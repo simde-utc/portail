@@ -15,7 +15,6 @@ class CAS
 		if (empty($data))
 			return -1;
 
-		// print_r($data); exit;
 		$parsed = new xmlToArrayParser($data);
 
 		if (!isset($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']))
