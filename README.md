@@ -2,6 +2,8 @@
 
 Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Laravel 5.6](https://laravel.com/) nécessitant au moins PHP 7.1.3
 
+
+
 ## Installation
 
 - Vérifier que qu'une version supérieure à 7.1.3 de PHP est installé : `php -v`
@@ -17,27 +19,54 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
 - Ça part !
 
 
-## Architecture
-
-`app/` : La plupart de l'application se trouve ici
-`app/Models` : les modèles de données
-`app/Http/Controllers` : traite les requêtes et envoie des réponses
-`app/Http/Middleware` : modifie les requêtes avant qu'elles soient traitées
-`app/Http/Requests` : valide ou non les données envoyées en POST
-
 
 ## Models
 
-> Dans \App\Models
+Il s'agit des modèles de données, avec lesquelles on peut intéragir via Eloquent.
+Namespace : `\App\Models\...`
+Dossier :   `app/Models`
+
 
 ### User
 ```
-#login: varchar(10)
+login: varchar(10) primary key
 email: varchar() unique
 prenom: varchar()
 nom: varchar()
 ```
 
 
+
+## Controllers
+
+Interfaces de validation des données envoyées en POST.
+Namespace : `\App\Http\Requests\...`
+Dossier :   `app/Http/Requests`
+
+
+
+## Middlewares
+
+Ils permettent de modifier les requêtes avant qu'elles ne soient traitées.
+Namespace : `\App\Http\Middleware\...`
+Dossier :   `app/Http/Middleware`
+
+
+
+## Services
+
+Il s'agit des services externes tels que le CAS ou Ginger
+Namespace : `\App\Services\...`
+Dossier :   `app/Services`
+
+
+### CAS
+
+
+### Ginger
+
+
+
 ## API
 
+Voici les routes de l'API
