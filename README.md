@@ -13,6 +13,9 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
 - Lancer les commances suivantes :
     + Suppression du cache : `php artisan config:clear`
     + Création de la clé : `php artisan key:generate`
+- Créer la base de données `portail`
+- Lancer la commande suivante : `php artisan migrate`
+- Pour populer la BDD : `php artisan db:seed`
 - Lancer l'application via :
     + Artisan : `php artisan serve` et aller sur http://localhost:8000
     + Wamp : aller directement sur le dossier `public` de l'installation via Wamp
