@@ -17,4 +17,6 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/cas', 'CasController@showLoginForm')->name('cas');
+
 Route::get('/home', 'HomeController@index')->name('home');
