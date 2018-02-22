@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Services;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class CAS
 {
@@ -22,32 +20,19 @@ class CAS
 		if (!isset($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']))
 			return -1;
 
-		$userArray = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess'];
-
-		// On cherche si l'utilisateur existe déjà dans la BDD
-		$user = User::where('login', $userArray['cas:user'])->first();
-
-		// Si inconnu, on le crée
-		if ($user == null) {
-			User::create([
-	            'login' => $userArray['cas:user'],
-	            'email' => $userArray['cas:attributes']['cas:mail'],
-	        ]);
-		} else {
-			// Si connu, on le connecte.
-			Auth::login($user);
-		}
-
 		return $parsed->array['cas:serviceResponse']['cas:authenticationSuccess'];
 	}
 
 
 	public static function login($service) {
-		// header() ne fonctionne pas, remplacé par away().
-		return redirect()->away(self::URL.'login?service='.$service);
+		header('Location: '.self::URL.'login?service='.$service);
 	}
 
-	/* Pas besoin de logout() spécifique, le notre est géré par laravel */
+
+	public static function logout()	{
+		header('Location: '.self::URL.'logout?service=https://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']));//ou SCRIPT_NAME?
+		// On n'utilise pas REQUEST_URI sinon cela déconnecterait à l'infini.
+	}
 }
 
 

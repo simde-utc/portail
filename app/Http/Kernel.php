@@ -37,10 +37,6 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        'cas' => [
-            \App\Http\Middleware\CheckCas::class,
-        ],
-
         'api' => [
             'throttle:60,1',
             'bindings',
