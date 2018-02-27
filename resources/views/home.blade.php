@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    Bonjour, {{ Auth::user()->id }} !
+                    Bonjour, {{ Auth::user()->lastname }} {{ Auth::user()->firstname }} !
                 </div>
             </div>
         </div>
