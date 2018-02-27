@@ -17,11 +17,9 @@ class CheckCas
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check()) {
+        if (Auth::check())
             return $next($request);
-        } else {
-            // If no user data found in Session, login and redirect to
+       	else            // If no user data found in Session, login and redirect to
             return CAS::login(route('cas'));
-        }
     }
 }
