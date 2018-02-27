@@ -17,6 +17,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/cas', 'CasController@showLoginForm')->name('cas');
+// Authentication Routes
+Route::get('login', 'Auth\LoginController@showLoginOptions')->name('login');
+Route::get('login/cas', 'Auth\LoginController@showCasLoginForm')->name('login.cas');
+Route::get('login/pass', 'Auth\LoginController@showPassLoginForm')->name('login.pass');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('home', 'HomeController@index')->name('home');

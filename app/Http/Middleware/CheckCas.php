@@ -20,6 +20,6 @@ class CheckCas
         if (Auth::check())
             return $next($request);
        	else            // If no user data found in Session, login and redirect to
-            return CAS::login(route('cas'));
+            return CAS::login(route('login.cas'));
     }
 }

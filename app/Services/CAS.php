@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class CAS
@@ -25,16 +26,25 @@ class CAS
 		$userArray = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess'];
 
 		// On cherche si l'utilisateur existe déjà dans la BDD
-		$user = User::where('login', $userArray['cas:user'])->first();
+		$user = DB::table('users_cas')->where('login', $userArray['cas:user'])->first();
 
 		// Si inconnu, on le crée
 		if ($user == null) {
-			User::create([
+
+			// dans users
+			$id = User::create([
+					'email' => $userArray['cas:attributes']['cas:mail'],
+				])->id;
+
+			// dans users_cas
+			DB::table('users_cas')->insert([
+				'user_id'	=> $id,
 	            'login' => $userArray['cas:user'],
-	            'email' => $userArray['cas:attributes']['cas:mail'],
 	        ]);
+
 		} else {
 			// Si connu, on le connecte.
+			$user = User::find($user->user_id);
 			Auth::login($user);
 		}
 
@@ -43,7 +53,6 @@ class CAS
 
 
 	public static function login($service) {
-		// header() ne fonctionne pas, remplacé par away().
 		return redirect()->away(self::URL.'login?service='.$service);
 	}
 

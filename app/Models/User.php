@@ -9,10 +9,6 @@ class User extends Authenticatable
 {
 	use Notifiable;
 
-	// La PK n'est pas un id autoincrémenté
-	public $incrementing = false;
-	protected $primaryKey = 'login';
-
 	/**
 	 * The attributes that are mass assignable.
 	 */
@@ -26,8 +22,4 @@ class User extends Authenticatable
 	protected $hidden = [
 		'password', 'remember_token',
 	];
-
-
-
-
 }

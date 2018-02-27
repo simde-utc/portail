@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use App\Services\CAS;
 
 class LoginController extends Controller
 {
@@ -27,18 +29,34 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function showLoginOptions()
     {
-        $this->middleware('cas')->except('logout');
+        return view('login.index');
     }
 
-    public function showLoginForm()
-    {
-        return redirect()->route('cas');
+    /*
+        Renvoie vers la page de login cas si pas de ticket.
+        Si ticket, retourne processUser().
+    */
+    public function showCasLoginForm(Request $request) {
+        if(!empty($request->query()))
+            return $this->processUser($request);
+        return CAS::login(route('login.cas'));
+    }
+
+    public function showPassLoginForm() {
+        return view('auth.login');
+    }
+
+    /*
+        A METTRE AUTRE PART.
+        Authentifie l'utilisateur et redirige vers home.
+    */
+    public function processUser(Request $request) {
+        $user = CAS::authenticate(route('login.cas'), $request->query('ticket'));
+        if ($user == -1)
+            return redirect()->route('login.cas');
+
+        return redirect()->route('home');
     }
 }

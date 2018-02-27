@@ -36,7 +36,7 @@
                         @auth
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ Auth::user()->login }} <span class="caret"></span>
+                                    {{ Auth::user()->id }} <span class="caret"></span>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
@@ -51,9 +51,7 @@
                                 </div>
                             </li>
                         @else
-
                             <li><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-
                         @endauth
 
                     </ul>
