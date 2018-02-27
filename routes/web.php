@@ -15,6 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Auth::routes();
 
 Route::get('/cas', 'CasController@showLoginForm')->name('cas');
 
