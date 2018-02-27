@@ -26,7 +26,7 @@ class CAS
 		$userArray = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess'];
 
 		// On cherche si l'utilisateur existe déjà dans la BDD
-		$user = DB::table('users_cas')->where('login', $userArray['cas:user'])->first();
+		$user = DB::table('auth_cas')->where('login', $userArray['cas:user'])->first();
 
 		// Si inconnu, on le crée
 		if ($user == null) {
@@ -37,7 +37,7 @@ class CAS
 				])->id;
 
 			// dans users_cas
-			DB::table('users_cas')->insert([
+			DB::table('auth_cas')->insert([
 				'user_id'	=> $id,
 	            'login' => $userArray['cas:user'],
 	        ]);
@@ -150,4 +150,3 @@ class xmlToArrayParser
 		return $idx;
 	}
 }
-
