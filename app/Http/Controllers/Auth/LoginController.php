@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Services\Auth\Cas;
+use Illuminate\Support\Facades\Auth as Authentification;
+use App\Services\Auth;
 
 class LoginController extends Controller
 {
@@ -41,7 +41,7 @@ class LoginController extends Controller
     public function showCasLoginForm(Request $request) {
         if(!empty($request->query()))
             return $this->processUser($request);
-        return Cas::login(route('login.cas'));
+        return Auth\Cas::login(route('login.cas'));
     }
 
     public function showPassLoginForm() {
@@ -53,7 +53,7 @@ class LoginController extends Controller
         Authentifie l'utilisateur et redirige vers home.
     */
     public function processUser(Request $request) {
-        $user = Cas::authenticate(route('login.cas'), $request->query('ticket'));
+        $user = Auth\Cas::authenticate(route('login.cas'), $request->query('ticket'));
         if (!$user)
             return redirect()->route('login.cas');
 
@@ -61,12 +61,12 @@ class LoginController extends Controller
     }
 
     /*
-        Déconnection de l'utilisateur    
+        Déconnection de l'utilisateur
     */
     public function logout($redirection = null) {
-        Auth::logout();
+        Authentification::logout();
         if (session('login'))
-            return redirect('https://cas.utc.fr/cas/logout');
+            return redirect('https://cas.utc.fr/cas/logout'); // A revoir ça pour qu'on fasse appel au bon logout du bon service !
         else if ($redirection === null)
             return redirect('home');
         else
