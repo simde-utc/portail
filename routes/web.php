@@ -11,16 +11,29 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Auth::routes();
+Auth::routes();		// TODO à enlever sur le long terme
+
+// Password reset
+Route::get('password/reset',  'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::match(['get', 'head'], 'password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+Route::get('password/done',  'Auth\ResetPasswordController@done');
+
 
 // Authentication Routes
 Route::get('login', 'Auth\LoginController@showLoginOptions')->name('login');
 Route::get('login/cas', 'Auth\LoginController@showCasLoginForm')->name('login.cas');
 Route::get('login/pass', 'Auth\LoginController@showPassLoginForm')->name('login.pass');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+Route::post('logout/{redirection?}', 'Auth\LoginController@logout')->name('logout');
 
+
+
+// Vues temporaires, uniquement de l'affichage de liens
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::get('home', 'HomeController@index')->name('home');
+
+
+

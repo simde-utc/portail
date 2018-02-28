@@ -41,7 +41,7 @@ class LoginController extends Controller
     public function showCasLoginForm(Request $request) {
         if(!empty($request->query()))
             return $this->processUser($request);
-        return Auth\Cas::login(route('login.cas'));
+        return Auth\CAS::login(route('login.cas'));
     }
 
     public function showPassLoginForm() {
@@ -53,6 +53,24 @@ class LoginController extends Controller
         Authentifie l'utilisateur et redirige vers home.
     */
     public function processUser(Request $request) {
-        return redirect()->route(Auth\Cas::authenticate(route('login.cas'), $request->query('ticket')) ? 'home' : 'login.cas');
+        $user = Auth\CAS::authenticate(route('login.cas'), $request->query('ticket'));
+        if ($user == -1)
+            return redirect()->route('login.cas');
+
+        return redirect()->route('home');
     }
+
+    /**
+     * Déconnection de l'utilisateur
+     */
+    public function logout($redirection = null) {
+        Auth::logout();
+        if (session('login'))
+            return redirect('https://cas.utc.fr/cas/logout');
+        else if ($redirection === null)
+            return redirect('home');
+        else
+            return redirect($redirection);      // Redirection vers la page choisie par le consommateur de l'API
+    }
+
 }
