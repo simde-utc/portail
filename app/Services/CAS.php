@@ -44,6 +44,8 @@ class CAS
 			AuthCas::create([
 				'user_id' => $user->id,
 				'login' => $userArray['cas:user'],
+        'email' => $userArray['cas:attributes']['cas:mail'],
+				'last_login_at' => new \DateTime(),
 			]);
 
 			// dans les préférences
@@ -66,7 +68,11 @@ class CAS
 
 			$cas = AuthCas::find($user->id);
 			$cas->login = $userArray['cas:user'];
-			$cas->updated_at = new \DateTime();
+			$cas->email = $userArray['cas:attributes']['cas:mail'];
+			$cas->save();
+
+			$cas->timestamps = false;
+			$cas->last_login_at = new \DateTime();
 			$cas->save();
 
 			Auth::login($user);

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AuthPassword extends Model
 {
 	protected $fillable = [
-	 'user_id',
+	 'user_id', 'last_login_at',
 	];
 
 	protected $hidden = [

@@ -18,6 +18,7 @@ class CreateAuthPasswordsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('password', 512);
             $table->timestamps();
+            $table->timestamp('last_login_at')->nullable();
         });
     }
 
