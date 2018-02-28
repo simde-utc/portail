@@ -29,8 +29,7 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/home';
 
-    public function showLoginOptions()
-    {
+    public function showLoginOptions() {
         return view('login.index');
     }
 

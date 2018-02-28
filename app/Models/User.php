@@ -17,4 +17,16 @@ class User extends Authenticatable
 	protected $hidden = [
 		'remember_token',
 	];
+
+	public function cas() {
+		return $this->hasOne('App\AuthCas');
+	}
+	public function password() {
+		return $this->hasOne('App\AuthPassword');
+	}
+
+	public function scopeUtc($query) {
+		return $query->has('auth_cas');
+	}
+
 }
