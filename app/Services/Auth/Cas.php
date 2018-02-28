@@ -1,84 +1,46 @@
 <?php
 
-namespace App\Services;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
+namespace App\Services\Auth;
 use App\Models\AuthCas;
-use App\Models\UserPreferences;
 
-class CAS
+class Cas extends Auth
 {
 	protected const URL = 'https://cas.utc.fr/cas/';
+	protected $model = 'AuthCas';
 
-
-	public static function authenticate($service, $ticket)	{
+	public static function authenticate($service, $ticket) {
 		if (!isset($ticket) || empty($ticket))
-			return -1;
+			return false;
 
 		$data = file_get_contents(self::URL.'serviceValidate?service='.$service.'&ticket='.$ticket);
 		if (empty($data))
-			return -1;
+			return false;
 
 		$parsed = new xmlToArrayParser($data);
 
 		if (!isset($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']))
-			return -1;
+			return false;
 
 		$userArray = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess'];
 
 		// On cherche si l'utilisateur existe déjà dans la BDD
-		$user = DB::table('auth_cas')->where('login', $userArray['cas:user'])->first();
-
-		// Si inconnu, on le crée
-		if ($user === null) {
-			// dans users
-			$user = User::create([
-				'email' => $userArray['cas:attributes']['cas:mail'],
-				'firstname' => $userArray['cas:attributes']['cas:givenName'],
-				'lastname' => $userArray['cas:attributes']['cas:sn'],
-				'last_login_at' => new \DateTime()
-			]);
-
-			// dans la table cas
-			AuthCas::create([
-				'user_id' => $user->id,
+		$auth = self::findUser('login', $userArray['cas:user']);
+		if ($auth === null) {
+			// Si inconnu, on le crée et on le connecte.
+			self::create($userArray['cas:attributes']['cas:mail'], $userArray['cas:attributes']['cas:givenName'], $userArray['cas:attributes']['cas:sn'], [
 				'login' => $userArray['cas:user'],
-        'email' => $userArray['cas:attributes']['cas:mail'],
-				'last_login_at' => new \DateTime(),
+				'email' => $userArray['cas:attributes']['cas:mail'],
 			]);
-
-			// dans les préférences
-			UserPreferences::create([
-				'user_id' => $user->id,
-        'email' => $userArray['cas:attributes']['cas:mail'],
-			]);
-
-			Auth::login($user);
-		} else {
+		}
+		else {
 			// Si connu, on actualise ses infos et on le connecte.
-			$user = User::find($user->user_id);
-			$user->firstname = $userArray['cas:attributes']['cas:givenName'];
-			$user->lastname = $userArray['cas:attributes']['cas:sn'];
-			$user->save();
-
-			$user->timestamps = false;
-			$user->last_login_at = new \DateTime();
-			$user->save();
-
-			$cas = AuthCas::find($user->id);
-			$cas->login = $userArray['cas:user'];
-			$cas->email = $userArray['cas:attributes']['cas:mail'];
-			$cas->save();
-
-			$cas->timestamps = false;
-			$cas->last_login_at = new \DateTime();
-			$cas->save();
-
-			Auth::login($user);
+			self::update($auth->user_id, $userArray['cas:attributes']['cas:givenName'], $userArray['cas:attributes']['cas:sn'], [
+				'login' => $userArray['cas:user'],
+				'email' => $userArray['cas:attributes']['cas:mail'],
+			]);
 		}
 
-		return $parsed->array['cas:serviceResponse']['cas:authenticationSuccess'];
+		return true;
 	}
 
 	public static function login($service) {
