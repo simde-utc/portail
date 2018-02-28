@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use App\Services\CAS;
+use App\Services\Auth\Cas;
 
 class CheckCas
 {
@@ -20,6 +20,6 @@ class CheckCas
         if (Auth::check())
             return $next($request);
        	else            // If no user data found in Session, login and redirect to
-            return CAS::login(route('login.cas'));
+            return Cas::login(route('login.cas'));
     }
 }

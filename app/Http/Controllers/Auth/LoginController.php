@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use App\Services\Auth;
+use Illuminate\Support\Facades\Auth;
+use App\Services\Auth\Cas;
 
 class LoginController extends Controller
 {
@@ -40,7 +41,7 @@ class LoginController extends Controller
     public function showCasLoginForm(Request $request) {
         if(!empty($request->query()))
             return $this->processUser($request);
-        return Auth\CAS::login(route('login.cas'));
+        return Cas::login(route('login.cas'));
     }
 
     public function showPassLoginForm() {
@@ -52,16 +53,16 @@ class LoginController extends Controller
         Authentifie l'utilisateur et redirige vers home.
     */
     public function processUser(Request $request) {
-        $user = Auth\CAS::authenticate(route('login.cas'), $request->query('ticket'));
-        if ($user == -1)
+        $user = Cas::authenticate(route('login.cas'), $request->query('ticket'));
+        if (!$user)
             return redirect()->route('login.cas');
 
         return redirect()->route('home');
     }
 
-    /**
-     * Déconnection de l'utilisateur
-     */
+    /*
+        Déconnection de l'utilisateur    
+    */
     public function logout($redirection = null) {
         Auth::logout();
         if (session('login'))
@@ -71,5 +72,4 @@ class LoginController extends Controller
         else
             return redirect($redirection);      // Redirection vers la page choisie par le consommateur de l'API
     }
-
 }
