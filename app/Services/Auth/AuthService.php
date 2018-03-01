@@ -43,13 +43,6 @@ abstract class AuthService
 	}
 	
 	/**
-	 * Loggue l'utilisateur User
-	 */
-	protected function connect($user) {
-		Auth::login($user);
-	}
-
-	/**
 	 * Crée l'utilisateur et son mode de connexion auth_...
 	 */
 	protected function create($model, array $user_infos, array $auth_infos = []) {
@@ -62,7 +55,7 @@ abstract class AuthService
 
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null)
-			$this->connect($user);
+			Auth::login($user);
 	}
 
 	/**
@@ -77,7 +70,7 @@ abstract class AuthService
 
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null)
-			$this->connect($user);
+			Auth::login($user);
 	}
 
 
