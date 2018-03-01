@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Http\Middleware\Auth;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\Cas;
 
-class CheckCas
+class Cas
 {
     /**
      * Handle an incoming request.
@@ -17,9 +17,13 @@ class CheckCas
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check())
+        $user = Auth::user();
+
+        if ($user === null)
+            return redirect('login', ['provider' => 'cas', 'redirection' => url()->current()]);
+        else if ($user->utc())
             return $next($request);
-       	else            // If no user data found in Session, login and redirect to
-            return Cas::login(route('login.cas'));
+       	else
+            return redirect('login', ['provider'], 'cas');
     }
 }

@@ -58,8 +58,14 @@ class Cas extends AuthService
 		return redirect($this->config['redirection']);
 	}
 
-	public function logout() {
-
+	/**
+	 * Se déconnecte du CAS de l'UTC
+	 */
+	public function logout(Request $request) {
+		$url = 'https://cas.utc.fr/cas/logout';
+		if ($request->query('redirection'))
+			$url .= '?service=' . $request->query('redirection');
+		return redirect($url);
 	}
 }
 
