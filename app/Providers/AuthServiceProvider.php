@@ -25,11 +25,12 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         // Singletonne tous les services d'authentification perso répertoriés dans auth.services
-        foreach (config('auth.services') as $name => $class) {
+        
+        foreach (config('auth.services') as $name => $config) {
             $this->app->singleton($name, function ($app) {
-                return new $class();
+                return new $config['class']();
             });
-        }
+        }        
     }
 
     /**
@@ -37,7 +38,10 @@ class AuthServiceProvider extends ServiceProvider
      * @return array dynamically all custom auth classes
      */
     public function provides() {
-        return array_values(config('auth.services'));
+        $classes = [];
+        foreach (config('auth.services') as $service)
+            array_push($classes, $service['class']);
+        return $classes;
     }
 
 
