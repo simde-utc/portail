@@ -12,7 +12,7 @@
 */
 
 
-Auth::routes();		// TODO à enlever sur le long terme
+// Auth::routes();		// TODO à enlever sur le long terme
 
 // Password reset
 Route::get('password/reset',  'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
@@ -22,9 +22,13 @@ Route::get('password/done',  'Auth\ResetPasswordController@done');
 
 
 // Authentication Routes
-Route::get('login', 'Auth\LoginController@showLoginOptions')->name('login');
-Route::get('login/cas', 'Auth\LoginController@showCasLoginForm')->name('login.cas');
-Route::get('login/pass', 'Auth\LoginController@showPassLoginForm')->name('login.pass');
+Route::get('login', 'Auth\LoginController@showLoginOptions')->name('login.show');
+Route::get('login/{provider?}', 'Auth\LoginController@showLoginForm')->name('login');
+Route::get('login/process/{provider}', 'Auth\LoginController@login')->name('login.process');		// Callback to login users back from API
+
+// Route::get('login/cas', 'Auth\LoginController@showCasLoginForm')->name('login.cas');
+// Route::get('login/pass', 'Auth\LoginController@showPassLoginForm')->name('login.pass');
+
 Route::post('logout/{redirection?}', 'Auth\LoginController@logout')->name('logout');
 
 

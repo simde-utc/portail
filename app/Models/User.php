@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -19,10 +19,10 @@ class User extends Authenticatable
 	];
 
 	public function cas() {
-		return $this->hasOne('App\AuthCas');
+		return $this->hasOne('App\Models\AuthCas');
 	}
 	public function password() {
-		return $this->hasOne('App\AuthPassword');
+		return $this->hasOne('App\Models\AuthPassword');
 	}
 
 	public function scopeUtc($query) {

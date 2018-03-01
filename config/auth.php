@@ -2,6 +2,20 @@
 
 return [
 
+    'services' => [
+        'pass'   => [
+            'class' => App\Services\Auth\Pass::class,
+            'model' => App\Models\AuthPass::class,
+            'redirection' => 'home'
+        ],
+
+        'cas'   => [
+            'class' => App\Services\Auth\Cas::class,
+            'model' => App\Models\AuthCas::class,
+            'redirection' => 'home'
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults

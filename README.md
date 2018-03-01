@@ -66,8 +66,29 @@ Il s'agit des services externes tels que le CAS ou Ginger
 Namespace : `\App\Services\...`
 Dossier :   `app/Services`
 
+### Auth
 
-### CAS
+Héritent de `App\Services\Auth\AuthService`
+Doivent implémenter :
+- `protected $name;`
+- `protected $processURL;      // Callback pour process login`
+- `protected $config;`
+- `public function login(Request $request)`
+
+
+```php
+public function __construct() {`
+    $this->processURL = route('login.process', ['provider' => $this->name]);
+    $this->config = config("auth.services." . $this->name);
+}
+```
+
+Config :
+
+Dans `config/auth.php`, le tableau 'services', rajouter le nom du service :
+
+
+#### CAS
 
 
 ### Ginger
