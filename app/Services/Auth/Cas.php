@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 class Cas extends AuthService
 {
 	protected $name = 'cas';
-	private $URL = 'https://cas.utc.fr/cas/';
-	protected $processURL;		// Callback pour process login
+	private $casURL = 'https://cas.utc.fr/cas/';
+	protected $processURL;
 	protected $config;
 
 	public function __construct() {
@@ -18,42 +18,36 @@ class Cas extends AuthService
 	}
 
 	public function showLoginForm() {
-		return redirect()->away($this->URL.'login?service='.$this->processURL);
+		return redirect()->away($this->casURL.'login?service='.$this->processURL);
 	}
 
 	public function login(Request $request) {
-		$ticket = $request->query('ticket');							// Ticket CAS
+		$ticket = $request->query('ticket');
+
 		if (!isset($ticket) || empty($ticket))
 			return redirect()->route('login.show')->withError('Ticket CAS invalide');	// TODO
-		$data = file_get_contents($this->URL.'serviceValidate?service='.$this->processURL.'&ticket='.$ticket);
+
+		$data = file_get_contents($this->casURL.'serviceValidate?service='.$this->processURL.'&ticket='.$ticket);
+
 		if (empty($data))
-			return redirect()->route('login.show')->withError('Ticket CAS invalide');	// TODO
+			return redirect()->route('login.show')->withError('Aucune information reçue du CAS');	// TODO
 
 		$parsed = new xmlToArrayParser($data);
 
 		if (!isset($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']))
-			return redirect()->route('login', ['provider' => $this->name]); //->withError('Ticket CAS invalide');	// TODO
+			return redirect()->route('login', ['provider' => $this->name])->withError('Données du CAS reçues invalides');	// TODO
 
 		$userArray = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess'];
 
-		// On cherche si l'utilisateur existe déjà dans la BDD
-		$userAuth = $this->findUser($this->config['model'], 'login', $userArray['cas:user']);
-		// TODO pass array
-
-		$user_infos = [
+		// On regarde si l'utilisateur existe ou non et on le crée ou l'update
+		$this->createOrUpdate('login', $userArray['cas:user'], [
 			'firstname' => $userArray['cas:attributes']['cas:givenName'],
 			'lastname' 	=> $userArray['cas:attributes']['cas:sn'],
 			'email' 	=> $userArray['cas:attributes']['cas:mail'],
-		];
-		$auth_infos = [
+		], [
 			'login' => $userArray['cas:user'],
 			'email' => $userArray['cas:attributes']['cas:mail'],
-		];
-
-		if ($userAuth === null)			// Si inconnu, on le crée et on le connecte.
-			$this->create($this->config['model'], $user_infos, $auth_infos);
-		else							// Si connu, on actualise ses infos et on le connecte.
-			$this->update($this->config['model'], $userAuth->user_id, $user_infos, $auth_infos);
+		]);
 
 		return redirect($this->config['redirection']);
 	}

@@ -4,7 +4,6 @@ namespace App\Http\Middleware\Auth;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use App\Services\Auth\Cas;
 
 class Cas
 {

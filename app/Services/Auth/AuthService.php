@@ -16,80 +16,94 @@ abstract class AuthService
 	protected $name, $processURL, $config;
 
 	/**
-	 * !! Fonction à overrider
 	 * Renvoie un lien vers le formulaire de login
 	 */
-	public function showLoginForm() { }
+	abstract public function showLoginForm();
 
 	/**
-	 * !! Fonction à overrider
 	 * Callback pour récupérer les infos de l'API en GET et login de l'utilisateur
 	 */
-	public function login(Request $request) { }
+	abstract function login(Request $request);
 
 	/**
-	 * !! Fonction à overrider
 	 * Callback pour se logout
 	 */
-	public function logout() { }
-
-
+	public function logout(Request $request) { }
 
 	/**
-	 * Retrouve l'utilisateur via le $model spécifié qui correspond au mode d'authentification
+	 * Retrouve l'utilisateur via le modèle qui correspond au mode d'authentification
 	 */
-	protected function findUser($model, $key, $value) {
-		return $model::where($key, $value)->first();
+	protected function findUser($key, $value) {
+		return resolve($this->config['model'])::where($key, $value)->first();
 	}
-	
+
+
 	/**
-	 * Crée l'utilisateur et son mode de connexion auth_...
+	 * Crée l'utilisateur et son mode de connexion auth_{provider}
 	 */
-	protected function create($model, array $user_infos, array $auth_infos = []) {
+	protected function create(array $userInfo, array $authInfo = []) {
 		// Création de l'utilisateur avec les informations minimales
-		$user = $this->createUser($user_infos);
-		if (!$user)	dd("ERREUR AuthService.php@create");	// TODO
+		$user = $this->createUser($userInfo);
 
 		// On crée le système d'authentification
-		$userAuth = $this->createAuth($model, $user->id, $auth_infos);
+		$userAuth = $this->createAuth($user->id, $authInfo);
 
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null)
 			Auth::login($user);
+		// TODO Dans le cas où ça n'aurait pas marché
 	}
 
 	/**
-	 * Met à jour les informations de l'utilsateur et de son mode de connexion
+	 * Met à jour les informations de l'utilsateur et de son mode de connexion auth_{provider}
 	 */
-	protected function update($model, $id, array $user_infos, array $auth_infos = []) {
+	protected function update($id, array $userInfo, array $authInfo = []) {
 		// Actualisation des informations
-		$user = $this->updateUser($id, $user_infos);
+		$user = $this->updateUser($id, $userInfo);
 
 		// On actualise le système d'authentification
-		$userAuth = $this->updateAuth($model, $id, $auth_infos);
+		$userAuth = $this->updateAuth($id, $authInfo);
 
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null)
 			Auth::login($user);
+		// TODO Dans le cas où ça n'aurait pas marché
 	}
 
+	/**
+	 * Crée ou ajuste les infos de l'utilisateur et son mode de connexion auth_{provider}
+	 */
+	protected function createOrUpdate($key, $value, array $userInfo, array $authInfo = []) {
+		// On cherche l'utilisateur
+		$userAuth = $this->findUser($key, $value);
+
+		if ($userAuth === null)
+			$this->create($userInfo, $authInfo); // Si inconnu, on le crée et on le connecte.
+		else
+			$this->update($userAuth->user_id, $userInfo, $authInfo); // Si connu, on actualise ses infos et on le connecte.
+	}
 
 
 	/**
 	 * Crée l'utilisateur User
 	 */
 	protected function createUser(array $infos) {
-		$infos['last_login_at'] = new \DateTime();
-		$user = User::create($infos);
+		$user = User::create([
+			'email' => $infos['email'],
+		  'lastname' => $infos['lastname'],
+		  'firstname' => $infos['firstname'],
+		  'last_login_at' => new \DateTime(),
+		]);
 
-		if (!$user)
-			dd("ERREUR AuthService.php@createUser");		// TODO
+		// TODO Dans le cas où User n'aurait pas été créé
 
 		// Ajout dans les préférences
 		$userPreferences = UserPreferences::create([
 		  'user_id' => $user->id,
 		  'email' 	=> $user->email,
 		]);
+
+		// TODO Dans le cas où UserPreferences n'aurait pas été créé
 
 		return $user;
 	}
@@ -99,11 +113,13 @@ abstract class AuthService
 	 */
 	protected function updateUser($id, array $infos) {
 		$user = User::find($id);
-		if (!$user)
-			dd("ERREUR AuthService.php@updateUser");		// TODO
+
+		// TODO Dans le cas où User n'aurait pas été trouvé
 
 		$user->lastname = $infos['lastname'];
 		$user->firstname = $infos['firstname'];
+		$user->save();
+
 		$user->timestamps = false;
 		$user->last_login_at = new \DateTime();
 		$user->save();
@@ -112,12 +128,11 @@ abstract class AuthService
 	}
 
 
-
 	/**
 	 * Crée la connexion auth
 	 */
-	protected function createAuth($model, $id, array $infos = []) {
-		return $model::create(array_merge($infos, [
+	protected function createAuth($id, array $infos = []) {
+		return resolve($this->config['model'])::create(array_merge($infos, [
 		  'user_id' => $id,
 		  'last_login_at' => new \DateTime(),
 		]));
@@ -126,8 +141,8 @@ abstract class AuthService
 	/**
 	 * Met à jour la connexion auth
 	 */
-	protected function updateAuth($model, $id, $infos = []) {
-		$userAuth = $model::find($id);
+	protected function updateAuth($id, $infos = []) {
+		$userAuth = resolve($this->config['model'])::find($id);
 
 		foreach ($infos as $key => $value)
 		  $userAuth->$key = $value;
@@ -140,5 +155,4 @@ abstract class AuthService
 
 		return $userAuth;
 	}
-
 }

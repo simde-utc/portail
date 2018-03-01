@@ -44,7 +44,8 @@ class LoginController extends Controller
 	 * et applique le show login
 	 */
 	public function showLoginForm($provider) {
-		$provider_class = config("auth.services.$provider.class");       
+		$provider_class = config("auth.services.$provider.class");
+
 		if ($provider_class === null)
 			return redirect()->route('login.show');
 		else
@@ -55,7 +56,7 @@ class LoginController extends Controller
 	 * Connection de l'utilisateur après passage par l'API
 	 */
 	public function login(Request $request, $provider) {
-		$provider_class = config("auth.services.$provider.class");       
+		$provider_class = config("auth.services.$provider.class");
 		if ($provider_class === null)
 			return redirect()->route('login.show');
 		else
@@ -67,10 +68,9 @@ class LoginController extends Controller
 TODO
 	 */
 	public function logout($redirection = null) {
-		Auth::logout();
-		if (session('login'))
-			return redirect('https://cas.utc.fr/cas/logout'); // A revoir ça pour qu'on fasse appel au bon logout du bon service !
-		else if ($redirection === null)
+    Auth::logout();
+
+    if ($redirection === null)
 			return redirect('home');
 		else
 			return redirect($redirection);      // Redirection vers la page choisie par le consommateur de l'API
