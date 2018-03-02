@@ -29,16 +29,8 @@ class User extends Authenticatable
 		return $query->has('auth_cas');
 	}
 
-	public function getProvider() {
-		return Session::get('provider');
-	}
-
-	public function getAuth() {
-		return Session::get('auth');
-	}
-
-	public function addAttributes($provider, $auth) {
-		Session::set('provider', $provider);
-		Session::set('auth', $auth);
+	public function addAttributes(array $info) {
+		foreach($info as $key => $value)
+			$this->attributes[$key] = $value;
 	}
 }

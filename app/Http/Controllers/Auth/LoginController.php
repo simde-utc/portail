@@ -70,7 +70,6 @@ class LoginController extends Controller
 	public function logout() {
 		$provider = config("auth.services.".Auth::user()->provider);
 
-		dd(Auth::user());
     Auth::logout();
 
     if ($provider === null || !$provider['redirect'])

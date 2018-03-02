@@ -159,7 +159,10 @@ abstract class AuthService
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null) {
 			// On ajoute les attributs fournis par auth
-			$user->addAttributes($this->name, $userAuth);
+			/*$user->addAttributes(array_merge([
+				'provider' => $this->name,
+				'auth' => $userAuth->getAttributes()
+			]));*/
 
 			Auth::login($user, true);
 
