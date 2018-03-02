@@ -57,6 +57,7 @@ class LoginController extends Controller
 	 */
 	public function login(Request $request, $provider) {
 		$provider_class = config("auth.services.$provider.class");
+
 		if ($provider_class === null)
 			return redirect()->route('login.show');
 		else
@@ -65,14 +66,16 @@ class LoginController extends Controller
 
 	/**
 	 * Déconnection de l'utilisateur
-TODO
 	 */
-	public function logout($redirection = null) {
+	public function logout() {
+		$provider = config("auth.services.".Auth::user()->provider);
+
+		dd(Auth::user());
     Auth::logout();
 
-    if ($redirection === null)
+    if ($provider === null || !$provider['redirect'])
 			return redirect('home');
 		else
-			return redirect($redirection);      // Redirection vers la page choisie par le consommateur de l'API
+			return resolve($provider['class'])->logout($request);      // Redirection vers la page choisie par le consommateur de l'API
 	}
 }

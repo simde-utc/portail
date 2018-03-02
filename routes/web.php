@@ -29,7 +29,7 @@ Route::get('login/process/{provider}', 'Auth\LoginController@login')->name('logi
 // Route::get('login/cas', 'Auth\LoginController@showCasLoginForm')->name('login.cas');
 // Route::get('login/pass', 'Auth\LoginController@showPassLoginForm')->name('login.pass');
 
-Route::post('logout/{redirection?}', 'Auth\LoginController@logout')->name('logout');
+Route::post('logout/', 'Auth\LoginController@logout')->name('logout');
 
 
 
@@ -38,6 +38,3 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('home', 'HomeController@index')->name('home');
-
-
-

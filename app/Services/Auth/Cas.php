@@ -40,7 +40,7 @@ class Cas extends AuthService
 		$userArray = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess'];
 
 		// On regarde si l'utilisateur existe ou non et on le crée ou l'update
-		$this->createOrUpdate('login', $userArray['cas:user'], [
+		return $this->createOrUpdate('login', $userArray['cas:user'], [
 			'firstname' => $userArray['cas:attributes']['cas:givenName'],
 			'lastname' 	=> $userArray['cas:attributes']['cas:sn'],
 			'email' 	=> $userArray['cas:attributes']['cas:mail'],
@@ -48,8 +48,6 @@ class Cas extends AuthService
 			'login' => $userArray['cas:user'],
 			'email' => $userArray['cas:attributes']['cas:mail'],
 		]);
-
-		return redirect($this->config['redirection']);
 	}
 
 	/**
@@ -57,8 +55,10 @@ class Cas extends AuthService
 	 */
 	public function logout(Request $request) {
 		$url = 'https://cas.utc.fr/cas/logout';
+
 		if ($request->query('redirection'))
 			$url .= '?service=' . $request->query('redirection');
+
 		return redirect($url);
 	}
 }

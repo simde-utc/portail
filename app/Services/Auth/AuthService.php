@@ -28,7 +28,9 @@ abstract class AuthService
 	/**
 	 * Callback pour se logout
 	 */
-	public function logout(Request $request) { }
+	public function logout(Request $request) {
+		return redirect('home');
+	}
 
 	/**
 	 * Retrouve l'utilisateur via le modèle qui correspond au mode d'authentification
@@ -48,10 +50,7 @@ abstract class AuthService
 		// On crée le système d'authentification
 		$userAuth = $this->createAuth($user->id, $authInfo);
 
-		// Si tout est bon, on le connecte
-		if ($user !== null && $userAuth !== null)
-			Auth::login($user);
-		// TODO Dans le cas où ça n'aurait pas marché
+		return $this->connect($user, $userAuth);
 	}
 
 	/**
@@ -64,10 +63,7 @@ abstract class AuthService
 		// On actualise le système d'authentification
 		$userAuth = $this->updateAuth($id, $authInfo);
 
-		// Si tout est bon, on le connecte
-		if ($user !== null && $userAuth !== null)
-			Auth::login($user);
-		// TODO Dans le cas où ça n'aurait pas marché
+		return $this->connect($user, $userAuth);
 	}
 
 	/**
@@ -78,9 +74,9 @@ abstract class AuthService
 		$userAuth = $this->findUser($key, $value);
 
 		if ($userAuth === null)
-			$this->create($userInfo, $authInfo); // Si inconnu, on le crée et on le connecte.
+			return $this->create($userInfo, $authInfo); // Si inconnu, on le crée et on le connecte.
 		else
-			$this->update($userAuth->user_id, $userInfo, $authInfo); // Si connu, on actualise ses infos et on le connecte.
+			return $this->update($userAuth->user_id, $userInfo, $authInfo); // Si connu, on actualise ses infos et on le connecte.
 	}
 
 
@@ -154,5 +150,21 @@ abstract class AuthService
 		$userAuth->save();
 
 		return $userAuth;
+	}
+
+	/**
+	 * Permet de se connecter
+	 */
+	protected function connect($user, $userAuth) {
+		// Si tout est bon, on le connecte
+		if ($user !== null && $userAuth !== null) {
+			// On ajoute les attributs fournis par auth
+			$user->addAttributes($this->name, $userAuth);
+
+			Auth::login($user, true);
+
+			return redirect('home');
+		}
+		// TODO Dans le cas où ça n'aurait pas marché
 	}
 }
