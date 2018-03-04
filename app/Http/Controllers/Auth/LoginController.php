@@ -67,14 +67,20 @@ class LoginController extends Controller
 	/**
 	 * Déconnection de l'utilisateur
 	 */
-	public function logout() {
-		$provider = config("auth.services.".Auth::user()->provider);
+	public function logout(Request $request) {
+		$service = config("auth.services.".Auth::user()->getCurrentAuth());
 
-    Auth::logout();
-
-    if ($provider === null || !$provider['redirect'])
-			return redirect('home');
+		if ($service === null) {
+			if ($request->query('redirection'))
+				$redirect = redirect($request->query('redirection'));
+			else
+				$redirect = redirect('home');
+		}
 		else
-			return resolve($provider['class'])->logout($request);      // Redirection vers la page choisie par le consommateur de l'API
+			$redirect = resolve($service['class'])->logout($request);
+
+		// On le déconnecte uniquement lorsque le service a fini son travail
+    Auth::logout();
+		return $redirect;
 	}
 }

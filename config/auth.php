@@ -3,18 +3,16 @@
 return [
 
     'services' => [
-        'pass'   => [
+        'password' => [
             'class' => App\Services\Auth\Pass::class,
             'model' => App\Models\AuthPass::class,
             'middleware'  => App\Middleware\Auth\Cas::class,
-            'redirect' => false
         ],
 
-        'cas'   => [
+        'cas' => [
             'class' => App\Services\Auth\Cas::class,
             'model' => App\Models\AuthCas::class,
             'middleware'  => App\Middleware\Auth\Cas::class,
-            'redirect' => true
         ],
     ],
 
@@ -84,6 +82,7 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+            'table' => 'users'
         ],
 
         // 'users' => [

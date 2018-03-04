@@ -18,6 +18,7 @@ class CreateAuthCasTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('login', 16)->unique();
             $table->string('email', 128)->unique();
+            $table->boolean('active')->default(1);
             $table->timestamps();
             $table->timestamp('last_login_at')->nullable();
         });

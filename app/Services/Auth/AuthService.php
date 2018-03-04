@@ -158,13 +158,7 @@ abstract class AuthService
 	protected function connect($user, $userAuth) {
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null) {
-			// On ajoute les attributs fournis par auth
-			/*$user->addAttributes(array_merge([
-				'provider' => $this->name,
-				'auth' => $userAuth->getAttributes()
-			]));*/
-
-			Auth::login($user, true);
+			Auth::login($user);
 
 			return redirect('home');
 		}

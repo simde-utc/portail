@@ -10,6 +10,10 @@ class UserPreferences extends Model
 	 'user_id', 'email',
 	];
 
+	public function user() {
+		return $this->belongsTo('App\Models\User');
+	}
+
   protected $table = 'users_preferences';
 	protected $primaryKey = 'user_id';
 }

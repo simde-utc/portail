@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -25,12 +26,14 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\AuthPassword');
 	}
 
-	public function scopeUtc($query) {
-		return $query->has('auth_cas');
-	}
+	public function getCurrentAuth() {
+		$services = config('auth.services');
 
-	public function addAttributes(array $info) {
-		foreach($info as $key => $value)
-			$this->attributes[$key] = $value;
+		foreach ($services as $service => $serviceInfo) {
+			if (method_exists($this, $service) && $this->$service()->exists())
+				return $service;
+		}
+
+		return null;
 	}
 }

@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 use App\Models\AuthCas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Cas extends AuthService
 {
@@ -56,10 +57,17 @@ class Cas extends AuthService
 	public function logout(Request $request) {
 		$url = 'https://cas.utc.fr/cas/logout';
 
-		if ($request->query('redirection'))
-			$url .= '?service=' . $request->query('redirection');
+		// Si le personne est ou était étudiant, il faut vérifier qu'il est bien passé par le CAS
+		if (Auth::user()->cas()->first()->active) {
+			if ($request->query('redirection'))
+				$url .= '?service=' . $request->query('redirection');
 
-		return redirect($url);
+			return redirect($url);
+		}
+		else if ($request->query('redirection'))
+			return redirect($request->query('redirection'));
+		else
+			return redirect('home');
 	}
 }
 
