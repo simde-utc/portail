@@ -9,13 +9,12 @@ use Illuminate\Support\Facades\Auth;
 class Cas extends AuthService
 {
 	protected $name = 'cas';
+	private $processURL;
 	private $casURL = 'https://cas.utc.fr/cas/';
-	protected $processURL;
-	protected $config;
 
 	public function __construct() {
-		$this->processURL = route('login.process', ['provider' => $this->name]);
 		$this->config = config("auth.services." . $this->name);
+		$this->processURL = route('login.process', ['provider' => $this->name]);
 	}
 
 	public function showLoginForm() {
@@ -51,18 +50,30 @@ class Cas extends AuthService
 		]);
 	}
 
+	/*
+	 * Redirige vers la bonne page en cas de succès
+	 */
+	protected function success($user, $userAuth) {
+		if (!$userAuth->active) {
+			$userAuth->active = 1;
+			$userAuth->save();
+
+			return redirect('home')->withSuccess('Vous êtes maintenant considéré.e comme un.e étudiant.e'); // TODO: taper sur Ginger pour désactiver ou non le compte CAS
+		}
+		else
+			return redirect('home');
+	}
+
 	/**
 	 * Se déconnecte du CAS de l'UTC
 	 */
 	public function logout(Request $request) {
-		$url = 'https://cas.utc.fr/cas/logout';
-
 		// Si le personne est ou était étudiant, il faut vérifier qu'il est bien passé par le CAS
 		if (Auth::user()->cas()->first()->active) {
 			if ($request->query('redirection'))
-				$url .= '?service=' . $request->query('redirection');
-
-			return redirect($url);
+				return redirect($this->casURL.'/logout?service='.$request->query('redirection'));
+			else
+				return redirect($this->casURL.'/logout');
 		}
 		else if ($request->query('redirection'))
 			return redirect($request->query('redirection'));

@@ -3,16 +3,16 @@
 return [
 
     'services' => [
-        'password' => [
-            'class' => App\Services\Auth\Pass::class,
-            'model' => App\Models\AuthPass::class,
-            'middleware'  => App\Middleware\Auth\Cas::class,
-        ],
-
         'cas' => [
             'class' => App\Services\Auth\Cas::class,
             'model' => App\Models\AuthCas::class,
             'middleware'  => App\Middleware\Auth\Cas::class,
+        ],
+
+        'password' => [
+            'class' => App\Services\Auth\Password::class,
+            'model' => App\Models\AuthPassword::class,
+            'middleware'  => App\Middleware\Auth\Password::class,
         ],
     ],
 

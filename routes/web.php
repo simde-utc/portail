@@ -24,7 +24,7 @@ Route::get('password/done',  'Auth\ResetPasswordController@done');
 // Authentication Routes
 Route::get('login', 'Auth\LoginController@showLoginOptions')->name('login.show');
 Route::get('login/{provider?}', 'Auth\LoginController@showLoginForm')->name('login');
-Route::get('login/process/{provider}', 'Auth\LoginController@login')->name('login.process');		// Callback to login users back from API
+Route::match(['get', 'post'], 'login/process/{provider}', 'Auth\LoginController@login')->name('login.process');		// Callback to login users back from API
 Route::post('logout/{redirection?}', 'Auth\LoginController@logout')->name('logout');
 
 

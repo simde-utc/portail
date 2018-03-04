@@ -13,7 +13,7 @@ abstract class AuthService
 	/**
 	 * !! Attributs à overrider
 	 */
-	protected $name, $processURL, $config;
+	protected $name, $config;
 
 	/**
 	 * Renvoie un lien vers le formulaire de login
@@ -43,7 +43,7 @@ abstract class AuthService
 	/**
 	 * Crée l'utilisateur et son mode de connexion auth_{provider}
 	 */
-	protected function create(array $userInfo, array $authInfo = []) {
+	protected function create(array $userInfo, array $authInfo) {
 		// Création de l'utilisateur avec les informations minimales
 		$user = $this->createUser($userInfo);
 
@@ -56,7 +56,7 @@ abstract class AuthService
 	/**
 	 * Met à jour les informations de l'utilsateur et de son mode de connexion auth_{provider}
 	 */
-	protected function update($id, array $userInfo, array $authInfo = []) {
+	protected function update($id, array $userInfo = [], array $authInfo = []) {
 		// Actualisation des informations
 		$user = $this->updateUser($id, $userInfo);
 
@@ -69,7 +69,7 @@ abstract class AuthService
 	/**
 	 * Crée ou ajuste les infos de l'utilisateur et son mode de connexion auth_{provider}
 	 */
-	protected function createOrUpdate($key, $value, array $userInfo, array $authInfo = []) {
+	protected function createOrUpdate($key, $value, array $userInfo = [], array $authInfo = []) {
 		// On cherche l'utilisateur
 		$userAuth = $this->findUser($key, $value);
 
@@ -83,11 +83,11 @@ abstract class AuthService
 	/**
 	 * Crée l'utilisateur User
 	 */
-	protected function createUser(array $infos) {
+	protected function createUser(array $info) {
 		$user = User::create([
-			'email' => $infos['email'],
-		  'lastname' => $infos['lastname'],
-		  'firstname' => $infos['firstname'],
+			'email' => $info['email'],
+		  'lastname' => $info['lastname'],
+		  'firstname' => $info['firstname'],
 		  'last_login_at' => new \DateTime(),
 		]);
 
@@ -107,18 +107,17 @@ abstract class AuthService
 	/**
 	 * Met à jour l'utilisateur User
 	 */
-	protected function updateUser($id, array $infos) {
+	protected function updateUser($id, array $info = []) {
 		$user = User::find($id);
 
-		// TODO Dans le cas où User n'aurait pas été trouvé
+		if ($user === null)
+			return null;
 
-		$user->lastname = $infos['lastname'];
-		$user->firstname = $infos['firstname'];
-		$user->save();
-
-		$user->timestamps = false;
-		$user->last_login_at = new \DateTime();
-		$user->save();
+		if ($info !== []) {
+			$user->lastname = $info['lastname'];
+			$user->firstname = $info['firstname'];
+			$user->save();
+		}
 
 		return $user;
 	}
@@ -127,8 +126,8 @@ abstract class AuthService
 	/**
 	 * Crée la connexion auth
 	 */
-	protected function createAuth($id, array $infos = []) {
-		return resolve($this->config['model'])::create(array_merge($infos, [
+	protected function createAuth($id, array $info = []) {
+		return resolve($this->config['model'])::create(array_merge($info, [
 		  'user_id' => $id,
 		  'last_login_at' => new \DateTime(),
 		]));
@@ -137,16 +136,12 @@ abstract class AuthService
 	/**
 	 * Met à jour la connexion auth
 	 */
-	protected function updateAuth($id, $infos = []) {
+	protected function updateAuth($id, $info = []) {
 		$userAuth = resolve($this->config['model'])::find($id);
 
-		foreach ($infos as $key => $value)
+		foreach ($info as $key => $value)
 		  $userAuth->$key = $value;
 
-		$userAuth->save();
-
-		$userAuth->timestamps = false;
-		$userAuth->last_login_at = new \DateTime();
 		$userAuth->save();
 
 		return $userAuth;
@@ -158,10 +153,33 @@ abstract class AuthService
 	protected function connect($user, $userAuth) {
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null) {
+			$user->timestamps = false;
+			$user->last_login_at = new \DateTime();
+			$user->save();
+
+			$userAuth->timestamps = false;
+			$userAuth->last_login_at = new \DateTime();
+			$userAuth->save();
+
 			Auth::login($user);
 
-			return redirect('home');
+			return $this->success($user, $userAuth);
 		}
-		// TODO Dans le cas où ça n'aurait pas marché
+		else
+			return $this->error($user, $userAuth);
+	}
+
+	/*
+	 * Redirige vers la bonne page en cas de succès
+	 */
+	protected function success($user, $userAuth) {
+		return redirect('home');
+	}
+
+	/*
+	 * Redirige vers la bonne page en cas d'erreur
+	 */
+	protected function error($user, $userAuth) {
+		return redirect()->route('login.show')->withError('Il n\'a pas été possible de vous connecter');	// TODO
 	}
 }

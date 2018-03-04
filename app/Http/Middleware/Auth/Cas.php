@@ -20,7 +20,7 @@ class Cas
 
         if ($user === null)
             return redirect('login', ['provider' => 'cas', 'redirection' => url()->current()]);
-        else if ($user->utc())
+        else if ($user->cas())
             return $next($request);
        	else
             return redirect('login', ['provider'], 'cas');
