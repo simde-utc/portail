@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class AuthCas extends Model
+{
+	public $incrementing = false;			// L'id n'est pas autoincrementé
+	protected $primaryKey = 'user_id';
+
+	protected $fillable = [
+	 'user_id', 'login', 'email', 'last_login_at', 'active',
+	];
+
+	protected $casts = [
+		'active' => 'boolean', // Si on se connecte via passsword, on désactive tout ce qui est relié au CAS car on suppose qu'il n'est plus étudiant
+	];
+
+	public function user() {
+		return $this->belongsTo('App\Models\User');
+	}
+}
