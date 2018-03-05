@@ -42,7 +42,7 @@ class Password extends AuthService
 	protected function success($user, $userAuth) {
 		$casAuth = $user->cas()->first();
 
-		if ($casAuth->active) {
+		if ($casAuth !== null && $casAuth->active) {
 			$casAuth->active = 0;
 			$casAuth->save();
 
