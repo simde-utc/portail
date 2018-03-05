@@ -83,6 +83,7 @@ Pour créer un nouveau service/système d'authentification, il suffit de créer 
 
 ### CAS
 
+Le CAS est un système d'authentification automatiquement géré par le service Cas créé pour l'occasion. Il gère automatiquement la connexion, et la déconnexion
 
 ### Ginger
 
