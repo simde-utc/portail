@@ -71,9 +71,9 @@ class Cas extends AuthService
 		// Si le personne est ou était étudiant, il faut vérifier qu'il est bien passé par le CAS
 		if (Auth::user()->cas()->first()->active) {
 			if ($request->query('redirection'))
-				return redirect($this->casURL.'/logout?service='.$request->query('redirection'));
+				return redirect($this->casURL.'logout?service='.$request->query('redirection'));
 			else
-				return redirect($this->casURL.'/logout');
+				return redirect($this->casURL.'logout');
 		}
 		else if ($request->query('redirection'))
 			return redirect($request->query('redirection'));

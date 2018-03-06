@@ -32,6 +32,10 @@ class LoginController extends Controller
 	 */
 	protected $redirectTo = '/home';
 
+	public function __construct()	{
+			$this->middleware('auth', ['only' => 'logout']);
+	}
+
 	/**
 	 * Affiche la vue de choix de méthode de login
 	 */
