@@ -23,10 +23,10 @@ class Asso extends Model
     }
 
     public function articles() {
-        // hasMany
+        // belongsToMany
     }
 
     public function events() {
-        // hasMany
+        // belongsToMany
     }
 }
