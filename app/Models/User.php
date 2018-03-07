@@ -36,4 +36,12 @@ class User extends Authenticatable
 
 		return null;
 	}
+
+	public function assos() {
+		return $this->belongsToMany('App\Asso', 'asso_user');
+	}
+
+	public function contact() {
+		// hasOne
+	}
 }
