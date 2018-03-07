@@ -36,4 +36,12 @@ class User extends Authenticatable
 
 		return null;
 	}
+
+	public function assos() {
+		// hasMany through AssoMember
+	}
+
+	public function contact() {
+		// hasOne
+	}
 }
