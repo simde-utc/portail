@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersPreferencesTable extends Migration
+class CreateGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateUsersPreferencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('users_preferences', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->string('email', 128)->unique();
+        Schema::create('groups', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name', 64);
+            $table->integer('icon_id')->unsigned();
+            $table->foreign('icon_id')->references('id')->on('icons');
+            $table->boolean('is_public')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateUsersPreferencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users_preferences');
+        Schema::dropIfExists('groups');
     }
 }
