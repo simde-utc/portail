@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Asso extends Model
 {
     public function members() {
-        // hasMany through AssoMember
+        return $this->belongsToMany('App\User', 'asso_user');
     }
 
     public function contact() {
