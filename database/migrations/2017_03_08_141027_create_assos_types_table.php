@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAssoTypeTable extends Migration
+class CreateAssosTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateAssoTypeTable extends Migration
      */
     public function up()
     {
-        Schema::create('asso_type', function (Blueprint $table) {
+        Schema::create('assos_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nom');
+            $table->string('name')->unique();
+            $table->timestamps();
         });
     }
 
@@ -26,6 +27,6 @@ class CreateAssoTypeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asso_type');
+        Schema::dropIfExists('assos_types');
     }
 }
