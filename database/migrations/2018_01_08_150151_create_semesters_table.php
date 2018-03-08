@@ -16,6 +16,10 @@ class CreateSemestersTable extends Migration
         Schema::create('semesters', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
+            $table->boolean('is_automn')->default(1);
+            $table->char('year', 2);
+            $table->timestamp('begining_at')->unique()->useCurrent(); // Le début du semestre
+            $table->timestamp('ending_at')->unique()->useCurrent(); //La fin du semestre
             $table->timestamps();
         });
     }
