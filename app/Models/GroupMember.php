@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GroupMembers extends Model
+class GroupMember extends Model
 {
   protected $fillable = [
     'user_id', 'group_id',

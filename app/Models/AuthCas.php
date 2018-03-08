@@ -10,11 +10,11 @@ class AuthCas extends Model
 	protected $primaryKey = 'user_id';
 
 	protected $fillable = [
-	 'user_id', 'login', 'email', 'last_login_at', 'active',
+	 'user_id', 'login', 'email', 'last_login_at', 'is_active',
 	];
 
 	protected $casts = [
-		'active' => 'boolean', // Si on se connecte via passsword, on désactive tout ce qui est relié au CAS car on suppose qu'il n'est plus étudiant
+		'is_active' => 'boolean', // Si on se connecte via passsword, on désactive tout ce qui est relié au CAS car on suppose qu'il n'est plus étudiant
 	];
 
 	public function user() {

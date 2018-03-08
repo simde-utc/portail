@@ -14,7 +14,7 @@ class CreateAuthPasswordsTable extends Migration
     public function up()
     {
         Schema::create('auth_passwords', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned()->unique();
+            $table->integer('user_id')->unsigned()->primary();
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('password', 512);
             $table->timestamps();

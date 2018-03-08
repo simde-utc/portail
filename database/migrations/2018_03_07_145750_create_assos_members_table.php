@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAssoUserTable extends Migration
+class CreateAssosMembersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateAssoUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('asso_user', function (Blueprint $table) {
+        Schema::create('assos_members', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('asso_id')->unsigned();
             $table->foreign('asso_id')->references('id')->on('assos');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('role'); // A confirmer.
+            // Role à voir
             $table->integer('semester_id')->unsigned();
             $table->foreign('semester_id')->references('id')->on('semesters');
+            $table->primary(['asso_id', 'user_id', 'semester_id']);
             $table->timestamps();
         });
     }
@@ -33,6 +34,6 @@ class CreateAssoUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asso_user');
+        Schema::dropIfExists('assos_members');
     }
 }
