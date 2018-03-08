@@ -22,7 +22,7 @@ class CreateAssosMembersTable extends Migration
             // Role à voir
             $table->integer('semester_id')->unsigned();
             $table->foreign('semester_id')->references('id')->on('semesters');
-            $table->primary(['asso_id', 'user_id', 'semester_id']);
+            $table->index(['asso_id', 'user_id', 'semester_id']);
             $table->timestamps();
         });
     }
