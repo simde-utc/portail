@@ -20,7 +20,7 @@ class CreateAssosTable extends Migration
             $table->string('photo');
             $table->text('description');
             $table->integer('type_asso_id')->unsigned();
-            $table->foreign('type_asso_id')-references('id')->on('type_assos');
+            $table->foreign('type_asso_id')->references('id')->on('assos_types');
             $table->integer('parent_id')->unsigned()->nullable();
             $table->foreign('parent_id')->references('id')->on('assos');
             $table->timestamps();
