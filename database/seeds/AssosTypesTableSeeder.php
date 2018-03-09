@@ -14,14 +14,20 @@ class AssosTypesTableSeeder extends Seeder
     public function run()
     {
 
-        $types = ['1901', 'commission', 'club', 'projet'];
+	    $types = [
+		    '1901' => 'association loi 1901',
+		    'commission' => 'commission',
+		    'club' => 'club',
+		    'projet' => 'projet'
+	    ];
 
-        foreach ($types as $type) {
-          DB::table('assos_types')->insert([
-            'name' => $type,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-          ]);
-        }
+        foreach ($types as $type => $description) {
+		DB::table('assos_types')->insert([
+			'name' => $type,
+			'description' => $description,
+			'created_at' => Carbon::now(),
+			'updated_at' => Carbon::now()
+		]);
+	}
     }
 }
