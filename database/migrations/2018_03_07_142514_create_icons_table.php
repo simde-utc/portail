@@ -15,6 +15,7 @@ class CreateIconsTable extends Migration
     {
         Schema::create('icons', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name', 64)->unique();
             $table->text('path');
             $table->timestamps();
         });

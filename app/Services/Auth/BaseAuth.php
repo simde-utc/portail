@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UserPreferences;
 
-abstract class AuthService
+abstract class BaseAuth
 {
 	/**
 	 * !! Attributs à overrider

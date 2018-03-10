@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class Password extends AuthService
+class Password extends BaseAuth
 {
 	protected $name = 'password';
 
@@ -40,10 +40,10 @@ class Password extends AuthService
 	 * Redirige vers la bonne page en cas de succès
 	 */
 	protected function success($user, $userAuth) {
-		$casAuth = $user->cas()->first();
+		$casAuth = $user->cas;
 
-		if ($casAuth !== null && $casAuth->active) {
-			$casAuth->active = 0;
+		if ($casAuth !== null && $casAuth->is_active) {
+			$casAuth->is_active = 0;
 			$casAuth->save();
 
 			return redirect('home')->withSuccess('Vous êtes maintenant considéré.e comme un.e Tremplin'); // TODO: taper sur Ginger pour désactiver ou non le compte CAS

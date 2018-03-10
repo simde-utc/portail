@@ -1,12 +1,12 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Icons extends Model
+class Icon extends Model
 {
-  protected $fillable = [
-    'path'
-  ];
+    protected $fillable = [
+        'name', 'path',
+    ];
 }

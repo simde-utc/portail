@@ -6,7 +6,7 @@ use App\Models\AuthCas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class Cas extends AuthService
+class Cas extends BaseAuth
 {
 	protected $name = 'cas';
 	private $processURL;
@@ -54,8 +54,8 @@ class Cas extends AuthService
 	 * Redirige vers la bonne page en cas de succès
 	 */
 	protected function success($user, $userAuth) {
-		if (!$userAuth->active) {
-			$userAuth->active = 1;
+		if (!$userAuth->is_active) {
+			$userAuth->is_active = 1;
 			$userAuth->save();
 
 			return redirect('home')->withSuccess('Vous êtes maintenant considéré.e comme un.e étudiant.e'); // TODO: taper sur Ginger pour désactiver ou non le compte CAS
@@ -69,7 +69,7 @@ class Cas extends AuthService
 	 */
 	public function logout(Request $request) {
 		// Si le personne est ou était étudiant, il faut vérifier qu'il est bien passé par le CAS
-		if (Auth::user()->cas()->first()->active) {
+		if (Auth::user()->cas->is_active) {
 			if ($request->query('redirection'))
 				return redirect($this->casURL.'logout?service='.$request->query('redirection'));
 			else

@@ -15,9 +15,8 @@ class CreateAssosTable extends Migration
     {
         Schema::create('assos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nom');
+            $table->string('name');
             $table->string('login');
-            $table->string('photo');
             $table->text('description');
             $table->integer('type_asso_id')->unsigned();
             $table->foreign('type_asso_id')->references('id')->on('assos_types');

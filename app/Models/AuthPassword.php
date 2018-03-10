@@ -6,17 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class AuthPassword extends Model
 {
-	protected $fillable = [
-	 'user_id', 'last_login_at',
-	];
+		public $incrementing = false;			// L'id n'est pas autoincrementé
+		protected $primaryKey = 'user_id';
 
-	protected $hidden = [
-		'password',
-	];
+		protected $fillable = [
+		 	'user_id', 'last_login_at',
+		];
 
-	public function user() {
-		return $this->belongsTo('App\Models\User');
-	}
+		protected $hidden = [
+				'password',
+		];
 
-	protected $primaryKey = 'user_id';
+		public function user() {
+				return $this->belongsTo('App\Models\User');
+		}
 }

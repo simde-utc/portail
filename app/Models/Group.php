@@ -1,20 +1,25 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
-  protected $fillable = [
-    'name', 'icon_id', 'is_public'
-  ];
+    protected $fillable = [
+        'name', 'user_id', 'icon_id', 'is_public', 'is_active',
+    ];
 
-	protected $casts = [
-		'is_public' => 'boolean', // Si on se connecte via passsword, on désactive tout ce qui est relié au CAS car on suppose qu'il n'est plus étudiant
-	];
+  	protected $casts = [
+        'is_public' => 'boolean',
+  		  'is_active' => 'boolean',
+  	];
 
-  public function icon() {
-    return $this->hasOne('App\Models\Icon');
-  }
+    public function icon() {
+        return $this->hasOne('App\Models\Icon');
+    }
+
+		public function members() {
+				return $this->belongsToMany('App\Models\User', 'groups_members');
+		}
 }

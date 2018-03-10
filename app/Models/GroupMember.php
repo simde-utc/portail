@@ -1,20 +1,22 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class GroupMember extends Model
 {
-  protected $fillable = [
-    'user_id', 'group_id',
-  ];
+    protected $table = 'groups_members';
 
-  public function user() {
-    return $this->hasOne('App\Models\User');
-  }
+    protected $fillable = [
+        'user_id', 'group_id',
+    ];
 
-  public function group() {
-    return $this->hasOne('App\Models\Group');
-  }
+    public function user() {
+        return $this->hasOne('App\Models\User');
+    }
+
+    public function group() {
+        return $this->hasOne('App\Models\Group');
+    }
 }
