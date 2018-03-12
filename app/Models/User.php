@@ -13,56 +13,56 @@ class User extends Authenticatable
 		use HasRoles;
 
 		protected $fillable = [
-				'firstname', 'lastname', 'email', 'last_login_at',
+			'firstname', 'lastname', 'email', 'last_login_at',
 		];
 
 		protected $hidden = [
-				'remember_token',
+			'remember_token',
 		];
 
 		public function cas() {
-				return $this->hasOne('App\Models\AuthCas');
+			return $this->hasOne('App\Models\AuthCas');
 		}
 		public function password() {
-				return $this->hasOne('App\Models\AuthPassword');
+			return $this->hasOne('App\Models\AuthPassword');
 		}
 
 		public function getCurrentAuth() {
-				$services = config('auth.services');
+			$services = config('auth.services');
 
-				foreach ($services as $service => $serviceInfo) {
-					if (method_exists($this, $service) && $this->$service()->exists())
-						return $service;
-				}
+			foreach ($services as $service => $serviceInfo) {
+				if (method_exists($this, $service) && $this->$service()->exists())
+					return $service;
+			}
 
-				return null;
+			return null;
 		}
 
 		public function assoMember() {
-				return $this->hasMany('App\Models\AssoMember');
+			return $this->hasMany('App\Models\AssoMember');
 		}
 
 		public function assos() {
-				return $this->belongsToMany('App\Models\Asso', 'assos_members');
+			return $this->belongsToMany('App\Models\Asso', 'assos_members');
 		}
 
 		public function currentAssos() {
-				return $this->belongsToMany('App\Models\Asso', 'assos_members')->where('semester_id', Semester::getThisSemester()->id);
+			return $this->belongsToMany('App\Models\Asso', 'assos_members')->where('semester_id', Semester::getThisSemester()->id);
 		}
 
 		public function groups() {
-				return $this->belongsToMany('App\Models\Group', 'groups_members');
+			return $this->belongsToMany('App\Models\Group', 'groups_members');
 		}
 
 		public function currentGroups() {
-				return $this->belongsToMany('App\Models\Group', 'groups_members')->where('is_active', 1);
+			return $this->belongsToMany('App\Models\Group', 'groups_members')->where('is_active', 1);
 		}
 
 		public function ownGroups() {
-				return $this->hasMany('App\Models\Group');
+			return $this->hasMany('App\Models\Group');
 		}
 
 		public function contact() {
-				// hasOne
-		}
+	        return $this->morphMany('App\Models\Contact', 'contactable');
+	    }
 }

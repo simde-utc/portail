@@ -18,8 +18,7 @@ class CreateGroupsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('name', 64);
-            $table->integer('icon_id')->unsigned();
-            $table->foreign('icon_id')->references('id')->on('icons');
+            $table->string('icon')->default(NULL);
             $table->boolean('is_public')->default(0);
             $table->boolean('is_active')->default(1);
             $table->timestamps();

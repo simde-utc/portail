@@ -14,20 +14,20 @@ class Asso extends Model
         return $this->hasMany('App\Models\AssoMember');
     }
 
-		public function members() {
-				return $this->belongsToMany('App\Models\User', 'assos_members');
-		}
+	public function members() {
+		return $this->belongsToMany('App\Models\User', 'assos_members');
+	}
 
-		public function currentMembers() {
-				return $this->belongsToMany('App\Models\User', 'assos_members')->where('semester_id', Semester::getThisSemester()->id);
-		}
+	public function currentMembers() {
+		return $this->belongsToMany('App\Models\User', 'assos_members')->where('semester_id', Semester::getThisSemester()->id);
+	}
 
     public function type() {
         return $this->belongsTo('App\Models\AssoType');
     }
 
     public function contact() {
-        // hasOne
+        return $this->morphMany('App\Models\Contact', 'contactable');
     }
 
     public function rooms() {
