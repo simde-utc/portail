@@ -14,9 +14,9 @@ class CreateRoomsTable extends Migration
     public function up()
     {
         Schema::create('rooms', function (Blueprint $table) {
-            $table->string('numero');
-            $table->string('name');
-            $table->string('pole');
+            $table->string('numero', 20);
+            $table->string('name', 128);
+            $table->string('pole', 128);
             
             /* LIGNE A RAJOUTER QUAND TABLE ASSO CREE
 
