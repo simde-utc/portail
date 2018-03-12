@@ -10,10 +10,10 @@ class UserPreferences extends Model
 		protected $primaryKey = 'user_id';
 
 		protected $fillable = [
-				'user_id', 'email',
+			'user_id', 'email',
 		];
 
 		public function user() {
-				return $this->belongsTo('App\Models\User');
+			return $this->belongsTo('App\Models\User');
 		}
 }
