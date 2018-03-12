@@ -16,13 +16,14 @@ class CreateEventsTable extends Migration
         Schema::create('events', function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('title', 128);
-			$table->string('description', 128)->nullable();
+			$table->text('description')->nullable();
 			$table->string('image', 128)->nullable();
-			$table->timestamp('date_from');
-			$table->timestamp('date_to');
-            $table->timestamps();
-			$table->string('visibility', 7);
+			$table->timestamp('date_from')->useCurrent();
+			$table->timestamp('date_to')->useCurrent();
+      $table->integer('visibility_id')->unsigned();
+      $table->foreign('visibility_id')->references('id')->on('visibilities');
 			$table->string('place', 128)->nullable();
+      $table->timestamps();
         });
     }
 
