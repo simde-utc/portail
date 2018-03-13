@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 
-class VisibilityTableSeeder extends Seeder
+class VisibilitiesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

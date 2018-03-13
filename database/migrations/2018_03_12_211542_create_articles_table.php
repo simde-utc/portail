@@ -15,11 +15,13 @@ class CreateArticlesTable extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('title', 128);
+            $table->longText('content');
+            $table->string('image', 128);
+            $table->boolean('toBePublished');
+            $table->integer('visibility_id')->unsigned();
+            $table->foreign('visibility_id')->references('id')->on('visibilities');
             $table->timestamps();
-			$table->string('title', 128);
-			$table->longText('content');
-			$table->string('image', 128);
-			$table->boolean('toBePublished');
         });
     }
 

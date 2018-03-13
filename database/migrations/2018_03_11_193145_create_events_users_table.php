@@ -13,11 +13,11 @@ class CreateEventsUsersTable extends Migration
      */
     public function up()
     {
-      Schema::create('event_user', function (Blueprint $table) {
-      $table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users');
-			$table->integer('event_id')->unsigned();
-			$table->foreign('event_id')->references('id')->on('events');
+        Schema::create('events_users', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('event_id')->unsigned();
+            $table->foreign('event_id')->references('id')->on('events');
         });
     }
 
