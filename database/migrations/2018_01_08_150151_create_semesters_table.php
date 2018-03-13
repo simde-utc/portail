@@ -15,11 +15,11 @@ class CreateSemestersTable extends Migration
     {
         Schema::create('semesters', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name', 128)->unique();
             $table->boolean('is_spring')->default(0);
             $table->char('year', 2);
-            $table->timestamp('begining_at')->unique()->useCurrent(); // Le début du semestre
-            $table->timestamp('ending_at')->unique()->useCurrent(); //La fin du semestre
+            $table->timestamp('begining_at')->unique()->nullable(); // Le début du semestre
+            $table->timestamp('ending_at')->unique()->nullable(); //La fin du semestre
             $table->timestamps();
         });
     }
