@@ -45,4 +45,8 @@ class Asso extends Model
 	public function events() {
 		// belongsToMany
 	}
+
+	public function parent() {
+	    return $this->hasOne('App\Models\Asso');
+    }
 }
