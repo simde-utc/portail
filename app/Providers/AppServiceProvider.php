@@ -7,26 +7,26 @@ use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot() {
-        Schema::defaultStringLength(191);       // Pour que 'email' puisse être une clé
-    }
+	/**
+	 * Bootstrap any application services.
+	 *
+	 * @return void
+	 */
+	public function boot() {
+		Schema::defaultStringLength(191);       // Pour que 'email' puisse être une clé
+	}
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register() {
-        /*
-        if (!$this->app->environment('production')) {
-            $this->app->register('Laravel\Tinker\TinkerServiceProvider');
-            $this->app->register('Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
-        }
-        */
-    }
+	/**
+	 * Register any application services.
+	 *
+	 * @return void
+	 */
+	public function register() {
+		// ServiceProviders de développement
+		if (!$this->app->environment('production')) {		
+			$this->app->register('Barryvdh\Debugbar\ServiceProvider');
+			$this->app->register('Asvae\ApiTester\ServiceProvider');
+		}
+		
+	}
 }
