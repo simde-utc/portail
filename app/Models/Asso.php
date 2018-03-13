@@ -39,7 +39,7 @@ class Asso extends Model
 	}
 
 	public function articles() {
-		// belongsToMany
+		return $this->belongsToMany('App\Models\Article', 'assos_articles');
 	}
 
 	public function events() {
