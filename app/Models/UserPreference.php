@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserPreferences extends Model
+class UserPreference extends Model
 {
 		protected $table = 'users_preferences';
 		protected $primaryKey = 'user_id';

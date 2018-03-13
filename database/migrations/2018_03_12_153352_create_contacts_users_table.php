@@ -19,6 +19,8 @@ class CreateContactsUsersTable extends Migration
             $table->string('body');
             $table->integer('visibility_id')->unsigned();
             $table->foreign('visibility_id')->references('id')->on('visibilities');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

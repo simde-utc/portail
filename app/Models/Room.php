@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
-    // TODO !
+    // TODO : Add RoomController + function index()
 }

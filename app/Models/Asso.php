@@ -27,7 +27,7 @@ class Asso extends Model
 	}
 
 	public function contact() {
-		return $this->morphMany('App\Models\Contact', 'contactable');
+		return $this->hasMany('App\Models\AssoContact', 'contacts_assos');
 	}
 
 	public function rooms() {
@@ -45,4 +45,8 @@ class Asso extends Model
 	public function events() {
 		// belongsToMany
 	}
+
+	public function parent() {
+	    return $this->hasOne('App\Models\Asso');
+    }
 }
