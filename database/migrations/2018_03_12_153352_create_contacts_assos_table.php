@@ -19,6 +19,8 @@ class CreateContactsAssosTable extends Migration
             $table->string('body');
             $table->integer('visibility_id')->unsigned();
             $table->foreign('visibility_id')->references('id')->on('visibilities');
+            $table->integer('asso_id')->unsigned();
+            $table->foreign('asso_id')->references('id')->on('assos');
             $table->timestamps();
         });
     }
