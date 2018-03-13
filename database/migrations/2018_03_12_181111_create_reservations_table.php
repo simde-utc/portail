@@ -23,8 +23,8 @@ class CreateReservationsTable extends Migration
 
             */
 
-            $table->timestamp('date_from');
-            $table->timestamp('date_to');
+            $table->timestamp('date_from')->nullable();
+            $table->timestamp('date_to')->nullable();
             $table->string('id_user')->references('email')->on('users');
             $table->string('comment', 250)->nullable();
             $table->enum('type', ['reunion', 'logistique', 'autre']);
