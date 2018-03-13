@@ -40,7 +40,7 @@ class Cas extends BaseAuth
 		$userArray = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess'];
 
 		// On regarde si l'utilisateur existe ou non et on le crée ou l'update
-		return $this->createOrUpdate('login', $userArray['cas:user'], [
+		return $this->updateOrCreate('login', $userArray['cas:user'], [
 			'firstname' => $userArray['cas:attributes']['cas:givenName'],
 			'lastname' 	=> $userArray['cas:attributes']['cas:sn'],
 			'email' 	=> $userArray['cas:attributes']['cas:mail'],
