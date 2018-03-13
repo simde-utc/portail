@@ -15,7 +15,7 @@ class CreateVisibilitiesTable extends Migration
     {
         Schema::create('visibilities', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name', 128)->unique();
             $table->timestamps();
         });
     }
