@@ -19,7 +19,7 @@ class CreateReservationsTable extends Migration
             $table->foreign('salle')->references('id')->on('rooms');
 
             $table->integer('asso')->unsigned();
-            $table->foreign('asso')->references('id')->on('assos')
+            $table->foreign('asso')->references('id')->on('assos');
 
             $table->timestamp('date_from')->nullable();
             $table->timestamp('date_to')->nullable();
