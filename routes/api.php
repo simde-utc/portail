@@ -26,4 +26,5 @@ Route::apiResources([
   'assos' 		=> 'AssoController',
   'assos/types' 	=> 'AssoTypeController',
   'groups'        => 'GroupController',
+  'articles'      => 'ArticleController',
 ]);
