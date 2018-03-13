@@ -18,11 +18,12 @@ class CreateEventsTable extends Migration
             $table->string('title', 128);
             $table->text('description')->nullable();
             $table->string('image', 128)->nullable();
-            $table->timestamp('date_from')->useCurrent();
-            $table->timestamp('date_to')->useCurrent();
+            $table->timestamp('from')->useCurrent();
+            $table->timestamp('to')->useCurrent();
             $table->integer('visibility_id')->unsigned();
             $table->foreign('visibility_id')->references('id')->on('visibilities');
             $table->string('place', 128)->nullable();
+
             $table->timestamps();
         });
     }

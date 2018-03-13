@@ -14,19 +14,18 @@ class CreateReservationsTable extends Migration
     public function up()
     {
         Schema::create('reservations', function (Blueprint $table) {
-            $table->string('salle')->references('numero')->on('rooms');
-            $table->string('asso');
-            $table->foreign('asso')->references('numero')->on('assos')
-
-            $table->timestamp('date_from')->nullable();
-            $table->timestamp('date_to')->nullable();
-            $table->string('id_user');
-            $table->foreign('id_user')->references('email')->on('users');
-            $table->string('comment', 250)->nullable();
-            $table->string('type');
-            $table->foreign('type')->references('id')->on('reservation_types');
-            $table->primary(['salle', 'asso']);
-
+            $table->integer('room_id')->unsigned();
+            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->integer('asso_id')->unsigned();
+            $table->foreign('asso_id')->references('id')->on('assos');
+            $table->timestamp('from')->nullable();
+            $table->timestamp('to')->nullable();
+            $table->integer('id_user')->unsigned();
+            $table->foreign('id_user')->references('id')->on('users');
+            $table->string('description', 250)->nullable();
+            $table->integer('reservation_type_id')->unsigned();
+            $table->foreign('reservation_type_id')->references('id')->on('reservation_types');
+            $table->primary(['room_id', 'asso_id']);
         });
     }
 

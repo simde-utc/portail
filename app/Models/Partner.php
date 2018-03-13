@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class reservation_type extends Model
+class Partner extends Model
 {
     //
 }
