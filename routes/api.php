@@ -27,4 +27,5 @@ Route::apiResources([
 	'rooms'			=> 'RoomController',
 	'users'			=> 'UserController',
 	'assos' 		=> 'AssoController',
+	'asso_types' 	=> 'AssoTypeController',
 ]);
