@@ -14,17 +14,24 @@ class CreateReservationsTable extends Migration
     public function up()
     {
         Schema::create('reservations', function (Blueprint $table) {
-            $table->string('salle')->references('numero')->on('rooms');
-            $table->string('asso');
-            $table->foreign('asso')->references('numero')->on('assos')
+            
+            $table->integer('salle')->unsigned();
+            $table->foreign('salle')->references('id')->on('rooms');
+
+            $table->integer('asso')->unsigned();
+            $table->foreign('asso')->references('id')->on('assos')
 
             $table->timestamp('date_from')->nullable();
             $table->timestamp('date_to')->nullable();
-            $table->string('id_user');
-            $table->foreign('id_user')->references('email')->on('users');
+
+            $table->integer('id_user')->unsigned();
+            $table->foreign('id_user')->references('id')->on('users');
+            
             $table->string('comment', 250)->nullable();
-            $table->string('type');
+            
+            $table->integer('type')->unsigned();
             $table->foreign('type')->references('id')->on('reservation_types');
+            
             $table->primary(['salle', 'asso']);
 
         });

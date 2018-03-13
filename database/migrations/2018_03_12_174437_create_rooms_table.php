@@ -16,8 +16,10 @@ class CreateRoomsTable extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->string('numero', 20);
             $table->string('name', 128);
-            $table->string('pole');
-            $table->foreign('pole')->references('login')->on('assos');
+
+            $table->integer('pole')->unsigned();
+            $table->foreign('pole')->references('id')->on('assos');
+            
             $table->primary('numero');
 
         });
