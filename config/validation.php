@@ -5,6 +5,11 @@
 |	Taille des validations
 |--------------------------------------------------------------------------
 | Utile pour les Requests et les Migrations
+| 
+| helper pour les requests :
+|		validation_between('login') 	=> donne between:1,15
+| helper pour les migrations :
+| 		validation_max('login') 		=> donne 15
 */
 
 return [
@@ -29,6 +34,12 @@ return [
 	'name' => [
 		'min' => 1,
 		'max' => 63
+	],
+
+	// Titre d'articles et d'évènements
+	'name' => [
+		'min' => 1,
+		'max' => 127
 	],
 
 	// Description courte d'assos
