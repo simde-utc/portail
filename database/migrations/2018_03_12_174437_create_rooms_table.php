@@ -14,17 +14,12 @@ class CreateRoomsTable extends Migration
     public function up()
     {
         Schema::create('rooms', function (Blueprint $table) {
-            $table->string('numero', 20);
+            $table->increments('id');
+
             $table->string('name', 128);
-            $table->string('pole', 128);
-            
-            /* LIGNE A RAJOUTER QUAND TABLE ASSO CREE
 
-            ->references('login')->on('asso');
-            
-            */
-
-            $table->primary('numero');
+            $table->integer('pole')->unsigned();
+            $table->foreign('pole')->references('id')->on('assos');
 
         });
     }

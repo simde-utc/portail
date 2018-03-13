@@ -21,8 +21,10 @@ class CreateEventsTable extends Migration
             $table->timestamp('date_from')->useCurrent();
             $table->timestamp('date_to')->useCurrent();
             $table->integer('visibility_id')->unsigned();
+
             $table->foreign('visibility_id')->references('id')->on('visibilities');
             $table->string('place', 128)->nullable();
+            
             $table->timestamps();
         });
     }
