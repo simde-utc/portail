@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC+1',
+    'timezone' => 'Europe/Paris',
 
     /*
     |--------------------------------------------------------------------------
@@ -161,7 +161,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        
+
         App\Providers\CasServiceProvider::class,
 
     ],

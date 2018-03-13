@@ -69,7 +69,7 @@ abstract class AuthService
 	/**
 	 * Crée ou ajuste les infos de l'utilisateur et son mode de connexion auth_{provider}
 	 */
-	protected function createOrUpdate($key, $value, array $userInfo = [], array $authInfo = []) {
+	protected function updateOrCreate($key, $value, array $userInfo = [], array $authInfo = []) {
 		// On cherche l'utilisateur
 		$userAuth = $this->findUser($key, $value);
 
@@ -84,8 +84,9 @@ abstract class AuthService
 	 * Crée l'utilisateur User
 	 */
 	protected function createUser(array $info) {
-		$user = User::create([
-			'email' => $info['email'],
+		$user = User::updateOrCreate([
+			'email' => $info['email']
+		], [
 		  'lastname' => $info['lastname'],
 		  'firstname' => $info['firstname'],
 		  'last_login_at' => new \DateTime(),
@@ -94,8 +95,9 @@ abstract class AuthService
 		// TODO Dans le cas où User n'aurait pas été créé
 
 		// Ajout dans les préférences
-		$userPreferences = UserPreferences::create([
+		$userPreferences = UserPreferences::updateOrCreate([
 		  'user_id' => $user->id,
+		], [
 		  'email' 	=> $user->email,
 		]);
 
@@ -127,8 +129,9 @@ abstract class AuthService
 	 * Crée la connexion auth
 	 */
 	protected function createAuth($id, array $info = []) {
-		return resolve($this->config['model'])::create(array_merge($info, [
+		return resolve($this->config['model'])::updateOrCreate(array_merge($info, [
 		  'user_id' => $id,
+		], [
 		  'last_login_at' => new \DateTime(),
 		]));
 	}
