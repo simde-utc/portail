@@ -25,9 +25,9 @@ class CreateReservationsTable extends Migration
 
             $table->timestamp('date_from')->nullable();
             $table->timestamp('date_to')->nullable();
-            $table->string('id_user')->references('email')->on('users');
+            $table->foreign('id_user')->references('email')->on('users');
             $table->string('comment', 250)->nullable();
-            $table->enum('type', ['reunion', 'logistique', 'autre']);
+            $table->foreign('type')->references('id')->on('reservation_types');
             $table->primary(['salle', 'asso']);
 
         });
