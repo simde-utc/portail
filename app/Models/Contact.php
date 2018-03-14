@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Contact extends Model
 {
     public function contactable() {
-        return $this->morphTo(); 
+        return $this->morphTo();
+    }
+
+    public function type() {
+        return $this->belongsTo('App\Models\ContactType');
     }
 }

@@ -15,8 +15,10 @@ class CreateContactsTable extends Migration
 	{
 		Schema::create('contacts', function (Blueprint $table) {
 			$table->increments('id');
-			$table->string('type', validation_max('string'));       // TODO taille
-			$table->string('body');                                 // TODO
+			$table->string('body', validation_max('url'));
+			$table->string('description', validation_max('string'));
+			$table->integer('contact_type_id')->unsigned();
+			$table->foreign('contact_type_id')->references('id')->on('contacts_types');
 			$table->integer('visibility_id')->unsigned();
 			$table->foreign('visibility_id')->references('id')->on('visibilities');
 			$table->integer('contactable_id')->unsigned();
