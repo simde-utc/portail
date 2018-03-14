@@ -14,14 +14,19 @@ class UsersTableSeeder extends Seeder
     {
         $users = [
             [
-                'email' => 'remy.huet@etu.utc.fr',
+                'email'     => 'remy.huet@etu.utc.fr',
                 'firstname' => 'Rémy',
-                'lastname' => 'Huet'
+                'lastname'  => 'Huet'
             ],
             [
-                'email' => 'samy.nastuzzi@etu.utc.fr',
+                'email'     => 'samy.nastuzzi@etu.utc.fr',
                 'firstname' => 'Samy',
-                'lastname' => 'Nastuzzi'
+                'lastname'  => 'Nastuzzi'
+            ],
+            [
+                'email'     => 'natan.danous@etu.utc.fr',
+                'firstname' => 'Natan',
+                'lastname'  => 'Danous'
             ]
         ];
 

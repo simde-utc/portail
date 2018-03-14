@@ -15,7 +15,7 @@ class GroupRequest extends FormRequest
     {
         $group = Group::find($this->route('group'));
 
-        return $group && $group->is_active && $group->user_id = $this->user();
+        return $group && $group->is_active && $group->user_id = $this->user()->user_id;
         // true si ce groupe existe, il est actif et l'utilisateur est le créateur du groupe.
     }
 
@@ -30,7 +30,8 @@ class GroupRequest extends FormRequest
         return [
             'name'          => 'required|string|between:1,64',
             'icon'          => 'required|string|between:3,191',
-            'is_public'     => 'required|boolean'
+            'visibility'    => 'required|string|between:1,128',
+            'is_active'     => 'required|boolean',
         ];
     }
 }

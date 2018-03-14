@@ -33,6 +33,9 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         $group = Group::create($request->input());
+        
+        // TODO: Sync Relationships
+
         if ($group)
             return response()->json($group, 200);
         else
@@ -64,6 +67,9 @@ class GroupController extends Controller
     public function update(GroupRequest $request, $id)
     {
         $group = Group::find($id);
+        
+        // TODO: Sync Relationships
+
         $group = Group::update($request->input());
         if ($group)
             return response()->json($group, 200);

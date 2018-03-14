@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
 			AssosTypesTableSeeder::class,
 			UsersTableSeeder::class,
 			VisibilitiesTableSeeder::class,
+			GroupsTableSeeder::class,
 		]);
 	}
 }

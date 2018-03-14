@@ -19,4 +19,8 @@ class Visibility extends Model
     public function events() {
         return $this->hasMany('App\Models\Event');
     }
+
+    public function groups() {
+        return $this->hasMany('App\Models\Group');
+    }
 }

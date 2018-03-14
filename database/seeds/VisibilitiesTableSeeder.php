@@ -12,7 +12,7 @@ class VisibilitiesTableSeeder extends Seeder
      */
     public function run()
     {
-        $visibilities = ['public', 'logged', 'cas', 'contributor']; // Visibilité contributor = cotisant
+        $visibilities = ['public', 'logged', 'cas', 'contributor', 'private']; // Visibilité contributor = cotisant
 
         foreach ($visibilities as $visibility) {
             Visibility::create([
