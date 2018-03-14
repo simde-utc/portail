@@ -18,7 +18,7 @@ class CreateArticlesTable extends Migration
 			$table->string('title', validation_max('title'));
 			$table->longText('content', validation_max('article'));
 			$table->string('image', validation_max('url'));
-			$table->boolean('toBePublished');
+			$table->boolean('toBePublished')->default(false);
 			$table->integer('visibility_id')->unsigned();
 			$table->foreign('visibility_id')->references('id')->on('visibilities');
 			$table->timestamps();
