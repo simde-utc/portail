@@ -29,10 +29,13 @@ class RoomController extends Controller
     public function store(RoomRequest $request)
     {
         $room = Room::create($request->input());
-        if($asso)
+        if($room)
+        {
+            $room->save();
             return response()->json($room, 200);
+        }
         else
-                return response()->json(["message" => "Impossible de créer l'association"], 500);
+                return response()->json(["message" => "Impossible de créer la salle"], 500);
     }
 
     /**
@@ -43,7 +46,12 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        
+        $room = Room::find($id);
+
+        if($room)
+            return response()->json($room, 200);
+        else
+            return response()->json(["message" => "Impossible de trouver la salle"], 500);
     }
 
     /**
@@ -53,9 +61,29 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RoomRequest $request, $id)
     {
-        //
+        $room = Room::find($id);
+
+        if($room)
+        {
+            //$room = Room::update($request->input());
+
+            /*$room->name = $request->input('name');
+            $room->asso_id = $request->input('asso_id');
+
+            $romm->save();
+
+            $room->update($request->input());
+
+            */
+
+            return response()->json($room, 200);
+        }
+        else
+            return reponse()->json(["message" => "Impossible de trouver la salle"], 500);
+
+
     }
 
     /**
@@ -66,6 +94,14 @@ class RoomController extends Controller
      */
     public function destroy($id)
     {
-        //
+       $room = Room::find($id);
+
+        if ($room)
+        {
+            $room->delete();
+            return response()->json([], 200);
+        }
+        else
+            return response()->json(["message" => "Impossible de trouver la salle"], 500);
     }
 }

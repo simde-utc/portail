@@ -28,3 +28,6 @@ Route::apiResources([
 	'rooms'			=> 'RoomController',
 ]);
 
+
+
+
