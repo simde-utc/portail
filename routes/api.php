@@ -29,3 +29,4 @@ Route::apiResources([
 	'assos' 		=> 'AssoController',
 	'asso_types' 	=> 'AssoTypeController',
 ]);
+
