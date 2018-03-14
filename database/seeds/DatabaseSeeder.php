@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
 			UsersTableSeeder::class,
 			VisibilitiesTableSeeder::class,
 			ContactsTypesTableSeeder::class,
+			GroupsTableSeeder::class,
 		]);
 	}
 }
