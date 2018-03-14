@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Group;
-//use App\Http\Requests\GroupRequest;
+use App\Http\Requests\GroupRequest;
 
 class GroupController extends Controller
 {
@@ -61,14 +61,14 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(GroupRequest $request, $id)
     {
         $group = Group::find($id);
+        $group = Group::update($request->input());
         if ($group)
-            $group = Group::update($request->input());
             return response()->json($group, 200);
         else
-            return response()->json(["message" => "Impossible de trouver le groupe"], 500);
+            return response()->json(["message" => "Impossible de modifier le groupe"], 500);
     }
 
     /**
