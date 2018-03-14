@@ -9,8 +9,8 @@ class Visibility extends Model
     protected $table = 'visibilities';
 
     protected $fillable = [
-        'name',
-        ];
+        'name', 'parent_id',
+    ];
 
     public function articles() {
         return $this->hasMany('App\Models\Article');
@@ -20,7 +20,6 @@ class Visibility extends Model
         return $this->hasMany('App\Models\Event');
     }
 
-    public function groups() {
-        return $this->hasMany('App\Models\Group');
-    }
+    // TODO les liens vers les modèles
+    // TODO générer isVisibible($user_id) en fonction des droits de la personne de visibilité (passer par un service ?)
 }

@@ -6,27 +6,29 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateVisibilitiesTable extends Migration
 {
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('visibilities', function (Blueprint $table) {
-			$table->increments('id');
-			$table->string('name', validation_max('name'))->unique();
-			$table->timestamps();
-		});
-	}
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('visibilities', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name')->unique();
+      			$table->integer('parent_id')->unsigned()->nullable();
+      			$table->foreign('parent_id')->references('id')->on('visibilities');
+            $table->timestamps();
+        });
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::dropIfExists('visibilities');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('visibilities');
+    }
 }

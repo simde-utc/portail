@@ -12,11 +12,13 @@ class VisibilitiesTableSeeder extends Seeder
      */
     public function run()
     {
-        $visibilities = ['public', 'logged', 'cas', 'contributor', 'private']; // Visibilité contributor = cotisant
+        // Visibilités possibles, du plus permissif au moins permissif
+        $visibilities = ['public', 'logged', 'cas', 'contributor', 'private', 'owner']; // Visibilité contributor = cotisant
 
-        foreach ($visibilities as $visibility) {
+        foreach ($visibilities as $key => $visibility) {
             Visibility::create([
               'name' => $visibility,
+              'parent_id' => ($key === 0 ? null : Visibility::where('name', $visibilities[$key - 1])->first()->id),
             ]);
         }
     }
