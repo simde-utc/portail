@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use App\Models\UserPreferences;
+use App\Models\UserPreference;
 
 abstract class BaseAuth
 {
@@ -95,7 +95,7 @@ abstract class BaseAuth
 		// TODO Dans le cas où User n'aurait pas été créé
 
 		// Ajout dans les préférences
-		$userPreferences = UserPreferences::updateOrCreate([
+		$userPreferences = UserPreference::updateOrCreate([
 		  'user_id' => $user->id,
 		], [
 		  'email' 	=> $user->email,

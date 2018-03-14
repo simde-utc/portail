@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class UsersTableSeeder extends Seeder
 {
@@ -24,8 +24,9 @@ class UsersTableSeeder extends Seeder
                 'lastname' => 'Nastuzzi'
             ]
         ];
+
         foreach ($users as $user => $values){
-            DB::table('users')->insert($values);
+            User::create($values);
         }
     }
 }

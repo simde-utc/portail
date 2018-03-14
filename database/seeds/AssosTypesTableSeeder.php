@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+use App\Models\AssoType;
 
 class AssosTypesTableSeeder extends Seeder
 {
@@ -13,21 +12,18 @@ class AssosTypesTableSeeder extends Seeder
      */
     public function run()
     {
-
-	    $types = [
-		    '1901' => 'association loi 1901',
-		    'commission' => 'commission',
-		    'club' => 'club',
-		    'projet' => 'projet'
-	    ];
+  	    $types = [
+  		    '1901' => 'Association loi 1901',
+  		    'commission' => 'Commission',
+  		    'club' => 'Club',
+  		    'projet' => 'Projet',
+  	    ];
 
         foreach ($types as $type => $description) {
-		DB::table('assos_types')->insert([
-			'name' => $type,
-			'description' => $description,
-			'created_at' => Carbon::now(),
-			'updated_at' => Carbon::now()
-		]);
-	}
+        		AssoType::create([
+        			'name' => $type,
+        			'description' => $description,
+        		]);
+      	}
     }
 }
