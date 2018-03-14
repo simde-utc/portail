@@ -54,7 +54,7 @@ class ContactsTypesTableSeeder extends Seeder
 
         foreach ($types as $type) {
             $type['visibility_id'] = Visibility::where([
-              'name' => $type['visibility_id']
+              'type' => $type['visibility_id']
             ])->first()->id;
 
             ContactType::create($type);

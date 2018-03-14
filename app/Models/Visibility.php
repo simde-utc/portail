@@ -9,7 +9,7 @@ class Visibility extends Model
     protected $table = 'visibilities';
 
     protected $fillable = [
-        'name', 'parent_id',
+        'type', 'name', 'parent_id',
     ];
 
     public function articles() {
