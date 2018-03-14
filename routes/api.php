@@ -24,7 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Illuminate\Http\Request $r
 Route::apiResources([
 	'users'			=> 'UserController',
 	'assos' 		=> 'AssoController',
-	'asso_types' 	=> 'AssoTypeController',
+	'assos/types' 	=> 'AssoTypeController',
     'groups'        => 'GroupController',
 ]);
 
