@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Group;
 use App\Http\Requests\GroupRequest;
+use App\Services\Visible;
 
 class GroupController extends Controller
 {
@@ -20,8 +21,8 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = Group::where('is_public', 1)->where('is_active', 1)->get();
-        return response()->json($groups, 200);
+        $groups = Group::where('is_active', 1)->get();
+        return response()->json(Visible::checkCollection($groups), 200);
     }
 
     /**
@@ -33,7 +34,7 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         $group = Group::create($request->input());
-        
+
         // TODO: Sync Relationships
 
         if ($group)
@@ -67,7 +68,7 @@ class GroupController extends Controller
     public function update(GroupRequest $request, $id)
     {
         $group = Group::find($id);
-        
+
         // TODO: Sync Relationships
 
         $group = Group::update($request->input());

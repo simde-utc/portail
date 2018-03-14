@@ -19,14 +19,14 @@ class GroupsTableSeeder extends Seeder
                 'user_id'       => User::find(2)->id,
                 'name'          => 'LA13 Forever',
                 'icon'          => '',
-                'visibility_id' => Visibility::where('name', 'public')->first()->id,
+                'visibility_id' => Visibility::where('type', 'public')->first()->id,
                 'is_active'     => 1,
             ],
             [
                 'user_id'       => User::find(3)->id,
                 'name'          => 'Coloc',
                 'icon'          => '',
-                'visibility_id' => Visibility::where('name', 'private')->first()->id,
+                'visibility_id' => Visibility::where('type', 'private')->first()->id,
                 'is_active'     => 1,
             ],
         ];
