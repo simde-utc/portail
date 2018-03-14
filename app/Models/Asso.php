@@ -31,11 +31,11 @@ class Asso extends Model
 	}
 
 	public function rooms() {
-		// hasMany
+		return $this->hasMany('App\Models\Room');
 	}
 
 	public function reservations() {
-		// hasMany
+		return $this->hasMany('App\Models\Reservations');
 	}
 
 	public function articles() {
@@ -43,7 +43,7 @@ class Asso extends Model
 	}
 
 	public function events() {
-		// belongsToMany
+		return $this->belongsToMany('App\Models\Event');
 	}
 
 	public function parent() {
