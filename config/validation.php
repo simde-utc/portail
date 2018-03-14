@@ -37,7 +37,7 @@ return [
 	],
 
 	// Titre d'articles et d'évènements
-	'name' => [
+	'title' => [
 		'min' => 1,
 		'max' => 127
 	],
