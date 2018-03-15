@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Group;
 use App\Http\Requests\GroupRequest;
-use App\Services\Visible;
+use App\Services\Visible\Visible;
 
 class GroupController extends Controller
 {

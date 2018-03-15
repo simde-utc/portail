@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Visible;
 
 use Auth;
 use App\Models\Visibility;
@@ -18,24 +18,15 @@ class Visible {
 		if (get_class($collection) === 'Illuminate\Database\Eloquent\Collection') {
 			foreach ($collection as $key => $model) {
 				if (!self::isVisible($visibilities, $model, $user_id)) {
-					$collection[$key] = [
-						'id' => $model->id,
-						'hidden' => true,
-						'visibility' => $visibilities->find($model->visibility_id),
-					];
+					$collection[$key] = self::hideData($model, $visibilities);
 				}
 			}
 
 			return $collection;
 		}
 		else {
-			if (!self::isVisible($visibilities, $collection, $user_id)) {
-				return [
-					'id' => $collection->id,
-					'hidden' => true,
-					'visibility' => $visibilities->find($collection->visibility_id),
-				];
-			}
+			if (!self::isVisible($visibilities, $collection, $user_id))
+				return self::hideData($collection, $visibilities);
 			else
 				return $collection;
 		}
@@ -53,6 +44,35 @@ class Visible {
 	 */
 	public static function without($collection, $user_id = null) {
 	    return self::remove($collection, $user_id, true);
+	}
+
+	/**
+	 *  Fonction renvoyant uniquement les non-visibles avec les infos cachés
+	 */
+	public static function hideAndWithout($collection, $user_id = null) {
+		if ($user_id === null && Auth::user() !== null)
+			$user_id = Auth::user()->id;
+
+		$visibilities = Visibility::get();
+
+		if (get_class($collection) === 'Illuminate\Database\Eloquent\Collection') {
+			foreach ($collection as $key => $model) {
+				if (!self::isVisible($visibilities, $model, $user_id)) {
+					$collection[$key] = self::hideData($model, $visibilities);
+				}
+				else
+					$collection->forget($key);
+			}
+
+			return $collection;
+		}
+		else {
+			if (!self::isVisible($visibilities, $collection, $user_id)) {
+				return self::hideData($collection, $visibilities);
+			}
+			else
+				return null;
+		}
 	}
 
     /**
@@ -80,6 +100,17 @@ class Visible {
 		}
     }
 
+    /**
+     *  Fonction retirant les modèles à ne pas afficher
+     */
+    protected static function hideData($model, $visibilities) {
+        return [
+			'id' => $model->id,
+			'hidden' => true,
+			'visibility' => $visibilities->find($model->visibility_id),
+		];
+    }
+
 	/**
 	 *  Fonction permettant d'indiquer si la ressource peut-être visible ou non pour la personne
 	 *  @return boolean
@@ -92,10 +123,10 @@ class Visible {
 
 		if ($visibility_id === null)
 			$visibility_id = $visibilities->first()->id;
-/*
+
 		if ($user_id === null)
 			return $visibilities->find($visibility_id)->type === 'public'; // Si on est pas co, on check si la visibilité est publique ou non
-*/
+
 		while ($visibility_id !== null) {
 			$visibility = $visibilities->find($visibility_id);
 
@@ -130,7 +161,12 @@ class Visible {
 	}
 
 	protected static function isPrivate($model, $user_id) {
-		$memberModel = resolve(get_class($model).'Member'); // En faisant ça, on optimise notre requête SQL en évitant de trier la liste des membres
+		try {
+			$memberModel = resolve(get_class($model).'Member'); // En faisant ça, on optimise notre requête SQL en évitant de trier la liste des membres
+		}
+		catch (Exception $e) {
+			$memberModel = null;
+		}
 
 		return $memberModel !== null && $memberModel::where('user_id', $user_id)->exists() > 0;
 	}
