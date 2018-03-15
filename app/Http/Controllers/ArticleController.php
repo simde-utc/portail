@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArticleRequest;
 use Illuminate\Http\Request;
 use App\Models\Article;
 
@@ -24,9 +25,13 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ArticleRequest $request)
     {
-        //
+        $article = Article::create($request);
+        if ($article)
+        	return response()->json($article, 200);
+        else
+        	return response()->json(['message' => 'impossible de créer l\'article'], 500);
     }
 
     /**
