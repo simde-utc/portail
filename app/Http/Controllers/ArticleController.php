@@ -57,9 +57,13 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(ArticleRequest $request, $id){
+		$article = Article::find($id);
+		$modified = $article->update($request->input());
+		if ($modified)
+			return response()->json($article, 200);
+		else
+			return response()->json(['message'=>'impossible de modifier l\'article'],500);
     }
 
     /**
@@ -70,6 +74,6 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-        //
+    	//TODO : delete foreign references before. Cascade ?
     }
 }
