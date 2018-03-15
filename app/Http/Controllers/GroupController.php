@@ -22,7 +22,7 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::where('is_active', 1)->get();
-        return response()->json(Visible::checkCollection($groups), 200);
+        return response()->json(Visible::hide($groups), 200);
     }
 
     /**

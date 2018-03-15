@@ -12,6 +12,10 @@ class Visibility extends Model
         'type', 'name', 'parent_id',
     ];
 
+	protected $hidden = [
+		'created_at', 'updated_at',
+	];
+
     public function articles() {
         return $this->hasMany('App\Models\Article');
     }

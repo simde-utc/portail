@@ -12,7 +12,7 @@ class VisibilitiesTableSeeder extends Seeder
      */
     public function run()
     {
-        // Visibilités possibles, du plus permissif au moins permissif
+        // Visibilités possibles, du moins permissif au plus permissif
         $visibilities = [
             [
                 'type' => 'public',
@@ -41,10 +41,10 @@ class VisibilitiesTableSeeder extends Seeder
         ];
 
         foreach ($visibilities as $key => $visibility) {
-            Visibility::create(array_add(
-              $visibility,
-              'parent_id', ($key === 0 ? null : Visibility::where('type', $visibilities[$key - 1]['type'])->first()->id))
-            );
+            $id = Visibility::create($visibility)->id;
+
+			if ($key !== 0)
+				Visibility::where('type', $visibilities[$key - 1]['type'])->update(['parent_id' => $id]);
         }
     }
 }
