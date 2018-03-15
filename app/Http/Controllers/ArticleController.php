@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
 use App\Http\Requests\ArticleRequest;
-=======
->>>>>>> Ajout des routes de bases pour le controller. Implémeentation de index().
 use Illuminate\Http\Request;
 use App\Models\Article;
 
