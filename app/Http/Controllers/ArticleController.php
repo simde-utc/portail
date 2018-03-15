@@ -27,7 +27,7 @@ class ArticleController extends Controller
      */
     public function store(ArticleRequest $request)
     {
-        $article = Article::create($request);
+        $article = Article::create($request->input());
         if ($article)
         	return response()->json($article, 200);
         else
