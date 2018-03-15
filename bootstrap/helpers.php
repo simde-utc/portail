@@ -8,7 +8,7 @@ if (!function_exists('validation_between')) {
 	 */
 	function validation_between(string $id) {
 		$values = config("validation.$id");
-		return "between:" . $values['min'] . "," . $values['min'];
+		return "between:" . $values['min'] . "," . $values['max'];
 	}
 }
 
