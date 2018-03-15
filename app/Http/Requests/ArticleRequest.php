@@ -26,7 +26,7 @@ class ArticleRequest extends FormRequest
         return [
 			'title' => 'required|string|'.validation_between('title'),
 	        'content' => 'required|string|'.validation_between('article'),
-	        'image' => 'required|image|'.validation_between('url'),
+	        'image' => 'image|'.validation_between('url'),
 	        'toBePublished' => 'boolean',
 	        'visibility_id' => 'required|integer|exists:visibilities,id',
         ];
