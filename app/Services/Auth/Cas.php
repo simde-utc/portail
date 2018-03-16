@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use Ginger;
 use App\Models\AuthCas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,16 +38,21 @@ class Cas extends BaseAuth
 		if (!isset($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']))
 			return redirect()->route('login', ['provider' => $this->name])->withError('Données du CAS reçues invalides');	// TODO
 
-		$userArray = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess'];
+		$login = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'];
+
+		$user = Ginger::user('snastuzz');
+
+		if (!$user->exists())
+			return redirect('home')->withError('Une erreur a été rencontrée avec Ginger (erreur '.$user->getResponseCode().'). Il est impossible de vous identifier');
 
 		// On regarde si l'utilisateur existe ou non et on le crée ou l'update
-		return $this->updateOrCreate('login', $userArray['cas:user'], [
-			'firstname' => $userArray['cas:attributes']['cas:givenName'],
-			'lastname' 	=> $userArray['cas:attributes']['cas:sn'],
-			'email' 	=> $userArray['cas:attributes']['cas:mail'],
+		return $this->updateOrCreate('login', $user->getLogin(), [
+			'firstname' => $user->getFirstname(),
+			'lastname' 	=> $user->getLastname(),
+			'email' 	=> $user->getEmail(),
 		], [
-			'login' => $userArray['cas:user'],
-			'email' => $userArray['cas:attributes']['cas:mail'],
+			'login' => $user->getLogin(),
+			'email' => $user->getEmail(),
 		]);
 	}
 
@@ -58,7 +64,7 @@ class Cas extends BaseAuth
 			$userAuth->is_active = 1;
 			$userAuth->save();
 
-			return redirect('home')->withSuccess('Vous êtes maintenant considéré.e comme un.e étudiant.e'); // TODO: taper sur Ginger pour désactiver ou non le compte CAS
+			return redirect('home')->withSuccess('Vous êtes maintenant considéré.e comme un.e étudiant.e');
 		}
 		else
 			return redirect('home');

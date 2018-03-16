@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use Ginger;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,11 +43,11 @@ class Password extends BaseAuth
 	protected function success($user, $userAuth) {
 		$casAuth = $user->cas;
 
-		if ($casAuth !== null && $casAuth->is_active) {
+		if ($casAuth !== null && $casAuth->is_active && !Ginger::userExists($casAuth->login)) { // Si l'utilisateur n'existe plus auprès de Ginger, on peut désactiver son compte
 			$casAuth->is_active = 0;
 			$casAuth->save();
 
-			return redirect('home')->withSuccess('Vous êtes maintenant considéré.e comme un.e Tremplin'); // TODO: taper sur Ginger pour désactiver ou non le compte CAS
+			return redirect('home')->withSuccess('Vous êtes maintenant considéré.e comme un.e Tremplin');
 		}
 		else
 			return redirect('home');
@@ -56,6 +57,6 @@ class Password extends BaseAuth
 	 * Redirige vers la bonne page en cas d'erreur
 	 */
 	protected function error($user, $userAuth) {
-		return redirect()->route('login', ['provider' => $this->name])->withError('L\'adresse email et/ou le mot de passe est incorrecte');	// TODO
+		return redirect()->route('login', ['provider' => $this->name])->withError('L\'adresse email et/ou le mot de passe est incorrecte');
 	}
 }
