@@ -29,6 +29,7 @@ class ArticleRequest extends FormRequest
 	        'image' => 'image|'.validation_between('url'),
 	        'toBePublished' => 'boolean',
 	        'visibility_id' => 'required|integer|exists:visibilities,id',
+	        'asso_id' => 'required|integer|exists:assos,id',
         ];
     }
 }
