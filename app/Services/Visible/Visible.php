@@ -6,9 +6,15 @@ use Auth;
 use Ginger;
 use App\Models;
 
+/**
+ * Fonction permettant de traiter la visibilité des informations
+ */
 class Visible {
     /**
-     *  Fonction cachant les infos dont nous n'avons pas la visibilité
+     * Fonction permettant de renvoyer toutes les informations tout en cachant celles privées
+     * @param  Collection/Model $collection Collection ou modèle sur lequel travailler
+     * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
+     * @return Collection/Model Collection ou modèle avec les informations privées cachées
      */
     public static function hide($collection, $user_id = null) {
         if ($user_id === null && Auth::user() !== null)
@@ -19,7 +25,7 @@ class Visible {
 		if (get_class($collection) === 'Illuminate\Database\Eloquent\Collection') {
 			foreach ($collection as $key => $model) {
 				if (!self::isVisible($visibilities, $model, $user_id)) {
-					$collection[$key] = self::hideData($model, $visibilities);
+					$collection[$key] = self::hideData($visibilities, $model);
 				}
 			}
 
@@ -27,28 +33,37 @@ class Visible {
 		}
 		else {
 			if (!self::isVisible($visibilities, $collection, $user_id))
-				return self::hideData($collection, $visibilities);
+				return self::hideData($visibilities, $collection);
 			else
 				return $collection;
 		}
     }
 
 	/**
-	 *  Fonction renvoyant uniquement les visibles
+	 * Fonction permettant de renvoyer toutes les informations visibles
+	 * @param  Collection/Model $collection Collection ou modèle sur lequel travailler
+	 * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
+	 * @return Collection/Model Collection ou modèle visible
 	 */
 	public static function with($collection, $user_id = null) {
 	    return self::remove($collection, $user_id, false);
 	}
 
 	/**
-	 *  Fonction renvoyant uniquement les non-visibles
+	 * Fonction permettant de renvoyer toutes les informations non-visibles
+	 * @param  Collection/Model $collection Collection ou modèle sur lequel travailler
+	 * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
+	 * @return Collection/Model Collection ou modèle non-visible
 	 */
 	public static function without($collection, $user_id = null) {
 	    return self::remove($collection, $user_id, true);
 	}
 
 	/**
-	 *  Fonction renvoyant uniquement les non-visibles avec les infos cachés
+	 * Fonction permettant de renvoyer toutes les informations non-visibles et cachées
+	 * @param  Collection/Model $collection Collection ou modèle sur lequel travailler
+	 * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
+	 * @return Collection/Model Collection ou modèle non-visible avec les informations cachées
 	 */
 	public static function hideAndWithout($collection, $user_id = null) {
 		if ($user_id === null && Auth::user() !== null)
@@ -59,7 +74,7 @@ class Visible {
 		if (get_class($collection) === 'Illuminate\Database\Eloquent\Collection') {
 			foreach ($collection as $key => $model) {
 				if (!self::isVisible($visibilities, $model, $user_id)) {
-					$collection[$key] = self::hideData($model, $visibilities);
+					$collection[$key] = self::hideData($visibilities, $model);
 				}
 				else
 					$collection->forget($key);
@@ -69,16 +84,20 @@ class Visible {
 		}
 		else {
 			if (!self::isVisible($visibilities, $collection, $user_id)) {
-				return self::hideData($collection, $visibilities);
+				return self::hideData($visibilities, $collection);
 			}
 			else
 				return null;
 		}
 	}
 
-    /**
-     *  Fonction retirant les modèles à ne pas afficher
-     */
+	/**
+	 * Fonction permettant de retirer toutes les informations visbiles ou non-visibles
+	 * @param  Collection/Model $collection Collection ou modèle sur lequel travailler
+	 * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
+	 * @param  boolean  $visible    Indique quel type d'infos à supprimer
+	 * @return Collection/Model Collection ou modèle visible ou non-visible
+	 */
     protected static function remove($collection, $user_id, $visible) {
         if ($user_id === null && Auth::user() !== null)
 			$user_id = Auth::user()->id;
@@ -101,10 +120,13 @@ class Visible {
 		}
     }
 
-    /**
-     *  Fonction retirant les modèles à ne pas afficher
-     */
-    protected static function hideData($model, $visibilities) {
+	/**
+	 * Fonction permettant de cacher les infos d'un modèle
+	 * @param  Collection $visibilities Liste des visibilités
+	 * @param  Model $model        Model sur lequel travailler
+	 * @return Model               Liste des infos cachées
+	 */
+    protected static function hideData($visibilities, $model) {
         return [
 			'id' => $model->id,
 			'hidden' => true,
@@ -114,7 +136,10 @@ class Visible {
 
 	/**
 	 *  Fonction permettant d'indiquer si la ressource peut-être visible ou non pour la personne
-	 *  @return boolean
+	 * @param  Collection $visibilities Liste des visibilités
+	 * @param  Model $model        Model sur lequel travailler
+	 * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
+	 *  @return boolean	           Visible ou non
 	 */
 	protected static function isVisible($visibilities, $model, $user_id = null) {
 		if ($visibilities === null || $visibilities->count() === 0 || $visibilities === null)

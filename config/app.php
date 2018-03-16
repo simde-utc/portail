@@ -165,7 +165,6 @@ return [
 		/*
 		 * Ginger Providers...
 		 */
-
  		Ixudra\Curl\CurlServiceProvider::class,
 		App\Providers\GingerServiceProvider::class,
 	],
@@ -218,6 +217,7 @@ return [
 		'URL' => Illuminate\Support\Facades\URL::class,
 		'Validator' => Illuminate\Support\Facades\Validator::class,
 		'View' => Illuminate\Support\Facades\View::class,
+		'Visible' => App\Services\Visible::class,
 
 	],
 
