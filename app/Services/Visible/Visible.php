@@ -3,7 +3,8 @@
 namespace App\Services\Visible;
 
 use Auth;
-use App\Models\Visibility;
+use Ginger;
+use App\Models;
 
 class Visible {
     /**
@@ -13,7 +14,7 @@ class Visible {
         if ($user_id === null && Auth::user() !== null)
 			$user_id = Auth::user()->id;
 
-		$visibilities = Visibility::get();
+		$visibilities = Models\Visibility::all();
 
 		if (get_class($collection) === 'Illuminate\Database\Eloquent\Collection') {
 			foreach ($collection as $key => $model) {
@@ -53,7 +54,7 @@ class Visible {
 		if ($user_id === null && Auth::user() !== null)
 			$user_id = Auth::user()->id;
 
-		$visibilities = Visibility::get();
+		$visibilities = Models\Visibility::all();
 
 		if (get_class($collection) === 'Illuminate\Database\Eloquent\Collection') {
 			foreach ($collection as $key => $model) {
@@ -82,7 +83,7 @@ class Visible {
         if ($user_id === null && Auth::user() !== null)
 			$user_id = Auth::user()->id;
 
-		$visibilities = Visibility::get();
+		$visibilities = Models\Visibility::all();
 
 		if (get_class($collection) === 'Illuminate\Database\Eloquent\Collection') {
 			foreach ($collection as $key => $model) {
@@ -149,15 +150,15 @@ class Visible {
 	}
 
 	protected static function isLogged($model, $user_id) {
-		return $user_id !== null;
+		return User::find($user_id)->exists();
 	}
 
 	protected static function isCas($model, $user_id) {
-		return self::isLogged($model, $user_id) && AuthCas::find($user_id)->exists();
+		return self::isLogged($model, $user_id) && Models\AuthCas::find($user_id)->exists();
 	}
 
 	protected static function isContributor($model, $user_id) {
-		return self::isCas($model, $user_id) && false; // TODO avec Ginger
+		return self::isCas($model, $user_id) && Ginger::userExists(Models\AuthCas::find($user_id)->login);
 	}
 
 	protected static function isPrivate($model, $user_id) {

@@ -11,6 +11,22 @@ class Ginger {
 	protected const URL = 'https://assos.utc.fr/ginger/v1/';
 	protected $user;
 	protected $responseCode;
+	protected $key;
+
+	/**
+	 * Crée la classe avec la clé du portail par défaut
+	 */
+	public function __construct() {
+		$this->key = config('app.ginger_key');
+	}
+
+	/**
+	 * Change la clé utilisée
+	 * @param string $key Clé Ginger donnée
+	 */
+	public function setKey($key) {
+		$this->key = $key;
+	}
 
 	/**
 	 * Permet de récupérer auprès de Ginger un login précis
@@ -27,6 +43,22 @@ class Ginger {
 		$this->user = $this->responseCode === 200 ? $response->content : null;
 
 		return $this;
+	}
+
+	/**
+	 * Permet de récupérer directement auprès de Ginger un login précis
+	 * @param  string $login Login UTC
+	 * @return array        Retourne l'ensemble des données de l'utilisateur
+	 */
+	public function getUser($login) {
+		$response = self::call(
+			'GET',
+			$login
+		);
+
+		$this->responseCode = $response === null ? null : $response->status;
+
+	 	return $this->responseCode === 200 ? $response->content : null;
 	}
 
 	/**
@@ -49,6 +81,25 @@ class Ginger {
 	}
 
 	/**
+	 * Permet de récupérer auprès de Ginger le code de réponse pour un login précis
+	 * @param  string $login Login UTC
+	 * @return int        Retourne la code de réponse
+	 */
+	public function responseCode($login) {
+		$this->user($login);
+
+		return $this->responseCode;
+	}
+
+	/**
+	 * Permet de récupérer auprès de Ginger le code de réponse pour un login précis
+	 * @return int        Retourne la code de réponse
+	 */
+	public function getResponseCode() {
+		return $this->responseCode;
+	}
+
+	/**
 	 * Renvoie l'utlisateur si existance de celui-ci
 	 * @return array
 	 */
@@ -60,7 +111,7 @@ class Ginger {
 	 * Renvoie le login de l'utilisateur si existant
 	 * @return string Ressource demandée
 	 */
-	public function getUsername() {
+	public function getLogin() {
 		return ($this->user === null ? null : $this->user->login);
 	}
 
@@ -128,11 +179,13 @@ class Ginger {
 	 * @return object         Contient la réponse mais aussi le code HTTP et quelques headers
 	 */
 	protected function call($method, $route, $params = []) {
-		$key = config('app.ginger_key');
-		$curl = Curl::to(self::URL.$route.'?key='.$key)
+		$curl = Curl::to(self::URL.$route.'?key='.$this->key)
 			->withData($params)
 			->asJson()
 			->returnResponseObject();
+
+		if (strpos($_SERVER['HTTP_HOST'], 'utc.fr'))
+			$curl = $curl->withProxy('proxyweb.utc.fr', 3128);
 
 		if ($method === 'POST')
 			$response = $curl->post();
