@@ -1,4 +1,5 @@
 <?php
+use App\Providers\GingerServiceProvider;
 
 return [
 
@@ -150,7 +151,6 @@ return [
 		/*
 		 * Package Service Providers...
 		 */
-		
 		Spatie\Permission\PermissionServiceProvider::class,
 
 		/*
@@ -162,6 +162,12 @@ return [
 		App\Providers\EventServiceProvider::class,
 		App\Providers\RouteServiceProvider::class,
 
+		/*
+		 * Ginger Providers...
+		 */
+
+ 		Ixudra\Curl\CurlServiceProvider::class,
+		App\Providers\GingerServiceProvider::class,
 	],
 
 	/*
@@ -187,11 +193,13 @@ return [
 		'Config' => Illuminate\Support\Facades\Config::class,
 		'Cookie' => Illuminate\Support\Facades\Cookie::class,
 		'Crypt' => Illuminate\Support\Facades\Crypt::class,
+        'Curl' => Ixudra\Curl\Facades\Curl::class,
 		'DB' => Illuminate\Support\Facades\DB::class,
 		'Eloquent' => Illuminate\Database\Eloquent\Model::class,
 		'Event' => Illuminate\Support\Facades\Event::class,
 		'File' => Illuminate\Support\Facades\File::class,
 		'Gate' => Illuminate\Support\Facades\Gate::class,
+		'Ginger' => App\Facades\Ginger::class,
 		'Hash' => Illuminate\Support\Facades\Hash::class,
 		'Lang' => Illuminate\Support\Facades\Lang::class,
 		'Log' => Illuminate\Support\Facades\Log::class,
@@ -213,4 +221,5 @@ return [
 
 	],
 
+	'ginger_key' => env('GINGER_KEY'),
 ];
