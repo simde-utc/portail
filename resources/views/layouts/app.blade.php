@@ -13,55 +13,69 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+<body style="margin-top: 55px; margin-bottom: 33px; overflow: hidden">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-                        @auth
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ Auth::user()->lastname }} {{ Auth::user()->firstname }} <span class="caret"></span>
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        Logout
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @else
-                            <li><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                        @endauth
-
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
+        <main style="overflow: auto">
             @yield('content')
         </main>
+
+		<nav style="position: fixed; top: 0; width: 100%" class="navbar navbar-expand-md navbar-light navbar-laravel">
+			<div class="container">
+				<a class="navbar-brand" href="{{ url('/') }}">
+					{{ config('app.name', 'Laravel') }}
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<!-- Left Side Of Navbar -->
+					<ul class="navbar-nav mr-auto">
+
+					</ul>
+
+					<!-- Right Side Of Navbar -->
+					<ul class="navbar-nav ml-auto">
+
+						@auth
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									{{ Auth::user()->lastname }} {{ Auth::user()->firstname }} <span class="caret"></span>
+								</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+									<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+										Se déconnecter
+									</a>
+
+									<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+										@csrf
+									</form>
+								</div>
+							</li>
+						@else
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Se connecter <span class="caret"></span>
+								</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+									@foreach (config('auth.services') as $name => $provider)
+										<a class="dropdown-item" href="{{ route('login.show', ['provider' => $name]) }}">
+											{{ $provider['text'] }}
+										</a>
+									@endforeach
+								</div>
+							</li>
+						@endauth
+
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<footer class="navbar navbar-expand-md navbar-light navbar-laravel" style="position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around;">
+			<a href={{ isset($service) ? $service : URL::previous() }}>Retourner à la page précédente</a>
+			<a href={{ route('home') }}>Retourner au portail</a>
+		</footer>
     </div>
 
     <!-- Scripts -->

@@ -18,7 +18,9 @@ abstract class BaseAuth
 	/**
 	 * Renvoie un lien vers le formulaire de login
 	 */
-	abstract public function show();
+	public function show() {
+		return view('auth.'.$this->name.'.login');
+	}
 
 	/**
 	 * Callback pour récupérer les infos de l'API en GET et login de l'utilisateur

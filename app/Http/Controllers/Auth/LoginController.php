@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Cas;
-
 
 class LoginController extends Controller
 {
@@ -33,14 +33,20 @@ class LoginController extends Controller
 	protected $redirectTo = '/home';
 
 	public function __construct()	{
-			$this->middleware('auth', ['only' => 'logout']);
+		$this->middleware('auth', ['only' => 'logout']);
 	}
 
 	/**
 	 * Affiche la vue de choix de méthode de login
 	 */
-	public function index() {
-		return view('login.index');
+	public function index(Request $request) {
+		$provider = $request->cookie('auth_provider');
+		$provider_class = config("auth.services.$provider.class");
+
+		if ($provider_class === null)
+			return view('login.index');
+		else
+			return redirect()->route('login.show', ['provider' => $provider]);
 	}
 
 	/**
@@ -50,8 +56,9 @@ class LoginController extends Controller
 	public function show($provider) {
 		$provider_class = config("auth.services.$provider.class");
 
-		if ($provider_class === null)
-			return redirect()->route('login.show');
+		if ($provider_class === null) {
+			return redirect()->route('login.index')->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+		}
 		else
 			return resolve($provider_class)->show();
 	}
@@ -64,8 +71,8 @@ class LoginController extends Controller
 
 		if ($provider_class === null)
 			return redirect()->route('login.show');
-		else
-			return resolve($provider_class)->login($request);
+		else 
+			return resolve($provider_class)->login($request)->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 	}
 
 	/**

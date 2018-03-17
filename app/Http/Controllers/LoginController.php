@@ -16,7 +16,7 @@ class LoginController extends Controller
 	use AuthenticatesUsers;
 
 	public function __construct() {
-		$this->middleware('auth', ['only' => 'logout']);
+		$this->middleware('auth', ['only' => 'destroy']);
 	}
 
 	/**

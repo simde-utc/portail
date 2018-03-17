@@ -20,13 +20,13 @@ Route::match(['get', 'head'], 'password/reset/{token}', 'Auth\ResetPasswordContr
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 Route::get('password/done',  'Auth\ResetPasswordController@done');
 
-/*
+
 // Authentication Routes
-Route::get('login', 'Auth\LoginController@index')->name('login');
+Route::get('login', 'Auth\LoginController@index')->name('login.index');
 Route::get('login/{provider?}', 'Auth\LoginController@show')->name('login.show');
 Route::match(['get', 'post'], 'login/{provider}/process', 'Auth\LoginController@login')->name('login.process');
 Route::match(['get', 'post'], 'logout/{redirection?}', 'Auth\LoginController@logout')->name('logout');
-*/
+
 
 // Vues temporaires, uniquement de l'affichage de liens
 Route::get('/', function () {

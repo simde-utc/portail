@@ -9,8 +9,12 @@ return [
 		'viaUTC'	=> false,		// Si le serveur passe par le VPN ou le réseau de l'UTC : true
 		'trans_url' => 'https://payutc.nemopay.net/validation?tra_id=',
 	],
+
 	'cas' => [
 		'url'		=> 'https://cas.utc.fr/cas/'
 	],
-	'ginger_key' 	=> env('GINGER_KEY', '')
+
+	'ginger_key' 	=> env('GINGER_KEY', ''),
+
+	'cookie_lifetime' => 518400,
 ];

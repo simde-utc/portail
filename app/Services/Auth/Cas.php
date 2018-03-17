@@ -19,10 +19,6 @@ class Cas extends BaseAuth
 		$this->casURL = config('portail.cas.url');
 	}
 
-	public function show() {
-		return redirect()->away($this->casURL.'login?service='.$this->processURL);
-	}
-
 	public function login(Request $request) {
 		$ticket = $request->query('ticket');
 

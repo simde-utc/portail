@@ -16,10 +16,6 @@ class Password extends BaseAuth
 		$this->config = config("auth.services." . $this->name);
 	}
 
-	public function show() {
-		return view('auth.login');
-	}
-
 	public function login(Request $request) {
 		if ($request->input('email') && $request->input('password')) {
 			$user = User::where('email', $request->input('email'))->first();
@@ -40,23 +36,23 @@ class Password extends BaseAuth
 	/*
 	 * Redirige vers la bonne page en cas de succès
 	 */
-	protected function success($user, $userAuth) {
+	protected function success($user = null, $userAuth = null, $message = null) {
 		$casAuth = $user->cas;
 
 		if ($casAuth !== null && $casAuth->is_active && !Ginger::userExists($casAuth->login)) { // Si l'utilisateur n'existe plus auprès de Ginger, on peut désactiver son compte
 			$casAuth->is_active = 0;
 			$casAuth->save();
 
-			return redirect('home')->withSuccess('Vous êtes maintenant considéré.e comme un.e Tremplin');
+			return parent::success($user, $userAuth, 'Vous êtes maintenant considéré.e comme un.e Tremplin');
 		}
 		else
-			return redirect('home');
+			return parent::success($user, $userAuth, $message);
 	}
 
 	/*
 	 * Redirige vers la bonne page en cas d'erreur
 	 */
-	protected function error($user, $userAuth) {
-		return redirect()->route('login', ['provider' => $this->name])->withError('L\'adresse email et/ou le mot de passe est incorrecte');
+	protected function error($user = null, $userAuth = null, $message = null) {
+		return redirect()->route('login', ['provider' => $this->name])->withError($message === null ? 'L\'adresse email et/ou le mot de passe est incorrecte' : $message);
 	}
 }
