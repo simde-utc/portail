@@ -39,7 +39,7 @@ class LoginController extends Controller
 	/**
 	 * Affiche la vue de choix de méthode de login
 	 */
-	public function showLoginOptions() {
+	public function index() {
 		return view('login.index');
 	}
 
@@ -47,13 +47,13 @@ class LoginController extends Controller
 	 * Récupère la classe d'authentication $provider_class dans le service container de Laravel
 	 * et applique le show login
 	 */
-	public function showLoginForm($provider) {
+	public function show($provider) {
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
 			return redirect()->route('login.show');
 		else
-			return resolve($provider_class)->showLoginForm();
+			return resolve($provider_class)->show();
 	}
 
 	/**

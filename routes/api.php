@@ -16,6 +16,12 @@ Route::middleware('auth:api')->get('/user', function (Illuminate\Http\Request $r
     return $request->user();
 });
 
+// Authentication Routes
+Route::get('login', 'LoginController@index')->name('login');
+Route::get('login/{provider?}', 'LoginController@show')->name('login.show');
+Route::match(['get', 'post'], 'login/{provider}/process', 'LoginController@store')->name('login.process');
+Route::match(['get', 'post'], 'logout/{redirection?}', 'LoginController@destroy')->name('logout');
+
 // Route::apiResources([
 //     'photos' => 'PhotoController',
 //     'posts' => 'PostController'

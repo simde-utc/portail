@@ -4,11 +4,13 @@ return [
 
     'services' => [
         'cas' => [
+			'text' => 'Connexion via CAS-UTC',
             'class' => App\Services\Auth\Cas::class,
             'model' => App\Models\AuthCas::class,
         ],
 
         'password' => [
+			'text' => 'Connexion via mot de passe',
             'class' => App\Services\Auth\Password::class,
             'model' => App\Models\AuthPassword::class,
         ],

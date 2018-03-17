@@ -18,7 +18,7 @@ abstract class BaseAuth
 	/**
 	 * Renvoie un lien vers le formulaire de login
 	 */
-	abstract public function showLoginForm();
+	abstract public function show();
 
 	/**
 	 * Callback pour récupérer les infos de l'API en GET et login de l'utilisateur
@@ -175,14 +175,20 @@ abstract class BaseAuth
 	/*
 	 * Redirige vers la bonne page en cas de succès
 	 */
-	protected function success($user, $userAuth) {
-		return redirect('home');
+	protected function success($user = null, $userAuth = null, $message = null) {
+		if ($message === null)
+			return redirect('home');
+		else
+			return redirect('home')->withSuccess($message);
 	}
 
 	/*
 	 * Redirige vers la bonne page en cas d'erreur
 	 */
-	protected function error($user, $userAuth) {
-		return redirect()->route('login.show')->withError('Il n\'a pas été possible de vous connecter');	// TODO
+	protected function error($user = null, $userAuth = null, $message = null) {
+		if ($message === null)
+			return redirect()->route('login.show')->withError('Il n\'a pas été possible de vous connecter');
+		else
+			return redirect()->route('login.show')->withError($message);
 	}
 }

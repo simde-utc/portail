@@ -10,8 +10,7 @@ return [
 		'trans_url' => 'https://payutc.nemopay.net/validation?tra_id=',
 	],
 	'cas' => [
-		'login'		=> 'https://cas.utc.fr/cas/login?service=',
-		'logout'	=> 'https://cas.utc.fr/cas/logout?service='
+		'url'		=> 'https://cas.utc.fr/cas/'
 	],
 	'ginger_key' 	=> env('GINGER_KEY', '')
 ];

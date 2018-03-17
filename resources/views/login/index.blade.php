@@ -1,2 +1,2 @@
-<a href="{{ route('login', ['provider' => 'cas']) }}">Étudiant UTC</a><br>
-<a href="{{ route('login', ['provider' => 'password']) }}">Extérieur</a>
+<a href="{{ route('login.show', ['provider' => 'cas']) }}">Étudiant UTC</a><br>
+<a href="{{ route('login.show', ['provider' => 'password']) }}">Extérieur</a>

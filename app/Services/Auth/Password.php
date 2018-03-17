@@ -16,7 +16,7 @@ class Password extends BaseAuth
 		$this->config = config("auth.services." . $this->name);
 	}
 
-	public function showLoginForm() {
+	public function show() {
 		return view('auth.login');
 	}
 
