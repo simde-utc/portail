@@ -57,7 +57,7 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null) {
-			return redirect()->route('login.index')->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+			return redirect()->route('login')->cookie('auth_provider', '', config('portail.cookie_lifetime'));
 		}
 		else
 			return resolve($provider_class)->show();
@@ -71,7 +71,7 @@ class LoginController extends Controller
 
 		if ($provider_class === null)
 			return redirect()->route('login.show');
-		else 
+		else
 			return resolve($provider_class)->login($request)->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 	}
 

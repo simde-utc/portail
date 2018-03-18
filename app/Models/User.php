@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,7 @@ use App\Models\Semester;
 
 class User extends Authenticatable
 {
-	use HasRoles;
+	use HasApiTokens, Notifiable, HasRoles;
 
 	protected $fillable = [
 		'firstname', 'lastname', 'email', 'last_login_at',
