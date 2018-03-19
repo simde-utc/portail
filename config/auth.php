@@ -4,13 +4,15 @@ return [
 
     'services' => [
         'cas' => [
-			'text' => 'via le CAS UTC',
+			'name' => 'CAS-UTC',
+			'description' => 'Tout membre de l\'UTC ou de l\'ESCOM',
             'class' => App\Services\Auth\Cas::class,
             'model' => App\Models\AuthCas::class,
         ],
 
         'password' => [
-			'text' => 'via mot de passe',
+			'name' => 'Mot de passe',
+			'description' => 'Tout autre membre',
             'class' => App\Services\Auth\Password::class,
             'model' => App\Models\AuthPassword::class,
         ],

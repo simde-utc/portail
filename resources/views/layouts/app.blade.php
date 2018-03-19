@@ -59,10 +59,13 @@
 								</a>
 								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 									@foreach (config('auth.services') as $name => $provider)
-										<a class="dropdown-item" href="{{ route('login.show', ['provider' => $name]) }}">
-											{{ $provider['text'] }}
+										<a class="dropdown-item" href="{{ route('login.show', ['provider' => $name, 'redirect' => $redirect]) }}">
+											{{ $provider['name'] }}
 										</a>
 									@endforeach
+										<a class="dropdown-item" href="{{ route('login', ['see' => 'all', 'redirect' => $redirect]) }}">
+											Tout voir
+										</a>
 								</div>
 							</li>
 						@endauth

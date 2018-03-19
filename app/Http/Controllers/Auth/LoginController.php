@@ -44,7 +44,7 @@ class LoginController extends Controller
 		$provider = $request->cookie('auth_provider');
 		$provider_class = config("auth.services.$provider.class");
 
-		if ($provider_class === null)
+		if ($provider_class === null || $request->query('see') === 'all')
 			return view('login.index', ['redirect' => $request->query('redirect', url()->previous())]);
 		else
 			return redirect()->route('login.show', ['provider' => $provider, 'redirect' => $request->query('redirect', url()->previous())]);
