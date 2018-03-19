@@ -28,7 +28,20 @@ class RoomController extends Controller
      */
     public function store(RoomRequest $request)
     {
-        $room = Room::create($request->input());
+        /*$room = Room::create($request->all());
+        if($room)
+        {
+            $room->save();
+            return response()->json($room, 200);
+        }
+        else
+                return response()->json(["message" => "Impossible de créer la salle"], 500);*/
+
+        $room = new Room;
+
+        $room->name = $request->input('name');
+        $room->asso_id = $request -> input('asso_id');
+
         if($room)
         {
             $room->save();
@@ -74,9 +87,9 @@ class RoomController extends Controller
 
             $romm->save();
 
-            $room->update($request->input());
-
-            */
+            $room->update($request->al());
+*/
+        
 
             return response()->json($room, 200);
         }
