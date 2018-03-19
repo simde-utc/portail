@@ -18,8 +18,8 @@ abstract class BaseAuth
 	/**
 	 * Renvoie un lien vers le formulaire de login
 	 */
-	public function show() {
-		return view('auth.'.$this->name.'.login');
+	public function show(Request $request) {
+		return view('auth.'.$this->name.'.login', ['redirect' => $request->query('redirect')]);
 	}
 
 	/**
@@ -31,7 +31,10 @@ abstract class BaseAuth
 	 * Callback pour se logout
 	 */
 	public function logout(Request $request) {
-		return redirect('home');
+		if ($request->query('redirect'))
+			return redirect()->$request->query('redirect');
+		else
+			return redirect('home');
 	}
 
 	/**
@@ -45,40 +48,40 @@ abstract class BaseAuth
 	/**
 	 * Crée l'utilisateur et son mode de connexion auth_{provider}
 	 */
-	protected function create(array $userInfo, array $authInfo) {
+	protected function create(Request $request, array $userInfo, array $authInfo) {
 		// Création de l'utilisateur avec les informations minimales
 		$user = $this->createUser($userInfo);
 
 		// On crée le système d'authentification
 		$userAuth = $this->createAuth($user->id, $authInfo);
 
-		return $this->connect($user, $userAuth);
+		return $this->connect($request, $user, $userAuth);
 	}
 
 	/**
 	 * Met à jour les informations de l'utilsateur et de son mode de connexion auth_{provider}
 	 */
-	protected function update($id, array $userInfo = [], array $authInfo = []) {
+	protected function update(Request $request, $id, array $userInfo = [], array $authInfo = []) {
 		// Actualisation des informations
 		$user = $this->updateUser($id, $userInfo);
 
 		// On actualise le système d'authentification
 		$userAuth = $this->updateAuth($id, $authInfo);
 
-		return $this->connect($user, $userAuth);
+		return $this->connect($request, $user, $userAuth);
 	}
 
 	/**
 	 * Crée ou ajuste les infos de l'utilisateur et son mode de connexion auth_{provider}
 	 */
-	protected function updateOrCreate($key, $value, array $userInfo = [], array $authInfo = []) {
+	protected function updateOrCreate(Request $request, $key, $value, array $userInfo = [], array $authInfo = []) {
 		// On cherche l'utilisateur
 		$userAuth = $this->findUser($key, $value);
 
 		if ($userAuth === null)
-			return $this->create($userInfo, $authInfo); // Si inconnu, on le crée et on le connecte.
+			return $this->create($request, $userInfo, $authInfo); // Si inconnu, on le crée et on le connecte.
 		else
-			return $this->update($userAuth->user_id, $userInfo, $authInfo); // Si connu, on actualise ses infos et on le connecte.
+			return $this->update($request, $userAuth->user_id, $userInfo, $authInfo); // Si connu, on actualise ses infos et on le connecte.
 	}
 
 
@@ -155,7 +158,7 @@ abstract class BaseAuth
 	/**
 	 * Permet de se connecter
 	 */
-	protected function connect($user, $userAuth) {
+	protected function connect(Request $request, $user, $userAuth) {
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null) {
 			$user->timestamps = false;
@@ -168,29 +171,29 @@ abstract class BaseAuth
 
 			Auth::login($user);
 
-			return $this->success($user, $userAuth);
+			return $this->success($request, $user, $userAuth);
 		}
 		else
-			return $this->error($user, $userAuth);
+			return $this->error($request, $user, $userAuth);
 	}
 
 	/*
 	 * Redirige vers la bonne page en cas de succès
 	 */
-	protected function success($user = null, $userAuth = null, $message = null) {
+	protected function success(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect('home');
+			return redirect($request->query('redirect', url()->previous()));
 		else
-			return redirect('home')->withSuccess($message);
+			return redirect($request->query('redirect', url()->previous()))->withSuccess($message);
 	}
 
 	/*
 	 * Redirige vers la bonne page en cas d'erreur
 	 */
-	protected function error($user = null, $userAuth = null, $message = null) {
+	protected function error(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect()->route('login.show')->withError('Il n\'a pas été possible de vous connecter');
+			return redirect()->route('login.show', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())])->withError('Il n\'a pas été possible de vous connecter');
 		else
-			return redirect()->route('login.show')->withError($message);
+			return redirect()->route('login.show', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())])->withError($message);
 	}
 }

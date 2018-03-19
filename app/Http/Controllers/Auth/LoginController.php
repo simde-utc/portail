@@ -33,6 +33,7 @@ class LoginController extends Controller
 	protected $redirectTo = '/home';
 
 	public function __construct()	{
+		$this->middleware('guest', ['except' => 'logout']);
 		$this->middleware('auth', ['only' => 'logout']);
 	}
 
@@ -44,23 +45,22 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
-			return view('login.index');
+			return view('login.index', ['redirect' => $request->query('redirect', url()->previous())]);
 		else
-			return redirect()->route('login.show', ['provider' => $provider]);
+			return redirect()->route('login.show', ['provider' => $provider, 'redirect' => $request->query('redirect', url()->previous())]);
 	}
 
 	/**
 	 * Récupère la classe d'authentication $provider_class dans le service container de Laravel
 	 * et applique le show login
 	 */
-	public function show($provider) {
+	public function show(Request $request, $provider) {
 		$provider_class = config("auth.services.$provider.class");
 
-		if ($provider_class === null) {
-			return redirect()->route('login')->cookie('auth_provider', '', config('portail.cookie_lifetime'));
-		}
+		if ($provider_class === null)
+			return redirect()->route('login', ['redirect' => $request->query('redirect', url()->previous())])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
 		else
-			return resolve($provider_class)->show();
+			return resolve($provider_class)->show($request);
 	}
 
 	/**
@@ -70,9 +70,12 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
-			return redirect()->route('login.show');
-		else
-			return resolve($provider_class)->login($request)->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
+			return redirect()->route('login.show', ['redirect' => $request->query('redirect', url()->previous())]);
+		else {
+			setcookie('auth_provider', $provider, config('portail.cookie_lifetime'));
+
+			return resolve($provider_class)->login($request);
+		}
 	}
 
 	/**
@@ -82,8 +85,8 @@ class LoginController extends Controller
 		$service = config("auth.services.".Auth::user()->getCurrentAuth());
 
 		if ($service === null) {
-			if ($request->query('redirection'))
-				$redirect = redirect($request->query('redirection'));
+			if ($request->query('redirect', url()->previous()))
+				$redirect = redirect($request->query('redirect', url()->previous()));
 			else
 				$redirect = redirect('home');
 		}
@@ -91,7 +94,8 @@ class LoginController extends Controller
 			$redirect = resolve($service['class'])->logout($request);
 
 		// On le déconnecte uniquement lorsque le service a fini son travail
-    Auth::logout();
+    	Auth::logout();
+
 		return $redirect;
 	}
 }
