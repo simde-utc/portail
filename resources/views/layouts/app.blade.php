@@ -13,7 +13,7 @@
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
-<body style="margin-top: 55px; margin-bottom: 33px; overflow: hidden">
+<body style="margin-top: 55px; margin-bottom: 33px; overflow-x: hidden">
     <div id="app">
         <main style="height: 100%">
             @yield('content')
