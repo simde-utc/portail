@@ -88,6 +88,6 @@ class GroupController extends Controller
         $group = Group::find($id);
         $group->delete();
 
-        return response()->json(["message" => "Groupe supprimé"]);
+        return response()->json(["message" => "Groupe supprimé"], 200);
     }
 }
