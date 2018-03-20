@@ -18,7 +18,7 @@ class CreateRoomsTable extends Migration
             $table->string('name', 128);
             $table->integer('asso_id')->unsigned();
             $table->foreign('asso_id')->references('id')->on('assos');
-
+            $table->timestamps();
         });
     }
 
