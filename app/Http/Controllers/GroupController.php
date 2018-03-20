@@ -86,6 +86,9 @@ class GroupController extends Controller
      */
     public function destroy($id)
     {
-        // TODO : soft delete.
+        $group = Group::find($id);
+        $group->delete();
+
+        return response()->json(["message" => "Groupe supprimé"]);
     }
 }
