@@ -69,15 +69,15 @@ class RoomController extends Controller
 
         if($room)
         {
-            //$room = Room::update($request->input());
+            //$room = Room::update($request->all());
 
-            /*$room->name = $request->input('name');
+            $room->name = $request->input('name');
             $room->asso_id = $request->input('asso_id');
 
-            $romm->save();
+            //$romm->save();
 
-            $room->update($request->al());
-*/
+            //$room->update($request->al());
+
         
 
             return response()->json($room, 200);
