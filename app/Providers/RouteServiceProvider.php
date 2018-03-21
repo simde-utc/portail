@@ -43,9 +43,7 @@ class RouteServiceProvider extends ServiceProvider
 
 		Passport::refreshTokensExpireIn(now()->addDays(30));
 
-		Passport::codeTokensCan(config('scopes.user'));
-		Passport::passwordTokensCan(config('scopes.user'));
-		Passport::clientTokensCan(config('scopes.client'));
+		Passport::tokensCan(config('scopes'));
 
         $this->mapApiRoutes();
 

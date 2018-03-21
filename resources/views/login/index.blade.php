@@ -10,7 +10,7 @@
 				<h5 class="card-title">{{ $provider['description'] }}</h5>
 			</div>
 			<div class="card-footer bg-transparent border-success" style="text-align: center">
-				<button onClick="window.location.href = '{{ route('login.show', ['provider' => $name, 'redirect' => $redirect]) }}'">Se connecter</button>
+				<button class="btn btn-info" onClick="window.location.href = '{{ route('login.show', ['provider' => $name, 'redirect' => $redirect]) }}'">Se connecter</button>
 			</div>
 		</div>
 	@endforeach
