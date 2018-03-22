@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
+use App\Facades\Scopes;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -43,7 +44,7 @@ class RouteServiceProvider extends ServiceProvider
 
 		Passport::refreshTokensExpireIn(now()->addDays(30));
 
-		Passport::tokensCan(config('scopes'));
+		Passport::tokensCan(Scopes::all());
 
         $this->mapApiRoutes();
 

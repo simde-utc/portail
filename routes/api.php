@@ -1,4 +1,5 @@
 <?php
+use App\Facades\Scopes;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +13,12 @@
 | Attention !! Les routes sont préfixées avec 'api/'
 */
 
-Route::middleware('auth:api')->get('/user', function (Illuminate\Http\Request $request) {
+//dd(Scopes::matchOne('u-get-calendar'));
+Route::middleware(Scopes::matchOne('u-get-calendar'))->get('/onescope', function (Illuminate\Http\Request $request) {
+    return $request->user();
+});
+//dd(Scopes::matchAll(['a-get-calendar', 'u-get-user-assos']));
+Route::middleware(Scopes::matchAll(['u-get-calendar-semester', 'u-get-user-assos']))->get('/allscopes', function (Illuminate\Http\Request $request) {
     return $request->user();
 });
 /*
