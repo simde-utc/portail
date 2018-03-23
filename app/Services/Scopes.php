@@ -60,6 +60,12 @@ class Scopes {
 		return $scopes;
 	}
 
+	/**
+	 * Donne le verbe qui suit par héridité montante ou descendante
+	 * @param  string  $verb
+	 * @param  boolean $up
+	 * @return array        liste des verbes à suivre
+	 */
 	private function nextVerbs(string $verb, $up = false) {
 		if ($up) {
 			switch ($verb) {
@@ -94,6 +100,11 @@ class Scopes {
 		}
 	}
 
+	/**
+	 * Recherche le scope existant (qui doit exister) et sa descendance
+	 * @param  string $scope
+	 * @return array
+	 */
 	private function find(string $scope) {
 		$elements = explode('-', $scope);
 
@@ -120,6 +131,11 @@ class Scopes {
 			];
 	}
 
+	/**
+	 * Renvoie le scope (doit exister !) avec sa description
+	 * @param  string $scope
+	 * @return array      scope => description
+	 */
 	public function get(string $scope) {
 		$current = $this->find($scope);
 
@@ -178,7 +194,7 @@ class Scopes {
 	}
 
 	/**
-	 * Retourne les Middleware à utiliser pour accéder à une route en matchant au moins un scope parmi la liste
+	 * Retourne la liste des scopes et des ses parents (prise en compte de l'héridité des verbes)
 	 *
 	 * @param string $scope
 	 * @param array $scopes
@@ -210,7 +226,7 @@ class Scopes {
 	}
 
 	/**
-	 * Retourne les Middleware à utiliser pour accéder à une route en matchant au moins un scope parmi la liste
+	 * Retourne les Middleware d'authentification
 	 *
 	 * @param string $scope
 	 * @param array $scopes
@@ -239,7 +255,7 @@ class Scopes {
 	}
 
 	/**
-	 * Retourne les Middleware à utiliser pour accéder à une route en matchant tous les scopes de la liste
+	 * Retourne les Middleware à utiliser pour accéder à une route en matchant tous les scopes ou leurs parents de la liste
 	 *
 	 * @param string/array $scopes
 	 * @return array

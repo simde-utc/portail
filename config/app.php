@@ -221,6 +221,7 @@ return [
 		// Custom aliases
 		'Ginger' => App\Facades\Ginger::class,
 		'Visible' => App\Services\Visible::class,
+		'Scopes' => App\Facades\Scopes::class,
 
 	],
 

@@ -37,7 +37,24 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+		$this->mapPassportRoutes();
 
+        $this->mapApiRoutes();
+
+        $this->mapWebRoutes();
+
+        //
+    }
+
+    /**
+     * Define the "web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapPassportRoutes()
+    {
 		Passport::routes();
 
 		Passport::tokensExpireIn(now()->addDays(15));
@@ -46,12 +63,12 @@ class RouteServiceProvider extends ServiceProvider
 
 		Passport::tokensCan(Scopes::all());
 
-        $this->mapApiRoutes();
+		// Routes modifiées
+		Route::post('oauth/clients', '\Laravel\Passport\Http\Controllers\ClientController@store')->middleware(['web', 'auth', 'admin']);
 
-        $this->mapWebRoutes();
-
-        //
+		Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')->middleware(['throttle', 'checkGrantType']);
     }
+
 
     /**
      * Define the "web" routes for the application.
@@ -77,8 +94,6 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-			//->middleware('api')
-            ->middleware('web')
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
     }

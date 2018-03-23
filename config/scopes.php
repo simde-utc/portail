@@ -118,19 +118,19 @@ return [
 		'calendar' => [
 			'description' => 'Permet à l\'application de posséder des informations sur le calendrier universitaire',
 			'verbs' => [
-				'get' => [ // scope: a-get-calendar
+				'get' => [ // scope: c-get-calendar
 					'description' => 'Récupérer le calendrier universitaire',
 					'scopes' => [
-						'semester' => [ // scope: a-get-calendar-semester
+						'semester' => [ // scope: c-get-calendar-semester
 							'description' => 'Récupérer l\'actuel semestre universitaire'
 						],
-						'semesters' => [ // scope: a-get-calendar-semesters
+						'semesters' => [ // scope: c-get-calendar-semesters
 							'description' => 'Récupérer les différents semestres universitaires'
 						],
-						'year' => [ // scope: a-get-calendar-year
+						'year' => [ // scope: c-get-calendar-year
 							'description' => 'Récupérer l\'actuel année universitaire'
 						],
-						'years' => [ // scope: a-get-calendar-years
+						'years' => [ // scope: c-get-calendar-years
 							'description' => 'Récupérer les différentes années universitaires'
 						]
 					]
@@ -138,7 +138,7 @@ return [
 			]
 		],
 	],
-	
+
 	// L'application NE DOIT PAS être connectée via un utilisateur
 	'c' => [
 		// Gestion relative aux utilisateurs
@@ -231,19 +231,19 @@ return [
 		'calendar' => [
 			'description' => 'Permet à l\'application de posséder des informations sur le calendrier universitaire',
 			'verbs' => [
-				'get' => [ // scope: a-get-calendar
+				'get' => [ // scope: c-get-calendar
 					'description' => 'Récupérer le calendrier universitaire',
 					'scopes' => [
-						'semester' => [ // scope: a-get-calendar-semester
+						'semester' => [ // scope: c-get-calendar-semester
 							'description' => 'Récupérer l\'actuel semestre universitaire'
 						],
-						'semesters' => [ // scope: a-get-calendar-semesters
+						'semesters' => [ // scope: c-get-calendar-semesters
 							'description' => 'Récupérer les différents semestres universitaires'
 						],
-						'year' => [ // scope: a-get-calendar-year
+						'year' => [ // scope: c-get-calendar-year
 							'description' => 'Récupérer l\'actuel année universitaire'
 						],
-						'years' => [ // scope: a-get-calendar-years
+						'years' => [ // scope: c-get-calendar-years
 							'description' => 'Récupérer les différentes années universitaires'
 						]
 					]

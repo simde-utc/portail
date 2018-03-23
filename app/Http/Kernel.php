@@ -61,6 +61,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 		'auth.client' => CheckClientCredentials::class,
 		'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
+		'admin' => \App\Http\Middleware\IsAdmin::class,
+		'checkGrantType' => \App\Http\Middleware\CheckGrantType::class,
 		//'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class, // Inutile car géré par notre service Scopes
     ];
 }
