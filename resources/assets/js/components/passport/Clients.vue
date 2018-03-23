@@ -30,6 +30,7 @@
                         <tr>
                             <th>Client ID</th>
                             <th>Name</th>
+							<th>Asso id</th>
                             <th>Secret</th>
                             <th></th>
                             <th></th>
@@ -46,6 +47,11 @@
                             <!-- Name -->
                             <td style="vertical-align: middle;">
                                 {{ client.name }}
+                            </td>
+
+                            <!-- Asso id -->
+                            <td style="vertical-align: middle;">
+                                {{ client.asso_id }}
                             </td>
 
                             <!-- Secret -->
@@ -108,6 +114,20 @@
 
                                     <span class="form-text text-muted">
                                         Something your users will recognize and trust.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Asso -->
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Asso id</label>
+
+                                <div class="col-md-9">
+                                    <input id="edit-client-asso" type="number" min="0" class="form-control"
+                                                                @keyup.enter="update" v-model="editForm.asso_id">
+
+                                    <span class="form-text text-muted">
+										L'id de l'asso a qui créer la clé
                                     </span>
                                 </div>
                             </div>
@@ -180,6 +200,20 @@
                                 </div>
                             </div>
 
+                            <!-- Asso -->
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Asso id</label>
+
+                                <div class="col-md-9">
+                                    <input id="edit-client-asso" type="number" min="0" class="form-control"
+                                                                @keyup.enter="update" v-model="editForm.asso_id">
+
+                                    <span class="form-text text-muted">
+                                        L'id de l'asso a qui créer la clé
+                                    </span>
+                                </div>
+                            </div>
+
                             <!-- Redirect URL -->
                             <div class="form-group row">
                                 <label class="col-md-3 col-form-label">Redirect URL</label>
@@ -221,13 +255,15 @@
 
                 createForm: {
                     errors: [],
-                    name: '',
+					name: '',
+                    asso_id: 1,
                     redirect: ''
                 },
 
                 editForm: {
                     errors: [],
                     name: '',
+					asso_id: 1,
                     redirect: ''
                 }
             };

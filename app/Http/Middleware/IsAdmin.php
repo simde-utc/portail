@@ -15,7 +15,6 @@ class IsAdmin
      */
 	public function handle($request, Closure $next)
 	{
-		echo 'a';
 		if (\Auth::user() && \Auth::id() === 2)
 			return $next($request);
 

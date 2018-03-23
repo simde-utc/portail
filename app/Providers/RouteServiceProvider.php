@@ -64,7 +64,8 @@ class RouteServiceProvider extends ServiceProvider
 		Passport::tokensCan(Scopes::all());
 
 		// Routes modifiées
-		Route::post('oauth/clients', '\Laravel\Passport\Http\Controllers\ClientController@store')->middleware(['web', 'auth', 'admin']);
+		Route::post('oauth/clients', '\App\Http\Controllers\Passport\ClientController@store')->middleware(['web', 'auth', 'admin']);
+		Route::put('oauth/clients/{client_id}', '\App\Http\Controllers\Passport\ClientController@update')->middleware(['web', 'auth', 'admin']);
 
 		Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')->middleware(['throttle', 'checkGrantType']);
     }

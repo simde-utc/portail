@@ -47982,6 +47982,40 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     /*
@@ -47994,12 +48028,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             createForm: {
                 errors: [],
                 name: '',
+                asso_id: 1,
                 redirect: ''
             },
 
             editForm: {
                 errors: [],
                 name: '',
+                asso_id: 1,
                 redirect: ''
             }
         };
@@ -48148,7 +48184,9 @@ var render = function() {
           },
           [
             _c("span", [
-              _vm._v("\n                    OAuth Clients\n                ")
+              _vm._v(
+                "\n                        OAuth Clients\n                    "
+              )
             ]),
             _vm._v(" "),
             _c(
@@ -48160,7 +48198,7 @@ var render = function() {
               },
               [
                 _vm._v(
-                  "\n                    Create New Client\n                "
+                  "\n                        Create New Client\n                    "
                 )
               ]
             )
@@ -48172,7 +48210,7 @@ var render = function() {
         _vm.clients.length === 0
           ? _c("p", { staticClass: "mb-0" }, [
               _vm._v(
-                "\n                You have not created any OAuth clients.\n            "
+                "\n                    You have not created any OAuth clients.\n                "
               )
             ])
           : _vm._e(),
@@ -48187,17 +48225,25 @@ var render = function() {
                   return _c("tr", [
                     _c("td", { staticStyle: { "vertical-align": "middle" } }, [
                       _vm._v(
-                        "\n                            " +
+                        "\n                                " +
                           _vm._s(client.id) +
-                          "\n                        "
+                          "\n                            "
                       )
                     ]),
                     _vm._v(" "),
                     _c("td", { staticStyle: { "vertical-align": "middle" } }, [
                       _vm._v(
-                        "\n                            " +
+                        "\n                                " +
                           _vm._s(client.name) +
-                          "\n                        "
+                          "\n                            "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
+                      _vm._v(
+                        "\n                                " +
+                          _vm._s(client.asso_id) +
+                          "\n                            "
                       )
                     ]),
                     _vm._v(" "),
@@ -48219,7 +48265,7 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n                                Edit\n                            "
+                            "\n                                    Edit\n                                "
                           )
                         ]
                       )
@@ -48238,7 +48284,7 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n                                Delete\n                            "
+                            "\n                                    Delete\n                                "
                           )
                         ]
                       )
@@ -48274,9 +48320,9 @@ var render = function() {
                       _vm._l(_vm.createForm.errors, function(error) {
                         return _c("li", [
                           _vm._v(
-                            "\n                                " +
+                            "\n                                    " +
                               _vm._s(error) +
-                              "\n                            "
+                              "\n                                "
                           )
                         ])
                       })
@@ -48330,7 +48376,62 @@ var render = function() {
                     _vm._v(" "),
                     _c("span", { staticClass: "form-text text-muted" }, [
                       _vm._v(
-                        "\n                                    Something your users will recognize and trust.\n                                "
+                        "\n                                        Something your users will recognize and trust.\n                                    "
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group row" }, [
+                  _c("label", { staticClass: "col-md-3 col-form-label" }, [
+                    _vm._v("Asso id")
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-9" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.editForm.asso_id,
+                          expression: "editForm.asso_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        id: "edit-client-asso",
+                        type: "number",
+                        min: "0"
+                      },
+                      domProps: { value: _vm.editForm.asso_id },
+                      on: {
+                        keyup: function($event) {
+                          if (
+                            !("button" in $event) &&
+                            _vm._k(
+                              $event.keyCode,
+                              "enter",
+                              13,
+                              $event.key,
+                              "Enter"
+                            )
+                          ) {
+                            return null
+                          }
+                          return _vm.update($event)
+                        },
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.editForm, "asso_id", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "form-text text-muted" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\tL'id de l'asso a qui créer la clé\n                                    "
                       )
                     ])
                   ])
@@ -48385,7 +48486,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("span", { staticClass: "form-text text-muted" }, [
                       _vm._v(
-                        "\n                                    Your application's authorization callback URL.\n                                "
+                        "\n                                        Your application's authorization callback URL.\n                                    "
                       )
                     ])
                   ])
@@ -48412,7 +48513,7 @@ var render = function() {
                 },
                 [
                   _vm._v(
-                    "\n                        Create\n                    "
+                    "\n                            Create\n                        "
                   )
                 ]
               )
@@ -48445,9 +48546,9 @@ var render = function() {
                       _vm._l(_vm.editForm.errors, function(error) {
                         return _c("li", [
                           _vm._v(
-                            "\n                                " +
+                            "\n                                    " +
                               _vm._s(error) +
-                              "\n                            "
+                              "\n                                "
                           )
                         ])
                       })
@@ -48501,7 +48602,62 @@ var render = function() {
                     _vm._v(" "),
                     _c("span", { staticClass: "form-text text-muted" }, [
                       _vm._v(
-                        "\n                                    Something your users will recognize and trust.\n                                "
+                        "\n                                        Something your users will recognize and trust.\n                                    "
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group row" }, [
+                  _c("label", { staticClass: "col-md-3 col-form-label" }, [
+                    _vm._v("Asso id")
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-9" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.editForm.asso_id,
+                          expression: "editForm.asso_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        id: "edit-client-asso",
+                        type: "number",
+                        min: "0"
+                      },
+                      domProps: { value: _vm.editForm.asso_id },
+                      on: {
+                        keyup: function($event) {
+                          if (
+                            !("button" in $event) &&
+                            _vm._k(
+                              $event.keyCode,
+                              "enter",
+                              13,
+                              $event.key,
+                              "Enter"
+                            )
+                          ) {
+                            return null
+                          }
+                          return _vm.update($event)
+                        },
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.editForm, "asso_id", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "form-text text-muted" }, [
+                      _vm._v(
+                        "\n                                        L'id de l'asso a qui créer la clé\n                                    "
                       )
                     ])
                   ])
@@ -48556,7 +48712,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("span", { staticClass: "form-text text-muted" }, [
                       _vm._v(
-                        "\n                                    Your application's authorization callback URL.\n                                "
+                        "\n                                        Your application's authorization callback URL.\n                                    "
                       )
                     ])
                   ])
@@ -48583,7 +48739,7 @@ var render = function() {
                 },
                 [
                   _vm._v(
-                    "\n                        Save Changes\n                    "
+                    "\n                            Save Changes\n                        "
                   )
                 ]
               )
@@ -48605,6 +48761,8 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Name")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Asso id")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Secret")]),
         _vm._v(" "),
         _c("th"),
@@ -48619,7 +48777,9 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
       _c("h4", { staticClass: "modal-title" }, [
-        _vm._v("\n                        Create Client\n                    ")
+        _vm._v(
+          "\n                            Create Client\n                        "
+        )
       ]),
       _vm._v(" "),
       _c(
@@ -48651,7 +48811,9 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
       _c("h4", { staticClass: "modal-title" }, [
-        _vm._v("\n                        Edit Client\n                    ")
+        _vm._v(
+          "\n                            Edit Client\n                        "
+        )
       ]),
       _vm._v(" "),
       _c(
