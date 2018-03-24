@@ -62,7 +62,7 @@
                             <!-- Edit Button -->
                             <td style="vertical-align: middle;">
                                 <a class="action-link" tabindex="-1" @click="edit(client)">
-                                    Edit
+                                    Voir
                                 </a>
                             </td>
 
@@ -160,13 +160,13 @@
             </div>
         </div>
 
-        <!-- Edit Client Modal -->
+        <!-- View Client Modal -->
         <div class="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">
-                            Edit Client
+                            Voir
                         </h4>
 
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -191,7 +191,7 @@
                                 <label class="col-md-3 col-form-label">Name</label>
 
                                 <div class="col-md-9">
-                                    <input id="edit-client-name" type="text" class="form-control"
+                                    <input id="edit-client-name" type="text" disabled class="form-control"
                                                                 @keyup.enter="update" v-model="editForm.name">
 
                                     <span class="form-text text-muted">
@@ -205,7 +205,7 @@
                                 <label class="col-md-3 col-form-label">Asso id</label>
 
                                 <div class="col-md-9">
-                                    <input id="edit-client-asso" type="number" min="0" class="form-control"
+                                    <input id="edit-client-asso" type="number" min="0" disabled class="form-control"
                                                                 @keyup.enter="update" v-model="editForm.asso_id">
 
                                     <span class="form-text text-muted">
@@ -219,7 +219,7 @@
                                 <label class="col-md-3 col-form-label">Redirect URL</label>
 
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="redirect"
+                                    <input type="text" class="form-control" disabled name="redirect"
                                                     @keyup.enter="update" v-model="editForm.redirect">
 
                                     <span class="form-text text-muted">
@@ -227,16 +227,25 @@
                                     </span>
                                 </div>
                             </div>
+
+							<!-- Scopes -->
+                            <div class="form-group" v-if="editForm.scopes.length > 0">
+                                <label class="col-md-4 col-form-label">Scopes</label>
+
+                                <div class="col-md-9">
+                                    <ul v-for="scope in editForm.scopes">
+                                        <li>
+                                            {{ scope }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </form>
                     </div>
 
                     <!-- Modal Actions -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                        <button type="button" class="btn btn-primary" @click="update">
-                            Save Changes
-                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -264,7 +273,8 @@
                     errors: [],
                     name: '',
 					asso_id: 1,
-                    redirect: ''
+                    redirect: '',
+					scopes: {}
                 }
             };
         },
@@ -332,7 +342,10 @@
             edit(client) {
                 this.editForm.id = client.id;
                 this.editForm.name = client.name;
-                this.editForm.redirect = client.redirect;
+				this.editForm.redirect = client.redirect;
+                this.editForm.scopes = JSON.parse(client.scopes);
+
+				console.log(this.editForm.scopes);
 
                 $('#modal-edit-client').modal('show');
             },

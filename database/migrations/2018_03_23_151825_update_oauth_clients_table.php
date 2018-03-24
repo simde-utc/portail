@@ -18,7 +18,7 @@ class UpdateOauthClientsTable extends Migration
 			$table->foreign('asso_id')->references('id')->on('assos');
 			$table->integer('user_id')->unsigned()->change();
 			$table->foreign('user_id')->references('id')->on('users');
-            $table->text('scopes')->nullable(); // Scopes définis pour le client credential
+            $table->text('scopes')->default('c-get-calendar-semester'); // Scopes définis pour le client credential
         });
     }
 

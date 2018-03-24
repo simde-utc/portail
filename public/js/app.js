@@ -48016,6 +48016,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     /*
@@ -48036,7 +48045,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 errors: [],
                 name: '',
                 asso_id: 1,
-                redirect: ''
+                redirect: '',
+                scopes: {}
             }
         };
     },
@@ -48110,6 +48120,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.editForm.id = client.id;
             this.editForm.name = client.name;
             this.editForm.redirect = client.redirect;
+            this.editForm.scopes = JSON.parse(client.scopes);
+
+            console.log(this.editForm.scopes);
 
             $('#modal-edit-client').modal('show');
         },
@@ -48265,7 +48278,7 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n                                    Edit\n                                "
+                            "\n                                    Voir\n                                "
                           )
                         ]
                       )
@@ -48573,7 +48586,11 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { id: "edit-client-name", type: "text" },
+                      attrs: {
+                        id: "edit-client-name",
+                        type: "text",
+                        disabled: ""
+                      },
                       domProps: { value: _vm.editForm.name },
                       on: {
                         keyup: function($event) {
@@ -48627,7 +48644,8 @@ var render = function() {
                       attrs: {
                         id: "edit-client-asso",
                         type: "number",
-                        min: "0"
+                        min: "0",
+                        disabled: ""
                       },
                       domProps: { value: _vm.editForm.asso_id },
                       on: {
@@ -48679,7 +48697,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { type: "text", name: "redirect" },
+                      attrs: { type: "text", disabled: "", name: "redirect" },
                       domProps: { value: _vm.editForm.redirect },
                       on: {
                         keyup: function($event) {
@@ -48716,34 +48734,35 @@ var render = function() {
                       )
                     ])
                   ])
-                ])
+                ]),
+                _vm._v(" "),
+                _vm.editForm.scopes.length > 0
+                  ? _c("div", { staticClass: "form-group" }, [
+                      _c("label", { staticClass: "col-md-4 col-form-label" }, [
+                        _vm._v("Scopes")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "col-md-9" },
+                        _vm._l(_vm.editForm.scopes, function(scope) {
+                          return _c("ul", [
+                            _c("li", [
+                              _vm._v(
+                                "\n                                            " +
+                                  _vm._s(scope) +
+                                  "\n                                        "
+                              )
+                            ])
+                          ])
+                        })
+                      )
+                    ])
+                  : _vm._e()
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "modal-footer" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-secondary",
-                  attrs: { type: "button", "data-dismiss": "modal" }
-                },
-                [_vm._v("Close")]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary",
-                  attrs: { type: "button" },
-                  on: { click: _vm.update }
-                },
-                [
-                  _vm._v(
-                    "\n                            Save Changes\n                        "
-                  )
-                ]
-              )
-            ])
+            _vm._m(5)
           ])
         ])
       ]
@@ -48811,9 +48830,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
       _c("h4", { staticClass: "modal-title" }, [
-        _vm._v(
-          "\n                            Edit Client\n                        "
-        )
+        _vm._v("\n                            Voir\n                        ")
       ]),
       _vm._v(" "),
       _c(
@@ -48837,6 +48854,21 @@ var staticRenderFns = [
     return _c("p", { staticClass: "mb-0" }, [
       _c("strong", [_vm._v("Whoops!")]),
       _vm._v(" Something went wrong!")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Fermer")]
+      )
     ])
   }
 ]

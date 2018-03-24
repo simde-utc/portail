@@ -212,7 +212,7 @@ class Scopes {
 			if (!isset($middleware))
 				$middleware = $elements[0];
 			elseif ($middleware !== $elements[0])
-				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'autorisation !'); // Des scopes commençant par c- et u-
+				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
 
 			$current = $this->getRelatives($scope, true);
 
@@ -274,7 +274,7 @@ class Scopes {
 			if (!isset($middleware))
 				$middleware = $elements[0];
 			elseif ($middleware !== $elements[0])
-				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'autorisation !'); // Des scopes commençant par c- et u-
+				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
 
 			array_push($middlewares, 'scope:'.implode(',', $scopeList));
 		}
@@ -283,5 +283,27 @@ class Scopes {
 			array_push($middlewares, $this->matchAny($middleware === 'u'));
 
 		return $middlewares;
+	}
+
+	/**
+	 * Génère une exception si les scopes ne sont correspondent pas au bon type d'authentification
+	 * @param  array  $scopes
+	 * @param  string $grantType
+	 */
+	public function checkScopesForGrantType(array $scopes, string $grantType = null) {
+		if ($scopes === [])
+			return;
+
+		foreach ($scopes as $scope) {
+			$elements = explode('-', $scope);
+
+			if (!isset($middleware))
+				$middleware = $elements[0];
+			elseif ($middleware !== $elements[0])
+				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
+		}
+
+		if ($middleware === 'c' && $grantType !== 'client_credentials' || $grantType === 'client_credentials' && $middleware !== 'c')
+			throw new \Exception('Les scopes ne sont pas définis pour le bon type d\'authentification !'); // Des scopes commençant par c- et u-
 	}
 }
