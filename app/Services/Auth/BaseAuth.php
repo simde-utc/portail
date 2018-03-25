@@ -19,7 +19,7 @@ abstract class BaseAuth
 	 * Renvoie un lien vers le formulaire de login
 	 */
 	public function show(Request $request) {
-		return view('auth.'.$this->name.'.login', ['redirect' => $request->query('redirect')]);
+		return view('auth.'.$this->name.'.login', ['redirect' => $request->query('redirect', url()->previous())]);
 	}
 
 	/**
