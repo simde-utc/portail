@@ -280,8 +280,11 @@ class Scopes {
 			array_push($middlewares, 'scope:'.implode(',', $scopeList));
 		}
 
-		if ($middleware !== 'a')
-			array_push($middlewares, $this->matchAny($middleware === 'u'));
+		if ($middleware !== 'a') {
+			$middlewares = array_merge([
+				$this->matchAny($middleware === 'u')
+			], $middlewares);
+		}
 
 		array_push($middlewares, 'auth.check');
 		return $middlewares;
