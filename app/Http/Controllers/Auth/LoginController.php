@@ -94,9 +94,6 @@ class LoginController extends Controller
 		else
 			$redirect = resolve($service['class'])->logout($request);
 
-		// Il faut déconnecter toutes les applis
-		//Token::where('user_id', Auth::id())->update(['revoke' => 1]);
-
 		// On le déconnecte uniquement lorsque le service a fini son travail
     	Auth::logout();
 

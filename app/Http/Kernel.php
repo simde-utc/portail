@@ -60,9 +60,11 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 		'auth.client' => CheckClientCredentials::class,
+		'auth.check' => \App\Http\Middleware\CheckAuth::class,
 		'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
 		'admin' => \App\Http\Middleware\IsAdmin::class,
 		'checkPassport' => \App\Http\Middleware\CheckPassport::class,
+		'linkTokenToSession' => \App\Http\Middleware\LinkTokenToSession::class,
 		//'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class, // Inutile car géré par notre service Scopes
     ];
 }

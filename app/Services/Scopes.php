@@ -250,7 +250,8 @@ class Scopes {
 
 		return [
 			$this->matchAny(explode('-', $scopeList[0])[0] === 'u'),
-			'scope:'.implode(',', $scopeList)
+			'scope:'.implode(',', $scopeList),
+			'auth.check',
 		];
 	}
 
@@ -282,6 +283,7 @@ class Scopes {
 		if ($middleware !== 'a')
 			array_push($middlewares, $this->matchAny($middleware === 'u'));
 
+		array_push($middlewares, 'auth.check');
 		return $middlewares;
 	}
 

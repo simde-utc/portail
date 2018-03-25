@@ -70,4 +70,8 @@ class User extends Authenticatable
     public function events() {
     	return $this->belongsToMany('App\Models\Event');
     }
+
+	public function accessToken() {
+		return $this->accessToken;
+	}
 }
