@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Services\Visibility\BaseVisibility;
+
 
 class Event extends Model
 {
@@ -18,4 +20,8 @@ class Event extends Model
 	public function assos() {
 			return $this->belongsToMany('App\Models\Asso');
 	}
+
+	public function visibility() {
+    	return $this->hasOne('App\Models\Visibility');
+    }
 }

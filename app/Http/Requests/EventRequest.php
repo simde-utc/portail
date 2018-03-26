@@ -25,11 +25,11 @@ class EventRequest extends FormRequest
     {
         return [
             'title'         => 'required|string|between:1,64',
-            'description'   => 'required|text',
+            'description'   => 'text',
             'image'         => 'string|between:1,191',
             'from'          => 'required|timestamp',
             'to'            => 'required|timestamp',
-            'visibility_id'    => 'required|integer',
+            'visibility'    => 'required|string|between:1,128',            
             'place'         => 'string'
         ];
     }
