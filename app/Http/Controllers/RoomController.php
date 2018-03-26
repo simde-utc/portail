@@ -28,7 +28,6 @@ class RoomController extends Controller
      */
     public function store(RoomRequest $request)
     {
-        //dd($request->all());
         $room = Room::create($request->all());
 
         if($room)
@@ -63,22 +62,19 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(RoomRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $room = Room::find($id);
 
         if($room)
         {
+            //Le "update ne passe pas"
             //$room = Room::update($request->all());
 
             $room->name = $request->input('name');
             $room->asso_id = $request->input('asso_id');
 
-            //$romm->save();
-
-            //$room->update($request->al());
-
-        
+            $room->save();
 
             return response()->json($room, 200);
         }
