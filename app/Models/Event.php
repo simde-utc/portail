@@ -8,7 +8,7 @@ class Event extends Model
 {
     protected $table = 'events';
     protected $fillable = [
-        'title', 'content', 'image', 'toBePublished', 'visibility'
+        'title', 'description', 'image', 'from', 'to', 'visibility_id', 'place',
     ];
 
 	public function users() {
