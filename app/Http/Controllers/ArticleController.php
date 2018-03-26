@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Http\Request;
 use App\Models\Article;
-use App\Services\Visible;
+use App\Services\Visible\ArticleVisible;
 
 class ArticleController extends Controller
 {
@@ -14,10 +14,11 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    //TODO Argument permettant de le passer en hide
     public function index()
     {
         $articles = Article::all();
-        return response()->json(Visible\ArticleVisible::with($articles), 200); //On ne renvoie que les articles visibles
+        return response()->json(ArticleVisible::with($articles), 200); //On ne renvoie que les articles visibles
     }
 
     /**
@@ -45,7 +46,7 @@ class ArticleController extends Controller
     {
         $article = Article::find($id);
         if ($article)
-        	return response()->json(Visible\ArticleVisible::hide($article),200); //On renvoie l'article demandé, mais en le cachant si l'user n'a pas les droits nécessaires
+        	return response()->json(ArticleVisible::hide($article),200); //On renvoie l'article demandé, mais en le cachant si l'user n'a pas les droits nécessaires
         else
         	return response()->json(['message' => 'Article not found'], 404);
     }
