@@ -19,12 +19,12 @@ class CheckAuth
     public function handle(\Illuminate\Http\Request $request, Closure $next)
     {
 		if ($request->user() !== null) {
-			$accessToken = $request->user()->accessToken();
-			$client = Client::find($accessToken->client_id);
+			$token = $request->user()->token();
+			$client = Client::find($token->client_id);
 
 			if ($client !== null && !$client->personal_access_client && !$client->password_client) {
-				$authCode = AuthCode::where('user_id', $accessToken->user_id)->where('client_id', $accessToken->client_id)->where('scopes', json_encode($accessToken->scopes))->where('revoked', true)->first();
-				$session = Session::find($authCode->session_id);
+				//$authCode = AuthCode::where('user_id', $token->user_id)->where('client_id', $token->client_id)->where('scopes', json_encode($token->scopes))->where('revoked', true)->first();
+				$session = Session::find($token->session_id);
 
 				if ($session === null || $session->user_id !== $request->user()->id)
 					return response()->json(['message' => 'L\'utilisateur n\'est plus connecté'], 410);

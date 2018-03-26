@@ -14,9 +14,9 @@ class UpdateOauthClientsTable extends Migration
     public function up()
     {
         Schema::table('oauth_clients', function (Blueprint $table) {
-			$table->integer('asso_id')->unsigned();
+			$table->integer('asso_id')->unsigned()->nullable();
 			$table->foreign('asso_id')->references('id')->on('assos');
-			$table->integer('user_id')->unsigned()->change();
+			$table->integer('user_id')->unsigned()->nullable()->change();
 			$table->foreign('user_id')->references('id')->on('users');
             $table->text('scopes')->nullable(); // Scopes définis pour le client credential
         });

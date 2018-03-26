@@ -71,7 +71,7 @@ class RouteServiceProvider extends ServiceProvider
 		Route::get('oauth/authorize', '\Laravel\Passport\Http\Controllers\AuthorizationController@authorize')->middleware(['web', 'auth', 'checkPassport', 'linkTokenToSession']);
 		Route::post('oauth/authorize', '\Laravel\Passport\Http\Controllers\ApproveAuthorizationController@approve')->middleware(['web', 'auth', 'linkTokenToSession']);
 
-		Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')->middleware(['throttle', 'checkPassport']);
+		Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')->middleware(['throttle', 'checkPassport', 'linkTokenToSession']);
     }
 
 
