@@ -11,4 +11,6 @@ class Room extends Model
 		'name','asso_id',
 	];
 
+	protected $table = 'Rooms';
+
 }
