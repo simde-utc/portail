@@ -72,7 +72,7 @@ class Cas extends BaseAuth
 		// Si le personne est ou était étudiant, il faut vérifier qu'il est bien passé par le CAS
 		if (Auth::user()->cas->is_active) {
 			return view('auth.cas.logout', [
-				'redirect' => $request->query('redirect'),
+				'redirect' => $request->query('redirect', url()->previous()),
 			]);
 		}
 		else
