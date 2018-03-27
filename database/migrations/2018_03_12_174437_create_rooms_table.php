@@ -16,7 +16,7 @@ class CreateRoomsTable extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 128);
-            $table->string('room', 20);
+            //$table->string('room', 20);
             $table->integer('asso_id')->unsigned();
             $table->foreign('asso_id')->references('id')->on('assos');
             $table->timestamps();
