@@ -59,7 +59,7 @@ class Cas extends BaseAuth
 			$userAuth->is_active = 1;
 			$userAuth->save();
 
-			return view('auth.cas.redirect').withSuccess('Vous êtes maintenant considéré.e comme un.e étudiant.e');
+			return view('auth.cas.redirect')->withSuccess('Vous êtes maintenant considéré.e comme un.e étudiant.e');
 		}
 		else
 			return view('auth.cas.redirect');
