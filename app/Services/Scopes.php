@@ -139,7 +139,7 @@ class Scopes {
 	public function get(string $scope) {
 		$current = $this->find($scope);
 
-		if ($current === [])
+		if ($current === [] || $current === null)
 			return [];
 
 		return [
@@ -160,7 +160,7 @@ class Scopes {
 
 		$current = $this->find($scope);
 
-		if ($current === [])
+		if ($current === [] || $current === null)
 			return [];
 
 		$scopes = [
@@ -201,7 +201,7 @@ class Scopes {
 	 * @return array
 	 */
 	private function getMatchingScopes(array $scopes = []) {
-		if ($scopes === [])
+		if ($scopes === [] || $scopes === null)
 			throw new \Exception('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([$userMustBeConnected])');
 
 		$matchingScopes = [];
@@ -296,7 +296,7 @@ class Scopes {
 	 * @param  string $grantType
 	 */
 	public function checkScopesForGrantType(array $scopes, string $grantType = null) {
-		if ($scopes === [])
+		if ($scopes === [] || $scopes === null)
 			return;
 
 		foreach ($scopes as $scope) {
