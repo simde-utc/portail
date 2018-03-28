@@ -35,15 +35,10 @@ class Cas extends BaseAuth
 
 		$login = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'];
 
-		$user = Ginger::user($login);
+		$ginger = Ginger::user($login);
 
-		// Renvoie un 401.
-		if (!$user->exists()) {
-			return $this->error($request, null, null, 'Une erreur a été rencontrée avec Ginger (erreur '.$user->getResponseCode().'). Il est impossible de vous identifier');
-		}
-
-		// Renvoie un 500. On passe par le CAS.
-		if ($user->getResponseCode() == 500) {
+		// Renvoie une erreur différente de la 200. On passe par le CAS.
+		if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
 			return $this->updateOrCreate($request, 'login', $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'], [
 				'firstname' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
 				'lastname' 	=> $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
@@ -55,13 +50,13 @@ class Cas extends BaseAuth
 		}
 
 		// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
-		return $this->updateOrCreate($request, 'login', $user->getLogin(), [
-			'firstname' => $user->getFirstname(),
-			'lastname' 	=> $user->getLastname(),
-			'email' 	=> $user->getEmail(),
+		return $this->updateOrCreate($request, 'login', $ginger->getLogin(), [
+			'firstname' => $ginger->getFirstname(),
+			'lastname' 	=> $ginger->getLastname(),
+			'email' 	=> $ginger->getEmail(),
 		], [
-			'login' => $user->getLogin(),
-			'email' => $user->getEmail(),
+			'login' => $ginger->getLogin(),
+			'email' => $ginger->getEmail(),
 		]);
 	}
 
