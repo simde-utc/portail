@@ -8,7 +8,25 @@ use Curl;
  * Cette classe permet de récupérer des informations concernant un membre de l'UTC
  */
 class Scopes {
-	private $scopes;
+	/*
+	 * Liste des scopes en fonction des routes
+	 *   - Définition des scopes:
+	 *   	portée + "-" + verbe + "-" + categorie + (pour chaque sous-catégorie: '-' + sous-catégorie)
+	 *   	ex: user-get-user user-get-user-assos user-get-user-assos-followed
+	 *
+	 *   - Définition de la portée des scopes:
+	 *     + user :    user_credential => nécessite que l'application soit connecté à un utilisateur
+	 *     + client :  client_credential => nécessite que l'application est les droits d'application indépendante d'un utilisateur
+	 *
+	 *   - Définition du verbe:
+	 *     + manage:  gestion de la ressource entière
+	 *       + get :  récupération des informations en lecture seule
+	 *       + set :  posibilité d'écrire et modifier les données
+	 *         + create:  créer une donnée associée
+	 *         + edit:    modifier une donnée
+	 *         + remove:  supprimer une donnée
+	 */
+	protected $scopes;
 
 	public function __construct() {
 		$this->scopes = config('scopes');
@@ -249,7 +267,7 @@ class Scopes {
 			$scopeList = $this->getMatchingScopes([$scopes]);
 
 		return [
-			$this->matchAny(explode('-', $scopeList[0])[0] === 'u'),
+			$this->matchAny(explode('-', $scopeList[0])[0] === 'user'),
 			'scope:'.implode(',', $scopeList),
 			'auth.check',
 		];
@@ -282,7 +300,7 @@ class Scopes {
 
 		if ($middleware !== 'a') {
 			$middlewares = array_merge([
-				$this->matchAny($middleware === 'u')
+				$this->matchAny($middleware === 'user')
 			], $middlewares);
 		}
 
@@ -308,7 +326,7 @@ class Scopes {
 				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
 		}
 
-		if ($middleware === 'c' && $grantType !== 'client_credentials' || $grantType === 'client_credentials' && $middleware !== 'c')
+		if ($middleware === 'client' && $grantType !== 'client_credentials' || $grantType === 'client_credentials' && $middleware !== 'client')
 			throw new \Exception('Les scopes ne sont pas définis pour le bon type d\'authentification !'); // Des scopes commençant par c- et u-
 	}
 }
