@@ -13,7 +13,6 @@
 */
 
 
-
 // Routes modifiées
 Route::get('clients', '\App\Http\Controllers\Passport\ClientController@forUser')->middleware(['web', 'auth']);
 Route::post('clients', '\App\Http\Controllers\Passport\ClientController@store')->middleware(['web', 'auth', 'admin']);
@@ -23,4 +22,6 @@ Route::get('authorize', '\Laravel\Passport\Http\Controllers\AuthorizationControl
 
 Route::post('token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')->middleware(['throttle', 'checkPassport']);
 
-Route::get('session', 'App\Http\Controllers\Passport\TokenController@link')->middleware(['auth:api', 'web']);
+// Routes crées
+Route::post('session', 'App\Http\Controllers\Passport\TokenController@create')->middleware('auth:api');
+Route::get('session', 'App\Http\Controllers\Passport\TokenController@link')->middleware('web')->name('oauth/session');
