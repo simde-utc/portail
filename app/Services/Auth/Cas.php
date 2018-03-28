@@ -42,18 +42,15 @@ class Cas extends BaseAuth
 			return $this->error($request, null, null, 'Une erreur a été rencontrée avec Ginger (erreur '.$user->getResponseCode().'). Il est impossible de vous identifier');
 		}
 
-		dd($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']);
-
 		// Renvoie un 500. On passe par le CAS.
 		if ($user->getResponseCode() == 500) {
-			dd($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user']);
-			return $this->updateOrCreate($request, 'login', $user->getLogin(), [
-				'firstname' => $user->getLastname(),
-				'lastname' 	=> $user->getLastname(),
-				'email' 	=> $user->getEmail(),
+			return $this->updateOrCreate($request, 'login', $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'], [
+				'firstname' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
+				'lastname' 	=> $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
+				'email' 	=> $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
 			], [
 				'login' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
-				'email' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:email'],
+				'email' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
 			]);
 		}
 
