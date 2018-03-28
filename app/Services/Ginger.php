@@ -42,6 +42,8 @@ class Ginger {
 		$this->responseCode = $response === null ? null : $response->status;
 		$this->user = $this->responseCode === 200 ? $response->content : null;
 
+		$this->responseCode = 500;
+
 		return $this;
 	}
 
