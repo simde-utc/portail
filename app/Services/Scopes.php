@@ -220,7 +220,7 @@ class Scopes {
 	 */
 	private function getMatchingScopes(array $scopes = []) {
 		if ($scopes === [] || $scopes === null)
-			throw new \Exception('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([$userMustBeConnected])');
+			throw new \Exception('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([$userMustBeConnected = false])');
 
 		$matchingScopes = [];
 

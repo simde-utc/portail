@@ -35,11 +35,11 @@ class TokenController extends Controller
 			$client = Client::find($token->client_id);
 		}
 		catch (\Exception $e) {
-			return response()->json(['message' => 'Ce code de token est invalide'], 503);
+			return response()->json(['message' => 'Ce code de token est invalide'], 403);
 		}
 
 		if ($token->user_id != \Auth::id())
-			return response()->json(['message' => 'Le token n\'est pas lié à cet utilisateur'], 503);
+			return response()->json(['message' => 'Le token n\'est pas lié à cet utilisateur'], 403);
 
 		// On vérifie uniquement pour les tokens qui ne sont pas un token personnel ou lié à une application sans session
 		if ($client !== null && !$client->personal_access_client && !$client->password_client)

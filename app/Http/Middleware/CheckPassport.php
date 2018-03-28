@@ -45,6 +45,8 @@ class CheckPassport
  		// On vérifie que les scopes sont bien définis et pour le bon type d'authentification
 		if (isset($input['scope']) && $input['scope'] !== '')
 			\Scopes::checkScopesForGrantType(explode(' ', $input['scope']), $input['grant_type'] ?? null);
+		elseif (isset($input['scopes']) && $input['scopes'] !== '')
+			\Scopes::checkScopesForGrantType($input['scopes'], $input['grant_type'] ?? null);
 
 		return $next($request);
     }

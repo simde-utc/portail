@@ -27,22 +27,25 @@ class CheckAuth
 
 			// On vérifie uniquement pour les tokens qui ne sont pas un token personnel ou lié à une application sans session
 			if ($client !== null && !$client->personal_access_client && !$client->password_client) {
-				if ($request->header('session') === null)
-					return response()->json(['message' => 'Ce token doit être lié à une session'], 400);
+				$session = Session::find($token->session_id);
 
-				try {
-					$session_id = decrypt($request->header('session'));
-				}
-				catch (\Exception $e) {
-					return response()->json(['message' => 'Cet identifiant de session est invalide'], 503);
-				}
+				if ($session === null) {
+					// Si la session n'existe plus/pas, on dévalide le token
+					$token->revoked = true;
+					$oken->timestamps = false;
+					$token->save();
 
-				$session = Session::find($session_id);
-				// On vérifie que l'utilisateur est toujours connecté et qu'il s'agit toujours du même
-				if ($session === null)
-					return response()->json(['message' => 'La session est invalide ou a expiré'], 503);
-				elseif ($session->user_id !== $request->user()->id)
+					return response()->json(['message' => 'La session est invalide ou a expiré'], 403);
+				}
+				elseif ($session->user_id !== $request->user()->id) {
+					// Si la session n'existe plus/pas, on dévalide le token
+					$token->revoked = true;
+					$oken->timestamps = false;
+					$token->save();
+
+					// On vérifie que l'utilisateur est toujours connecté et qu'il s'agit toujours du même
 					return response()->json(['message' => 'L\'utilisateur n\'est plus connecté'], 410);
+				}
 			}
 		}
 
