@@ -38,7 +38,6 @@ class CheckAuth
 				}
 
 				$session = Session::find($session_id);
-
 				// On vérifie que l'utilisateur est toujours connecté et qu'il s'agit toujours du même
 				if ($session === null)
 					return response()->json(['message' => 'La session est invalide ou a expiré'], 503);

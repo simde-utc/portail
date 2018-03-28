@@ -13,13 +13,13 @@
 */
 
 Route::prefix('v1')->group(function () {
-	Route::middleware(Scopes::matchOne('u-get-user'))->get('/onescope', function (Illuminate\Http\Request $request) {
+	Route::middleware(Scopes::matchOne('user-get-info-identity'))->get('/onescope', function (Illuminate\Http\Request $request) {
 	    return $request->user();
 	});
-	Route::middleware(Scopes::matchAll(['u-get-calendar-semester', 'u-get-user-assos']))->get('/allscopes', function (Illuminate\Http\Request $request) {
+	Route::middleware(Scopes::matchAll(['user-get-info', 'user-get-assos-done']))->get('/allscopes', function (Illuminate\Http\Request $request) {
 	    return $request->user();
 	});
-	Route::middleware(Scopes::matchOne(['c-get-users']))->get('/client', function ($request) {
+	Route::middleware(Scopes::matchOne(['client-get-users']))->get('/client', function ($request) {
 	    return 'coucou';
 	});
 
