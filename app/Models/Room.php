@@ -11,7 +11,7 @@ class Room extends Model
 		'name','asso_id',
 	];
 
-	protected $table = 'Rooms';
+	protected $table = 'rooms';
 
     public function asso() {
         return $this->belongsTo('App\Models\Asso');
