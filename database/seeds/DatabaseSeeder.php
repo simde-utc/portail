@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
 			GroupsTableSeeder::class,
 			RoomsTableSeeder::class,
 			ArticlesTableSeeder::class,
+			PartnersTableSeeder::class,
 		]);
 	}
 }
