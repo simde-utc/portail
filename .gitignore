@@ -14,3 +14,5 @@ npm-debug.log
 yarn-error.log
 .env
 .ftpconfig
+public/css/app.css
+public/js/app.js

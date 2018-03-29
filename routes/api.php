@@ -24,11 +24,10 @@ Route::middleware('auth:api')->get('/user', function (Illuminate\Http\Request $r
 Route::apiResources([
   'groups'        => 'GroupController',
   'assos/types' 	=> 'AssoTypeController',
-	'rooms'			=> 'RoomController',
 	'users'			=> 'UserController',
 	'assos' 		=> 'AssoController',
-	'asso_types' 	=> 'AssoTypeController',
 	'rooms'			=> 'RoomController',
+  'articles' => 'ArticleController',
 ]);
 
 
