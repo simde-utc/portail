@@ -1,0 +1,31 @@
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.passport-authorize {
+	.container {
+		margin-top: 30px;
+	}
+
+	.scopes {
+		margin-top: 20px;
+	}
+
+	.buttons {
+		margin-top: 25px;
+		text-align: center;
+	}
+
+	.btn {
+		width: 125px;
+	}
+
+	.btn-approve {
+		margin-right: 15px;
+	}
+
+	form {
+		display: inline;
+	}
+}
