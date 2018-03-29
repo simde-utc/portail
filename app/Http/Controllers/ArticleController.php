@@ -34,9 +34,8 @@ class ArticleController extends Controller
     {
         $article = Article::create($request->input());
         if ($article)
-        	return response()->json($article, 200);
-        else
-        	return response()->json(['message' => 'impossible de créer l\'article'], 500);
+        	return response()->json($article, 201);
+        return response()->json(['message' => 'impossible de créer l\'article'], 500);
     }
 
     /**
@@ -50,8 +49,7 @@ class ArticleController extends Controller
         $article = Article::find($id);
         if ($article)
         	return response()->json(ArticleVisible::hide($article),200); //On renvoie l'article demandé, mais en le cachant si l'user n'a pas les droits nécessaires
-        else
-        	return response()->json(['message' => 'Article not found'], 404);
+	    return response()->json(['message' => 'L\'article demandé n\'a pas été trouvé'], 404);
     }
 
     /**
@@ -63,11 +61,13 @@ class ArticleController extends Controller
      */
     public function update(ArticleRequest $request, $id){
 		$article = Article::find($id);
-		$modified = $article->update($request->input());
-		if ($modified)
-			return response()->json($article, 200);
-		else
-			return response()->json(['message'=>'impossible de modifier l\'article'],500);
+		if($article) {
+			$ok = $article->update($request->input());
+			if ($ok)
+				return response()->json($article, 201);
+			return response()->json(['message' => 'impossible de modifier l\'article'], 500);
+		}
+		return response()->json(['message'=>'L\'article demandé n\'a pas été trouvé'],404);
     }
 
     /**
@@ -78,7 +78,13 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-    	Article::destroy($id);
-    	return response()->json(['message'=>'Article supprimé !'],200);
+    	$article = Article::find($id);
+    	if($article){
+			$ok = $article->delete();
+			if($ok)
+				return response()->json(['message'=>'L\'article a bien été supprimé'],200);
+			return response()->json(['message'=>'Une erreur est survenue'],500);
+	    }
+	    return response()->json(['message'=>'L\'article demandé n\'a pas été trouvé'],404);
     }
 }
