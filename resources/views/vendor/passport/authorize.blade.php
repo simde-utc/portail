@@ -1,64 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-    <title>{{ config('app.name') }} - Authorization</title>
-
-    <!-- Styles -->
-    <link href="/css/app.css" rel="stylesheet">
-
-    <style>
-        .passport-authorize .container {
-            margin-top: 30px;
-        }
-
-        .passport-authorize .scopes {
-            margin-top: 20px;
-        }
-
-        .passport-authorize .buttons {
-            margin-top: 25px;
-            text-align: center;
-        }
-
-        .passport-authorize .btn {
-            width: 125px;
-        }
-
-        .passport-authorize .btn-approve {
-            margin-right: 15px;
-        }
-
-        .passport-authorize form {
-            display: inline;
-        }
-    </style>
-</head>
-<body class="passport-authorize">
+@section('content')
+<div class="passport-authorize">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card card-default">
                     <div class="card-header">
-                        Authorization Request
+                        Demande d'accès à vos données
+						<?php
+							$asso_id = $client->asso_id;
+							$asso = \App\Models\Asso::find($asso_id);
+						?>
+						@if ($asso_id !== null && $asso !== null)
+							par l'association <strong>{{ $asso->name }}</strong>
+						@endif
                     </div>
                     <div class="card-body">
                         <!-- Introduction -->
-                        <p><strong>{{ $client->name }}</strong> is requesting permission to access your account.</p>
+                        <p><strong>{{ $client->name }}</strong> souhaite accéder à vos données.</p>
 
                         <!-- Scope List -->
                         @if (count($scopes) > 0)
                             <div class="scopes">
-                                    <p><strong>This application will be able to:</strong></p>
+                                <p><strong>Cette application demande les accès suivants:</strong></p>
 
-                                    <ul>
-                                        @foreach ($scopes as $scope)
-                                            <li>{{ $scope->description }}</li>
-                                        @endforeach
-                                    </ul>
+                                <table>
+                                    @foreach (\Scopes::getByCategories(explode(' ', $request->input('scope'))) as $categorie)
+										<tr>
+											<td style="width: 50px; text-align: center"><i class="fa fa-{{ $categorie['icon'] }} fa-2x text-center"/></i></td>
+											<td>{{ $categorie['description'] }}</td>
+										</tr>
+										<tr><td></td><td>
+											<ul>
+												@foreach ($categorie['scopes'] as $description)
+													<li>{{ $description }}</li>
+												@endforeach
+											</ul>
+										</tr></td>
+                                    @endforeach
+                                </table>
                             </div>
                         @endif
 
@@ -69,7 +50,7 @@
 
                                 <input type="hidden" name="state" value="{{ $request->state }}">
                                 <input type="hidden" name="client_id" value="{{ $client->id }}">
-                                <button type="submit" class="btn btn-success btn-approve">Authorize</button>
+                                <button type="submit" class="btn btn-success btn-approve">Autoriser</button>
                             </form>
 
                             <!-- Cancel Button -->
@@ -79,13 +60,13 @@
 
                                 <input type="hidden" name="state" value="{{ $request->state }}">
                                 <input type="hidden" name="client_id" value="{{ $client->id }}">
-                                <button class="btn btn-danger">Cancel</button>
+                                <button class="btn btn-danger">Refuser</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</body>
-</html>
+	</div>
+</div>
+@endsection('content')

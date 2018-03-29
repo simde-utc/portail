@@ -7,8 +7,34 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+@import "node_modules/font-awesome/scss/font-awesome.scss";
 
 .navbar-laravel {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.passport-authorize .container {
+	margin-top: 30px;
+}
+
+.passport-authorize .scopes {
+	margin-top: 20px;
+}
+
+.passport-authorize .buttons {
+	margin-top: 25px;
+	text-align: center;
+}
+
+.passport-authorize .btn {
+	width: 125px;
+}
+
+.passport-authorize .btn-approve {
+	margin-right: 15px;
+}
+
+.passport-authorize form {
+	display: inline;
 }

@@ -142,7 +142,6 @@ class Scopes {
 
 		if ($current === [] || !isset($current['description']))
 			throw new \Exception('Le scope '.$scope.' est mal défini dans le fichier de config');
-
 		else
 			return [
 				$scope => $current,
@@ -163,6 +162,48 @@ class Scopes {
 		return [
 			$scope => $current[$scope]['description'],
 		];
+	}
+
+	/**
+	 * Renvoie les scopes (doivent exister !) avec leur description par catégorie
+	 * @param  array $scopes
+	 * @return array
+	 */
+	public function getByCategories(array $scopes) {
+		$categories = [];
+
+		if ($scopes === [] || $scopes === null)
+			return [];
+
+		foreach ($scopes as $scope) {
+			$elements = explode('-', $scope);
+
+			if (!isset($middleware))
+				$middleware = $elements[0];
+			elseif ($middleware !== $elements[0])
+				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
+
+			$current = $this->get($scope);
+
+			if ($current === [])
+				throw new \Exception('Le scope '.$scope.' n\'existe pas !');
+
+			if (!isset($categories[$elements[2]]) && !isset($categories[$elements[2]]['scopes'])) {
+				$categorie = $this->scopes[$middleware][$elements[2]];
+
+				$categories[$elements[2]] = [
+					'description' => $categorie['description'],
+					'icon' => $categorie['icon'],
+					'scopes' => [
+						$current[$scope]
+					]
+ 				];
+			}
+			else
+				array_push($categories[$elements[2]]['scopes'], $current[$scope]);
+		}
+
+		return $categories;
 	}
 
 	/**

@@ -21,7 +21,8 @@
 
 // Toutes les routes commencant par user-{verbe}-info-
 return [
-	'description' => 'Permet à l\'application de posséder différentes actions sur tous les utilisateurs',
+	'description' => 'Obtenir des droits sur vos informations personnelles',
+	'icon' => 'user-circle',
 	'verbs' => [
 		'manage' => [
 			'description' => 'Gérer totalement les informations sur l\'utilisateur',

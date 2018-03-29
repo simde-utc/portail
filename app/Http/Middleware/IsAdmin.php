@@ -15,7 +15,8 @@ class IsAdmin
      */
 	public function handle($request, Closure $next)
 	{
-		if (\Auth::user() && \Auth::id() === 2)
+		// if (\Auth::user() && \Auth::id() === 2)
+		if (\Auth::user())
 			return $next($request);
 
     	return redirect('/home');

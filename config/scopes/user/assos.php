@@ -21,7 +21,8 @@
 
 // Toutes les routes commencant par user-{verbe}-assos-
 return [
-	'description' => 'Permet à l\'application de posséder différentes actions sur tous les utilisateurs',
+	'description' => 'Obtenir des droits sur vos associations',
+	'icon' => 'handshake-o',
 	'verbs' => [
 		'manage' => [
 			'description' => 'Gérer les associations suivies et faites par l\'utilisateur',
