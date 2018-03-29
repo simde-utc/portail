@@ -30,11 +30,12 @@ class GroupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GroupRequest $request)
     {
         $group = Group::create($request->input());
         
-        // TODO: Sync Relationships
+        // TODO: Attach members ids.
+        // $group->members()->attach($ids);
 
         if ($group)
             return response()->json($group, 200);
@@ -68,7 +69,8 @@ class GroupController extends Controller
     {
         $group = Group::find($id);
         
-        // TODO: Sync Relationships
+        // TODO: Sync members ids.
+        // $group->members()->sync($ids);
 
         $group = Group::update($request->input());
         if ($group)
@@ -86,6 +88,9 @@ class GroupController extends Controller
     public function destroy($id)
     {
         $group = Group::find($id);
+
+        $group->members()->detach();
+
         $group->delete();
 
         return response()->json(["message" => "Groupe supprimé"], 200);
