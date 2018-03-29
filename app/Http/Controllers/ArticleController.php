@@ -78,6 +78,7 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-    	//TODO : delete foreign references before. Cascade ?
+    	Article::destroy($id);
+    	return response()->json(['message'=>'Article supprimé !'],200);
     }
 }

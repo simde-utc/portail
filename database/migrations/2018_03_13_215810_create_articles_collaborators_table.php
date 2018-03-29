@@ -15,10 +15,10 @@ class CreateArticlesCollaboratorsTable extends Migration
     {
         Schema::create('articles_collaborators', function (Blueprint $table) {
             $table->integer('asso_id')->unsigned();
-            $table->foreign('asso_id')->references('id')->on('assos');
+            $table->foreign('asso_id')->references('id')->on('assos')->onDelete('cascade'); //TODO a revoir
 
             $table->integer('article_id')->unsigned();
-            $table->foreign('article_id')->references('id')->on('articles');
+            $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade'); //TODO a revoir
 
             $table->primary(['asso_id', 'article_id']);
         });
