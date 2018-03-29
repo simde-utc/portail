@@ -24,12 +24,12 @@ class ArticleRequest extends FormRequest
     public function rules()
     {
         return [
-			'title' => 'required|string|'.validation_between('title'),
-	        'content' => 'required|string|'.validation_between('article'),
+			'title' => 'string|'.validation_between('title').($this->isMethod('put')?'':'|required'),
+	        'content' => 'string|'.validation_between('article').($this->isMethod('put')?'':'|required'),
 	        'image' => 'image|'.validation_between('url'),
 	        'toBePublished' => 'boolean',
-	        'visibility_id' => 'required|integer|exists:visibilities,id',
-	        'asso_id' => 'required|integer|exists:assos,id',
+	        'visibility_id' => 'integer|exists:visibilities,id'.($this->isMethod('put')?'':'|required'),
+	        'asso_id' => 'integer|exists:assos,id'.($this->isMethod('put')?'':'|required'),
         ];
     }
 }

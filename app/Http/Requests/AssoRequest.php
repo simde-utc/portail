@@ -22,11 +22,11 @@ class AssoRequest extends FormRequest
 	 */
 	public function rules() {
 		return [
-			'name' 			=> 'required|string|between:3,191',
-			'login' 		=> 'required|string|between:3,15',
-			'description' 	=> 'required|string|between:15,800',
-			'type_asso_id' 	=> 'required|integer|exists:assos_types,id',
-			'parent_id' 	=> 'nullable|integer|exists:assos,id'
+			'name' 			=> 'string|between:3,191'.($this->isMethod('put')?'':'|required'),
+			'login' 		=> 'string|between:3,15'.($this->isMethod('put')?'':'|required'),
+			'description' 	=> 'string|between:15,800'.($this->isMethod('put')?'':'|required'),
+			'type_asso_id' 	=> 'integer|exists:assos_types,id'.($this->isMethod('put')?'':'|required'),
+			'parent_id' 	=> 'nullable|integer|exists:assos,id'.($this->isMethod('put')?'':'|required'),
 		];
 	}
 }

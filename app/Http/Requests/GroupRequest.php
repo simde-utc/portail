@@ -28,10 +28,10 @@ class GroupRequest extends FormRequest
     {
         // TODO: Vielles valeurs de la BDD, pas oublier de changer.
         return [
-            'name'          => 'required|string|between:1,64',
-            'icon'          => 'required|string|between:3,191',
-            'visibility'    => 'required|string|between:1,128',
-            'is_active'     => 'required|boolean',
+            'name'          => 'string|between:1,64'.($this->isMethod('put')?'':'|required'),
+            'icon'          => 'string|between:3,191'.($this->isMethod('put')?'':'|required'),
+            'visibility'    => 'string|between:1,128'.($this->isMethod('put')?'':'|required'),
+            'is_active'     => 'boolean'.($this->isMethod('put')?'':'|required'),
         ];
     }
 }
