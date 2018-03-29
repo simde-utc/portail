@@ -13049,7 +13049,20 @@ a.text-dark:focus {
   clip: auto;
 }
 
-.navbar-laravel {
+body {
+  margin-top: 75px;
+  margin-bottom: 33px;
+  /* dégeu */
+  overflow-x: hidden;
+}
+
+main {
+  height: 100%;
+}
+
+.navbar {
+  position: fixed;
+  width: 100%;
   background-color: #fff;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);

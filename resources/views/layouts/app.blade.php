@@ -13,13 +13,13 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body style="margin-top: 75px; margin-bottom: 33px; overflow-x: hidden">
+<body>
     <div id="app">
-        <main style="height: 100%">
+        <main>
             @yield('content')
         </main>
 
-		<nav style="position: fixed; top: 0; width: 100%" class="navbar navbar-expand-md navbar-light navbar-laravel">
+		<nav class="navbar navbar-expand-md navbar-light" style="top: 0;">
 			<div class="container">
 				<a class="navbar-brand" href="{{ url('/') }}">
 					{{ config('app.name', 'Laravel') }}
@@ -75,7 +75,7 @@
 			</div>
 		</nav>
 
-		<footer class="navbar navbar-expand-md navbar-light navbar-laravel" style="position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around;">
+		<footer class="navbar navbar-expand-md navbar-light d-flex justify-content-around" style="bottom: 0;">
 			<a href={{ isset($service) ? $service : URL::previous() }}>Retourner à la page précédente</a>
 			<a href={{ route('home') }}>Retourner au portail</a>
 		</footer>

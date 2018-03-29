@@ -9,6 +9,7 @@
                     <div class="card-header">
                         Demande d'accès à vos données
 						<?php
+                        // TODO : CRAAAAAAAAAAAAAAAAAAAAAAAAAADE
 							$asso_id = $client->asso_id;
 							$asso = \App\Models\Asso::find($asso_id);
 						?>
