@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
 			ContactsTypesTableSeeder::class,
 			GroupsTableSeeder::class,
 			RoomsTableSeeder::class,
+			ArticlesTableSeeder::class,
 		]);
 	}
 }
