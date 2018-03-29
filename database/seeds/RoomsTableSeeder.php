@@ -16,15 +16,15 @@ class RoomsTableSeeder extends Seeder
         $rooms = [
             [
                 'name'       => 'Salle PVDC',
-                'asso_id'          => Asso::find(1)->id,
+                'asso_id'          => Asso::where('login', 'pvdc')->first()->id,
             ],
             [
                 'name'       => 'Salle PAE',
-                'asso_id'          => Asso::find(2)->id,
+                'asso_id'          => Asso::where('login', 'pae')->first()->id,
             ],
             [
                 'name'       => 'Salle de réunion',
-                'asso_id'          => Asso::find(3)->id,
+                'asso_id'          => Asso::where('login', 'bde')->first()->id,
             ],
         ];
 
