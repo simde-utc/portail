@@ -15,10 +15,13 @@ class ArticleController extends Controller
      * @return \Illuminate\Http\Response
      */
     //TODO Argument permettant de le passer en hide
-    public function index()
+    public function index(Request $request)
     {
         $articles = Article::all();
-        return response()->json(ArticleVisible::with($articles), 200); //On ne renvoie que les articles visibles
+        if(isset($request['all'])) //Si est dans la route est mis un argument all
+            return response()->json(ArticleVisible::hide($articles), 200); //On renvoie tous les articles en cachant les non visibles
+	    //Sinon
+	    return response()->json(ArticleVisible::with($articles),200); //On ne renvoie que ceux qui sont visibles
     }
 
     /**
