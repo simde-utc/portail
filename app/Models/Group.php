@@ -21,10 +21,6 @@ class Group extends Model
         'deleted_at'
     ];
 
-    public function icon() {
-    	return $this->hasOne('App\Models\Icon');
-    }
-
     public function visibility() {
     	return $this->hasOne('App\Models\Visibility');
     }
