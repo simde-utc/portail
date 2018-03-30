@@ -11,7 +11,7 @@ class ArticleController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     //TODO Argument permettant de le passer en hide

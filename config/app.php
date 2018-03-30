@@ -167,6 +167,10 @@ return [
 		 */
  		Ixudra\Curl\CurlServiceProvider::class,
 		App\Providers\GingerServiceProvider::class,
+		/*
+		 * API doc generator
+		 */
+		Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class,
 	],
 
 	/*

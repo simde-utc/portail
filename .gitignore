@@ -16,3 +16,4 @@ yarn-error.log
 .ftpconfig
 public/css/app.css
 public/js/app.js
+public/docs/*
