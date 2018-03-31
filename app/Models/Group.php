@@ -13,9 +13,9 @@ class Group extends Model
         'name', 'user_id', 'icon_id', 'visibility_id', 'is_active',
     ];
 
-  	protected $casts = [
-  		'is_active' => 'boolean',
-  	];
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     protected $dates = [
         'deleted_at'
@@ -25,7 +25,7 @@ class Group extends Model
     	return $this->hasOne('App\Models\Visibility');
     }
 
-  	public function members() {
-  		return $this->belongsToMany('App\Models\User', 'groups_members');
-  	}
+    public function members() {
+        return $this->belongsToMany('App\Models\User', 'groups_members');
+    }
 }
