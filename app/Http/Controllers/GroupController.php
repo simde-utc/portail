@@ -20,7 +20,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = Group::where('is_public', 1)->where('is_active', 1)->get();
+        $groups = Group::where('is_active', 1)->get();
         return response()->json($groups, 200);
     }
 
