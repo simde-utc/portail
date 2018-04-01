@@ -21,7 +21,7 @@
 
 // Toutes les routes commencant par client-{verbe}-assos-
 return [
-	'description' => 'Permet à l\'application de posséder différentes actions sur toutes les associations',
+	'description' => 'Associations',
 	'verbs' => [
 		'manage' => [
 			'description' => 'Gérer totalement toutes les associations',

@@ -21,7 +21,7 @@
 
 // Toutes les routes commencant par user-{verbe}-assos-
 return [
-	'description' => 'Obtenir des droits sur vos associations',
+	'description' => 'Associations',
 	'icon' => 'handshake-o',
 	'verbs' => [
 		'manage' => [

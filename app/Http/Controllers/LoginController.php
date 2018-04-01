@@ -15,10 +15,6 @@ class LoginController extends Controller
 {
 	use AuthenticatesUsers;
 
-	public function __construct() {
-		$this->middleware('auth', ['only' => 'destroy']);
-	}
-
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -48,15 +44,9 @@ class LoginController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request, $provider) {
-		if (Auth::check())
-			return $this->alreadyConnected();
-
-		$provider_class = config("auth.services.$provider.class");
-
-		if ($provider_class === null)
-			return redirect()->route('login.index');
-		else
-			return resolve($provider_class)->login($request);
+		/*
+			Sera utile pour l'authenification par mdp
+		 */
 	}
 
 	/**

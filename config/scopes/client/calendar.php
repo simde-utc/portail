@@ -21,7 +21,7 @@
 
 // Toutes les routes commencant par client-{verbe}-caelndar-
 return [
-	'description' => 'Permet à l\'application de posséder des informations sur le calendrier universitaire',
+	'description' => 'Calendrier universitaire',
 	'verbs' => [
 		'get' => [
 			'description' => 'Récupérer le calendrier universitaire',

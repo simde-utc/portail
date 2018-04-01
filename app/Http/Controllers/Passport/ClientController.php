@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Laravel\Passport\Client;
+use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
 class ClientController extends \Laravel\Passport\Http\Controllers\ClientController
 {

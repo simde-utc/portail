@@ -21,7 +21,7 @@
 
 // Toutes les routes commencant par user-{verbe}-info-
 return [
-	'description' => 'Obtenir des droits sur vos informations personnelles',
+	'description' => 'Informations personnelles',
 	'icon' => 'user-circle',
 	'verbs' => [
 		'manage' => [

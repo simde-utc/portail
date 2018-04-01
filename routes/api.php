@@ -19,8 +19,8 @@ Route::prefix('v1')->group(function () {
 	Route::middleware(Scopes::matchAll(['user-get-info', 'user-get-assos-done']))->get('/allscopes', function (Illuminate\Http\Request $request) {
 	    return $request->user();
 	});
-	Route::middleware(Scopes::matchAny())->get('/any', function (Illuminate\Http\Request $request) {
-	    return 'Sans aucun scope requis mais le token ne doit pas être relié car matchAny(false => pas connecté)';
+	Route::middleware(Scopes::matchAnyClient())->get('/any', function (Illuminate\Http\Request $request) {
+	    return 'Sans aucun scope requis mais le token ne doit pas être relié à un utilisateur';
 	});
 
 	/*
@@ -34,6 +34,10 @@ Route::prefix('v1')->group(function () {
 	//     'photos' => 'PhotoControlle"r',
 	//     'posts' => 'PostController'
 	// ]);
+
+	Route::middleware(Scopes::matchAnyUser())->get('/user', function (Illuminate\Http\Request $request) {
+	    return $request->user();
+	});
 
 	Route::apiResources([
 	  'users'			=> 'UserController',

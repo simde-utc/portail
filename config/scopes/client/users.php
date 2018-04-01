@@ -21,7 +21,7 @@
 
 // Toutes les routes commencant par client-{verbe}-users-
 return [
-	'description' => 'Permet à l\'application de posséder différentes actions sur tous les utilisateurs',
+	'description' => 'Utilisateurs',
 	'verbs' => [
 		'manage' => [
 			'description' => 'Gérer totalement tous les utilisateurs',

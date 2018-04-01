@@ -287,12 +287,29 @@ class Scopes {
 	/**
 	 * Retourne les Middleware d'authentification
 	 *
-	 * @param string $scope
-	 * @param array $scopes
+	 * @param boolean $userMustBeConnected
 	 * @return array
 	 */
-	public function matchAny(bool $userMustBeConnected = false) {
+	private function matchAny(bool $userMustBeConnected = false) {
 		return $userMustBeConnected ? 'auth:api' : 'auth.client';
+	}
+
+	/**
+	 * Retourne les Middleware d'authentification pour tout client connecté à un utilisateur
+	 *
+	 * @return array
+	 */
+	public function matchAnyUser() {
+		return $this->matchAny(true);
+	}
+
+	/**
+	 * Retourne les Middleware d'authentification pour tout client non connecté à un utilisateur
+	 *
+	 * @return array
+	 */
+	public function matchAnyClient() {
+		return $this->matchAny(true);
 	}
 
 	/**
