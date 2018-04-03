@@ -30,6 +30,7 @@ Route::apiResources([
     'articles'      => 'ArticleController',
 	'partners'      => 'PartnerController',
 	'events'		=> 'EventController',
+	'visibilities'	=> 'VisibilityController',
 ]);
 
 

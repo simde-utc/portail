@@ -29,7 +29,7 @@ class EventRequest extends FormRequest
             'image'         => 'nullable|image'.validation_between('url'),
             'from'          => 'date'.($this->isMethod('put')?'':'|required'),
             'to'            => 'date'.($this->isMethod('put')?'':'|required'),
-            'visibility_id' => 'integer'.($this->isMethod('put')?'':'|required'),
+            'visibility_id' => 'integer|exists:visibilities,id'.($this->isMethod('put')?'':'|required'),
             'place'         => 'nullable|string',
         ];
     }
