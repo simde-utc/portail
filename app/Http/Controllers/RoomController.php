@@ -65,23 +65,13 @@ class RoomController extends Controller
     public function update(Request $request, $id)
     {
         $room = Room::find($id);
-
-        if($room)
-        {
-            //Le "update ne passe pas"
-            //$room = Room::update($request->all());
-
-            $room->name = $request->input('name');
-            $room->asso_id = $request->input('asso_id');
-
-            $room->save();
-
-            return response()->json($room, 200);
+        if($room){
+            $ok = $room->update($request->input());
+            if($ok)
+                return response()->json($room, 201);
+            return response()->json(['message'=>'An error ocured'],500);
         }
-        else
-            return reponse()->json(["message" => "Impossible de trouver la salle"], 500);
-
-
+        return response()->json(["message" => "Impossible de trouver la salle"], 500);
     }
 
     /**

@@ -24,8 +24,9 @@ class RoomRequest extends FormRequest
     public function rules()
     {
         return [
+
             'name' => 'string|between:3,191'.($this->isMethod('put')?'':'|required'),
-            'assos_id' => 'integer'.($this->isMethod('put')?'':'|required'),
+            'asso_id' => 'integer'.($this->isMethod('put')?'':'|required'),
         ];
     }
 }
