@@ -20,6 +20,8 @@ class GroupController extends Controller
      */
     public function index()
     {
+        // TODO: Add visiblity !
+
         $groups = Group::where('is_active', 1)->get();
         return response()->json($groups, 200);
     }
@@ -33,9 +35,9 @@ class GroupController extends Controller
     public function store(GroupRequest $request)
     {
         $group = Group::create($request->input());
-        
-        // TODO: Attach members ids.
-        // $group->members()->attach($ids);
+
+        // Members user id will be passed to request.
+        $group->members()->attach($request->ids);
 
         if ($group)
             return response()->json($group, 200);
@@ -51,6 +53,8 @@ class GroupController extends Controller
      */
     public function show($id)
     {
+        // TODO: Add visiblity !
+
         $group = Group::find($id);
         if ($group)
             return response()->json($group, 200);
@@ -69,8 +73,9 @@ class GroupController extends Controller
     {
         $group = Group::find($id);
         
-        // TODO: Sync members ids.
-        // $group->members()->sync($ids);
+        // Members user id will be passed to request.
+        // Sync erases all previous associations and replaces them with the new one.
+        $group->members()->sync($request->ids);
 
         $group = Group::update($request->input());
         if ($group)
