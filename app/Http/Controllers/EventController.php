@@ -67,9 +67,9 @@ class EventController extends Controller
     {
         $event = Event::find($id);
 		if($event){
-			$ok = $event->update($request);
+			$ok = $event->update($request->input());
 			if($ok)
-				return response()->json($event,201);
+				return response()->json($event, 201);
 			return response()->json(['message'=>'An error ocured'],500);
 		}
     }

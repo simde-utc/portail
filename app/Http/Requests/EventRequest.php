@@ -25,12 +25,12 @@ class EventRequest extends FormRequest
     {
         return [
             'title'         => 'string|between:1,64'.($this->isMethod('put')?'':'|required'),
-            'description'   => 'text',
-            'image'         => 'string|between:1,191',
-            'from'          => 'timestamp'.($this->isMethod('put')?'':'|required'),
-            'to'            => 'timestamp'.($this->isMethod('put')?'':'|required'),
-            'visibility'    => 'string|between:1,128'.($this->isMethod('put')?'':'|required'),
-            'place'         => 'string',
+            'description'   => 'required|string|between:10,800',
+            //'image'         => 'string|between:1,191',
+            //'from'          => 'timestamp'.($this->isMethod('put')?'':'|required'),
+            'to'            => /*'timestamp'.*/($this->isMethod('put')?'':'|required'),
+            //'visibility_id'    => 'string|between:1,128'.($this->isMethod('put')?'':'|required'),
+            //'place'         => 'string',
         ];
     }
 }
