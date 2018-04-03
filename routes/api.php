@@ -23,21 +23,13 @@ Route::prefix('v1')->group(function () {
 	    return 'Sans aucun scope requis mais le token ne doit pas être relié à un utilisateur';
 	});
 
-	/*
 	// Authentication Routes
-	Route::get('login', 'LoginController@index')->name('login');
-	Route::get('login/{provider?}', 'LoginController@show')->name('login.show');
-	Route::match(['get', 'post'], 'login/{provider}/process', 'LoginController@store')->name('login.process');
-	Route::match(['get', 'post'], 'logout/{redirection?}', 'LoginController@destroy')->name('logout');
-	*/
-	// Route::apiResources([
-	//     'photos' => 'PhotoControlle"r',
-	//     'posts' => 'PostController'
-	// ]);
+	Route::get('login', 'LoginController@index')->middleware('guest')->name('api/login');
+	Route::get('logout', 'LoginController@destroy')->middleware(Scopes::matchAnyUser())->name('api/logout');
 
-	Route::middleware(Scopes::matchAnyUser())->get('/user', function (Illuminate\Http\Request $request) {
+	Route::get('/user', function (Illuminate\Http\Request $request) {
 	    return $request->user();
-	});
+	})->middleware(Scopes::matchAnyUser())->name('api/user');
 
 	Route::apiResources([
 	  'users'			=> 'UserController',

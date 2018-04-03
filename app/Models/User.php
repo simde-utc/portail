@@ -28,17 +28,6 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\AuthPassword');
 	}
 
-	public function getCurrentAuth() {
-		$services = config('auth.services');
-
-		foreach ($services as $service => $serviceInfo) {
-			if (method_exists($this, $service) && $this->$service()->exists())
-				return $service;
-		}
-
-		return null;
-	}
-
 	public function assoMember() {
 		return $this->hasMany('App\Models\AssoMember');
 	}

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UserPreference;
+use App\Models\Session;
 
 abstract class BaseAuth
 {
@@ -170,6 +171,14 @@ abstract class BaseAuth
 			$userAuth->save();
 
 			Auth::login($user);
+			Session::updateOrCreate(
+				[
+					'id' => \Session::getId(),
+				],
+				[
+					'auth_provider' => $this->name,
+				]
+			);
 
 			return $this->success($request, $user, $userAuth);
 		}

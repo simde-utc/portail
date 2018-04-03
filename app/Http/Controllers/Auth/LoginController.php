@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Cas;
 use Laravel\Passport\Token;
+use App\Models\Session;
 
 class LoginController extends Controller
 {
@@ -83,7 +84,7 @@ class LoginController extends Controller
 	 * Déconnection de l'utilisateur
 	 */
 	public function logout(Request $request) {
-		$service = config("auth.services.".Auth::user()->getCurrentAuth());
+		$service = config("auth.services.".Session::find(\Session::getId())->auth_provider);
 
 		if ($service === null) {
 			if ($request->query('redirect', url()->previous()))
@@ -95,6 +96,7 @@ class LoginController extends Controller
 			$redirect = resolve($service['class'])->logout($request);
 
 		// On le déconnecte uniquement lorsque le service a fini son travail
+		Session::find(\Session::getId())->update(['auth_provider' => null]);
     	Auth::logout();
 
 		return $redirect;

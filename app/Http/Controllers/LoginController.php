@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Cas;
 
-
 class LoginController extends Controller
 {
 	use AuthenticatesUsers;
@@ -28,11 +27,11 @@ class LoginController extends Controller
 		$auth = [];
 
 		foreach ($services as $provider => $service)
-			array_push($auth, [
-				'name' => $provider,
-				'text' => $service['text'],
-				'url' => route('login.show').'/'.$provider,
-			]);
+			$auth[$provider] = [
+				'name' => $service['name'],
+				'description' => $service['description'],
+				'url' => route('login.show', ['provider' => $provider]),
+			];
 
 		return response()->json($auth, 200);
 	}
@@ -50,65 +49,25 @@ class LoginController extends Controller
 	}
 
 	/**
-	 * Display the specified resource.
-	 *
-	 * @param  string  $name
-	 * @return \Illuminate\Http\Response
+	 * Déconnection de l'utilisateur
 	 */
-	public function show($provider) {
-		if (Auth::check())
-			return $this->alreadyConnected();
+	public function logout(Request $request) {
+		$token = $request->user()->token();
+		$service = config("auth.services.".Session::find($token->session_id)->auth_provider);
 
-		$provider_class = config("auth.services.$provider.class");
-
-		if ($provider_class === null)
-			return redirect()->action('LoginController@index');
-		else
-			return resolve($provider_class)->show();
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id)
-	{
-		// A voir si on actualise qq chose niveau
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy(Request $request) {
-		// TODO se déconnecter de tous les sites
-
-		$provider = config("auth.services.".Auth::user()->getCurrentAuth());
-
-		if ($provider !== null)
-			$redirect = resolve($provider['class'])->logout($request);
-
-		if ($redirect === null) {
-			if ($request->query('redirection'))
-				$redirect = redirect($request->query('redirection'));
+		if ($service === null) {
+			if ($request->query('redirect', url()->previous()))
+				$redirect = redirect($request->query('redirect', url()->previous()));
 			else
 				$redirect = redirect('home');
 		}
+		else
+			$redirect = resolve($service['class'])->logout($request);
 
 		// On le déconnecte uniquement lorsque le service a fini son travail
+		\App\Models\Session::find(\Session::getId())->update(['auth_provider' => null]);
     	Auth::logout();
 
 		return $redirect;
-	}
-
-	protected function alreadyConnected() {
-		$user = Auth::user();
-
-		return response()->json(['message' => 'Vous êtes déjà connecté sous '.$user->lastname.' '.$user->firstname], 409);
 	}
 }
