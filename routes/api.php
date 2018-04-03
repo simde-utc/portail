@@ -29,6 +29,7 @@ Route::apiResources([
 	'rooms'			=> 'RoomController',
     'articles'      => 'ArticleController',
 	'partners'      => 'PartnerController',
+	'events'		=> 'EventController',
 ]);
 
 
