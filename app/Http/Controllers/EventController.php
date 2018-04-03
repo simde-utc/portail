@@ -52,9 +52,8 @@ class EventController extends Controller
         $event = Event::find($id);
 
         if($event)
-            return response()->json($event, 200);
-        else
-            return response()->json(["message" => "Impossible de trouver l'évènement"], 500);
+            return response()->json($event, 202);
+        return response()->json(["message" => "Impossible de trouver l'évènement"], 404);
     }
 
     /**
@@ -64,31 +63,15 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EventRequest $request, $id)
     {
         $event = Event::find($id);
-
-        if($event)
-        {
-            //Le "update ne passe pas"
-            //$event = Event::update($request->all());
-
-            $room->title = $request->input('title');
-            $room->description = $request->input('description');
-            $room->image = $request->input('image')->nullable();
-            $room->from = $request->input('from');
-            $room->to = $request->input('to');
-            $room->visibility_id = $request->input('visibility_id');
-            $room->place = $request->input('place');
-
-            $room->save();
-
-            return response()->json($event, 200);
-        }
-        else
-            return reponse()->json(["message" => "Impossible de trouver la salle"], 500);
-
-
+		if($event){
+			$ok = $event->update($request);
+			if($ok)
+				return response()->json($article,201);
+			return
+		}
     }
 
     /**

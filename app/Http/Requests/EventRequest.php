@@ -24,13 +24,13 @@ class EventRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'         => 'required|string|between:1,64',
+            'title'         => 'string|between:1,64'.($this->isMethod('put')?'':'|required'),
             'description'   => 'text',
             'image'         => 'string|between:1,191',
-            'from'          => 'required|timestamp',
-            'to'            => 'required|timestamp',
-            'visibility'    => 'required|string|between:1,128',            
-            'place'         => 'string'
+            'from'          => 'timestamp'.($this->isMethod('put')?'':'|required'),
+            'to'            => 'timestamp'.($this->isMethod('put')?'':'|required'),
+            'visibility'    => 'string|between:1,128'.($this->isMethod('put')?'':'|required'),
+            'place'         => 'string',
         ];
     }
 }
