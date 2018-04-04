@@ -23,10 +23,12 @@ class VisibilityRequest extends FormRequest
      */
     public function rules()
     {
+        $id=$this->visibilities;
+
         return [
 
-            'name' => 'unique:visibilities,name|string|between:3,191'.($this->isMethod('put')?'':'|required'),
-            'type'  => 'unique:visibilities,type|string|between:3,191'.($this->isMethod('put')?'':'|required'),
+            'name' => 'unique:visibilities,name'.$id.'|string|between:3,191'.($this->isMethod('put')?'':'|required'),
+            'type'  => 'unique:visibilities,type'.$id.'|string|between:3,191'.($this->isMethod('put')?'':'|required'),
             'parent_id' => 'integer|exists:visibilities,id'.($this->isMethod('put')?'':'|required'),
         ];
     }
