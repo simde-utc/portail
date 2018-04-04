@@ -29,13 +29,6 @@ class VisibilityController extends Controller
      */
     public function store(VisibilityRequest $request)
     {
-        if(Visibility::where('name', $request->input('name'))->get()->first()) {
-                return response()->json("Ce nom de visibilité existe déjà, conflit", 409);
-            }
-
-        if(Visibility::where('type', $request->input('type'))->get()->first()) {
-                return response()->json("Ce type de visibilité existe déjà, conflit", 409);
-            }
 
         $visibility = Visibility::create($request->all());
 
@@ -77,18 +70,7 @@ class VisibilityController extends Controller
         $visibility = Visibility::find($id);
 
 
-
         if($visibility){
-
-            if(Visibility::where('name', $request->input('name'))->get()->first() && ($visibility->name != $request->input('name'))) 
-            {
-                return response()->json("Ce nom de visibilité existe déjà, conflit", 409);
-            }
-
-            if(Visibility::where('type', $request->input('type'))->get()->first() && ($visibility->type != $request->input('type'))) 
-            {    
-                return response()->json("Ce type de visibilité existe déjà, conflit", 409);
-            }
 
             $ok = $visibility->update($request->input());
     
