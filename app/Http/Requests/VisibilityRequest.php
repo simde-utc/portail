@@ -27,7 +27,7 @@ class VisibilityRequest extends FormRequest
 
             'name' => 'unique:visibilities,name|string|between:3,191'.($this->isMethod('put')?'':'|required'),
             'type'  => 'unique:visibilities,type|string|between:3,191'.($this->isMethod('put')?'':'|required'),
-            'parent_id' => 'integer'.($this->isMethod('put')?'':'|required'),
+            'parent_id' => 'integer|exists:visibilities,id'.($this->isMethod('put')?'':'|required'),
         ];
     }
 }
