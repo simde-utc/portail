@@ -23,6 +23,10 @@ class VisibilitiesTableSeeder extends Seeder
                 'name' => 'Toute personne connectée',
             ],
             [
+                'type' => 'casOrWasCas',
+                'name' => 'Toute personne connectée au CAS ou maintenant Tremplin',
+            ],
+            [
                 'type' => 'cas',
                 'name' => 'Toute personne connectée au CAS',
             ],

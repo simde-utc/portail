@@ -13,24 +13,16 @@
 */
 
 Route::prefix('v1')->group(function () {
-	Route::middleware(Scopes::matchOne('user-get-info-identity'))->get('/onescope', function (Illuminate\Http\Request $request) {
-	    return $request->user();
-	});
-	Route::middleware(Scopes::matchAll(['user-get-info', 'user-get-assos-done']))->get('/allscopes', function (Illuminate\Http\Request $request) {
-	    return $request->user();
-	});
-	Route::middleware(Scopes::matchAnyClient())->get('/any', function (Illuminate\Http\Request $request) {
-	    return 'Sans aucun scope requis mais le token ne doit pas être relié à un utilisateur';
-	});
-
-	// Authentication Routes
+	// Connexions
 	Route::get('login', 'LoginController@index')->middleware('guest')->name('api/login');
 	Route::get('logout', 'LoginController@destroy')->middleware(Scopes::matchAnyUser())->name('api/logout');
 
-	Route::get('/user', function (Illuminate\Http\Request $request) {
-	    return $request->user();
-	})->middleware(Scopes::matchAnyUser())->name('api/user');
+	// Informations relatives à l'utlisateur
+	Route::get('/user', 'ConnectedUserController@index')->middleware(Scopes::matchAnyUser())->name('api/user');
+	Route::get('/user/providers', 'ConnectedUserController@getProviders')->middleware(Scopes::matchOne('user-get-info-identity-auth'))->name('api/user');
+	Route::get('/user/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchOne('user-get-info-identity-auth'))->name('api/user');
 
+	// Ressources diverses
 	Route::apiResources([
 	  'users'			=> 'UserController',
 	  'assos' 			=> 'AssoController',

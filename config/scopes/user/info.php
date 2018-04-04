@@ -29,6 +29,19 @@ return [
 			'scopes' => [
 				'identity' => [
 					'description' => 'Gérer l\'identité de l\'utilisateur',
+					'scopes' => [
+						'emails' => [
+							'description' => 'Gérer les adresses emails de l\'utlisateur',
+							'scopes' => [
+								'main' => [
+									'description' => 'Gérer l\'adresse email principale de l\'utlisateur',
+								],
+							]
+						],
+						'names' => [
+							'description' => 'Gérer les nom et prénom de l\'utlisateur',
+						],
+					]
 				]
 			]
 		],
@@ -37,20 +50,49 @@ return [
 			'scopes' => [
 				'identity' => [
 					'description' => 'Récupérer l\'identité de l\'utilisateur',
+					'scopes' => [
+						'emails' => [
+							'description' => 'Récupérer les adresses emails de l\'utlisateur',
+							'scopes' => [
+								'main' => [
+									'description' => 'Récupérer l\'adresse email principale de l\'utlisateur',
+								],
+							]
+						],
+						'names' => [
+							'description' => 'Connaître les nom et prénom de l\'utlisateur',
+						],
+						'timestamps' => [
+							'description' => 'Connaître les moments de connexion et de création de l\'utilisateur',
+						],
+						'type' => [
+							'description' => 'Connaître le type de l\'utilisateur',
+						],
+						'auth' => [
+							'description' => 'Connaître les types de connexions de l\'utilisateur',
+						],
+					]
 				]
 			]
-		],
-		'set' => [
-			'description' => "Modifier toutes les informations sur l'utilisateur",
-		],
-		'create' => [
-			'description' => "Créer toutes les informations sur l'utilisateur",
 		],
 		'edit' => [
 			'description' => "Modifier toutes les informations sur l'utilisateur",
 			'scopes' => [
 				'identity' => [
 					'description' => 'Modifier l\'identité de l\'utilisateur',
+					'scopes' => [
+						'emails' => [
+							'description' => 'Modifier les adresses emails de l\'utlisateur',
+							'scopes' => [
+								'main' => [
+									'description' => 'Modifier l\'adresse email principale de l\'utlisateur',
+								],
+							]
+						],
+						'names' => [
+							'description' => 'Modifier les nom et prénom de l\'utlisateur',
+						],
+					]
 				]
 			]
 		],
