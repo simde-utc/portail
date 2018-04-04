@@ -123,8 +123,8 @@
                                 <label class="col-md-3 col-form-label">Asso id</label>
 
                                 <div class="col-md-9">
-                                    <input id="edit-client-asso" type="number" min="0" class="form-control"
-                                                                @keyup.enter="update" v-model="editForm.asso_id">
+                                    <input name="asso_id" type="number" min="0" class="form-control"
+                                                                @keyup.enter="store" v-model="createForm.asso_id">
 
                                     <span class="form-text text-muted">
 										L'id de l'asso a qui créer la clé
@@ -205,7 +205,7 @@
                                 <label class="col-md-3 col-form-label">Asso id</label>
 
                                 <div class="col-md-9">
-                                    <input id="edit-client-asso" type="number" min="0" disabled class="form-control"
+                                    <input type="number" min="0" disabled class="form-control"
                                                                 @keyup.enter="update" v-model="editForm.asso_id">
 
                                     <span class="form-text text-muted">
@@ -229,7 +229,8 @@
                             </div>
 
 							<!-- Scopes -->
-                            <div class="form-group" v-if="editForm.scopes.length > 0">
+                            <div class="form-group" v-if="editForm.scopes.length > 0"
+														@keyup.enter="update" v-model="editForm.scopes">
                                 <label class="col-md-4 col-form-label">Scopes</label>
 
                                 <div class="col-md-9">
@@ -274,7 +275,7 @@
                     name: '',
 					asso_id: 1,
                     redirect: '',
-					scopes: {}
+					scopes: []
                 }
             };
         },
@@ -343,9 +344,16 @@
                 this.editForm.id = client.id;
                 this.editForm.name = client.name;
 				this.editForm.redirect = client.redirect;
-                this.editForm.scopes = JSON.parse(client.scopes);
 
-				console.log(this.editForm.scopes);
+				try{
+					this.editForm.scopes = JSON.parse(client.scopes);
+
+					if (this.editForm.scopes === null)
+						this.editForm.scopes = [];
+				}
+				catch (error){
+					this.editForm.scopes = [];
+				}
 
                 $('#modal-edit-client').modal('show');
             },

@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use Curl;
-
 /**
  * Cette classe permet de récupérer des informations concernant un membre de l'UTC
  */
@@ -309,7 +307,7 @@ class Scopes {
 	 * @return array
 	 */
 	public function matchAnyClient() {
-		return $this->matchAny(true);
+		return $this->matchAny(false);
 	}
 
 	/**

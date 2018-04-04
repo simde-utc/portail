@@ -47904,6 +47904,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     /*
@@ -47925,7 +47926,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 name: '',
                 asso_id: 1,
                 redirect: '',
-                scopes: {}
+                scopes: []
             }
         };
     },
@@ -47999,9 +48000,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.editForm.id = client.id;
             this.editForm.name = client.name;
             this.editForm.redirect = client.redirect;
-            this.editForm.scopes = JSON.parse(client.scopes);
 
-            console.log(this.editForm.scopes);
+            try {
+                this.editForm.scopes = JSON.parse(client.scopes);
+
+                if (this.editForm.scopes === null) this.editForm.scopes = [];
+            } catch (error) {
+                this.editForm.scopes = [];
+            }
 
             $('#modal-edit-client').modal('show');
         },
@@ -48285,17 +48291,13 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.editForm.asso_id,
-                          expression: "editForm.asso_id"
+                          value: _vm.createForm.asso_id,
+                          expression: "createForm.asso_id"
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: {
-                        id: "edit-client-asso",
-                        type: "number",
-                        min: "0"
-                      },
-                      domProps: { value: _vm.editForm.asso_id },
+                      attrs: { name: "asso_id", type: "number", min: "0" },
+                      domProps: { value: _vm.createForm.asso_id },
                       on: {
                         keyup: function($event) {
                           if (
@@ -48310,13 +48312,17 @@ var render = function() {
                           ) {
                             return null
                           }
-                          return _vm.update($event)
+                          return _vm.store($event)
                         },
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.$set(_vm.editForm, "asso_id", $event.target.value)
+                          _vm.$set(
+                            _vm.createForm,
+                            "asso_id",
+                            $event.target.value
+                          )
                         }
                       }
                     }),
@@ -48520,12 +48526,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: {
-                        id: "edit-client-asso",
-                        type: "number",
-                        min: "0",
-                        disabled: ""
-                      },
+                      attrs: { type: "number", min: "0", disabled: "" },
                       domProps: { value: _vm.editForm.asso_id },
                       on: {
                         keyup: function($event) {
@@ -48616,27 +48617,59 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _vm.editForm.scopes.length > 0
-                  ? _c("div", { staticClass: "form-group" }, [
-                      _c("label", { staticClass: "col-md-4 col-form-label" }, [
-                        _vm._v("Scopes")
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "col-md-9" },
-                        _vm._l(_vm.editForm.scopes, function(scope) {
-                          return _c("ul", [
-                            _c("li", [
-                              _vm._v(
-                                "\n                                            " +
-                                  _vm._s(scope) +
-                                  "\n                                        "
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "form-group",
+                        on: {
+                          keyup: function($event) {
+                            if (
+                              !("button" in $event) &&
+                              _vm._k(
+                                $event.keyCode,
+                                "enter",
+                                13,
+                                $event.key,
+                                "Enter"
                               )
+                            ) {
+                              return null
+                            }
+                            return _vm.update($event)
+                          }
+                        },
+                        model: {
+                          value: _vm.editForm.scopes,
+                          callback: function($$v) {
+                            _vm.$set(_vm.editForm, "scopes", $$v)
+                          },
+                          expression: "editForm.scopes"
+                        }
+                      },
+                      [
+                        _c(
+                          "label",
+                          { staticClass: "col-md-4 col-form-label" },
+                          [_vm._v("Scopes")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col-md-9" },
+                          _vm._l(_vm.editForm.scopes, function(scope) {
+                            return _c("ul", [
+                              _c("li", [
+                                _vm._v(
+                                  "\n                                            " +
+                                    _vm._s(scope) +
+                                    "\n                                        "
+                                )
+                              ])
                             ])
-                          ])
-                        })
-                      )
-                    ])
+                          })
+                        )
+                      ]
+                    )
                   : _vm._e()
               ])
             ]),
@@ -49689,28 +49722,30 @@ var render = function() {
                           "div",
                           { staticClass: "col-md-6" },
                           _vm._l(_vm.scopes, function(scope) {
-                            return _c("div", [
-                              _c("div", { staticClass: "checkbox" }, [
-                                _c("label", [
-                                  _c("input", {
-                                    attrs: { type: "checkbox" },
-                                    domProps: {
-                                      checked: _vm.scopeIsAssigned(scope.id)
-                                    },
-                                    on: {
-                                      click: function($event) {
-                                        _vm.toggleScope(scope.id)
-                                      }
-                                    }
-                                  }),
-                                  _vm._v(
-                                    "\n\n                                                " +
-                                      _vm._s(scope.id) +
-                                      "\n                                        "
-                                  )
+                            return !scope.startsWith("client")
+                              ? _c("div", [
+                                  _c("div", { staticClass: "checkbox" }, [
+                                    _c("label", [
+                                      _c("input", {
+                                        attrs: { type: "checkbox" },
+                                        domProps: {
+                                          checked: _vm.scopeIsAssigned(scope.id)
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.toggleScope(scope.id)
+                                          }
+                                        }
+                                      }),
+                                      _vm._v(
+                                        "\n\n                                                " +
+                                          _vm._s(scope.id) +
+                                          "\n                                        "
+                                      )
+                                    ])
+                                  ])
                                 ])
-                              ])
-                            ])
+                              : _vm._e()
                           })
                         )
                       ])

@@ -95,7 +95,7 @@
                                 <label class="col-md-4 col-form-label">Scopes</label>
 
                                 <div class="col-md-6">
-                                    <div v-for="scope in scopes">
+                                    <div v-for="scope in scopes" v-if="!scope.startsWith('client')">
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox"
