@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+use Illuminate\Http\Request;
 
 /**
  * Cette classe permet de récupérer des informations concernant un membre de l'UTC
@@ -289,7 +290,10 @@ class Scopes {
 	 * @return array
 	 */
 	private function matchAny(bool $userMustBeConnected = false) {
-		return $userMustBeConnected ? 'auth:api' : 'auth.client';
+		return [
+			$userMustBeConnected ? 'auth:api' : 'auth.client',
+			'auth.check',
+		];
 	}
 
 	/**
@@ -311,6 +315,15 @@ class Scopes {
 	}
 
 	/**
+	 * Retourne les Middleware à utiliser pour accéder à une route en matchant le scope ou les scopes
+	 * @param  string/array $scopes
+	 * @return array
+	 */
+	public function match($scopes) {
+		return is_array($scopes) ? $this->matchAll($scopes) : $this->matchOne([$scopes]);
+	}
+
+	/**
 	 * Retourne les Middleware à utiliser pour accéder à une route en matchant au moins un scope parmi la liste
 	 *
 	 * @param string/array $scopes
@@ -322,11 +335,9 @@ class Scopes {
 		else
 			$scopeList = $this->getMatchingScopes([$scopes]);
 
-		return [
-			$this->matchAny(explode('-', $scopeList[0])[0] === 'user'),
-			'scope:'.implode(',', $scopeList),
-			'auth.check',
-		];
+		return array_merge($this->matchAny(explode('-', $scopeList[0])[0] === 'user'), [
+			'scope:'.implode(',', $scopeList)
+		]);
 	}
 
 	/**
@@ -354,14 +365,77 @@ class Scopes {
 			array_push($middlewares, 'scope:'.implode(',', $scopeList));
 		}
 
-		if ($middleware !== 'a') {
-			$middlewares = array_merge([
-				$this->matchAny($middleware === 'user')
-			], $middlewares);
+		if ($middleware !== 'a')
+			$middlewares = array_merge($this->matchAny($middleware === 'user'), $middlewares);
+
+		return $middlewares;
+	}
+
+	/**
+	 * Retourne si le token est du type User
+	 * @param  Request $request
+	 * @return boolean
+	 */
+	public function isUserToken(Request $request) {
+		return $request->user() !== null;
+	}
+
+	/**
+	 * Retourne si le token est du type User
+	 * @param  Request $request
+	 * @return boolean
+	 */
+	public function isClientToken(Request $request) {
+		return $request->user() === null;
+	}
+
+	/**
+	 * Retourne les Middleware à utiliser pour accéder à une route en matchant le scope ou les scopes
+	 * @param  string/array $scopes
+	 * @return boolean
+	 */
+	public function has(Request $request, $scopes) {
+		return is_array($scopes) ? $this->hasAll($request, $scopes) : $this->hasOne($request, [$scopes]);
+	}
+
+	/**
+	 * Retourne si on peut accéder à une route en matchant au moins un scope parmi la liste
+	 *
+	 * @param string/array $scopes
+	 * @return boolean
+	 */
+	public function hasOne(Request $request, $scopes = []) {
+		if (is_array($scopes))
+			$scopes = $this->getMatchingScopes($scopes);
+		else
+			$scopes = $this->getMatchingScopes([$scopes]);
+
+		foreach ($request->user()->token()->scopes as $scope) {
+			if (in_array($scope, $scopes))
+				return true;
 		}
 
-		array_push($middlewares, 'auth.check');
-		return $middlewares;
+		return false;
+	}
+
+	/**
+	 * Retourne si on peut accéder à une route en matchant tous les scopes parmi la liste
+	 *
+	 * @param string/array $scopes
+	 * @return boolean
+	 */
+	public function hasAll(Request $request, array $scopes = []) {
+		if (is_array($scopes))
+			$scopes = $this->getMatchingScopes($scopes);
+		else
+			$scopes = $this->getMatchingScopes([$scopes]);
+
+		foreach ($request->user()->token()->scopes as $scope) {
+			if (!in_array($scope, $scopes))
+				return false;
+		}
+
+		return true;
 	}
 
 	/**

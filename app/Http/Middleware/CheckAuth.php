@@ -29,23 +29,10 @@ class CheckAuth
 			if ($client !== null && !$client->personal_access_client && !$client->password_client) {
 				$session = Session::find($token->session_id);
 
-				if ($session === null) {
-					// Si la session n'existe plus/pas, on dévalide le token
-					$token->revoked = true;
-					$oken->timestamps = false;
-					$token->save();
-
+				if ($session === null)
 					return response()->json(['message' => 'La session est invalide ou a expiré'], 403);
-				}
-				elseif ($session->user_id !== $request->user()->id) {
-					// Si la session n'existe plus/pas, on dévalide le token
-					$token->revoked = true;
-					$oken->timestamps = false;
-					$token->save();
-
-					// On vérifie que l'utilisateur est toujours connecté et qu'il s'agit toujours du même
+				elseif ($session->user_id !== $request->user()->id)
 					return response()->json(['message' => 'L\'utilisateur n\'est plus connecté'], 410);
-				}
 			}
 		}
 

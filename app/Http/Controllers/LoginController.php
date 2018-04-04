@@ -37,37 +37,24 @@ class LoginController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request, $provider) {
-		/*
-			Sera utile pour l'authenification par mdp
-		 */
-	}
-
-	/**
 	 * Déconnection de l'utilisateur
 	 */
-	public function logout(Request $request) {
+	public function destroy(Request $request) {
 		$token = $request->user()->token();
-		$service = config("auth.services.".Session::find($token->session_id)->auth_provider);
+		$session_id = $token->session_id;
+		$service = config("auth.services.".(\App\Models\Session::find($session_id)->auth_provider));
+		$redirect = $service === null ? null : resolve($service['class'])->logout($request);
 
-		if ($service === null) {
-			if ($request->query('redirect', url()->previous()))
-				$redirect = redirect($request->query('redirect', url()->previous()));
-			else
-				$redirect = redirect('home');
+		if ($redirect === null) {
+			// On le déconnecte uniquement lorsque le service a fini son travail
+			\App\Models\Session::find($session_id)->update([
+				'user_id' => null,
+				'auth_provider' => null,
+			]);
+
+			return response()->json(['message' => 'Utilisateur déconnecté avec succès'], 202);
 		}
 		else
-			$redirect = resolve($service['class'])->logout($request);
-
-		// On le déconnecte uniquement lorsque le service a fini son travail
-		\App\Models\Session::find(\Session::getId())->update(['auth_provider' => null]);
-    	Auth::logout();
-
-		return $redirect;
+			return response()->json(['redirect' => route('logout')], 200);
 	}
 }

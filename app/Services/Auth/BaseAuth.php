@@ -32,10 +32,7 @@ abstract class BaseAuth
 	 * Callback pour se logout
 	 */
 	public function logout(Request $request) {
-		if ($request->query('redirect'))
-			return redirect()->$request->query('redirect');
-		else
-			return redirect('home');
+		return null;
 	}
 
 	/**

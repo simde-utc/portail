@@ -56,11 +56,6 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapPassportRoutes()
     {
 		Passport::routes();
-
-		Passport::tokensExpireIn(now()->addDays(15));
-
-		Passport::refreshTokensExpireIn(now()->addDays(30));
-
 		Passport::tokensCan(Scopes::all());
 
 		Route::prefix('oauth')

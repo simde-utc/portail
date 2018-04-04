@@ -85,15 +85,14 @@ class LoginController extends Controller
 	 */
 	public function logout(Request $request) {
 		$service = config("auth.services.".Session::find(\Session::getId())->auth_provider);
+		$redirect = $service === null ? null : resolve($service['class'])->logout($request);
 
-		if ($service === null) {
+		if ($redirect === null) {
 			if ($request->query('redirect', url()->previous()))
 				$redirect = redirect($request->query('redirect', url()->previous()));
 			else
 				$redirect = redirect('home');
 		}
-		else
-			$redirect = resolve($service['class'])->logout($request);
 
 		// On le déconnecte uniquement lorsque le service a fini son travail
 		Session::find(\Session::getId())->update(['auth_provider' => null]);

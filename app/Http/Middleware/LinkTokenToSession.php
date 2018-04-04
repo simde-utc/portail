@@ -6,6 +6,7 @@ use Closure;
 use Laravel\Passport\Token;
 use Laravel\Passport\Client;
 use Laravel\Passport\AuthCode;
+use App\Models\Session;
 
 class LinkTokenToSession
 {
@@ -35,8 +36,14 @@ class LinkTokenToSession
 
 						// On ne procède uniquement sur les tokens liés à une session
 						if ($authCode != null) {
-							// Pour résoudre une faille de sécurité de notre super Laravel/Passport, à la génération d'un nouveau code, il faut révoker toutes les anciennes du même type
-							Token::where('user_id', $authCode->user_id)->where('client_id', $authCode->client_id)->where('scopes', $authCode->scopes)->where('session_id', $authCode->session_id)->update(['revoked' => true]);
+							// On supprime les duplications du trio client/user/scopes qui ne sont plus utilisées ou sont expirées
+							Token::where('user_id', $authCode->user_id)->where('client_id', $authCode->client_id)->where('scopes', $authCode->scopes)->where('user_id', $authCode->user_id)->whereNotNull('session_id')->get()->each(function ($tokenToDelete, $key) use ($authCode) {
+								$session = Session::find($tokenToDelete->session_id);
+
+								// Si la session a expiré ou que l'utlisateur n'est plus connecté, on supprime le token en vue d'un nouveau
+								if ($session === null || $session->user_id !== $authCode->user_id || $tokenToDelete->session_id === $authCode->session_id)
+									$tokenToDelete->delete();
+							});
 
 							$token->session_id = $authCode->session_id;
 							$token->timestamps = false;
@@ -46,7 +53,7 @@ class LinkTokenToSession
 				}
 			}
 		}
-		elseif ($response->status() !== 200 && $response->status() !== 400) {
+		elseif ($response->status() !== 200 && $response->status() !== 400 && $request->user() !== null) {
 			$authCode = AuthCode::where('user_id', $request->user()->id)->where('client_id', $request->input('client_id'))->whereNull('session_id')->orderBy('expires_at', 'DESC')->first();
 
 			if ($authCode !== null) {
