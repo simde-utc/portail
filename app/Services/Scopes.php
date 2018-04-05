@@ -37,11 +37,11 @@ class Scopes {
 	 * @param  array $subScopes
 	 * @return array
 	 */
-	private function generate(string $prefix, array $subScopes) {
+	private function generate(string $before, array $subScopes) {
 		$scopes = [];
 
 		foreach ($subScopes as $name => $data) {
-			$prefix = $prefix.'-'.$name;
+			$prefix = $before.'-'.$name;
 
 			if (isset($data['scopes']))
 				$scopes = array_merge($scopes, $this->generate($prefix, $data['scopes']));
@@ -312,6 +312,18 @@ class Scopes {
 	 */
 	public function matchAnyClient() {
 		return $this->matchAny(false);
+	}
+
+	/**
+	 * Retourne les Middleware d'authentification pour tout client connecté ou non à un utilisateur
+	 *
+	 * @return array
+	 */
+	public function matchAnyUserOrClient() {
+		return [
+			'auth.any',
+			'auth.check',
+		];
 	}
 
 	/**

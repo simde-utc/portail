@@ -37,7 +37,7 @@ class LinkTokenToSession
 						// On ne procède uniquement sur les tokens liés à une session
 						if ($authCode != null) {
 							// On supprime les duplications du trio client/user/scopes qui ne sont plus utilisées ou sont expirées
-							Token::where('user_id', $authCode->user_id)->where('client_id', $authCode->client_id)->where('scopes', $authCode->scopes)->where('user_id', $authCode->user_id)->whereNotNull('session_id')->get()->each(function ($tokenToDelete, $key) use ($authCode) {
+							Token::where('user_id', $authCode->user_id)->where('client_id', $authCode->client_id)->where('user_id', $authCode->user_id)->where('revoked', false)->whereNotNull('session_id')->get()->each(function ($tokenToDelete, $key) use ($authCode) {
 								$session = Session::find($tokenToDelete->session_id);
 
 								// Si la session a expiré ou que l'utlisateur n'est plus connecté, on supprime le token en vue d'un nouveau
