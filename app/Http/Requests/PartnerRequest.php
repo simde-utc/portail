@@ -26,7 +26,8 @@ class PartnerRequest extends FormRequest
         return [
             'name' => 'string|'.validation_between('title').($this->isMethod('put')?'':'|required'),
 	        'description' => 'string|'.validation_between('description').($this->isMethod('put')?'':'|required'),
-	        'image'=> 'string|'.validation_between('url').($this->isMethod('put')?'':'|required'), //TODO mettre un champ image
+	        'image'=> 'image'.validation_between('url').'|nullable', 
         ];
     }
 }
+

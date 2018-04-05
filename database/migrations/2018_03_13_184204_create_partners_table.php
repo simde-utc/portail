@@ -17,7 +17,7 @@ class CreatePartnersTable extends Migration
 			$table->increments('id');
 			$table->string('name', validation_max('name'))->unique();
 			$table->string('description', validation_max('description'));
-			$table->string('image', validation_max('url'));
+			$table->string('image', validation_max('url'))->nullable();
 			$table->timestamps();
 		});
 	}
