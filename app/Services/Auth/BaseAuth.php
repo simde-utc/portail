@@ -168,14 +168,7 @@ abstract class BaseAuth
 			$userAuth->save();
 
 			Auth::login($user);
-			Session::updateOrCreate(
-				[
-					'id' => \Session::getId(),
-				],
-				[
-					'auth_provider' => $this->name,
-				]
-			);
+			Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => $this->name]);
 
 			return $this->success($request, $user, $userAuth);
 		}

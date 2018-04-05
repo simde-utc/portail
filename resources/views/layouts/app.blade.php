@@ -59,11 +59,11 @@
 								</a>
 								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 									@foreach (config('auth.services') as $name => $provider)
-										<a class="dropdown-item" href="{{ route('login.show', ['provider' => $name, 'redirect' => $redirect]) }}">
+										<a class="dropdown-item" href="{{ route('login.show', ['provider' => $name, 'redirect' => $redirect ?? url()->previous()]) }}">
 											{{ $provider['name'] }}
 										</a>
 									@endforeach
-										<a class="dropdown-item" href="{{ route('login', ['see' => 'all', 'redirect' => $redirect]) }}">
+										<a class="dropdown-item" href="{{ route('login', ['see' => 'all', 'redirect' => $redirect ?? url()->previous()]) }}">
 											Tout voir
 										</a>
 								</div>

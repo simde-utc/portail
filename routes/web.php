@@ -10,16 +10,12 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
-// Auth::routes();		// TODO à enlever sur le long terme
-
+Auth::routes();
 // Password reset
 Route::get('password/reset',  'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
 Route::match(['get', 'head'], 'password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 Route::get('password/done',  'Auth\ResetPasswordController@done');
-
 
 // Authentication Routes
 Route::get('login', 'Auth\LoginController@index')->name('login');

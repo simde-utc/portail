@@ -15,7 +15,7 @@ class UpdateOauthAccessTokensTable extends Migration
     {
         Schema::table('oauth_access_tokens', function (Blueprint $table) {
 			$table->string('session_id')->nullable();
-			$table->foreign('session_id')->references('id')->on('sessions');
+			// Pas de contrainte car ça cause un problème lors du changement automatique de l'id de la session
         });
     }
 
