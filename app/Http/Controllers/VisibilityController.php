@@ -69,7 +69,6 @@ class VisibilityController extends Controller
     {
         $visibility = Visibility::find($id);
 
-
         if($visibility){
 
             $ok = $visibility->update($request->input());
