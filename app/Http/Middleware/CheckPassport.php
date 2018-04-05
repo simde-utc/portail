@@ -18,13 +18,12 @@ class CheckPassport
     public function handle($request, Closure $next)
     {
 		$input = $request->all();
-
 		// On vérifie la requête uniquement s'il s'agit d'une authentification par client uniquement
         if (isset($input['grant_type']) && ($input['grant_type'] === 'client_credentials' || $input['grant_type'] === 'password')) {
 			if (isset($input['scope']))
 				throw new \Exception('Les scopes sont définis à l\'avance pour chaque clé, il ne faut pas les définir dans la requête');
 
-			$clientId = $_SERVER['PHP_AUTH_USER'] ?? $_REQUEST['client_id'] ?? null;
+			$clientId = $input['client_id'] ?? $_SERVER['PHP_AUTH_USER'] ?? null;
 			$client = Client::find($clientId);
 
 			// Si on n'arrive pas à récupérer le client_id, on refuse l'accès

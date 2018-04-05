@@ -22,7 +22,7 @@ class AuthPassword extends Model
 		return $this->belongsTo('App\Models\User');
 	}
 
-	public function getByIdentifiant($email) {
+	public function getUserByIdentifiant($email) {
 		return User::where('email', $email)->first();
     }
 

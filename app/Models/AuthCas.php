@@ -21,8 +21,13 @@ class AuthCas extends Model
 		return $this->belongsTo('App\Models\User');
 	}
 
-	public function getByIdentifiant($login) {
-		return $this->where('login', $login)->first();
+	public function getUserByIdentifiant($login) {
+		$auth = $this->where('login', $login)->first();
+
+		if ($auth)
+			return User::find($auth->user_id);
+		else
+			return null;
     }
 
 	public function isPasswordCorrect($password) {

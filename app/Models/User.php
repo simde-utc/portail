@@ -66,8 +66,8 @@ class User extends Authenticatable
 		foreach ($providers as $provider) {
 			$model = $provider['model'];
 
-			if (method_exists($model, 'getByIdentifiant'))
-				$user = (new $model)->getByIdentifiant($username);
+			if (method_exists($model, 'getUserByIdentifiant'))
+				$user = (new $model)->getUserByIdentifiant($username);
 
 			if ($user)
 				return $user;
