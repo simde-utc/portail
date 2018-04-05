@@ -23,7 +23,6 @@ class VisibilityRequest extends FormRequest
      */
     public function rules()
     {
-        //$id=$this->id;
 
         return [
 
