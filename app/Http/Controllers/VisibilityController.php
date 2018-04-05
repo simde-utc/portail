@@ -6,6 +6,7 @@ use App\Http\Requests\VisibilityRequest;
 use Illuminate\Http\Request;
 use App\Models\Visibility;
 
+
 class VisibilityController extends Controller
 {
     /**
@@ -28,8 +29,12 @@ class VisibilityController extends Controller
      */
     public function store(VisibilityRequest $request)
     {
-        if(Visibility::where('name', $request->input('name'))) {
-                return response()->error("Cette visibilité existe déjà, conflit", 409);
+        if(Visibility::where('name', $request->input('name'))->get()->first()) {
+                return response()->json("Ce nom de visibilité existe déjà, conflit", 409);
+            }
+
+        if(Visibility::where('type', $request->input('type'))->get()->first()) {
+                return response()->json("Ce type de visibilité existe déjà, conflit", 409);
             }
 
         $visibility = Visibility::create($request->all());
