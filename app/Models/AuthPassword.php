@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
-class AuthPassword extends Model
+class AuthPassword extends Auth
 {
 	protected $fillable = [
-	 'user_id', 'last_login_at',
+	 	'user_id', 'password', 'last_login_at',
 	];
 
 	protected $hidden = [
@@ -18,5 +19,11 @@ class AuthPassword extends Model
 		return $this->belongsTo('App\Models\User');
 	}
 
-	protected $primaryKey = 'user_id';
+	public function getUserByIdentifiant($email) {
+		return User::where('email', $email)->first();
+    }
+
+	public function isPasswordCorrect($password) {
+		return Hash::check($password, $this->password);
+	}
 }

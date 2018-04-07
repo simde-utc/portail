@@ -3,13 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Semester;
 
 class User extends Authenticatable
 {
-	use HasRoles;
+	use HasApiTokens, Notifiable, HasRoles;
 
 	protected $fillable = [
 		'firstname', 'lastname', 'email', 'last_login_at',
@@ -26,14 +28,68 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\AuthPassword');
 	}
 
-	public function getCurrentAuth() {
-		$services = config('auth.services');
+	public function assoMember() {
+		return $this->hasMany('App\Models\AssoMember');
+	}
 
-		foreach ($services as $service => $serviceInfo) {
-			if (method_exists($this, $service) && $this->$service()->exists())
-				return $service;
+	public function assos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members');
+	}
+
+	public function currentAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->where('semester_id', Semester::getThisSemester()->id);
+	}
+
+	public function groups() {
+		return $this->belongsToMany('App\Models\Group', 'groups_members');
+	}
+
+	public function currentGroups() {
+		return $this->belongsToMany('App\Models\Group', 'groups_members')->where('is_active', 1);
+	}
+
+	public function ownGroups() {
+		return $this->hasMany('App\Models\Group');
+	}
+
+	public function contact() {
+        return $this->hasMany('App\Models\UserContact', 'contacts_users');
+    }
+
+    public function events() {
+    	return $this->belongsToMany('App\Models\Event');
+    }
+
+	// Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification
+	public function findForPassport($username) {
+		$providers = config('auth.services');
+
+		foreach ($providers as $provider) {
+			$model = $provider['model'];
+
+			if (method_exists($model, 'getUserByIdentifiant'))
+				$user = (new $model)->getUserByIdentifiant($username);
+
+			if ($user)
+				return $user;
 		}
 
 		return null;
+    }
+	public function validateForPassportPasswordGrant($password) {
+		$providers = config('auth.services');
+
+		foreach ($providers as $name => $provider) {
+			$auth = $this->$name;
+
+			if ($auth) {
+				if (method_exists($auth, 'isPasswordCorrect')) {
+					if ($auth->isPasswordCorrect($password))
+						return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }

@@ -37,10 +37,6 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        'cas' => [
-            \App\Http\Middleware\CheckCas::class,
-        ],
-
         'api' => [
             'throttle:60,1',
             'bindings',
@@ -62,5 +58,13 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+		'auth.any' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+		'auth.client' => \App\Http\Middleware\CheckClient::class,
+		'auth.check' => \App\Http\Middleware\CheckAuth::class,
+		'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
+		'admin' => \App\Http\Middleware\IsAdmin::class,
+		'checkPassport' => \App\Http\Middleware\CheckPassport::class,
+		'linkTokenToSession' => \App\Http\Middleware\LinkTokenToSession::class,
+		//'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class, // Inutile car géré par notre service Scopes
     ];
 }

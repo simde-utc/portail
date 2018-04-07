@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Cas;
-
+use Laravel\Passport\Token;
+use App\Models\Session;
 
 class LoginController extends Controller
 {
@@ -32,24 +34,35 @@ class LoginController extends Controller
 	 */
 	protected $redirectTo = '/home';
 
+	public function __construct()	{
+		$this->middleware('guest', ['except' => 'logout']);
+		$this->middleware('auth', ['only' => 'logout']);
+	}
+
 	/**
 	 * Affiche la vue de choix de méthode de login
 	 */
-	public function showLoginOptions() {
-		return view('login.index');
+	public function index(Request $request) {
+		$provider = $request->cookie('auth_provider');
+		$provider_class = config("auth.services.$provider.class");
+
+		if ($provider_class === null || $request->query('see') === 'all')
+			return view('login.index', ['redirect' => $request->query('redirect', url()->previous())]);
+		else
+			return redirect()->route('login.show', ['provider' => $provider, 'redirect' => $request->query('redirect', url()->previous())]);
 	}
 
 	/**
 	 * Récupère la classe d'authentication $provider_class dans le service container de Laravel
 	 * et applique le show login
 	 */
-	public function showLoginForm($provider) {
+	public function show(Request $request, $provider) {
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
-			return redirect()->route('login.show');
+			return redirect()->route('login', ['redirect' => $request->query('redirect', url()->previous())])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
 		else
-			return resolve($provider_class)->showLoginForm();
+			return resolve($provider_class)->showLoginForm($request);
 	}
 
 	/**
@@ -59,28 +72,32 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
-			return redirect()->route('login.show');
-		else
+			return redirect()->route('login.show', ['redirect' => $request->query('redirect', url()->previous())]);
+		else {
+			setcookie('auth_provider', $provider, config('portail.cookie_lifetime'));
+
 			return resolve($provider_class)->login($request);
+		}
 	}
 
 	/**
 	 * Déconnection de l'utilisateur
 	 */
 	public function logout(Request $request) {
-		$service = config("auth.services.".Auth::user()->getCurrentAuth());
+		$service = config("auth.services.".Session::find(\Session::getId())->auth_provider);
+		$redirect = $service === null ? null : resolve($service['class'])->logout($request);
 
-		if ($service === null) {
-			if ($request->query('redirection'))
-				$redirect = redirect($request->query('redirection'));
+		if ($redirect === null) {
+			if ($request->query('redirect', url()->previous()))
+				$redirect = redirect($request->query('redirect', url()->previous()));
 			else
 				$redirect = redirect('home');
 		}
-		else
-			$redirect = resolve($service['class'])->logout($request);
 
 		// On le déconnecte uniquement lorsque le service a fini son travail
-    Auth::logout();
+		Session::find(\Session::getId())->update(['auth_provider' => null]);
+    	Auth::logout();
+
 		return $redirect;
 	}
 }

@@ -2,21 +2,18 @@
 
 namespace App\Services\Auth;
 
+use Ginger;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class Password extends AuthService
+class Password extends BaseAuth
 {
 	protected $name = 'password';
 
 	public function __construct() {
-		$this->config = config("auth.services." . $this->name);
-	}
-
-	public function showLoginForm() {
-		return view('auth.login');
+		$this->config = config("auth.services.".$this->name);
 	}
 
 	public function login(Request $request) {
@@ -27,35 +24,40 @@ class Password extends AuthService
 				$userAuth = $user->password()->first();
 
 				if ($userAuth !== null && Hash::check($request->input('password'), $userAuth->password))
-					return $this->connect($user, $userAuth);
+					return $this->connect($request, $user, $userAuth);
 			}
 
-			return $this->error(null, null);
+			return $this->error($request, null, null, 'L\'adresse email et/ou le mot de passe est incorrecte');
 		}
 		else
-			return $this->showLoginForm();
+			return $this->show($request);
+	}
+
+	public function register(Request $request) {
+		$this->type = "register";
+
+		return $this->create($request, [
+			'email' => $request->input('email'),
+			'firstname' => $request->input('firstname'),
+            'lastname' => $request->input('lastname'),
+		], [
+			'password' => Hash::make($request->input('password')),
+		]);
 	}
 
 	/*
 	 * Redirige vers la bonne page en cas de succès
 	 */
-	protected function success($user, $userAuth) {
-		$casAuth = $user->cas()->first();
+	protected function success(Request $request, $user = null, $userAuth = null, $message = null) {
+		$casAuth = $user->cas;
 
-		if ($casAuth !== null && $casAuth->active) {
-			$casAuth->active = 0;
+		if ($casAuth !== null && $casAuth->is_active && !Ginger::userExists($casAuth->login)) { // Si l'utilisateur n'existe plus auprès de Ginger, on peut désactiver son compte
+			$casAuth->is_active = 0;
 			$casAuth->save();
 
-			return redirect('home')->withSuccess('Vous êtes maintenant considéré.e comme un.e Tremplin'); // TODO: taper sur Ginger pour désactiver ou non le compte CAS
+			return parent::success($request, $user, $userAuth, 'Vous êtes maintenant considéré.e comme un.e Tremplin');
 		}
 		else
-			return redirect('home');
-	}
-
-	/*
-	 * Redirige vers la bonne page en cas d'erreur
-	 */
-	protected function error($user, $userAuth) {
-		return redirect()->route('login', ['provider' => $this->name])->withError('L\'adresse email et/ou le mot de passe est incorrecte');	// TODO
+			return parent::success($request, $user, $userAuth, $message);
 	}
 }

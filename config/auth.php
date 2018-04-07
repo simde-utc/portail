@@ -4,15 +4,19 @@ return [
 
     'services' => [
         'cas' => [
+			'name' => 'CAS-UTC',
+			'description' => 'Tout membre de l\'UTC ou de l\'ESCOM',
             'class' => App\Services\Auth\Cas::class,
             'model' => App\Models\AuthCas::class,
-            'middleware'  => App\Middleware\Auth\Cas::class,
+			'registrable' => false,
         ],
 
         'password' => [
+			'name' => 'Mot de passe',
+			'description' => 'Tout autre membre',
             'class' => App\Services\Auth\Password::class,
             'model' => App\Models\AuthPassword::class,
-            'middleware'  => App\Middleware\Auth\Password::class,
+			'registrable' => true,
         ],
     ],
 
@@ -56,7 +60,7 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver' => 'passport',
             'provider' => 'users',
         ],
     ],
@@ -84,11 +88,6 @@ return [
             'model' => App\Models\User::class,
             'table' => 'users'
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

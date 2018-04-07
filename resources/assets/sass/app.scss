@@ -6,9 +6,9 @@
 @import "variables";
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+@import "bootstrap/bootstrap";
+@import "node_modules/font-awesome/scss/font-awesome.scss";
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
+// Custom styles
+@import "layout";
+@import "passport";
