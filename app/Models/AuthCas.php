@@ -4,11 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AuthCas extends Model
+class AuthCas extends Auth
 {
-	public $incrementing = false;			// L'id n'est pas autoincrementé
-	protected $primaryKey = 'user_id';
-
 	protected $fillable = [
 	 	'user_id', 'login', 'email', 'last_login_at', 'is_active',
 	];

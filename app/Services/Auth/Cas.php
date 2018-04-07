@@ -60,6 +60,10 @@ class Cas extends BaseAuth
 		]);
 	}
 
+	public function register(Request $request) {
+		return redirect()->route('register.show', ['redirect' => $request->query('redirect', url()->previous())])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+	}
+
 	/*
 	 * Redirige vers la bonne page en cas de succès
 	 */

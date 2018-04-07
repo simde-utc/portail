@@ -8,6 +8,7 @@ return [
 			'description' => 'Tout membre de l\'UTC ou de l\'ESCOM',
             'class' => App\Services\Auth\Cas::class,
             'model' => App\Models\AuthCas::class,
+			'registrable' => false,
         ],
 
         'password' => [
@@ -15,6 +16,7 @@ return [
 			'description' => 'Tout autre membre',
             'class' => App\Services\Auth\Password::class,
             'model' => App\Models\AuthPassword::class,
+			'registrable' => true,
         ],
     ],
 

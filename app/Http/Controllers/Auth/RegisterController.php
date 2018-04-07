@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Models\AuthPassword;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -53,29 +54,31 @@ class RegisterController extends Controller
 			'firstname' => 'required|string|max:255',
 			'lastname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            //'password' => 'required|string|min:6|confirmed',
         ]);
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\Models\User
-     */
-    protected function create(array $data)
-    {
-        $user = User::create([
-			'email' => $data['email'],
-			'firstname' => $data['firstname'],
-            'lastname' => $data['lastname'],
-        ]);
+	public function show(Request $request, $name) {
+		$provider = config("auth.services.$name");
 
-		AuthPassword::create([
-			'user_id' => $user->id,
-			'password' => Hash::make($data['password']),
-		]);
+		if ($provider === null || !$provider['registrable'])
+			return redirect()->route('register.show', ['redirect' => $request->query('redirect', url()->previous())])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+		else
+			return resolve($provider['class'])->showRegisterForm($request);
+	}
 
-		return $user;
-    }
+	/**
+	 * Enregistrement de l'utilisateur après passage par l'API
+	 */
+	public function register(Request $request, $name) {
+		$provider = config("auth.services.$name");
+
+		if ($provider === null || !$provider['registrable'])
+			return redirect()->route('register.show', ['redirect' => $request->query('redirect', url()->previous())])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+		else {
+			setcookie('auth_provider', $name, config('portail.cookie_lifetime'));
+
+			return resolve($provider['class'])->register($request);
+		}
+	}
 }

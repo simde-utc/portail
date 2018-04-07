@@ -62,7 +62,7 @@ class LoginController extends Controller
 		if ($provider_class === null)
 			return redirect()->route('login', ['redirect' => $request->query('redirect', url()->previous())])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
 		else
-			return resolve($provider_class)->show($request);
+			return resolve($provider_class)->showLoginForm($request);
 	}
 
 	/**

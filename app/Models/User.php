@@ -60,6 +60,7 @@ class User extends Authenticatable
     	return $this->belongsToMany('App\Models\Event');
     }
 
+	// Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification
 	public function findForPassport($username) {
 		$providers = config('auth.services');
 
@@ -75,7 +76,6 @@ class User extends Authenticatable
 
 		return null;
     }
-
 	public function validateForPassportPasswordGrant($password) {
 		$providers = config('auth.services');
 

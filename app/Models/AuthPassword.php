@@ -5,11 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
-class AuthPassword extends Model
+class AuthPassword extends Auth
 {
-	public $incrementing = false;			// L'id n'est pas autoincrementé
-	protected $primaryKey = 'user_id';
-
 	protected $fillable = [
 	 	'user_id', 'password', 'last_login_at',
 	];

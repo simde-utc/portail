@@ -33,6 +33,18 @@ class Password extends BaseAuth
 			return $this->show($request);
 	}
 
+	public function register(Request $request) {
+		$this->type = "register";
+
+		return $this->create($request, [
+			'email' => $request->input('email'),
+			'firstname' => $request->input('firstname'),
+            'lastname' => $request->input('lastname'),
+		], [
+			'password' => Hash::make($request->input('password')),
+		]);
+	}
+
 	/*
 	 * Redirige vers la bonne page en cas de succès
 	 */
