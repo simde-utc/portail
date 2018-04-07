@@ -1,5 +1,4 @@
 <?php
-use App\Providers\GingerServiceProvider;
 
 return [
 
@@ -161,12 +160,14 @@ return [
 		// App\Providers\BroadcastServiceProvider::class,
 		App\Providers\EventServiceProvider::class,
 		App\Providers\RouteServiceProvider::class,
+		Laravel\Passport\PassportServiceProvider::class,
 
 		/*
-		 * Ginger Providers...
+		 * Custom Providers...
 		 */
  		Ixudra\Curl\CurlServiceProvider::class,
 		App\Providers\GingerServiceProvider::class,
+		App\Providers\ScopesServiceProvider::class,
 		/*
 		 * API doc generator
 		 */
@@ -202,7 +203,6 @@ return [
 		'Event' => Illuminate\Support\Facades\Event::class,
 		'File' => Illuminate\Support\Facades\File::class,
 		'Gate' => Illuminate\Support\Facades\Gate::class,
-		'Ginger' => App\Facades\Ginger::class,
 		'Hash' => Illuminate\Support\Facades\Hash::class,
 		'Lang' => Illuminate\Support\Facades\Lang::class,
 		'Log' => Illuminate\Support\Facades\Log::class,
@@ -221,7 +221,11 @@ return [
 		'URL' => Illuminate\Support\Facades\URL::class,
 		'Validator' => Illuminate\Support\Facades\Validator::class,
 		'View' => Illuminate\Support\Facades\View::class,
+
+		// Custom aliases
+		'Ginger' => App\Facades\Ginger::class,
 		'Visible' => App\Services\Visible::class,
+		'Scopes' => App\Facades\Scopes::class,
 
 	],
 

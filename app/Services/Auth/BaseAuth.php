@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UserPreference;
+use App\Models\Session;
 
 abstract class BaseAuth
 {
@@ -14,22 +15,36 @@ abstract class BaseAuth
 	 * !! Attributs à overrider
 	 */
 	protected $name, $config;
+	protected $type = 'login';
 
 	/**
 	 * Renvoie un lien vers le formulaire de login
 	 */
-	abstract public function showLoginForm();
+	public function showLoginForm(Request $request) {
+		return view('auth.'.$this->name.'.login', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())]);
+	}
+
+	/**
+	 * Renvoie un lien vers le formulaire d'enregistrement
+	 */
+	public function showRegisterForm(Request $request) {
+		if ($this->config['registrable'])
+			return view('auth.'.$this->name.'.register', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())]);
+		else
+			return redirect()->route('register.show', ['redirect' => $request->query('redirect', url()->previous())])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+	}
 
 	/**
 	 * Callback pour récupérer les infos de l'API en GET et login de l'utilisateur
 	 */
 	abstract function login(Request $request);
+	abstract function register(Request $request);
 
 	/**
 	 * Callback pour se logout
 	 */
 	public function logout(Request $request) {
-		return redirect('home');
+		return null;
 	}
 
 	/**
@@ -43,40 +58,51 @@ abstract class BaseAuth
 	/**
 	 * Crée l'utilisateur et son mode de connexion auth_{provider}
 	 */
-	protected function create(array $userInfo, array $authInfo) {
+	protected function create(Request $request, array $userInfo, array $authInfo) {
 		// Création de l'utilisateur avec les informations minimales
-		$user = $this->createUser($userInfo);
+		try {
+			$user = $this->createUser($userInfo);
+		}
+		catch (\Exception $e) {
+			return $this->error($request, null, null, 'Cette adresse mail est déjà utilisée');
+		}
 
 		// On crée le système d'authentification
 		$userAuth = $this->createAuth($user->id, $authInfo);
 
-		return $this->connect($user, $userAuth);
+		return $this->connect($request, $user, $userAuth);
 	}
 
 	/**
 	 * Met à jour les informations de l'utilsateur et de son mode de connexion auth_{provider}
 	 */
-	protected function update($id, array $userInfo = [], array $authInfo = []) {
+	protected function update(Request $request, $id, array $userInfo = [], array $authInfo = []) {
 		// Actualisation des informations
 		$user = $this->updateUser($id, $userInfo);
 
 		// On actualise le système d'authentification
 		$userAuth = $this->updateAuth($id, $authInfo);
 
-		return $this->connect($user, $userAuth);
+		return $this->connect($request, $user, $userAuth);
 	}
 
 	/**
 	 * Crée ou ajuste les infos de l'utilisateur et son mode de connexion auth_{provider}
 	 */
-	protected function updateOrCreate($key, $value, array $userInfo = [], array $authInfo = []) {
+	protected function updateOrCreate(Request $request, $key, $value, array $userInfo = [], array $authInfo = []) {
 		// On cherche l'utilisateur
 		$userAuth = $this->findUser($key, $value);
 
-		if ($userAuth === null)
-			return $this->create($userInfo, $authInfo); // Si inconnu, on le crée et on le connecte.
+		if ($userAuth === null) {
+			try {
+				return $this->create($request, $userInfo, $authInfo); // Si inconnu, on le crée et on le connecte.
+			}
+			catch (\Exception $e) {
+				return $this->error($request, null, null, 'Cette adresse mail est déjà utilisé mais n\'est pas relié au bon compte');
+			}
+		}
 		else
-			return $this->update($userAuth->user_id, $userInfo, $authInfo); // Si connu, on actualise ses infos et on le connecte.
+			return $this->update($request, $userAuth->user_id, $userInfo, $authInfo); // Si connu, on actualise ses infos et on le connecte.
 	}
 
 
@@ -84,24 +110,17 @@ abstract class BaseAuth
 	 * Crée l'utilisateur User
 	 */
 	protected function createUser(array $info) {
-		$user = User::updateOrCreate([
-			'email' => $info['email']
-		], [
-		  'lastname' => $info['lastname'],
-		  'firstname' => $info['firstname'],
-		  'last_login_at' => new \DateTime(),
+		$user = User::create([
+			'email' => $info['email'],
+			'lastname' => $info['lastname'],
+			'firstname' => $info['firstname'],
 		]);
-
-		// TODO Dans le cas où User n'aurait pas été créé
 
 		// Ajout dans les préférences
-		$userPreferences = UserPreference::updateOrCreate([
-		  'user_id' => $user->id,
-		], [
-		  'email' 	=> $user->email,
+		$userPreferences = UserPreference::create([
+			'user_id' => $user->id,
+			'email'   => $user->email,
 		]);
-
-		// TODO Dans le cas où UserPreferences n'aurait pas été créé
 
 		return $user;
 	}
@@ -129,10 +148,10 @@ abstract class BaseAuth
 	 * Crée la connexion auth
 	 */
 	protected function createAuth($id, array $info = []) {
-		return resolve($this->config['model'])::updateOrCreate(array_merge($info, [
-		  'user_id' => $id,
-		], [
-		  'last_login_at' => new \DateTime(),
+		return resolve($this->config['model'])::updateOrCreate([
+			'user_id' => $id,
+		], array_merge($info, [
+			'last_login_at' => new \DateTime(),
 		]));
 	}
 
@@ -153,7 +172,7 @@ abstract class BaseAuth
 	/**
 	 * Permet de se connecter
 	 */
-	protected function connect($user, $userAuth) {
+	protected function connect(Request $request, $user, $userAuth) {
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null) {
 			$user->timestamps = false;
@@ -165,24 +184,31 @@ abstract class BaseAuth
 			$userAuth->save();
 
 			Auth::login($user);
+			Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => $this->name]);
 
-			return $this->success($user, $userAuth);
+			return $this->success($request, $user, $userAuth);
 		}
 		else
-			return $this->error($user, $userAuth);
+			return $this->error($request, $user, $userAuth);
 	}
 
 	/*
 	 * Redirige vers la bonne page en cas de succès
 	 */
-	protected function success($user, $userAuth) {
-		return redirect('home');
+	protected function success(Request $request, $user = null, $userAuth = null, $message = null) {
+		if ($message === null)
+			return redirect($request->query('redirect', url()->previous()));
+		else
+			return redirect($request->query('redirect', url()->previous()))->withSuccess($message);
 	}
 
 	/*
 	 * Redirige vers la bonne page en cas d'erreur
 	 */
-	protected function error($user, $userAuth) {
-		return redirect()->route('login.show')->withError('Il n\'a pas été possible de vous connecter');	// TODO
+	protected function error(Request $request, $user = null, $userAuth = null, $message = null) {
+		if ($message === null)
+			return redirect()->route($this->type.'.show', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())])->withError('Il n\'a pas été possible de vous connecter');
+		else
+			return redirect()->route($this->type.'.show', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())])->withError($message);
 	}
 }

@@ -20,10 +20,10 @@ class AssosTypesTableSeeder extends Seeder
   	    ];
 
         foreach ($types as $type => $description) {
-        		AssoType::create([
-        			'name' => $type,
-        			'description' => $description,
-        		]);
+    		AssoType::create([
+    			'name' => $type,
+    			'description' => $description,
+    		]);
       	}
     }
 }

@@ -91,6 +91,34 @@ class Visible {
 		}
 	}
 
+	public static function getType($user_id = null) {
+		$visibilities = Models\Visibility::all();
+		$visibility_id = $visibilities->first()->id;
+
+		if ($user_id === null)
+			return 'public';
+
+		$result = 'public';
+
+		while ($visibility_id !== null) {
+			$visibility = $visibilities->find($visibility_id);
+
+			if ($visibility === null)
+				return false;
+
+			$type = 'is'.ucfirst($visibility->type);
+
+			if (method_exists(get_class(), $type) && self::$type(null, $user_id))
+				$result = $visibility->type;
+			else
+				break;
+
+			$visibility_id = $visibility->parent_id;
+		}
+
+		return $result;
+	}
+
 	/**
 	 * Fonction permettant de retirer toutes les informations visbiles ou non-visibles
 	 * @param  Collection/Model $collection Collection ou modèle sur lequel travailler
@@ -175,18 +203,25 @@ class Visible {
 	}
 
 	protected static function isLogged($model, $user_id) {
-		return User::find($user_id)->exists();
+		return Models\User::find($user_id)->exists();
+	}
+
+	protected static function isCasOrWasCas($model, $user_id) {
+		return Models\AuthCas::find($user_id)->exists();
 	}
 
 	protected static function isCas($model, $user_id) {
-		return self::isLogged($model, $user_id) && Models\AuthCas::find($user_id)->exists();
+		return Models\AuthCas::find($user_id)->where('is_active', true)->exists();
 	}
 
 	protected static function isContributor($model, $user_id) {
-		return self::isCas($model, $user_id) && Ginger::userExists(Models\AuthCas::find($user_id)->login);
+		return Ginger::userExists(Models\AuthCas::find($user_id)->login);
 	}
 
 	protected static function isPrivate($model, $user_id) {
+		if ($model === null)
+			return false;
+
 		try {
 			$memberModel = resolve(get_class($model).'Member'); // En faisant ça, on optimise notre requête SQL en évitant de trier la liste des membres
 		}

@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Laravel\Passport\Passport;
+use App\Facades\Scopes;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -35,6 +37,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+		$this->mapPassportRoutes();
+
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
@@ -49,11 +53,28 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    protected function mapPassportRoutes()
+    {
+		Passport::routes();
+		Passport::tokensCan(Scopes::all());
+
+		Route::prefix('oauth')
+			->group(base_path('routes/oauth.php'));
+    }
+
+
+    /**
+     * Define the "web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
     protected function mapWebRoutes()
     {
         Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
     }
 
     /**
@@ -66,8 +87,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
     }
 }

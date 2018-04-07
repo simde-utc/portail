@@ -10,64 +10,72 @@ use Illuminate\Support\Facades\Auth;
 class Cas extends BaseAuth
 {
 	protected $name = 'cas';
-	private $processURL;
-	private $casURL = 'https://cas.utc.fr/cas/';
+	private $casURL;
 
 	public function __construct() {
 		$this->config = config("auth.services." . $this->name);
-		$this->processURL = route('login.process', ['provider' => $this->name]);
-	}
-
-	public function showLoginForm() {
-		return redirect()->away($this->casURL.'login?service='.$this->processURL);
+		$this->casURL = config('portail.cas.url');
 	}
 
 	public function login(Request $request) {
 		$ticket = $request->query('ticket');
 
 		if (!isset($ticket) || empty($ticket))
-			return redirect()->route('login.show')->withError('Ticket CAS invalide');	// TODO
+			return $this->error($request, null, null, 'Ticket CAS invalide');
 
-		$data = file_get_contents($this->casURL.'serviceValidate?service='.$this->processURL.'&ticket='.$ticket);
+		$data = file_get_contents($this->casURL.'serviceValidate?service='.route('login.process', ['provider' => $this->name, 'redirect' => $request->query('redirect')]).'&ticket='.$ticket);
 
 		if (empty($data))
-			return redirect()->route('login.show')->withError('Aucune information reçue du CAS');	// TODO
+			return $this->error($request, null, null, 'Aucune information reçue du CAS');
 
 		$parsed = new xmlToArrayParser($data);
 
 		if (!isset($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']))
-			return redirect()->route('login', ['provider' => $this->name])->withError('Données du CAS reçues invalides');	// TODO
+			return $this->error($request, null, null, 'Données du CAS reçues invalides');
 
 		$login = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'];
 
-		$user = Ginger::user('snastuzz');
+		$ginger = Ginger::user($login);
 
-		if (!$user->exists())
-			return redirect('home')->withError('Une erreur a été rencontrée avec Ginger (erreur '.$user->getResponseCode().'). Il est impossible de vous identifier');
+		// Renvoie une erreur différente de la 200. On passe par le CAS.
+		if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
+			return $this->updateOrCreate($request, 'login', $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'], [
+				'firstname' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
+				'lastname' 	=> $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
+				'email' 	=> $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
+			], [
+				'login' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
+				'email' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
+			]);
+		}
 
-		// On regarde si l'utilisateur existe ou non et on le crée ou l'update
-		return $this->updateOrCreate('login', $user->getLogin(), [
-			'firstname' => $user->getFirstname(),
-			'lastname' 	=> $user->getLastname(),
-			'email' 	=> $user->getEmail(),
+		// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
+		return $this->updateOrCreate($request, 'login', $ginger->getLogin(), [
+			'firstname' => $ginger->getFirstname(),
+			'lastname' 	=> $ginger->getLastname(),
+			'email' 	=> $ginger->getEmail(),
 		], [
-			'login' => $user->getLogin(),
-			'email' => $user->getEmail(),
+			'login' => $ginger->getLogin(),
+			'email' => $ginger->getEmail(),
 		]);
+	}
+
+	public function register(Request $request) {
+		return redirect()->route('register.show', ['redirect' => $request->query('redirect', url()->previous())])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
 	}
 
 	/*
 	 * Redirige vers la bonne page en cas de succès
 	 */
-	protected function success($user, $userAuth) {
+	protected function success(Request $request, $user = null, $userAuth = null, $message = null) {
 		if (!$userAuth->is_active) {
 			$userAuth->is_active = 1;
 			$userAuth->save();
 
-			return redirect('home')->withSuccess('Vous êtes maintenant considéré.e comme un.e étudiant.e');
+			return view('auth.cas.redirect')->withSuccess('Vous êtes maintenant considéré.e comme un.e étudiant.e');
 		}
 		else
-			return redirect('home');
+			return view('auth.cas.redirect');
 	}
 
 	/**
@@ -76,15 +84,12 @@ class Cas extends BaseAuth
 	public function logout(Request $request) {
 		// Si le personne est ou était étudiant, il faut vérifier qu'il est bien passé par le CAS
 		if (Auth::user()->cas->is_active) {
-			if ($request->query('redirection'))
-				return redirect($this->casURL.'logout?service='.$request->query('redirection'));
-			else
-				return redirect($this->casURL.'logout');
+			return view('auth.cas.logout', [
+				'redirect' => $request->query('redirect', url()->previous()),
+			]);
 		}
-		else if ($request->query('redirection'))
-			return redirect($request->query('redirection'));
 		else
-			return redirect('home');
+			return parent::logout($request);
 	}
 }
 

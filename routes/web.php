@@ -10,23 +10,21 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
-// Auth::routes();		// TODO à enlever sur le long terme
-
+//Auth::routes();
 // Password reset
 Route::get('password/reset',  'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
 Route::match(['get', 'head'], 'password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 Route::get('password/done',  'Auth\ResetPasswordController@done');
 
-
 // Authentication Routes
-Route::get('login', 'Auth\LoginController@showLoginOptions')->name('login.show');
-Route::get('login/{provider?}', 'Auth\LoginController@showLoginForm')->name('login');
-Route::match(['get', 'post'], 'login/process/{provider}', 'Auth\LoginController@login')->name('login.process');		// Callback to login users back from API
+Route::get('login', 'Auth\LoginController@index')->name('login');
+Route::get('login/{provider?}', 'Auth\LoginController@show')->name('login.show');
+Route::match(['get', 'post'], 'login/{provider}/process', 'Auth\LoginController@login')->name('login.process');
 Route::match(['get', 'post'], 'logout/{redirection?}', 'Auth\LoginController@logout')->name('logout');
 
+Route::get('register/{provider?}', 'Auth\RegisterController@show')->name('register.show');
+Route::post('register/{provider?}/process', 'Auth\RegisterController@register')->name('register.process');
 
 // Vues temporaires, uniquement de l'affichage de liens
 Route::get('/', function () {

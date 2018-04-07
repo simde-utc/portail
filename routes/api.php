@@ -11,28 +11,33 @@
 |
 | Attention !! Les routes sont préfixées avec 'api/'
 */
+Route::prefix('v1')->group(function () {
+	// Connexions
+	Route::get('login', 'LoginController@index')->middleware('guest')->name('api/login');
+	Route::get('logout', 'LoginController@destroy')->middleware(Scopes::matchAnyUser())->name('api/logout');
 
-Route::middleware('auth:api')->get('/user', function (Illuminate\Http\Request $request) {
-    return $request->user();
-});
+	// Informations relatives à l'utlisateur
+	Route::get('user', 'ConnectedUserController@index')->middleware(Scopes::matchAnyUser())->name('api/user');
+	Route::get('user/providers', 'ConnectedUserController@getProviders')->middleware(Scopes::matchOne('user-get-info-identity-auth'))->name('api/user/providers');
+	Route::get('user/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchOne('user-get-info-identity-auth'))->name('api/user/provider');
 
-// Route::apiResources([
-//     'photos' => 'PhotoController',
-//     'posts' => 'PostController'
-// ]);
+	// Informations relatives au client
+	Route::get('client', 'ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
+	Route::get('client/users', 'ClientController@getUsers')->middleware(Scopes::matchAnyClient())->name('api/client/users');
+	Route::get('client/{user_id}', 'ClientController@getUser')->middleware(Scopes::matchAnyClient())->name('api/client/user');
+	Route::delete('client', 'ClientController@destroyCurrent')->middleware(Scopes::matchAnyUser())->name('api/client/delete');
+	Route::delete('client/users', 'ClientController@destroyAll')->middleware(Scopes::matchAnyClient())->name('api/client/users/delete');
+	Route::delete('client/{user_id}', 'ClientController@destroy')->middleware(Scopes::matchAnyClient())->name('api/client/user/delete');
 
-Route::apiResources([
+	Route::apiResources([
     'groups'        => 'GroupController',
     'assos/types' 	=> 'AssoTypeController',
-	'users'			=> 'UserController',
-	'assos' 		=> 'AssoController',
-	'rooms'			=> 'RoomController',
+	  'users'			    => 'UserController',
+	  'assos' 	  	  => 'AssoController',
+	  'rooms'			    => 'RoomController',
     'articles'      => 'ArticleController',
-	'partners'      => 'PartnerController',
-	'events'		=> 'EventController',
-	'visibilities'	=> 'VisibilityController',
-]);
-
-
-
-
+	  'partners'      => 'PartnerController',
+	  'events'		    => 'EventController',
+	  'visibilities'	=> 'VisibilityController',	
+  ]);
+});
