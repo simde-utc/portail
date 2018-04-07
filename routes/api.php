@@ -29,11 +29,15 @@ Route::prefix('v1')->group(function () {
 	Route::delete('client/users', 'ClientController@destroyAll')->middleware(Scopes::matchAnyClient())->name('api/client/users/delete');
 	Route::delete('client/{user_id}', 'ClientController@destroy')->middleware(Scopes::matchAnyClient())->name('api/client/user/delete');
 
-	// Ressources diverses
 	Route::apiResources([
-	  'users'			=> 'UserController',
-	  'assos' 			=> 'AssoController',
-	  'assos/types' 	=> 'AssoTypeController',
-	  'groups'      	=> 'GroupController',
-	]);
+    'groups'        => 'GroupController',
+    'assos/types' 	=> 'AssoTypeController',
+	  'users'			    => 'UserController',
+	  'assos' 	  	  => 'AssoController',
+	  'rooms'			    => 'RoomController',
+    'articles'      => 'ArticleController',
+	  'partners'      => 'PartnerController',
+	  'events'		    => 'EventController',
+	  'visibilities'	=> 'VisibilityController',	
+  ]);
 });

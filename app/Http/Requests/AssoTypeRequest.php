@@ -22,8 +22,8 @@ class AssoTypeRequest extends FormRequest
 	 */
 	public function rules() {
 		return [
-			'name' 			=> 'required|string|between:3,191',
-			'description' 	=> 'required|string|between:3,800',
+			'name' 			=> 'string|between:3,191'.($this->isMethod('put')?'':'|required'),
+			'description' 	=> 'string|between:3,800'.($this->isMethod('put')?'':'|required'),
 		];
 	}
 }

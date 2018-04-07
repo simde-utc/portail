@@ -168,6 +168,10 @@ return [
  		Ixudra\Curl\CurlServiceProvider::class,
 		App\Providers\GingerServiceProvider::class,
 		App\Providers\ScopesServiceProvider::class,
+		/*
+		 * API doc generator
+		 */
+		Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class,
 	],
 
 	/*

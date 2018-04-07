@@ -16,3 +16,5 @@ yarn-error.log
 .ftpconfig
 public/js/app.js
 package-lock\.json
+public/css/app.css
+public/docs/*

@@ -23,6 +23,7 @@ class CreateGroupsTable extends Migration
 			$table->foreign('visibility_id')->references('id')->on('visibilities');
 			$table->boolean('is_active')->default(1);
 			$table->timestamps();
+			$table->softDeletes();
 			$table->unique(['user_id', 'name']);
 		});
 	}
