@@ -21,9 +21,9 @@ class CheckClient
 		// On vérifie que le token n'est pas lié à un utilisateur
 		$bearerToken = $request->bearerToken();
 		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
-		$user_id = Token::find($tokenId)->user_id;
+		$token = Token::find($tokenId);
 
-		if ($user_id !== null)
+		if ($token === null || $token->user_id !== null)
 			throw OAuthServerException::accessDenied();
 
 		return $next($request);

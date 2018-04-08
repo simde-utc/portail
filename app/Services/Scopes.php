@@ -332,7 +332,7 @@ class Scopes {
 		if (is_array($scopes))
 			return $this->matchAll($scopes, $scopes2);
 		else {
-			array_push($clients, $scopes);
+			array_push($scopes2, $scopes);
 
 			return $this->matchOne($scopes2);
 		}
@@ -440,6 +440,19 @@ class Scopes {
 	 */
 	public function isClientToken(Request $request) {
 		return $request->user() === null;
+	}
+
+	public function isUserOrClientToken(Request $request) {
+		if ($request->user() === null) {
+			$bearerToken = $request->bearerToken();
+			$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+			$token = Token::find($tokenId);
+
+			if ($token !== null)
+				return false;
+		}
+
+		return true;
 	}
 
 	/**
