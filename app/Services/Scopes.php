@@ -254,13 +254,12 @@ class Scopes {
 	/**
 	 * Retourne la liste des scopes et des ses parents (prise en compte de l'héridité des verbes)
 	 *
-	 * @param string $scope
 	 * @param array $scopes
 	 * @return array
 	 */
-	private function getMatchingScopes(array $scopes = []) {
+	private function getMatchingScopes(array $scopes = [], bool $checkMiddleware = true) {
 		if ($scopes === [] || $scopes === null)
-			throw new \Exception('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([$userMustBeConnected = false])');
+			throw new \Exception('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
 
 		$matchingScopes = [];
 
@@ -269,7 +268,7 @@ class Scopes {
 
 			if (!isset($middleware))
 				$middleware = $elements[0];
-			elseif ($middleware !== $elements[0])
+			elseif ($middleware !== $elements[0] && $checkMiddleware)
 				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
 
 			$current = $this->getRelatives($scope, true);
@@ -289,9 +288,9 @@ class Scopes {
 	 * @param boolean $userMustBeConnected
 	 * @return array
 	 */
-	private function matchAny(bool $userMustBeConnected = false) {
+	private function matchAny(bool $canBeUser = true, bool $canBeClient = true) {
 		return [
-			$userMustBeConnected ? 'auth:api' : 'auth.client',
+			$canBeUser ? ($canBeClient ? 'auth.any' : 'auth:api') : ($canBeClient ? 'auth.client' : ''),
 			'auth.check',
 		];
 	}
@@ -302,7 +301,7 @@ class Scopes {
 	 * @return array
 	 */
 	public function matchAnyUser() {
-		return $this->matchAny(true);
+		return $this->matchAny(true, false);
 	}
 
 	/**
@@ -320,19 +319,23 @@ class Scopes {
 	 * @return array
 	 */
 	public function matchAnyUserOrClient() {
-		return [
-			'auth.any',
-			'auth.check',
-		];
+		return $this->matchAny();
 	}
 
 	/**
 	 * Retourne les Middleware à utiliser pour accéder à une route en matchant le scope ou les scopes
-	 * @param  string/array $scopes
+	 * @param  string/array $scopes  Liste des scopes ou des scopes user/client à avoir si on est user/client
+	 * @param  array $scopes2		 Liste des scopes client/user à avoir
 	 * @return array
 	 */
-	public function match($scopes) {
-		return is_array($scopes) ? $this->matchAll($scopes) : $this->matchOne([$scopes]);
+	public function match($scopes, array $scopes2 = []) {
+		if (is_array($scopes))
+			return $this->matchAll($scopes, $scopes2);
+		else {
+			array_push($clients, $scopes);
+
+			return $this->matchOne($scopes2);
+		}
 	}
 
 	/**
@@ -343,11 +346,19 @@ class Scopes {
 	 */
 	public function matchOne($scopes = []) {
 		if (is_array($scopes))
-			$scopeList = $this->getMatchingScopes($scopes);
+			$scopeList = $this->getMatchingScopes($scopes, false);
 		else
-			$scopeList = $this->getMatchingScopes([$scopes]);
+			$scopeList = $this->getMatchingScopes([$scopes], false);
 
-		return array_merge($this->matchAny(explode('-', $scopeList[0])[0] === 'user'), [
+		$middleware = isset($scopeList[0]) ? explode('-', $scopeList[0])[0] : null;
+
+		for ($i = 1; $i < count($scopeList); $i++) {
+			$temp = explode('-', $scopeList[$i])[0];
+			if ($middleware !== $temp)
+				$middleware = null;
+		}
+
+		return array_merge($this->matchAny($middleware !== 'client', $middleware !== 'user'), [
 			'scope:'.implode(',', $scopeList)
 		]);
 	}
@@ -358,29 +369,59 @@ class Scopes {
 	 * @param string/array $scopes
 	 * @return array
 	 */
-	public function matchAll(array $scopes = []) {
-		if (count($scopes) < 2)
-			return $this->matchOne($scope, $scopes);
+	public function matchAll(array $scopes = [], array $scopes2 = []) {
+		if (count($scopes) + count($scopes2) < 2)
+			return $this->matchOne(array_merge($scopes, $scopes2));
 
-		$middlewares = [];
+		$forScopes = [];
+		$middleware = null;
 
 		foreach ($scopes as $scope) {
 			$scopeList = $this->getMatchingScopes([$scope]);
 
 			$elements = explode('-', $scopeList[0]);
 
-			if (!isset($middleware))
+			if ($middleware === null)
 				$middleware = $elements[0];
 			elseif ($middleware !== $elements[0])
 				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
 
-			array_push($middlewares, 'scope:'.implode(',', $scopeList));
+			array_push($forScopes, $scopeList);
 		}
 
-		if ($middleware !== 'a')
-			$middlewares = array_merge($this->matchAny($middleware === 'user'), $middlewares);
+		$forScopes2 = [];
+		$middleware2 = null;
 
-		return $middlewares;
+		foreach ($scopes2 as $scope) {
+			$scopeList = $this->getMatchingScopes([$scope]);
+
+			$elements = explode('-', $scopeList[0]);
+
+			if ($middleware2 === null)
+				$middleware2 = $elements[0];
+			elseif ($middleware2 !== $elements[0])
+				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
+
+			array_push($forScopes2, $scopeList);
+		}
+
+		$allScopes = [];
+		$max = count($forScopes) - 1;
+		$max2 = count($forScopes2) - 1;
+
+		for ($i = 0; $i <= max($max, $max2); $i++) {
+			$add = [];
+
+			if (count($forScopes) > 0)
+				$add = array_merge($add, $forScopes[$i > $max ? 0 : $i]);
+
+			if (count($forScopes2) > 0)
+				$add = array_merge($add, $forScopes2[$i > $max2 ? 0 : $i]);
+
+			array_push($allScopes, 'scope:'.implode(',', $add));
+		}
+
+		return array_merge($this->matchAny($middleware === 'user' || $middleware2 === 'user', $middleware === 'client' || $middleware2 === 'client'), $allScopes);
 	}
 
 	/**
