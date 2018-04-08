@@ -30,14 +30,14 @@ Route::prefix('v1')->group(function () {
 	Route::delete('client/{user_id}', 'ClientController@destroy')->middleware(Scopes::matchAnyClient())->name('api/client/user/delete');
 
 	Route::apiResources([
-    'groups'        => 'GroupController',
-    'assos/types' 	=> 'AssoTypeController',
-	  'users'			    => 'UserController',
-	  'assos' 	  	  => 'AssoController',
-	  'rooms'			    => 'RoomController',
-    'articles'      => 'ArticleController',
-	  'partners'      => 'PartnerController',
-	  'events'		    => 'EventController',
-	  'visibilities'	=> 'VisibilityController',	
+		'groups'		=> 'GroupController',
+		'assos/types'	=> 'AssoTypeController',
+		'users'			=> 'UserController',
+		'assos'			=> 'AssoController',
+		'rooms'			=> 'RoomController',
+		'articles'		=> 'ArticleController',
+		'partners'		=> 'PartnerController',
+		'events'		=> 'EventController',
+		'visibilities'	=> 'VisibilityController',	
   ]);
 });

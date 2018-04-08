@@ -94,12 +94,23 @@ abstract class BaseAuth
 		$userAuth = $this->findUser($key, $value);
 
 		if ($userAuth === null) {
-			try {
-				return $this->create($request, $userInfo, $authInfo); // Si inconnu, on le crée et on le connecte.
+			$user = isset($userInfo['email']) ? User::where('email', $userInfo['email'])->first() : null;
+
+			if ($user === null) {
+				try {
+					return $this->create($userInfo); // Si inconnu, on le crée et on le connecte.
+				}
+				catch (\Exception $e) {
+					return $this->error($request, null, null, 'Cette adresse mail est déjà utilisé mais n\'est pas relié au bon compte');
+				}
 			}
-			catch (\Exception $e) {
-				return $this->error($request, null, null, 'Cette adresse mail est déjà utilisé mais n\'est pas relié au bon compte');
+			else {
+				$user = $this->updateUser($user->id, $userInfo);
+				$userAuth = $this->createAuth($user->id, $authInfo);
+
+				return $this->connect($request, $user, $userAuth);
 			}
+
 		}
 		else
 			return $this->update($request, $userAuth->user_id, $userInfo, $authInfo); // Si connu, on actualise ses infos et on le connecte.
