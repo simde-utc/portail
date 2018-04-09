@@ -18,8 +18,8 @@ Route::prefix('v1')->group(function () {
 
 	// Informations relatives à l'utlisateur
 	Route::get('user', 'ConnectedUserController@index')->middleware(Scopes::matchAnyUser())->name('api/user');
-	Route::get('user/auths', 'ConnectedUserController@getProviders')->middleware(Scopes::matchOne('user-get-info-identity-auth'))->name('api/user/auths');
-	Route::get('user/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchOne('user-get-info-identity-auth'))->name('api/user/auth');
+	Route::get('user/auths', 'ConnectedUserController@getProviders')->middleware(Scopes::matchAnyUser())->name('api/user/auths');
+	Route::get('user/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchAnyUser())->name('api/user/auth');
 
 	// Informations relatives au client
 	Route::get('client', 'ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');

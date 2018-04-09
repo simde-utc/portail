@@ -45,7 +45,7 @@ class ConnectedUserController extends Controller
 		foreach ($providers as $name => $provider) {
 			$model = resolve($provider['model']);
 
-			if ($model !== null) {
+			if ($model !== null && \Scopes::has($request, 'user-get-info-identity-auth-'.$name)) {
 				$data = $model->find($user->id);
 
 				if ($data !== null) {
@@ -72,6 +72,9 @@ class ConnectedUserController extends Controller
 		if ($provider === null)
 			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
 		else {
+			if (!\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+				return response()->json(['message' => 'Non autorisé'], 503);
+
 			$model = resolve($provider['model']);
 
 			if ($model !== null) {

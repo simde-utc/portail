@@ -70,6 +70,14 @@ return [
 						],
 						'auth' => [
 							'description' => 'Connaître les types de connexions de l\'utilisateur',
+							'scopes' => [
+								'cas' => [
+									'description' => 'Avoir les données CAS de l\'utilisateur',
+								],
+								'password' => [
+									'description' => 'Avoir les données liées à la création du compte mot de passe de l\'utilisateur',
+								],
+							]
 						],
 					]
 				]

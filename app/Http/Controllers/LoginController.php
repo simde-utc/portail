@@ -31,6 +31,7 @@ class LoginController extends Controller
 				'name' => $service['name'],
 				'description' => $service['description'],
 				'url' => route('login.show', ['provider' => $provider]),
+				'register_url' => $service['registrable'] ? route('register.show', ['provider' => $provider]) : null,
 			];
 
 		return response()->json($auth, 200);
