@@ -84,16 +84,4 @@ class Semester extends Model
             }
         }
     }
-
-    public function assoMember() {
-        return $this->hasMany('App\Models\AssoMember');
-    }
-
-    public function currentAssos() {
-        return $this->belongsToMany('App\Models\Asso', 'assos_members');
-    }
-
-    public function currentMembers() {
-        return $this->belongsToMany('App\Models\User', 'assos_members');
-    }
 }

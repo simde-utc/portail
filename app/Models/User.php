@@ -28,16 +28,20 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\AuthPassword');
 	}
 
-	public function assoMember() {
-		return $this->hasMany('App\Models\AssoMember');
-	}
-
 	public function assos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members');
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNotNull('validated_by');
 	}
 
 	public function currentAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->where('semester_id', Semester::getThisSemester()->id);
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('validated_by');
+	}
+
+	public function joiningAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNull('validated_by');
+	}
+
+	public function currentJoiningAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNull('validated_by');
 	}
 
 	public function groups() {
