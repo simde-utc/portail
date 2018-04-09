@@ -79,6 +79,15 @@ class Validation
 	}
 
 	/**
+	 * @return Validation
+	 */
+	public function nullable(){
+		$this->args['nullable'] = 'nullable';
+
+		return $this;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function get(){
