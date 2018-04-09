@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class VisibilityRequest extends FormRequest
@@ -23,11 +24,11 @@ class VisibilityRequest extends FormRequest
      */
     public function rules()
     {
+    	$id = $this->visibility;
         return [
-
-            'name' => 'unique:visibilities,name|string|between:3,191'.($this->isMethod('put')?'':'|required'),
-            'type'  => 'unique:visibilities,type|string|between:3,191'.($this->isMethod('put')?'':'|required'),
-            'parent_id' => 'integer'.($this->isMethod('put')?'':'|required'),
+	        'name' => Validation::make($this)->type('string')->length('between:3,191')->unique('visibilities', 'name,'.$id)->post('required')->get(),
+	        'type' => Validation::make($this)->type('string')->length('between:3,191')->unique('visibilities', 'type,'.$id)->post('required')->get(),
+	        'parent_id' => Validation::make($this)->type('integer')->exists('visibilities', 'id')->post('required')->get(),
         ];
     }
 }
