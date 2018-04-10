@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GroupRequest extends FormRequest
@@ -28,10 +29,12 @@ class GroupRequest extends FormRequest
     {
         // TODO: Vielles valeurs de la BDD, pas oublier de changer.
         return [
-            'name'          => 'string|between:1,64'.($this->isMethod('put')?'':'|required'),
-            'icon'          => 'string|between:3,191'.($this->isMethod('put')?'':'|required'),
-            'visibility'    => 'string|between:1,128'.($this->isMethod('put')?'':'|required'),
-            'is_active'     => 'boolean'.($this->isMethod('put')?'':'|required'),
+	        'name' => Validation::make($this)->type('string')->length(validation_between('name'))->unique('groups','name')->post('required')->get(),
+	        'icon' => Validation::make($this)->type('image')->length(validation_between('url'))->nullable()->get(),
+	        'visibility_id' => Validation::make($this)->type('integer')->exists('visibilities', 'id')->post('required')->get(),
+	        'user_id' => Validation::make($this)->type('integer')->exists('users', 'id')->post('required')->get(),
+	        'is_active' => Validation::make($this)->type('boolean')->get(),
+
         ];
     }
 }
