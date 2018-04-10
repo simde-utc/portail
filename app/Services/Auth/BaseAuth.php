@@ -98,7 +98,7 @@ abstract class BaseAuth
 
 			if ($user === null) {
 				try {
-					return $this->create($userInfo); // Si inconnu, on le crée et on le connecte.
+					return $this->create($request, $userInfo, $authInfo); // Si inconnu, on le crée et on le connecte.
 				}
 				catch (\Exception $e) {
 					return $this->error($request, null, null, 'Cette adresse mail est déjà utilisé mais n\'est pas relié au bon compte');
