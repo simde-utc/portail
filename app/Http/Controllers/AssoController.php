@@ -62,7 +62,7 @@ class AssoController extends Controller
 	{
 		$asso = Asso::find($id);
 		if($asso){
-			$ok = $asso->update($request);
+			$ok = $asso->update($request->input());
 			if($ok)
 				return response()->json($asso,201);
 			return response()->json(['message'=>'L\'association n\'a pas pu être modifiée'],500);

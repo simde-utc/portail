@@ -26,6 +26,8 @@ class Ginger {
 	 */
 	public function setKey($key) {
 		$this->key = $key;
+
+		return $this;
 	}
 
 	/**
