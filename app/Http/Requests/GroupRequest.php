@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Group;
 
 class GroupRequest extends FormRequest
 {
@@ -13,10 +14,9 @@ class GroupRequest extends FormRequest
      */
     public function authorize()
     {
-        $group = Group::find($this->route('group'));
+        //TODO: Autoriser en PUT et DELETE si c'est l'owner.
 
-        return $group && $group->is_active && $group->user_id = $this->user()->user_id;
-        // true si ce groupe existe, il est actif et l'utilisateur est le créateur du groupe.
+        return true;
     }
 
     /**

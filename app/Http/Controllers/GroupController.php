@@ -11,7 +11,7 @@ use App\Services\Visible\Visible;
 class GroupController extends Controller
 {
     public function __construct() {
-        // $this->middleware('auth:api');
+        $this->middleware('auth:api');
     }
 
     /**
@@ -21,8 +21,6 @@ class GroupController extends Controller
      */
     public function index()
     {
-        // TODO: Add visiblity !
-
         $groups = Group::where('is_active', 1)->get();
         return response()->json(Visible::hide($groups), 200);
     }
@@ -39,7 +37,7 @@ class GroupController extends Controller
         $group->user_id = Auth::user()->id; // A vérifier si c'est bon vis à vis du Oauth.
         $group->name = $request->name;
         $group->icon = $request->icon;
-        $group->visiblity_id = $request->visiblity_id;
+        $group->visibility_id = $request->visibility_id;
         $group->is_active = $request->is_active;
 
         // Les ids des membres à ajouter seront passé dans la requête.
@@ -63,11 +61,9 @@ class GroupController extends Controller
      */
     public function show($id)
     {
-        // TODO: Add visiblity !
-
         $group = Group::find($id);
         if ($group)
-            return response()->json($group, 200);
+            return response()->json(Visible::hide($group), 200);
         else
             return response()->json(["message" => "Impossible de trouver le groupe"], 404);
     }
