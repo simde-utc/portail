@@ -11,7 +11,8 @@ use App\Services\Visible\Visible;
 class GroupController extends Controller
 {
     public function __construct() {
-        $this->middleware('auth:api');
+        $this->middleware(\Scopes::matchOne(['user-manage-groups'], NULL), ['only' => ['store', 'update', 'destroy']]);
+        $this->middleware(\Scopes::matchOne(NULL, ['client-get-groups']), ['only' => ['index', 'show']]);
     }
 
     /**
