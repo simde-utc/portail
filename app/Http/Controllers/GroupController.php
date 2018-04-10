@@ -35,10 +35,19 @@ class GroupController extends Controller
      */
     public function store(GroupRequest $request)
     {
-        $group = Group::create($request->input());
+        $group = new Group;
+        $group->user_id = Auth::user()->id; // A vérifier si c'est bon vis à vis du Oauth.
+        $group->name = $request->name;
+        $group->icon = $request->icon;
+        $group->visiblity_id = $request->visiblity_id;
+        $group->is_active = $request->is_active;
 
-        // Members user id will be passed to request.
-        $group->members()->attach($request->ids);
+        // Les ids des membres à ajouter seront passé dans la requête.
+        // ids est un array de user ids.
+        if ($request->has('ids'))
+            $group->members()->attach($request->ids);
+
+        $group->save();
 
         if ($group)
             return response()->json($group, 200);
@@ -73,12 +82,23 @@ class GroupController extends Controller
     public function update(GroupRequest $request, $id)
     {
         $group = Group::find($id);
-        
-        // Members user id will be passed to request.
-        // Sync erases all previous associations and replaces them with the new one.
-        $group->members()->sync($request->ids);
 
-        $group = Group::update($request->input());
+        if (!$group)
+            return response()->json(["message" => "Impossible de trouver le groupe"], 404);
+
+        $group->user_id = Auth::user()->id; // A vérifier si c'est bon vis à vis du Oauth.
+        $group->name = $request->name;
+        $group->icon = $request->icon;
+        $group->visiblity_id = $request->visiblity_id;
+        $group->is_active = $request->is_active;
+
+        // Les ids de tout les membres (actuels et anciens) seront passés dans la requête.
+        // ids est un array de user ids.
+        if ($request->has('ids'))
+            $group->members()->sync($request->ids);
+
+        $group->save();
+
         if ($group)
             return response()->json($group, 200);
         else
@@ -95,8 +115,11 @@ class GroupController extends Controller
     {
         $group = Group::find($id);
 
-        $group->members()->detach();
+        if (!$group)
+            return response()->json(["message" => "Impossible de trouver le groupe"], 404);
 
+        $group->members()->detach();
+        
         $group->delete();
 
         return response()->json(["message" => "Groupe supprimé"], 200);
