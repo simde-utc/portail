@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Http\Requests\GroupRequest;
 use App\Services\Visible\Visible;
+use App\Models\Visibility;
 
 class GroupController extends Controller
 {
@@ -37,10 +38,10 @@ class GroupController extends Controller
     {
         $group = new Group;
         $group->user_id = $request->user()->id;
-        $group->name = $request->input('name', 'Nouveau groupe');
-        $group->icon = $request->input('icon');
-        $group->visibility_id = $request->input('visibility_id') ?? Visibility::where('type', 'owner')->first()->id;
-        $group->is_active = $request->input('is_active', true);
+        $group->name = $request->name;
+        $group->icon = $request->icon;
+        $group->visibility_id = $request->visibility_id ?? Visibility::where('type', 'owner')->first()->id;
+        $group->is_active = $request->is_active;
 
         // Les ids des membres à ajouter seront passé dans la requête.
         // ids est un array de user ids.
