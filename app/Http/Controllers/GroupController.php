@@ -12,8 +12,9 @@ use App\Models\Visibility;
 class GroupController extends Controller
 {
     public function __construct() {
-        $this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
-        $this->middleware(\Scopes::matchOne(['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']), ['only' => ['index', 'show']]);
+        //$this->middleware(\Scopes::matchAnyUserOrClient());
+        // $this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
+        // $this->middleware(\Scopes::matchOne(['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']), ['only' => ['index', 'show']]);
     }
 
     /**
@@ -62,10 +63,10 @@ class GroupController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $group = Group::find($id);
+        $group = Group::with('members')->find($id);
 
         if ($group)
-            return response()->json($request->user() ? Visible::hide($group, $request->user()->id) : $group, 200);
+            return response()->json($request->user() ? Visible::hide($group->toArray(), $request->user()->id) : $group->toArray(), 200);
         else
             return response()->json(["message" => "Impossible de trouver le groupe"], 404);
     }
