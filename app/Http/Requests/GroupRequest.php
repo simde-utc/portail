@@ -31,11 +31,12 @@ class GroupRequest extends FormRequest
      */
     public function rules()
     {
+	    $id = $this->group;
         return [
 	        'name' => Validation::make($this)
                         ->type('string')
                         ->length(validation_between('name'))
-                        //->unique('groups','name')
+                        ->unique('groups','name,'.$id)
                         ->post('required')
                         ->get(),
 	        'icon' => Validation::make($this)
