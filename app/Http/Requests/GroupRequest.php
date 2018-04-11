@@ -15,9 +15,12 @@ class GroupRequest extends FormRequest
      */
     public function authorize()
     {
-        //TODO: Autoriser en PUT et DELETE si c'est l'owner.
-
-        return true;
+        if ($this->isMethod('put') || $this->isMethod('delete')) {
+            $group = Group::find($this->route('group'));
+            return $group && ($this->user()->id == $group->user_id);
+        }
+        else
+            return true;
     }
 
     /**
@@ -27,14 +30,26 @@ class GroupRequest extends FormRequest
      */
     public function rules()
     {
-        // TODO: Vielles valeurs de la BDD, pas oublier de changer.
         return [
-	        'name' => Validation::make($this)->type('string')->length(validation_between('name'))->unique('groups','name')->post('required')->get(),
-	        'icon' => Validation::make($this)->type('image')->length(validation_between('url'))->nullable()->get(),
-	        'visibility_id' => Validation::make($this)->type('integer')->exists('visibilities', 'id')->post('required')->get(),
-	        'user_id' => Validation::make($this)->type('integer')->exists('users', 'id')->post('required')->get(),
-	        'is_active' => Validation::make($this)->type('boolean')->get(),
-
+	        'name' => Validation::make($this)
+                        ->type('string')
+                        ->length(validation_between('name'))
+                        ->unique('groups','name')
+                        ->post('required')
+                        ->get(),
+	        'icon' => Validation::make($this)
+                        ->type('image')
+                        ->length(validation_between('url'))
+                        ->nullable()
+                        ->get(),
+	        'visibility_id' => Validation::make($this)
+                        ->type('integer')
+                        ->exists('visibilities', 'id')
+                        ->post('required')
+                        ->get(),
+	        'is_active' => Validation::make($this)
+                        ->type('boolean')
+                        ->get(),
         ];
     }
 }

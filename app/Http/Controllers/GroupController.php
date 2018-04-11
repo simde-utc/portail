@@ -11,8 +11,8 @@ use App\Services\Visible\Visible;
 class GroupController extends Controller
 {
     public function __construct() {
-        $this->middleware(\Scopes::matchOne(['user-manage-groups'], NULL), ['only' => ['store', 'update', 'destroy']]);
-        $this->middleware(\Scopes::matchOne(NULL, ['client-get-groups']), ['only' => ['index', 'show']]);
+        $this->middleware(\Scopes::match('user-manage-groups'), ['only' => ['store', 'update', 'destroy']]);
+        $this->middleware(\Scopes::match('client-get-groups'), ['only' => ['index', 'show']]);
     }
 
     /**
@@ -35,7 +35,7 @@ class GroupController extends Controller
     public function store(GroupRequest $request)
     {
         $group = new Group;
-        $group->user_id = Auth::user()->id; // A vérifier si c'est bon vis à vis du Oauth.
+        $group->user_id = 1; //$request->user()->id;
         $group->name = $request->name;
         $group->icon = $request->icon;
         $group->visibility_id = $request->visibility_id;
@@ -43,8 +43,8 @@ class GroupController extends Controller
 
         // Les ids des membres à ajouter seront passé dans la requête.
         // ids est un array de user ids.
-        if ($request->has('ids'))
-            $group->members()->attach($request->ids);
+        if ($request->has('member_ids'))
+            $group->members()->attach($request->member_ids);
 
         $group->save();
 
@@ -83,7 +83,7 @@ class GroupController extends Controller
         if (!$group)
             return response()->json(["message" => "Impossible de trouver le groupe"], 404);
 
-        $group->user_id = Auth::user()->id; // A vérifier si c'est bon vis à vis du Oauth.
+        $group->user_id = $request->user()->id;
         $group->name = $request->name;
         $group->icon = $request->icon;
         $group->visiblity_id = $request->visiblity_id;
@@ -91,8 +91,8 @@ class GroupController extends Controller
 
         // Les ids de tout les membres (actuels et anciens) seront passés dans la requête.
         // ids est un array de user ids.
-        if ($request->has('ids'))
-            $group->members()->sync($request->ids);
+        if ($request->has('member_ids'))
+            $group->members()->sync($request->member_ids);
 
         $group->save();
 
