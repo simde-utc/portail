@@ -58,7 +58,7 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-		'auth.any' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+		'auth.any' => \App\Http\Middleware\CheckAny::class,
 		'auth.client' => \App\Http\Middleware\CheckClient::class,
 		'auth.check' => \App\Http\Middleware\CheckAuth::class,
 		'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,

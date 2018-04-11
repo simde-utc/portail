@@ -26,6 +26,36 @@ return [
     'verbs' => [
         'manage' => [
             'description' => 'Gérer les groupes de l\'utilisateur',
+			'scopes' => [
+				'enabled' => [
+					'description' => 'Gérer les groupes actifs de l\'utilisateur',
+				],
+				'disabled' => [
+					'description' => 'Gérer les groupes inactifs de l\'utilisateur',
+				],
+			]
         ],
+	    'get' => [
+	        'description' => 'Récupérer les groupes de l\'utilisateur',
+			'scopes' => [
+				'enabled' => [
+					'description' => 'Récupérer les groupes actifs de l\'utilisateur',
+				],
+				'disabled' => [
+					'description' => 'Récupérer les groupes inactifs de l\'utilisateur',
+				],
+			]
+	    ],
+	    'set' => [
+	        'description' => 'Modifier les groupes de l\'utilisateur',
+			'scopes' => [
+				'enabled' => [
+					'description' => 'Modifier les groupes actifs de l\'utilisateur',
+				],
+				'disabled' => [
+					'description' => 'Modifier les groupes inactifs de l\'utilisateur',
+				],
+			]
+	    ],
     ]
 ];

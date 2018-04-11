@@ -11,8 +11,8 @@ use App\Services\Visible\Visible;
 class GroupController extends Controller
 {
     public function __construct() {
-        $this->middleware(\Scopes::matchOne(['user-manage-groups'], NULL), ['only' => ['store', 'update', 'destroy']]);
-        $this->middleware(\Scopes::matchOne(NULL, ['client-get-groups']), ['only' => ['index', 'show']]);
+        $this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
+        $this->middleware(\Scopes::matchOne(['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']), ['only' => ['index', 'show']]);
     }
 
     /**
@@ -20,10 +20,11 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $groups = Group::where('is_active', 1)->get();
-        return response()->json(Visible::hide($groups), 200);
+        $groups = Group::where('is_active', $request->input('active') != 0)->get();
+
+		return response()->json(Visible::hide($groups), 200);
     }
 
     /**
@@ -116,7 +117,7 @@ class GroupController extends Controller
             return response()->json(["message" => "Impossible de trouver le groupe"], 404);
 
         $group->members()->detach();
-        
+
         $group->delete();
 
         return response()->json(["message" => "Groupe supprimé"], 200);
