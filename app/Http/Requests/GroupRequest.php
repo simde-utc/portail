@@ -16,9 +16,9 @@ class GroupRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->isMethod('put') || $this->isMethod('delete')) {
+        if ($this->isMethod('put') || $this->isMethod('patch') || $this->isMethod('delete')) {
             $group = Group::find($this->route('group'));
-            return $group && Visible::isOwner($group, $request->user()->id);
+            return $group && Visible::isOwner($group, $this->user()->id);
         }
         else
             return true;
