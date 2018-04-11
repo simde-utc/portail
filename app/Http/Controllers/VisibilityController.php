@@ -29,7 +29,6 @@ class VisibilityController extends Controller
      */
     public function store(VisibilityRequest $request)
     {
-
         $visibility = Visibility::create($request->all());
 
         if($visibility)
@@ -68,6 +67,8 @@ class VisibilityController extends Controller
     public function update(VisibilityRequest $request, $id)
     {
         $visibility = Visibility::find($id);
+
+
 
         if($visibility){
 
