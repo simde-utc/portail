@@ -32,6 +32,7 @@ class GroupRequest extends FormRequest
     public function rules()
     {
 	    $id = $this->group;
+
         return [
 	        'name' => Validation::make($this)
                         ->type('string')
