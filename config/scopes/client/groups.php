@@ -28,14 +28,12 @@ return [
             'scopes' => [
                 'members' => [
                     'description' => 'Récupérer la liste des membres des groupes',
-					'scopes' => [
-					]
                 ],
 				'enabled' => [
 					'description' => 'Récupérer la liste des groupes actifs',
 					'scopes' => [
 		                'members' => [
-		                    'description' => 'Récupérer la liste des membres actifs des groupes',
+		                    'description' => 'Récupérer la liste des membres des groupes actifs',
 		                ],
 					]
 				],
@@ -43,7 +41,7 @@ return [
 					'description' => 'Récupérer la liste des groupes inactifs',
 					'scopes' => [
 		                'members' => [
-		                    'description' => 'Récupérer la liste des membres inactifs des groupes',
+		                    'description' => 'Récupérer la liste des membres des groupes inactifs',
 		                ],
 					]
 				],

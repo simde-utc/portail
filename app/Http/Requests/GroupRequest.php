@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Group;
+use App\Services\Visible\Visible;
 
 class GroupRequest extends FormRequest
 {
@@ -17,7 +18,7 @@ class GroupRequest extends FormRequest
     {
         if ($this->isMethod('put') || $this->isMethod('delete')) {
             $group = Group::find($this->route('group'));
-            return $group && ($this->user()->id == $group->user_id);
+            return $group && Visible::isOwner($group, $request->user()->id);
         }
         else
             return true;
@@ -34,7 +35,7 @@ class GroupRequest extends FormRequest
 	        'name' => Validation::make($this)
                         ->type('string')
                         ->length(validation_between('name'))
-                        ->unique('groups','name')
+                        //->unique('groups','name')
                         ->post('required')
                         ->get(),
 	        'icon' => Validation::make($this)

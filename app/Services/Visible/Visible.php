@@ -2,7 +2,6 @@
 
 namespace App\Services\Visible;
 
-use Auth;
 use Ginger;
 use App\Models;
 
@@ -16,10 +15,7 @@ class Visible {
      * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
      * @return Collection/Model Collection ou modèle avec les informations privées cachées
      */
-    public static function hide($collection, $user_id = null) {
-        if ($user_id === null && Auth::user() !== null)
-			$user_id = Auth::user()->id;
-
+    public static function hide($collection, $user_id) {
 		$visibilities = Models\Visibility::all();
 
 		if (get_class($collection) === 'Illuminate\Database\Eloquent\Collection') {
@@ -45,7 +41,7 @@ class Visible {
 	 * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
 	 * @return Collection/Model Collection ou modèle visible
 	 */
-	public static function with($collection, $user_id = null) {
+	public static function with($collection, $user_id) {
 	    return self::remove($collection, $user_id, false);
 	}
 
@@ -55,7 +51,7 @@ class Visible {
 	 * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
 	 * @return Collection/Model Collection ou modèle non-visible
 	 */
-	public static function without($collection, $user_id = null) {
+	public static function without($collection, $user_id) {
 	    return self::remove($collection, $user_id, true);
 	}
 
@@ -65,10 +61,7 @@ class Visible {
 	 * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
 	 * @return Collection/Model Collection ou modèle non-visible avec les informations cachées
 	 */
-	public static function hideAndWithout($collection, $user_id = null) {
-		if ($user_id === null && Auth::user() !== null)
-			$user_id = Auth::user()->id;
-
+	public static function hideAndWithout($collection, $user_id) {
 		$visibilities = Models\Visibility::all();
 
 		if (get_class($collection) === 'Illuminate\Database\Eloquent\Collection') {
@@ -91,7 +84,7 @@ class Visible {
 		}
 	}
 
-	public static function getType($user_id = null) {
+	public static function getType($user_id) {
 		$visibilities = Models\Visibility::all();
 		$visibility_id = $visibilities->first()->id;
 
@@ -127,9 +120,6 @@ class Visible {
 	 * @return Collection/Model Collection ou modèle visible ou non-visible
 	 */
     protected static function remove($collection, $user_id, $visible) {
-        if ($user_id === null && Auth::user() !== null)
-			$user_id = Auth::user()->id;
-
 		$visibilities = Models\Visibility::all();
 
 		if (get_class($collection) === 'Illuminate\Database\Eloquent\Collection') {
@@ -169,7 +159,7 @@ class Visible {
 	 * @param  int $user_id    id de l'utilisateur dont on veut connaître sa visibilité
 	 *  @return boolean	           Visible ou non
 	 */
-	protected static function isVisible($visibilities, $model, $user_id = null) {
+	public static function isVisible($visibilities, $model, $user_id) {
 		if ($visibilities === null || $visibilities->count() === 0 || $visibilities === null)
 			return true;
 
@@ -198,27 +188,27 @@ class Visible {
 	    return false;
 	}
 
-	protected static function isPublic($model, $user_id) {
+	public static function isPublic($model, $user_id) {
 		return true;
 	}
 
-	protected static function isLogged($model, $user_id) {
+	public static function isLogged($model, $user_id) {
 		return Models\User::find($user_id)->exists();
 	}
 
-	protected static function isCasOrWasCas($model, $user_id) {
+	public static function isCasOrWasCas($model, $user_id) {
 		return Models\AuthCas::find($user_id)->exists();
 	}
 
-	protected static function isCas($model, $user_id) {
+	public static function isCas($model, $user_id) {
 		return Models\AuthCas::find($user_id)->where('is_active', true)->exists();
 	}
 
-	protected static function isContributor($model, $user_id) {
+	public static function isContributor($model, $user_id) {
 		return Ginger::userExists(Models\AuthCas::find($user_id)->login);
 	}
 
-	protected static function isPrivate($model, $user_id) {
+	public static function isPrivate($model, $user_id) {
 		if ($model === null)
 			return false;
 
@@ -232,7 +222,7 @@ class Visible {
 		return $memberModel !== null && $memberModel::where('user_id', $user_id)->exists() > 0;
 	}
 
-	protected static function isOwner($model, $user_id) {
+	public static function isOwner($model, $user_id) {
 		return $model !== null && $model->user_id === $user_id;
 	}
 }
