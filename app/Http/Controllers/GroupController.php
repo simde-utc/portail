@@ -12,9 +12,9 @@ use App\Models\Visibility;
 class GroupController extends Controller
 {
     public function __construct() {
-        //$this->middleware(\Scopes::matchAnyUserOrClient());
-        // $this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
-        // $this->middleware(\Scopes::matchOne(['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']), ['only' => ['index', 'show']]);
+        // PROD :
+        //$this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
+        //$this->middleware(\Scopes::matchOne(['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']), ['only' => ['index', 'show']]);
     }
 
     /**
@@ -24,9 +24,14 @@ class GroupController extends Controller
      */
     public function index(Request $request)
     {
-        $groups = Group::where('is_active', $request->input('active', 1) != 0)->get();
+        // On inclue les relations et on les formattent.
+        $groups = Group::with([
+            'owner:id,email,firstname,lastname', 
+            'visibility:id,type'])
+            ->where('is_active', 1)
+            ->get();
 
-		return response()->json($request->user() ? Visible::with($groups, $request->user()->id) : $groups, 200);
+		return response()->json($request->user() ? Visible::with($groups->toArray(), $request->user()->id) : $groups->toArray(), 200);
     }
 
     /**
@@ -38,19 +43,23 @@ class GroupController extends Controller
     public function store(GroupRequest $request)
     {
         $group = new Group;
-        $group->user_id = $request->user()->id;
+        $group->user_id = 1; // PROD : $request->user()->id;
         $group->name = $request->name;
         $group->icon = $request->icon;
         $group->visibility_id = $request->visibility_id ?? Visibility::where('type', 'owner')->first()->id;
         $group->is_active = $request->is_active;
 
-        // Les ids des membres à ajouter seront passé dans la requête.
-        // ids est un array de user ids.
-        if ($request->has('member_ids'))
-            $group->members()->attach($request->input('member_ids', []));
+        if ($group->save()) {
+            // Owner est automatiquement membre du groupe.
+            $group->members()->attach(1); //PROD : $request->user()->id);
 
-        if ($group->save())
+            // Les ids des membres à ajouter seront passé dans la requête.
+            // ids est un array de user ids.
+            if ($request->has('member_ids'))
+                $group->members()->attach($request->input('member_ids', []));
+            
             return response()->json($group, 201);
+        }
         else
             return response()->json(["message" => "Impossible de créer le groupe"], 500);
     }
@@ -63,7 +72,12 @@ class GroupController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $group = Group::with('members')->find($id);
+        // On inclue les relations et on les formattent.
+        $group = Group::with([
+            'owner:id,email,firstname,lastname',
+            'visibility:id,type',
+            'members:id,email,firstname,lastname'])
+            ->find($id);
 
         if ($group)
             return response()->json($request->user() ? Visible::hide($group->toArray(), $request->user()->id) : $group->toArray(), 200);
@@ -100,10 +114,13 @@ class GroupController extends Controller
 		if ($request->has('is_active'))
 			$group->is_active = $request->input('is_active', true);
 
-        // Les ids de tout les membres (actuels et anciens) seront passés dans la requête.
-        // ids est un array de user ids.
+        // En update on enleve les ids précedents donc on sync.
+        $group->members()->sync(1); //PROD : $request->user()->id);
+
+        // Pas de sync() vu qu'on veut garder owner id.
+        // Les ids de tous les membres (actuels et anciens) seront passés dans la requête.
         if ($request->has('member_ids'))
-            $group->members()->sync($request->member_ids);
+            $group->members()->syncWithoutDetaching($request->member_ids);
 
         if ($group->save())
             return response()->json($group, 200);
