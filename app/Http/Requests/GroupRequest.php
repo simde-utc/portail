@@ -18,7 +18,7 @@ class GroupRequest extends FormRequest
     {
         if ($this->isMethod('put') || $this->isMethod('patch') || $this->isMethod('delete')) {
             $group = Group::find($this->route('group'));
-            return $group; // PROD : && Visible::isOwner($group, $this->user()->id);
+            return $group && $this->user() && Visible::isOwner($group, $this->user()->id);
         }
         else
             return true;
