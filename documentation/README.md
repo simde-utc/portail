@@ -7,6 +7,7 @@ Toute la documentation de l'api du portail des associations.
 - [Models](models.md)
 - [Controllers](controllers.md)
     - [GroupController](groupcontroller.md)
+- [Routes](routes.md)
 
 ## Liens utiles
 
