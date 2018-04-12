@@ -21,7 +21,7 @@ class Group extends Model
         'deleted_at'
     ];
 
-    // On les cache car on récupère directement le user et la vibility dans le controller
+    // On les caches car on récupère directement le user et la vibility dans le controller
     protected $hidden = [
         'user_id', 'visibility_id'
     ];
