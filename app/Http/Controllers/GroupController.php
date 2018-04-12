@@ -12,7 +12,7 @@ use App\Models\Visibility;
 class GroupController extends Controller
 {
     public function __construct() {
-        // PROD
+        // PROD :
         //$this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
         //$this->middleware(\Scopes::matchOne(['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']), ['only' => ['index', 'show']]);
     }
@@ -43,22 +43,23 @@ class GroupController extends Controller
     public function store(GroupRequest $request)
     {
         $group = new Group;
-        $group->user_id = $request->user()->id;
+        $group->user_id = 1; // PROD : $request->user()->id;
         $group->name = $request->name;
         $group->icon = $request->icon;
         $group->visibility_id = $request->visibility_id ?? Visibility::where('type', 'owner')->first()->id;
         $group->is_active = $request->is_active;
 
-        // Owner est automatiquement membre du groupe.
-        $group->members()->attach($request->user()->id);
+        if ($group->save()) {
+            // Owner est automatiquement membre du groupe.
+            $group->members()->attach(1); //PROD : $request->user()->id);
 
-        // Les ids des membres à ajouter seront passé dans la requête.
-        // ids est un array de user ids.
-        if ($request->has('member_ids'))
-            $group->members()->attach($request->input('member_ids', []));
-
-        if ($group->save())
+            // Les ids des membres à ajouter seront passé dans la requête.
+            // ids est un array de user ids.
+            if ($request->has('member_ids'))
+                $group->members()->attach($request->input('member_ids', []));
+            
             return response()->json($group, 201);
+        }
         else
             return response()->json(["message" => "Impossible de créer le groupe"], 500);
     }
@@ -114,7 +115,7 @@ class GroupController extends Controller
 			$group->is_active = $request->input('is_active', true);
 
         // En update on enleve les ids précedents donc on sync.
-        $group->members()->sync($request->user()->id);
+        $group->members()->sync(1); //PROD : $request->user()->id);
 
         // Pas de sync() vu qu'on veut garder owner id.
         // Les ids de tous les membres (actuels et anciens) seront passés dans la requête.
