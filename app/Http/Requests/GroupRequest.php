@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Group;
 
 class GroupRequest extends FormRequest
 {
