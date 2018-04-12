@@ -1,0 +1,125 @@
+# Requêtes GET
+
+
+
+## Index
+
+```json
+[
+  {
+    "id": 1,
+    "name": "LA13 Forever",
+    "icon": "",
+    "is_active": true,
+    "created_at": "2018-04-10 17:01:58",
+    "updated_at": "2018-04-10 17:01:58",
+    "deleted_at": null,
+    "owner": {
+      "id": 2,
+      "email": "samy.nastuzzi@etu.utc.fr",
+      "firstname": "Samy",
+      "lastname": "Nastuzzi"
+    },
+    "visibility": {
+      "id": 1,
+      "type": "public"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Coloc",
+    "icon": "",
+    "is_active": true,
+    "created_at": "2018-04-10 17:01:58",
+    "updated_at": "2018-04-10 17:01:58",
+    "deleted_at": null,
+    "owner": {
+      "id": 3,
+      "email": "natan.danous@etu.utc.fr",
+      "firstname": "Natan",
+      "lastname": "DANOUS"
+    },
+    "visibility": {
+      "id": 6,
+      "type": "private"
+    }
+  }
+]
+```
+
+## Show
+
+```json
+{
+  "id": 1,
+  "name": "LA13 Forever",
+  "icon": "",
+  "is_active": true,
+  "created_at": "2018-04-10 17:01:58",
+  "updated_at": "2018-04-10 17:01:58",
+  "deleted_at": null,
+  "owner": {
+    "id": 2,
+    "email": "samy.nastuzzi@etu.utc.fr",
+    "firstname": "Samy",
+    "lastname": "Nastuzzi"
+  },
+  "visibility": {
+    "id": 1,
+    "type": "public"
+  },
+  "members": [
+    {
+      "id": 1,
+      "email": "remy.huet@etu.utc.fr",
+      "firstname": "Rémy",
+      "lastname": "Huet",
+      "pivot": {
+        "group_id": 1,
+        "user_id": 1,
+        "created_at": null
+      }
+    },
+    {
+      "id": 2,
+      "email": "samy.nastuzzi@etu.utc.fr",
+      "firstname": "Samy",
+      "lastname": "Nastuzzi",
+      "pivot": {
+        "group_id": 1,
+        "user_id": 2,
+        "created_at": null
+      }
+    }
+  ]
+}
+```
+
+# Requêtes POST
+
+**Exemple de requête complète :**
+
+```json
+[
+    {
+        "name": "Groupe de travail LA14",
+	"icon": "",
+	"visibility_id": 5,
+	"is_active": true,
+        "member_ids" : [1, 2, 3],
+    }
+]
+```
+
+**Exemple de requête partielle :**
+
+```json
+[
+    {
+        "name": "Groupe de travail LA14",
+	"icon": "",
+	"visibility_id": 5,
+	"is_active": true,
+    }
+]
+```

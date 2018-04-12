@@ -1,6 +1,9 @@
 # Documentation
 
-[TOC]
+## Navigation
+
+- [Controllers](controllers.md)
+    - [GroupController](groupcontroller.md)
 
 ## Models
 
