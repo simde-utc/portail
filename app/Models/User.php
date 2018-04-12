@@ -21,6 +21,14 @@ class User extends Authenticatable
 		'remember_token',
 	];
 
+	protected $appends = [
+		'name'
+	];
+
+	public function getNameAttribute() {
+		return mb_strtoupper($this->lastname).' '.ucfirst($this->firstname);
+	}
+
 	public function cas() {
 		return $this->hasOne('App\Models\AuthCas');
 	}

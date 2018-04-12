@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
 		'admin' => \App\Http\Middleware\IsAdmin::class,
 		'checkPassport' => \App\Http\Middleware\CheckPassport::class,
 		'linkTokenToSession' => \App\Http\Middleware\LinkTokenToSession::class,
+		'forceJson' => \App\Http\Middleware\ForceJson::class,
 		//'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class, // Inutile car géré par notre service Scopes
     ];
 }

@@ -213,13 +213,13 @@ class Visible {
 			return false;
 
 		try {
-			$memberModel = resolve(get_class($model).'Member'); // En faisant ça, on optimise notre requête SQL en évitant de trier la liste des membres
+			$member = $model->members->find($user_id);
 		}
 		catch (Exception $e) {
-			$memberModel = null;
+			$member = null;
 		}
 
-		return $memberModel !== null && $memberModel::where('user_id', $user_id)->exists() > 0;
+		return $member !== null;
 	}
 
 	public static function isOwner($model, $user_id) {

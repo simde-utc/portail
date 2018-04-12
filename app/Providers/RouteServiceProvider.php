@@ -88,6 +88,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
             ->namespace($this->namespace)
+			->middleware('forceJson')
             ->group(base_path('routes/api.php'));
     }
 }

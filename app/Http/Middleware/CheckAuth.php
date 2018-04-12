@@ -20,9 +20,6 @@ class CheckAuth
      */
 	 public function handle(\Illuminate\Http\Request $request, Closure $next)
 	 {
-		// On force le retour en JSON:
-		$request->headers->set('Accept', 'application/json');
-
 		// On vérifie que l'utilisateur lié au token est toujours connecté
 		if ($request->user() !== null) {
 			$token = $request->user()->token();
