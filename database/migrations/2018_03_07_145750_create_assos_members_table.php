@@ -19,12 +19,12 @@ class CreateAssosMembersTable extends Migration
 			$table->foreign('asso_id')->references('id')->on('assos');
 			$table->integer('user_id')->unsigned();
 			$table->foreign('user_id')->references('id')->on('users');
-			$table->integer('role_id')->unsigned();
+			$table->integer('role_id')->unsigned()->nullable();
 			$table->foreign('role_id')->references('id')->on('roles');
-			$table->integer('validated_by')->unsigned();
-			$table->foreign('validated_by')->references('id')->on('users');
 			$table->integer('semester_id')->unsigned();
 			$table->foreign('semester_id')->references('id')->on('semesters');
+			$table->integer('validated_by')->unsigned()->nullable();
+			$table->foreign('validated_by')->references('id')->on('users');
 			$table->index(['asso_id', 'user_id', 'semester_id']);
 			$table->timestamps();
 		});

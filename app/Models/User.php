@@ -36,6 +36,14 @@ class User extends Authenticatable
 		return $this->assos()->where('semester_id', Semester::getThisSemester()->id);
 	}
 
+	public function followedAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNull('role_id');
+	}
+
+	public function currentFollowedAssos() {
+		return $this->joinedAssos()->where('semester_id', Semester::getThisSemester()->id);
+	}
+
 	public function joinedAssos() {
 		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNotNull('validated_by');
 	}

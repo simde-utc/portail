@@ -18,6 +18,9 @@ class CreatePermissionTables extends Migration
 		Schema::create($tableNames['permissions'], function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('name');
+			$table->string('description');
+			$table->string('limited_at')->nullable();
+			$table->boolean('only_system')->default(false);
 			$table->string('guard_name');
 			$table->timestamps();
 		});
@@ -25,6 +28,10 @@ class CreatePermissionTables extends Migration
 		Schema::create($tableNames['roles'], function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('name');
+			$table->string('description');
+			$table->string('limited_at')->nullable();
+			$table->boolean('only_system')->default(false);
+			$table->unsignedInteger('parent_id')->nullable();
 			$table->string('guard_name');
 			$table->timestamps();
 		});
@@ -39,6 +46,8 @@ class CreatePermissionTables extends Migration
 				->onDelete('cascade');
 
 			$table->primary(['permission_id', 'model_id', 'model_type']);
+
+			app('cache')->forget('spatie.permission.cache');
 		});
 
 		Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames) {

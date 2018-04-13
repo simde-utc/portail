@@ -31,7 +31,7 @@ class UsersTableSeeder extends Seeder
         ];
 
         foreach ($users as $user => $values){
-            User::create($values);
+            User::create($values)->givePermissionTo('superadmin');
         }
     }
 }
