@@ -21,14 +21,6 @@ class User extends Authenticatable
 		'remember_token',
 	];
 
-	protected $appends = [
-		'name'
-	];
-
-	public function getNameAttribute() {
-		return mb_strtoupper($this->lastname).' '.ucfirst($this->firstname);
-	}
-
 	public function cas() {
 		return $this->hasOne('App\Models\AuthCas');
 	}
@@ -37,11 +29,19 @@ class User extends Authenticatable
 	}
 
 	public function assos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNotNull('validated_by');
+		return $this->belongsToMany('App\Models\Asso', 'assos_members');
 	}
 
 	public function currentAssos() {
 		return $this->assos()->where('semester_id', Semester::getThisSemester()->id);
+	}
+
+	public function joinedAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNotNull('validated_by');
+	}
+
+	public function currentJoinedAssos() {
+		return $this->joiningAssos()->where('semester_id', Semester::getThisSemester()->id);
 	}
 
 	public function joiningAssos() {

@@ -163,6 +163,9 @@ class Visible {
 		if ($visibilities === null || $visibilities->count() === 0 || $visibilities === null)
 			return true;
 
+		if ($model === null || $model->visibility_id === null)
+			return false;
+
 		$visibility_id = $model->visibility_id;
 
 		if ($visibility_id === null)
