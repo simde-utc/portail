@@ -1,15 +1,17 @@
 # Documentation
 
-Toute la documentation de l'api du portail des associations.
+- [Documentation de l'api](api/)
+    - [Utilisateur](api/user/)
+        - [Récupérer les groupes](api/user/groups.md)
+    - [Client](api/client/)
+- [Documentation du backend](backend/)
+    - [Installation](backend/installation.md)
+    - [Authentification](backend/oauth.md)
+    - [Models](backend/models.md)
+    - [Controllers](backend/controllers.md)
+    - [Routes](backend/routes.md)
 
-## Navigation
-
-- [Models](models.md)
-- [Controllers](controllers.md)
-    - [GroupController](groupcontroller.md)
-- [Routes](routes.md)
-
-## Liens utiles
+# Liens utiles
 
 - Frontend du Portail des Assos : https://github.com/simde-utc/portail-web
 - Documentation Laravel 5.6 : https://laravel.com/docs/5.6

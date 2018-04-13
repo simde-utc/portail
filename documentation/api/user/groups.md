@@ -1,6 +1,13 @@
-# Requêtes GET
+# Groupes de l'utilisateur
 
-## Index
+- [GET](#get)
+    - [Index](#index)
+    - [Show](#show)
+- [POST](#post)
+
+## GET
+
+### Index
 
 ```json
 [
@@ -23,29 +30,11 @@
             "type": "public"
         }
     },
-    {
-        "id": 2,
-        "name": "Coloc",
-        "icon": "",
-        "is_active": true,
-        "created_at": "2018-04-10 17:01:58",
-        "updated_at": "2018-04-10 17:01:58",
-        "deleted_at": null,
-        "owner": {
-            "id": 3,
-            "email": "natan.danous@etu.utc.fr",
-            "firstname": "Natan",
-            "lastname": "DANOUS"
-        },
-        "visibility": {
-            "id": 6,
-            "type": "private"
-        }
-    }
+    ...
 ]
 ```
 
-## Show
+### Show
 
 ```json
 {
@@ -78,22 +67,12 @@
                 "created_at": null
             }
         },
-        {
-            "id": 2,
-            "email": "samy.nastuzzi@etu.utc.fr",
-            "firstname": "Samy",
-            "lastname": "Nastuzzi",
-            "pivot": {
-                "group_id": 1,
-                "user_id": 2,
-                "created_at": null
-            }
-        }
+        ...
     ]
 }
 ```
 
-# Requêtes POST
+## POST
 
 **Exemple de requête complète :**
 
