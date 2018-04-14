@@ -9,14 +9,14 @@
     - [Models](backend/models.md)
     - [Controllers](backend/controllers.md)
     - [Routes](backend/routes.md)
-- [Documentation de la documentation](#meta-documentation)
+- [Documentation de la documentation](#métadocumentation)
 
-# Liens utiles
+## Liens utiles
 
 - Frontend du Portail des Assos : https://github.com/simde-utc/portail-web
 - Documentation Laravel 5.6 : https://laravel.com/docs/5.6
 
-# Méta-documentation
+# Métadocumentation
 
 *Comment contribuer à la documentation ?*
 
