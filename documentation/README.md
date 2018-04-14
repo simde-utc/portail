@@ -2,7 +2,6 @@
 
 - [Documentation de l'api](api/)
     - [Utilisateur](api/user/)
-        - [Récupérer les groupes](api/user/groups.md)
     - [Client](api/client/)
 - [Documentation du backend](backend/)
     - [Installation](backend/installation.md)
