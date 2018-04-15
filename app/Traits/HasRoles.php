@@ -24,127 +24,63 @@ trait HasRoles
         });
     }
 
-	public function giveRole($roles, $semester_id = null, $givenBy = null) {
+	public function assignRole($roles, int $semester_id = null, int $givenBy = null) {
 		if (!is_array($roles))
 			$roles = [$roles];
 
 		if ($semester_id === null)
 			$semester_id = Semester::getThisSemester()->id;
 
-		$goodRoles = [];
+		$addRoles = [];
 
 		foreach ($roles as $key => $role) {
-			$goodRole = Role::getRole($role, $this->getTable());
+			$one = Role::getRole($role, $this->getTable());
 
-			if ($goodRole === null)
+			if ($one === null)
 				throw new \Exception('Il n\'est pas autorisé d\'associer ce role');
 
-			if ($goodRole->limited_at !== null && $goodRole->countUsers() >= $goodRole->limited_at)
+			if ($one->limited_at !== null && $one->countUsers() >= $one->limited_at)
 				throw new \Exception('Le nombre de personnes ayant ce role a été dépassé');
 
-			$goodRoles[$goodRole->id] = [
+			$addRoles[$one->id] = [
 				'semester_id' => $semester_id,
 				'given_by' => $givenBy,
 				'created_at' => Carbon::now(),
 			];
 		}
 
-		$this->roles()->attach($goodRoles);
+		$this->roles()->attach($addRoles);
+
+		return $this;
 	}
 
-    /**
-     * Scope the model query to certain roles only.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string|array|\Spatie\Permission\Contracts\Role|\Illuminate\Support\Collection $roles
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeRole(Builder $query, $roles): Builder
-    {
-        if ($roles instanceof Collection) {
-            $roles = $roles->all();
-        }
+    public function removeRole($roles, int $semester_id = null) {
+		if (!is_array($roles))
+			$roles = [$roles];
 
-        if (! is_array($roles)) {
-            $roles = [$roles];
-        }
+		if ($semester_id === null)
+			$semester_id = Semester::getThisSemester()->id;
 
-        $roles = array_map(function ($role) {
-            if ($role instanceof Role) {
-                return $role;
-            }
+		$delRoles = [];
 
-            return app(Role::class)->findByName($role, $this->getDefaultGuardName());
-        }, $roles);
+		foreach ($roles as $key => $role) {
+			$one = Role::getRole($role, $this->getTable());
 
-        return $query->whereHas('roles', function ($query) use ($roles) {
-            $query->where(function ($query) use ($roles) {
-                foreach ($roles as $role) {
-                    $query->orWhere(config('permission.table_names.roles').'.id', $role->id);
-                }
-            });
-        });
+			array_push($delRoles, $one->id);
+		}
+
+		$this->roles()->wherePivot('semester_id', $semester_id)->detach($delRoles);
+
+		return $this;
     }
 
-    /**
-     * Assign the given role to the model.
-     *
-     * @param array|string|\Spatie\Permission\Contracts\Role ...$roles
-     *
-     * @return $this
-     */
-    public function assignRole(...$roles)
-    {
-        $roles = collect($roles)
-            ->flatten()
-            ->map(function ($role) {
-                return $this->getStoredRole($role);
-            })
-            ->each(function ($role) {
-                $this->ensureModelSharesGuard($role);
-            })
-            ->all();
-
-        $this->roles()->saveMany($roles);
-
-        $this->forgetCachedPermissions();
-
-        return $this;
-    }
-
-    /**
-     * Revoke the given role from the model.
-     *
-     * @param string|\Spatie\Permission\Contracts\Role $role
-     */
-    public function removeRole($role)
-    {
-        $this->roles()->detach($this->getStoredRole($role));
-    }
-
-    /**
-     * Remove all current roles and set the given ones.
-     *
-     * @param array|\Spatie\Permission\Contracts\Role|string ...$roles
-     *
-     * @return $this
-     */
-    public function syncRoles(...$roles)
-    {
+    public function syncRoles($roles, int $semester_id = null) {
         $this->roles()->detach();
 
-        return $this->assignRole($roles);
+        return $this->assignRole($roles, $semester_id = null);
     }
 
-    /**
-     * Determine if the model has (one of) the given role(s).
-     *
-     * @param string|array|\Spatie\Permission\Contracts\Role|\Illuminate\Support\Collection $roles
-     *
-     * @return bool
-     */
-    public function hasRole($roles, Model $model = null, integer $semester_id = null): bool
+    public function hasRole($roles, int $semester_id = null): bool
     {
         if (is_string($roles) && false !== strpos($roles, '|')) {
             $roles = $this->convertPipeToArray($roles);

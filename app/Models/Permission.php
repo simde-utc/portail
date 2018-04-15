@@ -27,7 +27,7 @@ class Permission extends Model
     }
 
     public static function findByType(string $type, bool $is_system = true): Permission {
-		return static::getPermissions()->where('type', $type)->where('is_system', $is_system)->get();
+		return static::getPermissions()->where('type', $type)->where('is_system', $is_system)->first();
     }
 
     protected static function getPermissions()

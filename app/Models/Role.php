@@ -17,8 +17,19 @@ class Role extends Model
         return static::query()->create($attributes);
     }
 
-	public static function getRole($role, $only_for = 'users') {
-		return static::where('id', $role)->orWhere('type', $role)->where('only_for', $only_for)->first();
+	public static function find(int $id, string $only_for = 'users'): Role {
+		return static::where('id', $id)->where('only_for', $only_for)->first();
+	}
+
+	public static function findByType(string $type, string $only_for = 'users'): Role {
+		return static::where('type', $type)->where('only_for', $only_for)->first();
+	}
+
+	public static function getRole($role, string $only_for = 'users') {
+        if (is_string($role))
+            return static::findByType($role, $only_for);
+        else if (is_int($role))
+			return static::find($role, $only_for);
 	}
 
     public function permissions(): BelongsToMany {
@@ -31,10 +42,6 @@ class Role extends Model
 
     public function countUsers(): int {
 		return $this->users()->count();
-    }
-
-    public static function findByType(string $role, bool $is_system = true): Role {
-        return static::where('role', $role)->where('is_system', $is_system)->first();
     }
 
     public function hasPermissionTo($permission): bool {

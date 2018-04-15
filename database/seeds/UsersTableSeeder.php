@@ -32,9 +32,9 @@ class UsersTableSeeder extends Seeder
         ];
 
         foreach ($users as $user => $values){
-            User::create($values)->giveRole('admin');
+            User::create($values)->assignRole('admin');
         }
 
-		User::where('email', 'samy.nastuzzi@etu.utc.fr')->first()->giveRole('superadmin');
+		User::where('email', 'samy.nastuzzi@etu.utc.fr')->first()->assignRole('superadmin');
     }
 }
