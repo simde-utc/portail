@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 class PermissionsTableSeeder extends Seeder
 {
@@ -14,23 +14,32 @@ class PermissionsTableSeeder extends Seeder
     {
 		$permissions = [
 			[
-				'name' => 'superadmin',
-				'description' => 'Droit Super administrateur',
+				'type' => 'superadmin',
+				'name' => 'Droit Super administrateur',
+				'description' => '',
 				'limited_at' => 1,
-				'only_system' => true,
+				'is_system' => true,
 			],
 			[
-				'name' => 'admin',
-				'description' => 'Droit administrateur',
-				'only_system' => true,
+				'type' => 'admin',
+				'name' => 'Droit administrateur',
+				'description' => '',
+				'is_system' => true,
 			],
 			[
-				'name' => 'membres',
+				'type' => 'membres',
+				'name' => 'Membres',
 				'description' => 'Gestion des membres',
 			],
 			[
-				'name' => 'tresorie',
+				'type' => 'tresorie',
+				'name' => 'Trésorie',
 				'description' => 'Gestion de la trésorie',
+			],
+			[
+				'type' => 'bureau',
+				'name' => 'Bureau',
+				'description' => 'Indique que la personne fait partie du bureau',
 			],
 		];
 

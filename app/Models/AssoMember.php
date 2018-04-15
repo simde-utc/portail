@@ -33,4 +33,19 @@ class AssoMember extends Model
 	public function role() {
 		return $this->belongsTo('App\Models\Role');
 	}
+
+	public function permissions() {
+		$permissions = $this->role()->permissions;
+
+		$permission_ids = json_decode($this->permission_ids, true) ?? [];
+
+		if ($permission_ids !== null && !empty($permission_ids)) {
+			$permissions = array_merge(
+				$permissions,
+				Permission::whereIn('id', $permissions)->get()
+			);
+		}
+
+		return $permissions;
+	}
 }

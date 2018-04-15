@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use App\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
 
@@ -73,7 +73,7 @@ class User extends Authenticatable
 	}
 
 	public function contact() {
-        return $this->hasMany('App\Models\UserContact', 'contacts_users');
+        return $this->hasMany('App\Models\UserContact', 'users_contacts');
     }
 
     public function events() {
@@ -112,4 +112,8 @@ class User extends Authenticatable
 
 		return false;
 	}
+
+	public function roles() {
+        return $this->belongsToMany('App\Models\Role', 'users_roles');
+    }
 }

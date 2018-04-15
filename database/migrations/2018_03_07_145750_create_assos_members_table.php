@@ -25,8 +25,10 @@ class CreateAssosMembersTable extends Migration
 			$table->foreign('semester_id')->references('id')->on('semesters');
 			$table->integer('validated_by')->unsigned()->nullable();
 			$table->foreign('validated_by')->references('id')->on('users');
-			$table->index(['asso_id', 'user_id', 'semester_id']);
+			$table->text('permission_ids')->nullable(); // Permissions custom ajouté à la personne
+
 			$table->timestamps();
+			$table->index(['asso_id', 'user_id', 'semester_id']);
 		});
 	}
 

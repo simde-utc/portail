@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Role;
 
 class UsersTableSeeder extends Seeder
 {
@@ -31,7 +32,9 @@ class UsersTableSeeder extends Seeder
         ];
 
         foreach ($users as $user => $values){
-            User::create($values)->givePermissionTo('superadmin');
+            User::create($values)->giveRole('admin');
         }
+
+		User::where('email', 'samy.nastuzzi@etu.utc.fr')->first()->giveRole('superadmin');
     }
 }

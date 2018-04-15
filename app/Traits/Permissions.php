@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 // Trait qui permet d'ajouter des contraintes de vérification avant l'ajout d'un rôle à une personne
 trait Permissions {

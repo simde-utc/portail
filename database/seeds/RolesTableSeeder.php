@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
+use App\Models\Permission;
 
 class RolesTableSeeder extends Seeder
 {
@@ -14,81 +15,95 @@ class RolesTableSeeder extends Seeder
     {
 		$roles = [
 			[
-				'name' => 'superadmin',
-				'description' => 'Super administrateur',
+				'type' => 'superadmin',
+				'name' => 'Super administrateur',
+				'description' => 'Personne ayant réellement tous les droits sur le service',
 				'limited_at' => 1,
-				'only_system' => true,
+				'permissions' => [
+					'admin',
+					'tresorie',
+				]
+			],
+			[
+				'type' => 'admin',
+				'name' => 'Administrateur',
+				'description' => 'Personne ayant tous les droits sur le serveur',
 				'permissions' => [
 					'membres',
 					'tresorie',
 				]
 			],
 			[
-				'name' => 'admin',
-				'description' => 'Administrateur',
-				'only_system' => true,
+				'type' => 'president',
+				'name' => 'Président',
+				'description' => 'Responsable d\'une organisation',
+				'limited_at' => 1,
+				'only_for' => 'assos_members',
 				'permissions' => [
 					'membres',
 					'tresorie',
 				]
 			],
 			[
-				'name' => 'president',
-				'description' => 'Président',
+				'type' => 'vice-president',
+				'name' => 'Vice-Président',
+				'description' => 'Co-responsable d\'une organisation',
 				'limited_at' => 1,
-				'permissions' => [
-					'membres',
-					'tresorie',
-				]
-			],
-			[
-				'name' => 'vice-president',
-				'description' => 'Vice-Président',
-				'limited_at' => 1,
+				'only_for' => 'assos_members',
 				'parent_id' => 'president',
 				'permissions' => [
 					'membres',
 					'tresorie',
+					'bureau',
 				]
 			],
 			[
-				'name' => 'secretaire general',
-				'description' => 'Secrétaire Général',
+				'type' => 'secretaire general',
+				'name' => 'Secrétaire Général',
+				'description' => 'Administrateur de l\'organisation',
 				'limited_at' => 1,
+				'only_for' => 'assos_members',
 				'parent_id' => 'vice-president',
 				'permissions' => [
 					'membres',
+					'bureau',
 				]
 			],
 			[
-				'name' => 'tresorier',
-				'description' => 'Trésorier',
+				'type' => 'tresorier',
+				'name' => 'Trésorier',
+				'description' => 'Responsable de la trésorie',
 				'limited_at' => 1,
+				'only_for' => 'assos_members',
 				'parent_id' => 'secretaire general',
 				'permissions' => [
 					'tresorie',
+					'bureau',
 				]
 			],
 			[
-				'name' => 'bureau',
+				'type' => 'bureau',
+				'name' => 'Bureau',
 				'description' => 'Membre du bureau',
+				'only_for' => 'assos_members',
 				'parent_id' => 'tresorier',
 				'permissions' => [
-
+					'bureau',
 				]
 			],
 		];
 
 		foreach ($roles as $role) {
 			Role::create([
+				'type' => $role['type'],
 				'name' => $role['name'],
 				'description' => $role['description'],
 				'limited_at' => $role['limited_at'] ?? null,
-				'only_system' => $role['only_system'] ?? false,
+				'only_for' => $role['only_for'] ?? 'users',
 				'parent_id' => Role::where([
 	              'name' => $role['parent_id'] ?? null
 	            ])->first()->id ?? null
- 			])->givePermissionTo($role['permissions'] ?? []);
+ 			])->givePermissionTo(Permission::whereIn('type', $role['permissions'] ?? [])->pluck('id')->toArray());
 		}
     }
 }
