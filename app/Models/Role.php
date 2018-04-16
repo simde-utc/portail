@@ -17,19 +17,35 @@ class Role extends Model
         return static::query()->create($attributes);
     }
 
-	public static function find(int $id, string $only_for = 'users'): Role {
-		return static::where('id', $id)->where('only_for', $only_for)->first();
+	public static function find(int $id, string $only_for = null) {
+		$roles = static::where('id', $id);
+
+		if ($only_for !== null)
+			$roles->where('only_for', $only_for);
+
+		return $roles->first();
 	}
 
-	public static function findByType(string $type, string $only_for = 'users'): Role {
-		return static::where('type', $type)->where('only_for', $only_for)->first();
+	public static function findByType(string $type, string $only_for = null) {
+		$roles = static::where('type', $type);
+
+		if ($only_for !== null)
+			$roles->where('only_for', $only_for);
+
+		return $roles->first();
 	}
 
-	public static function getRole($role, string $only_for = 'users') {
+	public static function getRole($role, string $only_for = null) {
         if (is_string($role))
             return static::findByType($role, $only_for);
         else if (is_int($role))
 			return static::find($role, $only_for);
+		else
+			return null;
+	}
+
+	public static function getRoles($roles, string $only_for = 'users') {
+		return static::whereIn('id', $roles)->orWhereIn('type', $roles)->where('only_for', $only_for)->get();
 	}
 
     public function permissions(): BelongsToMany {
@@ -40,8 +56,12 @@ class Role extends Model
 		return $this->belongsToMany(User::class, 'users_roles');
     }
 
-    public function countUsers(): int {
-		return $this->users()->count();
+    public function childRoles(): BelongsToMany {
+		return $this->belongsToMany(Role::class, 'roles_parents', 'parent_id', 'role_id');
+    }
+
+    public function parentRoles(): BelongsToMany {
+		return $this->belongsToMany(Role::class, 'roles_parents', 'role_id', 'parent_id');
     }
 
     public function hasPermissionTo($permission): bool {
@@ -54,10 +74,13 @@ class Role extends Model
     }
 
 	public function givePermissionTo($permissions) {
-		if (!is_array($permissions))
-			$permissions = [$permissions];
+		$this->permissions()->withTimestamps()->attach(Permission::getPermissions(stringToArray($permissions), $this->only_fr === 'users'));
 
-		$this->permissions()->attach($permissions);
+		return $this;
+	}
+
+	public function assignParentRole($roles) {
+		$this->parentRoles()->withTimestamps()->attach(static::getRoles(stringToArray($roles), $this->only_for));
 
 		return $this;
 	}

@@ -20,17 +20,19 @@ class RolesTableSeeder extends Seeder
 				'description' => 'Personne ayant réellement tous les droits sur le service',
 				'limited_at' => 1,
 				'permissions' => [
+					'superadmin',
 					'admin',
-					'tresorie',
 				]
 			],
 			[
 				'type' => 'admin',
 				'name' => 'Administrateur',
 				'description' => 'Personne ayant tous les droits sur le serveur',
+				'parents' => [
+					'superadmin',
+				],
 				'permissions' => [
-					'membres',
-					'tresorie',
+					'admin',
 				]
 			],
 			[
@@ -40,7 +42,6 @@ class RolesTableSeeder extends Seeder
 				'limited_at' => 1,
 				'only_for' => 'assos_members',
 				'permissions' => [
-					'membres',
 					'tresorie',
 				]
 			],
@@ -50,9 +51,10 @@ class RolesTableSeeder extends Seeder
 				'description' => 'Co-responsable d\'une organisation',
 				'limited_at' => 1,
 				'only_for' => 'assos_members',
-				'parent_id' => 'president',
+				'parents' => [
+					'president',
+				],
 				'permissions' => [
-					'membres',
 					'tresorie',
 					'bureau',
 				]
@@ -63,11 +65,10 @@ class RolesTableSeeder extends Seeder
 				'description' => 'Administrateur de l\'organisation',
 				'limited_at' => 1,
 				'only_for' => 'assos_members',
-				'parent_id' => 'vice-president',
-				'permissions' => [
-					'membres',
-					'bureau',
-				]
+				'parents' => [
+					'president',
+					'vice-president',
+				],
 			],
 			[
 				'type' => 'tresorier',
@@ -75,7 +76,11 @@ class RolesTableSeeder extends Seeder
 				'description' => 'Responsable de la trésorie',
 				'limited_at' => 1,
 				'only_for' => 'assos_members',
-				'parent_id' => 'secretaire general',
+				'parents' => [
+					'president',
+					'vice-president',
+					'secretaire general',
+				],
 				'permissions' => [
 					'tresorie',
 					'bureau',
@@ -86,7 +91,12 @@ class RolesTableSeeder extends Seeder
 				'name' => 'Bureau',
 				'description' => 'Membre du bureau',
 				'only_for' => 'assos_members',
-				'parent_id' => 'tresorier',
+				'parents' => [
+					'president',
+					'vice-president',
+					'secretaire general',
+					'tresorier',
+				],
 				'permissions' => [
 					'bureau',
 				]
@@ -100,10 +110,8 @@ class RolesTableSeeder extends Seeder
 				'description' => $role['description'],
 				'limited_at' => $role['limited_at'] ?? null,
 				'only_for' => $role['only_for'] ?? 'users',
-				'parent_id' => Role::where([
-	              'name' => $role['parent_id'] ?? null
-	            ])->first()->id ?? null
- 			])->givePermissionTo(Permission::whereIn('type', $role['permissions'] ?? [])->pluck('id')->toArray());
+ 			])->givePermissionTo($role['permissions'] ?? [])
+				->assignParentRole($role['parents'] ?? []);
 		}
     }
 }

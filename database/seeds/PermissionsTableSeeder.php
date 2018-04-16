@@ -17,13 +17,14 @@ class PermissionsTableSeeder extends Seeder
 				'type' => 'superadmin',
 				'name' => 'Droit Super administrateur',
 				'description' => '',
-				'limited_at' => 1,
+				'limited_at' => 0,
 				'is_system' => true,
 			],
 			[
 				'type' => 'admin',
 				'name' => 'Droit administrateur',
 				'description' => '',
+				'limited_at' => 0,
 				'is_system' => true,
 			],
 			[

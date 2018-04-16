@@ -26,15 +26,22 @@ class CreatePermissionTables extends Migration
 
 		Schema::create('roles', function (Blueprint $table) {
 			$table->increments('id');
-			$table->string('type');
+			$table->string('type')->unique();
 			$table->string('name');
 			$table->string('description');
 			$table->string('limited_at')->nullable();
 			$table->string('only_for');
-			$table->unsignedInteger('parent_id')->nullable();
 
 			$table->timestamps();
 			$table->unique(['type', 'only_for']);
+		});
+
+		Schema::create('roles_parents', function (Blueprint $table) {
+			$table->integer('role_id')->unsigned();
+			$table->integer('parent_id')->unsigned();
+
+			$table->timestamps();
+			$table->primary(['parent_id', 'role_id']);
 		});
 
 		Schema::create('roles_permissions', function (Blueprint $table) {
@@ -65,8 +72,8 @@ class CreatePermissionTables extends Migration
 
 			$table->integer('semester_id')->unsigned();
 			$table->foreign('semester_id')->references('id')->on('semesters');
-			$table->integer('given_by')->unsigned()->nullable();
-			$table->foreign('given_by')->references('id')->on('users');
+			$table->integer('validated_by')->unsigned()->nullable();
+			$table->foreign('validated_by')->references('id')->on('users');
 
 			$table->timestamps();
 			$table->unique(['user_id', 'role_id', 'semester_id']);
@@ -82,8 +89,8 @@ class CreatePermissionTables extends Migration
 				->onDelete('cascade');
 			$table->integer('semester_id')->unsigned();
 			$table->foreign('semester_id')->references('id')->on('semesters');
-			$table->integer('given_by')->unsigned()->nullable();
-			$table->foreign('given_by')->references('id')->on('users');
+			$table->integer('validated_by')->unsigned()->nullable();
+			$table->foreign('validated_by')->references('id')->on('users');
 
 			$table->timestamps();
 			$table->unique(['user_id', 'permission_id', 'semester_id']);

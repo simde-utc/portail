@@ -14,7 +14,8 @@ trait HasRoles
 {
     use HasPermissions;
 
-    public static function bootHasRoles() {
+    public static function bootHasRoles()
+	{
         static::deleting(function ($model) {
             if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
                 return;
@@ -24,174 +25,128 @@ trait HasRoles
         });
     }
 
-	public function assignRole($roles, int $semester_id = null, int $givenBy = null) {
-		if (!is_array($roles))
-			$roles = [$roles];
-
-		if ($semester_id === null)
-			$semester_id = Semester::getThisSemester()->id;
+	public function assignRole($roles, array $data = [])
+	{
+		if (($data['semester_id'] ?? null) === null)
+			$data['semester_id'] = Semester::getThisSemester()->id;
 
 		$addRoles = [];
 
-		foreach ($roles as $key => $role) {
+		if ($data['validated_by'] ?? false)
+			$manageableRoles = $this->getRolesManageableBy($data['validated_by']);
+
+		foreach (stringToArray($roles) as $role) {
 			$one = Role::getRole($role, $this->getTable());
 
 			if ($one === null)
 				throw new \Exception('Il n\'est pas autorisé d\'associer ce role');
 
-			if ($one->limited_at !== null && $one->countUsers() >= $one->limited_at)
+			if ($one->limited_at !== null && $one->users()->wherePivot('semester_id', $data['semester_id'])->count() >= $one->limited_at)
 				throw new \Exception('Le nombre de personnes ayant ce role a été dépassé');
 
-			$addRoles[$one->id] = [
-				'semester_id' => $semester_id,
-				'given_by' => $givenBy,
-				'created_at' => Carbon::now(),
-			];
+			if ($data['validated_by'] ?? false) {
+				if (!$manageableRoles->contains('id', $one->id) && !$manageableRoles->contains('type', 'admin'))
+					throw new \Exception('La personne validatrice n\'est pas habilitée à donner ce rôle: '.$one->name);
+			}
+
+			$addRoles[$one->id] = $data;
 		}
 
-		$this->roles()->attach($addRoles);
+		$this->roles()->withTimestamps()->attach($addRoles);
 
 		return $this;
 	}
 
-    public function removeRole($roles, int $semester_id = null) {
-		if (!is_array($roles))
-			$roles = [$roles];
+    public function removeRole($roles, array $data = [])
+	{
+		if (($data['semester_id'] ?? null) === null)
+			$data['semester_id'] = Semester::getThisSemester()->id;
 
-		if ($semester_id === null)
-			$semester_id = Semester::getThisSemester()->id;
+		if ($data['removed_by'] ?? false)
+			$manageableRoles = $this->getRolesManageableBy($data['removed_by']);
 
 		$delRoles = [];
 
-		foreach ($roles as $key => $role) {
+		foreach (stringToArray($roles) as $role) {
 			$one = Role::getRole($role, $this->getTable());
+
+			if ($data['removed_by'] ?? false) {
+				if (!$manageableRoles->contains('id', $one->id) && (!$manageableRoles->contains('type', 'admin') || $one->childRoles->contains('type', 'admin')))
+					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$one->name);
+			}
 
 			array_push($delRoles, $one->id);
 		}
 
-		$this->roles()->wherePivot('semester_id', $semester_id)->detach($delRoles);
+		$toDetach = $this->roles();
+
+		if ($data['removed_by'] ?? false)
+			unset($data['removed_by']);
+
+		foreach ($data as $key => $value)
+			$toDetach->wherePivot($key, $value);
+
+		$toDetach->detach($delRoles);
 
 		return $this;
     }
 
-    public function syncRoles($roles, int $semester_id = null) {
+    public function syncRoles($roles, array $data = [])
+	{
         $this->roles()->detach();
 
-        return $this->assignRole($roles, $semester_id = null);
+        return $this->assignRole(stringToArray($roles), $data);
     }
 
-    public function hasRole($roles, int $semester_id = null): bool
+    public function hasAnyRole($roles, array $data = []): bool
     {
-        if (is_string($roles) && false !== strpos($roles, '|')) {
-            $roles = $this->convertPipeToArray($roles);
-        }
+		if (($data['semester_id'] ?? null) === null)
+			$data['semester_id'] = Semester::getThisSemester()->id;
 
-        if (is_string($roles)) {
-            return $this->roles->contains('name', $roles);
-        }
-
-        if ($roles instanceof Role) {
-            return $this->roles->contains('id', $roles->id);
-        }
-
-        if (is_array($roles)) {
-            foreach ($roles as $role) {
-                if ($this->hasRole($role)) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        return $roles->intersect($this->roles)->isNotEmpty();
+        return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->intersect($this->roles->pluck('id'))->isNotEmpty();
     }
 
-    /**
-     * Determine if the model has any of the given role(s).
-     *
-     * @param string|array|\Spatie\Permission\Contracts\Role|\Illuminate\Support\Collection $roles
-     *
-     * @return bool
-     */
-    public function hasAnyRole($roles): bool
+    public function hasAllRoles($roles, array $data = []): bool
     {
-        return $this->hasRole($roles);
+		if (($data['semester_id'] ?? null) === null)
+			$data['semester_id'] = Semester::getThisSemester()->id;
+
+		$roles = Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id');
+
+        return $roles->intersect($this->roles->pluck('id')) == $roles;
     }
 
-    /**
-     * Determine if the model has all of the given role(s).
-     *
-     * @param string|\Spatie\Permission\Contracts\Role|\Illuminate\Support\Collection $roles
-     *
-     * @return bool
-     */
-    public function hasAllRoles($roles): bool
-    {
-        if (is_string($roles) && false !== strpos($roles, '|')) {
-            $roles = $this->convertPipeToArray($roles);
-        }
+	public function getUserRoles($user_id, $semester_id = null)
+	{
+		if (($semester_id ?? null) === null)
+			$semester_id = Semester::getThisSemester()->id;
+		// TODO à rendre dynamique
+		return static::find($user_id)->roles()->wherePivot('semester_id', $semester_id)->get();
+	}
 
-        if (is_string($roles)) {
-            return $this->roles->contains('name', $roles);
-        }
+	public function getRolesManageableBy($user_id, $semester_id = null)
+	{
+		if (($semester_id ?? null) === null)
+			$semester_id = Semester::getThisSemester()->id;
 
-        if ($roles instanceof Role) {
-            return $this->roles->contains('id', $roles->id);
-        }
+		$roles = $this->getUserRoles($user_id, $semester_id);
 
-        $roles = collect()->make($roles)->map(function ($role) {
-            return $role instanceof Role ? $role->name : $role;
-        });
+		foreach ($roles as $role) {
+			foreach ($role->childRoles as $chilRole)
+				$roles->push($chilRole);
+		}
 
-        return $roles->intersect($this->roles->pluck('name')) == $roles;
-    }
+		return $roles;
+	}
 
-    /**
-     * Return all permissions directly coupled to the model.
-     */
+    /*
     public function getDirectPermissions(): Collection
     {
         return $this->permissions;
     }
 
-    public function getRoleNames(): Collection
+    public function getRoleTypes(): Collection
     {
-        return $this->roles->pluck('name');
-    }
-
-    protected function getStoredRole($role): Role
-    {
-        if (is_numeric($role)) {
-            return app(Role::class)->findById($role, $this->getDefaultGuardName());
-        }
-
-        if (is_string($role)) {
-            return app(Role::class)->findByName($role, $this->getDefaultGuardName());
-        }
-
-        return $role;
-    }
-
-    protected function convertPipeToArray(string $pipeString)
-    {
-        $pipeString = trim($pipeString);
-
-        if (strlen($pipeString) <= 2) {
-            return $pipeString;
-        }
-
-        $quoteCharacter = substr($pipeString, 0, 1);
-        $endCharacter = substr($quoteCharacter, -1, 1);
-
-        if ($quoteCharacter !== $endCharacter) {
-            return explode('|', $pipeString);
-        }
-
-        if (! in_array($quoteCharacter, ["'", '"'])) {
-            return explode('|', $pipeString);
-        }
-
-        return explode('|', trim($pipeString, $quoteCharacter));
-    }
+        return $this->roles->pluck('type');
+    }*/
 }

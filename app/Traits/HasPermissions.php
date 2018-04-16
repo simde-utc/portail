@@ -98,6 +98,13 @@ trait HasPermissions
     }
 
     public function givePermissionTo($permissions, Model $model = null, integer $semester_id = null) {
+
+
+		foreach ($permissions as $permission) {
+			if ($permission->limited_at === 0)
+				throw new \Exception('Il n\'est pas possible d\'affecter des permissions directement à un utilisateur');
+		}
+
         $permissions = collect($permissions)
             ->flatten()
             ->map(function ($permission) {
