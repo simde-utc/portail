@@ -50,6 +50,10 @@ class Asso extends Model
 		return $this->belongsToMany('App\Models\Article', 'assos_articles');
 	}
 
+	public function collaboratedArticles(){
+		return $this->belongsToMany('App\Models\Article', 'articles_collaborators');
+	}
+
 	public function events() {
 		return $this->belongsToMany('App\Models\Event');
 	}

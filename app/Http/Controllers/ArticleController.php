@@ -13,7 +13,7 @@ class ArticleController extends Controller
 {
     public function __construct() {
 		$this->middleware(\Scopes::matchOne(['client-get-articles-public', 'user-get-articles-followed-now', 'user-get-articles-done-now']), ['only' => ['index', 'show']]);
-        //$this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
+        $this->middleware(\Scopes::matchOne(['client-set-articles', 'user-set-articles-followed-now', 'user-set-articles-done-now']), ['only' => ['store', 'update', 'destroy']]);
     }
 
     /**
@@ -29,10 +29,16 @@ class ArticleController extends Controller
 				$articles = Article::where('visibility_id', '<=', Visibility::where('type', Visible::getType($request->user()->id ))->first()->id)->get();
 			}
 			else {
-				$articles = Article::whereIn('asso_id', array_merge(
+				/*$articles = Article::with('collaborators:id')->whereIn('asso_id', array_merge(
 					$request->user()->currentAssos()->pluck('assos.id')->toArray()
 					//$request->user()->currentAssosFollowed()->pluck('assos.id')->toArray(),
-				))->get();
+				))->get();*/
+				$articles = Article::with('collaborators')->whereHas('collaborators', function($q) use ($request){
+					$q->whereIn('collaborators.asso_id', array_merge(
+						$request->user()->currentAssos()->pluck('assos.id')->toArray()
+					))->get();
+				});
+				return response()->json($articles);
 			}
 		}
 		else

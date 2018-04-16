@@ -17,7 +17,7 @@ class Article extends Model
     public function collaborators() {
   		return $this->belongsToMany('App\Models\Asso', 'articles_collaborators');
   	}
-
+  	
   	public function asso(){
     	return $this->belongsTo('App\Models\Asso');
     }
