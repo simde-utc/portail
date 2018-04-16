@@ -28,4 +28,17 @@ class ArticleVisible extends Visible {
 		return false;
 	}
 
+
+	/**
+	 * @param $model
+	 * @param $user_id
+	 * @return bool|void
+	 *
+	 * Pas de Owner d'artticle (pas prévu dans les modèles. On renvoie donc isPrivate (À éviter visibilité Owner pour les articles
+	 */
+	public static function isOwner($model, $user_id)
+	{
+		return self::isPrivate();
+	}
+
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ArticleRequest;
+use App\Models\Visibility;
+use App\Services\Visible\Visible;
 use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Services\Visible\ArticleVisible;
@@ -11,7 +13,7 @@ class ArticleController extends Controller
 {
     public function __construct() {
 		$this->middleware(\Scopes::matchOne(['client-get-articles-public', 'user-get-articles-followed-now', 'user-get-articles-done-now']), ['only' => ['index', 'show']]);
-        $this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
+        //$this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
     }
 
     /**
@@ -23,10 +25,15 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
 		if ($request->user()) {
-			$articles = Article::whereIn('asso_id', array_merge(
-				$request->user()->currentAssos()->pluck('assos.id')->toArray()
-				//$request->user()->currentAssosFollowed()->pluck('assos.id')->toArray(),
-			))->get();
+			if (isset($request['all'])){
+				$articles = Article::where('visibility_id', '<=', Visibility::where('type', Visible::getType($request->user()->id ))->first()->id)->get();
+			}
+			else {
+				$articles = Article::whereIn('asso_id', array_merge(
+					$request->user()->currentAssos()->pluck('assos.id')->toArray()
+					//$request->user()->currentAssosFollowed()->pluck('assos.id')->toArray(),
+				))->get();
+			}
 		}
 		else
 		 	$articles = \Scopes::has('client-get-article') && isset($request['all']) ? Article::all() : Article::where('visibility', function ($query) { $query->where('type', 'public'); })->get();
