@@ -7,11 +7,17 @@ use App\Http\Requests\AssoTypeRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * @resource AssoType
+ *
+ * Gère les types d'associations
+ */
 class AssoTypeController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * List AssoTypes
 	 *
+	 * Retourne la liste des types d'associations
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index() {
@@ -20,7 +26,7 @@ class AssoTypeController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Create AssoType
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
@@ -30,11 +36,11 @@ class AssoTypeController extends Controller
 		if ($type)
 			return response()->json($type, 200);
 		else
-			return response()->json(["message" => "Impossible de créer le type"], 500);
+			return response()->json(['message' => 'Impossible de créer le type'], 500);
 	}
 
 	/**
-	 * Display the specified resource.
+	 * Show AssoType
 	 *
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
@@ -45,7 +51,7 @@ class AssoTypeController extends Controller
 	}
 
 	/**
-	 * Update the specified resource in storage.
+	 * Update AssoType
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  int  $id
@@ -57,7 +63,7 @@ class AssoTypeController extends Controller
 	}
 
 	/**
-	 * Remove the specified resource from storage.
+	 * Delete AssoType
 	 *
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response

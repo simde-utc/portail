@@ -7,6 +7,11 @@ use App\Http\Requests\AssoRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * @resource Association
+ *
+ * Gestion des associations
+ */
 class AssoController extends Controller
 {
 	public function __construct() {
@@ -14,8 +19,9 @@ class AssoController extends Controller
 	}
 
 	/**
-	 * Display a listing of the resource.
+	 * List Associations
 	 *
+	 * Retourne la liste des associations
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index() {
@@ -24,8 +30,9 @@ class AssoController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Store Association
 	 *
+	 * Créer une Association
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -34,12 +41,13 @@ class AssoController extends Controller
 		if ($asso)
 			return response()->json($asso, 201);
 		else
-			return response()->json(["message" => "Impossible de créer l'association"], 500);
+			return response()->json(['message' => 'Impossible de créer l\'association'], 500);
 	}
 
 	/**
-	 * Display the specified resource.
+	 * Show Association
 	 *
+	 * Retourne l'association si elle existe
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
@@ -52,8 +60,9 @@ class AssoController extends Controller
 	}
 
 	/**
-	 * Update the specified resource in storage.
+	 * Update Association
 	 *
+	 * Met à jour l'association si elle existe
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
@@ -71,8 +80,9 @@ class AssoController extends Controller
 	}
 
 	/**
-	 * Remove the specified resource from storage.
+	 * Delete Association
 	 *
+	 * Supprime l'association si elle existe
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */

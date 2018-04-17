@@ -9,18 +9,37 @@ use Laravel\Passport\Token;
 use Lcobucci\JWT\Parser;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
+/**
+ * @resource OAuth Client
+ *
+ * Gère le client OAuth
+ */
 class ClientController extends Controller
 {
-    public function index(Request $request) {
+	/**
+	 * Client Info
+	 *
+	 * Retourne les informations (scopes) sur le client en cours
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index(Request $request) {
 		$bearerToken = $request->bearerToken();
 		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
 		$client = Token::find($tokenId)->client->toArray();
 		$client['scopes'] = json_decode($client['scopes'], true);
 
 		return $client;
-    }
+	}
 
-    public function getUsers(Request $request) {
+	/**
+	 * Client Users
+	 *
+	 * Retourne les users qui ont authorisé les actions du client en cours
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getUsers(Request $request) {
 		$bearerToken = $request->bearerToken();
 		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;
@@ -46,9 +65,16 @@ class ClientController extends Controller
 		}
 
 		return $result;
-    }
+	}
 
-    public function getUser(Request $request, int $userId) {
+	/**
+	 * Client User info
+	 *
+	 * Retourne les users qui ont authorisé les actions du client en cours
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getUser(Request $request, int $userId) {
 		$bearerToken = $request->bearerToken();
 		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;
@@ -58,10 +84,12 @@ class ClientController extends Controller
 			$tokens->where('revoked', $request->input('revoked') == 1 ? 1 : 0);
 
 		return $tokens->get()->makeHidden('id')->makeHidden('session_id');
-    }
+	}
 
 	/**
-	 * Suppression des autorisations par un utilisateur pour le client
+	 * Delete User Authorizations to Client
+	 * 
+	 * Supprime les autorisations d'un utilisateur pour le client
 	 */
 	public function destroy(Request $request, int $userId) {
 		$bearerToken = $request->bearerToken();
@@ -75,6 +103,8 @@ class ClientController extends Controller
 	}
 
 	/**
+	 * Delete all Users Authorizations to Client
+	 * 
 	 * Suppression des autorisations de tous les utilisateurs pour le client
 	 */
 	public function destroyAll(Request $request) {
@@ -89,6 +119,8 @@ class ClientController extends Controller
 	}
 
 	/**
+	 * Delete current User Authorizations to Client
+	 * 
 	 * Suppression des autorisations pour l'utilisateur courrant
 	 */
 	public function destroyCurrent(Request $request) {

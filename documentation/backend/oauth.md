@@ -60,3 +60,27 @@ Des fonctions similaires existent qui renvoie un booléen plutôt que d'autorise
 
 ### Utiliser les scopes dans les controllers du portail
 
+
+
+Exemple :
+```php
+class RessourceController extends Controller {
+    /**
+     * Scopes Ressource
+     *
+     * <Description de la fonction>
+     */
+    public function __construct() {
+        $this->middleware(\Scopes::matchOne(
+            ['client-get-articles-public', 'user-get-articles-followed-now', 'user-get-articles-done-now']), 
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(\Scopes::matchAll(
+            ['user-manage-groups']), 
+            ['only' => ['store', 'update', 'destroy']]
+        );
+    }
+
+    // ...
+}
+```

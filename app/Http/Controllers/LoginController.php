@@ -10,12 +10,17 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Cas;
 
+/**
+ * @resource User
+ *
+ * Gestion des méthodes de Login
+ */
 class LoginController extends Controller
 {
 	use AuthenticatesUsers;
 
 	/**
-	 * Display a listing of the resource.
+	 * List Login providers
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -38,12 +43,14 @@ class LoginController extends Controller
 	}
 
 	/**
-	 * Déconnection de l'utilisateur
+	 * Disconnect User
+	 *
+	 * Déconnecte l'utilisateur du portail et le renvoie sur la route de déconnection de sa méthode de connection 
 	 */
 	public function destroy(Request $request) {
 		$token = $request->user()->token();
 		$session_id = $token->session_id;
-		$service = config("auth.services.".(\App\Models\Session::find($session_id)->auth_provider));
+		$service = config('auth.services.'.(\App\Models\Session::find($session_id)->auth_provider));
 		$redirect = $service === null ? null : resolve($service['class'])->logout($request);
 
 		if ($redirect === null) {

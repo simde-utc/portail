@@ -11,6 +11,7 @@
 |
 | Attention !! Les routes sont préfixées avec 'api/'
 */
+
 Route::prefix('v1')->group(function () {
 	// Connexions
 	Route::get('login', 'LoginController@index')->middleware('guest')->name('api/login');
@@ -21,7 +22,7 @@ Route::prefix('v1')->group(function () {
 	Route::get('user/auths', 'ConnectedUserController@getProviders')->middleware(Scopes::matchAnyUser())->name('api/user/auths');
 	Route::get('user/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchAnyUser())->name('api/user/auth');
 
-	// Informations relatives au client
+	// Gestions des authorisations données au client
 	Route::get('client', 'ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
 	Route::get('client/users', 'ClientController@getUsers')->middleware(Scopes::matchAnyClient())->name('api/client/users');
 	Route::get('client/{user_id}', 'ClientController@getUser')->middleware(Scopes::matchAnyClient())->name('api/client/user');
@@ -29,6 +30,7 @@ Route::prefix('v1')->group(function () {
 	Route::delete('client/users', 'ClientController@destroyAll')->middleware(Scopes::matchAnyClient())->name('api/client/users/delete');
 	Route::delete('client/{user_id}', 'ClientController@destroy')->middleware(Scopes::matchAnyClient())->name('api/client/user/delete');
 
+	// Ressources
 	Route::apiResources([
 		'groups'		=> 'GroupController',
 		'assos/types'	=> 'AssoTypeController',
