@@ -3,6 +3,7 @@
 - [Installation](#installation)
 - [Mise à jour](#mise-à-jour)
 - [En cas de problèmes](#en-cas-de-problèmes)
+- [Commandes](#commandes)
 
 ## Installation
 
@@ -21,13 +22,23 @@
     + Wamp : aller directement sur le dossier `public` de l'installation via Wamp
 - Ça part !
 
+
 ## Mise à jour
 
 - Mettre à jour les packages php avec `composer update`
 - Mettre à jour les packages npm avec `npm install`
 - Relancer les migrations avec `php artisan migrate:fresh --seed`
 
+
 ## En cas de problèmes
 
 - `composer dump-autoload`
 - `php config:clear`
+
+
+## Commandes
+
+Des commandes artisan ont été développées pour simplifier l'installation et la maintenance de l'application :
+- `php artisan quick:install` pour installer ou mettre à jour toute l'application
+- `php artisan quick:clear` pour supprimer les ressources mise en cache
+- `php artisan quick:optimize` pour mettre en cache les ressources

@@ -27,7 +27,5 @@ Route::get('register/{provider?}', 'Auth\RegisterController@show')->name('regist
 Route::post('register/{provider?}/process', 'Auth\RegisterController@register')->name('register.process');
 
 // Vues temporaires, uniquement de l'affichage de liens
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@welcome')->name('welcome');
 Route::get('home', 'HomeController@index')->name('home');
