@@ -24,7 +24,7 @@
 
 Organisation en deux grandes parties, une **documentation pour utiliser l'api** et une **documentation pour le code et l'architecture de l'api** (que l'on appelera documentation du *backend*).
 
-Chaque dossier à son `readme.md` où l'on trouve une *table des matières* qui doit être mise à jour. Celle-ci va jusqu'à une profondeure de 2 :
+Chaque dossier à son `readme.md` où l'on trouve une *table des matières* qui doit être mise à jour. Celle-ci va jusqu'à une profondeur de 2 :
 
 **Correct :** 
 

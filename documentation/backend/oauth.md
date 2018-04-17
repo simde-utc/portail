@@ -1,4 +1,4 @@
-# Droits avec OAuth
+# Droits API avec OAuth
 *(customisé par Samy parce qu'il est trop fort)*
 
 ## Présentation rapide
@@ -8,39 +8,15 @@ Un token est un triplet (client, user, scopes). Ce token est récupéré par un 
 ## Middleware
 
 Le Middleware:
-- auth:api permet de vérifier que la connexion est bien faite par un client (asso ou perso) lié à un utlisateur.
-- auth.client permet de vérifier que la connexion est bien faite par un client non lié à un utlisateur.
-- auth.any permet de vérifier que la connexion est bien faite par un client (asso ou perso)
+- `auth:api` permet de vérifier que la connexion est bien faite par un client (asso ou perso) lié à un utlisateur.
+- `auth.client` permet de vérifier que la connexion est bien faite par un client non lié à un utlisateur.
+- `auth.any` permet de vérifier que la connexion est bien faite par un client (asso ou perso)
 
-Ces Middlewares sont générés automatiquement par la façade Scopes.
+Ces Middlewares sont générés automatiquement par la façade `Scopes`.
 
 ## Scopes
 
 Les Scopes permettent de définir une portée autorisée pour un client. Ils permettent à un client d'accéder ou non à une route/ressource en fonction des Scopes prérequis par celle-ci.
-
-### Facades
-
-La façade Scopes permet de simplifier l'utilisatation des Scopes.
-
-Ces méthodes génèrent les middlewares qui sont requis à la demande:
-- matchAnyUser(): autorise uniquement les clients rattachés à un utilisateur
-- matchAnyClient(): autorise uniquement les clients non rattachés à un utilisateur
-- matchAnyUserOrClient(): autorise uniquement les clients connectés
-- match($scopes, array $scopes2): détecte en fonction des arguments donnés:
-  - si $scopes est un string: renvoie matchOne($scopes)
-  - si $scopes est un array : renvoie matchAll($scopes, $scopes)
-- matchOne($scopes): autorise uniquement si le client possède un des scopes parmi la liste donnée ou de leurs héritiés
-- matchAll(array $scopes, array $scopes2): autorise uniquement si le client possède tous les $scopes parmi la liste donnée ou leurs héritiés, ou tous les $scopes2 parmi la liste 2 donnée ou leurs héritiés
-
-Des fonctions similaires existent qui renvoie un booléen plutôt que d'autoriser via des middlewares.
-
-## Générer une clé user
-
-
-
-### Créer sa clé user
-Pour site perso
-
 
 ### Liste des scopes en fonction des routes
 
@@ -66,21 +42,21 @@ Les actions sont hiérarchisées. Chaque scope supérieur permet aussi les scope
         * **remove**:  supprimer une donnée
     + **get** :  récupération des informations en lecture seule
 
-#### Utiliser les scopes sur les routes du portail
+### Facades
 
-##### Dans Laravel
+La façade `Scopes` permet de simplifier l'utilisatation des Scopes.
 
-##### Avec mon Client
+Ces méthodes génèrent les middlewares qui sont requis à la demande:
+- `matchAnyUser()`: autorise uniquement les clients rattachés à un utilisateur
+- `matchAnyClient()`: autorise uniquement les clients non rattachés à un utilisateur
+- `matchAnyUserOrClient()`: autorise uniquement les clients connectés
+- `match($scopes, array $scopes2)`: détecte en fonction des arguments donnés:
+  - si `$scopes` est un `string`: renvoie `matchOne($scopes)`
+  - si `$scopes` est un `array` : renvoie `matchAll($scopes, $scopes)`
+- `matchOne($scopes)`: autorise uniquement si le client possède un des scopes parmi la liste donnée ou de leurs héritiés
+- `matchAll(array $scopes, array $scopes2)`: autorise uniquement si le client possède tous les `$scopes` parmi la liste donnée ou leurs héritiés, ou tous les `$scopes2` parmi la liste 2 donnée ou leurs héritiés
 
-## Spécifier ses tokens dans une requête
+Des fonctions similaires existent qui renvoie un booléen plutôt que d'autoriser via des middlewares.
 
-### Sous Insomnia ou Postman
+### Utiliser les scopes dans les controllers du portail
 
-- Grant type : Authorization Code
-- Authorization url: https://assos.utc.fr/oauth/authorize
-- Access token url : https://assos.utc.fr/oauth/token
-- Client ID : l'ID de votre asso
-- Client secret : la clé de votre asso
-- Redirect url : l'adresse pour récupérer le code du token
-
-### Par du code
