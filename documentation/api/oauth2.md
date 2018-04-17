@@ -2,11 +2,17 @@
 
 - [Introduction](#introduction)
 - [Protocole](#protocole)
-- [Exemple en NodeJS](#exemple-en-nodejs-avec-le-package-oauth)
+- [Utilisation](#utilisation)
 
-Avant de commencer, il est nécessaire de créer un client pour votre application. Pour cela, connectez à votre compte sur [ADRESSE_CREATION_CLIENT].
 
 ## Introduction
+
+L'API du Portail utilise [OAuth 2.0](https://oauth.net/2/), un puissant framework d'autorisation.
+
+Pour authentifier votre client auprès de l'API, vous devez possèder une clé _client_ et/ou une clé user.
+- Les clés _user_ sont liée à votre compte. Ce sont des tokens d'accès personel, ayant donc une portée limitée à vos droits et vos données.
+- Les clés _client_ correspondent à des associations. Elles ont des portée en général plus large que les clés _user_
+
 
 Il existe 4 rôles :
 
@@ -26,6 +32,7 @@ Dans le cas du Authorization Code, l'utilisateur va autoriser le client (votre a
 *Typiquement, ce genre d'autorisation se fait chez Google et Facebook, lorsque vous vous connectez à des applications tierces, vous vous trouvez devant une page d'autorisation pour certaines de vos données.*
 
 Pour en savoir plus : [documentation/backend/](../backend/readme.md).
+
 
 ## Protocole
 
@@ -52,7 +59,31 @@ Le serveur d'authentification enverra alors un `access_token` et un `refresh_tok
 
 **Attention :** étant donné que le secret du client est envoyé dans les requêtes, seul un server (php, python, nodejs) peut effectuer la demande de token. Un client js pur ne peut pas puisque la clé client ne serait pas **protégée**.
 
-## Exemple en NodeJS avec le package oauth
+![Schéma](./schema_connexion_api.jpg)
+
+
+## Utilisation
+
+### Sous Insomnia ou Postman
+
+- Type : OAuth2.0
+- Grant type : Authorization Code
+- Authorization url: https://assos.utc.fr/oauth/authorize
+- Access token url : https://assos.utc.fr/oauth/token
+- Client ID : l'ID de votre asso/client
+- Client secret : la clé de votre asso/client
+- Redirect url : l'adresse de votre application pour récupérer le code du token
+
+### Par du code
+
+Des packages sont disponibles pour utiliser OAuth2 facilement selon le langage utilisé :
+
+- Javascript : https://github.com/lelylan/simple-oauth2
+- Python : https://github.com/oauthlib/oauthlib
+- PHP : https://github.com/thephpleague/oauth2-client
+
+
+#### Exemple en NodeJS avec le package oauth
 
 Cet exemple permet seulement d'effectuer le protocole et de récupérer les tokens.
 
