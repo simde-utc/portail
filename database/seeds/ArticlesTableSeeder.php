@@ -18,28 +18,28 @@ class ArticlesTableSeeder extends Seeder
         	[
         		'title' => 'Samy a tout cassé !!!',
 		        'content' => 'Le serveur des associations a été cassé par Samy ce jour. Paix à lui (le serveur pas Samy)',
-		        'asso_id' => 'bde',
+		        'asso' => 'simde',
 		        'visibility_id' => 'public',
 	        ],
 	        [
 	        	'title' => 'L\'intégration va commencer !',
 		        'content' => 'Début de l\'intégration le jeudi 30 août 2018',
-		        'asso_id' => 'integ',
+		        'asso' => 'integ',
 		        'visibility_id' => 'cas',
 	        ],
 	        [
 	        	'title' => 'Grand spectacle du PAE',
 		        'content' => 'Jeudi dernier, les associations du PAE ont eu l\'honneur de présenter devant plus de 500 UTCéens un grand spectacle...',
-		        'asso_id' => 'pae',
+		        'asso' => 'pae',
 		        'visibility_id' => 'contributor',
 	        ]
         ];
 
-        foreach ($articles as $article){
+        foreach ($articles as $article) {
         	Article::create([
         		'title' => $article['title'],
 		        'content' => $article['content'],
-		        'asso_id' => Asso::where('login', $article['asso_id'])->first()->id,
+		        'asso_id' => Asso::where('login', $article['asso'])->first()->id,
 		        'visibility_id' => Visibility::where('type', $article['visibility_id'])->first()->id,
 	        ]);
         }

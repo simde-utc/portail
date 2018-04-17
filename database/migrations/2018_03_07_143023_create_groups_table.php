@@ -15,13 +15,13 @@ class CreateGroupsTable extends Migration
 	{
 		Schema::create('groups', function (Blueprint $table) {
 			$table->increments('id');
-			$table->integer('user_id')->unsigned();
+			$table->integer('user_id')->unsigned()->nullable(); // Correspond ici au créateur, pas à l'admin du groupe (qui peut changer)
 			$table->foreign('user_id')->references('id')->on('users');
 			$table->string('name', validation_max('name'));
-			$table->string('icon')->nullable();                     // TODO taille max ?
+			$table->string('icon')->nullable();
 			$table->integer('visibility_id')->unsigned();
 			$table->foreign('visibility_id')->references('id')->on('visibilities');
-			$table->boolean('is_active')->default(1);
+
 			$table->timestamps();
 			$table->softDeletes();
 			$table->unique(['user_id', 'name']);

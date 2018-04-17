@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Role;
+use App\Models\Asso;
 
 class UsersTableSeeder extends Seeder
 {
@@ -19,27 +19,45 @@ class UsersTableSeeder extends Seeder
 				'firstname' => 'Samy',
 				'lastname'  => 'Nastuzzi',
 				'role'		=> 'superadmin',
+				'assos'		=> [
+					'simde' => 'president',
+				],
 			],
             [
                 'email'     => 'remy.huet@etu.utc.fr',
                 'firstname' => 'Rémy',
                 'lastname'  => 'Huet',
 				'role'		=> 'admin',
+				'assos'		=> [
+					'simde' => 'developer',
+				],
             ],
             [
                 'email'     => 'natan.danous@etu.utc.fr',
                 'firstname' => 'Natan',
                 'lastname'  => 'Danous',
 				'role'		=> 'admin',
+				'assos'		=> [
+					'simde' => 'developer',
+				],
             ]
         ];
 
-        foreach ($users as $user){
-            User::create([
+        foreach ($users as $user) {
+            $model = User::create([
 				'email'     => $user['email'],
 				'firstname' => $user['firstname'],
 				'lastname'  => $user['lastname'],
-			])->assignRole($user['role']);
+			])->assignRole($user['role'], [
+				'validated_by' => 1
+			], true);
+
+			foreach ($user['assos'] as $name => $role) {
+				Asso::where('login', $name)->first()->assignRole($role, [
+					'user_id' => $model->id,
+					'validated_by' => 1,
+				], true);
+			}
         }
     }
 }

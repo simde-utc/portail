@@ -70,7 +70,7 @@ class CreatePermissionTables extends Migration
 				->on('roles')
 				->onDelete('cascade');
 
-			$table->integer('semester_id')->unsigned();
+			$table->integer('semester_id')->unsigned()->nullable();
 			$table->foreign('semester_id')->references('id')->on('semesters');
 			$table->integer('validated_by')->unsigned()->nullable();
 			$table->foreign('validated_by')->references('id')->on('users');
