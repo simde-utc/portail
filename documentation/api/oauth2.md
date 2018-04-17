@@ -25,7 +25,7 @@ Dans le cas du Authorization Code, l'utilisateur va autoriser le client (votre a
 
 *Typiquement, ce genre d'autorisation se fait chez Google et Facebook, lorsque vous vous connectez à des applications tierces, vous vous trouvez devant une page d'autorisation pour certaines de vos données.*
 
-Pour en savoir plus : (documentation/backend/)[../backend/readme.md].
+Pour en savoir plus : [documentation/backend/](../backend/readme.md).
 
 ## Protocole
 
@@ -50,7 +50,7 @@ Le serveur d'authentification enverra alors un `access_token` et un `refresh_tok
 
 **Attention :** si le paramètre `redirect_uri` n'est pas le même que celui spécifié lors de la création du client, l'autorisation ne se fera pas !
 
-**Attention :** étant donné que le secret du client est envoyé dans les requêtes, seul un server (php, python, nodejs) peut effectuer la demande de token. Un client js pur ne peut pas puisque la clé client ne serait pas **portégée**.
+**Attention :** étant donné que le secret du client est envoyé dans les requêtes, seul un server (php, python, nodejs) peut effectuer la demande de token. Un client js pur ne peut pas puisque la clé client ne serait pas **protégée**.
 
 ## Exemple en NodeJS avec le package oauth
 
