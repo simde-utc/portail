@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Http\Requests\GroupRequest;
 use App\Services\Visible\Visible;
+use App\Models\Visibility;
 
 class GroupController extends Controller
 {
     public function __construct() {
-        // $this->middleware('auth:api');
+		$this->middleware(\Scopes::matchOne(['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']), ['only' => ['index', 'show']]);
+        $this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
     }
 
     /**
@@ -19,12 +21,16 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // TODO: Add visiblity !
+        // On inclue les relations et on les formattent.
+		$groups = Group::with([
+            'owner:id,lastname,firstname',
+            'visibility',
+			'members:id,lastname,firstname'
+		])->where('is_active', 1)->get();
 
-        $groups = Group::where('is_active', 1)->get();
-        return response()->json(Visible::hide($groups), 200);
+		return response()->json($request->user() ? Visible::with($groups, $request->user()->id) : $groups, 200);
     }
 
     /**
@@ -35,13 +41,24 @@ class GroupController extends Controller
      */
     public function store(GroupRequest $request)
     {
-        $group = Group::create($request->input());
+        $group = new Group;
+        $group->user_id = 1; // PROD : $request->user()->id;
+        $group->name = $request->name;
+        $group->icon = $request->icon;
+        $group->visibility_id = $request->visibility_id ?? Visibility::where('type', 'owner')->first()->id;
+        $group->is_active = $request->is_active;
 
-        // Members user id will be passed to request.
-        $group->members()->attach($request->ids);
+        if ($group->save()) {
+            // Owner est automatiquement membre du groupe.
+            $group->members()->attach(1); //PROD : $request->user()->id);
 
-        if ($group)
-            return response()->json($group, 200);
+            // Les ids des membres à ajouter seront passé dans la requête.
+            // ids est un array de user ids.
+            if ($request->has('member_ids'))
+                $group->members()->attach($request->input('member_ids', []));
+
+            return response()->json($group, 201);
+        }
         else
             return response()->json(["message" => "Impossible de créer le groupe"], 500);
     }
@@ -52,15 +69,19 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        // TODO: Add visiblity !
+        // On inclue les relations et on les formattent.
+        $group = Group::with([
+            'owner:id,firstname,lastname',
+            'visibility',
+            'members:id,firstname,lastname'])
+            ->find($id);
 
-        $group = Group::find($id);
         if ($group)
-            return response()->json($group, 200);
+            return response()->json($request->user() ? Visible::hide($group, $request->user()->id) : $group, 200);
         else
-            return response()->json(["message" => "Impossible de trouver le groupe"], 404);
+            abort(404, "Groupe non trouvé");
     }
 
     /**
@@ -73,13 +94,34 @@ class GroupController extends Controller
     public function update(GroupRequest $request, $id)
     {
         $group = Group::find($id);
-        
-        // Members user id will be passed to request.
-        // Sync erases all previous associations and replaces them with the new one.
-        $group->members()->sync($request->ids);
 
-        $group = Group::update($request->input());
-        if ($group)
+        if (!$group)
+            return response()->json(["message" => "Impossible de trouver le groupe"], 404);
+
+		if ($request->has('user_id'))
+			$group->user_id = $request->input('user_id');
+
+		if ($request->has('name'))
+			$group->name = $request->input('name');
+
+		if ($request->has('icon'))
+        	$group->icon = $request->input('icon');
+
+		if ($request->has('visibility_id'))
+        	$group->visibility_id = $request->input('visibility_id');
+
+		if ($request->has('is_active'))
+			$group->is_active = $request->input('is_active', true);
+
+        // En update on enleve les ids précedents donc on sync.
+        $group->members()->sync(1); //PROD : $request->user()->id);
+
+        // Pas de sync() vu qu'on veut garder owner id.
+        // Les ids de tous les membres (actuels et anciens) seront passés dans la requête.
+        if ($request->has('member_ids'))
+            $group->members()->syncWithoutDetaching($request->member_ids);
+
+        if ($group->save())
             return response()->json($group, 200);
         else
             return response()->json(["message" => "Impossible de modifier le groupe"], 500);
@@ -95,10 +137,13 @@ class GroupController extends Controller
     {
         $group = Group::find($id);
 
+        if (!$group)
+            return response()->json(["message" => "Impossible de trouver le groupe"], 404);
+
         $group->members()->detach();
 
         $group->delete();
 
-        return response()->json(["message" => "Groupe supprimé"], 200);
+        return response()->json(["message" => "Groupe supprimé"], 204);
     }
 }

@@ -21,11 +21,20 @@ class Group extends Model
         'deleted_at'
     ];
 
+    // On les caches car on récupère directement le user et la vibility dans le controller
+    protected $hidden = [
+        'user_id', 'visibility_id'
+    ];
+
+    public function owner() {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
     public function visibility() {
-    	return $this->hasOne('App\Models\Visibility');
+    	return $this->belongsTo('App\Models\Visibility', 'visibility_id');
     }
 
     public function members() {
-        return $this->belongsToMany('App\Models\User', 'groups_members');
+        return $this->belongsToMany('App\Models\User', 'groups_members')->withPivot('created_at');
     }
 }

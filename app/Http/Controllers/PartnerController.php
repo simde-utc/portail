@@ -29,8 +29,15 @@ class PartnerController extends Controller
      */
     public function store(PartnerRequest $request)
     {
+        if(Partner::where('name', $request->input('name'))->get()->first()) {
+            return response()->json("Ce partenaire existe déjà, conflit", 409);
+        }
+
         $partner = Partner::create($request->input());
         if($partner)
+
+
+
         	return response()->json($partner,200);
         return response()->json(['message'=>'Le partenaire n\'a pas pu être créé'], 500);
     }
@@ -62,8 +69,16 @@ class PartnerController extends Controller
         if($partner){
         	$ok = $partner->update($request->input());
         	if($ok)
+            {
+                if(Partner::where('name', $request->input('name'))->get()->first() && ($partner->name != $request->input('name'))) 
+                {    
+                    return response()->json("Ce partenaire existe déjà, conflit", 409);
+                }
+
         		return response()->json($partner,200);
-        	return response()->json(['message'=>'Erreur pendant la mise à jour du partenaire'],500);
+        	}
+
+            return response()->json(['message'=>'Erreur pendant la mise à jour du partenaire'],500);
         }
         return response()->json(['message'=>'Le partenaire demandé n\'a pas été trouvé'],404);
     }

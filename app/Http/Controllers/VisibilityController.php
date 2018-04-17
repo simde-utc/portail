@@ -6,6 +6,7 @@ use App\Http\Requests\VisibilityRequest;
 use Illuminate\Http\Request;
 use App\Models\Visibility;
 
+
 class VisibilityController extends Controller
 {
     /**
@@ -23,7 +24,7 @@ class VisibilityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(VisibilityRequest $request)
@@ -32,11 +33,12 @@ class VisibilityController extends Controller
 
         if($visibility)
         {
+            
             return response()->json($visibility, 200);
         }
         else
-            return response()->json(["message" => "Impossible de créer la salle"], 500);
-
+            return response()->json(["message" => "Impossible de créer la visibilité"], 500);
+        
     }
 
     /**
@@ -52,7 +54,7 @@ class VisibilityController extends Controller
         if($visibility)
             return response()->json($visibility, 200);
         else
-            return response()->json(["message" => "Impossible de trouver la salle"], 500);
+            return response()->json(["message" => "Impossible de trouver la visibilité"], 500);
     }
 
     /**
@@ -66,16 +68,22 @@ class VisibilityController extends Controller
     {
         $visibility = Visibility::find($id);
 
+
+
         if($visibility){
+
             $ok = $visibility->update($request->input());
-        
+    
             if($ok)
                 return response()->json($visibility, 201);
-        
+
             return response()->json(['message'=>'An error ocured'],500);
+ 
+    
+            
         }
         
-        return response()->json(["message" => "Impossible de trouver la salle"], 500);
+        return response()->json(["message" => "Impossible de trouver la  visibilité"], 500);
     }
 
     /**
@@ -94,6 +102,6 @@ class VisibilityController extends Controller
             return response()->json([], 200);
         }
         else
-            return response()->json(["message" => "Impossible de trouver la salle"], 500);
+            return response()->json(["message" => "Impossible de trouver la visibilité"], 500);
     }
 }

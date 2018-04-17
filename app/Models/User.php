@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use App\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
 
@@ -29,11 +29,27 @@ class User extends Authenticatable
 	}
 
 	public function assos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNotNull('validated_by');
+		return $this->belongsToMany('App\Models\Asso', 'assos_members');
 	}
 
 	public function currentAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('validated_by');
+		return $this->assos()->where('semester_id', Semester::getThisSemester()->id);
+	}
+
+	public function followedAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNull('role_id');
+	}
+
+	public function currentFollowedAssos() {
+		return $this->joinedAssos()->where('semester_id', Semester::getThisSemester()->id);
+	}
+
+	public function joinedAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNotNull('validated_by');
+	}
+
+	public function currentJoinedAssos() {
+		return $this->joiningAssos()->where('semester_id', Semester::getThisSemester()->id);
 	}
 
 	public function joiningAssos() {
@@ -41,7 +57,7 @@ class User extends Authenticatable
 	}
 
 	public function currentJoiningAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNull('validated_by');
+		return $this->joiningAssos()->where('semester_id', Semester::getThisSemester()->id);
 	}
 
 	public function groups() {
@@ -49,7 +65,7 @@ class User extends Authenticatable
 	}
 
 	public function currentGroups() {
-		return $this->belongsToMany('App\Models\Group', 'groups_members')->where('is_active', 1);
+		return $this->groups()->where('is_active', 1);
 	}
 
 	public function ownGroups() {
@@ -57,7 +73,7 @@ class User extends Authenticatable
 	}
 
 	public function contact() {
-        return $this->hasMany('App\Models\UserContact', 'contacts_users');
+        return $this->hasMany('App\Models\UserContact', 'users_contacts');
     }
 
     public function events() {
@@ -96,4 +112,8 @@ class User extends Authenticatable
 
 		return false;
 	}
+
+	public function roles() {
+        return $this->belongsToMany('App\Models\Role', 'users_roles');
+    }
 }
