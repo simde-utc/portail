@@ -47999,6 +47999,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         edit: function edit(client) {
             this.editForm.id = client.id;
             this.editForm.name = client.name;
+            this.editForm.asso_id = client.asso_id;
             this.editForm.redirect = client.redirect;
 
             try {
@@ -49720,9 +49721,9 @@ var render = function() {
                         _vm._v(" "),
                         _c(
                           "div",
-                          { staticClass: "col-md-6" },
+                          { staticClass: "col-md-12" },
                           _vm._l(_vm.scopes, function(scope) {
-                            return !scope.startsWith("client")
+                            return !scope.id.startsWith("client")
                               ? _c("div", [
                                   _c("div", { staticClass: "checkbox" }, [
                                     _c("label", [
@@ -49739,7 +49740,7 @@ var render = function() {
                                       }),
                                       _vm._v(
                                         "\n\n                                                " +
-                                          _vm._s(scope.id) +
+                                          _vm._s(scope.description) +
                                           "\n                                        "
                                       )
                                     ])

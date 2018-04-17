@@ -342,7 +342,8 @@
              */
             edit(client) {
                 this.editForm.id = client.id;
-                this.editForm.name = client.name;
+				this.editForm.name = client.name;
+                this.editForm.asso_id = client.asso_id;
 				this.editForm.redirect = client.redirect;
 
 				try{
