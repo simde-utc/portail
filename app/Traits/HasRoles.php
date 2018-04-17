@@ -10,8 +10,6 @@ use App\Models\User;
 
 trait HasRoles
 {
-    use HasPermissions;
-
     public static function bootHasRoles() {
         static::deleting(function ($model) {
             if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
@@ -36,7 +34,7 @@ trait HasRoles
 				throw new \Exception('Il n\'est pas autorisé d\'associer ce role');
 
 			if (!$force) {
-				if ($role->limited_at !== null && $role->users()->wherePivot('semester_id', $data['semester_id'])->wherePivot('semester_id', '=', null)->wherePivot('validated_by', '!=', null)->count() >= $role->limited_at)
+				if ($role->limited_at !== null && $role->users()->wherePivot('semester_id', $data['semester_id'])->orWherePivot('semester_id', '=', null)->wherePivot('validated_by', '!=', null)->count() >= $role->limited_at)
 				throw new \Exception('Le nombre de personnes ayant ce role a été dépassé');
 
 				if ($data['validated_by'] ?? false) {
@@ -153,18 +151,19 @@ trait HasRoles
         return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
     }
 
-	public function getUserAssignedRoles($user_id, $semester_id = false, $needToBeValidated = true) {
+	public function getUserAssignedRoles($user_id = null, $semester_id = false, $needToBeValidated = true) {
 		if (!($semester_id ?? false))
 			$semester_id = Semester::getThisSemester()->id;
+
 		if ($this->getTable() === 'users')
-			$roles = static::find($user_id)->roles();
+			$roles = $this->roles();
 		else
 			$roles = $this->roles()->wherePivot('user_id', $user_id);
 
 		if ($roles === null)
 			return new Collection;
 		else {
-			$roles = $roles->wherePivot('semester_id', $semester_id)->wherePivot('semester_id', '=', null);
+			$roles = $roles->wherePivot('semester_id', $semester_id)->orWherePivot('semester_id', '=', null);
 
 			if ($needToBeValidated)
 				$roles = $roles->wherePivot('validated_by', '!=', null);
@@ -173,7 +172,7 @@ trait HasRoles
 		}
 	}
 
-	public function getUserRoles($user_id, $semester_id = false) {
+	public function getUserRoles($user_id = null, $semester_id = false) {
 		if (!($semester_id ?? false))
 			$semester_id = Semester::getThisSemester()->id;
 
@@ -192,14 +191,52 @@ trait HasRoles
 		return $roles;
 	}
 
-    /*
-    public function getDirectPermissions(): Collection
-    {
-        return $this->permissions;
-    }
+	public function getUserAssignedPermissions($user_id = null, $semester_id = false, $needToBeValidated = true) {
+		if (!($semester_id ?? false))
+			$semester_id = Semester::getThisSemester()->id;
 
-    public function getRoleTypes(): Collection
-    {
-        return $this->roles->pluck('type');
-    }*/
+		if ($this->getTable() === 'users')
+			$roles = $this->roles();
+		else
+			$roles = $this->roles()->wherePivot('user_id', $user_id);
+
+		if ($roles === null)
+			return new Collection;
+		else {
+			$roles = $roles->wherePivot('semester_id', $semester_id)->orWherePivot('semester_id', '=', null);
+
+			if ($needToBeValidated)
+				$roles = $roles->wherePivot('validated_by', '!=', null);
+
+			$permission_ids = [];
+
+			foreach ($roles->withPivot('permission_ids')->get() as $role) {
+				$permissions = json_decode($role->pivot->permission_ids, true);
+
+				if ($permissions === null)
+					continue;
+
+				foreach ($permissions as $permission)
+					$permission_ids[$permission] = true;
+			}
+
+			return Permission::getPermissions(array_keys($permission_ids), ($this->getTable() === 'users'));
+		}
+	}
+
+	public function getUserPermissions($user_id = null, $semester_id = false) {
+		if (!($semester_id ?? false))
+			$semester_id = Semester::getThisSemester()->id;
+
+		$permissions = $this->getUserAssignedPermissions($user_id, $semester_id);
+
+		$roles = $this->getUserRoles($user_id, $semester_id)->pluck('id');
+
+		foreach ($roles as $role) {
+			foreach(Role::find($role)->permissions as $permission)
+				$permissions->push($permission);
+		}
+
+		return $permissions;
+	}
 }

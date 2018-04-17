@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
-    use HasPermissions;
-
     public static function create(array $attributes = []) {
         if (static::where('type', $attributes['type'])->first())
 			throw new \Exception('Ce rôle existe déjà');

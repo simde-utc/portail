@@ -67,33 +67,16 @@ class CreatePermissionTables extends Migration
 			$table->integer('role_id')->unsigned();
 			$table->foreign('role_id')
 				->references('id')
-				->on('roles')
-				->onDelete('cascade');
+				->on('roles');
 
 			$table->integer('semester_id')->unsigned()->nullable();
 			$table->foreign('semester_id')->references('id')->on('semesters');
 			$table->integer('validated_by')->unsigned()->nullable();
 			$table->foreign('validated_by')->references('id')->on('users');
+			$table->string('permission_ids')->nullable(); // Permissions custom ajouté à la personne
 
 			$table->timestamps();
 			$table->unique(['user_id', 'role_id', 'semester_id']);
-		});
-
-		Schema::create('users_permissions', function (Blueprint $table) {
-			$table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users');
-			$table->integer('permission_id')->unsigned();
-			$table->foreign('permission_id')
-				->references('id')
-				->on('permissions')
-				->onDelete('cascade');
-			$table->integer('semester_id')->unsigned();
-			$table->foreign('semester_id')->references('id')->on('semesters');
-			$table->integer('validated_by')->unsigned()->nullable();
-			$table->foreign('validated_by')->references('id')->on('users');
-
-			$table->timestamps();
-			$table->unique(['user_id', 'permission_id', 'semester_id']);
 		});
 	}
 
