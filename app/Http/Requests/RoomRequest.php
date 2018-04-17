@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoomRequest extends FormRequest
