@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use \App\Traits\HasRoles;
 
 class Asso extends Model
 {
+	use HasRoles;
+
 	protected $fillable = [
 		'name', 'login', 'description', 'type_asso_id', 'parent_id',
 	];
@@ -28,6 +31,10 @@ class Asso extends Model
 
 	public function currentJoiners() {
 		return $this->belongsToMany('App\Models\User', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNull('validated_by');
+	}
+
+	public function roles() {
+		return $this->belongsToMany(Role::class, 'assos_members');
 	}
 
 	public function type() {

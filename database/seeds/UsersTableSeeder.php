@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Role;
 
 class UsersTableSeeder extends Seeder
 {
@@ -13,25 +14,32 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $users = [
+			[
+				'email'     => 'samy.nastuzzi@etu.utc.fr',
+				'firstname' => 'Samy',
+				'lastname'  => 'Nastuzzi',
+				'role'		=> 'superadmin',
+			],
             [
                 'email'     => 'remy.huet@etu.utc.fr',
                 'firstname' => 'Rémy',
-                'lastname'  => 'Huet'
-            ],
-            [
-                'email'     => 'samy.nastuzzi@etu.utc.fr',
-                'firstname' => 'Samy',
-                'lastname'  => 'Nastuzzi'
+                'lastname'  => 'Huet',
+				'role'		=> 'admin',
             ],
             [
                 'email'     => 'natan.danous@etu.utc.fr',
                 'firstname' => 'Natan',
-                'lastname'  => 'Danous'
+                'lastname'  => 'Danous',
+				'role'		=> 'admin',
             ]
         ];
 
-        foreach ($users as $user => $values){
-            User::create($values);
+        foreach ($users as $user){
+            User::create([
+				'email'     => $user['email'],
+				'firstname' => $user['firstname'],
+				'lastname'  => $user['lastname'],
+			])->assignRole($user['role']);
         }
     }
 }

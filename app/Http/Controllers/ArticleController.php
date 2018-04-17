@@ -9,6 +9,11 @@ use App\Services\Visible\ArticleVisible;
 
 class ArticleController extends Controller
 {
+    public function __construct() {
+		$this->middleware(\Scopes::matchOne(['client-get-articles-public', 'user-get-articles-followed-now', 'user-get-articles-done-now']), ['only' => ['index', 'show']]);
+        $this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @param \Illuminate\Http\Request $request
@@ -17,11 +22,16 @@ class ArticleController extends Controller
     //TODO Argument permettant de le passer en hide
     public function index(Request $request)
     {
-        $articles = Article::all();
-        if(isset($request['all'])) //Si est dans la route est mis un argument all
-            return response()->json(ArticleVisible::hide($articles), 200); //On renvoie tous les articles en cachant les non visibles
-	    //Sinon
-	    return response()->json(ArticleVisible::with($articles),200); //On ne renvoie que ceux qui sont visibles
+		if ($request->user()) {
+			$articles = Article::whereIn('asso_id', array_merge(
+				$request->user()->currentAssos()->pluck('assos.id')->toArray()
+				//$request->user()->currentAssosFollowed()->pluck('assos.id')->toArray(),
+			))->get();
+		}
+		else
+		 	$articles = \Scopes::has('client-get-article') && isset($request['all']) ? Article::all() : Article::where('visibility', function ($query) { $query->where('type', 'public'); })->get();
+
+    	return response()->json($request->user() ? ArticleVisible::with($articles, $request->user()->id) : $articles, 200); //On ne renvoie que ceux qui sont visibles
     }
 
     /**
@@ -33,9 +43,11 @@ class ArticleController extends Controller
     public function store(ArticleRequest $request)
     {
         $article = Article::create($request->input());
+
         if ($article)
         	return response()->json($article, 201);
-        return response()->json(['message' => 'impossible de créer l\'article'], 500);
+		else
+        	return response()->json(['message' => 'impossible de créer l\'article'], 500);
     }
 
     /**
@@ -47,9 +59,11 @@ class ArticleController extends Controller
     public function show($id)
     {
         $article = Article::find($id);
-        if ($article)
-        	return response()->json(ArticleVisible::hide($article),200); //On renvoie l'article demandé, mais en le cachant si l'user n'a pas les droits nécessaires
-	    return response()->json(['message' => 'L\'article demandé n\'a pas été trouvé'], 404);
+
+		if ($article)
+        	return response()->json(ArticleVisible::hide($article, $request->user()->id), 200); //On renvoie l'article demandé, mais en le cachant si l'user n'a pas les droits nécessaires
+		else
+	    	return response()->json(['message' => 'L\'article demandé n\'a pas été trouvé'], 404);
     }
 
     /**
@@ -61,13 +75,15 @@ class ArticleController extends Controller
      */
     public function update(ArticleRequest $request, $id){
 		$article = Article::find($id);
-		if($article) {
-			$ok = $article->update($request->input());
-			if ($ok)
+
+		if ($article) {
+			if ($article->update($request->input()))
 				return response()->json($article, 201);
-			return response()->json(['message' => 'impossible de modifier l\'article'], 500);
+			else
+				return response()->json(['message' => 'impossible de modifier l\'article'], 500);
 		}
-		return response()->json(['message'=>'L\'article demandé n\'a pas été trouvé'],404);
+
+		return response()->json(['message' => 'L\'article demandé n\'a pas été trouvé'], 404);
     }
 
     /**
@@ -79,12 +95,15 @@ class ArticleController extends Controller
     public function destroy($id)
     {
     	$article = Article::find($id);
-    	if($article){
-			$ok = $article->delete();
-			if($ok)
-				return response()->json(['message'=>'L\'article a bien été supprimé'],200);
-			return response()->json(['message'=>'Une erreur est survenue'],500);
+
+    	if($article) {
+
+			if ($article->delete())
+				return response()->json(['message' => 'L\'article a bien été supprimé'], 200);
+			else
+				return response()->json(['message' => 'Une erreur est survenue'],500);
 	    }
-	    return response()->json(['message'=>'L\'article demandé n\'a pas été trouvé'],404);
+
+		return response()->json(['message' => 'L\'article demandé n\'a pas été trouvé'], 404);
     }
 }

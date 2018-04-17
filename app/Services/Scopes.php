@@ -264,6 +264,9 @@ class Scopes {
 		$matchingScopes = [];
 
 		foreach ($scopes as $scope) {
+			if ($scope === null)
+				throw new \Exception('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
+
 			$elements = explode('-', $scope);
 
 			if (!isset($middleware))

@@ -19,9 +19,6 @@ class ConnectedUserController extends Controller
 		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
 			$user->makeHidden('email');
 
-		if (!\Scopes::has($request, 'user-get-info-identity-names'))
-			$user->makeHidden('lastname')->makeHidden('firstname');
-
 		if (\Scopes::has($request, 'user-get-info-identity-type'))
 			$user->type = \App\Services\Visible\Visible::getType($user->id);
 
