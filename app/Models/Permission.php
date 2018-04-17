@@ -44,16 +44,19 @@ class Permission extends Model
 		return $permission->first();
     }
 
-	public static function getPermission($permissions, bool $is_system = true): Permission {
+	public static function getPermission($permissions, bool $is_system = true) {
         if (is_string($permissions))
             return static::findByType($permissions, $is_system);
         else if (is_int($permissions))
 			return static::find($permissions, $is_system);
 		else
-			return null;
+			return $permission;
 	}
 
-	public static function getPermissions($permissions, bool $is_system = true): Collection {
-		return static::whereIn('id', $permissions)->orWhereIn('type', $permissions)->where('is_system', $is_system)->get();
+	public static function getPermissions($permissions, bool $is_system = true) {
+		if (is_array($roles))
+			return static::whereIn('id', $permissions)->orWhereIn('type', $permissions)->where('is_system', $is_system)->get();
+		else
+			return $roles;
 	}
 }

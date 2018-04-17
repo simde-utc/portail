@@ -41,11 +41,14 @@ class Role extends Model
         else if (is_int($role))
 			return static::find($role, $only_for);
 		else
-			return null;
+			return $role;
 	}
 
 	public static function getRoles($roles, string $only_for = 'users') {
-		return static::whereIn('id', $roles)->orWhereIn('type', $roles)->where('only_for', $only_for)->get();
+		if (is_array($roles))
+			return static::whereIn('id', $roles)->orWhereIn('type', $roles)->where('only_for', $only_for)->get();
+		else
+			return $roles;
 	}
 
     public function permissions(): BelongsToMany {

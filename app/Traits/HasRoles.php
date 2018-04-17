@@ -7,14 +7,12 @@ use App\Models\Role;
 use App\Models\Semester;
 use App\Models\Permission;
 use App\Models\User;
-use Carbon\Carbon;
 
 trait HasRoles
 {
     use HasPermissions;
 
-    public static function bootHasRoles()
-	{
+    public static function bootHasRoles() {
         static::deleting(function ($model) {
             if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
                 return;
@@ -24,31 +22,28 @@ trait HasRoles
         });
     }
 
-	public function assignRole($roles, array $data = [])
-	{
+	public function assignRole($roles, array $data = []) {
 		if (($data['semester_id'] ?? null) === null)
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
 		$addRoles = [];
 
 		if ($data['validated_by'] ?? false)
-			$manageableRoles = $this->getRolesManageableBy($data['validated_by']);
+			$manageableRoles = $this->getUserRoles($data['validated_by']);
 
-		foreach (stringToArray($roles) as $role) {
-			$one = Role::getRole($role, $this->getTable());
-
-			if ($one === null)
+		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
+			if ($role === null)
 				throw new \Exception('Il n\'est pas autorisé d\'associer ce role');
 
-			if ($one->limited_at !== null && $one->users()->wherePivot('semester_id', $data['semester_id'])->wherePivot('validated_by', '!=', null)->count() >= $one->limited_at)
+			if ($role->limited_at !== null && $role->users()->wherePivot('semester_id', $data['semester_id'])->wherePivot('validated_by', '!=', null)->count() >= $role->limited_at)
 				throw new \Exception('Le nombre de personnes ayant ce role a été dépassé');
 
 			if ($data['validated_by'] ?? false) {
-				if (!$manageableRoles->contains('id', $one->id) && !$manageableRoles->contains('type', 'admin'))
-					throw new \Exception('La personne validatrice n\'est pas habilitée à donner ce rôle: '.$one->name);
+				if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
+					throw new \Exception('La personne validatrice n\'est pas habilitée à donner ce rôle: '.$role->name);
 			}
 
-			$addRoles[$one->id] = $data;
+			$addRoles[$role->id] = $data;
 		}
 
 		$this->roles()->withTimestamps()->attach($addRoles);
@@ -56,8 +51,7 @@ trait HasRoles
 		return $this;
 	}
 
-    public function updateRole($roles, array $data = [], array $updatedData = [])
-	{
+    public function updateRole($roles, array $data = [], array $updatedData = []) {
 		if (($updatedData['semester_id'] ?? null) === null)
 			$updatedData['semester_id'] = Semester::getThisSemester()->id;
 
@@ -65,22 +59,20 @@ trait HasRoles
 				$data['semester_id'] = Semester::getThisSemester()->id;
 
 		if ($updatedData['validated_by'] ?? false)
-			$manageableRoles = $this->getRolesManageableBy($updatedData['validated_by']);
+			$manageableRoles = $this->getUserRoles($updatedData['validated_by']);
 
 		$updatedRoles = [];
 
-		foreach (stringToArray($roles) as $role) {
-			$one = Role::getRole($role, $this->getTable());
-
-			if ($one === null)
+		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
+			if ($role === null)
 				throw new \Exception('Le role '.$role.' n\'existe pas ou ne correspond à ce type de modèle');
 
 			if ($updatedData['validated_by'] ?? false) {
-				if (!$manageableRoles->contains('id', $one->id) && (!$manageableRoles->contains('type', 'admin') || $one->childRoles->contains('type', 'admin')))
-					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$one->name);
+				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
+					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
 			}
 
-			array_push($updatedRoles, $one->id);
+			array_push($updatedRoles, $role->id);
 		}
 
 		$toUpdate = $this->roles()->withTimestamps();
@@ -97,28 +89,25 @@ trait HasRoles
 		return $this;
     }
 
-    public function removeRole($roles, array $data = [])
-	{
+    public function removeRole($roles, array $data = []) {
 		if (($data['semester_id'] ?? null) === null)
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
 		if ($data['validated_by'] ?? false)
-			$manageableRoles = $this->getRolesManageableBy($data['validated_by']);
+			$manageableRoles = $this->getUserRoles($data['validated_by']);
 
 		$delRoles = [];
 
-		foreach (stringToArray($roles) as $role) {
-			$one = Role::getRole($role, $this->getTable());
-
-			if ($one === null)
+		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
+			if ($role === null)
 				throw new \Exception('Le role '.$role.' n\'existe pas ou ne correspond à ce type de modèle');
 
 			if ($data['validated_by'] ?? false) {
-				if (!$manageableRoles->contains('id', $one->id) && (!$manageableRoles->contains('type', 'admin') || $one->childRoles->contains('type', 'admin')))
-					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$one->name);
+				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
+					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
 			}
 
-			array_push($delRoles, $one->id);
+			array_push($delRoles, $role->id);
 		}
 
 		$toDetach = $this->roles();
@@ -134,9 +123,8 @@ trait HasRoles
 		return $this;
     }
 
-    public function syncRoles($roles, array $data = [])
-	{
-		$currentRoles = $this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
+    public function syncRoles($roles, array $data = [])	{
+		$currentRoles = $this->getUserAssignedRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
 		$roles = Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id');
 		$intersectedRoles = $currentRoles->intersect($roles);
 
@@ -149,30 +137,23 @@ trait HasRoles
         return $this->assignRole($roles->diff($currentRoles), $data)->updateRole($intersectedRoles, $oldData, $data)->removeRole($currentRoles->diff($roles), $data);
     }
 
-    public function hasAnyRole($roles, array $data = []): bool
-    {
+    public function hasOneRole($roles, array $data = []) {
 		if (($data['semester_id'] ?? null) === null)
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-        return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->intersect($this->roles->pluck('id'))->isNotEmpty();
+        return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
     }
 
-    public function hasAllRoles($roles, array $data = []): bool
-    {
+    public function hasAllRoles($roles, array $data = []) {
 		if (($data['semester_id'] ?? null) === null)
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-		$roles = Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id');
-
-        return $roles->intersect($this->roles->pluck('id')) == $roles;
+        return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
     }
 
-	public function getUserRoles($user_id, $semester_id = null, $needToBeValidated = true)
-	{
+	public function getUserAssignedRoles($user_id, $semester_id = null, $needToBeValidated = true) {
 		if (($semester_id ?? null) === null)
 			$semester_id = Semester::getThisSemester()->id;
-		// TODO à rendre dynamique
-
 		if ($this->getTable() === 'users')
 			$roles = static::find($user_id)->roles();
 		else
@@ -188,15 +169,13 @@ trait HasRoles
 
 			return $roles->get();
 		}
-
 	}
 
-	public function getRolesManageableBy($user_id, $semester_id = null)
-	{
+	public function getUserRoles($user_id, $semester_id = null) {
 		if (($semester_id ?? null) === null)
 			$semester_id = Semester::getThisSemester()->id;
 
-		$roles = $this->getUserRoles($user_id, $semester_id);
+		$roles = $this->getUserAssignedRoles($user_id, $semester_id);
 
 		foreach ($roles as $role) {
 			foreach ($role->childRoles as $chilRole)
@@ -204,7 +183,7 @@ trait HasRoles
 		}
 
 		if ($this->getTable() !== 'users') {
-			foreach ((new User)->getRolesManageableBy($user_id, $semester_id) as $userRole)
+			foreach ((new User)->getUserRoles($user_id, $semester_id) as $userRole)
 				$roles->push($userRole);
 		}
 
