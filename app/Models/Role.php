@@ -87,4 +87,16 @@ class Role extends Model
 
 		return $this;
 	}
+
+	public function removeParentRole($roles) {
+		$this->parentRoles()->withTimestamps()->detach(static::getRoles(stringToArray($roles), $this->only_for));
+
+		return $this;
+	}
+
+	public function syncParentRole($roles) {
+		$this->parentRoles()->withTimestamps()->sync(static::getRoles(stringToArray($roles), $this->only_for));
+
+		return $this;
+	}
 }

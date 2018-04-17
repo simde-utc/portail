@@ -54,9 +54,9 @@ class Permission extends Model
 	}
 
 	public static function getPermissions($permissions, bool $is_system = true) {
-		if (is_array($roles))
+		if (is_array($permissions))
 			return static::whereIn('id', $permissions)->orWhereIn('type', $permissions)->where('is_system', $is_system)->get();
 		else
-			return $roles;
+			return $permissions;
 	}
 }

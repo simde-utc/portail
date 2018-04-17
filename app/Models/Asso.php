@@ -13,24 +13,20 @@ class Asso extends Model
 		'name', 'login', 'description', 'type_asso_id', 'parent_id',
 	];
 
-	public function assoMember() {
-		return $this->hasMany('App\Models\AssoMember');
-	}
-
 	public function members() {
-		return $this->belongsToMany('App\Models\User', 'assos_members')->whereNotNull('validated_by');
+		return $this->belongsToMany(User::class, 'assos_members')->whereNotNull('validated_by');
 	}
 
 	public function currentMembers() {
-		return $this->belongsToMany('App\Models\User', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('validated_by');
+		return $this->belongsToMany(User::class, 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('validated_by');
 	}
 
 	public function joiners() {
-		return $this->belongsToMany('App\Models\User', 'assos_members')->whereNull('validated_by');
+		return $this->belongsToMany(User::class, 'assos_members')->whereNull('validated_by');
 	}
 
 	public function currentJoiners() {
-		return $this->belongsToMany('App\Models\User', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNull('validated_by');
+		return $this->belongsToMany(User::class, 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNull('validated_by');
 	}
 
 	public function roles() {
@@ -38,19 +34,19 @@ class Asso extends Model
 	}
 
 	public function type() {
-		return $this->belongsTo('App\Models\AssoType');
+		return $this->belongsTo(AssoType::class);
 	}
 
 	public function contact() {
-		return $this->hasMany('App\Models\AssoContact', 'contacts_assos');
+		return $this->hasMany(AssoContact::class, 'contacts_assos');
 	}
 
 	public function rooms() {
-		return $this->hasMany('App\Models\Room');
+		return $this->hasMany(Room::class);
 	}
 
 	public function reservations() {
-		return $this->hasMany('App\Models\Reservations');
+		return $this->hasMany(Reservation::class);
 	}
 
 	public function articles() {
