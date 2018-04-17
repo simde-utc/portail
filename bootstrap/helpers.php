@@ -50,8 +50,10 @@ if (!function_exists('convertPipeToArray') && !function_exists('stringToArray'))
     {
 		if (is_string($toArray) && false !== strpos($toArray, '|'))
             $toArray = convertPipeToArray($toArray);
-        if (!is_array($toArray))
+        if (is_string($toArray) || is_numeric($toArray))
             $toArray = [$toArray];
+		if (!is_array($toArray))
+			return $toArray;
 
 		foreach ($toArray as $key => $value) {
 			if (is_numeric($value))

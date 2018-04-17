@@ -14,7 +14,6 @@ class CreateAssosMembersTable extends Migration
 	public function up()
 	{
 		Schema::create('assos_members', function (Blueprint $table) {
-			$table->increments('id');
 			$table->integer('asso_id')->unsigned();
 			$table->foreign('asso_id')->references('id')->on('assos');
 			$table->integer('user_id')->unsigned();
@@ -28,7 +27,7 @@ class CreateAssosMembersTable extends Migration
 			$table->text('permission_ids')->nullable(); // Permissions custom ajouté à la personne
 
 			$table->timestamps();
-			$table->index(['asso_id', 'user_id', 'semester_id']);
+			$table->primary(['asso_id', 'user_id', 'semester_id']);
 		});
 	}
 

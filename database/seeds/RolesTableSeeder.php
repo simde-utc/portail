@@ -40,7 +40,7 @@ class RolesTableSeeder extends Seeder
 				'name' => 'Président',
 				'description' => 'Responsable d\'une organisation',
 				'limited_at' => 1,
-				'only_for' => 'assos_members',
+				'only_for' => 'assos',
 				'permissions' => [
 					'tresorie',
 				]
@@ -50,7 +50,7 @@ class RolesTableSeeder extends Seeder
 				'name' => 'Vice-Président',
 				'description' => 'Co-responsable d\'une organisation',
 				'limited_at' => 1,
-				'only_for' => 'assos_members',
+				'only_for' => 'assos',
 				'parents' => [
 					'president',
 				],
@@ -64,7 +64,7 @@ class RolesTableSeeder extends Seeder
 				'name' => 'Secrétaire Général',
 				'description' => 'Administrateur de l\'organisation',
 				'limited_at' => 1,
-				'only_for' => 'assos_members',
+				'only_for' => 'assos',
 				'parents' => [
 					'president',
 					'vice-president',
@@ -75,7 +75,7 @@ class RolesTableSeeder extends Seeder
 				'name' => 'Trésorier',
 				'description' => 'Responsable de la trésorie',
 				'limited_at' => 1,
-				'only_for' => 'assos_members',
+				'only_for' => 'assos',
 				'parents' => [
 					'president',
 					'vice-president',
@@ -90,7 +90,7 @@ class RolesTableSeeder extends Seeder
 				'type' => 'bureau',
 				'name' => 'Bureau',
 				'description' => 'Membre du bureau',
-				'only_for' => 'assos_members',
+				'only_for' => 'assos',
 				'parents' => [
 					'president',
 					'vice-president',
