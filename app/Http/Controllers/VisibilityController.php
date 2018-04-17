@@ -23,27 +23,25 @@ class VisibilityController extends Controller
 	 public function index()
 	{
 		$visibilities = Visibility::get();
+
 		return response()->json($visibilities, 200);
 	}
 
 	/**
 	 * Create Visibility
 	 *
-	 * @param \Illuminate\Http\Request $request
+	 * @param \Illuminate\Http\VisibilityRequest $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(VisibilityRequest $request)
 	{
 		$visibility = Visibility::create($request->all());
 
-		if($visibility)
-		{
-			
+		if ($visibility)
 			return response()->json($visibility, 200);
-		}
 		else
 			return response()->json(['message' => 'Impossible de créer la visibilité'], 500);
-		
+
 	}
 
 	/**
@@ -56,7 +54,7 @@ class VisibilityController extends Controller
 	{
 		$visibility = Visibility::find($id);
 
-		if($visibility)
+		if ($visibility)
 			return response()->json($visibility, 200);
 		else
 			return response()->json(['message' => 'Impossible de trouver la visibilité'], 500);
@@ -73,12 +71,14 @@ class VisibilityController extends Controller
 	{
 		$visibility = Visibility::find($id);
 
-		if($visibility) {
+		if ($visibility) {
 			if ($visibility->update($request->input()))
 				return response()->json($visibility, 201);
-			return response()->json(['message' => 'Impossible de mettre à jour la visibilité'],500);
+			else
+				return response()->json(['message' => 'Impossible de mettre à jour la visibilité'],500);
 		}
-		return response()->json(['message' => 'Impossible de trouver la  visibilité'], 500);
+		else
+			return response()->json(['message' => 'Impossible de trouver la  visibilité'], 500);
 	}
 
 	/**
@@ -92,10 +92,12 @@ class VisibilityController extends Controller
 	   $visibility = Visibility::find($id);
 
 		if ($visibility) {
-			if($visibility->delete())
-				return response()->json(['message'=>'La visibilité a bien été supprimée'],200);
-			return response()->json(['message'=>'Erreur lors de la suppression de la visibilité'],500);
+			if ($visibility->delete())
+				return response()->json(['message' => 'La visibilité a bien été supprimée'], 200);
+			else
+				return response()->json(['message' => 'Erreur lors de la suppression de la visibilité'], 500);
 		}
-		return response()->json(['message' => 'Impossible de trouver la visibilité'], 500);
+		else
+			return response()->json(['message' => 'Impossible de trouver la visibilité'], 500);
 	}
 }

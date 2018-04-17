@@ -22,13 +22,14 @@ class RoomController extends Controller
 	public function index()
 	{
 		$rooms = Room::get();
+
 		return response()->json($rooms, 200);
 	}
 
 	/**
 	 * Create Room
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Http\RoomRequest  $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(RoomRequest $request)
@@ -71,9 +72,11 @@ class RoomController extends Controller
 		if ($room) {
 			if ($room->update($request->input()))
 				return response()->json($room, 201);
-			return response()->json(['message'=>'An error ocured'],500);
+			else
+				return response()->json(['message'=>'An error ocured'],500);
 		}
-		return response()->json(['message' => 'Impossible de trouver la salle'], 500);
+		else
+			return response()->json(['message' => 'Impossible de trouver la salle'], 500);
 	}
 
 	/**
@@ -89,8 +92,10 @@ class RoomController extends Controller
 		if ($room) {
 			if ($room->delete())
 				return response()->json(['message'=>'La salle a bien été supprimée'],200);
-			return response()->json(['message'=>'Erreur lors de la suppression de la salle'],500);
+			else
+				return response()->json(['message'=>'Erreur lors de la suppression de la salle'],500);
 		}
-		return response()->json(['message' => 'Impossible de trouver la salle'], 500);
+		else
+			return response()->json(['message' => 'Impossible de trouver la salle'], 500);
 	}
 }

@@ -20,12 +20,12 @@ class ArticleController extends Controller
 	 * Les Scopes requis pour manipuler les Articles
 	 */
 	public function __construct() {
-		$this->middleware(\Scopes::matchOne(
-			['client-get-articles-public', 'user-get-articles-followed-now', 'user-get-articles-done-now']), 
+		$this->middleware(
+			\Scopes::matchOne(['client-get-articles-public', 'user-get-articles-followed-now', 'user-get-articles-done-now']),
 			['only' => ['index', 'show']]
 		);
-		$this->middleware(\Scopes::matchOne(
-			['user-manage-articles']), 
+		$this->middleware(
+			\Scopes::matchOne(['user-manage-articles']),
 			['only' => ['store', 'update', 'destroy']]
 		);
 	}
@@ -33,7 +33,7 @@ class ArticleController extends Controller
 	/**
 	 * List Articles
 	 *
-	 * Retourne la liste des articles 
+	 * Retourne la liste des articles
 	 * @param \Illuminate\Http\Request $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -57,7 +57,7 @@ class ArticleController extends Controller
 	 * Create Article
 	 *
 	 * Créer un article
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Http\ArticleRequest  $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(ArticleRequest $request)
@@ -91,7 +91,7 @@ class ArticleController extends Controller
 	 * Update Article
 	 *
 	 * Met à jour l'article s'il existe
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Http\ArticleRequest  $request
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
@@ -120,7 +120,7 @@ class ArticleController extends Controller
 	{
 		$article = Article::find($id);
 
-		if($article) {
+		if ($article) {
 			if ($article->delete())
 				return response()->json(['message' => 'L\'article a bien été supprimé'], 200);
 			else

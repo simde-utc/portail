@@ -22,12 +22,12 @@ class GroupController extends Controller
 	 * Les Scopes requis pour manipuler les Groups
 	 */
 	public function __construct() {
-		$this->middleware(\Scopes::matchOne(
-			['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']), 
+		$this->middleware(
+			\Scopes::matchOne(['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']),
 			['only' => ['index', 'show']]
 		);
-		$this->middleware(\Scopes::matchOne(
-			['user-manage-groups']),
+		$this->middleware(
+			\Scopes::matchOne(['user-manage-groups']),
 			['only' => ['store', 'update', 'destroy']]
 		);
 	}
@@ -52,13 +52,13 @@ class GroupController extends Controller
 	/**
 	 * Create Group
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Http\GroupRequest  $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(GroupRequest $request)
 	{
 		$group = new Group;
-		$group->user_id = 1; // PROD : $request->user()->id;
+		$group->user_id = $request->user()->id;
 		$group->name = $request->name;
 		$group->icon = $request->icon;
 		$group->visibility_id = $request->visibility_id ?? Visibility::where('type', 'owner')->first()->id;
@@ -66,7 +66,7 @@ class GroupController extends Controller
 
 		if ($group->save()) {
 			// Owner est automatiquement membre du groupe.
-			$group->members()->attach(1); //PROD : $request->user()->id);
+			$group->members()->attach($request->user()->id);
 
 			// Les ids des membres à ajouter seront passé dans la requête.
 			// ids est un array de user ids.
@@ -103,7 +103,7 @@ class GroupController extends Controller
 	/**
 	 * Update Group
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Http\GroupRequest  $request
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
@@ -130,7 +130,7 @@ class GroupController extends Controller
 			$group->is_active = $request->input('is_active', true);
 
 		// En update on enleve les ids précedents donc on sync.
-		$group->members()->sync(1); // TODO 1 ? PROD : $request->user()->id);
+		$group->members()->sync($request->user()->id);
 
 		// Pas de sync() vu qu'on veut garder owner id.
 		// Les ids de tous les membres (actuels et anciens) seront passés dans la requête.
@@ -156,8 +156,7 @@ class GroupController extends Controller
 		if (!$group)
 			return response()->json(['message' => 'Impossible de trouver le groupe'], 404);
 
-		$group->members()->detach();
-
+		$group->members()->detach(); // Pas sûr que ce soit utile
 		$group->delete();
 
 		return response()->json(['message' => 'Groupe supprimé'], 204);

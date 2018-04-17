@@ -25,8 +25,9 @@ class ClientController extends Controller
 	 */
 	public function index(Request $request) {
 		$bearerToken = $request->bearerToken();
-		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
 		$client = Token::find($tokenId)->client->toArray();
+
 		$client['scopes'] = json_decode($client['scopes'], true);
 
 		return $client;
@@ -41,7 +42,7 @@ class ClientController extends Controller
 	 */
 	public function getUsers(Request $request) {
 		$bearerToken = $request->bearerToken();
-		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;
 		$tokens = Token::where('client_id', $clientId);
 
@@ -76,7 +77,7 @@ class ClientController extends Controller
 	 */
 	public function getUser(Request $request, int $userId) {
 		$bearerToken = $request->bearerToken();
-		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;
 		$tokens = Token::where('client_id', $clientId)->where('user_id', $userId);
 
@@ -88,12 +89,12 @@ class ClientController extends Controller
 
 	/**
 	 * Delete User Authorizations to Client
-	 * 
+	 *
 	 * Supprime les autorisations d'un utilisateur pour le client
 	 */
 	public function destroy(Request $request, int $userId) {
 		$bearerToken = $request->bearerToken();
-		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;
 
 		if (Token::where('client_id', $clientId)->where('user_id', $userId)->where('revoked', false)->delete() === 0)
@@ -104,8 +105,8 @@ class ClientController extends Controller
 
 	/**
 	 * Delete all Users Authorizations to Client
-	 * 
-	 * Suppression des autorisations de tous les utilisateurs pour le client
+	 *
+	 * Suppression les autorisations de tous les utilisateurs pour le client
 	 */
 	public function destroyAll(Request $request) {
 		$bearerToken = $request->bearerToken();
@@ -120,8 +121,8 @@ class ClientController extends Controller
 
 	/**
 	 * Delete current User Authorizations to Client
-	 * 
-	 * Suppression des autorisations pour l'utilisateur courrant
+	 *
+	 * Suppression des autorisations pour l'utilisateur courant
 	 */
 	public function destroyCurrent(Request $request) {
 		Token::where('client_id', $request->user()->token()->client_id)->where('user_id', $request->user()->id)->where('revoked', false)->delete();

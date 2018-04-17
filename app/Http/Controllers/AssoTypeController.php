@@ -22,17 +22,19 @@ class AssoTypeController extends Controller
 	 */
 	public function index() {
 		$types = AssoType::get();
+
 		return response()->json($types, 200);
 	}
 
 	/**
 	 * Create AssoType
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Http\AssoTypeRequest  $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(AssoTypeRequest $request) {
 		$type = AssoType::create($request->input());
+		
 		if ($type)
 			return response()->json($type, 200);
 		else

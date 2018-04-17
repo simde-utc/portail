@@ -24,25 +24,24 @@ class EventController extends Controller
 	public function index()
 	{
 		$events = Event::get();
+
 		return response()->json($events, 200);
 	}
 
 	/**
 	 * Create Event
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Http\EventRequest  $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(EventRequest $request)
 	{
 		$event = Event::create($request->all());
 
-		if($event)
-		{
+		if ($event)
 			return response()->json($event, 200);
-		}
 		else
-				return response()->json(['message' => 'Impossible de créer l\'évènement'], 500);
+			return response()->json(['message' => 'Impossible de créer l\'évènement'], 500);
 
 	}
 
@@ -56,26 +55,27 @@ class EventController extends Controller
 	{
 		$event = Event::find($id);
 
-		if($event)
+		if ($event)
 			return response()->json($event, 202);
+
 		return response()->json(['message' => 'Impossible de trouver l\'évènement'], 404);
 	}
 
 	/**
 	 * Update Event
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Http\EventRequest  $request
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(EventRequest $request, $id)
 	{
 		$event = Event::find($id);
-		if($event){
-			$ok = $event->update($request->input());
-			if($ok)
+		if ($event) {
+			if ($event->update($request->input()))
 				return response()->json($event, 201);
-			return response()->json(['message'=>'An error ocured'],500);
+			else
+				return response()->json(['message'=>'An error ocured'],500);
 		}
 	}
 
@@ -89,9 +89,9 @@ class EventController extends Controller
 	{
 	   $event = Event::find($id);
 
-		if ($event)
-		{
+		if ($event) {
 			$event->delete();
+
 			return response()->json([], 200);
 		}
 		else
