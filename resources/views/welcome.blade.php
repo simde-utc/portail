@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Portail des Assos - UTC</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -62,6 +62,11 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+            .bottom {
+                position: absolute;
+                bottom: 0;
+                font-weight: 600;
+            }
         </style>
     </head>
     <body>
@@ -78,16 +83,17 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Portail des Assos
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a target="_blank" href="https://laravel.com/docs">Documentation</a>
+                    <a target="_blank" href="https://laravel-news.com">Laravel News</a>
+                    <a target="_blank" href="https://github.com/simde-utc/portail-api">GitHub Portail</a>
                 </div>
+            </div>
+            <div class="bottom">
+                <p>Codé avec &#60;3 par le SiMDE</p>
             </div>
         </div>
     </body>
