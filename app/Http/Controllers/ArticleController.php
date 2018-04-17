@@ -29,16 +29,11 @@ class ArticleController extends Controller
 				$articles = Article::where('visibility_id', '<=', Visibility::where('type', Visible::getType($request->user()->id ))->first()->id)->get();
 			}
 			else {
-				/*$articles = Article::with('collaborators:id')->whereIn('asso_id', array_merge(
-					$request->user()->currentAssos()->pluck('assos.id')->toArray()
-					//$request->user()->currentAssosFollowed()->pluck('assos.id')->toArray(),
-				))->get();*/
-				$articles = Article::with('collaborators')->whereHas('collaborators', function($q) use ($request){
-					$q->whereIn('collaborators.asso_id', array_merge(
+				$articles = Article::whereHas('collaborators', function ($query) use ($request){
+					$query->whereIn('asso_id', array_merge(
 						$request->user()->currentAssos()->pluck('assos.id')->toArray()
-					))->get();
-				});
-				return response()->json($articles);
+					));
+				})->get();
 			}
 		}
 		else
