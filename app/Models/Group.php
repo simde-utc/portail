@@ -46,10 +46,6 @@ class Group extends Model
     }
 
     public function members() {
-        return $this->belongsToMany(User::class, 'groups_members');
-    }
-
-    public function roles() {
-        return $this->belongsToMany(Role::class, 'groups_members');
+        return $this->belongsToMany(User::class, 'groups_roles');
     }
 }

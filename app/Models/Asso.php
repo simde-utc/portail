@@ -14,23 +14,19 @@ class Asso extends Model
 	];
 
 	public function members() {
-		return $this->belongsToMany(User::class, 'assos_members')->whereNotNull('validated_by');
+		return $this->belongsToMany(User::class, 'assos_roles')->whereNotNull('validated_by');
 	}
 
 	public function currentMembers() {
-		return $this->belongsToMany(User::class, 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('validated_by');
+		return $this->belongsToMany(User::class, 'assos_roles')->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('validated_by');
 	}
 
 	public function joiners() {
-		return $this->belongsToMany(User::class, 'assos_members')->whereNull('validated_by');
+		return $this->belongsToMany(User::class, 'assos_roles')->whereNull('validated_by');
 	}
 
 	public function currentJoiners() {
-		return $this->belongsToMany(User::class, 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNull('validated_by');
-	}
-
-	public function roles() {
-		return $this->belongsToMany(Role::class, 'assos_members');
+		return $this->belongsToMany(User::class, 'assos_roles')->where('semester_id', Semester::getThisSemester()->id)->whereNull('validated_by');
 	}
 
 	public function type() {

@@ -28,14 +28,6 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\AuthPassword');
 	}
 
-	public function roles() {
-        return $this->belongsToMany(Role::class, 'users_roles');
-    }
-
-	public function permissions() {
-        return $this->belongsToMany(Permission::class, 'users_permissions');
-    }
-
 	public function assos() {
 		return $this->belongsToMany('App\Models\Asso', 'assos_members');
 	}
