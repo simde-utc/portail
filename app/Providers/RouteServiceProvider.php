@@ -24,8 +24,6 @@ class RouteServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot() {
-		dd(\App\Models\User::find(1)->getUserPermissions());
-
         parent::boot();
     }
 

@@ -12,7 +12,9 @@ use App\Models\User;
 
 trait HasRoles
 {
-	use HasPermissions;
+	use HasPermissions {
+		getUserPermissions as getUserPermissionsFromPermissions;
+	}
 
     public static function bootHasRoles() {
         static::deleting(function ($model) {
@@ -216,7 +218,7 @@ trait HasRoles
 	}
 
 	public function getUserPermissions($user_id = null, $semester_id = false) {
-		$permissions = $this->getUserAssignedPermissions($user_id, $semester_id);
+		$permissions = $this->getUserPermissionsFromPermissions($user_id, $semester_id);
 
 		dd($permissions);
 
