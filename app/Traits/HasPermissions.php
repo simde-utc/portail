@@ -24,7 +24,7 @@ trait HasPermissions
 	}
 
 	public function permissions() {
-		return $this->belongsToMany(Permission::class, $this->getPermissionRelationTable())->withPivot('semester_id', 'validated_by');
+		return $this->belongsToMany(Permission::class, $this->getPermissionRelationTable());
 	}
 
 	public function assignPermission($permissions, array $data = [], bool $force = false) {
@@ -38,7 +38,7 @@ trait HasPermissions
 
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
 			if ($permission === null)
-				throw new \Exception('Il n\'est pas autorisé d\'associer ce permission');
+				throw new \Exception('Il n\'est pas autorisé d\'associer cette permission');
 
 			if (!$force) {
 				$relatedTable = $this->getPermissionRelationTable();
@@ -50,12 +50,12 @@ trait HasPermissions
 					})->wherePivot('validated_by', '!=', null);
 
 					if ($users->count() >= $permission->limited_at)
-						throw new \Exception('Le nombre de personnes ayant ce permission a été dépassé');
+						throw new \Exception('Le nombre de personnes ayant cette permission a été dépassé. Limité à '.$permission->limited_at);
 				}
 
 				if ($data['validated_by'] ?? false) {
 					if (!$manageablePermissions->contains('id', $permission->id) && !$manageablePermissions->contains('type', 'admin'))
-						throw new \Exception('La personne validatrice n\'est pas habilitée à donner ce permission: '.$permission->name);
+						throw new \Exception('La personne demandant la validation n\'est pas habilitée à donner cette permission: '.$permission->name);
 				}
 			}
 
@@ -83,18 +83,15 @@ trait HasPermissions
 			if ($permission === null)
 				throw new \Exception('Le permission '.$permission.' n\'existe pas ou ne correspond à ce type de modèle');
 
-			if (!$force && $updatedData['validated_by'] ?? false) {
-				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin') || $permission->childPermissions->contains('type', 'admin')))
-					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce permission: '.$permission->name);
+			if (!$force && ($updatedData['validated_by'] ?? false)) {
+				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
+					throw new \Exception('La personne demandant la validation n\'est pas habilitée à modifier cette permission: '.$permission->name);
 			}
 
 			array_push($updatedPermissions, $permission->id);
 		}
 
 		$toUpdate = $this->permissions()->withTimestamps();
-
-		if ($data['validated_by'] ?? false)
-			unset($data['validated_by']);
 
 		foreach ($data as $key => $value)
 			$toUpdate->wherePivot($key, $value);
@@ -118,9 +115,9 @@ trait HasPermissions
 			if ($permission === null)
 				throw new \Exception('Le permission '.$permission.' n\'existe pas ou ne correspond à ce type de modèle');
 
-			if (!$force && $data['validated_by'] ?? false) {
-				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin') || $permission->childPermissions->contains('type', 'admin')))
-					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce permission: '.$permission->name);
+			if (!$force && ($data['validated_by'] ?? false)) {
+				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
+					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer cette permission: '.$permission->name);
 			}
 
 			array_push($delPermissions, $permission->id);
@@ -176,7 +173,7 @@ trait HasPermissions
 		if ($permissions === null)
 		return new Collection;
 
-		if ($this->getTable() !== 'users')
+		if ($this->getTable() !== 'users' || $user_id !== null)
 			$permissions = $permissions->wherePivot('user_id', $user_id);
 
 		$relatedTable = $this->getPermissionRelationTable();

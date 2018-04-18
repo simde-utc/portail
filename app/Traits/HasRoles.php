@@ -13,7 +13,7 @@ use App\Models\User;
 trait HasRoles
 {
 	use HasPermissions {
-		getUserPermissionsFromPermissions as getUserPermissionsFromHasPermissions;
+		getUserPermissions as getUserPermissionsFromHasPermissions;
 	}
 
     public static function bootHasRoles() {
@@ -31,7 +31,7 @@ trait HasRoles
 	}
 
 	public function roles() {
-		return $this->belongsToMany(Role::class, $this->getRoleRelationTable())->withPivot('semester_id', 'validated_by');
+		return $this->belongsToMany(Role::class, $this->getRoleRelationTable());
 	}
 
 	public function assignRole($roles, array $data = [], bool $force = false) {
@@ -57,12 +57,12 @@ trait HasRoles
 					})->wherePivot('validated_by', '!=', null);
 
 					if ($users->count() >= $role->limited_at)
-						throw new \Exception('Le nombre de personnes ayant ce role a été dépassé');
+						throw new \Exception('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 				}
 
 				if ($data['validated_by'] ?? false) {
 					if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
-						throw new \Exception('La personne validatrice n\'est pas habilitée à donner ce rôle: '.$role->name);
+						throw new \Exception('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$role->name);
 				}
 			}
 
@@ -90,18 +90,15 @@ trait HasRoles
 			if ($role === null)
 				throw new \Exception('Le role '.$role.' n\'existe pas ou ne correspond à ce type de modèle');
 
-			if (!$force && $updatedData['validated_by'] ?? false) {
+			if (!$force && ($updatedData['validated_by'] ?? false)) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
-					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
+					throw new \Exception('La personne demandant la validation n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
 
 			array_push($updatedRoles, $role->id);
 		}
 
 		$toUpdate = $this->roles()->withTimestamps();
-
-		if ($data['validated_by'] ?? false)
-			unset($data['validated_by']);
 
 		foreach ($data as $key => $value)
 			$toUpdate->wherePivot($key, $value);
@@ -125,7 +122,7 @@ trait HasRoles
 			if ($role === null)
 				throw new \Exception('Le role '.$role.' n\'existe pas ou ne correspond à ce type de modèle');
 
-			if (!$force && $data['validated_by'] ?? false) {
+			if (!$force && ($data['validated_by'] ?? false)) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
 					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
 			}
@@ -183,7 +180,7 @@ trait HasRoles
 		if ($roles === null)
 			return new Collection;
 
-		if ($this->getTable() !== 'users')
+		if ($this->getTable() !== 'users' || $user_id !== null)
 			$roles = $roles->wherePivot('user_id', $user_id);
 
 		$relatedTable = $this->getRoleRelationTable();
@@ -219,8 +216,6 @@ trait HasRoles
 
 	public function getUserPermissions($user_id = null, $semester_id = false) {
 		$permissions = $this->getUserPermissionsFromHasPermissions($user_id, $semester_id);
-
-		dd($permissions);
 
 		foreach ($this->getUserRoles($user_id, $semester_id)->pluck('id') as $role_id)
 			$permissions = $permissions->merge(Role::find($role_id)->permissions);
