@@ -13,7 +13,7 @@ use App\Models\User;
 trait HasRoles
 {
 	use HasPermissions {
-		getUserPermissions as getUserPermissionsFromPermissions;
+		getUserPermissionsFromPermissions as getUserPermissionsFromHasPermissions;
 	}
 
     public static function bootHasRoles() {
@@ -218,7 +218,7 @@ trait HasRoles
 	}
 
 	public function getUserPermissions($user_id = null, $semester_id = false) {
-		$permissions = $this->getUserPermissionsFromPermissions($user_id, $semester_id);
+		$permissions = $this->getUserPermissionsFromHasPermissions($user_id, $semester_id);
 
 		dd($permissions);
 

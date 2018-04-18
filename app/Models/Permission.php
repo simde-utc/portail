@@ -27,21 +27,11 @@ class Permission extends Model
     }
 
 	public static function find(int $id, bool $is_system = true) {
-		$permission = static::where('id', $id);
-
-		if ($only_for !== null)
-			$permission->where('is_system', $is_system);
-
-		return $permission->first();
+		return static::where('id', $id)->where('is_system', $is_system)->first();
 	}
 
     public static function findByType(string $type, bool $is_system = true) {
-		$permission = static::where('type', $type);
-
-		if ($only_for !== null)
-			$permission->where('is_system', $is_system);
-
-		return $permission->first();
+		return static::where('type', $type)->where('is_system', $is_system)->first();
     }
 
 	public static function getPermission($permissions, bool $is_system = true) {
