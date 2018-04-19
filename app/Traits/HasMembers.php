@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Facades\Schema;
+use App\Exceptions\MemberException;
 use App\Traits\HasRoles;
 use Illuminate\Support\Collection;
 use App\Models\Role;
@@ -59,10 +59,10 @@ trait HasMembers
 				$manageablePermissions = $this->getUserPermissions($data['validated_by']);
 
 				if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-					throw new \Exception('La personne demandant la validation n\'est pas habilitée à ajouter de membres, il s\'agit d\'un groupe fermé');
+					throw new MemberException('La personne demandant la validation n\'est pas habilitée à ajouter de membres, il s\'agit d\'un groupe fermé');
 			}
 			else
-				throw new \Exception('L\'ajout de membre est fermé. Il est nécessaire qu\'une personne ayant les droits d\'ajout ajoute la personne');
+				throw new MemberException('L\'ajout de membre est fermé. Il est nécessaire qu\'une personne ayant les droits d\'ajout ajoute la personne');
 		}
 
 		$members = User::getUsers(stringToArray($members));
@@ -76,16 +76,16 @@ trait HasMembers
 				$role = Role::find($data['role_id'], $this->getTable());
 
 				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
-					throw new \Exception('La personne demandant l\'affectation de rôle n\'est pas habilitée à donner ce rôle: '.$role->name);
+					throw new MemberException('La personne demandant l\'affectation de rôle n\'est pas habilitée à donner ce rôle: '.$role->name);
 
 				if ($this->roles()->wherePivot('role_id', $data['role_id'])->wherePivotIn('user_id', $members->pluck('id'), false)->get()->count() > $role->limited_at - $members->count())
-					throw new \Exception('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
+					throw new MemberException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 			}
 
 			$manageablePermissions = $this->getUserPermissions($data['validated_by']);
 
 			if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-				throw new \Exception('La personne demandant la validation n\'est pas habilitée à ajouter des membres');
+				throw new MemberException('La personne demandant la validation n\'est pas habilitée à ajouter des membres');
 		}
 
 		$addMembers = [];
@@ -93,7 +93,11 @@ trait HasMembers
 		foreach ($members as $member)
 			$addMembers[$member->id] = $data;
 
-		$this->members()->withTimestamps()->attach($addMembers);
+		try {
+			$this->members()->withTimestamps()->attach($addMembers);
+		} catch (\Exception $e) {
+			throw new MemberException('Une des personnes est déjà membre');
+		}
 
 		return $this;
 	}
@@ -115,21 +119,21 @@ trait HasMembers
 				$role = Role::find($data['role_id'], $this->getTable());
 
 				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
-					throw new \Exception('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
+					throw new MemberException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
 
 			if ($updatedData['role_id'] ?? false) {
 				$role = Role::find($updatedData['role_id'], $this->getTable());
 
 				if (!$manageableRoles->contains('id', $updatedData['role_id']) && !$manageableRoles->contains('type', 'admin'))
-					throw new \Exception('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
+					throw new MemberException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 
 				if ($this->roles()->wherePivot('role_id', $updatedData['role_id'])->wherePivotIn('user_id', $members->pluck('id'), false)->get()->count() > $role->limited_at - $members->count())
-					throw new \Exception('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
+					throw new MemberException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 			}
 
 			if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-				throw new \Exception('La personne demandant la validation n\'est pas habilitée à modifier les membres');
+				throw new MemberException('La personne demandant la validation n\'est pas habilitée à modifier les membres');
 		}
 
 		$updatedMembers = [];
@@ -142,8 +146,12 @@ trait HasMembers
 		foreach ($data as $key => $value)
 			$toUpdate->wherePivot($key, $value);
 
-		foreach ($updatedMembers as $updatedRole)
-			$toUpdate->updateExistingPivot($updatedRole, $updatedData);
+		try {
+			foreach ($updatedMembers as $updatedMember)
+				$toUpdate->updateExistingPivot($updatedMember, $updatedData);
+		} catch (\Exception $e) {
+			throw new MemberException('Les données d\'un membre ne peuvent être modifiées');
+		}
 
 		return $this;
     }
@@ -165,11 +173,11 @@ trait HasMembers
 				$role = Role::find($data['role_id'], $this->getTable());
 
 				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
-					throw new \Exception('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
+					throw new MemberException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
 
 			if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-				throw new \Exception('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$member->name);
+				throw new MemberException('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$member->name);
 		}
 
 		$delMembers = [];
@@ -185,7 +193,11 @@ trait HasMembers
 		foreach ($data as $key => $value)
 			$toDetach->wherePivot($key, $value);
 
-		$toDetach->detach($delMembers);
+		try {
+			$toDetach->detach($delMembers);
+		} catch (\Exception $e) {
+			throw new MemberException('Une erreur a été recontrée à la suppression d\'un membre');
+		}
 
 		return $this;
     }

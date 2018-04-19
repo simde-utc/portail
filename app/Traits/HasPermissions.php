@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use AppRoleExceptions\PermissionException;
 use Illuminate\Support\Collection;
 use App\Models\Permission;
 use App\Models\Semester;
@@ -47,19 +48,23 @@ trait HasPermissions
 					})->wherePivot('validated_by', '!=', null);
 
 					if ($users->count() >= $permission->limited_at)
-						throw new \Exception('Le nombre de personnes ayant cette permission a été dépassé. Limité à '.$permission->limited_at);
+						throw new PermissionException('Le nombre de personnes ayant cette permission a été dépassé. Limité à '.$permission->limited_at);
 				}
 
 				if (isset($data['validated_by'])) {
 					if (!$manageablePermissions->contains('id', $permission->id) && !$manageablePermissions->contains('type', 'admin'))
-						throw new \Exception('La personne demandant la validation n\'est pas habilitée à donner cette permission: '.$permission->name);
+						throw new PermissionException('La personne demandant la validation n\'est pas habilitée à donner cette permission: '.$permission->name);
 				}
 			}
 
 			$addPermissions[$permission->id] = $data;
 		}
 
-		$this->permissions()->withTimestamps()->attach($addPermissions);
+		try {
+			$this->permissions()->withTimestamps()->attach($addPermissions);
+		} catch (\Exception $e) {
+			throw new RoleException('Une des personnes possède déjà trop de permissions');
+		}
 
 		return $this;
 	}
@@ -79,7 +84,7 @@ trait HasPermissions
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
 			if (!$force && isset($updatedData['validated_by'])) {
 				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
-					throw new \Exception('La personne demandant la validation n\'est pas habilitée à modifier cette permission: '.$permission->name);
+					throw new PermissionException('La personne demandant la validation n\'est pas habilitée à modifier cette permission: '.$permission->name);
 			}
 
 			array_push($updatedPermissions, $permission->id);
@@ -90,8 +95,12 @@ trait HasPermissions
 		foreach ($data as $key => $value)
 			$toUpdate->wherePivot($key, $value);
 
-		foreach ($updatedPermissions as $updatedPermission)
-			$toUpdate->updateExistingPivot($updatedPermission, $updatedData);
+		try {
+			foreach ($updatedPermissions as $updatedPermission)
+				$toUpdate->updateExistingPivot($updatedPermission, $updatedData);
+		} catch (\Exception $e) {
+			throw new MemberException('Les données d\'une permission ne peuvent être modifiées');
+		}
 
 		return $this;
     }
@@ -108,7 +117,7 @@ trait HasPermissions
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
 			if (!$force && isset($data['validated_by'])) {
 				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
-					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer cette permission: '.$permission->name);
+					throw new PermissionException('La personne demandant la suppression n\'est pas habilitée à retirer cette permission: '.$permission->name);
 			}
 
 			array_push($delPermissions, $permission->id);
@@ -122,7 +131,11 @@ trait HasPermissions
 		foreach ($data as $key => $value)
 			$toDetach->wherePivot($key, $value);
 
-		$toDetach->detach($delPermissions);
+		try {
+			$toDetach->detach($delPermissions);
+		} catch (\Exception $e) {
+			throw new MemberException('Une erreur a été recontrée à la suppression d\'une permission');
+		}
 
 		return $this;
     }

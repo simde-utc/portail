@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use AppRoleExceptions\RoleException;
 use App\Traits\HasPermissions;
 use Illuminate\Support\Collection;
 use App\Models\Role;
@@ -53,19 +54,23 @@ trait HasRoles
 					})->wherePivot('validated_by', '!=', null);
 
 					if ($users->count() >= $role->limited_at)
-						throw new \Exception('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
+						throw new RoleException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 				}
 
 				if (isset($data['validated_by'])) {
 					if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
-						throw new \Exception('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$role->name);
+						throw new RoleException('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$role->name);
 				}
 			}
 
 			$addRoles[$role->id] = $data;
 		}
 
-		$this->roles()->withTimestamps()->attach($addRoles);
+		try {
+			$this->roles()->withTimestamps()->attach($addRoles);
+		} catch (\Exception $e) {
+			throw new RoleException('Une des personnes possède déjà un rôle');
+		}
 
 		return $this;
 	}
@@ -85,7 +90,7 @@ trait HasRoles
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
 			if (!$force && isset($updatedData['validated_by'])) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
-					throw new \Exception('La personne demandant la validation n\'est pas habilitée à modifier ce rôle: '.$role->name);
+					throw new RoleException('La personne demandant la validation n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
 
 			array_push($updatedRoles, $role->id);
@@ -96,8 +101,12 @@ trait HasRoles
 		foreach ($data as $key => $value)
 			$toUpdate->wherePivot($key, $value);
 
-		foreach ($updatedRoles as $updatedRole)
-			$toUpdate->updateExistingPivot($updatedRole, $updatedData);
+		try {
+			foreach ($updatedRoles as $updatedRole)
+				$toUpdate->updateExistingPivot($updatedRole, $updatedData);
+		} catch (\Exception $e) {
+			throw new MemberException('Les données d\'un role ne peuvent être modifiées');
+		}
 
 		return $this;
     }
@@ -114,7 +123,7 @@ trait HasRoles
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
 			if (!$force && isset($data['validated_by'])) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
-					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
+					throw new RoleException('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
 			}
 
 			array_push($delRoles, $role->id);
@@ -128,7 +137,11 @@ trait HasRoles
 		foreach ($data as $key => $value)
 			$toDetach->wherePivot($key, $value);
 
-		$toDetach->detach($delRoles);
+		try {
+			$toDetach->detach($delRoles);
+		} catch (\Exception $e) {
+			throw new MemberException('Une erreur a été recontrée à la suppression d\'un role utilisateur');
+		}
 
 		return $this;
     }
