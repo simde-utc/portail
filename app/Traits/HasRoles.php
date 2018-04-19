@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use AppRoleExceptions\RoleException;
+use AppPortailExceptions\PortailException;
 use App\Traits\HasPermissions;
 use Illuminate\Support\Collection;
 use App\Models\Role;
@@ -54,12 +54,12 @@ trait HasRoles
 					})->wherePivot('validated_by', '!=', null);
 
 					if ($users->count() >= $role->limited_at)
-						throw new RoleException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
+						throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 				}
 
 				if (isset($data['validated_by'])) {
 					if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
-						throw new RoleException('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$role->name);
+						throw new PortailException('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$role->name);
 				}
 			}
 
@@ -69,7 +69,7 @@ trait HasRoles
 		try {
 			$this->roles()->withTimestamps()->attach($addRoles);
 		} catch (\Exception $e) {
-			throw new RoleException('Une des personnes possède déjà un rôle');
+			throw new PortailException('Une des personnes possède déjà un rôle');
 		}
 
 		return $this;
@@ -90,7 +90,7 @@ trait HasRoles
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
 			if (!$force && isset($updatedData['validated_by'])) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
-					throw new RoleException('La personne demandant la validation n\'est pas habilitée à modifier ce rôle: '.$role->name);
+					throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
 
 			array_push($updatedRoles, $role->id);
@@ -111,28 +111,25 @@ trait HasRoles
 		return $this;
     }
 
-    public function removeRoles($roles, array $data = [], bool $force = false) {
+    public function removeRoles($roles, array $data = [], int $removed_by = null, bool $force = false) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-		if (isset($data['validated_by']))
-			$manageableRoles = $this->getUserRoles($data['validated_by']);
+		if ($removed_by !== null)
+			$manageableRoles = $this->getUserRoles($removed_by);
 
 		$delRoles = [];
 
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
-			if (!$force && isset($data['validated_by'])) {
+			if (!$force && $removed_by !== null) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
-					throw new RoleException('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
+					throw new PortailException('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
 			}
 
 			array_push($delRoles, $role->id);
 		}
 
 		$toDetach = $this->roles();
-
-		if (isset($data['validated_by']))
-			unset($data['validated_by']);
 
 		foreach ($data as $key => $value)
 			$toDetach->wherePivot($key, $value);
@@ -146,7 +143,7 @@ trait HasRoles
 		return $this;
     }
 
-    public function syncRoles($roles, array $data = [], bool $force = false) {
+    public function syncRoles($roles, array $data = [], int $removed_by = null, bool $force = false) {
 		$currentRoles = $this->getUserAssignedRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
 		$roles = Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id');
 		$intersectedRoles = $currentRoles->intersect($roles);
@@ -157,7 +154,7 @@ trait HasRoles
 		if ($data['user_id'] ?? false)
 			$oldData['user_id'] = $data['user_id'];
 
-        return $this->assignRoles($roles->diff($currentRoles), $data, $force)->updateRoles($intersectedRoles, $oldData, $data, $force)->removeRoles($currentRoles->diff($roles), $data, $force);
+        return $this->assignRoles($roles->diff($currentRoles), $data, $force)->updateRoles($intersectedRoles, $oldData, $data, $force)->removeRoles($currentRoles->diff($roles), $data, $removed_by, $force);
     }
 
     public function hasOneRole($roles, array $data = []) {

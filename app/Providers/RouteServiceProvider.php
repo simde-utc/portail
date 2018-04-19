@@ -24,10 +24,6 @@ class RouteServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot() {
-		dd(\App\Models\Group::find(3)->assignMembers([1, 2], [
-			'validated_by' => 3
-		])->members);
-
         parent::boot();
     }
 

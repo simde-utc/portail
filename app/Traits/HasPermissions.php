@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use AppRoleExceptions\PermissionException;
+use AppRoleExceptions\PortailException;
 use Illuminate\Support\Collection;
 use App\Models\Permission;
 use App\Models\Semester;
@@ -48,12 +48,12 @@ trait HasPermissions
 					})->wherePivot('validated_by', '!=', null);
 
 					if ($users->count() >= $permission->limited_at)
-						throw new PermissionException('Le nombre de personnes ayant cette permission a été dépassé. Limité à '.$permission->limited_at);
+						throw new PortailException('Le nombre de personnes ayant cette permission a été dépassé. Limité à '.$permission->limited_at);
 				}
 
 				if (isset($data['validated_by'])) {
 					if (!$manageablePermissions->contains('id', $permission->id) && !$manageablePermissions->contains('type', 'admin'))
-						throw new PermissionException('La personne demandant la validation n\'est pas habilitée à donner cette permission: '.$permission->name);
+						throw new PortailException('La personne demandant la validation n\'est pas habilitée à donner cette permission: '.$permission->name);
 				}
 			}
 
@@ -84,7 +84,7 @@ trait HasPermissions
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
 			if (!$force && isset($updatedData['validated_by'])) {
 				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
-					throw new PermissionException('La personne demandant la validation n\'est pas habilitée à modifier cette permission: '.$permission->name);
+					throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier cette permission: '.$permission->name);
 			}
 
 			array_push($updatedPermissions, $permission->id);
@@ -105,28 +105,25 @@ trait HasPermissions
 		return $this;
     }
 
-    public function removePermissions($permissions, array $data = [], bool $force = false) {
+    public function removePermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-		if (isset($data['validated_by']))
-			$manageablePermissions = $this->getUserPermissions($data['validated_by']);
+		if ($removed_by !== null)
+			$manageablePermissions = $this->getUserPermissions($removed_by);
 
 		$delPermissions = [];
 
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
-			if (!$force && isset($data['validated_by'])) {
+			if (!$force && $removed_by !== null) {
 				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
-					throw new PermissionException('La personne demandant la suppression n\'est pas habilitée à retirer cette permission: '.$permission->name);
+					throw new PortailException('La personne demandant la suppression n\'est pas habilitée à retirer cette permission: '.$permission->name);
 			}
 
 			array_push($delPermissions, $permission->id);
 		}
 
 		$toDetach = $this->permissions();
-
-		if (isset($data['validated_by']))
-			unset($data['validated_by']);
 
 		foreach ($data as $key => $value)
 			$toDetach->wherePivot($key, $value);
@@ -140,7 +137,7 @@ trait HasPermissions
 		return $this;
     }
 
-    public function syncPermissions($permissions, array $data = [], bool $force = false) {
+    public function syncPermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
 		$currentPermissions = $this->getUserAssignedPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
 		$permissions = Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id');
 		$intersectedPermissions = $currentPermissions->intersect($permissions);
@@ -151,7 +148,7 @@ trait HasPermissions
 		if ($data['user_id'] ?? false)
 			$oldData['user_id'] = $data['user_id'];
 
-        return $this->assignPermissions($permissions->diff($currentPermissions), $data, $force)->updatePermissions($intersectedPermissions, $oldData, $data, $force)->removePermissions($currentPermissions->diff($permissions), $data, $force);
+        return $this->assignPermissions($permissions->diff($currentPermissions), $data, $force)->updatePermissions($intersectedPermissions, $oldData, $data, $force)->removePermissions($currentPermissions->diff($permissions), $data, $removed_by, $force);
     }
 
     public function hasOnePermission($permissions, array $data = []) {

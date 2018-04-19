@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Exceptions\MemberException;
+use App\Exceptions\PortailException;
 use App\Traits\HasRoles;
 use Illuminate\Support\Collection;
 use App\Models\Role;
@@ -59,10 +59,10 @@ trait HasMembers
 				$manageablePermissions = $this->getUserPermissions($data['validated_by']);
 
 				if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-					throw new MemberException('La personne demandant la validation n\'est pas habilitée à ajouter de membres, il s\'agit d\'un groupe fermé');
+					throw new PortailException('La personne demandant la validation n\'est pas habilitée à ajouter de membres, il s\'agit d\'un groupe fermé');
 			}
 			else
-				throw new MemberException('L\'ajout de membre est fermé. Il est nécessaire qu\'une personne ayant les droits d\'ajout ajoute la personne');
+				throw new PortailException('L\'ajout de membre est fermé. Il est nécessaire qu\'une personne ayant les droits d\'ajout ajoute la personne');
 		}
 
 		$members = User::getUsers(stringToArray($members));
@@ -76,16 +76,16 @@ trait HasMembers
 				$role = Role::find($data['role_id'], $this->getTable());
 
 				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
-					throw new MemberException('La personne demandant l\'affectation de rôle n\'est pas habilitée à donner ce rôle: '.$role->name);
+					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à donner ce rôle: '.$role->name);
 
 				if ($this->roles()->wherePivot('role_id', $data['role_id'])->wherePivotIn('user_id', $members->pluck('id'), false)->get()->count() > $role->limited_at - $members->count())
-					throw new MemberException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
+					throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 			}
 
 			$manageablePermissions = $this->getUserPermissions($data['validated_by']);
 
 			if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-				throw new MemberException('La personne demandant la validation n\'est pas habilitée à ajouter des membres');
+				throw new PortailException('La personne demandant la validation n\'est pas habilitée à ajouter des membres');
 		}
 
 		$addMembers = [];
@@ -96,7 +96,7 @@ trait HasMembers
 		try {
 			$this->members()->withTimestamps()->attach($addMembers);
 		} catch (\Exception $e) {
-			throw new MemberException('Une des personnes est déjà membre');
+			throw new PortailException('Une des personnes est déjà membre');
 		}
 
 		return $this;
@@ -119,21 +119,21 @@ trait HasMembers
 				$role = Role::find($data['role_id'], $this->getTable());
 
 				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
-					throw new MemberException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
+					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
 
 			if ($updatedData['role_id'] ?? false) {
 				$role = Role::find($updatedData['role_id'], $this->getTable());
 
 				if (!$manageableRoles->contains('id', $updatedData['role_id']) && !$manageableRoles->contains('type', 'admin'))
-					throw new MemberException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
+					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 
 				if ($this->roles()->wherePivot('role_id', $updatedData['role_id'])->wherePivotIn('user_id', $members->pluck('id'), false)->get()->count() > $role->limited_at - $members->count())
-					throw new MemberException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
+					throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 			}
 
 			if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-				throw new MemberException('La personne demandant la validation n\'est pas habilitée à modifier les membres');
+				throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier les membres');
 		}
 
 		$updatedMembers = [];
@@ -150,34 +150,34 @@ trait HasMembers
 			foreach ($updatedMembers as $updatedMember)
 				$toUpdate->updateExistingPivot($updatedMember, $updatedData);
 		} catch (\Exception $e) {
-			throw new MemberException('Les données d\'un membre ne peuvent être modifiées');
+			throw new PortailException('Les données d\'un membre ne peuvent être modifiées');
 		}
 
 		return $this;
     }
 
-    public function removeMembers($members, array $data = [], bool $force = false) {
+    public function removeMembers($members, array $data = [], int $removed_by = null, bool $force = false) {
 		$members = User::getUsers(stringToArray($members));
 
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-		if (isset($data['validated_by']))
-			$manageableMembers = $this->getUserMembers($data['validated_by']);
+		if ($removed_by !== null)
+			$manageableMembers = $this->getUserMembers($removed_by);
 
-		if (!$force && isset($data['validated_by'])) {
-			$manageableRoles = $this->getUserRoles($data['validated_by']);
-			$manageablePermissions = $this->getUserPermissions($data['validated_by']);
+		if (!$force && $removed_by !== null) {
+			$manageableRoles = $this->getUserRoles($removed_by);
+			$manageablePermissions = $this->getUserPermissions($removed_by);
 
 			if ($data['role_id'] ?? false) {
 				$role = Role::find($data['role_id'], $this->getTable());
 
 				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
-					throw new MemberException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
+					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
 
 			if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-				throw new MemberException('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$member->name);
+				throw new PortailException('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$member->name);
 		}
 
 		$delMembers = [];
@@ -187,22 +187,19 @@ trait HasMembers
 
 		$toDetach = $this->members();
 
-		if (isset($data['validated_by']))
-			unset($data['validated_by']);
-
 		foreach ($data as $key => $value)
 			$toDetach->wherePivot($key, $value);
 
 		try {
 			$toDetach->detach($delMembers);
 		} catch (\Exception $e) {
-			throw new MemberException('Une erreur a été recontrée à la suppression d\'un membre');
+			throw new PortailException('Une erreur a été recontrée à la suppression d\'un membre');
 		}
 
 		return $this;
     }
 
-    public function syncMembers($members, array $data = [], bool $force = false) {
+    public function syncMembers($members, array $data = [], int $removed_by = null, bool $force = false) {
 		$currentMembers = $this->getUserAssignedMembers($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
 		$members = User::getUsers(stringToArray($members))->pluck('id');
 		$intersectedMembers = $currentMembers->intersect($members);
@@ -213,7 +210,7 @@ trait HasMembers
 		if ($data['role_id'] ?? false)
 			$oldData['role_id'] = $data['role_id'];
 
-        return $this->assignMembers($members->diff($currentMembers), $data, $force)->updateMembers($intersectedMembers, $oldData, $data, $force)->removeMembers($currentMembers->diff($members), $data, $force);
+        return $this->assignMembers($members->diff($currentMembers), $data, $force)->updateMembers($intersectedMembers, $oldData, $data, $force)->removeMembers($currentMembers->diff($members), $data, $removed_by, $force);
     }
 
     public function hasOneMember($members, array $data = []) {
