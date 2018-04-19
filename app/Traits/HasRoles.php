@@ -13,7 +13,7 @@ use App\Models\User;
 trait HasRoles
 {
 	use HasPermissions {
-		getUserPermissions as getUserPermissionsFromHasPermissions;
+		HasPermissions::getUserPermissions as getUserPermissionsFromHasPermissions;
 	}
 
     public static function bootHasRoles() {
@@ -30,8 +30,32 @@ trait HasRoles
 		return $this->roleRelationTable ?? $this->getTable().'_roles';
 	}
 
+	public function members() {
+		return $this->belongsToMany(User::class, $this->getRoleRelationTable())->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+	}
+
+	public function currentMembers() {
+		$relatedTable = $this->getRoleRelationTable();
+
+		return $this->belongsToMany(User::class, $relatedTable)->where(function ($query) use ($relatedTable) {
+			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
+		})->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+	}
+
+	public function joiners() {
+		return $this->belongsToMany(User::class, $this->getRoleRelationTable())->whereNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+	}
+
+	public function currentJoiners() {
+		$relatedTable = $this->getRoleRelationTable();
+
+		return $this->belongsToMany(User::class, $this->getRoleRelationTable())->where(function ($query) use ($relatedTable) {
+			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
+		})->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+	}
+
 	public function roles() {
-		return $this->belongsToMany(Role::class, $this->getRoleRelationTable());
+	    return $this->belongsToMany(Role::class, $this->getRoleRelationTable());
 	}
 
 	public function assignRole($roles, array $data = [], bool $force = false) {

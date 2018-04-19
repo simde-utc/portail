@@ -83,6 +83,12 @@ class Role extends Model
 		return $this;
 	}
 
+	public function removePermissionTo($permissions) {
+		$this->permissions()->withTimestamps()->detach(Permission::getPermissions(stringToArray($permissions), $this->only_fr === 'users'));
+
+		return $this;
+	}
+
 	public function assignParentRole($roles) {
 		$this->parentRoles()->withTimestamps()->attach(static::getRoles(stringToArray($roles), $this->only_for));
 

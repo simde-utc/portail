@@ -7,27 +7,14 @@ use \App\Traits\HasRoles;
 
 class Asso extends Model
 {
-	use HasRoles;
+	use HasRoles {
+		HasRoles::members as membersAndFollowers;
+		HasRoles::currentMembers as currentMembersAndFollowers;
+	}
 
 	protected $fillable = [
 		'name', 'login', 'description', 'type_asso_id', 'parent_id',
 	];
-
-	public function members() {
-		return $this->belongsToMany(User::class, 'assos_roles')->whereNotNull('validated_by');
-	}
-
-	public function currentMembers() {
-		return $this->belongsToMany(User::class, 'assos_roles')->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('validated_by');
-	}
-
-	public function joiners() {
-		return $this->belongsToMany(User::class, 'assos_roles')->whereNull('validated_by');
-	}
-
-	public function currentJoiners() {
-		return $this->belongsToMany(User::class, 'assos_roles')->where('semester_id', Semester::getThisSemester()->id)->whereNull('validated_by');
-	}
 
 	public function type() {
 		return $this->belongsTo(AssoType::class);
@@ -46,14 +33,30 @@ class Asso extends Model
 	}
 
 	public function articles() {
-		return $this->belongsToMany('App\Models\Article', 'assos_articles');
+		return $this->belongsToMany(Article::class, 'assos_articles');
 	}
 
 	public function events() {
-		return $this->belongsToMany('App\Models\Event');
+		return $this->belongsToMany(Event::class);
 	}
 
 	public function parent() {
-	    return $this->hasOne('App\Models\Asso');
+	    return $this->hasOne(Asso::class, 'parent_id');
     }
+
+	public function members() {
+		return $this->membersAndFollowers()->wherePivot('role_id', '!=', null);
+	}
+
+	public function currentMembers() {
+		return $this->currentMembersAndFollowers()->wherePivot('role_id', '!=', null);
+	}
+
+	public function followers() {
+		return $this->membersAndFollowers()->wherePivot('role_id', null);
+	}
+
+	public function currentFollowers() {
+		return $this->currentMembersAndFollowers()->wherePivot('role_id', null);
+	}
 }

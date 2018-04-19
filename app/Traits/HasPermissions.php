@@ -24,7 +24,7 @@ trait HasPermissions
 	}
 
 	public function permissions() {
-		return $this->belongsToMany(Permission::class, $this->getPermissionRelationTable());
+		return $this->belongsToMany(Permission::class, $this->getPermissionRelationTable())->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	public function assignPermission($permissions, array $data = [], bool $force = false) {

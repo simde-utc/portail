@@ -44,8 +44,4 @@ class Group extends Model
     public function visibility() {
     	return $this->belongsTo(Visibility::class, 'visibility_id');
     }
-
-    public function members() {
-        return $this->belongsToMany(User::class, 'groups_roles');
-    }
 }
