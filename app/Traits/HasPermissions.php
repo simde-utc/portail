@@ -27,19 +27,16 @@ trait HasPermissions
 		return $this->belongsToMany(Permission::class, $this->getPermissionRelationTable())->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
-	public function assignPermission($permissions, array $data = [], bool $force = false) {
+	public function assignPermissions($permissions, array $data = [], bool $force = false) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
 		$addPermissions = [];
 
-		if ($data['validated_by'] ?? false)
+		if (isset($data['validated_by']))
 			$manageablePermissions = $this->getUserPermissions($data['validated_by']);
 
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
-			if ($permission === null)
-				throw new \Exception('Il n\'est pas autorisé d\'associer cette permission');
-
 			if (!$force) {
 				$relatedTable = $this->getPermissionRelationTable();
 				$semester_id = $data['semester_id'];
@@ -53,7 +50,7 @@ trait HasPermissions
 						throw new \Exception('Le nombre de personnes ayant cette permission a été dépassé. Limité à '.$permission->limited_at);
 				}
 
-				if ($data['validated_by'] ?? false) {
+				if (isset($data['validated_by'])) {
 					if (!$manageablePermissions->contains('id', $permission->id) && !$manageablePermissions->contains('type', 'admin'))
 						throw new \Exception('La personne demandant la validation n\'est pas habilitée à donner cette permission: '.$permission->name);
 				}
@@ -67,23 +64,20 @@ trait HasPermissions
 		return $this;
 	}
 
-    public function updatePermission($permissions, array $data = [], array $updatedData = [], bool $force = false) {
+    public function updatePermissions($permissions, array $data = [], array $updatedData = [], bool $force = false) {
 		if (!isset($updatedData['semester_id']))
 			$updatedData['semester_id'] = Semester::getThisSemester()->id;
 
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-		if ($updatedData['validated_by'] ?? false)
+		if (isset($updatedData['validated_by']))
 			$manageablePermissions = $this->getUserPermissions($updatedData['validated_by']);
 
 		$updatedPermissions = [];
 
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
-			if ($permission === null)
-				throw new \Exception('Le permission '.$permission.' n\'existe pas ou ne correspond à ce type de modèle');
-
-			if (!$force && ($updatedData['validated_by'] ?? false)) {
+			if (!$force && isset($updatedData['validated_by'])) {
 				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
 					throw new \Exception('La personne demandant la validation n\'est pas habilitée à modifier cette permission: '.$permission->name);
 			}
@@ -102,20 +96,17 @@ trait HasPermissions
 		return $this;
     }
 
-    public function removePermission($permissions, array $data = [], bool $force = false) {
+    public function removePermissions($permissions, array $data = [], bool $force = false) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-		if ($data['validated_by'] ?? false)
+		if (isset($data['validated_by']))
 			$manageablePermissions = $this->getUserPermissions($data['validated_by']);
 
 		$delPermissions = [];
 
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
-			if ($permission === null)
-				throw new \Exception('Le permission '.$permission.' n\'existe pas ou ne correspond à ce type de modèle');
-
-			if (!$force && ($data['validated_by'] ?? false)) {
+			if (!$force && isset($data['validated_by'])) {
 				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
 					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer cette permission: '.$permission->name);
 			}
@@ -125,7 +116,7 @@ trait HasPermissions
 
 		$toDetach = $this->permissions();
 
-		if ($data['validated_by'] ?? false)
+		if (isset($data['validated_by']))
 			unset($data['validated_by']);
 
 		foreach ($data as $key => $value)
@@ -147,21 +138,21 @@ trait HasPermissions
 		if ($data['user_id'] ?? false)
 			$oldData['user_id'] = $data['user_id'];
 
-        return $this->assignPermission($permissions->diff($currentPermissions), $data, $force)->updatePermission($intersectedPermissions, $oldData, $data, $force)->removePermission($currentPermissions->diff($permissions), $data, $force);
+        return $this->assignPermissions($permissions->diff($currentPermissions), $data, $force)->updatePermissions($intersectedPermissions, $oldData, $data, $force)->removePermissions($currentPermissions->diff($permissions), $data, $force);
     }
 
-    public function hasOnePermission($permission, array $data = []) {
+    public function hasOnePermission($permissions, array $data = []) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-        return Permission::getPermissions(stringToArray($permission), $this->getTable() === 'users')->pluck('id')->intersect($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
+        return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->intersect($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
     }
 
-    public function hasAllPermissions($permission, array $data = []) {
+    public function hasAllPermissions($permissions, array $data = []) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-        return Permission::getPermissions(stringToArray($permission), $this->getTable() === 'users')->pluck('id')->diff($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
+        return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->diff($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
     }
 
 	public function getUserAssignedPermissions($user_id = null, $semester_id = false, $needToBeValidated = true) {

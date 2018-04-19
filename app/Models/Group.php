@@ -3,22 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasRoles;
+use App\Traits\HasMembers;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Group extends Model
 {
-    use HasRoles, SoftDeletes;
+    use HasMembers, SoftDeletes;
 
     public static function boot() {
         static::created(function ($model) {
-            $model->assignRole('group admin', [
+            $model->assignRoles('group admin', [
 				'user_id' => $model->user_id,
 				'validated_by' => $model->user_id,
 				'semester_id' => null,
 			], true);
         });
     }
+
+	protected $memberRelationTable = 'groups_roles';
 
     protected $fillable = [
         'name', 'user_id', 'icon_id', 'visibility_id', 'is_active',

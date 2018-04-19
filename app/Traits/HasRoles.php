@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use App\Traits\HasPermissions;
-
 use Illuminate\Support\Collection;
 use App\Models\Role;
 use App\Models\Semester;
@@ -30,47 +29,20 @@ trait HasRoles
 		return $this->roleRelationTable ?? $this->getTable().'_roles';
 	}
 
-	public function members() {
-		return $this->belongsToMany(User::class, $this->getRoleRelationTable())->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
-	}
-
-	public function currentMembers() {
-		$relatedTable = $this->getRoleRelationTable();
-
-		return $this->belongsToMany(User::class, $relatedTable)->where(function ($query) use ($relatedTable) {
-			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
-		})->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
-	}
-
-	public function joiners() {
-		return $this->belongsToMany(User::class, $this->getRoleRelationTable())->whereNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
-	}
-
-	public function currentJoiners() {
-		$relatedTable = $this->getRoleRelationTable();
-
-		return $this->belongsToMany(User::class, $this->getRoleRelationTable())->where(function ($query) use ($relatedTable) {
-			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
-		})->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
-	}
-
 	public function roles() {
 	    return $this->belongsToMany(Role::class, $this->getRoleRelationTable());
 	}
 
-	public function assignRole($roles, array $data = [], bool $force = false) {
+	public function assignRoles($roles, array $data = [], bool $force = false) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
 		$addRoles = [];
 
-		if ($data['validated_by'] ?? false)
+		if (isset($data['validated_by']))
 			$manageableRoles = $this->getUserRoles($data['validated_by']);
 
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
-			if ($role === null)
-				throw new \Exception('Il n\'est pas autorisé d\'associer ce role');
-
 			if (!$force) {
 				$relatedTable = $this->getRoleRelationTable();
 				$semester_id = $data['semester_id'];
@@ -84,7 +56,7 @@ trait HasRoles
 						throw new \Exception('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 				}
 
-				if ($data['validated_by'] ?? false) {
+				if (isset($data['validated_by'])) {
 					if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
 						throw new \Exception('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$role->name);
 				}
@@ -98,23 +70,20 @@ trait HasRoles
 		return $this;
 	}
 
-    public function updateRole($roles, array $data = [], array $updatedData = [], bool $force = false) {
+    public function updateRoles($roles, array $data = [], array $updatedData = [], bool $force = false) {
 		if (!isset($updatedData['semester_id']))
 			$updatedData['semester_id'] = Semester::getThisSemester()->id;
 
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-		if ($updatedData['validated_by'] ?? false)
+		if (isset($updatedData['validated_by']))
 			$manageableRoles = $this->getUserRoles($updatedData['validated_by']);
 
 		$updatedRoles = [];
 
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
-			if ($role === null)
-				throw new \Exception('Le role '.$role.' n\'existe pas ou ne correspond à ce type de modèle');
-
-			if (!$force && ($updatedData['validated_by'] ?? false)) {
+			if (!$force && isset($updatedData['validated_by'])) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
 					throw new \Exception('La personne demandant la validation n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
@@ -133,20 +102,17 @@ trait HasRoles
 		return $this;
     }
 
-    public function removeRole($roles, array $data = [], bool $force = false) {
+    public function removeRoles($roles, array $data = [], bool $force = false) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
 
-		if ($data['validated_by'] ?? false)
+		if (isset($data['validated_by']))
 			$manageableRoles = $this->getUserRoles($data['validated_by']);
 
 		$delRoles = [];
 
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
-			if ($role === null)
-				throw new \Exception('Le role '.$role.' n\'existe pas ou ne correspond à ce type de modèle');
-
-			if (!$force && ($data['validated_by'] ?? false)) {
+			if (!$force && isset($data['validated_by'])) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
 					throw new \Exception('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
 			}
@@ -156,7 +122,7 @@ trait HasRoles
 
 		$toDetach = $this->roles();
 
-		if ($data['validated_by'] ?? false)
+		if (isset($data['validated_by']))
 			unset($data['validated_by']);
 
 		foreach ($data as $key => $value)
@@ -178,7 +144,7 @@ trait HasRoles
 		if ($data['user_id'] ?? false)
 			$oldData['user_id'] = $data['user_id'];
 
-        return $this->assignRole($roles->diff($currentRoles), $data, $force)->updateRole($intersectedRoles, $oldData, $data, $force)->removeRole($currentRoles->diff($roles), $data, $force);
+        return $this->assignRoles($roles->diff($currentRoles), $data, $force)->updateRoles($intersectedRoles, $oldData, $data, $force)->removeRoles($currentRoles->diff($roles), $data, $force);
     }
 
     public function hasOneRole($roles, array $data = []) {
@@ -231,7 +197,7 @@ trait HasRoles
 		}
 
 		if ($this->getTable() !== 'users') {
-			foreach ((new User)->getUserRoles($user_id, $semester_id) as $userRole)
+			foreach (User::find($user_id)->getUserRoles(null, $semester_id) as $userRole)
 				$roles->push($userRole);
 		}
 

@@ -21,6 +21,17 @@ class User extends Authenticatable
 		'remember_token',
 	];
 
+	public static function findByEmail($email) {
+		return static::where('email', $email)->first();
+	}
+
+	public static function getUsers($users) {
+		if (is_array($users))
+			return static::whereIn('id', $users)->orWhereIn('email', $users)->get();
+		else
+			return $users;
+	}
+
 	public function cas() {
 		return $this->hasOne('App\Models\AuthCas');
 	}

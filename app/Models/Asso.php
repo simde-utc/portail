@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use \App\Traits\HasRoles;
+use \App\Traits\HasMembers;
 
 class Asso extends Model
 {
-	use HasRoles {
-		HasRoles::members as membersAndFollowers;
-		HasRoles::currentMembers as currentMembersAndFollowers;
+	use HasMembers {
+		HasMembers::members as membersAndFollowers;
+		HasMembers::currentMembers as currentMembersAndFollowers;
 	}
+
+	protected $memberRelationTable = 'assos_roles';
 
 	protected $fillable = [
 		'name', 'login', 'description', 'type_asso_id', 'parent_id',

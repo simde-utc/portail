@@ -43,6 +43,7 @@ class RolesTableSeeder extends Seeder
 				'only_for' => 'assos',
 				'permissions' => [
 					'tresorie',
+					'bureau',
 				]
 			],
 			[
@@ -69,6 +70,9 @@ class RolesTableSeeder extends Seeder
 					'president',
 					'vice-president',
 				],
+				'permissions' => [
+					'bureau',
+				]
 			],
 			[
 				'type' => 'tresorier',
