@@ -10,10 +10,13 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 | Attention !! Les routes sont préfixées avec 'oauth/'
+| Ces routes modifient celles définies par laravel-passport
 */
 
 
-// Routes modifiées
+// Liste des Scopes
+Route::get('scopes', '\App\Services\Scopes@showAll');
+
 // Clients
 Route::get('clients', '\App\Http\Controllers\Passport\ClientController@forUser')
 		->middleware(['forceJson', 'web', 'auth']);

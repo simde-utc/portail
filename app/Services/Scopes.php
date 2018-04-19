@@ -78,6 +78,14 @@ class Scopes {
 	}
 
 	/**
+	 * Affiche la liste de tous les scopes en JSON
+	 */
+	public function showAll() {
+		return response()->json($this->all(), 200);
+	}
+
+
+	/**
 	 * Donne le verbe qui suit par héridité montante ou descendante
 	 * @param  string  $verb
 	 * @param  boolean $up
