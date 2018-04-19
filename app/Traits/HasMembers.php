@@ -78,7 +78,7 @@ trait HasMembers
 				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
 					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à donner ce rôle: '.$role->name);
 
-				if ($this->roles()->wherePivot('role_id', $data['role_id'])->wherePivotIn('user_id', $members->pluck('id'), false)->get()->count() > $role->limited_at - $members->count())
+				if ($this->roles()->wherePivot('role_id', $data['role_id'])->whereNotIn($this->getMemberRelationTable().'.user_id', $members->pluck('id'))->get()->count() > $role->limited_at - $members->count())
 					throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 			}
 
@@ -128,7 +128,7 @@ trait HasMembers
 				if (!$manageableRoles->contains('id', $updatedData['role_id']) && !$manageableRoles->contains('type', 'admin'))
 					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 
-				if ($this->roles()->wherePivot('role_id', $updatedData['role_id'])->wherePivotIn('user_id', $members->pluck('id'), false)->get()->count() > $role->limited_at - $members->count())
+				if ($this->roles()->wherePivot('role_id', $updatedData['role_id'])->whereNotIn($this->getMemberRelationTable().'.user_id', $members->pluck('id'))->get()->count() > $role->limited_at - $members->count())
 					throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 			}
 
