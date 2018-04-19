@@ -9,10 +9,11 @@
 
 L'API du Portail utilise [OAuth 2.0](https://oauth.net/2/), un puissant framework d'autorisation.
 
-Pour authentifier votre client auprès de l'API, vous devez possèder une clé _client_ et/ou une clé user.
+Pour authentifier votre Client auprès de l'API, vous devez possèder une clé _client_ et/ou une clé _user_.
 - Les clés _user_ sont liée à votre compte. Ce sont des tokens d'accès personel, ayant donc une portée limitée à vos droits et vos données.
-- Les clés _client_ correspondent à des associations. Elles ont des portée en général plus large que les clés _user_
+- Les clés _client_ correspondent principalement à des associations. Elles ont des portée en général plus large que les clés _user_
 
+**Ces clés doivent être gardées secrètes.**
 
 Il existe 4 rôles :
 
@@ -38,20 +39,20 @@ Pour en savoir plus : [documentation/backend/](../backend/readme.md).
 
 Pour résumer OAuth2 dans l'action, il y a trois étapes :
 
-- Redirection vers le serveur d'authentification `https://assos.utc.fr/authorize` avec les paramètres suivants :
-    - client_id : ID du client
-    - client_secret : Secret du client
-    - response_type : code
-    - redirect_uri : [adresse de redirection spécifiée à la création du client]
-    - scopes[] : tableau des scopes demandés (ex : 'user-manage-groups')
-    - state : '' (A DÉFINIR)
-- Utilisateur accepte, redirection vers le client avec les paramètres suivants :
-    - code : le code demandé
-- Le client fait une requete POST vers `https://assos.utc.fr/token` avec les paramètres suivants :
-    - client_id : ID du client
-    - client_secret : Secret du client
-    - grant_type : authorization_code
-    - redirect_uri : [adresse de redirection spécifiée à la création du client]
+- Redirection vers le serveur d'authentification https://assos.utc.fr/oauth/authorize avec les paramètres suivants :
+    - `client_id` : ID du client
+    - `client_secret` : Secret du client
+    - `response_type` : code
+    - `redirect_uri` : [adresse de redirection spécifiée à la création du client]
+    - `scopes[]` : tableau des scopes demandés (ex : 'user-manage-groups')
+    - `state` : '' (A DÉFINIR)
+- L'utilisateur accepte, redirection vers le callback client avec les paramètres suivants :
+    - `code` : le code demandé
+- Le client fait une requete POST vers https://assos.utc.fr/auth/token avec les paramètres suivants :
+    - `client_id` : ID du client
+    - `client_secret` : Secret du client
+    - `grant_type` : authorization_code
+    - `redirect_uri` : [adresse de redirection spécifiée à la création du client]
 
 Le serveur d'authentification enverra alors un `access_token` et un `refresh_token` au client. Celui-ci pourra alors mettre l'`access_token` en header de ses requetes vers l'API.
 
@@ -76,11 +77,8 @@ Le serveur d'authentification enverra alors un `access_token` et un `refresh_tok
 
 ### Par du code
 
-Des packages sont disponibles pour utiliser OAuth2 facilement selon le langage utilisé :
-
-- Javascript : https://github.com/lelylan/simple-oauth2
-- Python : https://github.com/oauthlib/oauthlib
-- PHP : https://github.com/thephpleague/oauth2-client
+Des packages sont disponibles pour utiliser OAuth2 en version Client facilement selon le langage utilisé.
+Une liste est disponible ici : https://oauth.net/code/#client-libraries
 
 
 #### Exemple en NodeJS avec le package oauth
