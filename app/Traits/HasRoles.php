@@ -13,11 +13,16 @@ use App\Models\User;
 trait HasRoles
 {
 	use HasPermissions {
+		// On rename les méthodes qu'on veut réutiliser et redéfinir
 		HasPermissions::getUserPermissions as getUserPermissionsFromHasPermissions;
 	}
 
+	/**
+	 * Méthode appelée au chargement du trait
+	 */
     public static function bootHasRoles() {
         static::deleting(function ($model) {
+			// Si on souhaite supprimer la ressources, on supprime les membres associés
             if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
                 return;
             }
@@ -26,14 +31,27 @@ trait HasRoles
         });
     }
 
+	/**
+	 * Récupération du nom de la table de relation
+	 * @return string
+	 */
 	protected function getRoleRelationTable() {
 		return $this->roleRelationTable ?? $this->getTable().'_roles';
 	}
 
+	/**
+	 * Liste des roles attribués
+	 */
 	public function roles() {
-	    return $this->belongsToMany(Role::class, $this->getRoleRelationTable());
+	    return $this->belongsToMany(Role::class, $this->getRoleRelationTable())->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
+	/**
+	 * Permet d'assigner un ou plusieurs roles attribués en fonction des données fournis
+	 * @param  string/array/Collection  $roles
+	 * @param  array   $data    Possibilité d'affecter role_id, semester_id, validated_by, user_id
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
 	public function assignRoles($roles, array $data = [], bool $force = false) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
@@ -75,6 +93,13 @@ trait HasRoles
 		return $this;
 	}
 
+	/**
+	 * Permet de modifier un ou plusieurs roles attribués en fonction des données fournis
+	 * @param  string/array/Collection  $roles
+	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @param  array   $updatedData    Possibilité d'affecter role_id, semester_id, validated_by, user_id
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
     public function updateRoles($roles, array $data = [], array $updatedData = [], bool $force = false) {
 		if (!isset($updatedData['semester_id']))
 			$updatedData['semester_id'] = Semester::getThisSemester()->id;
@@ -111,6 +136,13 @@ trait HasRoles
 		return $this;
     }
 
+	/**
+	 * Permet de supprimer un ou plusieurs roles attribués en fonction des données fournis
+	 * @param  string/array/Collection  $roles
+	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @param  int 	   $removed_by   Personne demandant la suppression
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
     public function removeRoles($roles, array $data = [], int $removed_by = null, bool $force = false) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
@@ -143,6 +175,13 @@ trait HasRoles
 		return $this;
     }
 
+	/**
+	 * Permet de synchroniser (tout supprimer et assigner de nouveaux) un ou plusieurs roles en fonction des données fournis
+	 * @param  string/array/Collection  $roles
+	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @param  int 	   $removed_by   Personne demandant la suppression
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
     public function syncRoles($roles, array $data = [], int $removed_by = null, bool $force = false) {
 		$currentRoles = $this->getUserAssignedRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
 		$roles = Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id');
@@ -157,6 +196,12 @@ trait HasRoles
         return $this->assignRoles($roles->diff($currentRoles), $data, $force)->updateRoles($intersectedRoles, $oldData, $data, $force)->removeRoles($currentRoles->diff($roles), $data, $removed_by, $force);
     }
 
+	/**
+	 * Regarde si un role parmi la liste a été donné ou non
+	 * @param  string/array/Collection  $roles
+	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @return boolean
+	 */
     public function hasOneRole($roles, array $data = []) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
@@ -164,6 +209,11 @@ trait HasRoles
         return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
     }
 
+	/** Regarde si tous les roles parmi la liste existe ou non
+	 * @param  string/array/Collection  $members
+	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @return boolean
+	 */
     public function hasAllRoles($roles, array $data = []) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
@@ -171,7 +221,13 @@ trait HasRoles
         return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
     }
 
-	public function getUserAssignedRoles($user_id = null, $semester_id = false, $needToBeValidated = true) {
+	/**
+	 * Récupérer les rôles assignés d'une personne
+	 * @param  int  $user_id
+	 * @param  int/false $semester_id
+	 * @param  boolean $needToBeValidated
+	 */
+	public function getUserAssignedRoles(int $user_id = null, $semester_id = false, $needToBeValidated = true) {
 		if (!($semester_id ?? false))
 			$semester_id = Semester::getThisSemester()->id;
 
@@ -195,7 +251,12 @@ trait HasRoles
 		return $roles->get();
 	}
 
-	public function getUserRoles($user_id = null, $semester_id = false) {
+	/**
+	 * Récupérer les rôles de cette instance ou de celui sur les users assignés et hérités d'une personne
+	 * @param  int  $user_id     [description]
+	 * @param  int/false $semester_id
+	 */
+	public function getUserRoles(int $user_id = null, $semester_id = false) {
 		if (!($semester_id ?? false))
 			$semester_id = Semester::getThisSemester()->id;
 
@@ -214,7 +275,12 @@ trait HasRoles
 		return $roles;
 	}
 
-	public function getUserPermissions($user_id = null, $semester_id = false) {
+	/**
+	 * Override de la méthode du trait hasPermissions: Récupérer les permissions de cette instance ou de celui sur les users assignés et hérités d'une personne
+	 * @param  int  $user_id     [description]
+	 * @param  int/false $semester_id
+	 */
+	public function getUserPermissions(int $user_id = null, $semester_id = false) {
 		$permissions = $this->getUserPermissionsFromHasPermissions($user_id, $semester_id);
 
 		foreach ($this->getUserRoles($user_id, $semester_id)->pluck('id') as $role_id)

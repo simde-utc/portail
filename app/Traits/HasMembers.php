@@ -15,7 +15,11 @@ trait HasMembers
 {
 	use HasRoles;
 
+	/**
+	 * Méthode appelée au chargement du trait
+	 */
     public static function bootHasMembers() {
+		// Si on souhaite supprimer la ressources, on supprime les membres associés
         static::deleting(function ($model) {
             if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
                 return;
@@ -25,14 +29,24 @@ trait HasMembers
         });
     }
 
+	/**
+	 * Récupération du nom de la table de relation
+	 * @return string
+	 */
 	protected function getMemberRelationTable() {
 		return $this->memberRelationTable ?? $this->getTable().'_members';
 	}
 
+	/**
+	 * Liste des membres (validés par une personne)
+	 */
 	public function members() {
 		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
+	/**
+	 * Liste des membres de ce semestre ou d'aucun semestre (validés par une personne)
+	 */
 	public function currentMembers() {
 		$relatedTable = $this->getMemberRelationTable();
 
@@ -41,10 +55,16 @@ trait HasMembers
 		})->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
+	/**
+	 * Liste des personnes souhaitant se joindre (non validés)
+	 */
 	public function joiners() {
 		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->whereNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
+	/**
+	 * Liste des personnes souhaitant se joindre ce semestre ou d'aucun semestre (non validés)
+	 */
 	public function currentJoiners() {
 		$relatedTable = $this->getMemberRelationTable();
 
@@ -53,6 +73,12 @@ trait HasMembers
 		})->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
+	/**
+	 * Permet d'assigner un ou plusieurs membres en fonction des données fournis
+	 * @param  string/array/Collection  $members
+	 * @param  array   $data    Possibilité d'affecter role_id, semester_id, validated_by, user_id
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
 	public function assignMembers($members, array $data = [], bool $force = false) {
 		if (!$force && $this->visibility_id != null && $this->visibility_id < Visibility::findByType('private')->id) {
 			if (isset($data['validated_by'])) {
@@ -102,6 +128,13 @@ trait HasMembers
 		return $this;
 	}
 
+	/**
+	 * Permet de modifier un ou plusieurs membres en fonction des données fournis
+	 * @param  string/array/Collection  $members
+	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @param  array   $updatedData    Possibilité d'affecter role_id, semester_id, validated_by, user_id
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
     public function updateMembers($members, array $data = [], array $updatedData = [], bool $force = false) {
 		$members = User::getUsers(stringToArray($members));
 
@@ -156,6 +189,13 @@ trait HasMembers
 		return $this;
     }
 
+	/**
+	 * Permet de supprimer un ou plusieurs membres en fonction des données fournis
+	 * @param  string/array/Collection  $members
+	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @param  int 	   $removed_by   Personne demandant la suppression
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
     public function removeMembers($members, array $data = [], int $removed_by = null, bool $force = false) {
 		$members = User::getUsers(stringToArray($members));
 
@@ -199,6 +239,13 @@ trait HasMembers
 		return $this;
     }
 
+	/**
+	 * Permet de synchroniser (tout supprimer et assigner de nouveaux) un ou plusieurs membres en fonction des données fournis
+	 * @param  string/array/Collection  $members
+	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @param  int 	   $removed_by   Personne demandant la suppression
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
     public function syncMembers($members, array $data = [], int $removed_by = null, bool $force = false) {
 		$currentMembers = $this->getUserAssignedMembers($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
 		$members = User::getUsers(stringToArray($members))->pluck('id');
@@ -213,6 +260,12 @@ trait HasMembers
         return $this->assignMembers($members->diff($currentMembers), $data, $force)->updateMembers($intersectedMembers, $oldData, $data, $force)->removeMembers($currentMembers->diff($members), $data, $removed_by, $force);
     }
 
+	/**
+	 * Regarde si un membre parmi la liste existe ou non
+	 * @param  string/array/Collection  $members
+	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @return boolean
+	 */
     public function hasOneMember($members, array $data = []) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
@@ -220,6 +273,11 @@ trait HasMembers
         return User::getUsers(stringToArray($members))->pluck('id')->intersect($this->getUserMembers($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
     }
 
+	/** Regarde si tous les membres parmi la liste existe ou non
+	 * @param  string/array/Collection  $members
+	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @return boolean
+	 */
     public function hasAllMembers($members, array $data = []) {
 		if (!isset($data['semester_id']))
 			$data['semester_id'] = Semester::getThisSemester()->id;
