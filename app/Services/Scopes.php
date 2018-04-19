@@ -78,12 +78,31 @@ class Scopes {
 	}
 
 	/**
-	 * Affiche la liste de tous les scopes en JSON
+	 * Renvoie les scopes (doivent exister !) avec leur description par catégorie
+	 * @param  array $scopes
+	 * @return array
 	 */
-	public function showAll() {
-		return response()->json($this->all(), 200);
-	}
+	public function getAllByCategories() {
+		$categories = [];
+		foreach ($this->all() as $scope => $description) {
+			$elements = explode('-', $scope);
 
+			if (!isset($categories[$elements[2]]) && !isset($categories[$elements[2]]['scopes'])) {
+				$categorie = $this->scopes[$elements[0]][$elements[2]];
+
+				$categories[$elements[2]] = [
+					'description' => $categorie['description'],
+					'scopes' => [
+						$scope => $description,
+					]
+ 				];
+			}
+			else
+				$categories[$elements[2]]['scopes'][$scope] = $description;
+		}
+
+		return $categories;
+	}
 
 	/**
 	 * Donne le verbe qui suit par héridité montante ou descendante
