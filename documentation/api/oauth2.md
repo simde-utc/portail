@@ -79,7 +79,7 @@ Le serveur d'authentification enverra alors un `access_token` et un `refresh_tok
 
 Des packages sont disponibles pour utiliser OAuth2 en version Client facilement selon le langage utilisé.
 Une liste est disponible ici : https://oauth.net/code/#client-libraries
-Si vous ne tombez pas sur la page de login normale, c'est comme vous avez soit un scope inexistant, soit le mauvais couple client_id, client_secret.
+Si vous ne tombez pas sur la page de login normale, vous avez soit un scope inexistant, soit votre adresse de callback n'est pas exacte, soit le mauvais couple client_id, client_secret.
 
 
 #### Exemple en NodeJS avec le package oauth
