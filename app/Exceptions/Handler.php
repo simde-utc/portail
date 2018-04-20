@@ -50,13 +50,14 @@ class Handler extends ExceptionHandler
 	        // Define the response
 	        $response = [
 	            'errors' => 'Une erreur a été détectée',
+				'message' => ($exception instanceof \QueryException) ? 'Problème trouvé dans la requête SQL effectuée' : $exception->getMessage(),
 	        ];
 
 	        // If the app is in debug mode
 	        if (config('app.debug')) {
 	            // Add the exception class name, message and stack trace to response
+				$response['message'] = $exception->getMessage();
 				$response['exception'] = get_class($exception);
-	            $response['message'] = $exception->getMessage();
 	            $response['trace'] = $exception->getTrace();
 	        }
 

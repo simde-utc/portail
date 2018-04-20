@@ -8,6 +8,7 @@ use App\Models\Group;
 use App\Http\Requests\GroupRequest;
 use App\Services\Visible\Visible;
 use App\Models\Visibility;
+use App\Exceptions\PortailException;
 
 class GroupController extends Controller
 {
@@ -30,7 +31,7 @@ class GroupController extends Controller
 			'currentMembers:id,lastname,firstname'
 		])->get();
 
-		return response()->json($request->user() ? Visible::with($groups, $request->user()->id) : $groups, 200);
+		return response()->json(\Auth::user() ? Visible::with($groups, \Auth::user()->id) : $groups, 200);
     }
 
     /**
@@ -42,19 +43,30 @@ class GroupController extends Controller
     public function store(GroupRequest $request)
     {
         $group = new Group;
-        $group->user_id = 1; // PROD : $request->user()->id;
+        $group->user_id = \Auth::user();
         $group->name = $request->name;
         $group->icon = $request->icon;
-        $group->visibility_id = $request->visibility_id ?? Visibility::where('type', 'owner')->first()->id;
+        $group->visibility_id = $request->visibility_id ?? Visibility::findByType('owner')->id;
 
-        if ($group->save()) {
-            // Owner est automatiquement membre du groupe.
-            $group->members()->attach(1); //PROD : $request->user()->id);
-
+        if ($group->save()) { // Le créateur du groupe devient automatiquement admin et membre de son groupe
             // Les ids des membres à ajouter seront passé dans la requête.
             // ids est un array de user ids.
-            if ($request->has('member_ids'))
-                $group->members()->attach($request->input('member_ids', []));
+            if ($request->has('member_ids')) {
+				if ($group->visibility_id === Visibility::findByType('owner')->id)
+					$data = [
+						'visibility_id' => $group->user_id,
+					];
+				else {
+					$data = [];
+					// TODO: Envoyer un mail d'invitation dans le groupe
+				}
+
+				try {
+					$group->assignMembers($request->input('member_ids', []), $data);
+				} catch (PortailException $e) {
+					return response()->json(["message" => $e->getMessage()], 400);
+				}
+			}
 
             return response()->json($group, 201);
         }
@@ -78,7 +90,7 @@ class GroupController extends Controller
             ->find($id);
 
         if ($group)
-            return response()->json($request->user() ? Visible::hide($group, $request->user()->id) : $group, 200);
+            return response()->json(\Auth::user() ? Visible::hide($group, \Auth::user()->id) : $group, 200);
         else
             abort(404, "Groupe non trouvé");
     }
@@ -110,15 +122,28 @@ class GroupController extends Controller
         	$group->visibility_id = $request->input('visibility_id');
 
         // En update on enleve les ids précedents donc on sync.
-        $group->members()->sync(1); //PROD : $request->user()->id);
+        $group->members()->sync(\Auth::user()->id);
 
-        // Pas de sync() vu qu'on veut garder owner id.
-        // Les ids de tous les membres (actuels et anciens) seront passés dans la requête.
-        if ($request->has('member_ids'))
-            $group->members()->syncWithoutDetaching($request->member_ids);
+        if ($group->save()) {
+	        if ($request->has('member_ids')) {
+				if ($group->visibility_id === Visibility::findByType('owner')->id)
+					$data = [
+						'visibility_id' => $group->user_id,
+					];
+				else {
+					$data = [];
+					// TODO: Envoyer un mail d'invitation dans le groupe
+				}
 
-        if ($group->save())
-            return response()->json($group, 200);
+				try {
+					$group->syncMembers(array_merge($request->member_ids, [\Auth::user()->id]), $data, \Auth::user()->id);
+				} catch (PortailException $e) {
+					return response()->json(["message" => $e->getMessage()], 400);
+				}
+			}
+
+			return response()->json($group, 200);
+		}
         else
             return response()->json(["message" => "Impossible de modifier le groupe"], 500);
     }
@@ -135,11 +160,10 @@ class GroupController extends Controller
 
         if (!$group)
             return response()->json(["message" => "Impossible de trouver le groupe"], 404);
+		else {
+			$group->delete();
 
-        $group->members()->detach();
-
-        $group->delete();
-
-        return response()->json(["message" => "Groupe supprimé"], 204);
+			return response()->json(["message" => "Groupe supprimé"], 204);
+		}
     }
 }
