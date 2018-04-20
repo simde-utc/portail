@@ -45,9 +45,7 @@ trait HasPermissions
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
 	public function assignPermissions($permissions, array $data = [], bool $force = false) {
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
-
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
 		$addPermissions = [];
 
 		if (isset($data['validated_by']))
@@ -93,16 +91,12 @@ trait HasPermissions
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function updatePermissions($permissions, array $data = [], array $updatedData = [], bool $force = false) {
-		if (!isset($updatedData['semester_id']))
-			$updatedData['semester_id'] = Semester::getThisSemester()->id;
-
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$updatedData['semester_id'] = isset($updatedData['semester_id']) ? ($updatedData['semester_id'] === -1 ? null : $updatedData['semester_id']) : Semester::getThisSemester()->id;
+		$updatedPermissions = [];
 
 		if (isset($updatedData['validated_by']))
 			$manageablePermissions = $this->getUserPermissions($updatedData['validated_by']);
-
-		$updatedPermissions = [];
 
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
 			if (!$force && isset($updatedData['validated_by'])) {
@@ -136,13 +130,11 @@ trait HasPermissions
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function removePermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$delPermissions = [];
 
 		if ($removed_by !== null)
 			$manageablePermissions = $this->getUserPermissions($removed_by);
-
-		$delPermissions = [];
 
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
 			if (!$force && $removed_by !== null) {
@@ -195,8 +187,7 @@ trait HasPermissions
 	 * @return boolean
 	 */
     public function hasOnePermission($permissions, array $data = []) {
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
 
         return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->intersect($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
     }
@@ -207,8 +198,7 @@ trait HasPermissions
 	 * @return boolean
 	 */
     public function hasAllPermissions($permissions, array $data = []) {
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
 
         return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->diff($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
     }
@@ -219,10 +209,8 @@ trait HasPermissions
 	 * @param  int/false $semester_id
 	 * @param  boolean $needToBeValidated
 	 */
-	public function getUserAssignedPermissions($user_id = null, $semester_id = false, $needToBeValidated = true) {
-		if (!($semester_id ?? false))
-			$semester_id = Semester::getThisSemester()->id;
-
+	public function getUserAssignedPermissions($user_id = null, $semester_id = null, $needToBeValidated = true) {
+		$semester_id = isset($semester_id) ? ($semester_id === -1 ? null : $semester_id) : Semester::getThisSemester()->id;
 		$permissions = $this->permissions();
 
 		if ($permissions === null)
@@ -248,7 +236,7 @@ trait HasPermissions
 	 * @param  int  $user_id     [description]
 	 * @param  int/false $semester_id
 	 */
-	public function getUserPermissions($user_id = null, $semester_id = false) {
+	public function getUserPermissions($user_id = null, $semester_id = null) {
 		return $this->getUserAssignedPermissions($user_id, $semester_id);
 	}
 }

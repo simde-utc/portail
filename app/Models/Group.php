@@ -15,7 +15,7 @@ class Group extends Model
             $model->assignRoles('group admin', [
 				'user_id' => $model->user_id,
 				'validated_by' => $model->user_id,
-				'semester_id' => null,
+				'semester_id' => -1,
 			], true);
         });
     }

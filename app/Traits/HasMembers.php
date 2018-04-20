@@ -80,7 +80,9 @@ trait HasMembers
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
 	public function assignMembers($members, array $data = [], bool $force = false) {
-		if (!$force && $this->visibility_id != null && $this->visibility_id < Visibility::findByType('private')->id) {
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+
+		if (!$force && $this->visibility_id !== null && $this->visibility_id >= Visibility::findByType('private')->id) {
 			if (isset($data['validated_by'])) {
 				$manageablePermissions = $this->getUserPermissions($data['validated_by']);
 
@@ -92,9 +94,6 @@ trait HasMembers
 		}
 
 		$members = User::getUsers(stringToArray($members));
-
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
 
 		if (!$force && isset($data['validated_by'])) {
 			if ($data['role_id'] ?? false) {
@@ -117,7 +116,7 @@ trait HasMembers
 		$addMembers = [];
 
 		foreach ($members as $member)
-			$addMembers[$member->id] = $data;
+			$addMembers[$member->id ?? $member] = $data;
 
 		try {
 			$this->members()->withTimestamps()->attach($addMembers);
@@ -136,13 +135,9 @@ trait HasMembers
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function updateMembers($members, array $data = [], array $updatedData = [], bool $force = false) {
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$updatedData['semester_id'] = isset($updatedData['semester_id']) ? ($updatedData['semester_id'] === -1 ? null : $updatedData['semester_id']) : Semester::getThisSemester()->id;
 		$members = User::getUsers(stringToArray($members));
-
-		if (!isset($updatedData['semester_id']))
-			$updatedData['semester_id'] = Semester::getThisSemester()->id;
-
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
 
 		if (!$force && isset($data['validated_by'])) {
 			$manageableRoles = $this->getUserRoles($data['validated_by']);
@@ -172,7 +167,7 @@ trait HasMembers
 		$updatedMembers = [];
 
 		foreach ($members as $member)
-			array_push($updatedMembers, $member->id);
+			array_push($updatedMembers, $member->id ?? $member);
 
 		$toUpdate = $this->members()->withTimestamps();
 
@@ -197,13 +192,8 @@ trait HasMembers
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function removeMembers($members, array $data = [], int $removed_by = null, bool $force = false) {
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
 		$members = User::getUsers(stringToArray($members));
-
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
-
-		if ($removed_by !== null)
-			$manageableMembers = $this->getUserMembers($removed_by);
 
 		if (!$force && $removed_by !== null) {
 			$manageableRoles = $this->getUserRoles($removed_by);
@@ -223,7 +213,7 @@ trait HasMembers
 		$delMembers = [];
 
 		foreach ($members as $member)
-			array_push($delMembers, $member->id);
+			array_push($delMembers, $member->id ?? $member);
 
 		$toDetach = $this->members();
 
@@ -247,7 +237,12 @@ trait HasMembers
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function syncMembers($members, array $data = [], int $removed_by = null, bool $force = false) {
-		$currentMembers = $this->getUserAssignedMembers($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
+		$semester_id = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$relatedTable = $this->getMemberRelationTable();
+
+		$currentMembers = $this->members()->where(function ($query) use ($relatedTable) {
+			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
+		})->get()->pluck('id');
 		$members = User::getUsers(stringToArray($members))->pluck('id');
 		$intersectedMembers = $currentMembers->intersect($members);
 
@@ -267,10 +262,12 @@ trait HasMembers
 	 * @return boolean
 	 */
     public function hasOneMember($members, array $data = []) {
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
+		$semester_id = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$relatedTable = $this->getMemberRelationTable();
 
-        return User::getUsers(stringToArray($members))->pluck('id')->intersect($this->getUserMembers($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
+        return $this->members()->where(function ($query) use ($relatedTable) {
+			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
+		})->wherePivotIn('user_id', User::getUsers(stringToArray($members))->pluck('id'))->get()->count() > 0;
     }
 
 	/** Regarde si tous les membres parmi la liste existe ou non
@@ -279,9 +276,12 @@ trait HasMembers
 	 * @return boolean
 	 */
     public function hasAllMembers($members, array $data = []) {
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
+		$semester_id = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$user_ids = User::getUsers(stringToArray($members))->pluck('id');
+		$relatedTable = $this->getMemberRelationTable();
 
-        return User::getUsers(stringToArray($members))->pluck('id')->diff($this->getUserMembers($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
+		return $this->members()->where(function ($query) use ($relatedTable) {
+			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
+		})->wherePivotIn('user_id', $user_ids)->get()->count() > $user_ids->count();
     }
 }

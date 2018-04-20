@@ -53,9 +53,7 @@ trait HasRoles
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
 	public function assignRoles($roles, array $data = [], bool $force = false) {
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
-
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
 		$addRoles = [];
 
 		if (isset($data['validated_by']))
@@ -101,16 +99,12 @@ trait HasRoles
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function updateRoles($roles, array $data = [], array $updatedData = [], bool $force = false) {
-		if (!isset($updatedData['semester_id']))
-			$updatedData['semester_id'] = Semester::getThisSemester()->id;
-
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$updatedData['semester_id'] = isset($updatedData['semester_id']) ? ($updatedData['semester_id'] === -1 ? null : $updatedData['semester_id']) : Semester::getThisSemester()->id;
+		$updatedRoles = [];
 
 		if (isset($updatedData['validated_by']))
 			$manageableRoles = $this->getUserRoles($updatedData['validated_by']);
-
-		$updatedRoles = [];
 
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
 			if (!$force && isset($updatedData['validated_by'])) {
@@ -144,13 +138,11 @@ trait HasRoles
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function removeRoles($roles, array $data = [], int $removed_by = null, bool $force = false) {
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$delRoles = [];
 
 		if ($removed_by !== null)
 			$manageableRoles = $this->getUserRoles($removed_by);
-
-		$delRoles = [];
 
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
 			if (!$force && $removed_by !== null) {
@@ -186,8 +178,8 @@ trait HasRoles
 		$currentRoles = $this->getUserAssignedRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
 		$roles = Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id');
 		$intersectedRoles = $currentRoles->intersect($roles);
-
 		$oldData = [];
+
 		if ($data['semester_id'] ?? false)
 			$oldData['semester_id'] = $data['semester_id'];
 		if ($data['user_id'] ?? false)
@@ -203,8 +195,7 @@ trait HasRoles
 	 * @return boolean
 	 */
     public function hasOneRole($roles, array $data = []) {
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
 
         return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
     }
@@ -215,8 +206,7 @@ trait HasRoles
 	 * @return boolean
 	 */
     public function hasAllRoles($roles, array $data = []) {
-		if (!isset($data['semester_id']))
-			$data['semester_id'] = Semester::getThisSemester()->id;
+		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
 
         return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
     }
@@ -227,10 +217,8 @@ trait HasRoles
 	 * @param  int/false $semester_id
 	 * @param  boolean $needToBeValidated
 	 */
-	public function getUserAssignedRoles(int $user_id = null, $semester_id = false, $needToBeValidated = true) {
-		if (!($semester_id ?? false))
-			$semester_id = Semester::getThisSemester()->id;
-
+	public function getUserAssignedRoles(int $user_id = null, $semester_id = null, $needToBeValidated = true) {
+		$semester_id = isset($semester_id) ? ($semester_id === -1 ? null : $semester_id) : Semester::getThisSemester()->id;
 		$roles = $this->roles();
 
 		if ($roles === null)
@@ -256,10 +244,8 @@ trait HasRoles
 	 * @param  int  $user_id     [description]
 	 * @param  int/false $semester_id
 	 */
-	public function getUserRoles(int $user_id = null, $semester_id = false) {
-		if (!($semester_id ?? false))
-			$semester_id = Semester::getThisSemester()->id;
-
+	public function getUserRoles(int $user_id = null, $semester_id = null) {
+		$semester_id = isset($semester_id) ? ($semester_id === -1 ? null : $semester_id) : Semester::getThisSemester()->id;
 		$roles = $this->getUserAssignedRoles($user_id, $semester_id);
 
 		foreach ($roles as $role) {
@@ -280,7 +266,7 @@ trait HasRoles
 	 * @param  int  $user_id     [description]
 	 * @param  int/false $semester_id
 	 */
-	public function getUserPermissions(int $user_id = null, $semester_id = false) {
+	public function getUserPermissions(int $user_id = null, $semester_id = null) {
 		$permissions = $this->getUserPermissionsFromHasPermissions($user_id, $semester_id);
 
 		foreach ($this->getUserRoles($user_id, $semester_id)->pluck('id') as $role_id)

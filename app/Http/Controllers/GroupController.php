@@ -43,7 +43,7 @@ class GroupController extends Controller
     public function store(GroupRequest $request)
     {
         $group = new Group;
-        $group->user_id = \Auth::user();
+        $group->user_id = \Auth::user()->id;
         $group->name = $request->name;
         $group->icon = $request->icon;
         $group->visibility_id = $request->visibility_id ?? Visibility::findByType('owner')->id;
@@ -54,10 +54,13 @@ class GroupController extends Controller
             if ($request->has('member_ids')) {
 				if ($group->visibility_id === Visibility::findByType('owner')->id)
 					$data = [
-						'visibility_id' => $group->user_id,
+						'semester_id' => $request->input('semester_id', -1),
+						'validated_by' => $group->user_id,
 					];
 				else {
-					$data = [];
+					$data = [
+						'semester_id' => $request->input('semester_id', -1),
+					];
 					// TODO: Envoyer un mail d'invitation dans le groupe
 				}
 
@@ -121,17 +124,19 @@ class GroupController extends Controller
 		if ($request->has('visibility_id'))
         	$group->visibility_id = $request->input('visibility_id');
 
-        // En update on enleve les ids précedents donc on sync.
-        $group->members()->sync(\Auth::user()->id);
-
         if ($group->save()) {
 	        if ($request->has('member_ids')) {
 				if ($group->visibility_id === Visibility::findByType('owner')->id)
 					$data = [
-						'visibility_id' => $group->user_id,
+						'semester_id' => $request->input('semester_id', -1),
+						'validated_by' => $group->user_id,
+						'removed_by' => $group->user_id,
 					];
 				else {
-					$data = [];
+					$data = [
+						'semester_id' => $request->input('semester_id', -1),
+						'removed_by' => $group->user_id,
+					];
 					// TODO: Envoyer un mail d'invitation dans le groupe
 				}
 
