@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasVisibility;
 
 class Group extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasVisibility;
 
     protected $fillable = [
         'name', 'user_id', 'icon_id', 'visibility_id', 'is_active',
