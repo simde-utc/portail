@@ -3,51 +3,39 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use \App\Traits\HasMembers;
 
 class Asso extends Model
 {
+	use HasMembers {
+		HasMembers::members as membersAndFollowers;
+		HasMembers::currentMembers as currentMembersAndFollowers;
+	}
+
+	protected $memberRelationTable = 'assos_roles';
+
 	protected $fillable = [
 		'name', 'login', 'description', 'type_asso_id', 'parent_id',
 	];
 
-	public function assoMember() {
-		return $this->hasMany('App\Models\AssoMember');
-	}
-
-	public function members() {
-		return $this->belongsToMany('App\Models\User', 'assos_members')->whereNotNull('validated_by');
-	}
-
-	public function currentMembers() {
-		return $this->belongsToMany('App\Models\User', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('validated_by');
-	}
-
-	public function joiners() {
-		return $this->belongsToMany('App\Models\User', 'assos_members')->whereNull('validated_by');
-	}
-
-	public function currentJoiners() {
-		return $this->belongsToMany('App\Models\User', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNull('validated_by');
-	}
-
 	public function type() {
-		return $this->belongsTo('App\Models\AssoType');
+		return $this->belongsTo(AssoType::class);
 	}
 
 	public function contact() {
-		return $this->hasMany('App\Models\AssoContact', 'contacts_assos');
+		return $this->hasMany(AssoContact::class, 'contacts_assos');
 	}
 
 	public function rooms() {
-		return $this->hasMany('App\Models\Room');
+		return $this->hasMany(Room::class);
 	}
 
 	public function reservations() {
-		return $this->hasMany('App\Models\Reservations');
+		return $this->hasMany(Reservation::class);
 	}
 
 	public function articles() {
-		return $this->belongsToMany('App\Models\Article', 'assos_articles');
+		return $this->belongsToMany(Article::class, 'assos_articles');
 	}
 
 	public function collaboratedArticles(){
@@ -55,10 +43,26 @@ class Asso extends Model
 	}
 
 	public function events() {
-		return $this->belongsToMany('App\Models\Event');
+		return $this->belongsToMany(Event::class);
 	}
 
 	public function parent() {
-	    return $this->hasOne('App\Models\Asso');
+	    return $this->hasOne(Asso::class, 'parent_id');
     }
+
+	public function members() {
+		return $this->membersAndFollowers()->wherePivot('role_id', '!=', null);
+	}
+
+	public function currentMembers() {
+		return $this->currentMembersAndFollowers()->wherePivot('role_id', '!=', null);
+	}
+
+	public function followers() {
+		return $this->membersAndFollowers()->wherePivot('role_id', null);
+	}
+
+	public function currentFollowers() {
+		return $this->currentMembersAndFollowers()->wherePivot('role_id', null);
+	}
 }

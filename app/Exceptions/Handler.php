@@ -34,8 +34,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
-    public function report(Exception $exception)
-    {
+    public function report(Exception $exception) {
         parent::report($exception);
     }
 
@@ -46,8 +45,25 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
-    {
+    public function render($request, Exception $exception) {
+		if ($request->wantsJson()) {
+	        // Define the response
+	        $response = [
+	            'errors' => 'Une erreur a été détectée',
+	        ];
+
+	        // If the app is in debug mode
+	        if (config('app.debug')) {
+	            // Add the exception class name, message and stack trace to response
+				$response['exception'] = get_class($exception);
+	            $response['message'] = $exception->getMessage();
+	            $response['trace'] = $exception->getTrace();
+	        }
+
+	        // Return a JSON response with the response array and status code
+	        return response()->json($response, $this->isHttpException($exception) ? $exception->getStatusCode() : 400);
+	    }
+
         return parent::render($request, $exception);
     }
 }

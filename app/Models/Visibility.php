@@ -16,6 +16,10 @@ class Visibility extends Model
 		'created_at', 'updated_at',
 	];
 
+	public static function findByType($type) {
+		return static::where('type', $type)->first();
+	}
+
     public function articles() {
         return $this->hasMany('App\Models\Article');
     }

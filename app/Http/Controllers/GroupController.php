@@ -27,8 +27,8 @@ class GroupController extends Controller
 		$groups = Group::with([
             'owner:id,lastname,firstname',
             'visibility',
-			'members:id,lastname,firstname'
-		])->where('is_active', 1)->get();
+			'currentMembers:id,lastname,firstname'
+		])->get();
 
 		return response()->json($request->user() ? Visible::with($groups, $request->user()->id) : $groups, 200);
     }
@@ -46,7 +46,6 @@ class GroupController extends Controller
         $group->name = $request->name;
         $group->icon = $request->icon;
         $group->visibility_id = $request->visibility_id ?? Visibility::where('type', 'owner')->first()->id;
-        $group->is_active = $request->is_active;
 
         if ($group->save()) {
             // Owner est automatiquement membre du groupe.
@@ -75,7 +74,7 @@ class GroupController extends Controller
         $group = Group::with([
             'owner:id,firstname,lastname',
             'visibility',
-            'members:id,firstname,lastname'])
+            'currentMembers:id,firstname,lastname'])
             ->find($id);
 
         if ($group)
@@ -109,9 +108,6 @@ class GroupController extends Controller
 
 		if ($request->has('visibility_id'))
         	$group->visibility_id = $request->input('visibility_id');
-
-		if ($request->has('is_active'))
-			$group->is_active = $request->input('is_active', true);
 
         // En update on enleve les ids précedents donc on sync.
         $group->members()->sync(1); //PROD : $request->user()->id);

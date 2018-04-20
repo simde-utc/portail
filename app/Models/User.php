@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use App\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
 
@@ -21,6 +21,17 @@ class User extends Authenticatable
 		'remember_token',
 	];
 
+	public static function findByEmail($email) {
+		return static::where('email', $email)->first();
+	}
+
+	public static function getUsers($users) {
+		if (is_array($users))
+			return static::whereIn('id', $users)->orWhereIn('email', $users)->get();
+		else
+			return $users;
+	}
+
 	public function cas() {
 		return $this->hasOne('App\Models\AuthCas');
 	}
@@ -34,6 +45,14 @@ class User extends Authenticatable
 
 	public function currentAssos() {
 		return $this->assos()->where('semester_id', Semester::getThisSemester()->id);
+	}
+
+	public function followedAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNull('role_id');
+	}
+
+	public function currentFollowedAssos() {
+		return $this->joinedAssos()->where('semester_id', Semester::getThisSemester()->id);
 	}
 
 	public function joinedAssos() {
@@ -65,7 +84,7 @@ class User extends Authenticatable
 	}
 
 	public function contact() {
-        return $this->hasMany('App\Models\UserContact', 'contacts_users');
+        return $this->hasMany('App\Models\UserContact', 'users_contacts');
     }
 
     public function events() {
