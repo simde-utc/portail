@@ -67,15 +67,15 @@ class CreatePermissionTables extends Migration
 			$table->integer('role_id')->unsigned();
 			$table->foreign('role_id')
 				->references('id')
-				->on('roles')
-				->onDelete('cascade');
+				->on('roles');
 
-			$table->integer('semester_id')->unsigned();
+			$table->integer('semester_id')->unsigned()->nullable();
 			$table->foreign('semester_id')->references('id')->on('semesters');
 			$table->integer('validated_by')->unsigned()->nullable();
 			$table->foreign('validated_by')->references('id')->on('users');
 
 			$table->timestamps();
+			$table->primary(['user_id', 'role_id']);
 			$table->unique(['user_id', 'role_id', 'semester_id']);
 		});
 
@@ -85,9 +85,9 @@ class CreatePermissionTables extends Migration
 			$table->integer('permission_id')->unsigned();
 			$table->foreign('permission_id')
 				->references('id')
-				->on('permissions')
-				->onDelete('cascade');
-			$table->integer('semester_id')->unsigned();
+				->on('permissions');
+
+			$table->integer('semester_id')->unsigned()->nullable();
 			$table->foreign('semester_id')->references('id')->on('semesters');
 			$table->integer('validated_by')->unsigned()->nullable();
 			$table->foreign('validated_by')->references('id')->on('users');
@@ -106,6 +106,7 @@ class CreatePermissionTables extends Migration
 	{
 		Schema::drop('permissions');
 		Schema::drop('roles');
+		Schema::drop('roles_parents');
 		Schema::drop('roles_permissions');
 		Schema::drop('users_permissions');
 		Schema::drop('users_roles');

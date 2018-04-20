@@ -15,10 +15,9 @@ class IsAdmin
      */
 	public function handle($request, Closure $next)
 	{
-		// if (\Auth::user() && \Auth::id() === 2)
-		if (\Auth::user())
+		if (\Auth::user() && \Auth::user()->hasOneRole('admin'))
 			return $next($request);
 
-    	return redirect('/home');
+    	return abort('Vous n\'êtes pas autorisé', 403);
  	}
 }

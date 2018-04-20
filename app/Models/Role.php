@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasPermissions;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
-    use HasPermissions;
+	use HasPermissions;
 
     public static function create(array $attributes = []) {
         if (static::where('type', $attributes['type'])->first())
@@ -77,13 +78,31 @@ class Role extends Model
     }
 
 	public function givePermissionTo($permissions) {
-		$this->permissions()->withTimestamps()->attach(Permission::getPermissions(stringToArray($permissions), $this->only_fr === 'users'));
+		$this->permissions()->withTimestamps()->attach(Permission::getPermissions(stringToArray($permissions), $this->only_for === 'users'));
+
+		return $this;
+	}
+
+	public function removePermissionTo($permissions) {
+		$this->permissions()->withTimestamps()->detach(Permission::getPermissions(stringToArray($permissions), $this->only_for === 'users'));
 
 		return $this;
 	}
 
 	public function assignParentRole($roles) {
 		$this->parentRoles()->withTimestamps()->attach(static::getRoles(stringToArray($roles), $this->only_for));
+
+		return $this;
+	}
+
+	public function removeParentRole($roles) {
+		$this->parentRoles()->withTimestamps()->detach(static::getRoles(stringToArray($roles), $this->only_for));
+
+		return $this;
+	}
+
+	public function syncParentRole($roles) {
+		$this->parentRoles()->withTimestamps()->sync(static::getRoles(stringToArray($roles), $this->only_for));
 
 		return $this;
 	}

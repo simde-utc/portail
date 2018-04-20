@@ -41,28 +41,27 @@ class GroupController extends Controller
 	{
 		// On inclue les relations et on les formattent.
 		$groups = Group::with([
-			'owner:id,lastname,firstname',
-			'visibility',
-			'members:id,lastname,firstname'
-		])->where('is_active', 1)->get();
+            'owner:id,lastname,firstname',
+            'visibility',
+			'currentMembers:id,lastname,firstname'
+		])->get();
 
 		return response()->json($request->user() ? Visible::with($groups, $request->user()->id) : $groups, 200);
 	}
 
-	/**
-	 * Create Group
-	 *
-	 * @param  \Illuminate\Http\GroupRequest  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(GroupRequest $request)
-	{
-		$group = new Group;
-		$group->user_id = $request->user()->id;
-		$group->name = $request->name;
-		$group->icon = $request->icon;
-		$group->visibility_id = $request->visibility_id ?? Visibility::where('type', 'owner')->first()->id;
-		$group->is_active = $request->is_active;
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(GroupRequest $request)
+    {
+        $group = new Group;
+        $group->user_id = 1; // PROD : $request->user()->id;
+        $group->name = $request->name;
+        $group->icon = $request->icon;
+        $group->visibility_id = $request->visibility_id ?? Visibility::where('type', 'owner')->first()->id;
 
 		if ($group->save()) {
 			// Owner est automatiquement membre du groupe.
@@ -79,20 +78,20 @@ class GroupController extends Controller
 			return response()->json(['message' => 'Impossible de créer le groupe'], 500);
 	}
 
-	/**
-	 * Show Group
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show(Request $request, $id)
-	{
-		// On inclue les relations et on les formattent.
-		$group = Group::with([
-			'owner:id,firstname,lastname',
-			'visibility',
-			'members:id,firstname,lastname'])
-			->find($id);
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request, $id)
+    {
+        // On inclue les relations et on les formattent.
+        $group = Group::with([
+            'owner:id,firstname,lastname',
+            'visibility',
+            'currentMembers:id,firstname,lastname'])
+            ->find($id);
 
 		if ($group)
 			return response()->json($request->user() ? Visible::hide($group, $request->user()->id) : $group, 200);
@@ -125,9 +124,6 @@ class GroupController extends Controller
 
 		if ($request->has('visibility_id'))
 			$group->visibility_id = $request->input('visibility_id');
-
-		if ($request->has('is_active'))
-			$group->is_active = $request->input('is_active', true);
 
 		// En update on enleve les ids précedents donc on sync.
 		$group->members()->sync($request->user()->id);

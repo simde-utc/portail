@@ -3,11 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasMembers;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Group extends Model
 {
-    use SoftDeletes;
+    use HasMembers, SoftDeletes;
+
+    public static function boot() {
+        static::created(function ($model) {
+            $model->assignRoles('group admin', [
+				'user_id' => $model->user_id,
+				'validated_by' => $model->user_id,
+				'semester_id' => null,
+			], true);
+        });
+    }
+
+	protected $memberRelationTable = 'groups_roles';
 
     protected $fillable = [
         'name', 'user_id', 'icon_id', 'visibility_id', 'is_active',
@@ -27,14 +40,10 @@ class Group extends Model
     ];
 
     public function owner() {
-        return $this->belongsTo('App\Models\User', 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function visibility() {
-    	return $this->belongsTo('App\Models\Visibility', 'visibility_id');
-    }
-
-    public function members() {
-        return $this->belongsToMany('App\Models\User', 'groups_members')->withPivot('created_at');
+    	return $this->belongsTo(Visibility::class, 'visibility_id');
     }
 }

@@ -1,10 +1,18 @@
 <?php
 
 namespace App\Traits;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+
+use AppRoleExceptions\PortailException;
+use Illuminate\Support\Collection;
+use App\Models\Permission;
+use App\Models\Semester;
+use App\Models\User;
 
 trait HasPermissions
 {
+	/**
+	 * Méthode appelée au chargement du trait
+	 */
     public static function bootHasPermissions() {
         static::deleting(function ($model) {
             if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
@@ -15,176 +23,232 @@ trait HasPermissions
         });
     }
 
-    public function permissions(Model $model = null, integer $semester_id = null): HasMany {
-		$permissions = $this->hasMany('App\Models\Permission', 'users_permissions');
-
-		if ($model !== null)
-			$permissions->where('on_type', get_class($model))->where('on_id', $model->id);
-
-		if ($semester_id !== null)
-			$permissions->where('semester_id', $semester_id);
-
-		return $permissions;
-    }
-
-    public function hasPermissionTo($permission, Model $model = null, integer $semester_id = null): bool {
-        if (is_string($permission))
-            $permission = Permission::findByType($permission);
-        else if (is_int($permission))
-            $permission = Permission::find($permission);
-
-        return $this->hasDirectPermission($permission, $model, $semester_id) || $this->hasPermissionViaRole($permission, $model, $semester_id);
-    }
-
-    public function hasOnePermission($permissions, Model $model = null, integer $semester_id = null): bool {
-        if (!is_array($permissions))
-			return $this->hasPermissionTo($permission, $model, $semester_id);
-
-        foreach ($permissions as $permission) {
-            if ($this->hasPermissionTo($permission, $model, $semester_id))
-                return true;
-        }
-
-        return false;
-    }
-
-    public function hasAllPermissions($permissions, Model $model = null, integer $semester_id = null): bool {
-        if (!is_array($permissions))
-			return $this->hasPermissionTo($permission, $model, $semester_id);
-
-        foreach ($permissions as $permission) {
-            if (!$this->hasPermissionTo($permission, $model, $semester_id))
-                return false;
-        }
-
-        return true;
-    }
-
-	public function hasDirectPermission($permission, Model $model = null, integer $semester_id = null): bool {
-		if (is_string($permission))
-		   $permission = Permission::findByType($permission);
-		else if (is_int($permission))
-		   $permission = Permission::find($permission);
-
-		$contains = ['id' => $permission->id];
-
-		if ($model !== null) {
-			$contains['on_type'] = get_class($model);
-			$contains['on_id'] = $model->id;
-		}
-
-		if ($semester_id !== null)
-			$contains['semester_id'] = $semester_id;
-
-	   return $this->permissions->contains($contains);
+	/**
+	 * Récupération du nom de la table de relation
+	 * @return string
+	 */
+	protected function getPermissionRelationTable() {
+		return $this->permissionRelationTable ?? $this->getTable().'_permissions';
 	}
 
-    protected function hasPermissionViaRole(Permission $permission, Model $model = null, integer $semester_id = null): bool {
-        return method_exists($this, 'hasRole') && $this->hasRole($permission->roles, $model, $semester_id);
-    }
+	/**
+	 * Liste des permissions attribués
+	 */
+	public function permissions() {
+		return $this->belongsToMany(Permission::class, $this->getPermissionRelationTable())->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+	}
 
-    public function getPermissionsViaRoles(): Collection {
-        return $this->load('roles', 'roles.permissions')
-            ->roles->flatMap(function ($role) {
-                return $role->permissions;
-            })->sort()->values();
-    }
+	/**
+	 * Permet d'assigner une ou plusieures permissions attribués en fonction des données fournis
+	 * @param  string/array/Collection  $permissions
+	 * @param  array   $data    Possibilité d'affecter permission_id, semester_id, validated_by, user_id
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
+	public function assignPermissions($permissions, array $data = [], bool $force = false) {
+		if (!isset($data['semester_id']))
+			$data['semester_id'] = Semester::getThisSemester()->id;
 
-    public function getAllPermissions(): Collection {
-        return $this->permissions
-            ->merge($this->getPermissionsViaRoles())
-            ->sort()
-            ->values();
-    }
+		$addPermissions = [];
 
-    public function givePermissionTo($permissions, Model $model = null, integer $semester_id = null) {
+		if (isset($data['validated_by']))
+			$manageablePermissions = $this->getUserPermissions($data['validated_by']);
 
+		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
+			if (!$force) {
+				$relatedTable = $this->getPermissionRelationTable();
+				$semester_id = $data['semester_id'];
 
-		foreach ($permissions as $permission) {
-			if ($permission->limited_at === 0)
-				throw new \Exception('Il n\'est pas possible d\'affecter des permissions directement à un utilisateur');
-		}
+				if ($permission->limited_at !== null) {
+					$users = $permission->users()->where(function ($query) use ($semester_id, $relatedTable) {
+						$query->where($relatedTable.'.semester_id', $semester_id)->orWhere($relatedTable.'.semester_id', '=', null);
+					})->wherePivot('validated_by', '!=', null);
 
-        $permissions = collect($permissions)
-            ->flatten()
-            ->map(function ($permission) {
-                $permission = $this->getStoredPermission($permission);
-
-				if ($model !== null) {
-					$permission->on_type = get_class($model);
-					$permission->on_id = $model->id;
+					if ($users->count() >= $permission->limited_at)
+						throw new PortailException('Le nombre de personnes ayant cette permission a été dépassé. Limité à '.$permission->limited_at);
 				}
 
-				if ($semester_id !== null)
-					$permission->semester_id = $semester_id;
+				if (isset($data['validated_by'])) {
+					if (!$manageablePermissions->contains('id', $permission->id) && !$manageablePermissions->contains('type', 'admin'))
+						throw new PortailException('La personne demandant la validation n\'est pas habilitée à donner cette permission: '.$permission->name);
+				}
+			}
 
-				return $permission;
-            })
-            ->all();
+			$addPermissions[$permission->id] = $data;
+		}
 
-        $this->permissions()->saveMany($permissions);
+		try {
+			$this->permissions()->withTimestamps()->attach($addPermissions);
+		} catch (\Exception $e) {
+			throw new RoleException('Une des personnes possède déjà trop de permissions');
+		}
 
-        return $this;
+		return $this;
+	}
+
+	/**
+	 * Permet de modifier une ou plusieures permissions attribués en fonction des données fournis
+	 * @param  string/array/Collection  $permissions
+	 * @param  array   $data    Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @param  array   $updatedData    Possibilité d'affecter permission_id, semester_id, validated_by, user_id
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
+    public function updatePermissions($permissions, array $data = [], array $updatedData = [], bool $force = false) {
+		if (!isset($updatedData['semester_id']))
+			$updatedData['semester_id'] = Semester::getThisSemester()->id;
+
+		if (!isset($data['semester_id']))
+			$data['semester_id'] = Semester::getThisSemester()->id;
+
+		if (isset($updatedData['validated_by']))
+			$manageablePermissions = $this->getUserPermissions($updatedData['validated_by']);
+
+		$updatedPermissions = [];
+
+		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
+			if (!$force && isset($updatedData['validated_by'])) {
+				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
+					throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier cette permission: '.$permission->name);
+			}
+
+			array_push($updatedPermissions, $permission->id);
+		}
+
+		$toUpdate = $this->permissions()->withTimestamps();
+
+		foreach ($data as $key => $value)
+			$toUpdate->wherePivot($key, $value);
+
+		try {
+			foreach ($updatedPermissions as $updatedPermission)
+				$toUpdate->updateExistingPivot($updatedPermission, $updatedData);
+		} catch (\Exception $e) {
+			throw new MemberException('Les données d\'une permission ne peuvent être modifiées');
+		}
+
+		return $this;
     }
 
-    public function syncPermissions($permissions, Model $model = null, integer $semester_id = null) {
-        $this->permissions()->detach();
+	/**
+	 * Permet de supprimer une ou plusieures permissions attribués en fonction des données fournis
+	 * @param  string/array/Collection  $permissions
+	 * @param  array   $data    Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @param  int 	   $removed_by   Personne demandant la suppression
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
+    public function removePermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
+		if (!isset($data['semester_id']))
+			$data['semester_id'] = Semester::getThisSemester()->id;
 
-        return $this->givePermissionTo($permissions, $model, $semester_id);
+		if ($removed_by !== null)
+			$manageablePermissions = $this->getUserPermissions($removed_by);
+
+		$delPermissions = [];
+
+		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
+			if (!$force && $removed_by !== null) {
+				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
+					throw new PortailException('La personne demandant la suppression n\'est pas habilitée à retirer cette permission: '.$permission->name);
+			}
+
+			array_push($delPermissions, $permission->id);
+		}
+
+		$toDetach = $this->permissions();
+
+		foreach ($data as $key => $value)
+			$toDetach->wherePivot($key, $value);
+
+		try {
+			$toDetach->detach($delPermissions);
+		} catch (\Exception $e) {
+			throw new MemberException('Une erreur a été recontrée à la suppression d\'une permission');
+		}
+
+		return $this;
     }
 
-    public function revokePermissionTo($permission, Model $model = null, integer $semester_id = null) {
-        $this->permissions()->detach($this->getStoredPermission($permission, $model, $semester_id));
+	/**
+	 * Permet de synchroniser (tout supprimer et assigner de nouveaux) une ou plusieures permissions en fonction des données fournis
+	 * @param  string/array/Collection  $permissions
+	 * @param  array   $data    Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @param  int 	   $removed_by   Personne demandant la suppression
+	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
+	 */
+    public function syncPermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
+		$currentPermissions = $this->getUserAssignedPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
+		$permissions = Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id');
+		$intersectedPermissions = $currentPermissions->intersect($permissions);
 
-        $this->forgetCachedPermissions();
+		$oldData = [];
+		if ($data['semester_id'] ?? false)
+			$oldData['semester_id'] = $data['semester_id'];
+		if ($data['user_id'] ?? false)
+			$oldData['user_id'] = $data['user_id'];
 
-        return $this;
+        return $this->assignPermissions($permissions->diff($currentPermissions), $data, $force)->updatePermissions($intersectedPermissions, $oldData, $data, $force)->removePermissions($currentPermissions->diff($permissions), $data, $removed_by, $force);
     }
 
-    protected function getStoredPermission($permissions, Model $model = null, integer $semester_id = null) {
-        if (is_numeric($permissions))
-            return $this->permissions($model, $semester_id)->where('id', $permissions)->get();
-        if (is_string($permissions)) {
-            return app(Permission::class)->findByType($permissions);
-        }
+	/**
+	 * Regarde si une permission parmi la liste a été donnée ou non
+	 * @param  string/array/Collection  $permissions
+	 * @param  array   $data    Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @return boolean
+	 */
+    public function hasOnePermission($permissions, array $data = []) {
+		if (!isset($data['semester_id']))
+			$data['semester_id'] = Semester::getThisSemester()->id;
 
-        if (is_array($permissions)) {
-            return app(Permission::class)
-                ->whereIn('name', $permissions)
-                ->whereIn('guard_name', $this->getGuardNames())
-                ->get();
-        }
-
-        return $permissions;
+        return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->intersect($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
     }
 
-    /**
-     * @param \Spatie\Permission\Contracts\Permission|\Spatie\Permission\Contracts\Role $roleOrPermission
-     *
-     * @throws \Spatie\Permission\Exceptions\GuardDoesNotMatch
-     */
-    protected function ensureModelSharesGuard($roleOrPermission)
-    {
-        if (! $this->getGuardNames()->contains($roleOrPermission->guard_name)) {
-            throw GuardDoesNotMatch::create($roleOrPermission->guard_name, $this->getGuardNames());
-        }
+	/** Regarde si toutes les permissions parmi la liste existe ou non
+	 * @param  string/array/Collection  $members
+	 * @param  array   $data    Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
+	 * @return boolean
+	 */
+    public function hasAllPermissions($permissions, array $data = []) {
+		if (!isset($data['semester_id']))
+			$data['semester_id'] = Semester::getThisSemester()->id;
+
+        return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->diff($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
     }
 
-    protected function getGuardNames(): Collection
-    {
-        return Guard::getNames($this);
-    }
+	/**
+	 * Récupérer les permissions assignées d'une personne
+	 * @param  int  $user_id
+	 * @param  int/false $semester_id
+	 * @param  boolean $needToBeValidated
+	 */
+	public function getUserAssignedPermissions($user_id = null, $semester_id = false, $needToBeValidated = true) {
+		if (!($semester_id ?? false))
+			$semester_id = Semester::getThisSemester()->id;
 
-    protected function getDefaultGuardName(): string
-    {
-        return Guard::getDefaultName($this);
-    }
+		$permissions = $this->permissions();
 
-    /**
-     * Forget the cached permissions.
-     */
-    public function forgetCachedPermissions()
-    {
-        app(PermissionRegistrar::class)->forgetCachedPermissions();
-    }
+		if ($permissions === null)
+		return new Collection;
+
+		if ($this->getTable() !== 'users' || $user_id !== null)
+			$permissions = $permissions->wherePivot('user_id', $user_id);
+
+		$relatedTable = $this->getPermissionRelationTable();
+
+		$permissions = $permissions->where(function ($query) use ($semester_id, $relatedTable) {
+			$query->where($relatedTable.'.semester_id', $semester_id)->orWhere($relatedTable.'.semester_id', '=', null);
+		});
+
+		if ($needToBeValidated)
+			$permissions = $permissions->wherePivot('validated_by', '!=', null);
+
+		return $permissions->get();
+	}
+
+	/**
+	 * Récupérer les permissions de cette instance ou de celui sur les users assignés et hérités d'une personne
+	 * @param  int  $user_id     [description]
+	 * @param  int/false $semester_id
+	 */
+	public function getUserPermissions($user_id = null, $semester_id = false) {
+		return $this->getUserAssignedPermissions($user_id, $semester_id);
+	}
 }

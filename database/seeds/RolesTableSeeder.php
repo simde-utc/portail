@@ -43,6 +43,7 @@ class RolesTableSeeder extends Seeder
 				'only_for' => 'assos',
 				'permissions' => [
 					'tresorie',
+					'bureau',
 				]
 			],
 			[
@@ -69,6 +70,9 @@ class RolesTableSeeder extends Seeder
 					'president',
 					'vice-president',
 				],
+				'permissions' => [
+					'bureau',
+				]
 			],
 			[
 				'type' => 'tresorier',
@@ -100,6 +104,43 @@ class RolesTableSeeder extends Seeder
 				'permissions' => [
 					'bureau',
 				]
+			],
+			[
+				'type' => 'resp info',
+				'name' => 'Responsable Informatique',
+				'description' => 'Responsable informatique de l\'association',
+				'only_for' => 'assos',
+				'parents' => [
+					'president',
+					'vice-president',
+					'secretaire general',
+					'tresorier',
+					'bureau',
+				],
+				'permissions' => [
+					'bureau',
+				]
+			],
+			[
+				'type' => 'developer',
+				'name' => 'Développeur',
+				'description' => 'Fais parti de l\'équipe informatique de l\'association',
+				'only_for' => 'assos',
+				'parents' => [
+					'president',
+					'vice-president',
+					'secretaire general',
+					'tresorier',
+					'bureau',
+					'resp info',
+				],
+			],
+			[
+				'type' => 'group admin',
+				'name' => 'Administrateur',
+				'description' => 'Administrateur du groupe',
+				'limited_at' => 1,
+				'only_for' => 'groups',
 			],
 		];
 
