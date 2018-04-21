@@ -6,14 +6,14 @@ use App\Models\Asso;
 
 class UsersTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        $users = [
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
+		$users = [
 			[
 				'email'     => 'samy.nastuzzi@etu.utc.fr',
 				'firstname' => 'Samy',
@@ -23,28 +23,37 @@ class UsersTableSeeder extends Seeder
 					'simde' => 'president',
 				],
 			],
-            [
-                'email'     => 'remy.huet@etu.utc.fr',
-                'firstname' => 'Rémy',
-                'lastname'  => 'Huet',
+			[
+				'email'     => 'remy.huet@etu.utc.fr',
+				'firstname' => 'Rémy',
+				'lastname'  => 'Huet',
 				'role'		=> 'admin',
 				'assos'		=> [
 					'simde' => 'developer',
 				],
-            ],
-            [
-                'email'     => 'natan.danous@etu.utc.fr',
-                'firstname' => 'Natan',
-                'lastname'  => 'Danous',
+			],
+			[
+				'email'     => 'natan.danous@etu.utc.fr',
+				'firstname' => 'Natan',
+				'lastname'  => 'Danous',
 				'role'		=> 'admin',
 				'assos'		=> [
 					'simde' => 'developer',
 				],
-            ]
-        ];
+			],
+			[
+				'email'     => 'alexandre.brasseur@etu.utc.fr',
+				'firstname' => 'Alex',
+				'lastname'  => 'Brass',
+				'role'		=> 'admin',
+				'assos'		=> [
+					'simde' => 'developer',
+				],
+			]
+		];
 
-        foreach ($users as $user) {
-            $model = User::create([
+		foreach ($users as $user) {
+			$model = User::create([
 				'email'     => $user['email'],
 				'firstname' => $user['firstname'],
 				'lastname'  => $user['lastname'],
@@ -58,6 +67,6 @@ class UsersTableSeeder extends Seeder
 					'validated_by' => 1,
 				], true);
 			}
-        }
-    }
+		}
+	}
 }
