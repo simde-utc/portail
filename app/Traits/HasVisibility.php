@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Services\Ginger;
 use App\Models\Visibility;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,7 +48,7 @@ trait HasVisibility
     }
 
     /**
-     * Fonction permettant de renvoyer toutes les informations visibles
+     * Fonction permettant de renvoyer toutes les informations visibles sans celles non visibles
      *
      * @return Illuminate\Database\Eloquent\Collection
      */
@@ -65,7 +66,7 @@ trait HasVisibility
     }
 
     /**
-     * Fonction permettant de retirer toutes les informations visibles ou non-visibles
+     * Fonction permettant de retirer toutes les informations visibles ou non visibles
      *
      * @param bool
      * @return Illuminate\Database\Eloquent\Collection
@@ -175,27 +176,31 @@ trait HasVisibility
         return false;
     }
 
-    public function isPublic($model, $user_id) {
+    public static function isPublic($model, $user_id) {
         return true;
     }
 
-    public function isLogged($model, $user_id) {
+    public static function isLogged($model, $user_id) {
         return Models\User::find($user_id)->exists();
     }
 
-    public function isCasOrWasCas($model, $user_id) {
+    public static function isCasOrWasCas($model, $user_id) {
         return Models\AuthCas::find($user_id)->exists();
     }
 
-    public function isCas($model, $user_id) {
+    public static function isCas($model, $user_id) {
         return Models\AuthCas::find($user_id)->where('is_active', true)->exists();
     }
 
-    public function isContributor($model, $user_id) {
-        return Ginger::userExists(Models\AuthCas::find($user_id)->login);
+    public static function isStudent($model, $user_id) {
+        return Ginger::user(Models\AuthCas::find($user_id)->login)->getType() === 'etu';
     }
 
-    public function isPrivate($model, $user_id) {
+    public static function isContributor($model, $user_id) {
+        return Ginger::user(Models\AuthCas::find($user_id)->login)->isContributor();
+    }
+
+    public static function isPrivate($model, $user_id) {
         if ($model === null)
             return false;
 
@@ -211,5 +216,9 @@ trait HasVisibility
 
     public function isOwner($model, $user_id) {
         return $model !== null && $model->user_id === $user_id;
+    }
+
+    public static function isInternal($model, $user_id) {
+        return Models\User::find($user_id)->hasOneRole('superadmin');
     }
 }

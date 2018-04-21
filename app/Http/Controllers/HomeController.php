@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Group;
 
 /**
  * @resource Home
@@ -27,6 +28,8 @@ class HomeController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function welcome() {
+		$groups = Group::withVisible();
+		return response()->json($groups, 200);
 		return view('welcome');
 	}
 

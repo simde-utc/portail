@@ -8,6 +8,8 @@
     - [Authentification](backend/oauth.md)
     - [Models](backend/models.md)
     - [Controllers](backend/controllers.md)
+    - [Traits](backend/traits.md)
+    - [Services](backend/services.md)
     - [Routes](backend/routes.md)
     - [Comment commenter](backend/commenter.md)
 - [Documentation de la documentation](#métadocumentation)
