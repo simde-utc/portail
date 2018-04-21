@@ -10,9 +10,9 @@ use App\Models\Visibility;
 use App\Exceptions\PortailException;
 
 /**
- * @resource Group
+ * Gestion des groupes utilisateurs
  *
- * Gestion des groupe d'utilisateurs
+ * @resource Group 
  */
 class GroupController extends Controller
 {
@@ -23,7 +23,7 @@ class GroupController extends Controller
 	 */
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOne(['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']),
+			\Scopes::matchOne(['user-get-groups-enabled', 'user-get-groups-disabled']),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
@@ -87,18 +87,22 @@ class GroupController extends Controller
     public function index(Request $request)
     {
         // On inclue les relations et on les formattent.
-		$groups = Group::hide()->with([
+        $groups = Group::with([
             'owner:id,lastname,firstname',
             'visibility',
 			'currentMembers:id,lastname,firstname'
-		])->get();
+		])->get()->map(function ($group) {
+            return $group->hide();
+        });
+
+        dd($groups);
 
 		// if (\Auth::user())
 		//  	$groups = Visible::with($groups, \Auth::user()->id);
 
-		$groups->each(function ($group) use ($request) {
-			$this->hideMemberData($request, $group->currentMembers);
-		});
+		// $groups->each(function ($group) use ($request) {
+		// 	$this->hideMemberData($request, $group->currentMembers);
+		// });
 
 		return response()->json($groups, 200);
     }

@@ -4,83 +4,33 @@ namespace App\Traits;
 
 use App\Services\Ginger;
 use App\Models\Visibility;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 trait HasVisibility
 {
     /**
-     * Fonction permettant de renvoyer toutes les informations tout en cachant celles privées
+     * Fonction qui renvoie une nouvelle instance du modèle si celui-ci
+     * n'est pas visible par l'utilisateur.
      *
-     * @return Illuminate\Database\Eloquent\Collection
+     * @return Illuminate\Database\Eloquent\Model
      */
-    public static function hide() {
-        $visibilities = Visibility::all();
-        $collection = self::all();
+    public function hide() {
+        if ($this->isVisible()) {
+            $model = new static;
 
-        foreach ($collection as $key => $model) {
-            if (!self::isVisible($visibilities, $model)) {
-                $collection[$key] = self::hideData($visibilities, $model);
-            }
-        }
+            // On ne renvoie pas l'id du modèle par sécurité, 
+            // ainsi on ne peut plus accèder aux relations du modèle caché
+            $model->message = "Vous ne pouvez pas voir cela.";
+            $model->visibility = $this->visibility;
 
-        return $collection;
-    }
-
-    // Natan : Utilité de cette fonction ?
-    /**
-     * Fonction permettant de renvoyer uniquement les informations privées en les cachant
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public static function hideWithout() {
-        $visibilities = Visibility::all();
-        $collection = self::all();
-
-        foreach ($collection as $key => $model) {
-            if (!self::isVisible($visibilities, $model)) {
-                $collection[$key] = self::hideData($visibilities, $model);
-            }
-            else
-                $collection->forget($key);
-        }
-
-        return $collection;
-    }
-
-    /**
-     * Fonction permettant de renvoyer toutes les informations visibles sans celles non visibles
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public static function withVisible() {
-        return self::removeData(false);
-    }
-
-    /**
-     * Fonction permettant de renvoyer toutes les informations non-visibles
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public static function withoutVisible() {
-        return self::removeData(true);
-    }
-
-    /**
-     * Fonction permettant de retirer toutes les informations visibles ou non visibles
-     *
-     * @param bool
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    protected static function removeData($visible) {
-        $visibilities = Visibility::all();
-        $collection = self::all();
-
-        foreach ($collection as $key => $model) {
-            if (self::isVisible($visibilities, $model) === $visible)
-                $collection->forget($key);
-        }
-
-        return $collection;
+            // Debug
+            $model->visibility_id = $this->visibility_id;
+            
+            return $model;
+        } else {
+            return $this;
+        } 
     }
 
     /**
@@ -88,7 +38,7 @@ trait HasVisibility
      *
      * @return string
      */
-    public static function getVisibilityType() {
+    public function getVisibilityType() {
         $visibilities = Visibility::all();
         $visibility_id = $visibilities->first()->id;
 
@@ -105,7 +55,7 @@ trait HasVisibility
 
             $type = 'is'.ucfirst($visibility->type);
 
-            if (method_exists(get_class(), $type) && $this->$type(null, Auth::user()->id))
+            if (method_exists(get_class(), $type) && self::$type(null, Auth::user()->id))
                 $result = $visibility->type;
             else
                 break;
@@ -117,45 +67,26 @@ trait HasVisibility
     }
 
     /**
-     * Fonction permettant de cacher les infos d'un modèle
-     *
-     * @param Illuminate\Database\Eloquent\Collection $visibilities
-     * @param Illuminate\Database\Eloquent\Model $model
-     * @return array
-     */
-    protected static function hideData($visibilities, $model) {
-        
-        // TODO: Besoin de choisir entre retourner soit un array soit un group avec attribut vides.
-
-        return [
-            'id' => $model->id,
-            'hidden' => true,
-            'visibility' => $visibilities->find($model->visibility_id),
-        ];
-
-        // return new self;
-    }
-
-    /**
      * Fonction permettant d'indiquer si la ressource peut-être visible ou non pour l'utilisateur actuel
      *
      * @param Illuminate\Database\Eloquent\Collection $visibilities
      * @param Illuminate\Database\Eloquent\Model $model
      * @return bool
      */
-    public static function isVisible($visibilities, $model) {
-        if ($visibilities === null || $visibilities->count() === 0)
+    public function isVisible() {
+        $visibilities = Visibility::all();
+
+        if ($visibilities === null)
             return true;
 
-        if ($model === null || $model->visibility_id === null)
-            return false;
-
-        $visibility_id = $model->visibility_id;
-
-        if ($visibility_id === null)
+        // Si le modèle n'a pas de visibilité, on prend la première visibilité,
+        // la plus ouverte.
+        if ($this->visibility_id === null)
             $visibility_id = $visibilities->first()->id;
+        else 
+            $visibility_id = $this->visibility_id;
 
-        // Si on est pas co, on check si la visibilité est publique ou non
+        // Si on est pas connecté, on regarde si la visibilité est publique ou non
         if (Auth::user() === null)
             return $visibilities->find($visibility_id)->type === 'public';
 
@@ -167,7 +98,7 @@ trait HasVisibility
 
             $type = 'is'.ucfirst($visibility->type);
 
-            if (method_exists(get_class(), $type) && $this->$type($model, Auth::user()->id))
+            if (method_exists(get_class(), $type) && $this->$type(Auth::user()->id))
                 return true;
 
             $visibility_id = $visibility->parent_id;
@@ -176,36 +107,33 @@ trait HasVisibility
         return false;
     }
 
-    public static function isPublic($model, $user_id) {
+    public function isPublic($user_id) {
         return true;
     }
 
-    public static function isLogged($model, $user_id) {
-        return Models\User::find($user_id)->exists();
+    public function isLogged($user_id) {
+        return User::find($user_id)->exists();
     }
 
-    public static function isCasOrWasCas($model, $user_id) {
-        return Models\AuthCas::find($user_id)->exists();
+    public function isCasOrWasCas($user_id) {
+        return AuthCas::find($user_id)->exists();
     }
 
-    public static function isCas($model, $user_id) {
-        return Models\AuthCas::find($user_id)->where('is_active', true)->exists();
+    public function isCas($user_id) {
+        return AuthCas::find($user_id)->where('is_active', true)->exists();
     }
 
-    public static function isStudent($model, $user_id) {
-        return Ginger::user(Models\AuthCas::find($user_id)->login)->getType() === 'etu';
+    public function isStudent($user_id) {
+        return Ginger::user(AuthCas::find($user_id)->login)->getType() === 'etu';
     }
 
-    public static function isContributor($model, $user_id) {
-        return Ginger::user(Models\AuthCas::find($user_id)->login)->isContributor();
+    public function isContributor($user_id) {
+        return Ginger::user(AuthCas::find($user_id)->login)->isContributor();
     }
 
-    public static function isPrivate($model, $user_id) {
-        if ($model === null)
-            return false;
-
+    public function isPrivate($user_id) {
         try {
-            $member = $model->members->find($user_id);
+            $member = $this->members->find($user_id);
         }
         catch (Exception $e) {
             $member = null;
@@ -214,11 +142,11 @@ trait HasVisibility
         return $member !== null;
     }
 
-    public function isOwner($model, $user_id) {
-        return $model !== null && $model->user_id === $user_id;
+    public function isOwner($user_id) {
+        return $this->user_id === $user_id;
     }
 
-    public static function isInternal($model, $user_id) {
-        return Models\User::find($user_id)->hasOneRole('superadmin');
+    public function isInternal($user_id) {
+        return User::find($user_id)->hasOneRole('superadmin');
     }
 }
