@@ -87,14 +87,14 @@ class GroupController extends Controller
     public function index(Request $request)
     {
         // On inclue les relations et on les formattent.
-		$groups = Group::with([
+		$groups = Group::hide()->with([
             'owner:id,lastname,firstname',
             'visibility',
 			'currentMembers:id,lastname,firstname'
 		])->get();
 
-		if (\Auth::user())
-		 	$groups = Visible::with($groups, \Auth::user()->id);
+		// if (\Auth::user())
+		//  	$groups = Visible::with($groups, \Auth::user()->id);
 
 		$groups->each(function ($group) use ($request) {
 			$this->hideMemberData($request, $group->currentMembers);
