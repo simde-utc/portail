@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Cas;
 use Laravel\Passport\Token;
+// Session utile ?
 use App\Models\Session;
 
 class LoginController extends Controller
@@ -35,8 +36,8 @@ class LoginController extends Controller
 	protected $redirectTo = '/home';
 
 	public function __construct()	{
-		$this->middleware('guest', ['except' => 'logout']);
-		$this->middleware('auth', ['only' => 'logout']);
+		$this->middleware('guest');
+		// $this->middleware('auth', ['only' => 'logout']);
 	}
 
 	/**
@@ -64,7 +65,9 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
-			return redirect()->route('login', ['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+			return redirect()->route('login',
+				['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))]
+			)->cookie('auth_provider', '', config('portail.cookie_lifetime'));
 		else
 			return resolve($provider_class)->showLoginForm($request);
 	}
@@ -76,7 +79,9 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
-			return redirect()->route('login.show', ['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))]);
+			return redirect()->route('login.show',
+				['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))]
+			);
 		else {
 			setcookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 
@@ -92,15 +97,22 @@ class LoginController extends Controller
 		$redirect = $service === null ? null : resolve($service['class'])->logout($request);
 
 		if ($redirect === null) {
-			if (\Session::get('url.intended', $request->query('redirect', url()->previous())))
-				$redirect = redirect(\Session::get('url.intended', $request->query('redirect', url()->previous())));
+			$after_logout_redirection = \Session::get('url.intended', $request->query('redirect', url()->previous()));
+			// Évite les redirections sur logout
+			if ($after_logout_redirection && $after_logout_redirection !== $request->url())
+				$redirect = redirect($after_logout_redirection);
 			else
-				$redirect = redirect('home');
+				$redirect = redirect('welcome');
 		}
 
-		// On le déconnecte uniquement lorsque le service a fini son travail
+		// Utile ?
 		Session::find(\Session::getId())->update(['auth_provider' => null]);
-    	Auth::logout();
+
+		// Ne pas oublier de détruire sa session
+		\Session::flush();
+
+		// On le déconnecte uniquement lorsque le service a fini son travail
+		Auth::logout();
 
 		return $redirect;
 	}
