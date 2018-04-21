@@ -47,9 +47,9 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null || $request->query('see') === 'all')
-			return view('login.index', ['redirect' => $request->query('redirect', url()->previous())]);
+			return view('login.index', ['redirect' => \Session::get('url.intended', \Session::get('url.intended', $request->query('redirect', url()->previous())))]);
 		else
-			return redirect()->route('login.show', ['provider' => $provider, 'redirect' => $request->query('redirect', url()->previous())]);
+			return redirect()->route('login.show', ['provider' => $provider, 'redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))]);
 	}
 
 	/**
@@ -60,7 +60,7 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
-			return redirect()->route('login', ['redirect' => $request->query('redirect', url()->previous())])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+			return redirect()->route('login', ['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
 		else
 			return resolve($provider_class)->showLoginForm($request);
 	}
@@ -72,7 +72,7 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
-			return redirect()->route('login.show', ['redirect' => $request->query('redirect', url()->previous())]);
+			return redirect()->route('login.show', ['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))]);
 		else {
 			setcookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 
@@ -88,8 +88,8 @@ class LoginController extends Controller
 		$redirect = $service === null ? null : resolve($service['class'])->logout($request);
 
 		if ($redirect === null) {
-			if ($request->query('redirect', url()->previous()))
-				$redirect = redirect($request->query('redirect', url()->previous()));
+			if (\Session::get('url.intended', $request->query('redirect', url()->previous())))
+				$redirect = redirect(\Session::get('url.intended', $request->query('redirect', url()->previous())));
 			else
 				$redirect = redirect('home');
 		}
