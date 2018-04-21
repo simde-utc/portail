@@ -9,6 +9,7 @@
     - [Models](backend/models.md)
     - [Controllers](backend/controllers.md)
     - [Routes](backend/routes.md)
+    - [Comment commenter](backend/commenter.md)
 - [Documentation de la documentation](#métadocumentation)
 
 ## Liens utiles
@@ -19,6 +20,8 @@
 # Métadocumentation
 
 *Comment contribuer à la documentation ?*
+
+***NB :*** *Veillez à également lire le guide pour commenter : [Comment commenter](backend/commenter.md)*
 
 ## Forme
 
