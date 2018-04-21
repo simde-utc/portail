@@ -72,12 +72,11 @@ class Install extends Command
 		if ($this->confirm('Seed the database ?'))
 			$this->call("db:seed");
 		$bar->advance();
-		
+
 		// API Generation
 		$this->info(' [Quick Install] Generating api');
 		$this->callSilent('api:generate', [
 			'--routePrefix' => 'api/*',
-			'--actAsUserId' => 1
 		]);
 		$this->info('API Doc and collection.json generated');
 		$bar->advance();
