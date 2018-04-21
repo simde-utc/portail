@@ -12,7 +12,7 @@ use App\Exceptions\PortailException;
 /**
  * Gestion des groupes utilisateurs
  *
- * @resource Group 
+ * @resource Group
  */
 class GroupController extends Controller
 {
@@ -95,14 +95,12 @@ class GroupController extends Controller
             return $group->hide();
         });
 
-        dd($groups);
+		if (\Auth::user())
+		  	$groups = Visible::with($groups, \Auth::user()->id);
 
-		// if (\Auth::user())
-		//  	$groups = Visible::with($groups, \Auth::user()->id);
-
-		// $groups->each(function ($group) use ($request) {
-		// 	$this->hideMemberData($request, $group->currentMembers);
-		// });
+		$groups->each(function ($group) use ($request) {
+			$this->hideMemberData($request, $group->currentMembers);
+		});
 
 		return response()->json($groups, 200);
     }

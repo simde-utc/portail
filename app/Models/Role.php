@@ -62,11 +62,11 @@ class Role extends Model
 		return $this->belongsToMany(User::class, 'users_roles');
     }
 
-    public function childRoles(): BelongsToMany {
+    public function childs(): BelongsToMany {
 		return $this->belongsToMany(Role::class, 'roles_parents', 'parent_id', 'role_id');
     }
 
-    public function parentRoles(): BelongsToMany {
+    public function parents(): BelongsToMany {
 		return $this->belongsToMany(Role::class, 'roles_parents', 'role_id', 'parent_id');
     }
 
@@ -92,19 +92,19 @@ class Role extends Model
 	}
 
 	public function assignParentRole($roles) {
-		$this->parentRoles()->withTimestamps()->attach(static::getRoles(stringToArray($roles), $this->only_for));
+		$this->parents()->withTimestamps()->attach(static::getRoles(stringToArray($roles), $this->only_for));
 
 		return $this;
 	}
 
 	public function removeParentRole($roles) {
-		$this->parentRoles()->withTimestamps()->detach(static::getRoles(stringToArray($roles), $this->only_for));
+		$this->parents()->withTimestamps()->detach(static::getRoles(stringToArray($roles), $this->only_for));
 
 		return $this;
 	}
 
 	public function syncParentRole($roles) {
-		$this->parentRoles()->withTimestamps()->sync(static::getRoles(stringToArray($roles), $this->only_for));
+		$this->parents()->withTimestamps()->sync(static::getRoles(stringToArray($roles), $this->only_for));
 
 		return $this;
 	}

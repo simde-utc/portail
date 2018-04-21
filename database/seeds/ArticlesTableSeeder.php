@@ -31,7 +31,7 @@ class ArticlesTableSeeder extends Seeder
 	        	'title' => 'Grand spectacle du PAE',
 		        'content' => 'Jeudi dernier, les associations du PAE ont eu l\'honneur de présenter devant plus de 500 UTCéens un grand spectacle...',
 		        'asso' => 'pae',
-		        'visibility_id' => 'contributor',
+		        'visibility_id' => 'contributorBde',
 	        ]
         ];
 

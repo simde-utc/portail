@@ -106,7 +106,7 @@ trait HasRoles
 
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
 			if (!$force && isset($updatedData['validated_by'])) {
-				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
+				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childs->contains('type', 'admin')))
 					throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
 
@@ -145,7 +145,7 @@ trait HasRoles
 
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
 			if (!$force && $removed_by !== null) {
-				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childRoles->contains('type', 'admin')))
+				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childs->contains('type', 'admin')))
 					throw new PortailException('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
 			}
 
@@ -249,7 +249,7 @@ trait HasRoles
 		$roles = $this->getUserAssignedRoles($user_id, $semester_id);
 
 		foreach ($roles as $role) {
-			foreach ($role->childRoles as $chilRole)
+			foreach ($role->childs as $chilRole)
 				$roles->push($chilRole);
 		}
 

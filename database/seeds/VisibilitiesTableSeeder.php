@@ -17,34 +17,74 @@ class VisibilitiesTableSeeder extends Seeder
             [
                 'type' => 'public',
                 'name' => 'Public',
+				'childs' => [
+					'logged',
+				],
             ],
             [
                 'type' => 'logged',
                 'name' => 'Toute personne connectée',
+				'childs' => [
+					'casOrWasCas',
+				],
             ],
             [
                 'type' => 'casOrWasCas',
                 'name' => 'Toute personne connectée au CAS ou maintenant Tremplin',
+				'childs' => [
+					'cas',
+				],
             ],
             [
                 'type' => 'cas',
                 'name' => 'Toute personne connectée au CAS',
+				'childs' => [
+					'personnal',
+					'studentUtc',
+					'studentEscom',
+				],
             ],
             [
-                'type' => 'student',
-                'name' => 'Etudiant connecté au CAS',
+                'type' => 'studentUtc',
+                'name' => 'Etudiant UTC',
+				'childs' => [
+					'contributorBde',
+				],
             ],
             [
-                'type' => 'contributor',
+                'type' => 'studentEscom',
+                'name' => 'Etudiant ESCOM',
+				'childs' => [
+					'contributorBde',
+				],
+            ],
+            [
+                'type' => 'personnal',
+                'name' => 'Personnel UTC',
+				'childs' => [
+					'contributorBde',
+				],
+            ],
+            [
+                'type' => 'contributorBde',
                 'name' => 'Tout cotisant BDE-UTC',
+				'childs' => [
+					'private',
+				],
             ],
             [
                 'type' => 'private',
                 'name' => 'Privée aux membres',
+				'childs' => [
+					'owner',
+				],
             ],
             [
                 'type' => 'owner',
                 'name' => 'Uniquement la personne créatrice',
+				'childs' => [
+					'internal',
+				],
             ],
             [
                 'type' => 'internal',
@@ -52,11 +92,16 @@ class VisibilitiesTableSeeder extends Seeder
             ],
         ];
 
-        foreach ($visibilities as $key => $visibility) {
-            $id = Visibility::create($visibility)->id;
+        foreach ($visibilities as $visibility) {
+            Visibility::create([
+				'type' => $visibility['type'],
+				'name' => $visibility['name'],
+			]);
+        }
 
-			if ($key !== 0)
-				Visibility::where('type', $visibilities[$key - 1]['type'])->update(['parent_id' => $id]);
+        foreach ($visibilities as $visibility) {
+            if (isset($visibility['childs']))
+				Visibility::findByType($visibility['type'])->childs()->attach(Visibility::whereIn('type', $visibility['childs'])->get());
         }
     }
 }
