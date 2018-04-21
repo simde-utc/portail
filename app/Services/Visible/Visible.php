@@ -207,8 +207,12 @@ class Visible {
 		return Models\AuthCas::find($user_id)->where('is_active', true)->exists();
 	}
 
+	public static function isStudent($model, $user_id) {
+		return Ginger::user(Models\AuthCas::find($user_id)->login)->getType() === 'etu';
+	}
+
 	public static function isContributor($model, $user_id) {
-		return Ginger::userExists(Models\AuthCas::find($user_id)->login);
+		return Ginger::user(Models\AuthCas::find($user_id)->login)->isContributor();
 	}
 
 	public static function isPrivate($model, $user_id) {
@@ -227,5 +231,9 @@ class Visible {
 
 	public static function isOwner($model, $user_id) {
 		return $model !== null && $model->user_id === $user_id;
+	}
+
+	public static function isInternal($model, $user_id) {
+		return Models\User::find($user_id)->hasOneRole('superadmin');
 	}
 }

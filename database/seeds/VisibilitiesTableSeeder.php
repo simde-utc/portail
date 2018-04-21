@@ -31,6 +31,10 @@ class VisibilitiesTableSeeder extends Seeder
                 'name' => 'Toute personne connectée au CAS',
             ],
             [
+                'type' => 'student',
+                'name' => 'Etudiant connecté au CAS',
+            ],
+            [
                 'type' => 'contributor',
                 'name' => 'Tout cotisant BDE-UTC',
             ],
@@ -41,6 +45,10 @@ class VisibilitiesTableSeeder extends Seeder
             [
                 'type' => 'owner',
                 'name' => 'Uniquement la personne créatrice',
+            ],
+            [
+                'type' => 'internal',
+                'name' => 'Réservé à la gestion interne du système',
             ],
         ];
 
