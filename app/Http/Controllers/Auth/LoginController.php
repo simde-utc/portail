@@ -47,9 +47,13 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null || $request->query('see') === 'all')
-			return view('login.index', ['redirect' => \Session::get('url.intended', \Session::get('url.intended', $request->query('redirect', url()->previous())))]);
+			return view('login.index',
+				['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))]
+			);
 		else
-			return redirect()->route('login.show', ['provider' => $provider, 'redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))]);
+			return redirect()->route('login.show',
+				['provider' => $provider, 'redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))]
+			);
 	}
 
 	/**
