@@ -49,14 +49,14 @@ class Handler extends ExceptionHandler
 		if ($request->wantsJson()) {
 	        // Define the response
 	        $response = [
-	            'errors' => 'Une erreur a été détectée',
+				'message' => ($exception instanceof \QueryException) ? 'Problème trouvé dans la requête SQL effectuée' : $exception->getMessage(),
 	        ];
 
 	        // If the app is in debug mode
-	        if (config('app.debug')) {
+	        if (config('app.debug') && !($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException)) {
 	            // Add the exception class name, message and stack trace to response
+				$response['message'] = $exception->getMessage();
 				$response['exception'] = get_class($exception);
-	            $response['message'] = $exception->getMessage();
 	            $response['trace'] = $exception->getTrace();
 	        }
 

@@ -38,6 +38,10 @@ class Asso extends Model
 		return $this->belongsToMany(Article::class, 'assos_articles');
 	}
 
+	public function collaboratedArticles(){
+		return $this->belongsToMany('App\Models\Article', 'articles_collaborators');
+	}
+
 	public function events() {
 		return $this->belongsToMany(Event::class);
 	}

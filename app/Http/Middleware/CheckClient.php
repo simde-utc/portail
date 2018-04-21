@@ -26,6 +26,6 @@ class CheckClient
 		if ($token === null || $token->user_id !== null)
 			throw OAuthServerException::accessDenied();
 
-		return $next($request);
+		return app(\Laravel\Passport\Http\Middleware\CheckClientCredentials::class)->handle($request, $next);
     }
 }

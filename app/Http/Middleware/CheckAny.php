@@ -19,21 +19,9 @@ class CheckAny
 	 public function handle(\Illuminate\Http\Request $request, Closure $next)
 	 {
 		// On vérifie que le token n'est pas lié à un utilisateur
-		$bearerToken = $request->bearerToken();
-
-		if ($bearerToken === null)
-			return $this->checkUser($request, $next);
-
-		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
-		$token = Token::find($tokenId);
-
-		if ($token === null || $token->user_id !== null)
-			return $this->checkUser($request, $next);
-
-		return $next($request);
+		if ($request->bearerToken() === null)
+			return app(\Illuminate\Auth\Middleware\Authenticate::class)->handle($request, $next, 'api');
+		else
+			return app(\App\Http\Middleware\CheckClient::class)->handle($request, $next);
     }
-
-	private function checkUser(\Illuminate\Http\Request $request, Closure $next) {
-		return app(\Illuminate\Auth\Middleware\Authenticate::class)->handle($request, $next, 'api');
-	}
 }

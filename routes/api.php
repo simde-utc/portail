@@ -33,6 +33,7 @@ Route::prefix('v1')->group(function () {
 	// Ressources
 	Route::apiResources([
 		'groups'		=> 'GroupController',
+		'groups/{group_id}/members'		=> 'GroupMemberController',
 		'assos/types'	=> 'AssoTypeController',
 		'users'			=> 'UserController',
 		'assos'			=> 'AssoController',

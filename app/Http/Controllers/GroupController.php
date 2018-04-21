@@ -8,6 +8,7 @@ use App\Models\Group;
 use App\Http\Requests\GroupRequest;
 use App\Services\Visible\Visible;
 use App\Models\Visibility;
+use App\Exceptions\PortailException;
 
 /**
  * @resource Group
@@ -32,22 +33,76 @@ class GroupController extends Controller
 		);
 	}
 
-	/**
-	 * List Groups
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index(Request $request)
-	{
-		// On inclue les relations et on les formattent.
+	protected function getMember(Request $request, $member) {
+		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
+			$member->makeHidden('email');
+
+		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
+			$member->makeHidden(['last_login_at', 'created_at', 'updated_at']);
+
+		$member->pivot->makeHidden(['group_id', 'user_id']);
+
+		if ($member->pivot->semester_id === 0)
+			$member->pivot->makeHidden('semester_id');
+
+		if (is_null($member->pivot->role_id))
+			$member->pivot->makeHidden('role_id');
+
+		if (is_null($member->pivot->validated_by))
+			$member->pivot->makeHidden('validated_by');
+
+		return $member;
+	}
+
+	protected function hideMemberData(Request $request, $members) {
+		$toHide = [];
+
+		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
+			array_push($toHide, 'email');
+
+		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
+			array_push($toHide, 'last_login_at', 'created_at', 'updated_at');
+
+		$members->each(function ($member) use ($toHide) {
+			$member->makeHidden($toHide);
+			$member->pivot->makeHidden(['group_id', 'user_id']);
+
+			if ($member->pivot->semester_id === 0)
+				$member->pivot->makeHidden('semester_id');
+
+			if (is_null($member->pivot->role_id))
+				$member->pivot->makeHidden('role_id');
+
+			if (is_null($member->pivot->validated_by))
+				$member->pivot->makeHidden('validated_by');
+		});
+
+		return $members;
+	}
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        // On inclue les relations et on les formattent.
 		$groups = Group::with([
             'owner:id,lastname,firstname',
             'visibility',
 			'currentMembers:id,lastname,firstname'
 		])->get();
 
-		return response()->json($request->user() ? Visible::with($groups, $request->user()->id) : $groups, 200);
-	}
+		if (\Auth::user())
+		 	$groups = Visible::with($groups, \Auth::user()->id);
+
+		$groups->each(function ($group) use ($request) {
+			$this->hideMemberData($request, $group->currentMembers);
+		});
+
+		return response()->json($groups, 200);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -58,25 +113,47 @@ class GroupController extends Controller
     public function store(GroupRequest $request)
     {
         $group = new Group;
-        $group->user_id = 1; // PROD : $request->user()->id;
+        $group->user_id = \Auth::user()->id;
         $group->name = $request->name;
         $group->icon = $request->icon;
-        $group->visibility_id = $request->visibility_id ?? Visibility::where('type', 'owner')->first()->id;
+        $group->visibility_id = $request->visibility_id ?? Visibility::findByType('owner')->id;
 
-		if ($group->save()) {
-			// Owner est automatiquement membre du groupe.
-			$group->members()->attach($request->user()->id);
+        if ($group->save()) { // Le créateur du groupe devient automatiquement admin et membre de son groupe
+            // Les ids des membres à ajouter seront passé dans la requête.
+            // ids est un array de user ids.
+            if ($request->has('member_ids')) {
+				if ($group->visibility_id === Visibility::findByType('owner')->id)
+					$data = [
+						'semester_id' => $request->input('semester_id', 0),
+						'validated_by' => $group->user_id,
+					];
+				else {
+					$data = [
+						'semester_id' => $request->input('semester_id', 0),
+					];
+					// TODO: Envoyer un mail d'invitation dans le groupe
+				}
 
-			// Les ids des membres à ajouter seront passé dans la requête.
-			// ids est un array de user ids.
-			if ($request->has('member_ids'))
-				$group->members()->attach($request->input('member_ids', []));
+				try {
+					$group->assignMembers($request->input('member_ids', []), $data);
+				} catch (PortailException $e) {
+					return response()->json(["message" => $e->getMessage()], 400);
+				}
+			}
 
-			return response()->json($group, 201);
-		}
-		else
-			return response()->json(['message' => 'Impossible de créer le groupe'], 500);
-	}
+			$group = $group->with([
+	            'owner:id,lastname,firstname',
+	            'visibility',
+				'currentMembers:id,lastname,firstname'
+			]);
+
+			$this->hideMemberData($request, $group->currentMembers);
+
+            return response()->json($group, 201);
+        }
+        else
+            return response()->json(["message" => "Impossible de créer le groupe"], 500);
+    }
 
     /**
      * Display the specified resource.
@@ -93,11 +170,17 @@ class GroupController extends Controller
             'currentMembers:id,firstname,lastname'])
             ->find($id);
 
-		if ($group)
-			return response()->json($request->user() ? Visible::hide($group, $request->user()->id) : $group, 200);
-		else
-			abort(404, 'Groupe non trouvé');
-	}
+        if ($group) {
+			if (\Auth::user())
+			 	$group = Visible::with($group, \Auth::user()->id);
+
+			$this->hideMemberData($request, $group->currentMembers);
+
+			return response()->json($group, 200);
+		}
+        else
+            abort(404, "Groupe non trouvé");
+    }
 
 	/**
 	 * Update Group
@@ -125,19 +208,42 @@ class GroupController extends Controller
 		if ($request->has('visibility_id'))
 			$group->visibility_id = $request->input('visibility_id');
 
-		// En update on enleve les ids précedents donc on sync.
-		$group->members()->sync($request->user()->id);
+        if ($group->save()) {
+	        if ($request->has('member_ids')) {
+				if ($group->visibility_id >= Visibility::findByType('owner')->id)
+					$data = [
+						'semester_id' => $request->input('semester_id', 0),
+						'validated_by' => $group->user_id,
+						'removed_by' => $group->user_id,
+					];
+				else {
+					$data = [
+						'semester_id' => $request->input('semester_id', 0),
+						'removed_by' => $group->user_id,
+					];
+					// TODO: Envoyer un mail d'invitation dans le groupe
+				}
 
-		// Pas de sync() vu qu'on veut garder owner id.
-		// Les ids de tous les membres (actuels et anciens) seront passés dans la requête.
-		if ($request->has('member_ids'))
-			$group->members()->syncWithoutDetaching($request->member_ids);
+				try {
+					$group->syncMembers(array_merge($request->member_ids, [\Auth::user()->id]), $data, \Auth::user()->id);
+				} catch (PortailException $e) {
+					return response()->json(["message" => $e->getMessage()], 400);
+				}
+			}
 
-		if ($group->save())
-			return response()->json($group, 200);
-		else
-			return response()->json(['message' => 'Impossible de modifier le groupe'], 500);
-	}
+			$group = $group->with([
+	            'owner:id,lastname,firstname',
+	            'visibility',
+				'currentMembers:id,lastname,firstname'
+			]);
+
+			$this->hideMemberData($request, $group->currentMembers);
+
+            return response()->json($group, 200);
+		}
+        else
+            return response()->json(["message" => "Impossible de modifier le groupe"], 500);
+    }
 
 	/**
 	 * Delete Group
@@ -149,12 +255,12 @@ class GroupController extends Controller
 	{
 		$group = Group::find($id);
 
-		if (!$group)
-			return response()->json(['message' => 'Impossible de trouver le groupe'], 404);
+        if (!$group)
+            return response()->json(["message" => "Impossible de trouver le groupe"], 404);
+		else {
+			$group->delete();
 
-		$group->members()->detach(); // Pas sûr que ce soit utile
-		$group->delete();
-
-		return response()->json(['message' => 'Groupe supprimé'], 204);
-	}
+			return response()->json(["message" => "Groupe supprimé"], 204);
+		}
+    }
 }

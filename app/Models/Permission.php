@@ -46,6 +46,8 @@ class Permission extends Model
 	public static function getPermissions($permissions, bool $is_system = true) {
 		if (is_array($permissions))
 			return static::whereIn('id', $permissions)->orWhereIn('type', $permissions)->where('is_system', $is_system)->get();
+		else if ($permissions instanceof \Illuminate\Database\Eloquent\Model)
+			return collect($permissions);
 		else
 			return $permissions;
 	}
