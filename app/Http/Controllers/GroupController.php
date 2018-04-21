@@ -12,8 +12,9 @@ use App\Exceptions\PortailException;
 
 class GroupController extends Controller
 {
-    public function __construct() {
-		$this->middleware(\Scopes::matchOne(['client-get-groups-enabled', 'client-get-groups-disabled', 'user-get-groups-enabled', 'user-get-groups-disabled']), ['only' => ['index', 'show']]);
+    public function __construct(Request $request) {
+		$this->middleware('auth.client', ['only' => ['index', 'show']]);
+		dd($request->token());
         $this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
     }
 
