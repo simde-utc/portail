@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use AppPortailExceptions\PortailException;
+use App\Exceptions\PortailException;
 use App\Traits\HasPermissions;
 use Illuminate\Support\Collection;
 use App\Models\Role;
@@ -43,7 +43,7 @@ trait HasRoles
 	 * Liste des roles attribués
 	 */
 	public function roles() {
-	    return $this->belongsToMany(Role::class, $this->getRoleRelationTable())->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+	    return $this->belongsToMany(Role::class, $this->getRoleRelationTable());
 	}
 
 	/**
@@ -53,7 +53,7 @@ trait HasRoles
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
 	public function assignRoles($roles, array $data = [], bool $force = false) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$addRoles = [];
 
 		if (isset($data['validated_by']))
@@ -61,13 +61,8 @@ trait HasRoles
 
 		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
 			if (!$force) {
-				$relatedTable = $this->getRoleRelationTable();
-				$semester_id = $data['semester_id'];
-
 				if ($role->limited_at !== null) {
-					$users = $role->users()->where(function ($query) use ($semester_id, $relatedTable) {
-						$query->where($relatedTable.'.semester_id', $semester_id)->orWhere($relatedTable.'.semester_id', '=', null);
-					})->wherePivot('validated_by', '!=', null);
+					$users = $role->users()->wherePivotIn('semester_id', [0, $data['semester_id']])->wherePivot('validated_by', '!=', null);
 
 					if ($users->count() >= $role->limited_at)
 						throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
@@ -99,8 +94,8 @@ trait HasRoles
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function updateRoles($roles, array $data = [], array $updatedData = [], bool $force = false) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
-		$updatedData['semester_id'] = isset($updatedData['semester_id']) ? ($updatedData['semester_id'] === -1 ? null : $updatedData['semester_id']) : Semester::getThisSemester()->id;
+		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
+		$updatedData['semester_id'] = $updatedData['semester_id'] ?? Semester::getThisSemester()->id;
 		$updatedRoles = [];
 
 		if (isset($updatedData['validated_by']))
@@ -138,7 +133,7 @@ trait HasRoles
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function removeRoles($roles, array $data = [], int $removed_by = null, bool $force = false) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$delRoles = [];
 
 		if ($removed_by !== null)
@@ -175,7 +170,7 @@ trait HasRoles
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function syncRoles($roles, array $data = [], int $removed_by = null, bool $force = false) {
-		$currentRoles = $this->getUserAssignedRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
+		$currentRoles = $this->getUserAssignedRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? 0, false)->pluck('id');
 		$roles = Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id');
 		$intersectedRoles = $currentRoles->intersect($roles);
 		$oldData = [];
@@ -195,9 +190,7 @@ trait HasRoles
 	 * @return boolean
 	 */
     public function hasOneRole($roles, array $data = []) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
-
-        return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
+        return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
     }
 
 	/** Regarde si tous les roles parmi la liste existe ou non
@@ -206,9 +199,7 @@ trait HasRoles
 	 * @return boolean
 	 */
     public function hasAllRoles($roles, array $data = []) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
-
-        return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
+        return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isEmpty();
     }
 
 	/**
@@ -218,7 +209,7 @@ trait HasRoles
 	 * @param  boolean $needToBeValidated
 	 */
 	public function getUserAssignedRoles(int $user_id = null, $semester_id = null, $needToBeValidated = true) {
-		$semester_id = isset($semester_id) ? ($semester_id === -1 ? null : $semester_id) : Semester::getThisSemester()->id;
+		$semester_id = $semester_id ?? Semester::getThisSemester()->id;
 		$roles = $this->roles();
 
 		if ($roles === null)
@@ -229,9 +220,7 @@ trait HasRoles
 
 		$relatedTable = $this->getRoleRelationTable();
 
-		$roles = $roles->where(function ($query) use ($semester_id, $relatedTable) {
-			$query->where($relatedTable.'.semester_id', $semester_id)->orWhere($relatedTable.'.semester_id', '=', null);
-		});
+		$roles = $roles->wherePivotIn('semester_id', [0, $semester_id]);
 
 		if ($needToBeValidated)
 			$roles = $roles->wherePivot('validated_by', '!=', null);
@@ -245,7 +234,7 @@ trait HasRoles
 	 * @param  int/false $semester_id
 	 */
 	public function getUserRoles(int $user_id = null, $semester_id = null) {
-		$semester_id = isset($semester_id) ? ($semester_id === -1 ? null : $semester_id) : Semester::getThisSemester()->id;
+		$semester_id = $semester_id ?? Semester::getThisSemester()->id;
 		$roles = $this->getUserAssignedRoles($user_id, $semester_id);
 
 		foreach ($roles as $role) {

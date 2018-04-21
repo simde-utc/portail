@@ -48,6 +48,8 @@ class Role extends Model
 	public static function getRoles($roles, string $only_for = 'users') {
 		if (is_array($roles))
 			return static::whereIn('id', $roles)->orWhereIn('type', $roles)->where('only_for', $only_for)->get();
+		else if ($roles instanceof \Illuminate\Database\Eloquent\Model)
+			return collect($roles);
 		else
 			return $roles;
 	}

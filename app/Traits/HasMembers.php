@@ -40,6 +40,22 @@ trait HasMembers
 	/**
 	 * Liste des membres (validés par une personne)
 	 */
+	public function membersAndJoiners() {
+		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+	}
+
+	/**
+	 * Liste des membres de ce semestre ou d'aucun semestre (validés par une personne)
+	 */
+	public function currentMembersAndJoiners() {
+		$relatedTable = $this->getMemberRelationTable();
+
+		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+	}
+
+	/**
+	 * Liste des membres (validés par une personne)
+	 */
 	public function members() {
 		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
 	}
@@ -50,9 +66,7 @@ trait HasMembers
 	public function currentMembers() {
 		$relatedTable = $this->getMemberRelationTable();
 
-		return $this->belongsToMany(User::class, $relatedTable)->where(function ($query) use ($relatedTable) {
-			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
-		})->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
@@ -68,9 +82,7 @@ trait HasMembers
 	public function currentJoiners() {
 		$relatedTable = $this->getMemberRelationTable();
 
-		return $this->belongsToMany(User::class, $relatedTable)->where(function ($query) use ($relatedTable) {
-			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
-		})->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
@@ -80,7 +92,7 @@ trait HasMembers
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
 	public function assignMembers($members, array $data = [], bool $force = false) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 
 		if (!$force && $this->visibility_id !== null && $this->visibility_id >= Visibility::findByType('private')->id) {
 			if (isset($data['validated_by'])) {
@@ -135,8 +147,8 @@ trait HasMembers
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function updateMembers($members, array $data = [], array $updatedData = [], bool $force = false) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
-		$updatedData['semester_id'] = isset($updatedData['semester_id']) ? ($updatedData['semester_id'] === -1 ? null : $updatedData['semester_id']) : Semester::getThisSemester()->id;
+		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
+		$updatedData['semester_id'] = $updatedData['semester_id'] ?? Semester::getThisSemester()->id;
 		$members = User::getUsers(stringToArray($members));
 
 		if (!$force && isset($data['validated_by'])) {
@@ -192,7 +204,7 @@ trait HasMembers
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function removeMembers($members, array $data = [], int $removed_by = null, bool $force = false) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$members = User::getUsers(stringToArray($members));
 
 		if (!$force && $removed_by !== null) {
@@ -237,12 +249,8 @@ trait HasMembers
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function syncMembers($members, array $data = [], int $removed_by = null, bool $force = false) {
-		$semester_id = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
-		$relatedTable = $this->getMemberRelationTable();
-
-		$currentMembers = $this->members()->where(function ($query) use ($relatedTable) {
-			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
-		})->get()->pluck('id');
+		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
+		$currentMembers = $this->currentMembers>pluck('id');
 		$members = User::getUsers(stringToArray($members))->pluck('id');
 		$intersectedMembers = $currentMembers->intersect($members);
 
@@ -262,12 +270,7 @@ trait HasMembers
 	 * @return boolean
 	 */
     public function hasOneMember($members, array $data = []) {
-		$semester_id = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
-		$relatedTable = $this->getMemberRelationTable();
-
-        return $this->members()->where(function ($query) use ($relatedTable) {
-			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
-		})->wherePivotIn('user_id', User::getUsers(stringToArray($members))->pluck('id'))->get()->count() > 0;
+        return $this->members()->wherePivotIn('semester_id', [0, $data['semester_id'] ?? Semester::getThisSemester()->id])->wherePivotIn('user_id', User::getUsers(stringToArray($members))->pluck('id'))->get()->count() > 0;
     }
 
 	/** Regarde si tous les membres parmi la liste existe ou non
@@ -276,12 +279,8 @@ trait HasMembers
 	 * @return boolean
 	 */
     public function hasAllMembers($members, array $data = []) {
-		$semester_id = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
 		$user_ids = User::getUsers(stringToArray($members))->pluck('id');
-		$relatedTable = $this->getMemberRelationTable();
 
-		return $this->members()->where(function ($query) use ($relatedTable) {
-			$query->where($relatedTable.'.semester_id', Semester::getThisSemester()->id)->orWhere($relatedTable.'.semester_id', '=', null);
-		})->wherePivotIn('user_id', $user_ids)->get()->count() > $user_ids->count();
+		return $this->members()->wherePivotIn('semester_id', [0, $data['semester_id'] ?? Semester::getThisSemester()->id])->wherePivotIn('user_id', $user_ids)->get()->count() > $user_ids->count();
     }
 }

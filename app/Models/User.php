@@ -28,6 +28,8 @@ class User extends Authenticatable
 	public static function getUsers($users) {
 		if (is_array($users))
 			return static::whereIn('id', $users)->orWhereIn('email', $users)->get();
+		else if ($users instanceof \Illuminate\Database\Eloquent\Model)
+			return collect($users);
 		else
 			return $users;
 	}

@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use AppRoleExceptions\PortailException;
+use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;
 use App\Models\Permission;
 use App\Models\Semester;
@@ -35,7 +35,7 @@ trait HasPermissions
 	 * Liste des permissions attribués
 	 */
 	public function permissions() {
-		return $this->belongsToMany(Permission::class, $this->getPermissionRelationTable())->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(Permission::class, $this->getPermissionRelationTable());
 	}
 
 	/**
@@ -45,7 +45,7 @@ trait HasPermissions
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
 	public function assignPermissions($permissions, array $data = [], bool $force = false) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$addPermissions = [];
 
 		if (isset($data['validated_by']))
@@ -53,13 +53,8 @@ trait HasPermissions
 
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
 			if (!$force) {
-				$relatedTable = $this->getPermissionRelationTable();
-				$semester_id = $data['semester_id'];
-
 				if ($permission->limited_at !== null) {
-					$users = $permission->users()->where(function ($query) use ($semester_id, $relatedTable) {
-						$query->where($relatedTable.'.semester_id', $semester_id)->orWhere($relatedTable.'.semester_id', '=', null);
-					})->wherePivot('validated_by', '!=', null);
+					$users = $permission->users()->wherePivotIn('semester_id', [0, $data['semester_id']])->wherePivot('validated_by', '!=', null);
 
 					if ($users->count() >= $permission->limited_at)
 						throw new PortailException('Le nombre de personnes ayant cette permission a été dépassé. Limité à '.$permission->limited_at);
@@ -91,8 +86,8 @@ trait HasPermissions
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function updatePermissions($permissions, array $data = [], array $updatedData = [], bool $force = false) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
-		$updatedData['semester_id'] = isset($updatedData['semester_id']) ? ($updatedData['semester_id'] === -1 ? null : $updatedData['semester_id']) : Semester::getThisSemester()->id;
+		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
+		$updatedData['semester_id'] = $updatedData['semester_id'] ?? Semester::getThisSemester()->id;
 		$updatedPermissions = [];
 
 		if (isset($updatedData['validated_by']))
@@ -130,7 +125,7 @@ trait HasPermissions
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function removePermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
+		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$delPermissions = [];
 
 		if ($removed_by !== null)
@@ -167,7 +162,7 @@ trait HasPermissions
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
     public function syncPermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
-		$currentPermissions = $this->getUserAssignedPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null, false)->pluck('id');
+		$currentPermissions = $this->getUserAssignedPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id, false)->pluck('id');
 		$permissions = Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id');
 		$intersectedPermissions = $currentPermissions->intersect($permissions);
 
@@ -187,9 +182,7 @@ trait HasPermissions
 	 * @return boolean
 	 */
     public function hasOnePermission($permissions, array $data = []) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
-
-        return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->intersect($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? null)->pluck('id'))->isNotEmpty();
+        return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->intersect($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
     }
 
 	/** Regarde si toutes les permissions parmi la liste existe ou non
@@ -198,9 +191,7 @@ trait HasPermissions
 	 * @return boolean
 	 */
     public function hasAllPermissions($permissions, array $data = []) {
-		$data['semester_id'] = isset($data['semester_id']) ? ($data['semester_id'] === -1 ? null : $data['semester_id']) : Semester::getThisSemester()->id;
-
-        return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->diff($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'])->pluck('id'))->isEmpty();
+        return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->diff($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isEmpty();
     }
 
 	/**
@@ -210,7 +201,7 @@ trait HasPermissions
 	 * @param  boolean $needToBeValidated
 	 */
 	public function getUserAssignedPermissions($user_id = null, $semester_id = null, $needToBeValidated = true) {
-		$semester_id = isset($semester_id) ? ($semester_id === -1 ? null : $semester_id) : Semester::getThisSemester()->id;
+		$semester_id = $semester_id ?? Semester::getThisSemester()->id;
 		$permissions = $this->permissions();
 
 		if ($permissions === null)
@@ -221,9 +212,7 @@ trait HasPermissions
 
 		$relatedTable = $this->getPermissionRelationTable();
 
-		$permissions = $permissions->where(function ($query) use ($semester_id, $relatedTable) {
-			$query->where($relatedTable.'.semester_id', $semester_id)->orWhere($relatedTable.'.semester_id', '=', null);
-		});
+		$permissions = $permissions->wherePivotIn('semester_id', [0, $semester_id]);
 
 		if ($needToBeValidated)
 			$permissions = $permissions->wherePivot('validated_by', '!=', null);

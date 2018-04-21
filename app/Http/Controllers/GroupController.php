@@ -54,12 +54,12 @@ class GroupController extends Controller
             if ($request->has('member_ids')) {
 				if ($group->visibility_id === Visibility::findByType('owner')->id)
 					$data = [
-						'semester_id' => $request->input('semester_id', -1),
+						'semester_id' => $request->input('semester_id', 0),
 						'validated_by' => $group->user_id,
 					];
 				else {
 					$data = [
-						'semester_id' => $request->input('semester_id', -1),
+						'semester_id' => $request->input('semester_id', 0),
 					];
 					// TODO: Envoyer un mail d'invitation dans le groupe
 				}
@@ -71,7 +71,11 @@ class GroupController extends Controller
 				}
 			}
 
-            return response()->json($group, 201);
+            return response()->json($group->with([
+	            'owner:id,lastname,firstname',
+	            'visibility',
+				'currentMembers:id,lastname,firstname'
+			]), 201);
         }
         else
             return response()->json(["message" => "Impossible de créer le groupe"], 500);
@@ -126,15 +130,15 @@ class GroupController extends Controller
 
         if ($group->save()) {
 	        if ($request->has('member_ids')) {
-				if ($group->visibility_id === Visibility::findByType('owner')->id)
+				if ($group->visibility_id >= Visibility::findByType('owner')->id)
 					$data = [
-						'semester_id' => $request->input('semester_id', -1),
+						'semester_id' => $request->input('semester_id', 0),
 						'validated_by' => $group->user_id,
 						'removed_by' => $group->user_id,
 					];
 				else {
 					$data = [
-						'semester_id' => $request->input('semester_id', -1),
+						'semester_id' => $request->input('semester_id', 0),
 						'removed_by' => $group->user_id,
 					];
 					// TODO: Envoyer un mail d'invitation dans le groupe
@@ -147,7 +151,11 @@ class GroupController extends Controller
 				}
 			}
 
-			return response()->json($group, 200);
+			return response()->json($group->with([
+	            'owner:id,lastname,firstname',
+	            'visibility',
+				'currentMembers:id,lastname,firstname'
+			]), 200);
 		}
         else
             return response()->json(["message" => "Impossible de modifier le groupe"], 500);
