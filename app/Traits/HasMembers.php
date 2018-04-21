@@ -41,7 +41,7 @@ trait HasMembers
 	 * Liste des membres (validés par une personne)
 	 */
 	public function membersAndJoiners() {
-		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
@@ -50,14 +50,14 @@ trait HasMembers
 	public function currentMembersAndJoiners() {
 		$relatedTable = $this->getMemberRelationTable();
 
-		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
 	 * Liste des membres (validés par une personne)
 	 */
 	public function members() {
-		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->whereNotNull('validated_by')->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
@@ -66,14 +66,14 @@ trait HasMembers
 	public function currentMembers() {
 		$relatedTable = $this->getMemberRelationTable();
 
-		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
 	 * Liste des personnes souhaitant se joindre (non validés)
 	 */
 	public function joiners() {
-		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->whereNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->whereNull('validated_by')->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
@@ -82,7 +82,7 @@ trait HasMembers
 	public function currentJoiners() {
 		$relatedTable = $this->getMemberRelationTable();
 
-		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')->withPivot('semester_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**

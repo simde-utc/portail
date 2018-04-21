@@ -17,6 +17,53 @@ class GroupController extends Controller
         $this->middleware(\Scopes::matchOne(['user-manage-groups']), ['only' => ['store', 'update', 'destroy']]);
     }
 
+	protected function getMember(Request $request, $member) {
+		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
+			$member->makeHidden('email');
+
+		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
+			$member->makeHidden(['last_login_at', 'created_at', 'updated_at']);
+
+		$member->pivot->makeHidden(['group_id', 'user_id']);
+
+		if ($member->pivot->semester_id === 0)
+			$member->pivot->makeHidden('semester_id');
+
+		if (is_null($member->pivot->role_id))
+			$member->pivot->makeHidden('role_id');
+
+		if (is_null($member->pivot->validated_by))
+			$member->pivot->makeHidden('validated_by');
+
+		return $member;
+	}
+
+	protected function hideMemberData(Request $request, $members) {
+		$toHide = [];
+
+		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
+			array_push($toHide, 'email');
+
+		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
+			array_push($toHide, 'last_login_at', 'created_at', 'updated_at');
+
+		$members->each(function ($member) use ($toHide) {
+			$member->makeHidden($toHide);
+			$member->pivot->makeHidden(['group_id', 'user_id']);
+
+			if ($member->pivot->semester_id === 0)
+				$member->pivot->makeHidden('semester_id');
+
+			if (is_null($member->pivot->role_id))
+				$member->pivot->makeHidden('role_id');
+
+			if (is_null($member->pivot->validated_by))
+				$member->pivot->makeHidden('validated_by');
+		});
+
+		return $members;
+	}
+
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +78,14 @@ class GroupController extends Controller
 			'currentMembers:id,lastname,firstname'
 		])->get();
 
-		return response()->json(\Auth::user() ? Visible::with($groups, \Auth::user()->id) : $groups, 200);
+		if (\Auth::user())
+		 	$groups = Visible::with($groups, \Auth::user()->id);
+
+		$groups->each(function ($group) use ($request) {
+			$this->hideMemberData($request, $group->currentMembers);
+		});
+
+		return response()->json($groups, 200);
     }
 
     /**
@@ -71,11 +125,15 @@ class GroupController extends Controller
 				}
 			}
 
-            return response()->json($group->with([
+			$group = $group->with([
 	            'owner:id,lastname,firstname',
 	            'visibility',
 				'currentMembers:id,lastname,firstname'
-			]), 201);
+			]);
+
+			$this->hideMemberData($request, $group->currentMembers);
+
+            return response()->json($group, 201);
         }
         else
             return response()->json(["message" => "Impossible de créer le groupe"], 500);
@@ -96,8 +154,14 @@ class GroupController extends Controller
             'currentMembers:id,firstname,lastname'])
             ->find($id);
 
-        if ($group)
-            return response()->json(\Auth::user() ? Visible::hide($group, \Auth::user()->id) : $group, 200);
+        if ($group) {
+			if (\Auth::user())
+			 	$group = Visible::with($group, \Auth::user()->id);
+
+			$this->hideMemberData($request, $group->currentMembers);
+
+			return response()->json($group, 200);
+		}
         else
             abort(404, "Groupe non trouvé");
     }
@@ -151,11 +215,15 @@ class GroupController extends Controller
 				}
 			}
 
-			return response()->json($group->with([
+			$group = $group->with([
 	            'owner:id,lastname,firstname',
 	            'visibility',
 				'currentMembers:id,lastname,firstname'
-			]), 200);
+			]);
+
+			$this->hideMemberData($request, $group->currentMembers);
+
+            return response()->json($group, 200);
 		}
         else
             return response()->json(["message" => "Impossible de modifier le groupe"], 500);
