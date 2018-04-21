@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 
 use App\Models\Group;
 use App\Http\Requests\GroupRequest;
-use App\Services\Visible\Visible;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
 

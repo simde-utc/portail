@@ -93,7 +93,12 @@ class User extends Authenticatable
     	return $this->belongsToMany('App\Models\Event');
     }
 
-	// Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification
+	/**
+	 * Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification
+	 *
+	 * @param string $username
+	 * @return null|Illuminate\Database\Eloquent\Model
+	 */
 	public function findForPassport($username) {
 		$providers = config('auth.services');
 

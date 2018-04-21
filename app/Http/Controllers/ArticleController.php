@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
+use App\Models\Article;
 use App\Models\Visibility;
 use App\Services\Visible\Visible;
-use Illuminate\Http\Request;
-use App\Models\Article;
 use App\Services\Visible\ArticleVisible;
 
 /**

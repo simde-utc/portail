@@ -7,14 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Visibility extends Model
 {
     protected $table = 'visibilities';
-
-    protected $fillable = [
-        'type', 'name', 'parent_id',
-    ];
-
-	protected $hidden = [
-		'created_at', 'updated_at',
-	];
+    protected $fillable = ['type', 'name', 'parent_id'];
+	protected $hidden = ['created_at', 'updated_at'];
 
 	public static function findByType($type) {
 		return static::where('type', $type)->first();

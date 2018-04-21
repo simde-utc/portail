@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Asso;
-use App\Http\Requests\AssoRequest;
 use Illuminate\Http\Request;
+use App\Http\Requests\AssoRequest;
+use App\Models\Asso;
 use App\Http\Controllers\Controller;
 
 /**
