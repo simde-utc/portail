@@ -16,16 +16,13 @@ trait HasVisibility
      * @return Illuminate\Database\Eloquent\Model
      */
     public function hide() {
-        if ($this->isVisible()) {
+        if (!$this->isVisible()) {
             $model = new static;
 
             // On ne renvoie pas l'id du modèle par sécurité, 
             // ainsi on ne peut plus accèder aux relations du modèle caché
-            $model->message = "Vous ne pouvez pas voir cela.";
+            $model->error = "Vous ne pouvez pas voir cela.";
             $model->visibility = $this->visibility;
-
-            // Debug
-            $model->visibility_id = $this->visibility_id;
             
             return $model;
         } else {
@@ -69,8 +66,6 @@ trait HasVisibility
     /**
      * Fonction permettant d'indiquer si la ressource peut-être visible ou non pour l'utilisateur actuel
      *
-     * @param Illuminate\Database\Eloquent\Collection $visibilities
-     * @param Illuminate\Database\Eloquent\Model $model
      * @return bool
      */
     public function isVisible() {

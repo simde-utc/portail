@@ -95,12 +95,9 @@ class GroupController extends Controller
             return $group->hide();
         });
 
-		if (\Auth::user())
-		  	$groups = Visible::with($groups, \Auth::user()->id);
-
-		$groups->each(function ($group) use ($request) {
-			$this->hideMemberData($request, $group->currentMembers);
-		});
+		// $groups->each(function ($group) use ($request) {
+		// 	$this->hideMemberData($request, $group->currentMembers);
+		// });
 
 		return response()->json($groups, 200);
     }

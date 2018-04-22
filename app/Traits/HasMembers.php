@@ -19,7 +19,7 @@ trait HasMembers
 	 * Méthode appelée au chargement du trait
 	 */
     public static function bootHasMembers() {
-		// Si on souhaite supprimer la ressources, on supprime les membres associés
+		// Si on souhaite supprimer la ressource, on supprime les membres associés
         static::deleting(function ($model) {
             if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
                 return;
