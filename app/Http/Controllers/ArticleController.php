@@ -23,11 +23,16 @@ class ArticleController extends Controller
 	 */
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOne(['client-get-articles-public', 'user-get-articles-followed-now', 'user-get-articles-done-now']),
+			\Scopes::matchOne(
+				['user-get-articles-followed-now', 'user-get-articles-done-now'],
+				['client-get-articles-public']
+			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(['user-manage-articles']),
+			\Scopes::matchOne(
+				['user-manage-articles']
+			),
 			['only' => ['store', 'update', 'destroy']]
 		);
 	}
