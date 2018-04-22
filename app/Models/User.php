@@ -42,7 +42,7 @@ class User extends Authenticatable
 	}
 
 	public function assos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_roles');
+		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->withPivot('semester_id', 'role_id', 'validated_by');
 	}
 
 	public function currentAssos() {
@@ -50,7 +50,7 @@ class User extends Authenticatable
 	}
 
 	public function joinedAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNotNull('validated_by')->whereNotNull('role_id');
+		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNotNull('validated_by')->whereNotNull('role_id')->withPivot('semester_id', 'role_id', 'validated_by');
 	}
 
 	public function currentJoinedAssos() {
@@ -58,7 +58,7 @@ class User extends Authenticatable
 	}
 
 	public function joiningAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNull('validated_by')->whereNotNull('role_id');
+		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNull('validated_by')->whereNotNull('role_id')->withPivot('semester_id', 'role_id', 'validated_by');
 	}
 
 	public function currentJoiningAssos() {
@@ -66,7 +66,7 @@ class User extends Authenticatable
 	}
 
 	public function followedAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNull('role_id');
+		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNull('role_id')->withPivot('semester_id', 'role_id', 'validated_by');
 	}
 
 	public function currentFollowedAssos() {

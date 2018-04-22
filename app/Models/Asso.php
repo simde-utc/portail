@@ -20,7 +20,7 @@ class Asso extends Model
 	];
 
 	public function type() {
-		return $this->belongsTo(AssoType::class);
+		return $this->belongsTo(AssoType::class, 'type_asso_id');
 	}
 
 	public function contact() {

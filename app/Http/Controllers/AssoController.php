@@ -28,6 +28,46 @@ class AssoController extends Controller
 			['only' => ['store', 'update', 'destroy']]);
 	}
 
+	protected function hideAssoData($asso) {
+		$asso->makeHidden('type_asso_id');
+		$asso->pivot->makeHidden(['user_id', 'asso_id']);
+
+		if ($asso->pivot->semester_id === 0)
+			$asso->pivot->makeHidden('semester_id');
+
+		if (is_null($asso->pivot->role_id))
+			$asso->pivot->makeHidden('role_id');
+
+		if (is_null($asso->pivot->validated_by))
+			$asso->pivot->makeHidden('validated_by');
+	}
+
+	protected function hideMemberData(Request $request, $members) {
+		$toHide = [];
+
+		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
+			array_push($toHide, 'email');
+
+		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
+			array_push($toHide, 'last_login_at', 'created_at', 'updated_at');
+
+		$members->each(function ($member) use ($toHide) {
+			$member->makeHidden($toHide);
+			$member->pivot->makeHidden(['group_id', 'user_id']);
+
+			if ($member->pivot->semester_id === 0)
+				$member->pivot->makeHidden('semester_id');
+
+			if (is_null($member->pivot->role_id))
+				$member->pivot->makeHidden('role_id');
+
+			if (is_null($member->pivot->validated_by))
+				$member->pivot->makeHidden('validated_by');
+		});
+
+		return $members;
+	}
+
 	/**
 	 * List Associations
 	 *
@@ -44,11 +84,11 @@ class AssoController extends Controller
 
 			if (\Scopes::has($request, 'user-get-assos-joined-now') && (in_array('joined', $choices) || in_array('joining', $choices))) {
 				if (in_array('joined', $choices) && in_array('joining', $choices))
-					$assos = $request->user()->assos();
+					$assos = $request->user()->assos()->with('type:id,name,description');
 				if (in_array('joined', $choices))
-					$assos = $request->user()->joinedAssos();
+					$assos = $request->user()->joinedAssos()->with('type:id,name,description');
 				else
-					$assos = $request->user()->joiningAssos();
+					$assos = $request->user()->joiningAssos()->with('type:id,name,description');
 
 				if (\Scopes::has($request, 'user-get-assos-joined')) {
 					$semester = Semester::find($request->input('semester_id'));
@@ -63,16 +103,19 @@ class AssoController extends Controller
 			if (\Scopes::has($request, 'user-get-assos-followed-now') && in_array('followed', $choices)) {
 				if (\Scopes::has($request, 'user-get-assos-followed')) {
 					$semester = Semester::find($request->input('semester_id'));
-					$addAssos = $request->user()->followedAssos();
+					$addAssos = $request->user()->followedAssos()->with('type:id,name,description');
 					$addAssos = $semester ? $addAssos->where('semester_id', $semester->id) : $addAssos;
 
 					$assos = $assos->merge($assos->get());
 				}
 				else if ($request->input('semester_id') === null)
-					$assos = $assos->merge($request->user()->currentFollowedAssos);
+					$assos = $assos->merge($request->user()->currentFollowedAssos()->with('type:id,name,description')->get());
 			}
 
 		}
+
+		foreach ($assos as $asso)
+			$this->hideAssoData($asso);
 
 		return response()->json($assos, 200);
 	}
