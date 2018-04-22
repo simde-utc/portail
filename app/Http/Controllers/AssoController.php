@@ -37,23 +37,30 @@ class AssoController extends Controller
 	public function index(Request $request) {
 		if (\Scopes::isUserToken($request)) {
 			$assos = collect();
+			$choices = $this->getChoices($request, ['joined', 'joining', 'followed']);
 
-			if ($request->input('semester_id') && !\Scopes::hasOne($request,  ['user-get-assos-joined', 'user-get-assos-followed']))
+			if ($request->input('semester_id') && !\Scopes::hasOne($request, ['user-get-assos-joined', 'user-get-assos-followed']))
 				throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes associés');
 
-			if (\Scopes::has($request, 'user-get-assos-joined-now')) {
+			if (\Scopes::has($request, 'user-get-assos-joined-now') && (in_array('joined', $choices) || in_array('joining', $choices))) {
+				if (in_array('joined', $choices) && in_array('joining', $choices))
+					$assos = $request->user()->assos();
+				if (in_array('joined', $choices))
+					$assos = $request->user()->joinedAssos();
+				else
+					$assos = $request->user()->joiningAssos();
+
 				if (\Scopes::has($request, 'user-get-assos-joined')) {
 					$semester = Semester::find($request->input('semester_id'));
-					$assos = $request->user()->joinedAssos();
 					$assos = $semester ? $assos->where('semester_id', $semester->id) : $assos;
 
 					$assos = $assos->get();
 				}
 				else if ($request->input('semester_id') === null)
-					$assos = $request->user()->currentJoinedAssos;
+					$assos = $assos->get();
 			}
 
-			if (\Scopes::has($request, 'user-get-assos-followed-now')) {
+			if (\Scopes::has($request, 'user-get-assos-followed-now') && in_array('followed', $choices)) {
 				if (\Scopes::has($request, 'user-get-assos-followed')) {
 					$semester = Semester::find($request->input('semester_id'));
 					$addAssos = $request->user()->followedAssos();

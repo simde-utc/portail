@@ -46,11 +46,11 @@ class User extends Authenticatable
 	}
 
 	public function currentAssos() {
-		return $this->assos()->where('semester_id', Semester::getThisSemester()->id);
+		return $this->assos()->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('role_id');
 	}
 
 	public function joinedAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNotNull('validated_by');
+		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNotNull('validated_by')->whereNotNull('role_id');
 	}
 
 	public function currentJoinedAssos() {
@@ -58,7 +58,7 @@ class User extends Authenticatable
 	}
 
 	public function joiningAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNull('validated_by');
+		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNull('validated_by')->whereNotNull('role_id');
 	}
 
 	public function currentJoiningAssos() {
