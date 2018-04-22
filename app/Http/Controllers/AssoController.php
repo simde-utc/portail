@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AssoRequest;
 use App\Models\Asso;
 use App\Http\Controllers\Controller;
+use App\Exceptions\PortailException;
 
 /**
  * @resource Association
@@ -15,7 +16,16 @@ use App\Http\Controllers\Controller;
 class AssoController extends Controller
 {
 	public function __construct() {
-		// $this->middleware('auth:api', ['except' => ['index', 'show']]);
+		$this->middleware(
+			\Scopes::matchOne(
+				['user-get-assos-joined-now', 'user-get-assos-followed-now']
+			),
+			['only' => ['index', 'show']]);
+		$this->middleware(
+			\Scopes::matchOne(
+				['user-get-assos-joined-now', 'user-get-assos-followed-now']
+			),
+			['only' => ['store', 'update', 'destroy']]);
 	}
 
 	/**
@@ -24,8 +34,40 @@ class AssoController extends Controller
 	 * Retourne la liste des associations
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index() {
-		return response()->json(Asso::get(), 200);
+	public function index(Request $request) {
+		if (\Scopes::isUserToken($request)) {
+			$assos = collect();
+
+			if ($request->input('semester_id') && !\Scopes::hasOne($request,  ['user-get-assos-joined', 'user-get-assos-followed']))
+				throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes associés');
+
+			if (\Scopes::has($request, 'user-get-assos-joined-now')) {
+				if (\Scopes::has($request, 'user-get-assos-joined')) {
+					$semester = Semester::find($request->input('semester_id'));
+					$assos = $request->user()->joinedAssos();
+					$assos = $semester ? $assos->where('semester_id', $semester->id) : $assos;
+
+					$assos = $assos->get();
+				}
+				else if ($request->input('semester_id') === null)
+					$assos = $request->user()->currentJoinedAssos;
+			}
+
+			if (\Scopes::has($request, 'user-get-assos-followed-now')) {
+				if (\Scopes::has($request, 'user-get-assos-followed')) {
+					$semester = Semester::find($request->input('semester_id'));
+					$addAssos = $request->user()->followedAssos();
+					$addAssos = $semester ? $addAssos->where('semester_id', $semester->id) : $addAssos;
+
+					$assos = $assos->merge($assos->get());
+				}
+				else if ($request->input('semester_id') === null)
+					$assos = $assos->merge($request->user()->currentFollowedAssos);
+			}
+
+		}
+
+		return response()->json($assos, 200);
 	}
 
 	/**

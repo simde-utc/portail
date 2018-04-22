@@ -27,7 +27,7 @@ return [
 		'manage' => [
 			'description' => 'Gérer les associations suivies et faites par l\'utilisateur',
 			'scopes' => [
-				'done' => [
+				'joined' => [
 					'description' => 'Gérer les associations faites par l\'utilisateur',
 					'scopes' => [
 						'now' => [
@@ -48,7 +48,7 @@ return [
 		'get' => [
 			'description' => 'Récupérer toutes les associations suivies et faites par l\'utilisateur',
 			'scopes' => [
-				'done' => [
+				'joined' => [
 					'description' => 'Récupérer toutes les associations faites par l\'utilisateur',
 					'scopes' => [
 						'now' => [
@@ -77,7 +77,7 @@ return [
 		'set' => [
 			'description' => 'Créer et modifier les associations suivies et faites par l\'utilisateur',
 			'scopes' => [
-				'done' => [
+				'joined' => [
 					'description' => 'Créer et modifier les associations faites par l\'utilisateur',
 					'scopes' => [
 						'now' => [
