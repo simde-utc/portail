@@ -199,7 +199,7 @@ trait HasRoles
         return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
     }
 
-	/** 
+	/**
 	 * Regarde si tous les roles parmi la liste existe ou non
 	 *
 	 * @param string|array|Illuminate\Database\Eloquent\Collection $members
@@ -244,13 +244,15 @@ trait HasRoles
 	 * @param int $user_id
 	 * @param int $semester_id
 	 */
-	public function getUserRoles(int $user_id = null, $semester_id = null) {
+	public function getUserRoles(int $user_id = null, int $semester_id = null) {
 		$semester_id = $semester_id ?? Semester::getThisSemester()->id;
 		$roles = $this->getUserAssignedRoles($user_id, $semester_id);
 
 		foreach ($roles as $role) {
-			foreach ($role->childs as $chilRole)
-				$roles->push($chilRole);
+			foreach ($role->childs as $childRole)
+				$roles->push($childRole);
+
+			$role->makeHidden('childs');
 		}
 
 		if ($this->getTable() !== 'users') {
