@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\AssoRequest;
 use App\Models\Asso;
+use App\Models\Semester;
 use App\Http\Controllers\Controller;
 use App\Exceptions\PortailException;
 
@@ -28,44 +29,23 @@ class AssoController extends Controller
 			['only' => ['store', 'update', 'destroy']]);
 	}
 
-	protected function hideAssoData($asso) {
+	protected function hideAssoData(Request $request, $asso) {
 		$asso->makeHidden('type_asso_id');
-		$asso->pivot->makeHidden(['user_id', 'asso_id']);
 
-		if ($asso->pivot->semester_id === 0)
-			$asso->pivot->makeHidden('semester_id');
+		if ($asso->pivot) {
+			$asso->pivot->makeHidden(['user_id', 'asso_id']);
 
-		if (is_null($asso->pivot->role_id))
-			$asso->pivot->makeHidden('role_id');
+			if ($asso->pivot->semester_id === 0)
+				$asso->pivot->makeHidden('semester_id');
 
-		if (is_null($asso->pivot->validated_by))
-			$asso->pivot->makeHidden('validated_by');
-	}
+			if (is_null($asso->pivot->role_id))
+				$asso->pivot->makeHidden('role_id');
 
-	protected function hideMemberData(Request $request, $members) {
-		$toHide = [];
+			if (is_null($asso->pivot->validated_by))
+				$asso->pivot->makeHidden('validated_by');
+		}
 
-		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
-			array_push($toHide, 'email');
-
-		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
-			array_push($toHide, 'last_login_at', 'created_at', 'updated_at');
-
-		$members->each(function ($member) use ($toHide) {
-			$member->makeHidden($toHide);
-			$member->pivot->makeHidden(['group_id', 'user_id']);
-
-			if ($member->pivot->semester_id === 0)
-				$member->pivot->makeHidden('semester_id');
-
-			if (is_null($member->pivot->role_id))
-				$member->pivot->makeHidden('role_id');
-
-			if (is_null($member->pivot->validated_by))
-				$member->pivot->makeHidden('validated_by');
-		});
-
-		return $members;
+		return $asso;
 	}
 
 	/**
@@ -79,43 +59,48 @@ class AssoController extends Controller
 			$assos = collect();
 			$choices = $this->getChoices($request, ['joined', 'joining', 'followed']);
 
-			if ($request->input('semester_id') && !\Scopes::hasOne($request, ['user-get-assos-joined', 'user-get-assos-followed']))
-				throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes associés');
+			if ($request->input('semester_id') && !\Scopes::hasOne($request, ['user-get-assos-joined', 'user-get-assos-joining', 'user-get-assos-followed']))
+				throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes user-get-assos-joined ou user-get-assos-joining ou user-get-assos-followeds');
 
-			if (\Scopes::has($request, 'user-get-assos-joined-now') && (in_array('joined', $choices) || in_array('joining', $choices))) {
-				if (in_array('joined', $choices) && in_array('joining', $choices))
-					$assos = $request->user()->assos()->with('type:id,name,description');
-				if (in_array('joined', $choices))
-					$assos = $request->user()->joinedAssos()->with('type:id,name,description');
-				else
-					$assos = $request->user()->joiningAssos()->with('type:id,name,description');
-
+			if (\Scopes::has($request, 'user-get-assos-joined-now') && in_array('joined', $choices)) {
 				if (\Scopes::has($request, 'user-get-assos-joined')) {
 					$semester = Semester::find($request->input('semester_id'));
-					$assos = $semester ? $assos->where('semester_id', $semester->id) : $assos;
+					$addAssos = $request->user()->joinedAssos();
+					$addAssos = $addAssos->where('semester_id', $semester ? $semester->id : Semester::getThisSemester()->id);
 
-					$assos = $assos->get();
+					$assos = $assos->merge($addAssos->with('type:id,name,description')->get());
 				}
-				else if ($request->input('semester_id') === null)
-					$assos = $assos->get();
+				else
+					$assos = $assos->merge($request->user()->currentJoinedAssos()->with('type:id,name,description')->get());
+			}
+
+			if (\Scopes::has($request, 'user-get-assos-joining-now') && in_array('joining', $choices)) {
+				if (\Scopes::has($request, 'user-get-assos-joining')) {
+					$semester = Semester::find($request->input('semester_id'));
+					$addAssos = $request->user()->joiningAssos();
+					$addAssos = $addAssos->where('semester_id', $semester ? $semester->id : Semester::getThisSemester()->id);
+
+					$assos = $assos->merge($addAssos->with('type:id,name,description')->get());
+				}
+				else
+					$assos = $assos->merge($request->user()->currentJoiningAssos()->with('type:id,name,description')->get());
 			}
 
 			if (\Scopes::has($request, 'user-get-assos-followed-now') && in_array('followed', $choices)) {
 				if (\Scopes::has($request, 'user-get-assos-followed')) {
 					$semester = Semester::find($request->input('semester_id'));
-					$addAssos = $request->user()->followedAssos()->with('type:id,name,description');
-					$addAssos = $semester ? $addAssos->where('semester_id', $semester->id) : $addAssos;
+					$addAssos = $request->user()->followedAssos();
+					$addAssos = $addAssos->where('semester_id', $semester ? $semester->id : Semester::getThisSemester()->id);
 
-					$assos = $assos->merge($assos->get());
+					$assos = $assos->merge($addAssos->with('type:id,name,description')->get());
 				}
-				else if ($request->input('semester_id') === null)
+				else
 					$assos = $assos->merge($request->user()->currentFollowedAssos()->with('type:id,name,description')->get());
 			}
-
 		}
 
 		foreach ($assos as $asso)
-			$this->hideAssoData($asso);
+			$this->hideAssoData($request, $asso);
 
 		return response()->json($assos, 200);
 	}
@@ -128,12 +113,7 @@ class AssoController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(AssoRequest $request) {
-		$asso = Asso::create($request->input());
 
-		if ($asso)
-			return response()->json($asso, 201);
-		else
-			return response()->json(['message' => 'Impossible de créer l\'association'], 500);
 	}
 
 	/**
@@ -143,11 +123,52 @@ class AssoController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($id) {
-		$asso = Asso::find($id);
+	public function show(Request $request, int $id) {
+		$asso = Asso::with('type:id,name,description')->find($id);
 
-		if ($asso)
-			return response()->json($asso, 200);
+		if ($asso) {
+			if (\Scopes::isUserToken($request)) {
+				$choices = $this->getChoices($request, ['joined', 'joining', 'followed']);
+
+				if ($request->input('semester_id') && !\Scopes::hasOne($request, ['user-get-assos-joined', 'user-get-assos-followed']))
+					throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes user-get-assos-joined ou user-get-assos-joining ou user-get-assos-followed');
+
+				$semester = Semester::find($request->input('semester_id'));
+				$users = $asso->membersAndFollowers()->wherePivot('semester_id', $semester ? $semester->id : Semester::getThisSemester()->id)->wherePivot('user_id', $request->user()->id)->get();
+				$userData = [];
+
+				if (\Scopes::has($request, 'user-get-assos-joined-now') && in_array('joined', $choices)) {
+					$userData['is_member'] = false;
+
+					foreach ($users as $user) {
+						if (!is_null($user->pivot->role_id) && !is_null($user->pivot->validated_by))
+							$userData['is_member'] = true;
+					}
+				}
+
+				if (\Scopes::has($request, 'user-get-assos-joining-now') && in_array('joining', $choices)) {
+					$userData['is_joining'] = false;
+
+					foreach ($users as $user) {
+						if (!is_null($user->pivot->role_id) && is_null($user->pivot->validated_by))
+							$userData['is_joining'] = true;
+					}
+				}
+
+				if (\Scopes::has($request, 'user-get-assos-followed-now') && in_array('followed', $choices)) {
+					$userData['is_follower'] = false;
+
+					foreach ($users as $user) {
+						if (is_null($user->pivot->role_id))
+							$userData['is_follower'] = true;
+					}
+				}
+
+				$asso->user = $userData;
+			}
+
+			return response()->json($this->hideAssoData($request, $asso), 200);
+		}
 		else
 			return response()->json(['message' => 'L\'asso demandée n\'a pas pu être trouvée'], 404);
 	}
