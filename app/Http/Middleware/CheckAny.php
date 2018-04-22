@@ -16,19 +16,19 @@ class CheckAny
      * @param  \Closure  $next
      * @return mixed
      */
-	 public function handle(\Illuminate\Http\Request $request, Closure $next)
+	 public function handle(\Illuminate\Http\Request $request, Closure $next, ...$args)
 	 {
 		// On vérifie que le token n'est pas lié à un utilisateur
 
-		if ($request->bearerToken() === null) {
+		if ($request->bearerToken() !== null) {
 			$bearerToken = $request->bearerToken();
 			$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
 			$token = Token::find($tokenId);
 
-			if ($token === null || $token->user_id !== null)
-				return app(\App\Http\Middleware\CheckClient::class)->handle($request, $next);
+			if ($token !== null && $token->user_id === null)
+				return app(\App\Http\Middleware\CheckClient::class)->handle($request, $next, $args);
 		}
-		else
-			return app(\Illuminate\Auth\Middleware\Authenticate::class)->handle($request, $next, 'api');
+
+		return app(\App\Http\Middleware\CheckUser::class)->handle($request, $next, $args);
     }
 }

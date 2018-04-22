@@ -53,19 +53,18 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+		'auth.any' => \App\Http\Middleware\CheckAny::class,
+		'auth.user' => \App\Http\Middleware\CheckUser::class,
+		'auth.client' => \App\Http\Middleware\CheckClient::class,
+		'auth.check' => \App\Http\Middleware\CheckAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-		'auth.any' => \App\Http\Middleware\CheckAny::class,
-		'auth.client' => \App\Http\Middleware\CheckClient::class,
-		'auth.check' => \App\Http\Middleware\CheckAuth::class,
-		'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
 		'admin' => \App\Http\Middleware\IsAdmin::class,
 		'checkPassport' => \App\Http\Middleware\CheckPassport::class,
 		'linkTokenToSession' => \App\Http\Middleware\LinkTokenToSession::class,
 		'forceJson' => \App\Http\Middleware\ForceJson::class,
-		//'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class, // Inutile car géré par notre service Scopes
     ];
 }
