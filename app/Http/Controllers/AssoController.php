@@ -73,15 +73,15 @@ class AssoController extends Controller
 		if (\Scopes::isUserToken($request)) {
 			$assos = collect();
 			$choices = $this->getChoices($request, ['joined', 'joining', 'followed']);
+			$semester = Semester::getSemester($request->input('semester')) ?? Semester::getThisSemester();
 
 			if ($request->input('semester') && !\Scopes::hasOne($request, ['user-get-assos-joined', 'user-get-assos-joining', 'user-get-assos-followed']))
 				throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes user-get-assos-joined ou user-get-assos-joining ou user-get-assos-followeds');
 
 			if (\Scopes::has($request, 'user-get-assos-joined-now') && in_array('joined', $choices)) {
 				if (\Scopes::has($request, 'user-get-assos-joined')) {
-					$semester = Semester::getSemester($request->input('semester'));
 					$addAssos = $request->user()->joinedAssos();
-					$addAssos = $addAssos->where('semester_id', $semester ? $semester->id : Semester::getThisSemester()->id);
+					$addAssos = $addAssos->where('semester_id', $semester->id);
 
 					$assos = $assos->merge($addAssos->with('type:id,name,description')->get());
 				}
@@ -91,9 +91,8 @@ class AssoController extends Controller
 
 			if (\Scopes::has($request, 'user-get-assos-joining-now') && in_array('joining', $choices)) {
 				if (\Scopes::has($request, 'user-get-assos-joining')) {
-					$semester = Semester::getSemester($request->input('semester'));
 					$addAssos = $request->user()->joiningAssos();
-					$addAssos = $addAssos->where('semester_id', $semester ? $semester->id : Semester::getThisSemester()->id);
+					$addAssos = $addAssos->where('semester_id', $semester->id);
 
 					$assos = $assos->merge($addAssos->with('type:id,name,description')->get());
 				}
@@ -103,9 +102,8 @@ class AssoController extends Controller
 
 			if (\Scopes::has($request, 'user-get-assos-followed-now') && in_array('followed', $choices)) {
 				if (\Scopes::has($request, 'user-get-assos-followed')) {
-					$semester = Semester::getSemester($request->input('semester'));
 					$addAssos = $request->user()->followedAssos();
-					$addAssos = $addAssos->where('semester_id', $semester ? $semester->id : Semester::getThisSemester()->id);
+					$addAssos = $addAssos->where('semester_id', $semester->id);
 
 					$assos = $assos->merge($addAssos->with('type:id,name,description')->get());
 				}

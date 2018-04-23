@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use App\Exceptions\PortailException;
 
 class Controller extends BaseController
 {
@@ -21,6 +22,9 @@ class Controller extends BaseController
 	protected function getChoices(Request $request, array $choices) {
 		$only = $request->input('only') ? explode(',', $request->input('only')) : [];
 		$except = $request->input('except') ? explode(',', $request->input('except')) : [];
+
+		if (count(array_intersect($only, $choices)) !== count($only) || count(array_intersect($except, $choices)) !== count($except))
+			throw new PortailException('Il n\'est possible de spécifier pour only et except que: '.implode(', ', $choices));
 
 		if (count($only) > 0)
 			$choices = $only;

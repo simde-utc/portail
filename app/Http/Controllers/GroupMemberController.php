@@ -38,55 +38,15 @@ class GroupMemberController extends Controller
 			}
 		}
 
-		// Retourne null si le groupe n'existe pas ou n'est pas accessible par la personne
 		abort(404, "Groupe non trouvé");
 	}
 
-	protected function hideMemberData(Request $request, $member) {
-		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
-			$member->makeHidden('email');
-
-		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
-			$member->makeHidden(['last_login_at', 'created_at', 'updated_at']);
-
-		$member->pivot->makeHidden(['group_id', 'user_id']);
-
-		if ($member->pivot->semester_id === 0)
-			$member->pivot->makeHidden('semester_id');
-
-		if (is_null($member->pivot->role_id))
-			$member->pivot->makeHidden('role_id');
-
-		if (is_null($member->pivot->validated_by))
-			$member->pivot->makeHidden('validated_by');
-
-		return $member;
+	protected function hideUsersData(Request $request, $users, bool $hidePivot = false) {
+		return parent::hideUsersData($request, $users, $hidePivot);
 	}
 
-	protected function hideMembersData(Request $request, $members) {
-		$toHide = [];
-
-		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
-			array_push($toHide, 'email');
-
-		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
-			array_push($toHide, 'last_login_at', 'created_at', 'updated_at');
-
-		$members->each(function ($member) use ($toHide) {
-			$member->makeHidden($toHide);
-			$member->pivot->makeHidden(['group_id', 'user_id']);
-
-			if ($member->pivot->semester_id === 0)
-				$member->pivot->makeHidden('semester_id');
-
-			if (is_null($member->pivot->role_id))
-				$member->pivot->makeHidden('role_id');
-
-			if (is_null($member->pivot->validated_by))
-				$member->pivot->makeHidden('validated_by');
-		});
-
-		return $members;
+	protected function hideUserData(Request $request, $user, bool $hidePivot = false) {
+		return parent::hideUserData($request, $user, $hidePivot);
 	}
 
     /**
@@ -96,7 +56,7 @@ class GroupMemberController extends Controller
      */
     public function index(Request $request, int $group_id)
     {
-		return response()->json($this->hideMembersData($request, $this->getGroup($request, $group_id)->currentMembersAndJoiners));
+		return response()->json($this->hideUsersData($request, $this->getGroup($request, $group_id)->currentMembersAndJoiners));
     }
 
     /**
@@ -129,7 +89,7 @@ class GroupMemberController extends Controller
 			return response()->json(["message" => $e->getMessage()], 400);
 		}
 
-		return response()->json($this->hideMembersData($request, $group->currentMembersAndJoiners));
+		return response()->json($this->hideUsersData($request, $group->currentMembersAndJoiners));
     }
 
     /**
@@ -144,7 +104,7 @@ class GroupMemberController extends Controller
 		$member = $group->currentMembersAndJoiners->where('id', $member_id)->first();
 
 		if ($member)
-			return response()->json($this->hideMemberData($request, $member));
+			return response()->json($this->hideUserData($request, $member));
 		else
 			abort(404, 'Cette personne ne fait pas partie du groupe');
     }
@@ -184,7 +144,7 @@ class GroupMemberController extends Controller
 				return response()->json(["message" => $e->getMessage()], 400);
 			}
 
-			return response()->json($this->hideMemberData($request, $group->currentMembersAndJoiners()->where('user_id', $member_id)->first()));
+			return response()->json($this->hideUserData($request, $group->currentMembersAndJoiners()->where('user_id', $member_id)->first()));
 		}
 		else
 			abort(404, 'Cette personne ne fait pas partie du groupe');
@@ -212,7 +172,7 @@ class GroupMemberController extends Controller
 				return response()->json(["message" => $e->getMessage()], 400);
 			}
 
-			return response()->json($this->hideMemberData($request, $this->getGroup($request, $group_id)->currentMembersAndJoiners));
+			return response()->json($this->hideUserData($request, $this->getGroup($request, $group_id)->currentMembersAndJoiners));
 		}
 		else
 			abort(404, 'Cette personne ne faisait déjà pas partie du groupe');

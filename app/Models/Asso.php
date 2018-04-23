@@ -11,6 +11,8 @@ class Asso extends Model
 	use SoftDeletes, HasMembers {
 		HasMembers::members as membersAndFollowers;
 		HasMembers::currentMembers as currentMembersAndFollowers;
+		HasMembers::joiners as protected joinersFromHasMembers;
+		HasMembers::currentJoiners as currentJoinersFromHasMembers;
 		HasMembers::getUserRoles as getUsersRolesInThisAssociation;
 	}
 
@@ -62,6 +64,14 @@ class Asso extends Model
 
 	public function currentMembers() {
 		return $this->currentMembersAndFollowers()->wherePivot('role_id', '!=', null);
+	}
+
+	public function joiners() {
+		return $this->joinersFromHasMembers()->wherePivot('role_id', '!=', null);
+	}
+
+	public function currentJoiners() {
+		return $this->currentJoinersFromHasMembers()->wherePivot('role_id', '!=', null);
 	}
 
 	public function followers() {

@@ -48,9 +48,7 @@ trait HasMembers
 	 * Liste des membres de ce semestre ou d'aucun semestre (validés par une personne)
 	 */
 	public function currentMembersAndJoiners() {
-		$relatedTable = $this->getMemberRelationTable();
-
-		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
@@ -64,9 +62,7 @@ trait HasMembers
 	 * Liste des membres de ce semestre ou d'aucun semestre (validés par une personne)
 	 */
 	public function currentMembers() {
-		$relatedTable = $this->getMemberRelationTable();
-
-		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
@@ -80,9 +76,7 @@ trait HasMembers
 	 * Liste des personnes souhaitant se joindre ce semestre ou d'aucun semestre (non validés)
 	 */
 	public function currentJoiners() {
-		$relatedTable = $this->getMemberRelationTable();
-
-		return $this->belongsToMany(User::class, $relatedTable)->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
+		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
