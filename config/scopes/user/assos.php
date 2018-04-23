@@ -119,5 +119,34 @@ return [
 				],
 			]
 		],
+		'create' => [
+			'description' => 'Ajouter des associations suivies et faites par l\'utilisateur',
+			'scopes' => [
+				'joined' => [
+					'description' => 'Ajouter des associations faites par l\'utilisateur',
+					'scopes' => [
+						'now' => [
+							'description' => 'Ajouter des associations faites par l\'utilisateur durant l\'actuel semestre',
+						],
+					]
+				],
+				'joining' => [
+					'description' => 'Ajouter des associations que l\'utilisateur souhaite rejoindre',
+					'scopes' => [
+						'now' => [
+							'description' => 'Ajouter des associations que l\'utilisateur souhaite rejoindre durant l\'actuel semestre',
+						],
+					]
+				],
+				'followed' => [
+					'description' => 'Ajouter des associations suivies par l\'utilisateur',
+					'scopes' => [
+						'now' => [
+							'description' => 'Ajouter des associations suivies par l\'utilisateur durant l\'actuel semestre',
+						],
+					]
+				],
+			]
+		],
 	]
 ];
