@@ -15,7 +15,8 @@
 
 
 // Liste des Scopes
-Route::get('scopes', '\App\Services\Scopes@getAllByCategories');
+Route::get('scopes', '\App\Services\Scopes@all');
+Route::get('scopes/categories', '\App\Services\Scopes@getAllByCategories');
 
 // Clients
 Route::get('clients', '\App\Http\Controllers\Passport\ClientController@forUser')
