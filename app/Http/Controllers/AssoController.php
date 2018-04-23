@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AssoRequest;
 use App\Models\Asso;
 use App\Models\Semester;
+use App\Models\Role;
 use App\Http\Controllers\Controller;
 use App\Exceptions\PortailException;
 
@@ -21,12 +22,20 @@ class AssoController extends Controller
 			\Scopes::matchOne(
 				['user-get-assos-joined-now', 'user-get-assos-followed-now']
 			),
-			['only' => ['index', 'show']]);
+			['only' => ['index', 'show']]
+		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-get-assos-joined-now', 'user-get-assos-followed-now']
+				['user-set-assos']
 			),
-			['only' => ['store', 'update', 'destroy']]);
+			['only' => ['store', 'update']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				['user-manage-assos']
+			),
+			['only' => ['destroy']]
+		);
 	}
 
 	protected function hideAssoData(Request $request, $asso) {
@@ -113,7 +122,24 @@ class AssoController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(AssoRequest $request) {
+		$asso = Asso::create($request->input());
 
+		// On vérifie la création
+		if ($asso) {
+			// Après la création, on ajoute son président (non confirmé évidemment)
+			$asso->assignRoles('president', [
+				'user_id' => $request->input('user_id'),
+			]);
+
+			// On met l'asso en état inactif
+			$asso->delete();
+
+			// TODO: Envoyer un mail de confirmation et de demande de confirmation par les assos parents
+
+			return response()->json($asso, 201);
+		}
+		else
+			abort(500, 'L\'asso n\'as pas pu être créée');
 	}
 
 	/**
@@ -170,7 +196,7 @@ class AssoController extends Controller
 			return response()->json($this->hideAssoData($request, $asso), 200);
 		}
 		else
-			return response()->json(['message' => 'L\'asso demandée n\'a pas pu être trouvée'], 404);
+			abort(404, 'L\'asso demandée n\'a pas pu être trouvée');
 	}
 
 	/**
@@ -185,13 +211,23 @@ class AssoController extends Controller
 		$asso = Asso::find($id);
 
 		if ($asso) {
-			if ($asso->update($request->input()))
-				return response()->json($asso, 201);
+			if (!$asso->hasOneRole('resp communication', ['user_id' => \Auth::user()->id]) && !\Auth::user()->hasOneRole('admin'))
+				abort(403, 'Il est nécessaire de posséder les droits pour pouvoir supprimer cette association');
+
+			if ($asso->update($request->input())) {
+				if ($request->input('validate')) {
+					$asso->updateRoles($request->input('validate'), [], [
+						'validated_by' => \Auth::user()->id,
+					]);
+				}
+
+				return response()->json($asso, 200);
+			}
 			else
-				return response()->json(['message' => 'L\'association n\'a pas pu être modifiée'], 500);
+				abort(500, 'L\'association n\'a pas pu être modifiée');
 		}
 		else
-			return response()->json(['message' => 'L\'association demandée n\'a pas été trouvée'], 404);
+			abort(404, 'L\'association demandée n\'a pas été trouvée');
 	}
 
 	/**
@@ -201,16 +237,22 @@ class AssoController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($id) {
+	public function destroy(Request $request, $id) {
 		$asso = Asso::find($id);
 
 		if ($asso) {
-			if ($asso->destroy())
-				return response()->json(['message' => 'L\'assocition a bien été supprimée'], 200);
+			if ($asso->childs()->count() > 0)
+				abort(400, 'Il n\'est pas possible de supprimer une association parente');
+
+			if (!\Auth::user()->hasOneRole('admin'))
+				abort(403, 'Il est nécessaire de posséder les droits admin pour pouvoir supprimer cette association');
+
+			if ($asso->delete())
+				abort(200, 'L\'assocition a bien été supprimée');
 			else
-				return response()->json(['message' => 'L\'association n\'a pas pu être supprimée'], 500);
+				abort(500, 'L\'association n\'a pas pu être supprimée');
 		}
 		else
-			return response()->json(['message' => 'L\'association demandée n\'a pas pu être trouvée'], 404);
+			abort(404, 'L\'association demandée n\'a pas pu être trouvée');
 	}
 }

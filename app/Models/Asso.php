@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\Traits\HasMembers;
 
 class Asso extends Model
 {
-	use HasMembers {
+	use SoftDeletes, HasMembers {
 		HasMembers::members as membersAndFollowers;
 		HasMembers::currentMembers as currentMembersAndFollowers;
 		HasMembers::getUserRoles as getUsersRolesInThisAssociation;
@@ -16,7 +17,7 @@ class Asso extends Model
 	protected $memberRelationTable = 'assos_roles';
 
 	protected $fillable = [
-		'name', 'login', 'description', 'type_asso_id', 'parent_id',
+		'name', 'shortname', 'login', 'description', 'type_asso_id', 'parent_id',
 	];
 
 	public function type() {
@@ -49,6 +50,10 @@ class Asso extends Model
 
 	public function parent() {
 	    return $this->hasOne(Asso::class, 'parent_id');
+    }
+
+	public function childs() {
+	    return static::where('parent_id', $this->id);
     }
 
 	public function members() {

@@ -117,7 +117,7 @@ trait HasRoles
 
 		foreach ($data as $key => $value)
 			$toUpdate->wherePivot($key, $value);
-
+			
 		try {
 			foreach ($updatedRoles as $updatedRole)
 				$toUpdate->updateExistingPivot($updatedRole, $updatedData);
@@ -255,7 +255,7 @@ trait HasRoles
 			$role->makeHidden('childs');
 		}
 
-		if ($this->getTable() !== 'users') {
+		if ($this->getTable() !== 'users' && $user_id) {
 			foreach (User::find($user_id)->getUserRoles(null, $semester_id) as $userRole)
 				$roles->push($userRole);
 		}

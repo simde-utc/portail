@@ -17,7 +17,7 @@ class CreateAssosTable extends Migration
 			$table->increments('id');
 			$table->string('login', validation_max('login'))->unique();
 			$table->string('shortname', validation_max('login'))->unique();
-			$table->string('name', validation_max('name'));
+			$table->string('name', validation_max('name'))->unique();
 			$table->text('description', validation_max('description'));
 			$table->integer('type_asso_id')->unsigned();
 			$table->foreign('type_asso_id')->references('id')->on('assos_types');
