@@ -156,7 +156,7 @@ class AssoController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show(Request $request, int $id) {
-		$asso = Asso::with('type:id,name,description')->find($id);
+		$asso = Asso::with('type:id,name,description')->withTrashed()->find($id);
 
 		if ($asso) {
 			if (\Scopes::isUserToken($request)) {
@@ -214,11 +214,18 @@ class AssoController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(AssoRequest $request, $id) {
-		$asso = Asso::find($id);
+		$asso = Asso::withTrashed()->find($id);
 
 		if ($asso) {
 			if (!$asso->hasOneRole('resp communication', ['user_id' => \Auth::user()->id]) && !\Auth::user()->hasOneRole('admin'))
 				abort(403, 'Il est nécessaire de posséder les droits pour pouvoir supprimer cette association');
+
+			if ($request->input('restore', 0) == 1) {
+				if (!\Auth::user()->hasOneRole('admin'))
+					abort(403, 'Il est nécessaire de posséder les droits admin pour pouvoir restaurer cette association');
+
+				$asso->restore();
+			}
 
 			if ($asso->update($request->input())) {
 				if ($request->input('validate')) {
