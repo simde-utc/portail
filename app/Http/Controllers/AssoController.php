@@ -18,6 +18,7 @@ use App\Exceptions\PortailException;
 class AssoController extends Controller
 {
 	public function __construct() {
+
 		$this->middleware(
 			\Scopes::matchOne(
 				['user-get-assos-joined-now', 'user-get-assos-followed-now']
@@ -25,8 +26,12 @@ class AssoController extends Controller
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(
-				['user-create-assos']
+			array_merge(
+				\Scopes::matchOne(
+					['user-create-assos']
+				), [
+					'admin',
+				]
 			),
 			['only' => ['store']]
 		);
@@ -37,8 +42,12 @@ class AssoController extends Controller
 			['only' => ['update']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(
-				['user-manage-assos']
+			array_merge(
+				\Scopes::matchOne(
+					['user-remove-assos']
+				), [
+					'admin',
+				]
 			),
 			['only' => ['destroy']]
 		);

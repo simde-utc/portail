@@ -148,5 +148,34 @@ return [
 				],
 			]
 		],
+		'remove' => [
+			'description' => 'Supprimer des associations suivies et faites par l\'utilisateur',
+			'scopes' => [
+				'joined' => [
+					'description' => 'Supprimer des associations faites par l\'utilisateur',
+					'scopes' => [
+						'now' => [
+							'description' => 'Supprimer des associations faites par l\'utilisateur durant l\'actuel semestre',
+						],
+					]
+				],
+				'joining' => [
+					'description' => 'Supprimer des associations que l\'utilisateur souhaite rejoindre',
+					'scopes' => [
+						'now' => [
+							'description' => 'Supprimer des associations que l\'utilisateur souhaite rejoindre durant l\'actuel semestre',
+						],
+					]
+				],
+				'followed' => [
+					'description' => 'Supprimer des associations suivies par l\'utilisateur',
+					'scopes' => [
+						'now' => [
+							'description' => 'Supprimer des associations suivies par l\'utilisateur durant l\'actuel semestre',
+						],
+					]
+				],
+			]
+		],
 	]
 ];
