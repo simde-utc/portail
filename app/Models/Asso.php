@@ -107,4 +107,29 @@ class Asso extends Model
 	public function getLastUserWithRole($role) {
 		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
 	}
+
+	public static function getStage(int $stage) {
+		$assos = static::whereNull('parent_id')->with('type:id,name,description')->get();
+
+		for ($i = 0; $i < $stage; $i++) {
+			$before = $assos;
+			$assos = collect();
+
+			foreach ($before as $asso)
+				$assos = $assos->merge($asso->childs()->with('type:id,name,description')->get());
+		}
+
+		return $assos;
+	}
+
+	public static function getFromStage(int $stage) {
+		$assos = static::whereNull('parent_id')->with('type:id,name,description')->get();
+
+		for ($i = 0; $i < $stage; $i++) {
+			foreach ($assos as $asso)
+				$assos = $assos->merge($asso->childs()->with('type:id,name,description')->get());
+		}
+
+		return $assos;
+	}
 }
