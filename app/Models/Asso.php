@@ -108,26 +108,53 @@ class Asso extends Model
 		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
 	}
 
-	public static function getStage(int $stage) {
-		$assos = static::whereNull('parent_id')->with('type:id,name,description')->get();
+	public static function getStage(int $stage, int $type_asso_id = null) {
+		$assos = static::whereNull('parent_id')->with('type:id,name,description');
+
+		if (!is_null($type_asso_id))
+			$assos = $assos->where('type_asso_id', $type_asso_id);
+
+		$assos = $assos->get();
 
 		for ($i = 0; $i < $stage; $i++) {
 			$before = $assos;
 			$assos = collect();
 
-			foreach ($before as $asso)
-				$assos = $assos->merge($asso->childs()->with('type:id,name,description')->get());
+			foreach ($before as $asso) {
+				$childs = $asso->childs()->with('type:id,name,description');
+
+				if (!is_null($childs))
+					$childs = $childs->where('type_asso_id', $type_asso_id);
+
+				$assos = $assos->merge($childs->get());
+			}
 		}
 
 		return $assos;
 	}
 
-	public static function getFromStage(int $stage) {
-		$assos = static::whereNull('parent_id')->with('type:id,name,description')->get();
+	public static function getFromStage(int $stage, int $type_asso_id = null) {
+		$assos = static::whereNull('parent_id')->with('type:id,name,description');
+
+		if (!is_null($type_asso_id))
+			$assos = $assos->where('type_asso_id', $type_asso_id);
+
+		$assos = $assos->get();
+		$toAdd = $assos;
 
 		for ($i = 0; $i < $stage; $i++) {
-			foreach ($assos as $asso)
-				$assos = $assos->merge($asso->childs()->with('type:id,name,description')->get());
+			$toAddChilds = $toAdd;
+			$toAdd = collect();
+
+			foreach ($toAddChilds as $asso) {
+				$childs = $asso->childs()->with('type:id,name,description');
+
+				if (!is_null($type_asso_id))
+					$childs = $childs->where('type_asso_id', $type_asso_id);
+
+				$asso->sub = $childs->get();
+				$toAdd = $toAdd->merge($asso->sub);
+			}
 		}
 
 		return $assos;

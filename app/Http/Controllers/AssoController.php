@@ -18,7 +18,6 @@ use App\Exceptions\PortailException;
 class AssoController extends Controller
 {
 	public function __construct() {
-
 		$this->middleware(
 			\Scopes::matchOne(
 				['user-get-assos-joined-now', 'user-get-assos-followed-now']
@@ -69,6 +68,11 @@ class AssoController extends Controller
 				$asso->pivot->makeHidden('validated_by');
 		}
 
+		if ($asso->sub) {
+			foreach ($asso->sub as $sub)
+				$this->hideAssoData($request, $sub);
+		}
+
 		return $asso;
 	}
 
@@ -78,8 +82,14 @@ class AssoController extends Controller
 	 * Retourne la liste des associations
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index(Request $request) {
-		if (\Scopes::isUserToken($request)) {
+	public function index(AssoRequest $request) {
+		if (isset($request['stage']) || isset($request['fromStage'])) {
+			$assos = isset($request['stage']) ? Asso::getStage($request->stage, $request->type_asso_id) : Asso::getFromStage($request->fromStage, $request->type_asso_id);
+		}
+		else if (\Scopes::isClientToken($request) || isset($request['all'])) {
+			$assos = Asso::with('type:id,name,description')->get();
+		}
+		else {
 			$assos = collect();
 			$choices = $this->getChoices($request, ['joined', 'joining', 'followed']);
 			$semester = Semester::getSemester($request->input('semester')) ?? Semester::getThisSemester();
