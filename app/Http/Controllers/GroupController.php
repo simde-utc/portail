@@ -67,7 +67,7 @@ class GroupController extends Controller
     public function store(GroupRequest $request)
     {
         $group = new Group;
-        $group->user_id = \Auth::user()->id;
+        $group->user_id = \Auth::id();
         $group->name = $request->name;
         $group->icon = $request->icon;
         $group->visibility_id = $request->visibility_id ?? Visibility::findByType('owner')->id;
@@ -124,7 +124,7 @@ class GroupController extends Controller
 
         if ($group) {
 			if (\Auth::user())
-			 	$group = Visible::with($group, \Auth::user()->id);
+			 	$group = Visible::with($group, \Auth::id());
 
 			$this->hideUserData($request, $group->owner);
 
@@ -177,7 +177,7 @@ class GroupController extends Controller
 				}
 
 				try {
-					$group->syncMembers(array_merge($request->member_ids, [\Auth::user()->id]), $data, \Auth::user()->id);
+					$group->syncMembers(array_merge($request->member_ids, [\Auth::id()]), $data, \Auth::id());
 				} catch (PortailException $e) {
 					return response()->json(["message" => $e->getMessage()], 400);
 				}

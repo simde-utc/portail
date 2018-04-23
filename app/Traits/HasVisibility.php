@@ -52,7 +52,7 @@ trait HasVisibility
 
             $type = 'is'.ucfirst($visibility->type);
 
-            if (method_exists(get_class(), $type) && self::$type(null, Auth::user()->id))
+            if (method_exists(get_class(), $type) && self::$type(null, Auth::id()))
                 $result = $visibility->type;
             else
                 break;
@@ -93,7 +93,7 @@ trait HasVisibility
 
             $type = 'is'.ucfirst($visibility->type);
 
-            if (method_exists(get_class(), $type) && $this->$type(Auth::user()->id))
+            if (method_exists(get_class(), $type) && $this->$type(Auth::id()))
                 return true;
 
             $visibility_id = $visibility->parent_id;

@@ -30,9 +30,9 @@ class GroupMemberController extends Controller
 		$group = Group::find($group_id);
 
 		if ($group) {
-			if ($group->user_id === \Auth::user()->id)
+			if ($group->user_id === \Auth::id())
 				return $group;
-			else if ($group->hasOneMember(\Auth::user()->id)) {
+			else if ($group->hasOneMember(\Auth::id())) {
 				if ($group->visibility_id <= Visibility::findByType('private')->id)
 					return $group;
 			}
@@ -56,7 +56,7 @@ class GroupMemberController extends Controller
      */
     public function index(Request $request, int $group_id)
     {
-		return response()->json($this->hideUsersData($request, $this->getGroup($request, $group_id)->currentMembersAndJoiners));
+		return response()->json($this->hideUsersData($request, $this->getGroup($request, $group_id)->currentAllMembers));
     }
 
     /**
@@ -73,7 +73,7 @@ class GroupMemberController extends Controller
 			$data = [
 				'semester_id' => $request->input('semester_id', 0),
 				'role_id' => $request->input('role_id', null),
-				'validated_by' => \Auth::user()->id,
+				'validated_by' => \Auth::id(),
 			];
 		else {
 			$data = [
@@ -89,7 +89,7 @@ class GroupMemberController extends Controller
 			return response()->json(["message" => $e->getMessage()], 400);
 		}
 
-		return response()->json($this->hideUsersData($request, $group->currentMembersAndJoiners));
+		return response()->json($this->hideUsersData($request, $group->currentAllMembers));
     }
 
     /**
@@ -101,7 +101,7 @@ class GroupMemberController extends Controller
     public function show(Request $request, int $group_id, int $member_id)
     {
 		$group = $this->getGroup($request, $group_id);
-		$member = $group->currentMembersAndJoiners->where('id', $member_id)->first();
+		$member = $group->currentAllMembers()->where('id', $member_id)->first();
 
 		if ($member)
 			return response()->json($this->hideUserData($request, $member));
@@ -119,10 +119,10 @@ class GroupMemberController extends Controller
     public function update(Request $request, int $group_id, int $member_id)
     {
 		$group = $this->getGroup($request, $group_id);
-		$member = $group->currentMembersAndJoiners->where('id', $member_id)->first();
+		$member = $group->currentAllMembers->where('id', $member_id)->first();
 
 		if ($member) {
-			if ($member_id === \Auth::user()->id)
+			if ($member_id === \Auth::id())
 				$data = [
 					'semester_id' => $request->input('semester_id', $member->pivot->semester_id),
 					'role_id' => $request->input('role_id', $member->pivot->role_id),
@@ -144,7 +144,7 @@ class GroupMemberController extends Controller
 				return response()->json(["message" => $e->getMessage()], 400);
 			}
 
-			return response()->json($this->hideUserData($request, $group->currentMembersAndJoiners()->where('user_id', $member_id)->first()));
+			return response()->json($this->hideUserData($request, $group->currentAllMembers()->where('user_id', $member_id)->first()));
 		}
 		else
 			abort(404, 'Cette personne ne fait pas partie du groupe');
@@ -159,7 +159,7 @@ class GroupMemberController extends Controller
     public function destroy(Request $request, int $group_id, int $member_id)
     {
 		$group = $this->getGroup($request, $group_id);
-		$member = $group->currentMembersAndJoiners->where('id', $member_id)->first();
+		$member = $group->currentAllMembers->where('id', $member_id)->first();
 
 		if ($member) {
 			$data = [
@@ -167,12 +167,12 @@ class GroupMemberController extends Controller
 			];
 
 			try {
-				$group->removeMembers($member_id, $data, \Auth::user()->id);
+				$group->removeMembers($member_id, $data, \Auth::id());
 			} catch (PortailException $e) {
 				return response()->json(["message" => $e->getMessage()], 400);
 			}
 
-			return response()->json($this->hideUserData($request, $this->getGroup($request, $group_id)->currentMembersAndJoiners));
+			return response()->json($this->hideUserData($request, $this->getGroup($request, $group_id)->currentAllMembers));
 		}
 		else
 			abort(404, 'Cette personne ne faisait déjà pas partie du groupe');

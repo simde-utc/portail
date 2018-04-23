@@ -40,14 +40,14 @@ trait HasMembers
 	/**
 	 * Liste des membres (validés par une personne)
 	 */
-	public function membersAndJoiners() {
+	public function allMembers() {
 		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
 	/**
 	 * Liste des membres de ce semestre ou d'aucun semestre (validés par une personne)
 	 */
-	public function currentMembersAndJoiners() {
+	public function currentAllMembers() {
 		return $this->belongsToMany(User::class, $this->getMemberRelationTable())->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
 	}
 
@@ -112,11 +112,6 @@ trait HasMembers
 				if ($this->roles()->wherePivot('role_id', $data['role_id'])->whereNotIn($this->getMemberRelationTable().'.user_id', $members->pluck('id'))->get()->count() > $role->limited_at - $members->count())
 					throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 			}
-
-			$manageablePermissions = $this->getUserPermissions($data['validated_by']);
-
-			if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-				throw new PortailException('La personne demandant la validation n\'est pas habilitée à ajouter des membres');
 		}
 
 		$addMembers = [];
@@ -125,7 +120,7 @@ trait HasMembers
 			$addMembers[$member->id ?? $member] = $data;
 
 		try {
-			$this->members()->withTimestamps()->attach($addMembers);
+			$this->allMembers()->withTimestamps()->attach($addMembers);
 		} catch (\Exception $e) {
 			throw new PortailException('Une des personnes est déjà membre');
 		}
@@ -145,29 +140,31 @@ trait HasMembers
 		$updatedData['semester_id'] = $updatedData['semester_id'] ?? Semester::getThisSemester()->id;
 		$members = User::getUsers(stringToArray($members));
 
-		if (!$force && isset($data['validated_by'])) {
-			$manageableRoles = $this->getUserRoles($data['validated_by']);
-			$manageablePermissions = $this->getUserPermissions($data['validated_by']);
+		if (!$force && isset($updatedData['validated_by'])) {
+			$manageableRoles = $this->getUserRoles($updatedData['validated_by']);
 
 			if ($data['role_id'] ?? false) {
 				$role = Role::find($data['role_id'], $this->getTable());
 
-				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
+				if ($role === null)
+					throw new PortailException('Ce role ne peut-être assigné');
+
+				if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
 					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
 
 			if ($updatedData['role_id'] ?? false) {
 				$role = Role::find($updatedData['role_id'], $this->getTable());
 
-				if (!$manageableRoles->contains('id', $updatedData['role_id']) && !$manageableRoles->contains('type', 'admin'))
+				if ($role === null)
+					throw new PortailException('Ce role ne peut-être assigné');
+
+				if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
 					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 
-				if ($this->roles()->wherePivot('role_id', $updatedData['role_id'])->whereNotIn($this->getMemberRelationTable().'.user_id', $members->pluck('id'))->get()->count() > $role->limited_at - $members->count())
+				if ($this->roles()->wherePivot('role_id', $role->id)->whereNotIn($this->getMemberRelationTable().'.user_id', $members->pluck('id'))->get()->count() > $role->limited_at - $members->count())
 					throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 			}
-
-			if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-				throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier les membres');
 		}
 
 		$updatedMembers = [];
@@ -175,7 +172,7 @@ trait HasMembers
 		foreach ($members as $member)
 			array_push($updatedMembers, $member->id ?? $member);
 
-		$toUpdate = $this->members()->withTimestamps();
+		$toUpdate = $this->allMembers()->withTimestamps();
 
 		foreach ($data as $key => $value)
 			$toUpdate->wherePivot($key, $value);
@@ -211,9 +208,6 @@ trait HasMembers
 				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
 					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
-
-			if (!$manageablePermissions->contains('type', 'members') && !$manageablePermissions->contains('type', 'admin'))
-				throw new PortailException('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$member->name);
 		}
 
 		$delMembers = [];
@@ -221,7 +215,7 @@ trait HasMembers
 		foreach ($members as $member)
 			array_push($delMembers, $member->id ?? $member);
 
-		$toDetach = $this->members();
+		$toDetach = $this->allMembers();
 
 		foreach ($data as $key => $value)
 			$toDetach->wherePivot($key, $value);

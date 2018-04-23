@@ -90,31 +90,25 @@ class AssoMemberController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, int $asso_id)
-    {
+    public function store(Request $request, int $asso_id) {
 		$asso = $this->getAsso($request, $asso_id);
 
-		if ($asso->visibility_id >= Visibility::findByType('owner')->id)
-			$data = [
-				'semester_id' => $request->input('semester_id', 0),
-				'role_id' => $request->input('role_id', null),
-				'validated_by' => \Auth::user()->id,
-			];
-		else {
-			$data = [
-				'semester_id' => $request->input('semester_id', 0),
-				'role_id' => $request->input('role_id', null),
-			];
-			// TODO: Envoyer un mail d'invitation dans le assoe
+		if (\Scopes::isUserToken($request)) {
+			if ($request->input('role_id')) {
+				$asso->assignMembers(\Auth::id(), [
+					'role_id' => $request->input('role_id'),
+				]);
+			}
+			else {
+				$asso->assignMembers(\Auth::id(), [
+					'validated_by' => \Auth::id(),
+				]);
+			}
+
+			$member = $asso->allMembers()->wherePivot('user_id', \Auth::id())->first();
 		}
 
-		try {
-			$asso->assignMembers($request->input('member_ids', []), $data);
-		} catch (PortailException $e) {
-			return response()->json(["message" => $e->getMessage()], 400);
-		}
-
-		return response()->json($this->hideUsersData($request, $asso->currentMembersAndJoiners));
+		return response()->json($this->hideUserData($request, $member));
     }
 
     /**
@@ -126,12 +120,12 @@ class AssoMemberController extends Controller
     public function show(Request $request, int $asso_id, int $member_id)
     {
 		$asso = $this->getAsso($request, $asso_id);
-		$member = $asso->currentMembersAndJoiners->where('id', $member_id)->first();
+		$member = $asso->currentAllMembers()->where('id', $member_id)->first();
 
 		if ($member)
 			return response()->json($this->hideUserData($request, $member));
 		else
-			abort(404, 'Cette personne ne fait pas partie du assoe');
+			abort(404, 'Cette personne ne fait pas partie de l\'association');
     }
 
     /**
@@ -144,35 +138,29 @@ class AssoMemberController extends Controller
     public function update(Request $request, int $asso_id, int $member_id)
     {
 		$asso = $this->getAsso($request, $asso_id);
-		$member = $asso->currentMembersAndJoiners->where('id', $member_id)->first();
+		$member = $asso->currentAllMembers()->where('id', $member_id)->first();
 
 		if ($member) {
-			if ($member_id === \Auth::user()->id)
+			if ($member_id === \Auth::id())
 				$data = [
-					'semester_id' => $request->input('semester_id', $member->pivot->semester_id),
 					'role_id' => $request->input('role_id', $member->pivot->role_id),
 					'validated_by' => $member_id,
 				];
 			else {
 				$data = [
-					'semester_id' => $request->input('semester_id', $member->pivot->semester_id),
 					'role_id' => $request->input('role_id', $member->pivot->role_id),
+					'validated_by' => $member_id,
 				];
-				// TODO: Envoyer un mail d'invitation dans le assoe
 			}
 
-			try {
-				$asso->updateMembers($member_id, [
-					'semester_id' => $member->pivot->semester_id,
-				], $data);
-			} catch (PortailException $e) {
-				return response()->json(["message" => $e->getMessage()], 400);
-			}
+			$asso->updateMembers($member_id, [
+				'semester_id' => $member->pivot->semester_id,
+			], $data);
 
-			return response()->json($this->hideUserData($request, $asso->currentMembersAndJoiners()->where('user_id', $member_id)->first()));
+			return response()->json($this->hideUserData($request, $asso->currentAllMembers()->where('user_id', $member_id)->first()));
 		}
 		else
-			abort(404, 'Cette personne ne fait pas partie du assoe');
+			abort(404, 'Cette personne ne fait pas partie de l\'association');
     }
 
     /**
@@ -184,7 +172,7 @@ class AssoMemberController extends Controller
     public function destroy(Request $request, int $asso_id, int $member_id)
     {
 		$asso = $this->getAsso($request, $asso_id);
-		$member = $asso->currentMembersAndJoiners->where('id', $member_id)->first();
+		$member = $asso->currentAllMembers()->where('id', $member_id)->first();
 
 		if ($member) {
 			$data = [
@@ -192,7 +180,7 @@ class AssoMemberController extends Controller
 			];
 
 			try {
-				$asso->removeMembers($member_id, $data, \Auth::user()->id);
+				$asso->removeMembers($member_id, $data, \Auth::id());
 			} catch (PortailException $e) {
 				return response()->json(["message" => $e->getMessage()], 400);
 			}

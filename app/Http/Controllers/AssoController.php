@@ -215,7 +215,7 @@ class AssoController extends Controller
 		$asso = Asso::withTrashed()->find($id);
 
 		if ($asso) {
-			if (!$asso->hasOneRole('resp communication', ['user_id' => \Auth::user()->id]) && !\Auth::user()->hasOneRole('admin'))
+			if (!$asso->hasOneRole('resp communication', ['user_id' => \Auth::id()]) && !\Auth::user()->hasOneRole('admin'))
 				abort(403, 'Il est nécessaire de posséder les droits pour pouvoir supprimer cette association');
 
 			if ($request->input('restore', 0) == 1) {
@@ -228,7 +228,7 @@ class AssoController extends Controller
 			if ($asso->update($request->input())) {
 				if ($request->input('validate')) {
 					$asso->updateRoles($request->input('validate'), [], [
-						'validated_by' => \Auth::user()->id,
+						'validated_by' => \Auth::id(),
 					]);
 				}
 
