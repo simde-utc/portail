@@ -167,7 +167,7 @@ class AssoController extends Controller
 
 		if ($asso) {
 			if (\Scopes::isUserToken($request)) {
-				$choices = $this->getChoices($request, ['joined', 'joining', 'followed']);
+				$choices = $this->getChoices($request, ['member', 'joiner', 'followed']);
 
 				if ($request->input('semester') && !\Scopes::hasOne($request, ['user-get-assos-joined', 'user-get-assos-followed']))
 					throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes user-get-assos-joined ou user-get-assos-joining ou user-get-assos-followed');
@@ -176,7 +176,7 @@ class AssoController extends Controller
 				$users = $asso->membersAndFollowers()->wherePivot('semester_id', $semester ? $semester->id : Semester::getThisSemester()->id)->wherePivot('user_id', $request->user()->id)->get();
 				$userData = [];
 
-				if (\Scopes::has($request, 'user-get-assos-joined-now') && in_array('joined', $choices)) {
+				if (\Scopes::has($request, 'user-get-assos-joined-now') && in_array('member', $choices)) {
 					$userData['is_member'] = false;
 
 					foreach ($users as $user) {
@@ -185,12 +185,12 @@ class AssoController extends Controller
 					}
 				}
 
-				if (\Scopes::has($request, 'user-get-assos-joining-now') && in_array('joining', $choices)) {
-					$userData['is_joining'] = false;
+				if (\Scopes::has($request, 'user-get-assos-joining-now') && in_array('joiner', $choices)) {
+					$userData['is_joiner'] = false;
 
 					foreach ($users as $user) {
 						if (!is_null($user->pivot->role_id) && is_null($user->pivot->validated_by))
-							$userData['is_joining'] = true;
+							$userData['is_joiner'] = true;
 					}
 				}
 
@@ -224,25 +224,28 @@ class AssoController extends Controller
 		$asso = Asso::withTrashed()->find($id);
 
 		if ($asso) {
-			if (!$asso->hasOneRole('resp communication', ['user_id' => \Auth::id()]) && !\Auth::user()->hasOneRole('admin'))
-				abort(403, 'Il est nécessaire de posséder les droits pour pouvoir supprimer cette association');
+			if (isset($request['validate'])) {
+				$asso->updateRoles('president', [], [
+					'validated_by' => \Auth::id(),
+				], $asso->getLastUserWithRole('president')->id === \Auth::id());
+			}
 
-			if ($request->input('restore', 0) == 1) {
+			if (!$asso->hasOneRole('resp communication', ['user_id' => \Auth::id()]) && !\Auth::user()->hasOneRole('admin')) {
+				if (isset($request['validate']))
+					return response()->json($asso, 200);
+
+				abort(403, 'Il est nécessaire de posséder les droits pour pouvoir modifier cette association');
+			}
+
+			if (isset($request['restore'])) {
 				if (!\Auth::user()->hasOneRole('admin'))
 					abort(403, 'Il est nécessaire de posséder les droits admin pour pouvoir restaurer cette association');
 
 				$asso->restore();
 			}
 
-			if ($asso->update($request->input())) {
-				if ($request->input('validate')) {
-					$asso->updateRoles($request->input('validate'), [], [
-						'validated_by' => \Auth::id(),
-					]);
-				}
-
+			if ($asso->update($request->input()))
 				return response()->json($asso, 200);
-			}
 			else
 				abort(500, 'L\'association n\'a pas pu être modifiée');
 		}

@@ -103,4 +103,8 @@ class Asso extends Model
 
 		return $roles;
 	}
+
+	public function getLastUserWithRole($role) {
+		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
+	}
 }
