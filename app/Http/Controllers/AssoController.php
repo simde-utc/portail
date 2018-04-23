@@ -225,7 +225,9 @@ class AssoController extends Controller
 
 		if ($asso) {
 			if (isset($request['validate'])) {
-				$asso->updateRoles('president', [], [
+				$asso->updateRoles('president', [
+					'validated_by' => null,
+				], [
 					'validated_by' => \Auth::id(),
 				], $asso->getLastUserWithRole('president')->id === \Auth::id());
 			}
