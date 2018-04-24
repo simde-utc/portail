@@ -211,7 +211,7 @@ class GroupController extends Controller
 		else {
 			$group->delete();
 
-			return response()->json(["message" => "Groupe supprimé"], 204);
+			return abort(204);
 		}
     }
 }

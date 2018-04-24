@@ -166,11 +166,7 @@ class GroupMemberController extends Controller
 				'semester_id' => $request->input('semester_id', 0),
 			];
 
-			try {
-				$group->removeMembers($member_id, $data, \Auth::id());
-			} catch (PortailException $e) {
-				return response()->json(["message" => $e->getMessage()], 400);
-			}
+			$group->removeMembers($member_id, $data, \Auth::id());
 
 			return response()->json($this->hideUserData($request, $this->getGroup($request, $group_id)->currentAllMembers));
 		}

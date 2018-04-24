@@ -25,6 +25,8 @@ Route::post('clients', '\App\Http\Controllers\Passport\ClientController@store')
 		->middleware(['forceJson', 'web', 'auth', 'admin']);
 Route::put('clients/{client_id}', '\App\Http\Controllers\Passport\ClientController@update')
 		->middleware(['forceJson', 'web', 'auth', 'admin']);
+Route::delete('clients/{client_id}', '\App\Http\Controllers\Passport\ClientController@destroy')
+		->middleware(['forceJson', 'web', 'auth', 'admin']);
 
 // Authorizations
 Route::get('authorize', '\Laravel\Passport\Http\Controllers\AuthorizationController@authorize')

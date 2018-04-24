@@ -179,11 +179,7 @@ class AssoMemberController extends Controller
 				'semester_id' => $request->input('semester_id', 0),
 			];
 
-			try {
-				$asso->removeMembers($member_id, $data, \Auth::id());
-			} catch (PortailException $e) {
-				return response()->json(["message" => $e->getMessage()], 400);
-			}
+			$asso->removeMembers($member_id, $data, \Auth::id());
 
 			return response()->json($this->hideUserData($request, $this->getAsso($request, $asso_id)->currentMembersAndJoiners));
 		}

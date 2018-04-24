@@ -283,7 +283,7 @@ class AssoController extends Controller
 				abort(403, 'Il est nécessaire de posséder les droits admin pour pouvoir supprimer cette association');
 
 			if ($asso->delete())
-				abort(200, 'L\'assocition a bien été supprimée');
+				abort(204);
 			else
 				abort(500, 'L\'association n\'a pas pu être supprimée');
 		}

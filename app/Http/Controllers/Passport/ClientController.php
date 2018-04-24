@@ -11,7 +11,7 @@ use App\Models\Asso;
 use App\Models\Role;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
-class ClientController extends \Laravel\Passport\Http\Controllers\ClientController
+class ClientController extends Controller
 {
     public function index(Request $request) {
 		if (\Auth::user()->hasOneRole('admin'))
@@ -25,13 +25,12 @@ class ClientController extends \Laravel\Passport\Http\Controllers\ClientControll
     }
 
     /**
-     * Store a new client.
+     * Créer un nouveau client (nécessaire d'être un admin)
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $this->validation->make($request->all(), [
 			'asso_id' => 'required',
             'name' => 'required|max:255',
@@ -53,8 +52,7 @@ class ClientController extends \Laravel\Passport\Http\Controllers\ClientControll
 		])->makeVisible('secret'), 201);
     }
 
-    public function update(Request $request, $clientId)
-    {
+    public function update(Request $request, $clientId) {
 		$client = Client::find($clientId);
 
 		if ($client) {
@@ -81,17 +79,15 @@ class ClientController extends \Laravel\Passport\Http\Controllers\ClientControll
      * @param  string  $clientId
      * @return Response
      */
-    public function destroy(Request $request, $clientId)
-    {
-		// Regarder si on a le droit
-        $client = $this->clients->findForUser($clientId, $request->user()->getKey());
+    public function destroy(Request $request, $clientId) {
+		$client = Client::find($clientId);
 
-        if (! $client) {
-            return new Response('', 404);
-        }
+		if ($client) {
+			$client->delete();
 
-        $this->clients->delete(
-            $client
-        );
+			abort(204);
+		}
+		else
+			abort(404, 'Le client n\'a pas été trouvé');
     }
 }
