@@ -54,6 +54,19 @@ class Role extends Model
 			return $roles;
 	}
 
+	public static function getRoleAndItsParents($role, string $only_for = null) {
+		$role = static::getRole($role, $only_for);
+
+
+		if ($role === null)
+			return null;
+
+	 	$roles = $role->parents;
+		$roles->push($role);
+
+		return $roles;
+	}
+
     public function permissions(): BelongsToMany {
         return $this->belongsToMany(Permission::class, 'roles_permissions');
     }

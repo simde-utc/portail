@@ -7,16 +7,21 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Exceptions\PortailException;
 use Laravel\Passport\Client;
+use App\Models\Asso;
+use App\Models\Role;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
 class ClientController extends \Laravel\Passport\Http\Controllers\ClientController
 {
-    public function forUser(Request $request)
-    {
-		// Afficher en fonction de l'asso
-        $userId = $request->user()->getKey();
+    public function index(Request $request) {
+		if (\Auth::user()->hasOneRole('admin'))
+			return Client::all()->makeVisible('secret');
+		else {
+			$roles = Role::getRoleAndItsParents('resp info');
+			$assos = \Auth::user()->currentJoinedAssos()->wherePivotIn('role_id', $roles->pluck('id'));
 
-        return $this->clients->activeForUser($userId)->makeVisible('secret');
+			return Client::where('asso_id', $assos->pluck('id'))->get();
+		}
     }
 
     /**

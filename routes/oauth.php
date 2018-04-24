@@ -19,7 +19,7 @@ Route::get('scopes', '\App\Services\Scopes@all');
 Route::get('scopes/categories', '\App\Services\Scopes@getAllByCategories');
 
 // Clients
-Route::get('clients', '\App\Http\Controllers\Passport\ClientController@forUser')
+Route::get('clients', '\App\Http\Controllers\Passport\ClientController@index')
 		->middleware(['forceJson', 'web', 'auth']);
 Route::post('clients', '\App\Http\Controllers\Passport\ClientController@store')
 		->middleware(['forceJson', 'web', 'auth', 'admin']);
