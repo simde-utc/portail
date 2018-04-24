@@ -114,7 +114,6 @@ class RolesTableSeeder extends Seeder
 					'president',
 					'vice-president',
 					'secretaire general',
-					'tresorier',
 					'bureau',
 				],
 				'permissions' => [
@@ -130,9 +129,36 @@ class RolesTableSeeder extends Seeder
 					'president',
 					'vice-president',
 					'secretaire general',
-					'tresorier',
 					'bureau',
 					'resp info',
+				],
+			],
+			[
+				'type' => 'resp communication',
+				'name' => 'Responsable Communication',
+				'description' => 'Responsable communication de l\'association',
+				'only_for' => 'assos',
+				'parents' => [
+					'president',
+					'vice-president',
+					'secretaire general',
+					'bureau',
+				],
+				'permissions' => [
+					'bureau',
+				]
+			],
+			[
+				'type' => 'communication',
+				'name' => 'Communication',
+				'description' => 'Fais parti de l\'équipe communication de l\'association',
+				'only_for' => 'assos',
+				'parents' => [
+					'president',
+					'vice-president',
+					'secretaire general',
+					'bureau',
+					'resp communication',
 				],
 			],
 			[

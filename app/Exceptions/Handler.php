@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,14 +48,14 @@ class Handler extends ExceptionHandler
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception) {
-		if ($request->wantsJson()) {
+		if ($request->wantsJson() && !($exception instanceof ValidationException)) {
 	        // Define the response
 	        $response = [
 				'message' => ($exception instanceof \QueryException) ? 'Problème trouvé dans la requête SQL effectuée' : $exception->getMessage(),
 	        ];
 
 	        // If the app is in debug mode
-	        if (config('app.debug') && !($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException)) {
+	        if (config('app.debug') && !($exception instanceof HttpException)) {
 	            // Add the exception class name, message and stack trace to response
 				$response['message'] = $exception->getMessage();
 				$response['exception'] = get_class($exception);

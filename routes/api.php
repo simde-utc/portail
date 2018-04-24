@@ -34,9 +34,10 @@ Route::prefix('v1')->group(function () {
 	Route::apiResources([
 		'groups'		=> 'GroupController',
 		'groups/{group_id}/members'		=> 'GroupMemberController',
+		'assos'			=> 'AssoController',
+		'assos/{asso_id}/members'		=> 'AssoMemberController',
 		'assos/types'	=> 'AssoTypeController',
 		'users'			=> 'UserController',
-		'assos'			=> 'AssoController',
 		'rooms'			=> 'RoomController',
 		'articles'		=> 'ArticleController',
 		'partners'		=> 'PartnerController',

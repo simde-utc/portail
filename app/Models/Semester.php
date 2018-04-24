@@ -15,6 +15,10 @@ class Semester extends Model
         'year' => 'char',
     ];
 
+	public static function getSemester($semester) {
+		return static::where('id', $semester)->orWhere('name', $semester)->first();
+	}
+
     public static function getThisSemester($currentYear = null, $currentMonth = null, $currentDay = null) {
         if ($currentYear === null)
             $currentYear = date('y');

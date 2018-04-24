@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class IsAdmin
 {
@@ -18,6 +19,6 @@ class IsAdmin
 		if (\Auth::user() && \Auth::user()->hasOneRole('admin'))
 			return $next($request);
 
-    	return abort('Vous n\'êtes pas autorisé', 403);
+    	throw new AuthorizationException('Il est nécessaire d\'être un administrateur');
  	}
 }

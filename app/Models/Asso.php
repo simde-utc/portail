@@ -3,24 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\Traits\HasMembers;
 
 class Asso extends Model
 {
-	use HasMembers {
+	use SoftDeletes, HasMembers {
 		HasMembers::members as membersAndFollowers;
 		HasMembers::currentMembers as currentMembersAndFollowers;
+		HasMembers::joiners as protected joinersFromHasMembers;
+		HasMembers::currentJoiners as currentJoinersFromHasMembers;
 		HasMembers::getUserRoles as getUsersRolesInThisAssociation;
 	}
 
 	protected $memberRelationTable = 'assos_roles';
 
 	protected $fillable = [
-		'name', 'login', 'description', 'type_asso_id', 'parent_id',
+		'name', 'shortname', 'login', 'description', 'type_asso_id', 'parent_id',
 	];
 
 	public function type() {
-		return $this->belongsTo(AssoType::class);
+		return $this->belongsTo(AssoType::class, 'type_asso_id');
 	}
 
 	public function contact() {
@@ -51,12 +54,24 @@ class Asso extends Model
 	    return $this->hasOne(Asso::class, 'parent_id');
     }
 
+	public function childs() {
+	    return static::where('parent_id', $this->id);
+    }
+
 	public function members() {
 		return $this->membersAndFollowers()->wherePivot('role_id', '!=', null);
 	}
 
 	public function currentMembers() {
 		return $this->currentMembersAndFollowers()->wherePivot('role_id', '!=', null);
+	}
+
+	public function joiners() {
+		return $this->joinersFromHasMembers()->wherePivot('role_id', '!=', null);
+	}
+
+	public function currentJoiners() {
+		return $this->currentJoinersFromHasMembers()->wherePivot('role_id', '!=', null);
 	}
 
 	public function followers() {
@@ -87,5 +102,61 @@ class Asso extends Model
 		}
 
 		return $roles;
+	}
+
+	public function getLastUserWithRole($role) {
+		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
+	}
+
+	public static function getStage(int $stage, int $type_asso_id = null) {
+		$assos = static::whereNull('parent_id')->with('type:id,name,description');
+
+		if (!is_null($type_asso_id))
+			$assos = $assos->where('type_asso_id', $type_asso_id);
+
+		$assos = $assos->get();
+
+		for ($i = 0; $i < $stage; $i++) {
+			$before = $assos;
+			$assos = collect();
+
+			foreach ($before as $asso) {
+				$childs = $asso->childs()->with('type:id,name,description');
+
+				if (!is_null($childs))
+					$childs = $childs->where('type_asso_id', $type_asso_id);
+
+				$assos = $assos->merge($childs->get());
+			}
+		}
+
+		return $assos;
+	}
+
+	public static function getFromStage(int $stage, int $type_asso_id = null) {
+		$assos = static::whereNull('parent_id')->with('type:id,name,description');
+
+		if (!is_null($type_asso_id))
+			$assos = $assos->where('type_asso_id', $type_asso_id);
+
+		$assos = $assos->get();
+		$toAdd = $assos;
+
+		for ($i = 0; $i < $stage; $i++) {
+			$toAddChilds = $toAdd;
+			$toAdd = collect();
+
+			foreach ($toAddChilds as $asso) {
+				$childs = $asso->childs()->with('type:id,name,description');
+
+				if (!is_null($type_asso_id))
+					$childs = $childs->where('type_asso_id', $type_asso_id);
+
+				$asso->sub = $childs->get();
+				$toAdd = $toAdd->merge($asso->sub);
+			}
+		}
+
+		return $assos;
 	}
 }

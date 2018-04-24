@@ -42,35 +42,35 @@ class User extends Authenticatable
 	}
 
 	public function assos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members');
+		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->withPivot('semester_id', 'role_id', 'validated_by');
 	}
 
 	public function currentAssos() {
-		return $this->assos()->where('semester_id', Semester::getThisSemester()->id);
-	}
-
-	public function followedAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNull('role_id');
-	}
-
-	public function currentFollowedAssos() {
-		return $this->joinedAssos()->where('semester_id', Semester::getThisSemester()->id);
+		return $this->assos()->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('role_id');
 	}
 
 	public function joinedAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNotNull('validated_by');
+		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNotNull('validated_by')->whereNotNull('role_id')->withPivot('semester_id', 'role_id', 'validated_by');
 	}
 
 	public function currentJoinedAssos() {
-		return $this->joiningAssos()->where('semester_id', Semester::getThisSemester()->id);
+		return $this->joinedAssos()->where('semester_id', Semester::getThisSemester()->id);
 	}
 
 	public function joiningAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNull('validated_by');
+		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNull('validated_by')->whereNotNull('role_id')->withPivot('semester_id', 'role_id', 'validated_by');
 	}
 
 	public function currentJoiningAssos() {
 		return $this->joiningAssos()->where('semester_id', Semester::getThisSemester()->id);
+	}
+
+	public function followedAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_roles')->whereNull('role_id')->withPivot('semester_id', 'role_id', 'validated_by');
+	}
+
+	public function currentFollowedAssos() {
+		return $this->followedAssos()->where('semester_id', Semester::getThisSemester()->id);
 	}
 
 	public function groups() {
