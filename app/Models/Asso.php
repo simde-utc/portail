@@ -89,19 +89,17 @@ class Asso extends Model
 		while ($parent_id) {
 			$asso = static::find($parent_id);
 
-			foreach ($asso->getUserAssignedRoles($user_id, $semester_id) as $role) {
+			foreach ($asso->getUsersRolesInThisAssociation($user_id, $semester_id) as $role) {
 				$roles->push($role);
 
-				foreach ($role->childs as $childRole)
-					$roles->push($childRole);
-
+				$roles = $roles->merge($role->allChilds());
 				$role->makeHidden('childs');
 			}
 
 			$parent_id = $asso->parent_id;
 		}
 
-		return $roles;
+		return $roles->unique('id');
 	}
 
 	public function getLastUserWithRole($role) {

@@ -43,21 +43,19 @@ class RolesTableSeeder extends Seeder
 				'only_for' => 'assos',
 				'permissions' => [
 					'tresorie',
-					'bureau',
 				]
 			],
 			[
 				'type' => 'vice-president',
 				'name' => 'Vice-Président',
 				'description' => 'Co-responsable d\'une organisation',
-				'limited_at' => 1,
+				'limited_at' => 4,
 				'only_for' => 'assos',
 				'parents' => [
 					'president',
 				],
 				'permissions' => [
 					'tresorie',
-					'bureau',
 				]
 			],
 			[
@@ -67,12 +65,18 @@ class RolesTableSeeder extends Seeder
 				'limited_at' => 1,
 				'only_for' => 'assos',
 				'parents' => [
-					'president',
 					'vice-president',
 				],
-				'permissions' => [
-					'bureau',
-				]
+			],
+			[
+				'type' => 'vice-secretaire',
+				'name' => 'Vice-Secrétaire',
+				'description' => 'Adjoint du secrétaire',
+				'limited_at' => 4,
+				'only_for' => 'assos',
+				'parents' => [
+					'secretaire general',
+				],
 			],
 			[
 				'type' => 'tresorier',
@@ -81,13 +85,23 @@ class RolesTableSeeder extends Seeder
 				'limited_at' => 1,
 				'only_for' => 'assos',
 				'parents' => [
-					'president',
 					'vice-president',
-					'secretaire general',
 				],
 				'permissions' => [
 					'tresorie',
-					'bureau',
+				]
+			],
+			[
+				'type' => 'vice-tresorier',
+				'name' => 'Vice-Trésorier',
+				'description' => 'Co-responsable de la trésorie',
+				'limited_at' => 4,
+				'only_for' => 'assos',
+				'parents' => [
+                    'tresorier',
+				],
+				'permissions' => [
+					'tresorie',
 				]
 			],
 			[
@@ -96,69 +110,124 @@ class RolesTableSeeder extends Seeder
 				'description' => 'Membre du bureau',
 				'only_for' => 'assos',
 				'parents' => [
-					'president',
 					'vice-president',
-					'secretaire general',
-					'tresorier',
+                    'secretaire general',
+					'vice-secretaire',
+                    'tresorier',
+					'vice-tresorier',
 				],
-				'permissions' => [
-					'bureau',
-				]
 			],
 			[
-				'type' => 'resp info',
+				'type' => 'resp informatique',
 				'name' => 'Responsable Informatique',
 				'description' => 'Responsable informatique de l\'association',
+                'limited_at' => 1,
 				'only_for' => 'assos',
 				'parents' => [
-					'president',
-					'vice-president',
-					'secretaire general',
 					'bureau',
 				],
-				'permissions' => [
-					'bureau',
-				]
 			],
 			[
 				'type' => 'developer',
 				'name' => 'Développeur',
-				'description' => 'Fais parti de l\'équipe informatique de l\'association',
+				'description' => 'Membre de l\'équipe informatique de l\'association',
 				'only_for' => 'assos',
 				'parents' => [
-					'president',
-					'vice-president',
-					'secretaire general',
-					'bureau',
-					'resp info',
+					'resp informatique',
 				],
 			],
 			[
 				'type' => 'resp communication',
 				'name' => 'Responsable Communication',
 				'description' => 'Responsable communication de l\'association',
+                'limited_at' => 1,
 				'only_for' => 'assos',
 				'parents' => [
-					'president',
-					'vice-president',
-					'secretaire general',
 					'bureau',
 				],
-				'permissions' => [
-					'bureau',
-				]
 			],
 			[
 				'type' => 'communication',
-				'name' => 'Communication',
-				'description' => 'Fais parti de l\'équipe communication de l\'association',
+				'name' => 'Chargé de communication',
+				'description' => 'Membre de l\'équipe communication de l\'association',
 				'only_for' => 'assos',
 				'parents' => [
-					'president',
-					'vice-president',
-					'secretaire general',
-					'bureau',
 					'resp communication',
+				],
+			],
+			[
+				'type' => 'resp animation',
+				'name' => 'Responsable animation',
+				'description' => 'Responsable animation de l\'association',
+                'limited_at' => 1,
+				'only_for' => 'assos',
+				'parents' => [
+					'bureau',
+				],
+			],
+			[
+				'type' => 'annimation',
+				'name' => 'Chargé de l\'animation',
+				'description' => 'Membre de l\'équipe animation de l\'association',
+				'only_for' => 'assos',
+				'parents' => [
+					'resp animation',
+				],
+			],
+			[
+				'type' => 'resp partenariat',
+				'name' => 'Responsable partenariat',
+				'description' => 'Responsable partenariat de l\'association',
+                'limited_at' => 1,
+				'only_for' => 'assos',
+				'parents' => [
+					'bureau',
+				],
+			],
+			[
+				'type' => 'partenariat',
+				'name' => 'Chargé du partenariat',
+				'description' => 'Membre de l\'équipe partenariat de l\'association',
+				'only_for' => 'assos',
+				'parents' => [
+					'resp partenariat',
+				],
+			],
+			[
+				'type' => 'resp logistique',
+				'name' => 'Responsable logistique',
+				'description' => 'Responsable logistique de l\'association',
+                'limited_at' => 1,
+				'only_for' => 'assos',
+				'parents' => [
+					'bureau',
+				],
+			],
+			[
+				'type' => 'logistique',
+				'name' => 'Chargé de la logistique',
+				'description' => 'Membre de l\'équipe logistique de l\'association',
+				'only_for' => 'assos',
+				'parents' => [
+					'resp logistique',
+				],
+			],
+			[
+				'type' => 'resp',
+				'name' => 'Responsable',
+				'description' => 'Responsable dans l\'association',
+				'only_for' => 'assos',
+				'parents' => [
+					'bureau',
+				],
+			],
+			[
+				'type' => 'membre',
+				'name' => 'Membre de l\'association',
+				'description' => 'Membre de l\'équipe associative',
+				'only_for' => 'assos',
+				'parents' => [
+					'resp',
 				],
 			],
 			[

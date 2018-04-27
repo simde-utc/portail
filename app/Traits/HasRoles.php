@@ -264,12 +264,12 @@ trait HasRoles
 	 */
 	public function getUserRoles(int $user_id = null, int $semester_id = null) {
 		$semester_id = $semester_id ?? Semester::getThisSemester()->id;
-		$roles = $this->getUserAssignedRoles($user_id, $semester_id);
+		$roles = collect();
 
-		foreach ($roles as $role) {
-			foreach ($role->childs as $childRole)
-				$roles->push($childRole);
+		foreach ($this->getUserAssignedRoles($user_id, $semester_id) as $role) {
+			$roles->push($role);
 
+			$roles = $roles->merge($role->allChilds());
 			$role->makeHidden('childs');
 		}
 
@@ -278,7 +278,7 @@ trait HasRoles
 				$roles->push($userRole);
 		}
 
-		return $roles;
+		return $roles->unique('id');
 	}
 
 	/**

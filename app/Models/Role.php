@@ -88,15 +88,41 @@ class Role extends Model
   }
 
   public function users(): BelongsToMany {
-	return $this->belongsToMany(User::class, 'users_roles');
+	  return $this->belongsToMany(User::class, 'users_roles');
   }
 
   public function childs(): BelongsToMany {
-	return $this->belongsToMany(Role::class, 'roles_parents', 'parent_id', 'role_id');
+	  return $this->belongsToMany(Role::class, 'roles_parents', 'parent_id', 'role_id');
   }
 
   public function parents(): BelongsToMany {
-	return $this->belongsToMany(Role::class, 'roles_parents', 'role_id', 'parent_id');
+	  return $this->belongsToMany(Role::class, 'roles_parents', 'role_id', 'parent_id');
+  }
+
+  public function allChilds() {
+	  $childs = collect();
+
+	  foreach ($this->childs as $child) {
+		  $childs->push($child);
+
+		  $childs = $childs->merge($child->allChilds());
+		  $child->makeHidden('childs');
+	  }
+
+	  return $childs->unique('id');
+  }
+
+  public function allParents() {
+	  $parents = collect();
+
+	  foreach ($this->parents as $parent) {
+		  $parents->push($parent);
+
+		  $parents = $parents->merge($parent->allChilds());
+		  $parent->makeHidden('parents');
+	  }
+
+	  return $parents->unique('id');
   }
 
   public function hasPermissionTo($permission): bool {
