@@ -16,7 +16,7 @@ class Asso extends Model
 		HasMembers::getUserRoles as getUsersRolesInThisAssociation;
 	}
 
-	protected $memberRelationTable = 'assos_roles';
+	protected $roleRelationTable = 'assos_members';
 
 	protected $fillable = [
 		'name', 'shortname', 'login', 'description', 'type_asso_id', 'parent_id',

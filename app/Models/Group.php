@@ -21,7 +21,7 @@ class Group extends Model
         });
     }
 
-	protected $memberRelationTable = 'groups_roles';
+	protected $roleRelationTable = 'groups_members';
     protected $fillable = ['name', 'user_id', 'icon_id', 'visibility_id', 'is_active'];
     protected $casts = ['is_active' => 'boolean'];
     protected $dates = ['deleted_at'];
