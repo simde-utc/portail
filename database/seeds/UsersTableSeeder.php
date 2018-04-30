@@ -43,8 +43,8 @@ class UsersTableSeeder extends Seeder
 			],
 			[
 				'email'     => 'alexandre.brasseur@etu.utc.fr',
-				'firstname' => 'Alex',
-				'lastname'  => 'Brass',
+				'firstname' => 'Alexandre',
+				'lastname'  => 'Brasseur',
 				'role'		=> 'admin',
 				'assos'		=> [
 					'simde' => 'developer',
@@ -66,7 +66,7 @@ class UsersTableSeeder extends Seeder
 			$model = User::create([
 				'email'     => $user['email'],
 				'firstname' => $user['firstname'],
-				'lastname'  => $user['lastname'],
+				'lastname'  => strtoupper($user['lastname']),
 			])->assignRoles($user['role'], [
 				'validated_by' => 1
 			], true);
