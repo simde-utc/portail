@@ -49,7 +49,17 @@ class UsersTableSeeder extends Seeder
 				'assos'		=> [
 					'simde' => 'developer',
 				],
-			]
+			],
+            [
+                'email'     => 'maxime.escourrou@etu.utc.fr',
+                'firstname' => 'Maxime',
+				'lastname'  => 'Escourrou',
+				'role'		=> 'admin',
+				'assos'		=> [
+					'simde'	=> 'developer',
+				]
+            ]
+
 		];
 
 		foreach ($users as $user) {
