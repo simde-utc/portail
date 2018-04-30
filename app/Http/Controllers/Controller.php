@@ -43,14 +43,9 @@ class Controller extends BaseController
 		if ($users === null)
 			return;
 
-		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
-			array_push($toHide, 'email');
-
-		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
-			array_push($toHide, 'last_login_at', 'created_at', 'updated_at');
-
 		foreach ($users as $user) {
-			$user->makeHidden($toHide);
+            $user->displayName = $user->firstname.' '.strtoupper($user->lastname);
+			$user->makeHidden(['firstname', 'lastname', 'email', 'last_login_at', 'created_at', 'updated_at']);
 			$this->hidePivotData($request, $user, $hidePivot);
 		}
 
@@ -63,13 +58,20 @@ class Controller extends BaseController
 		if ($user === null)
 			return;
 
-		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
-			array_push($toHide, 'email');
+        $user->displayName = $user->firstname.' '.strtoupper($user->lastname);
 
-		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
-			array_push($toHide, 'last_login_at', 'created_at', 'updated_at');
+        if ($user->id === \Auth::id()) {
+            if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
+                array_push($toHide, 'email');
 
-		$user->makeHidden($toHide);
+            if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
+                array_push($toHide, 'last_login_at', 'created_at', 'updated_at');
+
+            $user->makeHidden($toHide);
+        }
+        else
+            $user->makeHidden(['firstname', 'lastname', 'email', 'last_login_at', 'created_at', 'updated_at']);
+
 
 		return $this->hidePivotData($request, $user, $hidePivot);
 	}

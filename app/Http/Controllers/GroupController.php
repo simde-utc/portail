@@ -8,6 +8,7 @@ use App\Models\Group;
 use App\Http\Requests\GroupRequest;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
+use App\Services\Visible\Visible;
 
 /**
  * Gestion des groupes utilisateurs
