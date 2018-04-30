@@ -30,7 +30,7 @@ class ContactsTypesTableSeeder extends Seeder
             'name' => 'Numéro de téléphone',
             'pattern' => '/[^0-9]/',
             'max' => 2,
-            'visibility_id' => 'contributor',
+            'visibility_id' => 'contributorBde',
           ],
           [
             'name' => 'Facebook',

@@ -7,89 +7,95 @@ use App\Http\Requests\RoomRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * @resource Room
+ *
+ * Gestion des salles
+ */
 class RoomController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $rooms = Room::get();
-        return response()->json($rooms, 200);
-    }
+	/**
+	 * List Rooms
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index()
+	{
+		$rooms = Room::get();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(RoomRequest $request)
-    {
-        $room = Room::create($request->all());
+		return response()->json($rooms, 200);
+	}
 
-        if($room)
-        {
-            return response()->json($room, 200);
-        }
-        else
-                return response()->json(["message" => "Impossible de créer la salle"], 500);
+	/**
+	 * Create Room
+	 *
+	 * @param  \Illuminate\Http\RoomRequest  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(RoomRequest $request)
+	{
+		$room = Room::create($request->all());
 
-    }
+		if ($room)
+			return response()->json($room, 200);
+		else
+			return response()->json(['message' => 'Impossible de créer la salle'], 500);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $room = Room::find($id);
+	}
 
-        if($room)
-            return response()->json($room, 200);
-        else
-            return response()->json(["message" => "Impossible de trouver la salle"], 500);
-    }
+	/**
+	 * Show Room
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$room = Room::find($id);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $room = Room::find($id);
-        if($room){
-            $ok = $room->update($request->input());
-            if($ok)
-                return response()->json($room, 201);
-            return response()->json(['message'=>'An error ocured'],500);
-        }
-        return response()->json(["message" => "Impossible de trouver la salle"], 500);
-    }
+		if ($room)
+			return response()->json($room, 200);
+		else
+			return response()->json(['message' => 'Impossible de trouver la salle'], 500);
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-       $room = Room::find($id);
+	/**
+	 * Update Room
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id)
+	{
+		$room = Room::find($id);
+		if ($room) {
+			if ($room->update($request->input()))
+				return response()->json($room, 201);
+			else
+				return response()->json(['message'=>'An error ocured'],500);
+		}
+		else
+			return response()->json(['message' => 'Impossible de trouver la salle'], 500);
+	}
 
-        if ($room)
-        {
-            $room->delete();
-            return response()->json([], 200);
-        }
-        else
-            return response()->json(["message" => "Impossible de trouver la salle"], 500);
-    }
+	/**
+	 * Delete Room
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+		$room = Room::find($id);
+
+		if ($room) {
+			if ($room->delete())
+				return response()->json(['message'=>'La salle a bien été supprimée'],200);
+			else
+				return response()->json(['message'=>'Erreur lors de la suppression de la salle'],500);
+		}
+		else
+			return response()->json(['message' => 'Impossible de trouver la salle'], 500);
+	}
 }

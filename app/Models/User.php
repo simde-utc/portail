@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use App\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
 
@@ -21,6 +21,19 @@ class User extends Authenticatable
 		'remember_token',
 	];
 
+	public static function findByEmail($email) {
+		return static::where('email', $email)->first();
+	}
+
+	public static function getUsers($users) {
+		if (is_array($users))
+			return static::whereIn('id', $users)->orWhereIn('email', $users)->get();
+		else if ($users instanceof \Illuminate\Database\Eloquent\Model)
+			return collect($users);
+		else
+			return $users;
+	}
+
 	public function cas() {
 		return $this->hasOne('App\Models\AuthCas');
 	}
@@ -29,19 +42,35 @@ class User extends Authenticatable
 	}
 
 	public function assos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNotNull('validated_by');
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->withPivot('semester_id', 'role_id', 'validated_by');
 	}
 
 	public function currentAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('validated_by');
+		return $this->assos()->where('semester_id', Semester::getThisSemester()->id)->whereNotNull('role_id');
+	}
+
+	public function joinedAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNotNull('validated_by')->whereNotNull('role_id')->withPivot('semester_id', 'role_id', 'validated_by');
+	}
+
+	public function currentJoinedAssos() {
+		return $this->joinedAssos()->where('semester_id', Semester::getThisSemester()->id);
 	}
 
 	public function joiningAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNull('validated_by');
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNull('validated_by')->whereNotNull('role_id')->withPivot('semester_id', 'role_id', 'validated_by');
 	}
 
 	public function currentJoiningAssos() {
-		return $this->belongsToMany('App\Models\Asso', 'assos_members')->where('semester_id', Semester::getThisSemester()->id)->whereNull('validated_by');
+		return $this->joiningAssos()->where('semester_id', Semester::getThisSemester()->id);
+	}
+
+	public function followedAssos() {
+		return $this->belongsToMany('App\Models\Asso', 'assos_members')->whereNull('role_id')->withPivot('semester_id', 'role_id', 'validated_by');
+	}
+
+	public function currentFollowedAssos() {
+		return $this->followedAssos()->where('semester_id', Semester::getThisSemester()->id);
 	}
 
 	public function groups() {
@@ -49,7 +78,7 @@ class User extends Authenticatable
 	}
 
 	public function currentGroups() {
-		return $this->belongsToMany('App\Models\Group', 'groups_members')->where('is_active', 1);
+		return $this->groups()->where('is_active', 1);
 	}
 
 	public function ownGroups() {
@@ -57,14 +86,19 @@ class User extends Authenticatable
 	}
 
 	public function contact() {
-        return $this->hasMany('App\Models\UserContact', 'contacts_users');
+        return $this->hasMany('App\Models\UserContact', 'users_contacts');
     }
 
     public function events() {
     	return $this->belongsToMany('App\Models\Event');
     }
 
-	// Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification
+	/**
+	 * Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification
+	 *
+	 * @param string $username
+	 * @return null|Illuminate\Database\Eloquent\Model
+	 */
 	public function findForPassport($username) {
 		$providers = config('auth.services');
 

@@ -1,94 +1,66 @@
 # Documentation
 
-[TOC]
+- [Documentation de l'api](api/)
+    - [Utilisateur](api/user/)
+    - [Client](api/client/)
+- [Documentation du backend](backend/)
+    - [Installation](backend/installation.md)
+    - [Authentification](backend/oauth.md)
+    - [Models](backend/models.md)
+    - [Controllers](backend/controllers.md)
+    - [Traits](backend/traits.md)
+    - [Services](backend/services.md)
+    - [Routes](backend/routes.md)
+    - [Comment commenter](backend/commenter.md)
+- [Documentation de la documentation](#métadocumentation)
 
-## Models
+## Liens utiles
 
-Il s'agit des modèles de données, avec lesquelles on peut intéragir via Eloquent.
-Namespace : `\App\Models\...`
-Dossier :   `app/Models`
+- Frontend du Portail des Assos : https://github.com/simde-utc/portail-web
+- Documentation Laravel 5.6 : https://laravel.com/docs/5.6
 
+# Métadocumentation
 
-### User
+*Comment contribuer à la documentation ?*
+
+***NB :*** *Veillez à également lire le guide pour commenter : [Comment commenter](backend/commenter.md)*
+
+## Forme
+
+Organisation en deux grandes parties, une **documentation pour utiliser l'api** et une **documentation pour le code et l'architecture de l'api** (que l'on appelera documentation du *backend*).
+
+Chaque dossier à son `readme.md` où l'on trouve une *table des matières* qui doit être mise à jour. Celle-ci va jusqu'à une profondeur de 2 :
+
+**Correct :** 
+
 ```
-id: int() primary key
-email: varchar(128) unique
-lastname: varchar(128) nullable
-firstname: varchar(128) nullable
-last_login_at: timestamp
-```
-
-Laravel gère ensuite automatiquement le token et les timestamps de création et de modification
-
-
-### UserPreferences
-```
-user_id: int() fk -> user.id
-email: varchar(128) unique nullable
-```
-
-Laravel gère ensuite automatiquement les timestamps de création et de modification
-
-
-### AuthCas
-```
-user_id: int() fk -> user.id
-login: varchar(16) unique
-email: varchar(128) unique nullable
-active: boolean() default(1)
-last_login_at: timestamp
-```
-
-Le bool active indique si la connexion CAS est toujours possible pour l'utilisateur
-Laravel gère ensuite automatiquement les timestamps de création et de modification
-
-
-### AuthPassword
-```
-user_id: int() fk -> user.id
-password: varchar(512) unique
-last_login_at: timestamp
+- [Lien vers dossier]
+    - [Lien vers dossier fils]
+    - [Lien vers fichier fils]
 ```
 
-Laravel gère ensuite automatiquement les timestamps de création et de modification
+**Incorrect :**
 
+```
+- [Lien vers dossier]
+    - [Lien vers dossier fils]
+        - [Lien vers fichier petit-fils]
+    - [Lien vers fichier fils]
+```
 
-## Permissions7
+## Contenu
 
-Avec le package [spatie/laravel-permission](https://github.com/spatie/laravel-permission)
+### Documentation de l'api
 
-## Controllers
+Le but de cette documentation est de montrer aux utilisateurs de l'api comment se servir de celle-ci. On incluera donc des exemples de requêtes et réponses (en json).
 
-Interfaces de validation des données envoyées en POST.
-Namespace : `\App\Http\Requests\...`
-Dossier :   `app/Http/Requests`
+Il faut également montrer en différents languages comment intéragir avec l'api. Par exemple, on fournira des exemples de code de connexion à l'api en js, php et python.
 
+### Documentation du backend
 
+Le but étant de documenter l'architecture, les services crées, les controllers, les modèles et autres afin que le projet soit repris par d'autres. Le but n'est pas de refaire la documentation de Laravel, **il faut se concentrer sur ce qui est spécifique à notre projet.**
 
-## Middlewares
-
-Ils permettent de modifier les requêtes avant qu'elles ne soient traitées.
-Namespace : `\App\Http\Middleware\...`
-Dossier :   `app/Http/Middleware`
-
-
-
-## Services
-
-Il s'agit des services externes tels que le CAS ou Ginger
-Namespace : `\App\Services\...`
-Dossier :   `app/Services`
-
-Pour créer un nouveau service/système d'authentification, il suffit de créer une classe hérité du service AuthService.php et d'overrider les fonctions de base. Il est aussi nécessaire d'ajouter dans config/auth.php le service.
-
-### CAS
-
-Le CAS est un système d'authentification automatiquement géré par le service Cas créé pour l'occasion. Il gère automatiquement la connexion, et la déconnexion
-
-### Ginger
-
-
-
-## API
-
-Voici les routes de l'API
+Quelques exemples :
+- Implémentation de Oauth 2.
+- Template de controller.
+- Système de visibilité.

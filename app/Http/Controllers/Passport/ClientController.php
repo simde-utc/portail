@@ -5,34 +5,35 @@ namespace App\Http\Controllers\Passport;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use App\Exceptions\PortailException;
 use Laravel\Passport\Client;
+use App\Models\Asso;
+use App\Models\Role;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
-class ClientController extends \Laravel\Passport\Http\Controllers\ClientController
+class ClientController extends Controller
 {
-    public function forUser(Request $request)
-    {
-		// Afficher en fonction de l'asso
-        $userId = $request->user()->getKey();
+    public function index(Request $request) {
+		if (\Auth::user()->hasOneRole('admin'))
+			return Client::all()->makeVisible('secret');
+		else {
+			$roles = Role::getRoleAndItsParents('resp info');
+			$assos = \Auth::user()->currentJoinedAssos()->wherePivotIn('role_id', $roles->pluck('id'));
 
-        return $this->clients->activeForUser($userId)->makeVisible('secret');
+			return Client::where('asso_id', $assos->pluck('id'))->get();
+		}
     }
 
     /**
-     * Store a new client.
+     * Créer un nouveau client (nécessaire d'être un admin)
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $this->validation->make($request->all(), [
-			'asso_id' => 'required',
-            'name' => 'required|max:255',
-            'redirect' => 'required|url',
-        ])->validate();
+    public function store(Request $request) {
+		\Scopes::checkScopesForGrantType($request->scopes ?? [], 'client_credentials');
 
-        return Client::create([
+        return response()->json(Client::create([
 			'user_id' => \Auth::id(),
 			'asso_id' => $request->asso_id,
 			'name' => $request->name,
@@ -41,13 +42,28 @@ class ClientController extends \Laravel\Passport\Http\Controllers\ClientControll
 			'personal_access_client' => false,
 			'password_client' => false,
 			'revoked' => false,
-		])->makeVisible('secret');
+			'scopes' => json_encode($request->input('scopes', [])),
+		])->makeVisible('secret'), 201);
     }
 
-    public function update(Request $request, $clientId)
-    {
-		return response()->json(['message' => 'La modification n\'est pas permise'], 403);
-		// On ne permet pas la modification après création pour éviter un changement volontaire
+    public function update(Request $request, $clientId) {
+		$client = Client::find($clientId);
+
+		if ($client) {
+			\Scopes::checkScopesForGrantType($request->scopes ?? [], 'client_credentials');
+
+			if (isset($request['asso_id']) && $request->asso_id !== $client->asso_id)
+				throw new PortailException('Il n\'est pas possible de change l\'association à laquelle ce client est lié');
+
+			return response()->json($client->update([
+				'user_id' => \Auth::id(),
+				'name' => $request->input('name', $client->name),
+				'redirect' => $request->input('redirect', $client->redirect),
+				'scopes' => isset($request['scopes']) ? json_encode($request->input('scopes', [])) : $client->scopes,
+			]), 200);
+		}
+		else
+			abort(404, 'Le client n\'a pas été trouvé');
     }
 
     /**
@@ -57,17 +73,15 @@ class ClientController extends \Laravel\Passport\Http\Controllers\ClientControll
      * @param  string  $clientId
      * @return Response
      */
-    public function destroy(Request $request, $clientId)
-    {
-		// Regarder si on a le droit
-        $client = $this->clients->findForUser($clientId, $request->user()->getKey());
+    public function destroy(Request $request, $clientId) {
+		$client = Client::find($clientId);
 
-        if (! $client) {
-            return new Response('', 404);
-        }
+		if ($client) {
+			$client->delete();
 
-        $this->clients->delete(
-            $client
-        );
+			abort(204);
+		}
+		else
+			abort(404, 'Le client n\'a pas été trouvé');
     }
 }

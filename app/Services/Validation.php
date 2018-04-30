@@ -91,12 +91,7 @@ class Validation
 	 * @return string
 	 */
 	public function get(){
-		$string = null;
-		foreach ($this->args as $key => $arg){
-			$string.=$arg.'|';
-		}
-
-		return $string;
+		return implode('|', array_values($this->args));
 	}
 
 }

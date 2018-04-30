@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PartnerRequest extends FormRequest
@@ -30,3 +31,4 @@ class PartnerRequest extends FormRequest
         ];
     }
 }
+

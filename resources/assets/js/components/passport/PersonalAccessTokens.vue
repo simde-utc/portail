@@ -91,18 +91,18 @@
                             </div>
 
                             <!-- Scopes -->
-                            <div class="form-group" v-if="scopes.length > 0">
+                            <div class="form-group">
                                 <label class="col-md-4 col-form-label">Scopes</label>
 
-                                <div class="col-md-6">
-                                    <div v-for="scope in scopes" v-if="!scope.startsWith('client')">
+                                <div class="col-md-12">
+                                    <div v-for="(description, name) in scopes" v-if="name.startsWith('user')">
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox"
-                                                    @click="toggleScope(scope.id)"
-                                                    :checked="scopeIsAssigned(scope.id)">
+                                                    @click="toggleScope(name)"
+                                                    :checked="scopeIsAssigned(name)">
 
-                                                    {{ scope.id }}
+                                                    {{ description }}
                                             </label>
                                         </div>
                                     </div>

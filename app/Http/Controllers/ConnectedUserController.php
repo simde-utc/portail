@@ -6,11 +6,17 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * @resource Connected User
+ *
+ * Affiche des informations sur l'utilisateur connecté
+ */
 class ConnectedUserController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Show Connected User
 	 *
+	 * Renvoie des informations sur l'utilisateur connecté
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index(Request $request) {
@@ -18,9 +24,6 @@ class ConnectedUserController extends Controller
 
 		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
 			$user->makeHidden('email');
-
-		if (!\Scopes::has($request, 'user-get-info-identity-names'))
-			$user->makeHidden('lastname')->makeHidden('firstname');
 
 		if (\Scopes::has($request, 'user-get-info-identity-type'))
 			$user->type = \App\Services\Visible\Visible::getType($user->id);
@@ -33,7 +36,9 @@ class ConnectedUserController extends Controller
 	}
 
 	/**
-	 * Retourne tous les providers de la personne
+	 * List User's Providers
+	 *
+	 * Retourne tous les providers de l'utilisateur connecté
 	 * @param  Request $request
 	 * @return Json
 	 */
@@ -59,6 +64,8 @@ class ConnectedUserController extends Controller
 	}
 
 	/**
+	 * Get User Provider
+	 * 
 	 * Retourne le provider de la personne
 	 * @param  Request $request
 	 * @param  string $name

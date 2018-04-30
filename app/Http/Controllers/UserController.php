@@ -6,20 +6,26 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * @resource User
+ *
+ * Gestion des utilisateurs
+ */
 class UserController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * List Users
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index() {
 		$users = User::all();
+		
 		return response()->json($users, 200);
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Create User
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response

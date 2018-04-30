@@ -59,9 +59,6 @@ return [
 								],
 							]
 						],
-						'names' => [
-							'description' => 'Connaître les nom et prénom de l\'utlisateur',
-						],
 						'timestamps' => [
 							'description' => 'Connaître les moments de connexion et de création de l\'utilisateur',
 						],
