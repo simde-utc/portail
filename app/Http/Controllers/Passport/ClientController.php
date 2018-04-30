@@ -31,12 +31,6 @@ class ClientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        $this->validation->make($request->all(), [
-			'asso_id' => 'required',
-            'name' => 'required|max:255',
-            'redirect' => 'required|url',
-        ])->validate();
-
 		\Scopes::checkScopesForGrantType($request->scopes ?? [], 'client_credentials');
 
         return response()->json(Client::create([
