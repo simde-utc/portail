@@ -61,7 +61,13 @@ trait HasRoles
 		if (isset($data['validated_by']))
 			$manageableRoles = $this->getUserRoles($data['validated_by']);
 
-		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
+		$nbr = @count($roles) ?? 1;
+		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
+
+		if (count($roles) !== $nbr)
+			throw new PortailException('Certains rôles donnés n\'ont pas pu être trouvé');
+
+		foreach ($roles as $role) {
 			if (!$force) {
 				if ($role->limited_at !== null) {
 					$users = $role->users()->wherePivotIn('semester_id', [0, $data['semester_id']])->wherePivot('validated_by', '!=', null);
@@ -104,7 +110,13 @@ trait HasRoles
 		if (isset($updatedData['validated_by']))
 			$manageableRoles = $this->getUserRoles($updatedData['validated_by']);
 
-		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
+		$nbr = @count($roles) ?? 1;
+		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
+
+		if (count($roles) !== $nbr)
+  			throw new PortailException('Certains rôles donnés n\'ont pas pu être trouvé');
+
+		foreach ($roles as $role) {
 			if (!$force && isset($updatedData['validated_by'])) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childs->contains('type', 'admin')))
 					throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier ce rôle: '.$role->name);
@@ -117,7 +129,7 @@ trait HasRoles
 
 		foreach ($data as $key => $value)
 			$toUpdate->wherePivot($key, $value);
-			
+
 		try {
 			foreach ($updatedRoles as $updatedRole)
 				$toUpdate->updateExistingPivot($updatedRole, $updatedData);
@@ -143,7 +155,13 @@ trait HasRoles
 		if ($removed_by !== null)
 			$manageableRoles = $this->getUserRoles($removed_by);
 
-		foreach (Role::getRoles(stringToArray($roles), $this->getTable()) as $role) {
+		$nbr = @count($roles) ?? 1;
+		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
+
+		if (count($roles) !== $nbr)
+  			throw new PortailException('Certains rôles donnés n\'ont pas pu être trouvé');
+
+		foreach ($roles as $role) {
 			if (!$force && $removed_by !== null) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', 'admin') || $role->childs->contains('type', 'admin')))
 					throw new PortailException('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
@@ -176,7 +194,7 @@ trait HasRoles
 	 */
     public function syncRoles($roles, array $data = [], int $removed_by = null, bool $force = false) {
 		$currentRoles = $this->getUserAssignedRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? 0, false)->pluck('id');
-		$roles = Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id');
+		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id)->pluck('id');
 		$intersectedRoles = $currentRoles->intersect($roles);
 		$oldData = [];
 
@@ -196,7 +214,7 @@ trait HasRoles
 	 * @return bool
 	 */
     public function hasOneRole($roles, array $data = []) {
-        return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
+        return Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id)->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
     }
 
 	/**
@@ -207,7 +225,7 @@ trait HasRoles
 	 * @return bool
 	 */
     public function hasAllRoles($roles, array $data = []) {
-        return Role::getRoles(stringToArray($roles), $this->getTable())->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isEmpty();
+        return Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id)->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isEmpty();
     }
 
 	/**
@@ -246,12 +264,12 @@ trait HasRoles
 	 */
 	public function getUserRoles(int $user_id = null, int $semester_id = null) {
 		$semester_id = $semester_id ?? Semester::getThisSemester()->id;
-		$roles = $this->getUserAssignedRoles($user_id, $semester_id);
+		$roles = collect();
 
-		foreach ($roles as $role) {
-			foreach ($role->childs as $childRole)
-				$roles->push($childRole);
+		foreach ($this->getUserAssignedRoles($user_id, $semester_id) as $role) {
+			$roles->push($role);
 
+			$roles = $roles->merge($role->allChilds());
 			$role->makeHidden('childs');
 		}
 
@@ -260,7 +278,7 @@ trait HasRoles
 				$roles->push($userRole);
 		}
 
-		return $roles;
+		return $roles->unique('id');
 	}
 
 	/**
