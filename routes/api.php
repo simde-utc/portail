@@ -44,6 +44,7 @@ Route::prefix('v1')->group(function () {
 		'assos'			=> 'AssoController',
 		'assos/{asso_id}/members'		=> 'AssoMemberController',
 		'assos/types'	=> 'AssoTypeController',
+		'{type}/{id}/contacts' 			=> 'ContactController',
 		'users'			=> 'UserController',
 		'rooms'			=> 'RoomController',
 		'articles'		=> 'ArticleController',
