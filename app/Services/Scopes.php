@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Services;
+
 use Illuminate\Http\Request;
+use Lcobucci\JWT\Parser;
+use Laravel\Passport\Token;
 
 /**
  * Cette classe permet de récupérer des informations concernant un membre de l'UTC
