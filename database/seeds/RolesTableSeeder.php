@@ -25,7 +25,7 @@ class RolesTableSeeder extends Seeder
 				]
 			],
 			[
-				'type' => 'admin',
+				'type' => config('portail.roles.admin.users'),
 				'name' => 'Administrateur',
 				'description' => 'Personne ayant tous les droits sur le serveur',
 				'parents' => [
@@ -36,7 +36,7 @@ class RolesTableSeeder extends Seeder
 				]
 			],
 			[
-				'type' => 'president',
+				'type' => config('portail.roles.admin.assos'),
 				'name' => 'Président',
 				'description' => 'Responsable d\'une organisation',
 				'limited_at' => 1,
@@ -52,7 +52,7 @@ class RolesTableSeeder extends Seeder
 				'limited_at' => 4,
 				'only_for' => 'assos',
 				'parents' => [
-					'president',
+					config('portail.roles.admin.assos'),
 				],
 				'permissions' => [
 					'tresorie',

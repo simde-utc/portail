@@ -111,7 +111,7 @@ DESC
 				'parent_login'  => 'bde',
 			],
 			[
-				'login'			=> 'simde',
+				'login'			=> env('APP_ASSO', 'simde'),
 				'shortname'		=> 'SiMDE',
 				'name'			=> 'Service Informatique de la MDE (Maison Des Etudiants)',
 				'description'	=> <<<DESC

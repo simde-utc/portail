@@ -150,7 +150,7 @@ class AssoController extends Controller
 		// On vérifie la création
 		if ($asso) {
 			// Après la création, on ajoute son président (non confirmé évidemment)
-			$asso->assignRoles('president', [
+			$asso->assignRoles(config('portail.roles.admin.assos'), [
 				'user_id' => $request->input('user_id'),
 			]);
 
@@ -235,11 +235,11 @@ class AssoController extends Controller
 
 		if ($asso) {
 			if (isset($request['validate'])) {
-				$asso->updateRoles('president', [
+				$asso->updateRoles(config('portail.roles.admin.assos'), [
 					'validated_by' => null,
 				], [
 					'validated_by' => \Auth::id(),
-				], $asso->getLastUserWithRole('president')->id === \Auth::id());
+				], $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id());
 			}
 
 			if (!$asso->hasOneRole('resp communication', ['user_id' => \Auth::id()]) && !\Auth::user()->hasOneRole('admin')) {
