@@ -157,4 +157,22 @@ class Asso extends Model
 
 		return $assos;
 	}
+
+	public function hideAssoData() {
+		$this->makeHidden('type_asso_id');
+
+		if ($this->pivot) {
+			$this->pivot->makeHidden(['user_id', 'asso_id']);
+
+			if ($this->pivot->semester_id === 0)
+				$this->pivot->makeHidden('semester_id');
+		}
+
+		if ($this->sub) {
+			foreach ($this->sub as $sub)
+				$this->hideAssoData();
+		}
+
+		return $this;
+	}
 }

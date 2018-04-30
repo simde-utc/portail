@@ -52,30 +52,6 @@ class AssoController extends Controller
 		);
 	}
 
-	protected function hideAssoData(Request $request, $asso) {
-		$asso->makeHidden('type_asso_id');
-
-		if ($asso->pivot) {
-			$asso->pivot->makeHidden(['user_id', 'asso_id']);
-
-			if ($asso->pivot->semester_id === 0)
-				$asso->pivot->makeHidden('semester_id');
-
-			if (is_null($asso->pivot->role_id))
-				$asso->pivot->makeHidden('role_id');
-
-			if (is_null($asso->pivot->validated_by))
-				$asso->pivot->makeHidden('validated_by');
-		}
-
-		if ($asso->sub) {
-			foreach ($asso->sub as $sub)
-				$this->hideAssoData($request, $sub);
-		}
-
-		return $asso;
-	}
-
 	/**
 	 * List Associations
 	 *
@@ -132,7 +108,7 @@ class AssoController extends Controller
 		}
 
 		foreach ($assos as $asso)
-			$this->hideAssoData($request, $asso);
+			$asso->hideAssoData();
 
 		return response()->json($assos, 200);
 	}
@@ -216,7 +192,7 @@ class AssoController extends Controller
 				$asso->user = $userData;
 			}
 
-			return response()->json($this->hideAssoData($request, $asso), 200);
+			return response()->json($asso->hideAssoData(), 200);
 		}
 		else
 			abort(404, 'L\'asso demandée n\'a pas pu être trouvée');
