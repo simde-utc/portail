@@ -8,7 +8,7 @@ use App\Models\Group;
 use App\Http\Requests\GroupRequest;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
-use App\Services\Visible\Visible;
+use App\Traits\HasVisibility;
 
 /**
  * Gestion des groupes utilisateurs
@@ -17,6 +17,7 @@ use App\Services\Visible\Visible;
  */
 class GroupController extends Controller
 {
+	use HasVisibility;
 	/**
 	 * Scopes Group
 	 *
@@ -46,15 +47,18 @@ class GroupController extends Controller
     public function index(Request $request)
     {
         // On inclue les relations et on les formattent.
-        $groups = Group::with([
+		$groups = Group::with([
             'owner',
             'visibility',
-		])->get()->map(function ($group) {
-            return $group->hide();
-        });
+		])->get();
 
-		foreach ($groups as $group)
-		 	$this->hideUserData($request, $group->owner);
+		if (\Auth::id()) {
+			$group = $this->hide($groups, true, function ($group) use ($request) {
+				$this->hideUserData($request, $group->owner);
+
+				return $group;
+			});
+		}
 
 		return response()->json($groups, 200);
     }
@@ -123,14 +127,16 @@ class GroupController extends Controller
             'visibility',
 		])->find($id);
 
-        if ($group) {
-			if (\Auth::user())
-			 	$group = Visible::with($group, \Auth::id());
+		if (\Auth::id()) {
+			$group = $this->hide($group, false, function ($group) use ($request) {
+				$this->hideUserData($request, $group->owner);
 
-			$this->hideUserData($request, $group->owner);
-
-			return response()->json($group, 200);
+				return $group;
+			});
 		}
+
+        if ($group)
+			return response()->json($group, 200);
         else
             abort(404, "Groupe non trouvé");
     }

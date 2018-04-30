@@ -26,7 +26,7 @@ class ConnectedUserController extends Controller
 			$user->makeHidden('email');
 
 		if (\Scopes::has($request, 'user-get-info-identity-type'))
-			$user->type = \App\Services\Visible\Visible::getType($user->id);
+			//$user->type = \App\Services\Visible\Visible::getType($user->id); TODO
 
 		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
 			$user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
@@ -65,7 +65,7 @@ class ConnectedUserController extends Controller
 
 	/**
 	 * Get User Provider
-	 * 
+	 *
 	 * Retourne le provider de la personne
 	 * @param  Request $request
 	 * @param  string $name
