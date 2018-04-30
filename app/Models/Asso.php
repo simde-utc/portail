@@ -158,7 +158,7 @@ class Asso extends Model
 		return $assos;
 	}
 
-	public function hideAssoData() {
+	public function hide() {
 		$this->makeHidden('type_asso_id');
 
 		if ($this->pivot) {

@@ -56,7 +56,7 @@ class VisibilitiesTableSeeder extends Seeder
 				],
             ],
             [
-                'type' => 'studentUtc',
+                'type' => 'studentUTC',
                 'name' => 'Etudiant UTC',
 				'childs' => [
 					'contributorBde',
@@ -64,7 +64,7 @@ class VisibilitiesTableSeeder extends Seeder
 				],
             ],
             [
-                'type' => 'studentEscom',
+                'type' => 'studentESCOM',
                 'name' => 'Etudiant ESCOM',
 				'childs' => [
 					'contributorBde',
@@ -80,7 +80,7 @@ class VisibilitiesTableSeeder extends Seeder
 				],
             ],
             [
-                'type' => 'contributorBde',
+                'type' => 'contributorBDE',
                 'name' => 'Tout cotisant BDE-UTC',
 				'childs' => [
 					'private',
