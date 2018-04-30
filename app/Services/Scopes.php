@@ -480,7 +480,9 @@ class Scopes {
 		else
 			$scopes = $this->getMatchingScopes([$scopes]);
 
-		foreach ($request->user()->token()->scopes as $scope) {
+		$token = $request->token() ?? $request->user()->token();
+
+		foreach ($token->scopes as $scope) {
 			if (in_array($scope, $scopes))
 				return true;
 		}
@@ -500,7 +502,9 @@ class Scopes {
 		else
 			$scopes = $this->getMatchingScopes([$scopes]);
 
-		foreach ($request->user()->token()->scopes as $scope) {
+		$token = $request->token() ?? $request->user()->token();
+
+		foreach ($token->scopes as $scope) {
 			if (!in_array($scope, $scopes))
 				return false;
 		}
