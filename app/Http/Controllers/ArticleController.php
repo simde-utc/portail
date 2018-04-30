@@ -42,14 +42,19 @@ class ArticleController extends Controller
 	 *
 	 * Retourne la liste des articles
 	 * @param \Illuminate\Http\Request $request
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function index(Request $request)
+	public function index(Request $request) : \Illuminate\Http\JsonResponse
 	{
 		// TODO Argument permettant de le passer en hide
+
+		//Si la requête est une requête utilisateur
 		if ($request->user()) {
 			if (isset($request['all'])){
-				$articles = Article::where('visibility_id', '<=', Visibility::where('type', Visible::getType($request->user()->id ))->first()->id)->get();
+					//On recupère tous les articles dont l'id de visibility est inférieur ou égal à l'id de visibility auquel a accès l'utilisateur
+					$articles = Article::all()->map(function ($article) {
+						return $article->hide();
+					});
 			}
 			else {
 				$articles = Article::whereHas('collaborators', function ($query) use ($request){
@@ -59,8 +64,9 @@ class ArticleController extends Controller
 				})->get();
 			}
 		}
+		//Si la requête est une requête client
 		else
-			$articles = \Scopes::has('client-get-article') && isset($request['all']) ? Article::all() : Article::where('visibility', function ($query) { $query->where('type', 'public'); })->get();
+			$articles = \Scopes::has($request, 'client-get-articles') && isset($request['all']) ? Article::all() : Article::where('visibility_id', Visibility::where('type', 'public')->first()->id)->get();
 
 		// On ne renvoie que ceux qui sont visibles
 		return response()->json($request->user() ? ArticleVisible::with($articles, $request->user()->id) : $articles, 200);
