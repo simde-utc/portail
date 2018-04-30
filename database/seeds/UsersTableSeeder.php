@@ -27,6 +27,11 @@ class UsersTableSeeder extends Seeder
                 'email'     => 'natan.danous@etu.utc.fr',
                 'firstname' => 'Natan',
                 'lastname'  => 'Danous'
+            ],
+            [
+                'email'     => 'maxime.escourrou@etu.utc.fr',
+                'firstname' => 'Maxime',
+                'lastname'  => 'Escourrou'
             ]
         ];
 
