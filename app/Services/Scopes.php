@@ -459,6 +459,17 @@ class Scopes {
 		return true;
 	}
 
+	protected function getToken(Request $request) {
+		if ($request->user() === null) {
+			$bearerToken = $request->bearerToken();
+			$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+
+			return Token::find($tokenId);
+		}
+		else
+			return $request->user()->token();
+	}
+
 	/**
 	 * Retourne les Middleware à utiliser pour accéder à une route en matchant le scope ou les scopes
 	 * @param  string/array $scopes
@@ -480,9 +491,7 @@ class Scopes {
 		else
 			$scopes = $this->getMatchingScopes([$scopes]);
 
-		$token = $request->token() ?? $request->user()->token();
-
-		foreach ($token->scopes as $scope) {
+		foreach ($this->getToken($request)->scopes as $scope) {
 			if (in_array($scope, $scopes))
 				return true;
 		}
@@ -504,7 +513,7 @@ class Scopes {
 
 		$token = $request->token() ?? $request->user()->token();
 
-		foreach ($token->scopes as $scope) {
+		foreach ($this->getToken($request)->scopes as $scope) {
 			if (!in_array($scope, $scopes))
 				return false;
 		}
