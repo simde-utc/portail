@@ -31,6 +31,13 @@ Route::prefix('v1')->group(function () {
 	Route::delete('client/{user_id}', 'ClientController@destroy')->middleware(Scopes::matchAnyClient())->name('api/client/user/delete');
 
 	// Ressources
+	/*
+		index : /{ressource} en GET
+		show : /{ressource}/{id} en GET
+		store : /{ressource} en POST
+		update : /{ressource}/{id} en PUT
+		destroy : /{ressource}/{id} en DELETE
+	*/
 	Route::apiResources([
 		'groups'		=> 'GroupController',
 		'groups/{group_id}/members'		=> 'GroupMemberController',
