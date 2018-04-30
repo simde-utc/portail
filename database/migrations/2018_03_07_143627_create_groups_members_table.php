@@ -13,7 +13,7 @@ class CreateGroupsMembersTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('groups_roles', function (Blueprint $table) {
+		Schema::create('groups_members', function (Blueprint $table) {
 			$table->integer('group_id')->unsigned();
 			$table->foreign('group_id')->references('id')->on('groups');
 			$table->integer('user_id')->unsigned();
@@ -53,7 +53,7 @@ class CreateGroupsMembersTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('groups_roles');
+		Schema::dropIfExists('groups_members');
 		Schema::dropIfExists('groups_permissions');
 	}
 }

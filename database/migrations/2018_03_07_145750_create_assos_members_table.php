@@ -13,7 +13,8 @@ class CreateAssosMembersTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('assos_roles', function (Blueprint $table) {
+		Schema::create('assos_members', function (Blueprint 
+$table) {
 			$table->integer('asso_id')->unsigned();
 			$table->foreign('asso_id')->references('id')->on('assos');
 			$table->integer('user_id')->unsigned();
@@ -53,7 +54,7 @@ class CreateAssosMembersTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('assos_roles');
+		Schema::dropIfExists('assos_members');
 		Schema::dropIfExists('assos_permissions');
 	}
 }
