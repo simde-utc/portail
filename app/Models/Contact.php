@@ -3,12 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasVisibility;
 
 class Contact extends Model
-{
-    use HasVisibility;
-    
+{    
     public function contactable() {
         return $this->morphTo();
     }
