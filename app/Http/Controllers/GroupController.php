@@ -53,10 +53,10 @@ class GroupController extends Controller
 		])->get();
 
 		if (\Auth::id()) {
-			$group = $this->hide($groups, true, function ($group) use ($request) {
+			$groups = $this->hide($groups, true, function ($group) use ($request) {
 				$this->hideUserData($request, $group->owner);
 
-				return $group;
+				return $groups;
 			});
 		}
 
@@ -110,7 +110,7 @@ class GroupController extends Controller
             return response()->json($group, 201);
         }
         else
-            return response()->json(["message" => "Impossible de créer le groupe"], 500);
+            abort(500, 'Impossible de créer le groupe');
     }
 
     /**
@@ -153,7 +153,7 @@ class GroupController extends Controller
 		$group = Group::find($id);
 
 		if (!$group)
-			return response()->json(['message' => 'Impossible de trouver le groupe'], 404);
+			abort(404, "Groupe non trouvé");
 
 		if ($request->has('user_id'))
 			$group->user_id = $request->input('user_id');
@@ -200,7 +200,7 @@ class GroupController extends Controller
             return response()->json($group, 200);
 		}
         else
-            return response()->json(["message" => "Impossible de modifier le groupe"], 500);
+			abort(500, 'Impossible de modifier le groupe');
     }
 
 	/**
@@ -214,11 +214,11 @@ class GroupController extends Controller
 		$group = Group::find($id);
 
         if (!$group)
-            return response()->json(["message" => "Impossible de trouver le groupe"], 404);
+			abort(404, "Groupe non trouvé");
 		else {
 			$group->delete();
 
-			return abort(204);
+			abort(204);
 		}
     }
 }
