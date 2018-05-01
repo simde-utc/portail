@@ -19,14 +19,8 @@ trait HasVisibility
     public function hide($data, bool $remove = true, $callback = null) {
         if ($data instanceof Collection)
             return $this->hideCollection($data, $remove, $callback);
-        else if ($data instanceof Model) {
-            $model = $this->hideModel($data, $remove, $callback);
-
-            if ($model === null)
-                throw new \Illuminate\Auth\Access\AuthorizationException;
-            else
-                return $model;
-        }
+        else if ($data instanceof Model)
+            return $this->hideModel($data, $remove, $callback);
     }
 
     protected function hideCollection(Collection $collection, bool $remove = true, $callback = null) {
