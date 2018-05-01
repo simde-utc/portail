@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Visibility;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Traits\HasStages;
 
 class Visibility extends Model
 {
+    use HasStages;
+
     protected $table = 'visibilities';
 
     protected $fillable = [
@@ -36,6 +39,20 @@ class Visibility extends Model
 
     public function events() {
         return $this->hasMany('App\Models\Event');
+    }
+
+    public static function getTopStage(array $data = [], $with = []) {
+        $tableName = (new static)->getTable();
+        $model = static::orderBy('id')->with([]);
+
+        foreach ($data as $key => $value) {
+            if (!\Schema::hasColumn($tableName, $key))
+                throw new PortailException('L\'attribut '.$key.' n\'existe pas');
+
+            $model = $model->where($key, $value);
+        }
+
+        return collect()->push($model->first());
     }
 
     // TODO les liens vers les modèles

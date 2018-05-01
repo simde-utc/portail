@@ -26,6 +26,7 @@ class VisibilitiesTableSeeder extends Seeder
                 'name' => 'Toute personne connectée',
 				'childs' => [
 					'casOrWasCas',
+					'private',
 				],
             ],
             [
@@ -33,6 +34,7 @@ class VisibilitiesTableSeeder extends Seeder
                 'name' => 'Toute personne connectée au CAS ou maintenant Tremplin',
 				'childs' => [
 					'cas',
+					'private',
 				],
             ],
             [
@@ -40,22 +42,33 @@ class VisibilitiesTableSeeder extends Seeder
                 'name' => 'Toute personne connectée au CAS',
 				'childs' => [
 					'personnal',
-					'studentUtc',
-					'studentEscom',
+					'student',
+					'private',
 				],
             ],
             [
-                'type' => 'studentUtc',
+                'type' => 'student',
+                'name' => 'Etudiant',
+				'childs' => [
+                    'studentUtc',
+                    'studentEscom',
+					'private',
+				],
+            ],
+            [
+                'type' => 'studentUTC',
                 'name' => 'Etudiant UTC',
 				'childs' => [
 					'contributorBde',
+					'private',
 				],
             ],
             [
-                'type' => 'studentEscom',
+                'type' => 'studentESCOM',
                 'name' => 'Etudiant ESCOM',
 				'childs' => [
 					'contributorBde',
+					'private',
 				],
             ],
             [
@@ -63,10 +76,11 @@ class VisibilitiesTableSeeder extends Seeder
                 'name' => 'Personnel UTC',
 				'childs' => [
 					'contributorBde',
+					'private',
 				],
             ],
             [
-                'type' => 'contributorBde',
+                'type' => 'contributorBDE',
                 'name' => 'Tout cotisant BDE-UTC',
 				'childs' => [
 					'private',

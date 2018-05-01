@@ -52,30 +52,6 @@ class AssoController extends Controller
 		);
 	}
 
-	protected function hideAssoData(Request $request, $asso) {
-		$asso->makeHidden('type_asso_id');
-
-		if ($asso->pivot) {
-			$asso->pivot->makeHidden(['user_id', 'asso_id']);
-
-			if ($asso->pivot->semester_id === 0)
-				$asso->pivot->makeHidden('semester_id');
-
-			if (is_null($asso->pivot->role_id))
-				$asso->pivot->makeHidden('role_id');
-
-			if (is_null($asso->pivot->validated_by))
-				$asso->pivot->makeHidden('validated_by');
-		}
-
-		if ($asso->sub) {
-			foreach ($asso->sub as $sub)
-				$this->hideAssoData($request, $sub);
-		}
-
-		return $asso;
-	}
-
 	/**
 	 * List Associations
 	 *
@@ -83,8 +59,14 @@ class AssoController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index(AssoRequest $request) {
-		if (isset($request['stage']) || isset($request['fromStage'])) {
-			$assos = isset($request['stage']) ? Asso::getStage($request->stage, $request->type_asso_id) : Asso::getFromStage($request->fromStage, $request->type_asso_id);
+		if (isset($request['stage']) || isset($request['fromStage']) || isset($request['toStage']) || isset($request['allStages'])) {
+			$inputs = $request->input();
+			unset($inputs['stage']);
+			unset($inputs['fromStage']);
+			unset($inputs['toStage']);
+			unset($inputs['allStages']);
+
+			$assos = isset($request['stage']) ? Asso::getStage($request->stage, $inputs, 'type:id,name,description') : Asso::getStages($request->fromStage, $request->toStage, $inputs, 'type:id,name,description');
 		}
 		else if (\Scopes::isClientToken($request) || isset($request['all'])) {
 			$assos = Asso::with('type:id,name,description')->get();
@@ -132,7 +114,7 @@ class AssoController extends Controller
 		}
 
 		foreach ($assos as $asso)
-			$this->hideAssoData($request, $asso);
+			$asso->hide();
 
 		return response()->json($assos, 200);
 	}
@@ -216,7 +198,7 @@ class AssoController extends Controller
 				$asso->user = $userData;
 			}
 
-			return response()->json($this->hideAssoData($request, $asso), 200);
+			return response()->json($asso->hide(), 200);
 		}
 		else
 			abort(404, 'L\'asso demandée n\'a pas pu être trouvée');

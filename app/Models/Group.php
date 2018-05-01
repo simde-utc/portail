@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasMembers;
-use App\Traits\HasVisibility;
 
 class Group extends Model
 {
-    use SoftDeletes, HasMembers, HasVisibility;
+    use SoftDeletes, HasMembers;
 
     public static function boot() {
         static::created(function ($model) {

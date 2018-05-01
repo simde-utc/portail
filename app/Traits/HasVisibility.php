@@ -6,6 +6,8 @@ use App\Services\Ginger;
 use App\Models\Visibility;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 trait HasVisibility
 {
@@ -13,54 +15,68 @@ trait HasVisibility
      * Fonction qui renvoie une nouvelle instance du modèle si celui-ci
      * n'est pas visible par l'utilisateur.
      *
-     * @return Illuminate\Database\Eloquent\Model
      */
-    public function hide() {
-        if (!$this->isVisible()) {
-            $model = new static;
+    public function hide($data, bool $remove = true, $callback = null) {
+        if ($data instanceof Collection)
+            return $this->hideCollection($data, $remove, $callback);
+        else if ($data instanceof Model) {
+            $model = $this->hideModel($data, $remove, $callback);
 
-            // On ne renvoie pas l'id du modèle par sécurité, 
-            // ainsi on ne peut plus accèder aux relations du modèle caché
-            $model->error = "Vous ne pouvez pas voir cela.";
-            $model->visibility = $this->visibility;
-            
-            return $model;
-        } else {
-            return $this;
-        } 
+            if ($model === null)
+                throw new \Illuminate\Auth\Access\AuthorizationException;
+            else
+                return $model;
+        }
     }
 
-    /**
-     * Fonction permettant de retourner le type du niveau de visibilité de l'utilisateur actuel
-     *
-     * @return string
-     */
-    public function getVisibilityType() {
-        $visibilities = Visibility::all();
-        $visibility_id = $visibilities->first()->id;
+    protected function hideCollection(Collection $collection, bool $remove = true, $callback = null) {
+        foreach ($collection as $key => $model) {
+            if ($this->isVisible($model)) {
+                if (method_exists($model, 'hide'))
+                    $collection[$key] = $model->hide();
 
-        if (Auth::user() === null)
-            return 'public';
+                if ($callback)
+                    $collection[$key] = $callback($collection[$key]);
+            }
+            else {
+                if ($remove)
+                    $collection->forget($key);
+                else {
+                    $name = get_class($model);
+                    $hidden = new $name;
+                    $hidden->id = $model->id;
+                    $hidden->visibility = $model->visibility;
 
-        $result = 'public';
-
-        while ($visibility_id !== null) {
-            $visibility = $visibilities->find($visibility_id);
-
-            if ($visibility === null)
-                return false;
-
-            $type = 'is'.ucfirst($visibility->type);
-
-            if (method_exists(get_class(), $type) && self::$type(null, Auth::id()))
-                $result = $visibility->type;
-            else
-                break;
-
-            $visibility_id = $visibility->parent_id;
+                    $collection[$key] = $hidden;
+                }
+            }
         }
 
-        return $result;
+        return $collection;
+    }
+
+    protected function hideModel(Model $model, bool $remove = true, $callback = null) {
+        if ($this->isVisible($model)) {
+            if (method_exists($model, 'hide'))
+                $model = $model->hide();
+
+            if ($callback)
+                $model = $callback($model);
+
+            return $model;
+        }
+        else {
+            if ($remove)
+                return null;
+            else {
+                $name = get_class($model);
+                $hidden = new $name;
+                $hidden->id = $model->id;
+                $hidden->visibility = $model->visibility;
+
+                return $hidden;
+            }
+        }
     }
 
     /**
@@ -68,80 +84,84 @@ trait HasVisibility
      *
      * @return bool
      */
-    public function isVisible() {
-        $visibilities = Visibility::all();
-
-        if ($visibilities === null)
-            return true;
+    public function isVisible(Model $model) {
+        // Si on est pas connecté, on regarde si la visibilité est publique ou non
+        if (Auth::id() === null)
+            return is_null($model->visibility_id) || ($model->visibility_id === Visibility::first()->id);
 
         // Si le modèle n'a pas de visibilité, on prend la première visibilité,
         // la plus ouverte.
-        if ($this->visibility_id === null)
-            $visibility_id = $visibilities->first()->id;
-        else 
-            $visibility_id = $this->visibility_id;
+        if ($model->visibility_id)
+            $visibility = $model->visibility;
+        else
+            $visibility = Visibility::first();
 
-        // Si on est pas connecté, on regarde si la visibilité est publique ou non
-        if (Auth::user() === null)
-            return $visibilities->find($visibility_id)->type === 'public';
+        if ($visibility === null)
+            return false;
 
-        while ($visibility_id !== null) {
-            $visibility = $visibilities->find($visibility_id);
 
-            if ($visibility === null)
-                return false;
+        $type = 'is'.ucfirst($visibility->type);
 
-            $type = 'is'.ucfirst($visibility->type);
-
-            if (method_exists(get_class(), $type) && $this->$type(Auth::id()))
-                return true;
-
-            $visibility_id = $visibility->parent_id;
-        }
+        if (method_exists(get_class(), $type) && $this->$type(Auth::id(), $model))
+            return true;
 
         return false;
     }
 
-    public function isPublic($user_id) {
+    public function isPublic($user_id, $model) {
         return true;
     }
 
-    public function isLogged($user_id) {
+    public function isLogged($user_id, $model) {
         return User::find($user_id)->exists();
     }
 
-    public function isCasOrWasCas($user_id) {
+    public function isCasOrWasCas($user_id, $model) {
         return AuthCas::find($user_id)->exists();
     }
 
-    public function isCas($user_id) {
+    public function isCas($user_id, $model) {
         return AuthCas::find($user_id)->where('is_active', true)->exists();
     }
 
-    public function isStudent($user_id) {
+    public function isStudent($user_id, $model) {
+        $type = Ginger::user(AuthCas::find($user_id)->login)->getType();
+        return $type === 'etu' || $type === 'escom';
+    }
+
+    public function isStudentUTC($user_id, $model) {
         return Ginger::user(AuthCas::find($user_id)->login)->getType() === 'etu';
     }
 
-    public function isContributor($user_id) {
+    public function isStudentESCOM($user_id, $model) {
+        return Ginger::user(AuthCas::find($user_id)->login)->getType() === 'escom';
+    }
+
+    public function isPersonnal($user_id, $model) {
+        return Ginger::user(AuthCas::find($user_id)->login)->getType() === 'pers';
+    }
+
+    public function isContributorBDE($user_id, $model) {
         return Ginger::user(AuthCas::find($user_id)->login)->isContributor();
     }
 
-    public function isPrivate($user_id) {
-        try {
-            $member = $this->members->find($user_id);
-        }
-        catch (Exception $e) {
-            $member = null;
-        }
+    public function isPrivate($user_id, $model) {
+		if ($model === null)
+			return false;
 
-        return $member !== null;
+		try {
+			return $model->currentAllMembers()->wherePivot('user_id', $user_id)->count() > 0;
+		}
+		catch (Exception $e) {}
+
+        return false;
     }
 
-    public function isOwner($user_id) {
-        return $this->user_id === $user_id;
+    public function isOwner($user_id, $model) {
+        return $model->user_id === $user_id;
     }
 
-    public function isInternal($user_id) {
+    public function isInternal($user_id, $model) {
         return User::find($user_id)->hasOneRole('superadmin');
     }
 }

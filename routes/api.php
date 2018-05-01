@@ -50,5 +50,6 @@ Route::prefix('v1')->group(function () {
 		'partners'		=> 'PartnerController',
 		'events'		=> 'EventController',
 		'visibilities'	=> 'VisibilityController',
+		// '{type}/{id}/contact' => 'ContactController',
   ]);
 });

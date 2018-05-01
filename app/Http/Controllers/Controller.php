@@ -60,18 +60,10 @@ class Controller extends BaseController
 
         $user->displayName = $user->firstname.' '.strtoupper($user->lastname);
 
-        if ($user->id === \Auth::id()) {
-            if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
-                array_push($toHide, 'email');
+        if ($user->id === \Auth::id())
+            $user->me = true;
 
-            if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
-                array_push($toHide, 'last_login_at', 'created_at', 'updated_at');
-
-            $user->makeHidden($toHide);
-        }
-        else
-            $user->makeHidden(['firstname', 'lastname', 'email', 'last_login_at', 'created_at', 'updated_at']);
-
+        $user->makeHidden(['firstname', 'lastname', 'email', 'last_login_at', 'created_at', 'updated_at']);
 
 		return $this->hidePivotData($request, $user, $hidePivot);
 	}
