@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\Traits\HasMembers;
+use \App\Traits\HasStages;
 
 class Asso extends Model
 {
-	use SoftDeletes, HasMembers {
+	use SoftDeletes, HasStages, HasMembers {
 		HasMembers::members as membersAndFollowers;
 		HasMembers::currentMembers as currentMembersAndFollowers;
 		HasMembers::joiners as protected joinersFromHasMembers;
@@ -104,58 +105,6 @@ class Asso extends Model
 
 	public function getLastUserWithRole($role) {
 		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
-	}
-
-	public static function getStage(int $stage, int $type_asso_id = null) {
-		$assos = static::whereNull('parent_id')->with('type:id,name,description');
-
-		if (!is_null($type_asso_id))
-			$assos = $assos->where('type_asso_id', $type_asso_id);
-
-		$assos = $assos->get();
-
-		for ($i = 0; $i < $stage; $i++) {
-			$before = $assos;
-			$assos = collect();
-
-			foreach ($before as $asso) {
-				$childs = $asso->childs()->with('type:id,name,description');
-
-				if (!is_null($childs))
-					$childs = $childs->where('type_asso_id', $type_asso_id);
-
-				$assos = $assos->merge($childs->get());
-			}
-		}
-
-		return $assos;
-	}
-
-	public static function getFromStage(int $stage, int $type_asso_id = null) {
-		$assos = static::whereNull('parent_id')->with('type:id,name,description');
-
-		if (!is_null($type_asso_id))
-			$assos = $assos->where('type_asso_id', $type_asso_id);
-
-		$assos = $assos->get();
-		$toAdd = $assos;
-
-		for ($i = 0; $i < $stage; $i++) {
-			$toAddChilds = $toAdd;
-			$toAdd = collect();
-
-			foreach ($toAddChilds as $asso) {
-				$childs = $asso->childs()->with('type:id,name,description');
-
-				if (!is_null($type_asso_id))
-					$childs = $childs->where('type_asso_id', $type_asso_id);
-
-				$asso->sub = $childs->get();
-				$toAdd = $toAdd->merge($asso->sub);
-			}
-		}
-
-		return $assos;
 	}
 
 	public function hide() {
