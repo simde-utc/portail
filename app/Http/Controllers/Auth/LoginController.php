@@ -36,8 +36,8 @@ class LoginController extends Controller
 	protected $redirectTo = '/home';
 
 	public function __construct()	{
-		$this->middleware('guest');
-		// $this->middleware('auth', ['only' => 'logout']);
+		$this->middleware('guest', ['except' => 'logout']);
+		$this->middleware('auth:web', ['only' => 'logout']);
 	}
 
 	/**
@@ -104,9 +104,6 @@ class LoginController extends Controller
 			else
 				$redirect = redirect('welcome');
 		}
-
-		// Utile ?
-		Session::find(\Session::getId())->update(['auth_provider' => null]);
 
 		// Ne pas oublier de détruire sa session
 		\Session::flush();
