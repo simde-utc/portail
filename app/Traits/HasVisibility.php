@@ -30,10 +30,8 @@ trait HasVisibility
     }
 
     protected function hideCollection(Collection $collection, bool $remove = true, $callback = null) {
-        $visibilities = Visibility::all();
-
         foreach ($collection as $key => $model) {
-            if ($this->isVisible($model, $visibilities)) {
+            if ($this->isVisible($model)) {
                 if (method_exists($model, 'hide'))
                     $collection[$key] = $model->hide();
 
@@ -47,7 +45,7 @@ trait HasVisibility
                     $name = get_class($model);
                     $hidden = new $name;
                     $hidden->id = $model->id;
-                    $hidden->visibility = $visibilities->find($model->visibility_id);
+                    $hidden->visibility = $model->visibility;
 
                     $collection[$key] = $hidden;
                 }
@@ -58,9 +56,7 @@ trait HasVisibility
     }
 
     protected function hideModel(Model $model, bool $remove = true, $callback = null) {
-        $visibilities = Visibility::all();
-
-        if ($this->isVisible($model, $visibilities)) {
+        if ($this->isVisible($model)) {
             if (method_exists($model, 'hide'))
                 $model = $model->hide();
 
@@ -76,7 +72,7 @@ trait HasVisibility
                 $name = get_class($model);
                 $hidden = new $name;
                 $hidden->id = $model->id;
-                $hidden->visibility = $visibilities->find($model->visibility_id);
+                $hidden->visibility = $model->visibility;
 
                 return $hidden;
             }
@@ -88,33 +84,26 @@ trait HasVisibility
      *
      * @return bool
      */
-    public function isVisible(Model $model, Collection $visibilities = null) {
-        $visibilities = $visibilities ?? Visibility::all();
+    public function isVisible(Model $model) {
+        // Si on est pas connecté, on regarde si la visibilité est publique ou non
+        if (Auth::id() === null)
+            return is_null($model->visibility_id) || ($model->visibility_id === Visibility::first()->id);
 
         // Si le modèle n'a pas de visibilité, on prend la première visibilité,
         // la plus ouverte.
-        if ($model->visibility_id === null)
-            $visibility_id = $visibilities->first()->id;
+        if ($model->visibility_id)
+            $visibility = $model->visibility;
         else
-            $visibility_id = $model->visibility_id;
+            $visibility = Visibility::first();
 
-        // Si on est pas connecté, on regarde si la visibilité est publique ou non
-        if (Auth::id() === null)
-            return $visibilities->find($visibility_id)->type === 'public';
+        if ($visibility === null)
+            return false;
 
-        while ($visibility_id !== null) {
-            $visibility = $visibilities->find($visibility_id);
 
-            if ($visibility === null)
-                return false;
+        $type = 'is'.ucfirst($visibility->type);
 
-            $type = 'is'.ucfirst($visibility->type);
-
-            if (method_exists(get_class(), $type) && $this->$type(Auth::id(), $model))
-                return true;
-
-            $visibility_id = $visibility->parent_id;
-        }
+        if (method_exists(get_class(), $type) && $this->$type(Auth::id(), $model))
+            return true;
 
         return false;
     }

@@ -11,13 +11,6 @@ class Role extends Model
 {
 	use HasPermissions;
 
-  public static function create(array $attributes = []) {
-      if (static::where('type', $attributes['type'])->first())
-		throw new \Exception('Ce rôle existe déjà');
-
-      return static::query()->create($attributes);
-  }
-
 	public static function find(int $id, string $only_for = null) {
 		$roles = static::where('id', $id);
 
@@ -83,56 +76,56 @@ class Role extends Model
 		return $roles;
 	}
 
-  public function permissions(): BelongsToMany {
-      return $this->belongsToMany(Permission::class, 'roles_permissions');
-  }
+	public function permissions(): BelongsToMany {
+		return $this->belongsToMany(Permission::class, 'roles_permissions');
+	}
 
-  public function users(): BelongsToMany {
-	  return $this->belongsToMany(User::class, 'users_roles');
-  }
+	public function users(): BelongsToMany {
+		return $this->belongsToMany(User::class, 'users_roles');
+	}
 
-  public function childs(): BelongsToMany {
-	  return $this->belongsToMany(Role::class, 'roles_parents', 'parent_id', 'role_id');
-  }
+	public function childs(): BelongsToMany {
+		return $this->belongsToMany(Role::class, 'roles_parents', 'parent_id', 'role_id');
+	}
 
-  public function parents(): BelongsToMany {
-	  return $this->belongsToMany(Role::class, 'roles_parents', 'role_id', 'parent_id');
-  }
+	public function parents(): BelongsToMany {
+		return $this->belongsToMany(Role::class, 'roles_parents', 'role_id', 'parent_id');
+	}
 
-  public function allChilds() {
-	  $childs = collect();
+	public function allChilds() {
+		$childs = collect();
 
-	  foreach ($this->childs as $child) {
-		  $childs->push($child);
+		foreach ($this->childs as $child) {
+			$childs->push($child);
 
-		  $childs = $childs->merge($child->allChilds());
-		  $child->makeHidden('childs');
-	  }
+			$childs = $childs->merge($child->allChilds());
+			$child->makeHidden('childs');
+		}
 
-	  return $childs->unique('id');
-  }
+		return $childs->unique('id');
+	}
 
-  public function allParents() {
-	  $parents = collect();
+	public function allParents() {
+		$parents = collect();
 
-	  foreach ($this->parents as $parent) {
-		  $parents->push($parent);
+		foreach ($this->parents as $parent) {
+			$parents->push($parent);
 
-		  $parents = $parents->merge($parent->allChilds());
-		  $parent->makeHidden('parents');
-	  }
+			$parents = $parents->merge($parent->allChilds());
+			$parent->makeHidden('parents');
+		}
 
-	  return $parents->unique('id');
-  }
+		return $parents->unique('id');
+	}
 
-  public function hasPermissionTo($permission): bool {
-      if (is_string($permission))
-          $permission = Permission::findByType($permission);
-      else if (is_int($permission))
-          $permission = Permission::find($permission);
+	public function hasPermissionTo($permission): bool {
+		if (is_string($permission))
+			$permission = Permission::findByType($permission);
+		else if (is_int($permission))
+			$permission = Permission::find($permission);
 
-      return $this->permissions->contains('id', $permission->id);
-  }
+		return $this->permissions->contains('id', $permission->id);
+	}
 
 	public function givePermissionTo($permissions) {
 		$this->permissions()->withTimestamps()->attach(Permission::getPermissions(stringToArray($permissions), $this->only_for === 'users'));
