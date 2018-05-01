@@ -12,17 +12,38 @@ use App\Exceptions\PortailException;
 class ContactController extends Controller
 {
     /**
+     * Scopes Group
+     *
+     * Les Scopes requis pour manipuler les Groups
+     */
+    // public function __construct() {
+    //     $this->middleware(
+    //         \Scopes::matchOne(
+    //             ['user-get-groups-enabled', 'user-get-groups-disabled'],
+    //             ['client-get-groups-enabled', 'client-get-groups-disabled']
+    //         ),
+    //         ['only' => ['index', 'show']]
+    //     );
+    //     $this->middleware(
+    //         \Scopes::matchOne(
+    //             ['user-manage-groups']
+    //         ),
+    //         ['only' => ['store', 'update', 'destroy']]
+    //     );
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(ContactRequest $request)
     {
-        $model = $request->model;
-        $id = $request->id;
+        $model = $request->model::find($request->id);
 
-        $instance = $model::find($id);
-        $contacts = $instance->contact();
+        $contacts = $model->contact()->with([
+            'type',
+        ])->get();
 
         return response()->json($contacts, 200);
     }

@@ -86,7 +86,7 @@ class User extends Authenticatable
 	}
 
 	public function contact() {
-		return $this->morphMany(User::class, 'contacts');
+		return $this->morphMany(Contact::class, 'contactable');
 	}
 
     public function events() {
