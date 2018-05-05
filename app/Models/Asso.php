@@ -56,7 +56,7 @@ class Asso extends Model
     }
 
 	public function childs() {
-	    return static::where('parent_id', $this->id);
+		return $this->hasMany(Asso::class, 'parent_id', 'id');
     }
 
 	public function members() {

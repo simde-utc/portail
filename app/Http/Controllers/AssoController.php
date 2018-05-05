@@ -155,7 +155,12 @@ class AssoController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show(Request $request, int $id) {
-		$asso = Asso::with('type:id,name,description')->withTrashed()->find($id);
+		$asso = Asso::with(isset($request['withChilds']) ? [
+			'type:id,name,description',
+			'childs'
+		] : [
+			'type:id,name,description'
+		])->withTrashed()->find($id);
 
 		if ($asso) {
 			if (\Scopes::isUserToken($request)) {
