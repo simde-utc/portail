@@ -186,6 +186,9 @@ abstract class BaseAuth
 	protected function connect(Request $request, $user, $userAuth) {
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null) {
+			if (!$user->is_active)
+				return $this->error($request, $user, $userAuth, 'Ce compte a été désactivé');
+
 			$user->timestamps = false;
 			$user->last_login_at = new \DateTime();
 			$user->save();

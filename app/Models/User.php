@@ -14,11 +14,15 @@ class User extends Authenticatable
 	use HasApiTokens, Notifiable, HasRoles;
 
 	protected $fillable = [
-		'firstname', 'lastname', 'email', 'last_login_at',
+		'firstname', 'lastname', 'email', 'is_active', 'last_login_at',
 	];
 
 	protected $hidden = [
 		'remember_token',
+	];
+
+	protected $casts = [
+		'is_active' => 'boolean',
 	];
 
 	public static function findByEmail($email) {
@@ -32,6 +36,18 @@ class User extends Authenticatable
 			return collect($users);
 		else
 			return $users;
+	}
+
+	public function ban() {
+		return $this->update([
+			'is_active' => false
+		]);
+	}
+
+	public function unban() {
+		return $this->update([
+			'is_active' => true
+		]);
 	}
 
 	public function cas() {
