@@ -3,13 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasStages;
 use App\Traits\HasPermissions;
 use App\Models\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
-	use HasPermissions;
+	use HasStages, HasPermissions;
+
+	protected $casts = [
+		'limited_at' => 'integer',
+	];
 
 	public static function find(int $id, string $only_for = null) {
 		$roles = static::where('id', $id);
@@ -156,4 +161,18 @@ class Role extends Model
 
 		return $this;
 	}
+
+	public static function getTopStage(array $data = [], $with = []) {
+        $tableName = (new static)->getTable();
+        $model = static::doesntHave('parents')->with($with);
+
+		foreach ($data as $key => $value) {
+            if (!\Schema::hasColumn($tableName, $key))
+                throw new PortailException('L\'attribut '.$key.' n\'existe pas');
+
+            $model = $model->where($key, $value);
+        }
+
+		return $model->get();
+    }
 }
