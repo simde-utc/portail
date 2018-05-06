@@ -154,13 +154,18 @@ class AssoController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show(Request $request, int $id) {
+	public function show(Request $request, $id) {
 		$asso = Asso::with(isset($request['withChilds']) ? [
 			'type:id,name,description',
 			'childs'
 		] : [
 			'type:id,name,description'
-		])->withTrashed()->find($id);
+		])->withTrashed();
+
+		if (is_numeric($id))
+			$asso = $asso->find($id);
+		else
+			$asso = $asso->where('login', $id)->first();
 
 		if ($asso) {
 			if (\Scopes::isUserToken($request)) {
@@ -218,7 +223,12 @@ class AssoController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(AssoRequest $request, $id) {
-		$asso = Asso::withTrashed()->find($id);
+		$asso = Asso::withTrashed();
+
+		if (is_numeric($id))
+			$asso = $asso->find($id);
+		else
+			$asso = $asso->where('login', $id)->first();
 
 		if ($asso) {
 			if (isset($request['validate'])) {
@@ -260,7 +270,10 @@ class AssoController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy(Request $request, $id) {
-		$asso = Asso::find($id);
+		if (is_numeric($id))
+			$asso = Asso::find($id);
+		else
+			$asso = Asso::where('login', $id)->first();
 
 		if ($asso) {
 			if ($asso->childs()->count() > 0)
