@@ -101,10 +101,14 @@ trait HasMembers
 
 		$members = User::getUsers(stringToArray($members));
 
-		if (!$force && isset($data['validated_by'])) {
-			if ($data['role_id'] ?? false) {
+		if ($data['role_id'] ?? false) {
+			$role = Role::find($data['role_id'], $this->getTable());
+
+			if ($role === null)
+				throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
+
+			if (!$force && isset($data['validated_by'])) {
 				$manageableRoles = $this->getUserRoles($data['validated_by']);
-				$role = Role::find($data['role_id'], $this->getTable());
 
 				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
 					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à donner ce rôle: '.$role->name);
@@ -141,29 +145,33 @@ trait HasMembers
 		$members = User::getUsers(stringToArray($members));
 
 		if (!$force && isset($updatedData['validated_by'])) {
-			$manageableRoles = $this->getUserRoles($updatedData['validated_by']);
-
 			if ($data['role_id'] ?? false) {
 				$role = Role::find($data['role_id'], $this->getTable());
 
 				if ($role === null)
-					throw new PortailException('Ce role ne peut-être assigné');
+					throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
 
-				if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
-					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
+				if (!$force && isset($updatedData['validated_by'])) {
+					$manageableRoles = $this->getUserRoles($updatedData['validated_by']);
+
+					if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
+						throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
+				}
 			}
 
 			if ($updatedData['role_id'] ?? false) {
 				$role = Role::find($updatedData['role_id'], $this->getTable());
 
 				if ($role === null)
-					throw new PortailException('Ce role ne peut-être assigné');
+					throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
 
-				if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
-					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
+				if (!$force && isset($updatedData['validated_by'])) {
+					if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
+						throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 
-				if ($this->roles()->wherePivot('role_id', $role->id)->whereNotIn($this->getMemberRelationTable().'.user_id', $members->pluck('id'))->get()->count() > $role->limited_at - $members->count())
-					throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
+					if ($this->roles()->wherePivot('role_id', $role->id)->whereNotIn($this->getMemberRelationTable().'.user_id', $members->pluck('id'))->get()->count() > $role->limited_at - $members->count())
+						throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
+				}
 			}
 		}
 
@@ -198,13 +206,17 @@ trait HasMembers
 		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$members = User::getUsers(stringToArray($members));
 
-		if (!$force && $removed_by !== null) {
-			$manageableRoles = $this->getUserRoles($removed_by);
-			$manageablePermissions = $this->getUserPermissions($removed_by);
 
-			if ($data['role_id'] ?? false) {
-				$role = Role::find($data['role_id'], $this->getTable());
+		$manageableRoles = $this->getUserRoles($removed_by);
+		$manageablePermissions = $this->getUserPermissions($removed_by);
 
+		if ($data['role_id'] ?? false) {
+			$role = Role::find($data['role_id'], $this->getTable());
+
+			if ($role === null)
+				throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
+
+			if (!$force && $removed_by !== null) {
 				if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin'))
 					throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}

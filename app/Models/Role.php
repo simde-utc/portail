@@ -7,6 +7,7 @@ use App\Traits\HasStages;
 use App\Traits\HasPermissions;
 use App\Models\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Exceptions\PortailException;
 
 class Role extends Model
 {
@@ -145,19 +146,49 @@ class Role extends Model
 	}
 
 	public function assignParentRole($roles) {
-		$this->parents()->withTimestamps()->attach(static::getRoles(stringToArray($roles), $this->only_for));
+		$roles = stringToArray($roles);
+		$toAdd = static::getRoles($roles, $this->only_for);
+
+		if (count($toAdd) !== count($roles))
+			throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
+
+		if ($toAdd->find($this->id))
+			throw new PortailException('Il n\'est pas possible de s\'auto-hériter', 400);
+
+		if ($toAdd->whereIn('id', $this->childs()->get(['id'])->pluck('id'))->count() > 0)
+			throw new PortailException('Il n\'est pas possible d\'hériter de ses enfants', 400);
+
+		$this->parents()->withTimestamps()->attach($toAdd);
 
 		return $this;
 	}
 
 	public function removeParentRole($roles) {
-		$this->parents()->withTimestamps()->detach(static::getRoles(stringToArray($roles), $this->only_for));
+		$roles = stringToArray($roles);
+		$toAdd = static::getRoles($roles, $this->only_for);
+
+		if (count($toAdd) !== count($roles))
+			throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
+
+		$this->parents()->withTimestamps()->detach($roles);
 
 		return $this;
 	}
 
 	public function syncParentRole($roles) {
-		$this->parents()->withTimestamps()->sync(static::getRoles(stringToArray($roles), $this->only_for));
+		$roles = stringToArray($roles);
+		$toAdd = static::getRoles($roles, $this->only_for);
+
+		if (count($toAdd) !== count($roles))
+			throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
+
+		if ($toAdd->find($this->id))
+			throw new PortailException('Il n\'est pas possible de s\'auto-hériter', 400);
+
+		if ($toAdd->whereIn('id', $this->childs()->get(['id'])->pluck('id'))->count() > 0)
+			throw new PortailException('Il n\'est pas possible d\'hériter de ses enfants', 400);
+
+		$this->parents()->withTimestamps()->sync($roles);
 
 		return $this;
 	}
