@@ -39,17 +39,16 @@ Route::prefix('v1')->group(function () {
 		destroy : /{ressource}/{id} en DELETE
 	*/
 	Route::apiResources([
-		'groups'		=> 'GroupController',
-		'groups/{group_id}/members'		=> 'GroupMemberController',
-		'assos'			=> 'AssoController',
-		'assos/{asso_id}/members'		=> 'AssoMemberController',
-		'assos/types'	=> 'AssoTypeController',
-		'{type}/{id}/contacts' 			=> 'ContactController',
-		'users'			=> 'UserController',
-		'rooms'			=> 'RoomController',
-		'articles'		=> 'ArticleController',
-		'partners'		=> 'PartnerController',
-		'events'		=> 'EventController',
-		'visibilities'	=> 'VisibilityController',
+		'groups' => 'GroupController',
+		'groups/{group_id}/members' => 'GroupMemberController',
+		'assos'	=> 'AssoController',
+		'assos/{asso_id}/members' => 'AssoMemberController',
+		'{resource_type}/{resource_id}/contacts' => 'ContactController',
+		'users'	=> 'UserController',
+		'rooms'	=> 'RoomController',
+		'articles' => 'ArticleController',
+		'partners' => 'PartnerController',
+		'events' => 'EventController',
+		'visibilities' => 'VisibilityController',
   ]);
 });

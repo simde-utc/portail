@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Contact extends Model
 {    
     protected $hidden = ['contact_type_id', 'visibility_id', 'contactable_id', 'contactable_type'];
+    protected $with = ['type'];
 
     public function contactable() {
         return $this->morphTo();
