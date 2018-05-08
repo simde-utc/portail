@@ -81,11 +81,12 @@ class GroupController extends Controller
             // Les ids des membres à ajouter seront passé dans la requête.
             // ids est un array de user ids.
             if ($request->has('member_ids')) {
-				if ($group->visibility_id === Visibility::findByType('owner')->id)
+				if ($group->visibility_id === Visibility::findByType('owner')->id) {
 					$data = [
 						'semester_id' => $request->input('semester_id', 0),
 						'validated_by' => $group->user_id,
 					];
+                }
 				else {
 					$data = [
 						'semester_id' => $request->input('semester_id', 0),
@@ -94,7 +95,7 @@ class GroupController extends Controller
 				}
 
 				try {
-					$group->assignMembers($request->input('member_ids', []), $data);
+				    $group->assignMembers($request->input('member_ids', []), $data);
 				} catch (PortailException $e) {
 					return response()->json(["message" => $e->getMessage()], 400);
 				}

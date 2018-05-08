@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ContactRequest;
 use App\Models\Contact;
+use App\Models\ContactType;
 use App\Models\Asso;
 use App\Models\User;
 use App\Exceptions\PortailException;
@@ -14,7 +15,7 @@ class ContactController extends Controller
     /**
      * Scopes Group
      *
-     * Les Scopes requis pour manipuler les Groups
+     * Les Scopes requis pour manipuler les Contacts
      */
     // public function __construct() {
     //     $this->middleware(
@@ -30,7 +31,7 @@ class ContactController extends Controller
     //         ),
     //         ['only' => ['store', 'update', 'destroy']]
     //     );
-    }
+    // }
 
     /**
      * Display a listing of the resource.
@@ -56,7 +57,23 @@ class ContactController extends Controller
      */
     public function store(ContactRequest $request)
     {
-        //
+        $contact = new Contact;
+        $contact->body = $request->body;
+        $contact->description = $request->description;
+        $contact->contact_type_id = $request->contact_type_id;
+        $contact->visibility_id = $request->visibility_id;
+        $contact->contactable_id = $request->id;
+        $contact->contactable_type = $request->model;
+
+        if ($contact->save()) {
+            $contact = $contact->with([
+                'type',
+            ])->get();
+
+            return response()->json($contact, 201);
+        } else {
+            return response()->json(["message" => "Impossible de créer le contact"], 500);
+        }
     }
 
     /**
