@@ -17,12 +17,11 @@ class ContactRequest extends FormRequest
      */
     public function authorize()
     {
-        dd($this);
-
         // TODO (Natan) : régler et/ou tester sécurité si un utilisateur set lui-même $request->model à un nom de classe valable.
-        if ($this->type == 'assos') {     
+        // A discuter : utile/correct de throw une exception ? Ou on retourne juste false ?
+        if ($this->resource_type == 'assos') {     
             $this->model = Asso::class;
-        } else if ($this->type == 'users') {
+        } else if ($this->resource_type == 'users') {
             $this->model = User::class;
         } else {
             throw new PortailException('La ressource indiquée n\'a pas été reconnue.');
@@ -30,7 +29,7 @@ class ContactRequest extends FormRequest
         }
 
         // Vérifier si on trouve la ressource.
-        if ($this->model::find($this->id)) {
+        if ($this->resource = $this->model::find($this->resource_id)) {
             return true;
         }
         else {
@@ -49,12 +48,12 @@ class ContactRequest extends FormRequest
         return [
             'body' => Validation::make($this)
                         ->type('string')
-                        ->length(255)
+                        ->length(validation_between('string'))
                         ->post('required')
                         ->get(),
             'description' => Validation::make($this)
                         ->type('string')
-                        ->length(255)
+                        ->length(validation_between('string'))
                         ->nullable()
                         ->post('required')
                         ->get(),
