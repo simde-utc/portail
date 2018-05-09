@@ -17,9 +17,6 @@ class CreateContactsTypesTable extends Migration
 			$table->increments('id');
 			$table->string('name', validation_max('string'));
 			$table->string('pattern', validation_max('string'));
-			$table->integer('max')->unsigned();
-			$table->integer('visibility_id')->unsigned();						// By default
-			$table->foreign('visibility_id')->references('id')->on('visibilities');
 			$table->timestamps();
 		});
 	}

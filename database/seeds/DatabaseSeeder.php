@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
 			AssosTableSeeder::class,
 			VisibilitiesTableSeeder::class,
 			ContactsTypesTableSeeder::class,
+			ContactsTableSeeder::class,
 			PermissionsTableSeeder::class,
 			RolesTableSeeder::class,
 		]);

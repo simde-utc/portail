@@ -86,8 +86,8 @@ class User extends Authenticatable
 	}
 
 	public function contact() {
-        return $this->hasMany('App\Models\UserContact', 'users_contacts');
-    }
+		return $this->morphMany(Contact::class, 'contactable');
+	}
 
     public function events() {
     	return $this->belongsToMany('App\Models\Event');

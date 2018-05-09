@@ -28,7 +28,7 @@ class Asso extends Model
 	}
 
 	public function contact() {
-		return $this->hasMany(AssoContact::class, 'contacts_assos');
+		return $this->morphMany(Contact::class, 'contactable');
 	}
 
 	public function rooms() {
