@@ -19,7 +19,6 @@ class ContactController extends Controller
 
     /* TODO(Natan) :  
         - finir les scopes
-        - gerer les visibilités
     */
 
     /**
