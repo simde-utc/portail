@@ -25,13 +25,13 @@ class Visibility extends Model
 		return static::where('type', $type)->first();
 	}
 
-	public function childs(): BelongsToMany {
-		return $this->belongsToMany(Visibility::class, 'visibilities_parents', 'visibility_id', 'parent_id');
-	}
+    public function parent() {
+        return $this->belongsTo(Visibility::class, 'parent_id');
+    }
 
-	public function parents(): BelongsToMany {
-		return $this->belongsToMany(Visibility::class, 'visibilities_parents', 'parent_id', 'visibility_id');
-	}
+    public function children() {
+        return $this->hasMany(Visibility::class, 'parent_id');
+    }
 
     public function articles() {
         return $this->hasMany('App\Models\Article');

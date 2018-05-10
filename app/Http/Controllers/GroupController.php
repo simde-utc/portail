@@ -56,7 +56,7 @@ class GroupController extends Controller
 			$groups = $this->hide($groups, true, function ($group) use ($request) {
 				$this->hideUserData($request, $group->owner);
 
-				return $groups;
+				return $group;
 			});
 		}
 

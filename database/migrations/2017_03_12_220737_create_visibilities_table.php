@@ -17,18 +17,10 @@ class CreateVisibilitiesTable extends Migration
             $table->increments('id');
             $table->string('type')->unique();
             $table->string('name')->unique();
+			$table->integer('parent_id')->unsigned()->nullable();
+			$table->foreign('parent_id')->references('id')->on('visibilities');
             $table->timestamps();
         });
-
-		Schema::create('visibilities_parents', function (Blueprint $table) {
-			$table->integer('visibility_id')->unsigned();
-			$table->foreign('visibility_id')->references('id')->on('visibilities');
-			$table->integer('parent_id')->unsigned();
-			$table->foreign('parent_id')->references('id')->on('visibilities');
-
-			$table->timestamps();
-			$table->primary(['parent_id', 'visibility_id']);
-		});
     }
 
     /**
@@ -39,6 +31,5 @@ class CreateVisibilitiesTable extends Migration
     public function down()
     {
 		Schema::dropIfExists('visibilities');
-        Schema::dropIfExists('visibilities_parents');
     }
 }
