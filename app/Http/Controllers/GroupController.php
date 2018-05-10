@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Http\Requests\GroupRequest;
 use App\Models\Visibility;
-use App\Exceptions\PortailException;
 use App\Traits\HasVisibility;
+use App\Exceptions\PortailException;
 
 /**
  * Gestion des groupes utilisateurs
