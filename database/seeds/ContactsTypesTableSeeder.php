@@ -16,31 +16,27 @@ class ContactsTypesTableSeeder extends Seeder
         $types = [
           [
             'name' => 'Adresse email',
-            'pattern' => '/[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9-]+.[a-zA-Z]+/',
+            'pattern' => '[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9-]+.[a-zA-Z]+',
         ],
         [
             'name' => 'Url',
-            'pattern' => '#\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))#iS',
+            'pattern' => '\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))',
         ],
         [
             'name' => 'Numéro de téléphone',
-            'pattern' => '/[^0-9]/',
+            'pattern' => '\+?[^0-9 \.]',
         ],
         [
             'name' => 'Facebook',
-            'pattern' => '/(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/',
+            'pattern' => '(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?',
         ],
         [
             'name' => 'Twitter',
-            'pattern' => '/(https?:)?\/\/(www\.)?twitter.com\/(#!\/)?([^\/ ].)+/',
+            'pattern' => '(https?:)?\/\/(www\.)?twitter.com\/(#!\/)?([^\/ ].)+',
         ],
         [
             'name' => 'LinkedIn',
-            'pattern' => '/((http(s?)://)*([a-zA-Z0-9\-])*\.|[linkedin])[linkedin/~\-]+\.[a-zA-Z0-9/~\-_,&=\?\.;]+[^\.,\s<]+/',
-        ],
-        [
-            'name' => 'LinkedIn',
-            'pattern' => '/((http(s?)://)*([a-zA-Z0-9\-])*\.|[linkedin])[linkedin/~\-]+\.[a-zA-Z0-9/~\-_,&=\?\.;]+[^\.,\s<]+/',
+            'pattern' => '((http(s?)://)*([a-zA-Z0-9\-])*\.|[linkedin])[linkedin/~\-]+\.[a-zA-Z0-9/~\-_,&=\?\.;]+[^\.,\s<]+',
         ],
         [
             'name' => 'Autre',

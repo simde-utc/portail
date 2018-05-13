@@ -17,7 +17,7 @@ class ContactController extends Controller
 {
     use HasVisibility;
 
-    /* TODO(Natan) :  
+    /* TODO(Natan) :
         - finir les scopes
     */
 
@@ -81,14 +81,14 @@ class ContactController extends Controller
         if ($canCreate) {
 
             $contact_type = ContactType::find($request->contact_type_id);
-            
+
             // Si on trouve le type, on peut valider le body.
-            if ($contact_type && preg_match($contact_type->pattern, $request->body)) {
+            if ($contact_type && preg_match("/$contact_type->pattern/", $request->body)) {
                 $contact = new Contact;
                 $contact->body = $request->body;
                 $contact->description = $request->description;
                 $contact->contact_type_id = $request->contact_type_id;
-                $contact->visibility_id = $request->visibility_id;
+                $contact->visibility_id = $request->visibility_id ?? Visibility::getTopStage()->first()->id;
                 $contact->contactable_id = $request->resource_id;
                 $contact->contactable_type = $request->model;
 
@@ -134,7 +134,7 @@ class ContactController extends Controller
         $contact = $request->resource->contact()->where('id', $request->contact)->first();
 
         if ($contact && $this->canModify($contact)) {
-            
+
             // Tous les cas possibles.
             if ($request->has('body') && $request->has('contact_type_id')) {
                 $contact_type = ContactType::find($request->contact_type_id);
@@ -169,7 +169,7 @@ class ContactController extends Controller
 
             if ($contact->save()) {
                 return response()->json($contact, 200);
-            } 
+            }
             else
                 abort(500, "Impossible de modifier le groupe");
         }
@@ -203,13 +203,13 @@ class ContactController extends Controller
             return $contact->contactable_id == Auth::user()->id;
         }
         // Sinon, c'est celui d'une asso, on check si Auth::user() à le droit de modifier les infos de contact.
-        else if ($contact->contactable_type == Asso::class) { 
+        else if ($contact->contactable_type == Asso::class) {
             $resource = $contact->contactable;
             return ($resource->hasOneRole('resp communication', ['user_id' => \Auth::id()]) || \Auth::user()->hasOneRole('admin'));
         }
         // On pourrait également gérer d'autres types de ressources.
         else {
             return false;
-        }   
+        }
     }
 }

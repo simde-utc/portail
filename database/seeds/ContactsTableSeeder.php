@@ -2,9 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Contact;
-use App\Models\ContactType;
-use App\Models\Visibility;
-use App\Models\Asso;
 
 class ContactsTableSeeder extends Seeder
 {
