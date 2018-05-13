@@ -42,13 +42,30 @@ class RoleController extends Controller
 		);
 	}
 
+	protected function checkOnlyFor($only_for) {
+		@list($tableName, $id) = explode('-', $only_for);
+		$class = '\\App\\Models\\'.studly_case(str_singular($tableName));
+
+		if (str_singular($tableName) === $tableName || !class_exists($class))
+			abort(404, 'La table donnée n\'existe pas !');
+		else if (!method_exists($class, 'roles'))
+			abort(400, 'La table donnée ne possède pas de roles');
+		else if ($id && !resolve($class)->find($id))
+			abort(400, 'L\'id associé à la table donnée n\'existe pas');
+
+		return $only_for;
+	}
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) {
+    public function index(Request $request, $ressource_type = null, $ressource_id = null) {
 		$inputs = $request->input();
+		// On vérifie que la ressource possède des rôles
+		if ($ressource_type || isset($inputs['only_for']))
+			$inputs['only_for'] = $this->checkOnlyFor($ressource_type ? $ressource_type.($ressource_id ? '-'.$ressource_id : '') : $inputs['only_for']);
 
 		if ($request->has('stage') || $request->has('fromStage') || $request->has('toStage') || $request->has('allStages')) {
 	        // On inclue les relations et on les formattent.
@@ -64,7 +81,7 @@ class RoleController extends Controller
 
 			foreach ($inputs as $key => $value) {
 				if (!\Schema::hasColumn($roles->getTable(), $key))
-					throw new PortailException('L\'attribut '.$key.' n\'existe pas');
+					throw new PortailException('L\'attribut "'.$key.'" n\'existe pas');
 
 				$roles = $roles->where($key, $value);
 			}
@@ -81,24 +98,13 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request, $ressource_type = null, $ressource_id = null) {
 		$role = new Role;
 		$role->type = $request->type;
 		$role->name = $request->name;
 		$role->description = $request->description;
 		$role->limited_at = $request->limited_at;
-
-		@list($tableName, $id) = explode('_', $request->only_for);
-		$class = '\\App\\Models\\'.studly_case(str_singular($tableName));
-
-		if (!class_exists($class))
-			abort(404, 'La table donnée pour only_for n\'existe pas !');
-		else if (!in_array('App\\Traits\\HasRoles', class_uses($class)))
-			abort(400, 'La table donnée ne possède pas de roles');
-		else if ($id && !resolve($class)->find($id))
-			abort(400, 'L\'id associé à only_for n\'existe pas ');
-
-		$role->only_for = $request->only_for;
+		$role->only_for = $this->checkOnlyFor($ressource_type ? $ressource_type.($ressource_id ? '-'.$ressource_id : '') : $request->only_for);
 
 		if ($role->save()) {
 			if ($request->filled('parent_ids'))
@@ -116,9 +122,22 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id) {
+    public function show(Request $request, $ressource_type, $ressource_id = null, $id = null) {
+		// On inverse les bonnes variables
+		if (is_null($id)) {
+			if (is_null($ressource_id))
+				list($id, $ressource_type) = [$ressource_type, $id];
+			else
+				list($id, $ressource_id) = [$ressource_id, $id];
+		}
+
 		$role = $request->has('withChilds') ? Role::with('childs') : new Role;
 		$role = $request->has('withParents') ? $role->with('parents') : $role;
+
+		// On vérifie que la ressource possède des rôles
+		if ($ressource_type || $request->only_for)
+			$role = $role->where('only_for', $this->checkOnlyFor($ressource_type ? $ressource_type.($ressource_id ? '-'.$ressource_id : '') : $request->only_for));
+
 		$role = is_numeric($id) ? $role->find($id) : $role->where('type', $id)->first();
 
         if ($role) {
@@ -137,9 +156,22 @@ class RoleController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, $id) {
+	public function update(Request $request, $ressource_type, $ressource_id = null, $id = null) {
+		// On inverse les bonnes variables
+		if (is_null($id)) {
+			if (is_null($ressource_id))
+				list($id, $ressource_type) = [$ressource_type, $id];
+			else
+				list($id, $ressource_id) = [$ressource_id, $id];
+		}
+
 		$role = $request->has('withChilds') ? Role::with('childs') : new Role;
 		$role = $request->has('withParents') ? $role->with('parents') : $role;
+
+		// On vérifie que la ressource possède des rôles
+		if ($ressource_type || $request->only_for)
+			$role = $role->where('only_for', $this->checkOnlyFor($ressource_type ? $ressource_type.($ressource_id ? '-'.$ressource_id : '') : $request->only_for));
+
 		$role = is_numeric($id) ? $role->find($id) : $role->where('type', $id)->first();
 
 		if ($request->filled('type'))
@@ -155,15 +187,15 @@ class RoleController extends Controller
 			$role->limited_at = $request->input('limited_at');
 
 		if ($request->filled('only_for')) {
-			@list($tableName, $id) = explode('_', $request->input('only_for'));
+			@list($tableName, $id) = explode('-', $request->input('only_for'));
 			$class = '\\App\\Models\\'.studly_case(str_singular($tableName));
 
 			if (!class_exists($class))
-				abort(404, 'La table donnée pour only_for n\'existe pas !');
+				abort(404, 'La table donnée n\'existe pas !');
 			else if (!in_array('App\\Traits\\HasRoles', class_uses($class)))
 				abort(400, 'La table donnée ne possède pas de roles');
 			else if ($id && !resolve($class)->find($id))
-				abort(400, 'L\'id associé à only_for n\'existe pas ');
+				abort(400, 'L\'id associé à la table donnée n\'existe pas ');
 
 			$role->only_for = $request->input('only_for');
 		}
@@ -189,15 +221,34 @@ class RoleController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(Request $request, $id) {
-		if (is_numeric($id))
-			$role = Role::find($id);
-		else
-			$role = Role::where('type', $id)->first();
+	public function destroy(Request $request, $ressource_type, $ressource_id = null, $id = null) {
+		// On inverse les bonnes variables
+		if (is_null($id)) {
+			if (is_null($ressource_id))
+				list($id, $ressource_type) = [$ressource_type, $id];
+			else
+				list($id, $ressource_id) = [$ressource_id, $id];
+		}
 
-	    if (!$role || !$role->delete())
-			abort(404, "Role non trouvé");
+		$role = new Role;
+
+		// On vérifie que la ressource possède des rôles
+		if ($ressource_type || $request->only_for)
+			$role = $role->where('only_for', $this->checkOnlyFor($ressource_type ? $ressource_type.($ressource_id ? '-'.$ressource_id : '') : $request->only_for));
+
+		$role = is_numeric($id) ? $role->find($id) : $role->where('type', $id)->first();
+
+	    if ($role) {
+			if ($role->isDeletable()) {
+				if ($role->delete())
+					abort(204);
+				else
+					abort(500, "Impossible de supprimer le role souhaité");
+			}
+			else
+				abort(403, "Il n'est pas autorisé de supprimer ce rôle (possiblement car déjà assigné ou rôles enfants attachés)");
+		}
 		else
-			abort(204);
+			abort(404, "Role non trouvé");
     }
 }

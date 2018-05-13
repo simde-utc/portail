@@ -39,13 +39,15 @@ Route::prefix('v1')->group(function () {
 		destroy : /{ressource}/{id} en DELETE
 	*/
 	Route::apiResources([
+		'roles'			=> 'RoleController',
+		'{ressource_type}/roles'			=> 'RoleController',
+		'{ressource_type}/{ressource_id}/roles'			=> 'RoleController',
 		'groups'		=> 'GroupController',
 		'groups/{group_id}/members'		=> 'GroupMemberController',
 		'assos'			=> 'AssoController',
 		'assos/{asso_id}/members'		=> 'AssoMemberController',
 		'assos/types'	=> 'AssoTypeController',
 		'users'			=> 'UserController',
-		'roles'			=> 'RoleController',
 		'rooms'			=> 'RoomController',
 		'articles'		=> 'ArticleController',
 		'partners'		=> 'PartnerController',
