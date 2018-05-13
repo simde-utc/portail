@@ -26,20 +26,22 @@ class ContactController extends Controller
      *
      * Les Scopes requis pour manipuler les Contacts
      */
-    // public function __construct() {
-    //     $this->middleware(
-    //         \Scopes::matchOne(
-    //             ['user-get-identity']
-    //         ),
-    //         ['only' => ['index', 'show']]
-    //     );
-    //     $this->middleware(
-    //         \Scopes::matchOne(
-    //             ['user-manage-identity']
-    //         ),
-    //         ['only' => ['store', 'update', 'destroy']]
-    //     );
-    // }
+    public function __construct() {
+        $this->middleware(
+            \Scopes::matchOne(
+                ['user-get-info'],
+                ['client-get-users', 'client-get-assos']
+            ),
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+            \Scopes::matchOne(
+                ['user-manage-info'],
+                ['client-manage-users', 'client-manage-assos']
+            ),
+            ['only' => ['store', 'update', 'destroy']]
+        );
+    }
 
     /**
      * Display a listing of the resource.
