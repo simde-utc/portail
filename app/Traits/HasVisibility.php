@@ -81,13 +81,13 @@ trait HasVisibility
     public function isVisible(Model $model) {
         // Si on est pas connecté, on regarde si la visibilité est publique ou non
         if (Auth::id() === null)
-            return is_null($model->visibility_id) || ($model->visibility_id === Visibility::first()->id);
+            return is_null($model->visibility_id) || ($model->visibility_id === Visibility::getTopStage()->first()->id);
 
         // Si le modèle n'a pas de visibilité, on prend la première visibilité, la plus ouverte.
         if ($model->visibility_id)
             $visibility = $model->visibility;
         else
-            $visibility = Visibility::first();
+            $visibility = Visibility::getTopStage()->first();
 
         if ($visibility === null)
             return false;

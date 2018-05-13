@@ -43,7 +43,7 @@ class Visibility extends Model
 
     public static function getTopStage(array $data = [], $with = []) {
         $tableName = (new static)->getTable();
-        $model = static::orderBy('id')->with([]);
+        $model = static::whereNull('parent_id')->with($with);
 
         foreach ($data as $key => $value) {
             if (!\Schema::hasColumn($tableName, $key))
@@ -54,7 +54,4 @@ class Visibility extends Model
 
         return collect()->push($model->first());
     }
-
-    // TODO les liens vers les modèles
-    // TODO générer isVisibible($user_id) en fonction des droits de la personne de visibilité (passer par un service ?)
 }
