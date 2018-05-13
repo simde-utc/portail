@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
+use App\Http\Requests\ContactRequest;
 
 class User extends Authenticatable
 {
@@ -129,5 +130,26 @@ class User extends Authenticatable
 		}
 
 		return false;
+	}
+
+	/**
+	 * Permet de vérifier si l'utilisateur peut créer un contact pour ce model.
+	 *
+	 * @return bool
+	 */
+	public function canCreateContact() {
+		return true;
+	}
+
+	/**
+	 * Permet de vérifier si l'utilisateur peut modifier/supprimer un contact pour ce model.
+	 *
+	 * @return bool
+	 */
+	public function canModifyContact($contact) {
+		if ($contact->contactable == $this) {
+            return $contact->contactable_id == Auth::user()->id;
+        } else
+        	return false;
 	}
 }

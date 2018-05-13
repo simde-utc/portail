@@ -64,21 +64,7 @@ class ContactController extends Controller
      */
     public function store(ContactRequest $request)
     {
-        $canCreate = false;
-
-        if ($request->model == User::class) {
-            $canCreate = true;
-        }
-        else if ($request->model == Asso::class) {
-            $asso = $request->resource;
-            $canCreate = true;
-            // $canCreate = ($asso->hasOneRole('resp communication', ['user_id' => \Auth::id()]) || \Auth::user()->hasOneRole('admin'));
-        }
-        else {
-            $canCreate = false;
-        }
-
-        if ($canCreate) {
+        if ($request->resource->canCreateContact()) {
 
             $contact_type = ContactType::find($request->contact_type_id);
 
@@ -133,8 +119,8 @@ class ContactController extends Controller
     {
         $contact = $request->resource->contact()->where('id', $request->contact)->first();
 
-        if ($contact && $this->canModify($contact)) {
-
+        if ($contact && $request->resource->canModifyContact($contact)) {
+            
             // Tous les cas possibles.
             if ($request->has('body') && $request->has('contact_type_id')) {
                 $contact_type = ContactType::find($request->contact_type_id);
@@ -187,7 +173,7 @@ class ContactController extends Controller
     {
         $contact = $request->resource->contact()->where('id', $request->contact)->first();
 
-        if ($contact && $this->canModify($contact)) {
+        if ($contact && $request->resource->canModifyContact($contact)) {
             if ($contact->delete())
                 return response()->json(["message" => "Contact supprimé."], 204);
             else
@@ -195,21 +181,5 @@ class ContactController extends Controller
         }
         else
             abort(404, "Ce contact n'existe pas pour cette ressource.");
-    }
-
-    protected function canModify($contact) {
-        // Si le contact est celui d'un utilisateur, on check si contactable_id == Auth::user()->id.
-        if ($contact->contactable_type == User::class) {
-            return $contact->contactable_id == Auth::user()->id;
-        }
-        // Sinon, c'est celui d'une asso, on check si Auth::user() à le droit de modifier les infos de contact.
-        else if ($contact->contactable_type == Asso::class) {
-            $resource = $contact->contactable;
-            return ($resource->hasOneRole('resp communication', ['user_id' => \Auth::id()]) || \Auth::user()->hasOneRole('admin'));
-        }
-        // On pourrait également gérer d'autres types de ressources.
-        else {
-            return false;
-        }
     }
 }
