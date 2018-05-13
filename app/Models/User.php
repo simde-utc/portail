@@ -130,4 +130,10 @@ class User extends Authenticatable
 
 		return false;
 	}
+
+	// Par défaut, un role n'est pas supprimable s'il a déjà été assigné
+    // Mais on permet sa suppression s'il est assigné à un seul groupe
+	public function isRoleForIdDeletable($role, $id) {
+		return true;
+	}
 }

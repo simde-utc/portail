@@ -17,6 +17,15 @@ class Role extends Model
 		'limited_at' => 'integer',
 	];
 
+	/**
+	 * Méthode appelée au chargement du trait
+	 */
+    public static function boot() {
+        static::deleting(function ($model) {
+			return resolve('\\App\\Models\\'.studly_case(str_singular(explode('-', $model->only_for)[0])))->beforeDeletingRole($model);
+        });
+    }
+
 	public static function find(int $id, string $only_for = null) {
 		$roles = static::where('id', $id);
 
@@ -84,10 +93,6 @@ class Role extends Model
 
 	public function permissions(): BelongsToMany {
 		return $this->belongsToMany(Permission::class, 'roles_permissions');
-	}
-
-	public function users(): BelongsToMany {
-		return $this->belongsToMany(User::class, 'users_roles');
 	}
 
 	public function childs(): BelongsToMany {
@@ -205,5 +210,27 @@ class Role extends Model
         }
 
 		return $model->get();
+    }
+
+	public function isDeletable() {
+		// On ne permet la suppression de rôles parents
+		if ($this->childs()->count() > 0)
+			return false;
+
+		@list($tableName, $id) = explode('-', $this->only_for);
+
+		if ($id)
+			return resolve('\\App\\Models\\'.studly_case(str_singular($tableName)))->isRoleForIdDeletable($this, $id);
+		else
+			return resolve('\\App\\Models\\'.studly_case(str_singular($tableName)))->isRoleDeletable($this);
+	}
+
+	function __call($method, $arguments) {
+		$class = '\\App\\Models\\'.studly_case(str_singular(explode('-', $method)[0]));
+
+		if (class_exists($class) && method_exists($class, 'getRoleRelationTable'))
+			return $this->belongsToMany($class, resolve($class)->getRoleRelationTable());
+
+		return parent::__call($method, $arguments);
     }
 }

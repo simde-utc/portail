@@ -11,7 +11,7 @@ trait HasStages
 
 		foreach ($data as $key => $value) {
             if (!\Schema::hasColumn($tableName, $key))
-                throw new PortailException('L\'attribut '.$key.' n\'existe pas');
+                throw new PortailException('L\'attribut "'.$key.'" n\'existe pas');
 
             $model = $model->where($key, $value);
         }
@@ -32,7 +32,7 @@ trait HasStages
 
         		foreach ($data as $key => $value) {
                     if (!\Schema::hasColumn($tableName, $key))
-                        throw new PortailException('L\'attribut '.$key.' n\'existe pas');
+                        throw new PortailException('L\'attribut "'.$key.'" n\'existe pas');
 
                     $childs = $childs->where($key, $value);
                 }
@@ -61,7 +61,7 @@ trait HasStages
 
                 foreach ($data as $key => $value) {
                     if (!\Schema::hasColumn($tableName, $key))
-                        throw new PortailException('L\'attribut '.$key.' n\'existe pas');
+                        throw new PortailException('L\'attribut "'.$key.'" n\'existe pas');
 
                     $childs = $childs->where($key, $value);
                 }

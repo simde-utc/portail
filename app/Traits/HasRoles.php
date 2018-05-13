@@ -36,7 +36,7 @@ trait HasRoles
 	 *
 	 * @return string
 	 */
-	protected function getRoleRelationTable() {
+	public function getRoleRelationTable() {
 		return $this->roleRelationTable ?? $this->getTable().'_roles';
 	}
 
@@ -294,5 +294,22 @@ trait HasRoles
 			$permissions = $permissions->merge(Role::find($role_id)->permissions);
 
 		return $permissions;
+	}
+
+	// Par défaut, un role n'est pas supprimable s'il a déjà été assigné
+	public function isRoleDeletable($role) {
+		$class = explode('-', $role->only_for)[0];
+
+		return $role->$class()->count() === 0;
+	}
+
+	public function isRoleForIdDeletable($role, $id) {
+		return $this->isRoleDeletable($role);
+	}
+
+	public function beforeDeletingRole($role) {
+		$class = explode('-', $role->only_for)[0];
+
+		return $role->$class()->detach();
 	}
 }
