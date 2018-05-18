@@ -77,7 +77,7 @@ trait HasRoles
 				}
 
 				if (isset($data['validated_by'])) {
-					if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', config('portail.roles.admin.users')))
+					if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', config('portail.roles.admin.'.$this->getTable())))
 						throw new PortailException('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$role->name);
 				}
 			}
@@ -118,7 +118,7 @@ trait HasRoles
 
 		foreach ($roles as $role) {
 			if (!$force && isset($updatedData['validated_by'])) {
-				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', config('portail.roles.admin.users')) || $role->allChilds->contains('type', config('portail.roles.admin.users'))))
+				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', config('portail.roles.admin.'.$this->getTable())) || $role->allChilds->contains('type', config('portail.roles.admin.'.$this->getTable()))))
 					throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
 
@@ -163,7 +163,7 @@ trait HasRoles
 
 		foreach ($roles as $role) {
 			if (!$force && $removed_by !== null) {
-				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', config('portail.roles.admin.users')) || $role->allChilds->contains('type', config('portail.roles.admin.users'))))
+				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', config('portail.roles.admin.'.$this->getTable())) || $role->allChilds->contains('type', config('portail.roles.admin.'.$this->getTable()))))
 					throw new PortailException('La personne demandant la suppression n\'est pas habilitée à retirer ce rôle: '.$role->name);
 			}
 
@@ -243,10 +243,12 @@ trait HasRoles
 		if ($roles === null)
 			return new Collection;
 
-		if ($this->getTable() !== 'users' || $user_id !== null)
-			$roles = $roles->wherePivot('user_id', $user_id);
-
-		$relatedTable = $this->getRoleRelationTable();
+		if ($user_id !== null) {
+			if ($this->getTable() === 'users')
+				$roles = User::find($user_id)->roles();
+			else
+				$roles = $roles->wherePivot('user_id', $user_id);
+		}
 
 		$roles = $roles->wherePivotIn('semester_id', [0, $semester_id]);
 
