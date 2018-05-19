@@ -166,6 +166,8 @@ trait HasMembers
 					throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
 
 				if (!$force && isset($updatedData['validated_by'])) {
+					$manageableRoles = $manageableRoles ?? $this->getUserRoles($updatedData['validated_by']);
+
 					if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin'))
 						throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à modifier ce rôle: '.$role->name);
 

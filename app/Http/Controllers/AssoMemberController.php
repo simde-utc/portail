@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Asso;
 use App\Models\Semester;
+use App\Models\Role;
 use App\Http\Requests\AssoRequest;
 use App\Services\Visible\Visible;
 use App\Models\Visibility;
@@ -59,6 +60,37 @@ class AssoMemberController extends Controller
 	}
 
     /**
+     * On ajoute les droits admin en fonction du rôle qu'on a dans les assos
+     * @param Model  $asso
+     * @param Model  $pivot
+     * @return false/string renvoie le type du role ajouté
+     */
+    protected function addUserRoles($asso, $pivot) {
+        if (!is_null($pivot->validated_by)) {
+            $adminAssos = config('portail.assos', []);
+            if (isset($adminAssos[$asso->login])) {
+                $adminRoles = $adminAssos[$asso->login];
+                $role = Role::getRole($pivot->role_id);
+
+                if (isset($adminRoles[$role->type])) {
+                    try {
+                        \Auth::user()->assignRoles($adminRoles[$role->type], [
+                            'validated_by' => \Auth::id(),
+                        ], true);
+
+                        return $adminRoles[$role->type];
+                    }
+                    catch (\Exception $e) {
+                        // Dans le cas où on possède déjà ce rôle
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -108,6 +140,9 @@ class AssoMemberController extends Controller
 			$member = $asso->allMembers()->wherePivot('user_id', \Auth::id())->first();
 		}
 
+        if ($new = $this->addUserRoles($asso, $member->pivot))
+            $member->new_user_role = $new;
+
 		return response()->json($this->hideUserData($request, $member));
     }
 
@@ -141,23 +176,24 @@ class AssoMemberController extends Controller
 		$member = $asso->currentAllMembers()->where('id', $member_id)->first();
 
 		if ($member) {
-			if ($member_id === \Auth::id())
-				$data = [
-					'role_id' => $request->input('role_id', $member->pivot->role_id),
-					'validated_by' => $member_id,
-				];
-			else {
-				$data = [
-					'role_id' => $request->input('role_id', $member->pivot->role_id),
-					'validated_by' => $member_id,
-				];
-			}
+            $role_id = $request->input('role_id', $member->pivot->role_id);
 
-			$asso->updateMembers($member_id, [
+            // Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité
+            $force = Role::getRole(config('portail.roles.admin.assos'))->id === $role_id && $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id();
+
+            $asso->updateMembers($member_id, [
 				'semester_id' => $member->pivot->semester_id,
-			], $data);
+			], [
+				'role_id' => $role_id,
+				'validated_by' => \Auth::id(),
+			], $force);
 
-			return response()->json($this->hideUserData($request, $asso->currentAllMembers()->where('user_id', $member_id)->first()));
+            $member = $asso->currentAllMembers()->where('user_id', $member_id)->first();
+
+            if ($new = $this->addUserRoles($asso, $member->pivot))
+                $member->new_user_role = $new;
+
+			return response()->json($this->hideUserData($request, $member));
 		}
 		else
 			abort(404, 'Cette personne ne fait pas partie de l\'association');
