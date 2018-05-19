@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Http\Requests\GroupRequest;
 use App\Models\Visibility;
-use App\Exceptions\PortailException;
 use App\Traits\HasVisibility;
+use App\Exceptions\PortailException;
 
 /**
  * Gestion des groupes utilisateurs
@@ -56,7 +56,7 @@ class GroupController extends Controller
 			$groups = $this->hide($groups, true, function ($group) use ($request) {
 				$this->hideUserData($request, $group->owner);
 
-				return $groups;
+				return $group;
 			});
 		}
 
@@ -80,12 +80,13 @@ class GroupController extends Controller
         if ($group->save()) { // Le créateur du groupe devient automatiquement admin et membre de son groupe
             // Les ids des membres à ajouter seront passé dans la requête.
             // ids est un array de user ids.
-            if ($request->has('member_ids')) {
+            if ($request->filled('member_ids')) {
 				if ($group->visibility_id === Visibility::findByType('owner')->id)
 					$data = [
 						'semester_id' => $request->input('semester_id', 0),
 						'validated_by' => $group->user_id,
 					];
+                }
 				else {
 					$data = [
 						'semester_id' => $request->input('semester_id', 0),
@@ -94,7 +95,7 @@ class GroupController extends Controller
 				}
 
 				try {
-					$group->assignMembers($request->input('member_ids', []), $data);
+				    $group->assignMembers($request->input('member_ids', []), $data);
 				} catch (PortailException $e) {
 					return response()->json(["message" => $e->getMessage()], 400);
 				}
@@ -155,20 +156,20 @@ class GroupController extends Controller
 		if (!$group)
 			abort(404, "Groupe non trouvé");
 
-		if ($request->has('user_id'))
+		if ($request->filled('user_id'))
 			$group->user_id = $request->input('user_id');
 
-		if ($request->has('name'))
+		if ($request->filled('name'))
 			$group->name = $request->input('name');
 
-		if ($request->has('icon'))
+		if ($request->filled('icon'))
 			$group->icon = $request->input('icon');
 
-		if ($request->has('visibility_id'))
+		if ($request->filled('visibility_id'))
 			$group->visibility_id = $request->input('visibility_id');
 
         if ($group->save()) {
-	        if ($request->has('member_ids')) {
+	        if ($request->filled('member_ids')) {
 				if ($group->visibility_id >= Visibility::findByType('owner')->id)
 					$data = [
 						'semester_id' => $request->input('semester_id', 0),
@@ -213,12 +214,9 @@ class GroupController extends Controller
 	{
 		$group = Group::find($id);
 
-        if (!$group)
+        if (!$group || !$group->delete())
 			abort(404, "Groupe non trouvé");
-		else {
-			$group->delete();
-
+		else
 			abort(204);
-		}
     }
 }

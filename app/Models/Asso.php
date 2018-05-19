@@ -28,7 +28,7 @@ class Asso extends Model
 	}
 
 	public function contact() {
-		return $this->hasMany(AssoContact::class, 'contacts_assos');
+		return $this->morphMany(Contact::class, 'contactable');
 	}
 
 	public function rooms() {
@@ -123,5 +123,26 @@ class Asso extends Model
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Permet de vérifier si l'utilisateur peut créer un contact pour ce model.
+	 *
+	 * @return bool
+	 */
+	public function canCreateContact() {
+		return ($this->hasOneRole('resp communication', ['user_id' => \Auth::id()]) || \Auth::user()->hasOneRole('admin'));
+	}
+
+	/**
+	 * Permet de vérifier si l'utilisateur peut modifier/supprimer un contact pour ce model.
+	 *
+	 * @return bool
+	 */
+	public function canModifyContact($contact) {
+		if ($contact->contactable == $this) {
+            return ($this->hasOneRole('resp communication', ['user_id' => \Auth::id()]) || \Auth::user()->hasOneRole('admin'));
+        } else
+        	return false;
 	}
 }

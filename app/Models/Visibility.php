@@ -25,13 +25,13 @@ class Visibility extends Model
 		return static::where('type', $type)->first();
 	}
 
-	public function childs(): BelongsToMany {
-		return $this->belongsToMany(Visibility::class, 'visibilities_parents', 'visibility_id', 'parent_id');
-	}
+    public function parent() {
+        return $this->belongsTo(Visibility::class, 'parent_id');
+    }
 
-	public function parents(): BelongsToMany {
-		return $this->belongsToMany(Visibility::class, 'visibilities_parents', 'parent_id', 'visibility_id');
-	}
+    public function children() {
+        return $this->hasMany(Visibility::class, 'parent_id');
+    }
 
     public function articles() {
         return $this->hasMany('App\Models\Article');
@@ -43,7 +43,7 @@ class Visibility extends Model
 
     public static function getTopStage(array $data = [], $with = []) {
         $tableName = (new static)->getTable();
-        $model = static::orderBy('id')->with([]);
+        $model = static::whereNull('parent_id')->with($with);
 
         foreach ($data as $key => $value) {
             if (!\Schema::hasColumn($tableName, $key))
@@ -54,7 +54,4 @@ class Visibility extends Model
 
         return collect()->push($model->first());
     }
-
-    // TODO les liens vers les modèles
-    // TODO générer isVisibible($user_id) en fonction des droits de la personne de visibilité (passer par un service ?)
 }

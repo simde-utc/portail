@@ -81,18 +81,16 @@ trait HasVisibility
     public function isVisible(Model $model) {
         // Si on est pas connecté, on regarde si la visibilité est publique ou non
         if (Auth::id() === null)
-            return is_null($model->visibility_id) || ($model->visibility_id === Visibility::first()->id);
+            return is_null($model->visibility_id) || ($model->visibility_id === Visibility::getTopStage()->first()->id);
 
-        // Si le modèle n'a pas de visibilité, on prend la première visibilité,
-        // la plus ouverte.
+        // Si le modèle n'a pas de visibilité, on prend la première visibilité, la plus ouverte.
         if ($model->visibility_id)
             $visibility = $model->visibility;
         else
-            $visibility = Visibility::first();
+            $visibility = Visibility::getTopStage()->first();
 
         if ($visibility === null)
             return false;
-
 
         $type = 'is'.ucfirst($visibility->type);
 
@@ -102,44 +100,23 @@ trait HasVisibility
         return false;
     }
 
-    public function isPublic($user_id, $model) {
+    public function isPublic($user_id = null, $model = null) {
         return true;
     }
 
-    public function isLogged($user_id, $model) {
+    public function isLogged($user_id, $model = null) {
         return User::find($user_id)->exists();
     }
 
-    public function isCasOrWasCas($user_id, $model) {
-        return AuthCas::find($user_id)->exists();
-    }
-
-    public function isCas($user_id, $model) {
+    public function isCas($user_id, $model = null) {
         return AuthCas::find($user_id)->where('is_active', true)->exists();
     }
 
-    public function isStudent($user_id, $model) {
-        $type = Ginger::user(AuthCas::find($user_id)->login)->getType();
-        return $type === 'etu' || $type === 'escom';
-    }
-
-    public function isStudentUTC($user_id, $model) {
-        return Ginger::user(AuthCas::find($user_id)->login)->getType() === 'etu';
-    }
-
-    public function isStudentESCOM($user_id, $model) {
-        return Ginger::user(AuthCas::find($user_id)->login)->getType() === 'escom';
-    }
-
-    public function isPersonnal($user_id, $model) {
-        return Ginger::user(AuthCas::find($user_id)->login)->getType() === 'pers';
-    }
-
-    public function isContributorBDE($user_id, $model) {
+    public function isContributorBDE($user_id, $model = null) {
         return Ginger::user(AuthCas::find($user_id)->login)->isContributor();
     }
 
-    public function isPrivate($user_id, $model) {
+    public function isPrivate($user_id, $model = null) {
 		if ($model === null)
 			return false;
 
@@ -155,7 +132,7 @@ trait HasVisibility
         return $model->user_id === $user_id;
     }
 
-    public function isInternal($user_id, $model) {
+    public function isInternal($user_id, $model = null) {
         return User::find($user_id)->hasOneRole('superadmin');
     }
 }

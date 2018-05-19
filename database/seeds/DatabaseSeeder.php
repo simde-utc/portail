@@ -18,17 +18,19 @@ class DatabaseSeeder extends Seeder
 			AssosTableSeeder::class,
 			VisibilitiesTableSeeder::class,
 			ContactsTypesTableSeeder::class,
+			ContactsTableSeeder::class,
 			PermissionsTableSeeder::class,
 			RolesTableSeeder::class,
 		]);
 
-		// Dev:
-		$this->call([
-			UsersTableSeeder::class,
-			GroupsTableSeeder::class,
-			RoomsTableSeeder::class,
-			ArticlesTableSeeder::class,
-			PartnersTableSeeder::class,
-		]);
+		if (env('APP_DEBUG', false)) {
+			$this->call([
+				UsersTableSeeder::class,
+				GroupsTableSeeder::class,
+				RoomsTableSeeder::class,
+				ArticlesTableSeeder::class,
+				PartnersTableSeeder::class,
+			]);
+		}
 	}
 }

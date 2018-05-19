@@ -20,7 +20,7 @@ Route::prefix('v1')->group(function () {
 	// Informations relatives à l'utlisateur
 	Route::get('user', 'ConnectedUserController@index')->middleware(Scopes::matchAnyUser())->name('api/user');
 	Route::get('user/auths', 'ConnectedUserController@getProviders')->middleware(Scopes::matchAnyUser())->name('api/user/auths');
-	Route::get('user/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchAnyUser())->name('api/user/auth');
+	Route::get('user/auths/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchAnyUser())->name('api/user/auth');
 
 	// Gestions des authorisations données au client
 	Route::get('client', 'ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
@@ -39,17 +39,20 @@ Route::prefix('v1')->group(function () {
 		destroy : /{ressource}/{id} en DELETE
 	*/
 	Route::apiResources([
-		'groups'		=> 'GroupController',
+		'{resource_type}/{resource_id}/contacts' => 'ContactController',
 		'groups/{group_id}/members'		=> 'GroupMemberController',
+		'groups'		=> 'GroupController',
 		'assos'			=> 'AssoController',
 		'assos/{asso_id}/members'		=> 'AssoMemberController',
 		'assos/types'	=> 'AssoTypeController',
 		'users'			=> 'UserController',
+		'user/roles'			=> 'UserRoleController',
+		'users/{user_id}/roles'			=> 'UserRoleController',
+		'roles'			=> 'RoleController',
 		'rooms'			=> 'RoomController',
-		'articles'		=> 'ArticleController',
 		'partners'		=> 'PartnerController',
+		'articles'		=> 'ArticleController',
 		'events'		=> 'EventController',
 		'visibilities'	=> 'VisibilityController',
-		// '{type}/{id}/contact' => 'ContactController',
   ]);
 });
