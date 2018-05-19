@@ -25,24 +25,53 @@ class RoleController extends Controller
 	public function __construct() {
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-get-groups-enabled', 'user-get-groups-disabled'],
-				['client-get-groups-enabled', 'client-get-groups-disabled']
+				['user-get-roles-types-users', 'user-get-roles-types-assos', 'user-get-roles-types-groups']
 			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
 				\Scopes::matchOne(
-					['user-manage-groups']
+					['user-set-roles-types-users', 'user-set-roles-types-assos', 'user-set-roles-types-groups']
 				), [
 					'admin',
 				]
 			),
-			['only' => ['store', 'update', 'destroy']]
+			['only' => ['store', 'update']]
+		);
+		$this->middleware(
+			array_merge(
+				\Scopes::matchOne(
+					['user-manage-roles-types-users', 'user-manage-roles-types-assos', 'user-manage-roles-types-groups']
+				), [
+					'admin',
+				]
+			),
+			['only' => ['destroy']]
 		);
 	}
 
-	protected function checkOnlyFor($only_for) {
+	protected function hideRoles(Request $request, $roles) {
+		$only_for = [];
+
+		if (\Scopes::has('user-get-roles-types-users'))
+			$only_for[] = 'users';
+
+		if (\Scopes::has('user-get-roles-types-assos'))
+			$only_for[] = 'assos';
+
+		if (\Scopes::has('user-get-roles-types-groups'))
+			$only_for[] = 'groups';
+
+		foreach ($roles as $key => $role) {
+			if (!in_array(explode('-', $role->only_for)[0], $only_for))
+				$roles->forget($key);
+		}
+
+		return $roles;
+	}
+
+	protected function checkOnlyFor(Request $request, $only_for, $verb) {
 		@list($tableName, $id) = explode('-', $only_for);
 		$class = '\\App\\Models\\'.studly_case(str_singular($tableName));
 
@@ -52,6 +81,9 @@ class RoleController extends Controller
 			abort(400, 'La table donnée ne possède pas de roles');
 		else if ($id && !resolve($class)->find($id))
 			abort(400, 'L\'id associé à la table donnée n\'existe pas');
+
+		if (!\Scopes::has('user-'.$verb.'-roles-types-'.$tableName))
+			abort(403, 'Vous n\'être pas autorisé à créer de nouveau rôle pour '.$only_for);
 
 		return $only_for;
 	}
@@ -65,7 +97,7 @@ class RoleController extends Controller
 		$inputs = $request->input();
 		// On vérifie que la ressource possède des rôles
 		if (isset($inputs['only_for']))
-			$this->checkOnlyFor($inputs['only_for']);
+			$this->checkOnlyFor($request, $inputs['only_for'], 'get');
 
 		if ($request->has('stage') || $request->has('fromStage') || $request->has('toStage') || $request->has('allStages')) {
 	        // On inclue les relations et on les formattent.
@@ -89,7 +121,7 @@ class RoleController extends Controller
 			$roles = $roles->get();
 		}
 
-		return response()->json($roles, 200);
+		return response()->json($this->hideRoles($request, $roles), 200);
     }
 
     /**
@@ -104,7 +136,7 @@ class RoleController extends Controller
 		$role->name = $request->name;
 		$role->description = $request->description;
 		$role->limited_at = $request->limited_at;
-		$role->only_for = $this->checkOnlyFor($request->only_for);
+		$role->only_for = $this->checkOnlyFor($request, $request->only_for, 'set');
 
 		if ($role->save()) {
 			if ($request->filled('parent_ids'))
@@ -128,7 +160,7 @@ class RoleController extends Controller
 
 		// On vérifie que la ressource possède des rôles
 		if ($request->only_for)
-			$role = $role->where('only_for', $this->checkOnlyFor($request->only_for));
+			$role = $role->where('only_for', $this->checkOnlyFor($request, $request->only_for, 'get'));
 
 		$role = is_numeric($id) ? $role->find($id) : $role->where('type', $id)->first();
 
@@ -168,7 +200,7 @@ class RoleController extends Controller
 
 		// On vérifie que la ressource possède des rôles
 		if ($request->filled('only_for'))
-			$role = $role->where('only_for', $this->checkOnlyFor($request->only_for));
+			$role = $role->where('only_for', $this->checkOnlyFor($request, $request->only_for, 'set'));
 
 		if ($role->save()) {
 			if ($request->filled('parent_ids')) {
@@ -196,7 +228,7 @@ class RoleController extends Controller
 
 		// On vérifie que la ressource possède des rôles
 		if ($request->filled('only_for'))
-			$role = $role->where('only_for', $this->checkOnlyFor($request->only_for));
+			$role = $role->where('only_for', $this->checkOnlyFor($request, $request->only_for, 'manage'));
 
 		$role = is_numeric($id) ? $role->find($id) : $role->where('type', $id)->first();
 
