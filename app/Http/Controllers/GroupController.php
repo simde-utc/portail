@@ -80,8 +80,8 @@ class GroupController extends Controller
         if ($group->save()) { // Le créateur du groupe devient automatiquement admin et membre de son groupe
             // Les ids des membres à ajouter seront passé dans la requête.
             // ids est un array de user ids.
-            if ($request->has('member_ids')) {
-				if ($group->visibility_id === Visibility::findByType('owner')->id) {
+            if ($request->filled('member_ids')) {
+				if ($group->visibility_id === Visibility::findByType('owner')->id)
 					$data = [
 						'semester_id' => $request->input('semester_id', 0),
 						'validated_by' => $group->user_id,
@@ -156,20 +156,20 @@ class GroupController extends Controller
 		if (!$group)
 			abort(404, "Groupe non trouvé");
 
-		if ($request->has('user_id'))
+		if ($request->filled('user_id'))
 			$group->user_id = $request->input('user_id');
 
-		if ($request->has('name'))
+		if ($request->filled('name'))
 			$group->name = $request->input('name');
 
-		if ($request->has('icon'))
+		if ($request->filled('icon'))
 			$group->icon = $request->input('icon');
 
-		if ($request->has('visibility_id'))
+		if ($request->filled('visibility_id'))
 			$group->visibility_id = $request->input('visibility_id');
 
         if ($group->save()) {
-	        if ($request->has('member_ids')) {
+	        if ($request->filled('member_ids')) {
 				if ($group->visibility_id >= Visibility::findByType('owner')->id)
 					$data = [
 						'semester_id' => $request->input('semester_id', 0),
@@ -214,12 +214,9 @@ class GroupController extends Controller
 	{
 		$group = Group::find($id);
 
-        if (!$group)
+        if (!$group || !$group->delete())
 			abort(404, "Groupe non trouvé");
-		else {
-			$group->delete();
-
+		else
 			abort(204);
-		}
     }
 }

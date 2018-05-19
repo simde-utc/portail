@@ -44,7 +44,7 @@ class Controller extends BaseController
 			return;
 
 		foreach ($users as $user) {
-            $user->displayName = $user->firstname.' '.strtoupper($user->lastname);
+            $user->name = $user->firstname.' '.strtoupper($user->lastname);
 			$user->makeHidden(['firstname', 'lastname', 'email', 'last_login_at', 'created_at', 'updated_at']);
 			$this->hidePivotData($request, $user, $hidePivot);
 		}
@@ -58,7 +58,7 @@ class Controller extends BaseController
 		if ($user === null)
 			return;
 
-        $user->displayName = $user->firstname.' '.strtoupper($user->lastname);
+        $user->name = $user->firstname.' '.strtoupper($user->lastname);
 
         if ($user->id === \Auth::id())
             $user->me = true;
