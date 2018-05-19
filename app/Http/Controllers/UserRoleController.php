@@ -16,32 +16,33 @@ class UserRoleController extends Controller
     public function __construct() {
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-get-assos-joined-now', 'user-get-assos-followed-now']
+				['user-get-roles-users']
 			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-create-assos']
+				['user-set-roles-users']
 			),
-			['only' => ['store']]
+			['only' => ['store', 'update']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-set-assos']
-			),
-			['only' => ['update']]
-		);
-		$this->middleware(
-			\Scopes::matchOne(
-				['user-manage-assos']
+				['user-manage-roles-users']
 			),
 			['only' => ['destroy']]
 		);
     }
 
 	protected function getUser(Request $request, int $user_id = null) {
-		$user = User::find($user_id ?? \Auth::id());
+        if (\Scopes::isClientToken($request))
+            $user = User::find($user_id ?? null);
+        else {
+            $user = \Auth::user();
+
+            if (!is_null($user_id) && $user->id !== $user_id)
+                abort(403, 'Il ne vous est pas autorisé d\'accéder aux rôles des autres utilisateurs');
+        }
 
 		if ($user)
 			return $user;
