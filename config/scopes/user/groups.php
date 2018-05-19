@@ -12,11 +12,11 @@
  *
  *   - Définition du verbe:
  *     + manage:  gestion de la ressource entière
- *       + get :  récupération des informations en lecture seule
  *       + set :  posibilité d'écrire et modifier les données
+ *         + get :  récupération des informations en lecture seule
  *         + create:  créer une donnée associée
  *         + edit:    modifier une donnée
- *         + remove:  supprimer une donnée
+ *       + remove:  supprimer une donnée
  */
 
 // Toutes les routes commencant par user-{verbe}-groups-

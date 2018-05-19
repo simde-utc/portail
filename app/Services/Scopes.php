@@ -118,17 +118,17 @@ class Scopes {
 			switch ($verb) {
 				case 'get':
 				case 'set':
-				return ['manage'];
-				break;
+				case 'remove':
+					return ['manage'];
+					break;
 
 				case 'create':
 				case 'edit':
-				case 'remove':
-				return ['set'];
-				break;
+					return ['set'];
+					break;
 
 				default:
-				return [];
+					return [];
 			}
 		}
 		else {
@@ -138,7 +138,7 @@ class Scopes {
 					break;
 
 				case 'set':
-					return ['create', 'edit', 'remove'];
+					return ['create', 'edit'];
 					break;
 
 				default:
