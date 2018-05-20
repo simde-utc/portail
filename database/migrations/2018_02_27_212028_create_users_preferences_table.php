@@ -16,8 +16,14 @@ class CreateUsersPreferencesTable extends Migration
 		Schema::create('users_preferences', function (Blueprint $table) {
 			$table->integer('user_id')->unsigned()->primary();
 			$table->foreign('user_id')->references('id')->on('users');
-			$table->string('email', validation_max('email'))->unique();
+			$table->string('key');
+			$table->string('value');
+			$table->enum('type', [
+				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY',
+			])->default('STRING');
+
 			$table->timestamps();
+			$table->primary(['user_id', 'key']);
 		});
 	}
 
