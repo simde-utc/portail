@@ -83,9 +83,7 @@ class LoginController extends Controller
 				['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))]
 			);
 		else {
-			setcookie('auth_provider', $provider, config('portail.cookie_lifetime'));
-
-			return resolve($provider_class)->login($request);
+			return resolve($provider_class)->login($request)->cookie('auth_provider', '', config('portail.cookie_lifetime'));
 		}
 	}
 
