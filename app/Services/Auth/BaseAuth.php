@@ -130,7 +130,8 @@ abstract class BaseAuth
 		// Ajout dans les préférences
 		$userPreferences = UserPreference::create([
 			'user_id' => $user->id,
-			'email'   => $user->email,
+			'key' => 'PREFERED_EMAIL',
+			'value'   => $user->email,
 		]);
 
 		return $user;
