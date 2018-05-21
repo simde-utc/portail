@@ -17,9 +17,9 @@ class CreateUsersPreferencesTable extends Migration
 			$table->integer('user_id')->unsigned();
 			$table->foreign('user_id')->references('id')->on('users');
 			$table->string('key');
-			$table->string('value');
+			$table->string('value')->nullable();
 			$table->enum('type', [
-				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME',
+				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
 			])->default('STRING');
 
 			$table->timestamps();

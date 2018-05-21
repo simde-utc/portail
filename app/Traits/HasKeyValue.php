@@ -70,6 +70,9 @@ trait HasKeyValue
 
 				case 'DATETIME':
 					return \Carbon\Carbon::parse($value);
+
+				default:
+					return null;
 			}
 		}
 
@@ -80,7 +83,12 @@ trait HasKeyValue
 		if ($key === 'value') {
 			switch (gettype($value)) {
 				case 'string':
-					$type = 'STRING';
+					try {
+						$value = \Carbon\Carbon::parse($value);
+						break;
+					} catch (\Exception $e) {
+						$type = 'STRING';
+					}
 				case 'integer':
 					$type = $type ?? 'INTEGER';
 				case 'double':
@@ -93,6 +101,9 @@ trait HasKeyValue
 				case 'array':
 					$type = $type ?? 'ARRAY';
 					$value = json_encode($value);
+
+				default:
+					$type = 'NULL';
 			}
 
 			if ($value instanceof \Carbon\Carbon)
@@ -109,15 +120,21 @@ trait HasKeyValue
 	}
 
 	public function toArray($all = true) {
-		return $all ? parent::toArray() : [
-			strtolower($this->key) => $this->value,
-		];
+		if ($all) {
+			$array = parent::toArray();
+			$array['value'] = $this->getAttribute('value');
+
+			return $array;
+		}
+		else {
+			return [
+				strtolower($this->key) => $this->value,
+			];
+		}
 	}
 
 	public function toJson($all = true) {
-		return json_encode($all ? parent::toArray() : [
-			strtolower($this->key) => $this->value,
-		]);
+		return json_encode(parent::toArray($all));
 	}
 
 	public function __call($method, $parameters) {
