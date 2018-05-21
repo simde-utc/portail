@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
 use App\Traits\HasVisibility;
-use Psy\Util\Json;
 
 /**
  * @resource Article
@@ -52,10 +51,10 @@ class ArticleController extends Controller
 	{
 		if ($request->user()){
 			if (isset($request['all'])){
-				$articles = Article::all();
+				$articles = Article::with('collaborators:id,shortname')->get();
 			}
 			else{
-				$articles = Article::whereHas('collaborators', function ($query) use ($request){
+				$articles = Article::with('collaborators:id,shortname')->whereHas('collaborators', function ($query) use ($request){
 					$query->whereIn('asso_id', array_merge(
 						$request->user()->currentAssos()->pluck('assos.id')->toArray()
 					));
@@ -63,7 +62,7 @@ class ArticleController extends Controller
 			}
 		}
 		else{
-			$articles = Scopes::has($request, 'client-get-articles') && isset($request['all']) ? Article::all() : Article::where('visibility_id', Visibility::where('type', 'public')->first()->id)->get();
+			$articles = Scopes::has($request, 'client-get-articles') && isset($request['all']) ? Article::with('collaborators:id,shortname')->get() : Article::with('collaborators:id,shortname')->where('visibility_id', Visibility::where('type', 'public')->first()->id)->get();
 		}
 		return response()->json($request->user() ? $this->hide($articles, !isset($request['notRemoved'])) : $articles,200);
 	}
@@ -95,7 +94,7 @@ class ArticleController extends Controller
 	 */
 	public function show(Request $request, int $id) : JsonResponse
 	{
-		$article = Article::find($id);
+		$article = Article::with('collaborators:id,shortname')->find($id);
 		if (!isset($article))
 			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
 		else
@@ -106,42 +105,39 @@ class ArticleController extends Controller
 	 * Update Article
 	 *
 	 * Met à jour l'article s'il existe
-	 * @param  \Illuminate\Http\ArticleRequest  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param ArticleRequest $request
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function update(ArticleRequest $request, $id)
+	public function update(ArticleRequest $request, int $id) : JsonResponse
 	{
 		$article = Article::find($id);
+		if (!isset($article))
+			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
 
-		if ($article) {
-			if ($article->update($request->input()))
-				return response()->json($article, 201);
-			else
-				return response()->json(['message' => 'impossible de modifier l\'article'], 500);
-		}
-
-		return response()->json(['message' => 'L\'article demandé n\'a pas été trouvé'], 404);
+		if ($article->update($request->input()))
+			return response()->json($article, 201);
+		else
+			return response()->json(['message' => 'Impossible de modifier l\'article'], 500);
 	}
 
 	/**
 	 * Delete Article
 	 *
 	 * Supprime l'article s'il existe
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param ArticleRequest $request
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function destroy($id)
+	public function destroy(ArticleRequest $request, $id) : JsonResponse
 	{
 		$article = Article::find($id);
+		if (!isset($article))
+			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
 
-		if ($article) {
-			if ($article->delete())
-				return response()->json(['message' => 'L\'article a bien été supprimé'], 200);
-			else
-				return response()->json(['message' => 'Une erreur est survenue'],500);
-		}
-
-		return response()->json(['message' => 'L\'article demandé n\'a pas été trouvé'], 404);
+		if ($article->delete())
+			return response()->json(['message' => 'L\'article a bien été supprimé'], 200);
+		else
+			return response()->json(['message' => 'L\'article n\'a pas pu être supprimé'], 500);
 	}
 }
