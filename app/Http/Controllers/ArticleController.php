@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
 use App\Traits\HasVisibility;
+use Psy\Util\Json;
 
 /**
  * @resource Article
@@ -71,34 +72,34 @@ class ArticleController extends Controller
 	 * Create Article
 	 *
 	 * Créer un article
-	 * @param  \Illuminate\Http\ArticleRequest  $request
-	 * @return \Illuminate\Http\Response
+	 * @param ArticleRequest $request
+	 * @return JsonResponse
 	 */
-	public function store(ArticleRequest $request)
+	public function store(ArticleRequest $request) : JsonResponse
 	{
 		$article = Article::create($request->input());
 
 		if ($article)
 			return response()->json($article, 201);
 		else
-			return response()->json(['message' => 'impossible de créer l\'article'], 500);
+			return response()->json(['message' => 'Impossible de créer l\'article'], 500);
 	}
 
 	/**
 	 * Show Article
 	 *
-	 * Affiche l'article s'il existe et si l'utilisateur peut le voir
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * Affiche l'article s'il existe et si l'utilisateur peut le voir.
+	 * @param Request $request
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function show($id)
+	public function show(Request $request, int $id) : JsonResponse
 	{
 		$article = Article::find($id);
-
-		if ($article)
-			return response()->json(ArticleVisible::hide($article, $request->user()->id), 200); //On renvoie l'article demandé, mais en le cachant si l'user n'a pas les droits nécessaires
+		if (!isset($article))
+			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
 		else
-			return response()->json(['message' => 'L\'article demandé n\'a pas été trouvé'], 404);
+			return response()->json(Scopes::has($request, 'client-get-articles') ? $article : $this->hide($article, false),200);
 	}
 
 	/**
