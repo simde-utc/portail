@@ -33,7 +33,7 @@ class CreatePermissionTables extends Migration
 			$table->string('only_for');
 
 			$table->timestamps();
-			$table->unique(['type', 'only_for']);
+			$table->unique(['type', 'only_for'], 'roles_type_only_for');
 		});
 
 		Schema::create('roles_parents', function (Blueprint $table) {
@@ -42,14 +42,14 @@ class CreatePermissionTables extends Migration
 				->references('id')
 				->on('roles')
 				->onDelete('cascade');
-				
+
 			$table->integer('parent_id')->unsigned();
 			$table->foreign('parent_id')
 				->references('id')
 				->on('roles');
 
 			$table->timestamps();
-			$table->primary(['parent_id', 'role_id']);
+			$table->primary(['parent_id', 'role_id'], 'roles_id_parent');
 		});
 
 		Schema::create('roles_permissions', function (Blueprint $table) {
@@ -66,7 +66,7 @@ class CreatePermissionTables extends Migration
 				->onDelete('cascade');
 
 			$table->timestamps();
-			$table->unique(['role_id', 'permission_id']);
+			$table->unique(['role_id', 'permission_id'], 'roles_id_perm');
 		});
 
 		Schema::create('users_roles', function (Blueprint $table) {
@@ -83,7 +83,7 @@ class CreatePermissionTables extends Migration
 			$table->foreign('validated_by')->references('id')->on('users');
 
 			$table->timestamps();
-			$table->primary(['user_id', 'role_id', 'semester_id']);
+			$table->primary(['user_id', 'role_id', 'semester_id'], 'roles_id_user_sem');
 		});
 
 		Schema::create('users_permissions', function (Blueprint $table) {
@@ -100,7 +100,7 @@ class CreatePermissionTables extends Migration
 			$table->foreign('validated_by')->references('id')->on('users');
 
 			$table->timestamps();
-			$table->primary(['user_id', 'permission_id', 'semester_id']);
+			$table->primary(['user_id', 'permission_id', 'semester_id'], 'roles_user_perm_sem');
 		});
 	}
 
