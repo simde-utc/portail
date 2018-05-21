@@ -8,7 +8,7 @@
                 <div class="card-header">Login</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login.process', ['provider' => $provider, 'redirect' => $redirect]) }}">
+                    <form method="POST" action="{{ route('login.process', ['provider' => $provider]) }}">
                         @csrf
 
                         <div class="form-group row">

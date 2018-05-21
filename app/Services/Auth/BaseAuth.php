@@ -212,9 +212,9 @@ abstract class BaseAuth
 	 */
 	protected function success(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect($request->query('redirect', url()->previous()));
+			return redirect(\Session::get('url.intended', '/'));
 		else
-			return redirect($request->query('redirect', url()->previous()))->withSuccess($message);
+			return redirect(\Session::get('url.intended', '/'))->withSuccess($message);
 	}
 
 	/*
@@ -222,8 +222,8 @@ abstract class BaseAuth
 	 */
 	protected function error(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect()->route($this->type.'.show', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())])->withError('Il n\'a pas été possible de vous connecter');
+			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter');
 		else
-			return redirect()->route($this->type.'.show', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())])->withError($message);
+			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError($message);
 	}
 }

@@ -23,7 +23,7 @@ class Cas extends BaseAuth
 		if (!isset($ticket) || empty($ticket))
 			return $this->error($request, null, null, 'Ticket CAS invalide');
 
-		$data = file_get_contents($this->casURL.'serviceValidate?service='.route('login.process', ['provider' => $this->name, 'redirect' => $request->query('redirect')]).'&ticket='.$ticket);
+		$data = file_get_contents($this->casURL.'serviceValidate?service='.route('login.process', ['provider' => $this->name]).'&ticket='.$ticket);
 
 		if (empty($data))
 			return $this->error($request, null, null, 'Aucune information reçue du CAS');
@@ -84,9 +84,7 @@ class Cas extends BaseAuth
 	public function logout(Request $request) {
 		// Si le personne est ou était étudiant, il faut vérifier qu'il est bien passé par le CAS
 		if (Auth::user()->cas->is_active) {
-			return view('auth.cas.logout', [
-				'redirect' => $request->query('redirect', url()->previous()),
-			]);
+			return view('auth.cas.logout');
 		}
 		else
 			return parent::logout($request);
