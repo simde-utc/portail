@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use App\Models\Group;
@@ -18,12 +19,14 @@ use App\Exceptions\PortailException;
 class GroupController extends Controller
 {
 	use HasVisibility;
+
 	/**
 	 * Scopes Group
 	 *
 	 * Les Scopes requis pour manipuler les Groups
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		$this->middleware(
 			\Scopes::matchOne(
 				['user-get-groups-enabled', 'user-get-groups-disabled'],
@@ -39,17 +42,18 @@ class GroupController extends Controller
 		);
 	}
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        // On inclue les relations et on les formattent.
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
+	public function index(Request $request): JsonResponse
+	{
+		// On inclue les relations et on les formattent.
 		$groups = Group::with([
-            'owner',
-            'visibility',
+			'owner',
+			'visibility',
 		])->get();
 
 		if (\Auth::id()) {
@@ -61,71 +65,69 @@ class GroupController extends Controller
 		}
 
 		return response()->json($groups, 200);
-    }
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(GroupRequest $request)
-    {
-        $group = new Group;
-        $group->user_id = \Auth::id();
-        $group->name = $request->name;
-        $group->icon = $request->icon;
-        $group->visibility_id = $request->visibility_id ?? Visibility::findByType('owner')->id;
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param GroupRequest $request
+	 * @return JsonResponse
+	 */
+	public function store(GroupRequest $request): JsonResponse
+	{
+		$group = new Group;
+		$group->user_id = \Auth::id();
+		$group->name = $request->name;
+		$group->icon = $request->icon;
+		$group->visibility_id = $request->visibility_id ?? Visibility::findByType('owner')->id;
 
-        if ($group->save()) { // Le créateur du groupe devient automatiquement admin et membre de son groupe
-            // Les ids des membres à ajouter seront passé dans la requête.
-            // ids est un array de user ids.
-            if ($request->filled('member_ids')) {
+		if ($group->save()) { // Le créateur du groupe devient automatiquement admin et membre de son groupe
+			// Les ids des membres à ajouter seront passé dans la requête.
+			// ids est un array de user ids.
+			if ($request->filled('member_ids')) {
 				if ($group->visibility_id === Visibility::findByType('owner')->id)
 					$data = [
 						'semester_id' => $request->input('semester_id', 0),
 						'validated_by' => $group->user_id,
 					];
-                }
-				else {
-					$data = [
-						'semester_id' => $request->input('semester_id', 0),
-					];
-					// TODO: Envoyer un mail d'invitation dans le groupe
-				}
-
-				try {
-				    $group->assignMembers($request->input('member_ids', []), $data);
-				} catch (PortailException $e) {
-					return response()->json(["message" => $e->getMessage()], 400);
-				}
+			} else {
+				$data = [
+					'semester_id' => $request->input('semester_id', 0),
+				];
+				// TODO: Envoyer un mail d'invitation dans le groupe
 			}
 
-			$group = $group->with([
-	            'owner',
-	            'visibility',
-			]);
+			try {
+				$group->assignMembers($request->input('member_ids', []), $data);
+			} catch (PortailException $e) {
+				return response()->json(["message" => $e->getMessage()], 400);
+			}
+
+			$group = Group::with([
+				'owner',
+				'visibility',
+			])->find($group->id);
 
 			$this->hideUserData($request, $group->owner);
 
-            return response()->json($group, 201);
-        }
-        else
-            abort(500, 'Impossible de créer le groupe');
-    }
+			return response()->json($group, 201);
+		} else
+			abort(500, 'Impossible de créer le groupe');
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request, $id)
-    {
-        // On inclue les relations et on les formattent.
-        $group = Group::with([
-            'owner',
-            'visibility',
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param Request $request
+	 * @param  int $id
+	 * @return JsonResponse
+	 */
+	public function show(Request $request, $id): JsonResponse
+	{
+		// On inclue les relations et on les formattent.
+		$group = Group::with([
+			'owner',
+			'visibility',
 		])->find($id);
 
 		if (\Auth::id()) {
@@ -136,20 +138,20 @@ class GroupController extends Controller
 			});
 		}
 
-        if ($group)
+		if ($group)
 			return response()->json($group, 200);
-        else
-            abort(404, "Groupe non trouvé");
-    }
+		else
+			abort(404, "Groupe non trouvé");
+	}
 
 	/**
 	 * Update Group
 	 *
-	 * @param  \Illuminate\Http\GroupRequest  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param GroupRequest $request
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function update(GroupRequest $request, $id)
+	public function update(GroupRequest $request, $id): JsonResponse
 	{
 		$group = Group::find($id);
 
@@ -168,8 +170,8 @@ class GroupController extends Controller
 		if ($request->filled('visibility_id'))
 			$group->visibility_id = $request->input('visibility_id');
 
-        if ($group->save()) {
-	        if ($request->filled('member_ids')) {
+		if ($group->save()) {
+			if ($request->filled('member_ids')) {
 				if ($group->visibility_id >= Visibility::findByType('owner')->id)
 					$data = [
 						'semester_id' => $request->input('semester_id', 0),
@@ -191,32 +193,31 @@ class GroupController extends Controller
 				}
 			}
 
-			$group = $group->with([
-	            'owner',
-	            'visibility',
-			]);
+			$group = Group::with([
+				'owner',
+				'visibility',
+			])->find($id);
 
 			$this->hideUserData($request, $group->owner);
 
-            return response()->json($group, 200);
-		}
-        else
+			return response()->json($group, 200);
+		} else
 			abort(500, 'Impossible de modifier le groupe');
-    }
+	}
 
 	/**
 	 * Delete Group
 	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function destroy($id)
+	public function destroy($id): JsonResponse
 	{
 		$group = Group::find($id);
 
-        if (!$group || !$group->delete())
+		if (!$group || !$group->delete())
 			abort(404, "Groupe non trouvé");
 		else
 			abort(204);
-    }
+	}
 }
