@@ -2,9 +2,11 @@
 
 namespace App\Traits;
 
-use App\Services\Ginger;
+use App\Exceptions\PortailException;
 use App\Models\Visibility;
 use App\Models\User;
+use App\Models\AuthCas;
+use App\Facades\Ginger;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -90,7 +92,7 @@ trait HasVisibility
             $visibility = Visibility::getTopStage()->first();
 
         if ($visibility === null)
-            return false;
+            throw new PortailException('La relation de visibilité n\'a pas été trouvée');
 
         $type = 'is'.ucfirst($visibility->type);
 
