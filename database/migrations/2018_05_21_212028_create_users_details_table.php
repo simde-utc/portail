@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersPreferencesTable extends Migration
+class CreateUsersDetailsTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,13 +13,13 @@ class CreateUsersPreferencesTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('users_preferences', function (Blueprint $table) {
+		Schema::create('users_details', function (Blueprint $table) {
 			$table->integer('user_id')->unsigned();
 			$table->foreign('user_id')->references('id')->on('users');
 			$table->string('key');
 			$table->string('value');
 			$table->enum('type', [
-				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME',
+				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME'
 			])->default('STRING');
 
 			$table->timestamps();
@@ -34,6 +34,6 @@ class CreateUsersPreferencesTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('users_preferences');
+		Schema::dropIfExists('users_details');
 	}
 }
