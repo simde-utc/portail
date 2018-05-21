@@ -42,6 +42,17 @@ return [
 							'description' => 'Gérer les nom et prénom de l\'utlisateur',
 						],
 					]
+				],
+				'details' => [
+					'description' => 'Gérer les détails de l\'utilisateur',
+					'scopes' => [
+						'birthdate' => [
+							'description' => 'Gérer la date de naisssance de l\'utilisateur'
+						],
+						'major' => [
+							'description' => 'Gérer si l\'utilisateur est majeur ou non'
+						]
+					]
 				]
 			]
 		],
