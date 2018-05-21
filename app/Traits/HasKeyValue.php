@@ -36,6 +36,18 @@ trait HasKeyValue
 		return $array;
 	}
 
+	public static function allToArray(int $id) {
+		$thus = (new static);
+		$array = $thus->keysToArray($id);
+
+		if (property_exists($thus, 'valuesInFunction')) {
+			foreach ($thus->valuesInFunction as $value)
+				$array[$value] = $thus->$value($id);
+		}
+
+		return $array;
+	}
+
 	public function getAttribute($key) {
 		$value = parent::getAttribute($key);
 

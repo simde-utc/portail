@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserDetails;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -11,7 +12,7 @@ use App\Http\Controllers\Controller;
  *
  * Affiche des informations sur l'utilisateur connecté
  */
-class ConnectedUserController extends Controller
+class LoggedUserController extends Controller
 {
 	/**
 	 * Show Connected User
@@ -31,7 +32,20 @@ class ConnectedUserController extends Controller
 		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
 			$user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
 
-		// Par défaut, on retourne au moins l'id de la personne
+		$inputs = $request->input();
+
+		if ($request->has('allDetails')) 
+			$user->details = UserDetails::allToArray($user->id);
+		else if (count($inputs) > 0) {
+			$details = [];
+
+			foreach ($inputs as $input => $value)
+			$details[$input] = UserDetails::$input($user->id);
+
+			$user->details = $details;
+		}
+
+		// Par défaut, on retourne au moins l'id de la personne et son nom
 		return $user;
 	}
 

@@ -16,7 +16,9 @@ class UserDetails extends Model
 	protected $fillable = [
 		'user_id', 'key', 'value', 'type',
 	];
-
+	protected $valuesInFunction = [
+		'age', 'major', 'minor',
+	];
 
 	public static function age(int $user_id) {
 		return (new static)->birthdate($user_id)->age;

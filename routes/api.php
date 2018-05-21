@@ -18,9 +18,9 @@ Route::prefix('v1')->group(function () {
 	Route::get('logout', 'LoginController@destroy')->middleware(Scopes::matchAnyUser())->name('api/logout');
 
 	// Informations relatives à l'utlisateur
-	Route::get('user', 'ConnectedUserController@index')->middleware(Scopes::matchAnyUser())->name('api/user');
-	Route::get('user/auths', 'ConnectedUserController@getProviders')->middleware(Scopes::matchAnyUser())->name('api/user/auths');
-	Route::get('user/auths/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchAnyUser())->name('api/user/auth');
+	Route::get('user', 'LoggedUserController@index')->middleware(Scopes::matchAnyUser())->name('api/user');
+	Route::get('user/auths', 'LoggedUserController@getProviders')->middleware(Scopes::matchAnyUser())->name('api/user/auths');
+	Route::get('user/auths/{name}', 'LoggedUserController@getProvider')->middleware(Scopes::matchAnyUser())->name('api/user/auth');
 
 	// Gestions des authorisations données au client
 	Route::get('client', 'ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
