@@ -32,15 +32,13 @@ class LoggedUserController extends Controller
 		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
 			$user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
 
-		$inputs = $request->input();
-
-		if ($request->has('allDetails')) 
+		if ($request->has('allDetails'))
 			$user->details = UserDetails::allToArray($user->id);
-		else if (count($inputs) > 0) {
+		else if ($request->filled('with')) {
 			$details = [];
 
-			foreach ($inputs as $input => $value)
-			$details[$input] = UserDetails::$input($user->id);
+			foreach (explode(',', $request->input('with')) as $input)
+				$details[$input] = UserDetails::$input($user->id);
 
 			$user->details = $details;
 		}
