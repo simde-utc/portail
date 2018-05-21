@@ -24,7 +24,8 @@ class ArticleController extends Controller
 	 *
 	 * Les Scopes requis pour manipuler les Articles
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		$this->middleware(
 			\Scopes::matchOne(
 				['user-get-articles-followed-now', 'user-get-articles-done-now'],
@@ -47,24 +48,22 @@ class ArticleController extends Controller
 	 * @param \Illuminate\Http\Request $request
 	 * @return JsonResponse
 	 */
-	public function index(Request $request) : JsonResponse
+	public function index(Request $request): JsonResponse
 	{
-		if ($request->user()){
-			if (isset($request['all'])){
+		if ($request->user()) {
+			if (isset($request['all'])) {
 				$articles = Article::with('collaborators:id,shortname')->get();
-			}
-			else{
-				$articles = Article::with('collaborators:id,shortname')->whereHas('collaborators', function ($query) use ($request){
+			} else {
+				$articles = Article::with('collaborators:id,shortname')->whereHas('collaborators', function ($query) use ($request) {
 					$query->whereIn('asso_id', array_merge(
 						$request->user()->currentAssos()->pluck('assos.id')->toArray()
 					));
 				})->get();
 			}
-		}
-		else{
+		} else {
 			$articles = Scopes::has($request, 'client-get-articles') && isset($request['all']) ? Article::with('collaborators:id,shortname')->get() : Article::with('collaborators:id,shortname')->where('visibility_id', Visibility::where('type', 'public')->first()->id)->get();
 		}
-		return response()->json($request->user() ? $this->hide($articles, !isset($request['notRemoved'])) : $articles,200);
+		return response()->json($request->user() ? $this->hide($articles, !isset($request['notRemoved'])) : $articles, 200);
 	}
 
 	/**
@@ -74,12 +73,12 @@ class ArticleController extends Controller
 	 * @param ArticleRequest $request
 	 * @return JsonResponse
 	 */
-	public function store(ArticleRequest $request) : JsonResponse
+	public function store(ArticleRequest $request): JsonResponse
 	{
 		$article = Article::create($request->input());
 
 		if ($article)
-			return response()->json($article, 201);
+			return response()->json(Article::with('collaborators:id,shortname')->find($article->id), 201);
 		else
 			return response()->json(['message' => 'Impossible de créer l\'article'], 500);
 	}
@@ -92,13 +91,13 @@ class ArticleController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, int $id) : JsonResponse
+	public function show(Request $request, int $id): JsonResponse
 	{
 		$article = Article::with('collaborators:id,shortname')->find($id);
 		if (!isset($article))
 			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
 		else
-			return response()->json(Scopes::has($request, 'client-get-articles') ? $article : $this->hide($article, false),200);
+			return response()->json(Scopes::has($request, 'client-get-articles') ? $article : $this->hide($article, false), 200);
 	}
 
 	/**
@@ -109,14 +108,14 @@ class ArticleController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function update(ArticleRequest $request, int $id) : JsonResponse
+	public function update(ArticleRequest $request, int $id): JsonResponse
 	{
 		$article = Article::find($id);
 		if (!isset($article))
 			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
 
 		if ($article->update($request->input()))
-			return response()->json($article, 201);
+			return response()->json(Article::with('collaborators:id,shortname')->find($id), 201);
 		else
 			return response()->json(['message' => 'Impossible de modifier l\'article'], 500);
 	}
@@ -129,7 +128,7 @@ class ArticleController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy(ArticleRequest $request, $id) : JsonResponse
+	public function destroy(ArticleRequest $request, $id): JsonResponse
 	{
 		$article = Article::find($id);
 		if (!isset($article))
