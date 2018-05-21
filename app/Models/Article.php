@@ -26,4 +26,7 @@ class Article extends Model
   	public function asso(){
     	return $this->belongsTo('App\Models\Asso');
     }
+    public function visibility(){
+    	return $this->belongsTo('App\Models\Visibility', 'visibility_id');
+    }
 }

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Scopes;
+use App\Models\Visibility;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
-use App\Models\Visibility;
-use App\Services\Visible\Visible;
-use App\Services\Visible\ArticleVisible;
+use App\Traits\HasVisibility;
 
 /**
  * @resource Article
@@ -16,6 +17,8 @@ use App\Services\Visible\ArticleVisible;
  */
 class ArticleController extends Controller
 {
+	use HasVisibility; //Utilisation du Trait HasVisibility
+
 	/**
 	 * Scopes Article
 	 *
@@ -40,23 +43,17 @@ class ArticleController extends Controller
 	/**
 	 * List Articles
 	 *
-	 * Retourne la liste des articles
+	 * Retourne la liste des articles. ?all pour voir ceux en plus des assos suivies, ?notRemoved pour uniquement cacher les articles non visibles
 	 * @param \Illuminate\Http\Request $request
-	 * @return \Illuminate\Http\JsonResponse
+	 * @return JsonResponse
 	 */
-	public function index(Request $request) : \Illuminate\Http\JsonResponse
+	public function index(Request $request) : JsonResponse
 	{
-		// TODO Argument permettant de le passer en hide
-
-		//Si la requête est une requête utilisateur
-		if ($request->user()) {
+		if ($request->user()){
 			if (isset($request['all'])){
-					//On recupère tous les articles dont l'id de visibility est inférieur ou égal à l'id de visibility auquel a accès l'utilisateur
-					$articles = Article::all()->map(function ($article) {
-						return $article->hide();
-					});
+				$articles = Article::all();
 			}
-			else {
+			else{
 				$articles = Article::whereHas('collaborators', function ($query) use ($request){
 					$query->whereIn('asso_id', array_merge(
 						$request->user()->currentAssos()->pluck('assos.id')->toArray()
@@ -64,12 +61,10 @@ class ArticleController extends Controller
 				})->get();
 			}
 		}
-		//Si la requête est une requête client
-		else
-			$articles = \Scopes::has($request, 'client-get-articles') && isset($request['all']) ? Article::all() : Article::where('visibility_id', Visibility::where('type', 'public')->first()->id)->get();
-
-		// On ne renvoie que ceux qui sont visibles
-		return response()->json($request->user() ? ArticleVisible::with($articles, $request->user()->id) : $articles, 200);
+		else{
+			$articles = Scopes::has($request, 'client-get-articles') && isset($request['all']) ? Article::all() : Article::where('visibility_id', Visibility::where('type', 'public')->first()->id)->get();
+		}
+		return response()->json($request->user() ? $this->hide($articles, !isset($request['notRemoved'])) : $articles,200);
 	}
 
 	/**
