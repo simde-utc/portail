@@ -83,12 +83,12 @@ trait HasKeyValue
 		if ($key === 'value') {
 			switch (gettype($value)) {
 				case 'string':
-					try {
+					if (\DateTime::createFromFormat('Y-m-d H:i:s', $value) || \DateTime::createFromFormat('Y-m-d', $value) || \DateTime::createFromFormat('H:i:s', $value))
 						$value = \Carbon\Carbon::parse($value);
-						break;
-					} catch (\Exception $e) {
+					else
 						$type = 'STRING';
-					}
+					break;
+
 				case 'integer':
 					$type = $type ?? 'INTEGER';
 				case 'double':
