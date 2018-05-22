@@ -26,9 +26,20 @@ class LoggedUserController extends Controller
 		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
 			$user->makeHidden('email');
 
-		if (\Scopes::has($request, 'user-get-info-identity-type')) {
+		if (\Scopes::has($request, 'user-get-info-identity-type'))
 			$user->type = $user->type();
-			$user->types = $user->types();
+
+		foreach ($user->types as $type) {
+			if (!\Scopes::has($request, 'user-get-info-identity-type-'.$type))
+				continue;
+
+			$method = 'is'.ucfirst($type);
+			$type = 'is_'.$type;
+
+	        if (method_exists($user, $method) && $user->$method())
+				$user->$type = true;
+			else
+				$user->$type = false;
 		}
 
 		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))

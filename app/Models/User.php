@@ -27,8 +27,8 @@ class User extends Authenticatable
 		'is_active' => 'boolean',
 	];
 
-	protected $types = [
-		'admin', 'contributorBDE', 'cas', 'logged',
+	public $types = [
+		'admin', 'contributorBde', 'cas', 'logged',
 	];
 
 	public static function findByEmail($email) {
@@ -67,23 +67,8 @@ class User extends Authenticatable
 		return null;
 	}
 
-	public function types() {
-		$types = [];
-
-		foreach ($this->types as $type) {
-			$method = 'is'.ucfirst($type);
-
-	        if (method_exists($this, $method) && $this->$method())
-				$types[$type] = true;
-			else
-				$types[$type] = false;
-		}
-
-		return $types;
-	}
-
 	public function isLogged() {
-        return true;
+        return $this->is_active;
     }
 
     public function isCas() {

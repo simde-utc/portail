@@ -75,6 +75,20 @@ return [
 						],
 						'type' => [
 							'description' => 'Connaître le type de l\'utilisateur',
+							'scopes' => [
+								'logged' => [
+									'description' => 'Savoir si le compte est actif',
+								],
+								'cas' => [
+									'description' => 'Savoir si l\'utilisateur est un utilisateur CAS-UTC',
+								],
+								'contributorBde' => [
+									'description' => 'Savoir si l\'utilisateur est un cotisant BDE-UTC',
+								],
+								'admin' => [
+									'description' => 'Savoir si l\'utilisateur est un administrateur du système',
+								],
+							]
 						],
 						'auth' => [
 							'description' => 'Connaître les types de connexions de l\'utilisateur',
