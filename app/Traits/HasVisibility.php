@@ -109,7 +109,9 @@ trait HasVisibility
     }
 
     public function isCas($user_id, $model = null) {
-        return AuthCas::find($user_id)->where('is_active', true)->exists();
+		$cas = AuthCas::find($user_id);
+
+        return $cas && $cas->where('is_active', true)->exists();
     }
 
     public function isContributorBde($user_id, $model = null) {

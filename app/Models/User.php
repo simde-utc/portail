@@ -72,7 +72,9 @@ class User extends Authenticatable
     }
 
     public function isCas() {
-        return AuthCas::find($this->id)->where('is_active', true)->exists();
+		$cas = AuthCas::find($this->id);
+
+        return $cas && $cas->where('is_active', true)->exists();
     }
 
     public function isContributorBde() {
