@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\User;
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 
 class UserDetailController extends Controller
 {
@@ -53,7 +53,7 @@ class UserDetailController extends Controller
     public function index(Request $request, int $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 
-		return response()->json(UserDetails::allToArray($user->id));
+		return response()->json(UserDetail::allToArray($user->id));
     }
 
     /**
@@ -66,16 +66,16 @@ class UserDetailController extends Controller
 		$user = $this->getUser($request, $user_id);
 
 		if ($user) {
-			if (method_exists((new UserDetails), $request->input('key')))
+			if (method_exists((new UserDetail), $request->input('key')))
 				abort(403, "Cette information ne peut pas être crée ou modifiée");
 
 			if (\Scopes::isUserToken($request)) {
-				UserDetails::create(array_merge(
+				UserDetail::create(array_merge(
 					$request->input(),
 					['user_id' => $user->id]
 				));
 
-				return response()->json(UserDetails::find($user->id, $request->input('key'))->toArray(true));
+				return response()->json(UserDetail::find($user->id, $request->input('key'))->toArray(true));
 			}
 		}
 		else
@@ -93,12 +93,12 @@ class UserDetailController extends Controller
             list($user_id, $key) = [$key, $user_id];
 
         $user = $this->getUser($request, $user_id);
-		$detail = UserDetails::find($user->id, $key);
+		$detail = UserDetail::find($user->id, $key);
 
 		if ($detail)
 			return response()->json($detail->toArray(true));
 		else {
-			$detail = UserDetails::$key($user->id);
+			$detail = UserDetail::$key($user->id);
 
 			if (!is_null($detail))
 				return response()->json([
@@ -123,17 +123,17 @@ class UserDetailController extends Controller
 		$user = $this->getUser($request, $user_id);
 
 		if ($user) {
-			if (method_exists((new UserDetails), $key))
+			if (method_exists((new UserDetail), $key))
 				abort(403, "Cette information ne peut pas être modifiée ou crée");
 
 			if (\Scopes::isUserToken($request)) {
-				$detail = UserDetails::find($user->id, $key);
+				$detail = UserDetail::find($user->id, $key);
 
 				if ($detail) {
 					$detail->value = $request->input('value', $detail->value);
 
 					if ($detail->update())
-						return response()->json(UserDetails::find($user->id, $key)->toArray(true));
+						return response()->json(UserDetail::find($user->id, $key)->toArray(true));
 					else
 						abort(503, 'Erreur lors de la modification');
 				}
@@ -158,11 +158,11 @@ class UserDetailController extends Controller
 		$user = $this->getUser($request, $user_id);
 
 		if ($user) {
-			if (method_exists((new UserDetails), $key))
+			if (method_exists((new UserDetail), $key))
 				abort(403, "Cette information ne peut être supprimée");
 
 			if (\Scopes::isUserToken($request)) {
-				$detail = UserDetails::find($user->id, $key);
+				$detail = UserDetail::find($user->id, $key);
 
 				if ($detail) {
 					if ($detail->delete())

@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 
 class User extends Authenticatable
@@ -27,7 +27,7 @@ class User extends Authenticatable
 		'is_active' => 'boolean',
 	];
 
-	public $types = [
+	protected $types = [
 		'admin', 'contributorBde', 'cas', 'logged',
 	];
 
@@ -76,7 +76,7 @@ class User extends Authenticatable
     }
 
     public function isContributorBde() {
-        return UserDetails::isContributorBde($this->id);
+        return UserDetail::isContributorBde($this->id);
     }
 
     public function isAdmin() {

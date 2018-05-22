@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -29,29 +29,35 @@ class LoggedUserController extends Controller
 		if (\Scopes::has($request, 'user-get-info-identity-type'))
 			$user->type = $user->type();
 
-		foreach ($user->types as $type) {
-			if (!\Scopes::has($request, 'user-get-info-identity-type-'.$type))
-				continue;
+		if ($request->has('withTypes')) {
+			foreach (explode(',', $request->input('withTypes')) as $type) {
+				try {
+					if (!\Scopes::has($request, 'user-get-info-identity-type-'.$type))
+						continue;
 
-			$method = 'is'.ucfirst($type);
-			$type = 'is_'.$type;
+					$method = 'is'.ucfirst($type);
+					$type = 'is_'.$type;
 
-	        if (method_exists($user, $method) && $user->$method())
-				$user->$type = true;
-			else
-				$user->$type = false;
+					if (method_exists($user, $method) && $user->$method())
+						$user->$type = true;
+					else
+						$user->$type = false;
+				} catch (\Exception $e) {
+					abort(400, 'Le type '.$type.' n\'existe pas !');
+				}
+			}
 		}
 
 		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
 			$user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
 
 		if ($request->has('allDetails'))
-			$user->details = UserDetails::allToArray($user->id);
-		else if ($request->filled('with')) {
+			$user->details = UserDetail::allToArray($user->id);
+		else if ($request->filled('withDetails')) {
 			$details = [];
 
-			foreach (explode(',', $request->input('with')) as $input)
-				$details[$input] = UserDetails::$input($user->id);
+			foreach (explode(',', $request->input('withDetails')) as $input)
+				$details[$input] = UserDetail::$input($user->id);
 
 			$user->details = $details;
 		}

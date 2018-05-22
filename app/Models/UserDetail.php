@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasKeyValue;
 use App\Models\User;
 
-class UserDetails extends Model
+class UserDetail extends Model
 {
 	use HasKeyValue;
 
