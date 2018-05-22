@@ -27,8 +27,8 @@ class User extends Authenticatable
 		'is_active' => 'boolean',
 	];
 
-	protected $types = [
-		'admin', 'contributorBde', 'cas', 'logged',
+	public $types = [
+		'admin', 'contributorBde', 'cas', 'active',
 	];
 
 	public static function findByEmail($email) {
@@ -67,7 +67,7 @@ class User extends Authenticatable
 		return null;
 	}
 
-	public function isLogged() {
+	public function isActive() {
         return $this->is_active;
     }
 

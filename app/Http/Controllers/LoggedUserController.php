@@ -29,7 +29,21 @@ class LoggedUserController extends Controller
 		if (\Scopes::has($request, 'user-get-info-identity-type'))
 			$user->type = $user->type();
 
-		if ($request->has('withTypes')) {
+		if ($request->has('allTypes')) {
+			if (!\Scopes::has($request, 'user-get-info-identity-type'))
+				abort(403, 'Vous n\'avez pas le droit d\'avoir accès aux types de l\'utilisateur');
+
+			foreach ($user->types as $type) {
+				$method = 'is'.ucfirst($type);
+				$type = 'is_'.$type;
+
+				if (method_exists($user, $method) && $user->$method())
+					$user->$type = true;
+				else
+					$user->$type = false;
+			}
+		}
+		else if ($request->has('withTypes')) {
 			foreach (explode(',', $request->input('withTypes')) as $type) {
 				try {
 					if (!\Scopes::has($request, 'user-get-info-identity-type-'.$type))

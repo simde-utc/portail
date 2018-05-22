@@ -76,7 +76,7 @@ return [
 						'type' => [
 							'description' => 'Connaître le type de l\'utilisateur',
 							'scopes' => [
-								'logged' => [
+								'active' => [
 									'description' => 'Savoir si le compte est actif',
 								],
 								'cas' => [
