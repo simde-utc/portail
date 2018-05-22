@@ -21,10 +21,15 @@ class UserDetails extends Model
 	];
 
 	public static function age(int $user_id) {
-		return (new static)->birthdate($user_id)->age;
+		$birthdate = (new static)->birthdate($user_id);
+
+		if ($birthdate)
+			return $birthdate->age;
+		else
+			return null;
 	}
 
-	public static function major(int $user_id) {
+	public static function isMajor(int $user_id) {
 		$cas = User::find($user_id)->cas;
 
 		if ($cas) {
@@ -42,7 +47,43 @@ class UserDetails extends Model
 			return null;
 	}
 
-	public static function minor(int $user_id) {
-		return !(new static)->major($user_id);
+	public static function isMinor(int $user_id) {
+		$isMajor = (new static)->isMajor($user_id);
+
+		if (is_null($isMajor))
+			return null;
+		else
+			return !$isMajor;
+	}
+
+	public static function loginCAS(int $user_id) {
+		$cas = User::find($user_id)->cas;
+
+		if ($cas)
+			return $cas->login;
+		else
+			return null;
+	}
+
+	public static function loginContributorBde(int $user_id) { // TODO pour les extés
+		$cas = User::find($user_id)->cas;
+
+		if ($cas)
+			return $cas->login;
+		else
+			return null;
+	}
+
+	public static function isContributorBde(int $user_id) {
+		$login = (new static)->loginContributorBde($user_id);
+
+		if ($login) {
+			try {
+				return Ginger::user($login)->isContributor();
+			}
+			catch (\Exception $e) {} // Si on a pas les données CAS, on regarde avec la date de naissance
+		}
+
+		return null;
 	}
 }

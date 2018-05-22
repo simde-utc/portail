@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
+use App\Models\UserDetails;
 use App\Http\Requests\ContactRequest;
 
 class User extends Authenticatable
@@ -24,6 +25,10 @@ class User extends Authenticatable
 
 	protected $casts = [
 		'is_active' => 'boolean',
+	];
+
+	protected $types = [
+		'admin', 'contributorBDE', 'cas', 'logged',
 	];
 
 	public static function findByEmail($email) {
@@ -50,6 +55,48 @@ class User extends Authenticatable
 			'is_active' => true
 		]);
 	}
+
+	public function type() {
+		foreach ($this->types as $type) {
+			$method = 'is'.ucfirst($type);
+
+	        if (method_exists($this, $method) && $this->$method())
+	            return $type;
+		}
+
+		return null;
+	}
+
+	public function types() {
+		$types = [];
+
+		foreach ($this->types as $type) {
+			$method = 'is'.ucfirst($type);
+
+	        if (method_exists($this, $method) && $this->$method())
+				$types[$type] = true;
+			else
+				$types[$type] = false;
+		}
+
+		return $types;
+	}
+
+	public function isLogged() {
+        return true;
+    }
+
+    public function isCas() {
+        return AuthCas::find($this->id)->where('is_active', true)->exists();
+    }
+
+    public function isContributorBde() {
+        return UserDetails::isContributorBde($this->id);
+    }
+
+    public function isAdmin() {
+        return $this->hasOneRole(config('portail.roles.admin.users'));
+    }
 
 	public function cas() {
 		return $this->hasOne('App\Models\AuthCas');

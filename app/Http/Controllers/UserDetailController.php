@@ -100,7 +100,7 @@ class UserDetailController extends Controller
 		else {
 			$detail = UserDetails::$key($user->id);
 
-			if ($detail)
+			if (!is_null($detail))
 				return response()->json([
 					$key => $detail
 				]);
