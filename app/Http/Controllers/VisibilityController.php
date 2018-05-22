@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\VisibilityRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Visibility;
 
@@ -16,12 +17,10 @@ class VisibilityController extends Controller
 {
 	/**
 	 * List Visibilities
-	 * @param \Illuminate\Http\Request $request
-	 * @return \Illuminate\Http\Response
+	 * @return JsonResponse
 	 */
 
-	 public function index()
-	{
+	public function index(): JsonResponse {
 		$visibilities = Visibility::get();
 
 		return response()->json($visibilities, 200);
@@ -30,11 +29,10 @@ class VisibilityController extends Controller
 	/**
 	 * Create Visibility
 	 *
-	 * @param \Illuminate\Http\VisibilityRequest $request
-	 * @return \Illuminate\Http\Response
+	 * @param VisibilityRequest $request
+	 * @return JsonResponse
 	 */
-	public function store(VisibilityRequest $request)
-	{
+	public function store(VisibilityRequest $request): JsonResponse {
 		$visibility = Visibility::create($request->all());
 
 		if ($visibility)
@@ -47,11 +45,10 @@ class VisibilityController extends Controller
 	/**
 	 * Show Visibility
 	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function show($id)
-	{
+	public function show($id): JsonResponse {
 		$visibility = Visibility::find($id);
 
 		if ($visibility)
@@ -63,19 +60,18 @@ class VisibilityController extends Controller
 	/**
 	 * Update Visibility
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param VisibilityRequest $request
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function update(VisibilityRequest $request, $id)
-	{
+	public function update(VisibilityRequest $request, $id): JsonResponse {
 		$visibility = Visibility::find($id);
 
 		if ($visibility) {
 			if ($visibility->update($request->input()))
 				return response()->json($visibility, 201);
 			else
-				return response()->json(['message' => 'Impossible de mettre à jour la visibilité'],500);
+				return response()->json(['message' => 'Impossible de mettre à jour la visibilité'], 500);
 		}
 		else
 			return response()->json(['message' => 'Impossible de trouver la  visibilité'], 500);
@@ -84,12 +80,11 @@ class VisibilityController extends Controller
 	/**
 	 * Delete Visibility
 	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function destroy($id)
-	{
-	   $visibility = Visibility::find($id);
+	public function destroy($id): JsonResponse {
+		$visibility = Visibility::find($id);
 
 		if ($visibility) {
 			if ($visibility->delete())

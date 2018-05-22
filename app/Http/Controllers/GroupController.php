@@ -25,8 +25,7 @@ class GroupController extends Controller
 	 *
 	 * Les Scopes requis pour manipuler les Groups
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->middleware(
 			\Scopes::matchOne(
 				['user-get-groups-enabled', 'user-get-groups-disabled'],
@@ -48,13 +47,12 @@ class GroupController extends Controller
 	 * @param Request $request
 	 * @return JsonResponse
 	 */
-	public function index(Request $request): JsonResponse
-	{
+	public function index(Request $request): JsonResponse {
 		// On inclue les relations et on les formattent.
 		$groups = Group::with([
-			'owner',
-			'visibility',
-		])->get();
+			                      'owner',
+			                      'visibility',
+		                      ])->get();
 
 		if (\Auth::id()) {
 			$groups = $this->hide($groups, true, function ($group) use ($request) {
@@ -73,8 +71,7 @@ class GroupController extends Controller
 	 * @param GroupRequest $request
 	 * @return JsonResponse
 	 */
-	public function store(GroupRequest $request): JsonResponse
-	{
+	public function store(GroupRequest $request): JsonResponse {
 		$group = new Group;
 		$group->user_id = \Auth::id();
 		$group->name = $request->name;
@@ -87,10 +84,11 @@ class GroupController extends Controller
 			if ($request->filled('member_ids')) {
 				if ($group->visibility_id === Visibility::findByType('owner')->id)
 					$data = [
-						'semester_id' => $request->input('semester_id', 0),
+						'semester_id'  => $request->input('semester_id', 0),
 						'validated_by' => $group->user_id,
 					];
-			} else {
+			}
+			else {
 				$data = [
 					'semester_id' => $request->input('semester_id', 0),
 				];
@@ -104,14 +102,15 @@ class GroupController extends Controller
 			}
 
 			$group = Group::with([
-				'owner',
-				'visibility',
-			])->find($group->id);
+				                     'owner',
+				                     'visibility',
+			                     ])->find($group->id);
 
 			$this->hideUserData($request, $group->owner);
 
 			return response()->json($group, 201);
-		} else
+		}
+		else
 			abort(500, 'Impossible de créer le groupe');
 	}
 
@@ -122,13 +121,12 @@ class GroupController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, $id): JsonResponse
-	{
+	public function show(Request $request, $id): JsonResponse {
 		// On inclue les relations et on les formattent.
 		$group = Group::with([
-			'owner',
-			'visibility',
-		])->find($id);
+			                     'owner',
+			                     'visibility',
+		                     ])->find($id);
 
 		if (\Auth::id()) {
 			$group = $this->hide($group, false, function ($group) use ($request) {
@@ -151,8 +149,7 @@ class GroupController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function update(GroupRequest $request, $id): JsonResponse
-	{
+	public function update(GroupRequest $request, $id): JsonResponse {
 		$group = Group::find($id);
 
 		if (!$group)
@@ -174,14 +171,14 @@ class GroupController extends Controller
 			if ($request->filled('member_ids')) {
 				if ($group->visibility_id >= Visibility::findByType('owner')->id)
 					$data = [
-						'semester_id' => $request->input('semester_id', 0),
+						'semester_id'  => $request->input('semester_id', 0),
 						'validated_by' => $group->user_id,
-						'removed_by' => $group->user_id,
+						'removed_by'   => $group->user_id,
 					];
 				else {
 					$data = [
 						'semester_id' => $request->input('semester_id', 0),
-						'removed_by' => $group->user_id,
+						'removed_by'  => $group->user_id,
 					];
 					// TODO: Envoyer un mail d'invitation dans le groupe
 				}
@@ -194,14 +191,15 @@ class GroupController extends Controller
 			}
 
 			$group = Group::with([
-				'owner',
-				'visibility',
-			])->find($id);
+				                     'owner',
+				                     'visibility',
+			                     ])->find($id);
 
 			$this->hideUserData($request, $group->owner);
 
 			return response()->json($group, 200);
-		} else
+		}
+		else
 			abort(500, 'Impossible de modifier le groupe');
 	}
 
@@ -211,8 +209,7 @@ class GroupController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy($id): JsonResponse
-	{
+	public function destroy($id): JsonResponse {
 		$group = Group::find($id);
 
 		if (!$group || !$group->delete())

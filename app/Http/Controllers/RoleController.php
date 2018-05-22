@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use App\Models\Role;
@@ -17,6 +18,7 @@ use App\Traits\HasStages;
 class RoleController extends Controller
 {
 	use HasStages;
+
 	/**
 	 * Scopes Role
 	 *
@@ -88,19 +90,21 @@ class RoleController extends Controller
 		return $only_for;
 	}
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request) {
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @param Request $request
+	 * @return JsonResponse
+	 * @throws PortailException
+	 */
+	public function index(Request $request): JsonResponse {
 		$inputs = $request->input();
 		// On vérifie que la ressource possède des rôles
 		if (isset($inputs['only_for']))
 			$this->checkOnlyFor($request, $inputs['only_for'], 'get');
 
 		if ($request->has('stage') || $request->has('fromStage') || $request->has('toStage') || $request->has('allStages')) {
-	        // On inclue les relations et on les formattent.
+			// On inclue les relations et on les formattent.
 			unset($inputs['stage']);
 			unset($inputs['fromStage']);
 			unset($inputs['toStage']);
@@ -122,15 +126,16 @@ class RoleController extends Controller
 		}
 
 		return response()->json($this->hideRoles($request, $roles), 200);
-    }
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request) {
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @return JsonResponse
+	 * @throws PortailException
+	 */
+	public function store(Request $request): JsonResponse {
 		$role = new Role;
 		$role->type = $request->type;
 		$role->name = $request->name;
@@ -146,15 +151,16 @@ class RoleController extends Controller
 		}
 		else
 			abort(500, 'Impossible de créer le role');
-    }
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request, $id) {
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param Request $request
+	 * @param  int $id
+	 * @return JsonResponse
+	 */
+	public function show(Request $request, $id): JsonResponse {
 		$role = $request->has('withChilds') ? Role::with('childs') : new Role;
 		$role = $request->has('withParents') ? $role->with('parents') : $role;
 
@@ -164,23 +170,24 @@ class RoleController extends Controller
 
 		$role = is_numeric($id) ? $role->find($id) : $role->where('type', $id)->first();
 
-        if ($role) {
+		if ($role) {
 			$role->nbr_assigned = $role->users()->where('semester_id', Semester::getThisSemester()->id)->count();
 
 			return response()->json($role, 200);
 		}
-        else
-            abort(404, "Role non trouvé");
-    }
+		else
+			abort(404, "Role non trouvé");
+	}
 
 	/**
 	 * Update Role
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  int $id
+	 * @return JsonResponse
+	 * @throws PortailException
 	 */
-	public function update(Request $request, $id) {
+	public function update(Request $request, $id): JsonResponse {
 		$role = $request->has('withChilds') ? Role::with('childs') : new Role;
 		$role = $request->has('withParents') ? $role->with('parents') : $role;
 
@@ -215,15 +222,16 @@ class RoleController extends Controller
 		}
 		else
 			abort(500, 'Impossible de créer le role');
-    }
+	}
 
 	/**
 	 * Delete Role
 	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param Request $request
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, $id) {
+	public function destroy(Request $request, $id): JsonResponse {
 		$role = new Role;
 
 		// On vérifie que la ressource possède des rôles
@@ -232,7 +240,7 @@ class RoleController extends Controller
 
 		$role = is_numeric($id) ? $role->find($id) : $role->where('type', $id)->first();
 
-	    if ($role) {
+		if ($role) {
 			if ($role->isDeletable()) {
 				if ($role->delete())
 					abort(204);
@@ -244,5 +252,5 @@ class RoleController extends Controller
 		}
 		else
 			abort(404, "Role non trouvé");
-    }
+	}
 }

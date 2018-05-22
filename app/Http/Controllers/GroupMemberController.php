@@ -2,31 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use App\Models\Group;
-use App\Http\Requests\GroupRequest;
 use App\Services\Visible\Visible;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
+use Illuminate\Support\Collection;
 
 class GroupMemberController extends Controller
 {
-    public function __construct() {
+	public function __construct() {
 		$this->middleware(
 			\Scopes::matchOne(
 				['user-get-groups-enabled', 'user-get-groups-disabled'],
 				['client-get-groups-enabled', 'client-get-groups-disabled']
 			),
 			['only' => ['index', 'show']]);
-        $this->middleware(
+		$this->middleware(
 			\Scopes::matchOne(
 				['user-manage-groups']
 			),
 			['only' => ['store', 'update', 'destroy']]);
-    }
+	}
 
-	protected function getGroup(Request $request, int $group_id) {
+	/**
+	 * Renvoie le groupe demandé
+	 *
+	 * @param Request $request
+	 * @param int $group_id
+	 * @return Group
+	 */
+	protected function getGroup(Request $request, int $group_id): Group {
 		$group = Group::find($group_id);
 
 		if ($group) {
@@ -41,44 +50,57 @@ class GroupMemberController extends Controller
 		abort(404, "Groupe non trouvé");
 	}
 
-	protected function hideUsersData(Request $request, $users, bool $hidePivot = false) {
+	/**
+	 * @param Request $request
+	 * @param Collection $users
+	 * @param bool $hidePivot
+	 * @return Collection
+	 */
+	protected function hideUsersData(Request $request, Collection $users, bool $hidePivot = false): Collection {
 		return parent::hideUsersData($request, $users, $hidePivot);
 	}
 
-	protected function hideUserData(Request $request, $user, bool $hidePivot = false) {
+	/**
+	 * @param Request $request
+	 * @param User $user
+	 * @param bool $hidePivot
+	 * @return User
+	 */
+	protected function hideUserData(Request $request, User $user, bool $hidePivot = false): User {
 		return parent::hideUserData($request, $user, $hidePivot);
 	}
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request, int $group_id)
-    {
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @param Request $request
+	 * @param int $group_id
+	 * @return JsonResponse
+	 */
+	public function index(Request $request, int $group_id): JsonResponse {
 		return response()->json($this->hideUsersData($request, $this->getGroup($request, $group_id)->currentAllMembers));
-    }
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request, int $group_id)
-    {
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @param int $group_id
+	 * @return JsonResponse
+	 */
+	public function store(Request $request, int $group_id): JsonResponse {
 		$group = $this->getGroup($request, $group_id);
 
 		if ($group->visibility_id >= Visibility::findByType('owner')->id)
 			$data = [
-				'semester_id' => $request->input('semester_id', 0),
-				'role_id' => $request->input('role_id', null),
+				'semester_id'  => $request->input('semester_id', 0),
+				'role_id'      => $request->input('role_id', null),
 				'validated_by' => \Auth::id(),
 			];
 		else {
 			$data = [
 				'semester_id' => $request->input('semester_id', 0),
-				'role_id' => $request->input('role_id', null),
+				'role_id'     => $request->input('role_id', null),
 			];
 			// TODO: Envoyer un mail d'invitation dans le groupe
 		}
@@ -90,16 +112,17 @@ class GroupMemberController extends Controller
 		}
 
 		return response()->json($this->hideUsersData($request, $group->currentAllMembers));
-    }
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request, int $group_id, int $member_id)
-    {
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param Request $request
+	 * @param int $group_id
+	 * @param int $member_id
+	 * @return JsonResponse
+	 */
+	public function show(Request $request, int $group_id, int $member_id): JsonResponse {
 		$group = $this->getGroup($request, $group_id);
 		$member = $group->currentAllMembers()->where('id', $member_id)->first();
 
@@ -107,31 +130,31 @@ class GroupMemberController extends Controller
 			return response()->json($this->hideUserData($request, $member));
 		else
 			abort(404, 'Cette personne ne fait pas partie du groupe');
-    }
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, int $group_id, int $member_id)
-    {
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @param int $group_id
+	 * @param int $member_id
+	 * @return JsonResponse
+	 */
+	public function update(Request $request, int $group_id, int $member_id): JsonResponse {
 		$group = $this->getGroup($request, $group_id);
 		$member = $group->currentAllMembers->where('id', $member_id)->first();
 
 		if ($member) {
 			if ($member_id === \Auth::id())
 				$data = [
-					'semester_id' => $request->input('semester_id', $member->pivot->semester_id),
-					'role_id' => $request->input('role_id', $member->pivot->role_id),
+					'semester_id'  => $request->input('semester_id', $member->pivot->semester_id),
+					'role_id'      => $request->input('role_id', $member->pivot->role_id),
 					'validated_by' => $member_id,
 				];
 			else {
 				$data = [
 					'semester_id' => $request->input('semester_id', $member->pivot->semester_id),
-					'role_id' => $request->input('role_id', $member->pivot->role_id),
+					'role_id'     => $request->input('role_id', $member->pivot->role_id),
 				];
 				// TODO: Envoyer un mail d'invitation dans le groupe
 			}
@@ -148,16 +171,18 @@ class GroupMemberController extends Controller
 		}
 		else
 			abort(404, 'Cette personne ne fait pas partie du groupe');
-    }
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request, int $group_id, int $member_id)
-    {
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param Request $request
+	 * @param int $group_id
+	 * @param int $member_id
+	 * @return JsonResponse
+	 * @throws PortailException
+	 */
+	public function destroy(Request $request, int $group_id, int $member_id): JsonResponse {
 		$group = $this->getGroup($request, $group_id);
 		$member = $group->currentAllMembers->where('id', $member_id)->first();
 
@@ -172,5 +197,5 @@ class GroupMemberController extends Controller
 		}
 		else
 			abort(404, 'Cette personne ne faisait déjà pas partie du groupe');
-    }
+	}
 }

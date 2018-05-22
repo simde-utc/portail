@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Http\Requests\EventRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\Visible\Visible;
@@ -19,10 +20,9 @@ class EventController extends Controller
 	/**
 	 * List Events
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @return JsonResponse
 	 */
-	public function index()
-	{
+	public function index(): JsonResponse {
 		$events = Event::get();
 
 		return response()->json($events, 200);
@@ -31,11 +31,10 @@ class EventController extends Controller
 	/**
 	 * Create Event
 	 *
-	 * @param  \Illuminate\Http\EventRequest  $request
-	 * @return \Illuminate\Http\Response
+	 * @param EventRequest $request
+	 * @return JsonResponse
 	 */
-	public function store(EventRequest $request)
-	{
+	public function store(EventRequest $request): JsonResponse {
 		$event = Event::create($request->all());
 
 		if ($event)
@@ -48,11 +47,10 @@ class EventController extends Controller
 	/**
 	 * Show Event
 	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function show($id)
-	{
+	public function show($id): JsonResponse {
 		$event = Event::find($id);
 
 		if ($event)
@@ -64,30 +62,28 @@ class EventController extends Controller
 	/**
 	 * Update Event
 	 *
-	 * @param  \Illuminate\Http\EventRequest  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param EventRequest $request
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function update(EventRequest $request, $id)
-	{
+	public function update(EventRequest $request, $id): JsonResponse {
 		$event = Event::find($id);
 		if ($event) {
 			if ($event->update($request->input()))
 				return response()->json($event, 201);
 			else
-				return response()->json(['message'=>'An error ocured'],500);
+				return response()->json(['message' => 'An error ocured'], 500);
 		}
 	}
 
 	/**
 	 * Delete Event
 	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function destroy($id)
-	{
-	   $event = Event::find($id);
+	public function destroy($id): JsonResponse {
+		$event = Event::find($id);
 
 		if ($event) {
 			$event->delete();

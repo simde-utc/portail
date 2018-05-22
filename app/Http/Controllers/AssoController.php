@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\AssoRequest;
 use App\Models\Asso;
@@ -56,9 +57,11 @@ class AssoController extends Controller
 	 * List Associations
 	 *
 	 * Retourne la liste des associations
-	 * @return \Illuminate\Http\Response
+	 * @param AssoRequest $request
+	 * @return JsonResponse
+	 * @throws PortailException
 	 */
-	public function index(AssoRequest $request) {
+	public function index(AssoRequest $request): JsonResponse {
 		if (isset($request['stage']) || isset($request['fromStage']) || isset($request['toStage']) || isset($request['allStages'])) {
 			$inputs = $request->input();
 			unset($inputs['stage']);
@@ -123,10 +126,10 @@ class AssoController extends Controller
 	 * Store Association
 	 *
 	 * Créer une Association
-	 * @param  \Illuminate\Http\AssoRequest  $request
-	 * @return \Illuminate\Http\Response
+	 * @param AssoRequest $request
+	 * @return JsonResponse
 	 */
-	public function store(AssoRequest $request) {
+	public function store(AssoRequest $request): JsonResponse {
 		$asso = Asso::create($request->input());
 
 		// On vérifie la création
@@ -151,15 +154,17 @@ class AssoController extends Controller
 	 * Show Association
 	 *
 	 * Retourne l'association si elle existe
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param Request $request
+	 * @param  int/string $id
+	 * @return JsonResponse
+	 * @throws PortailException
 	 */
-	public function show(Request $request, $id) {
+	public function show(Request $request, $id): JsonResponse {
 		$asso = Asso::with(isset($request['withChilds']) ? [
 			'type:id,name,description',
-			'childs'
+			'childs',
 		] : [
-			'type:id,name,description'
+			'type:id,name,description',
 		])->withTrashed();
 
 		if (is_numeric($id))
@@ -218,11 +223,11 @@ class AssoController extends Controller
 	 * Update Association
 	 *
 	 * Met à jour l'association si elle existe
-	 * @param  \Illuminate\Http\AssoRequest  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param AssoRequest $request
+	 * @param  int/string $id
+	 * @return JsonResponse
 	 */
-	public function update(AssoRequest $request, $id) {
+	public function update(AssoRequest $request, $id): JsonResponse {
 		$asso = Asso::withTrashed();
 
 		if (is_numeric($id))
@@ -235,8 +240,8 @@ class AssoController extends Controller
 				$asso->updateRoles(config('portail.roles.admin.assos'), [
 					'validated_by' => null,
 				], [
-					'validated_by' => \Auth::id(),
-				], $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id());
+					                   'validated_by' => \Auth::id(),
+				                   ], $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id());
 			}
 
 			if (!$asso->hasOneRole('resp communication', ['user_id' => \Auth::id()]) && !\Auth::user()->hasOneRole('admin')) {
@@ -266,10 +271,11 @@ class AssoController extends Controller
 	 * Delete Association
 	 *
 	 * Supprime l'association si elle existe
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param Request $request
+	 * @param  int/string $id
+	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, $id) {
+	public function destroy(Request $request, $id): JsonResponse {
 		if (is_numeric($id))
 			$asso = Asso::find($id);
 		else

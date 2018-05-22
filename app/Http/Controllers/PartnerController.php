@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PartnerRequest;
 use App\Models\Partner;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -16,10 +17,9 @@ class PartnerController extends Controller
 	/**
 	 * List Partners
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @return JsonResponse
 	 */
-	public function index()
-	{
+	public function index(): JsonResponse {
 		$partners = Partner::all();
 
 		if ($partners)
@@ -31,11 +31,10 @@ class PartnerController extends Controller
 	/**
 	 * Create Partner
 	 *
-	 * @param  \Illuminate\Http\PartnerRequest  $request
-	 * @return \Illuminate\Http\Response
+	 * @param PartnerRequest $request
+	 * @return JsonResponse
 	 */
-	public function store(PartnerRequest $request)
-	{
+	public function store(PartnerRequest $request): JsonResponse {
 		$partner = Partner::create($request->input());
 
 		if ($partner)
@@ -47,15 +46,14 @@ class PartnerController extends Controller
 	/**
 	 * Show Partner
 	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function show($id)
-	{
+	public function show($id): JsonResponse {
 		$partner = Partner::find($id);
 
 		if ($partner)
-			return response()->json($partner,200);
+			return response()->json($partner, 200);
 		else
 			return response()->json(['message' => 'Le partenaire demandé n\'a pas été trouvé'], 404);
 	}
@@ -63,12 +61,11 @@ class PartnerController extends Controller
 	/**
 	 * Update Partner
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param PartnerRequest $request
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function update(PartnerRequest $request, $id)
-	{
+	public function update(PartnerRequest $request, $id): JsonResponse {
 		$partner = Partner::find($id);
 
 		if ($partner) {
@@ -76,7 +73,7 @@ class PartnerController extends Controller
 				if (Partner::where('name', $request->input('name'))->get()->first() && ($partner->name != $request->input('name')))
 					return response()->json('Ce partenaire existe déjà, conflit', 409);
 				else
-					return response()->json($partner,200);
+					return response()->json($partner, 200);
 			}
 			return response()->json(['message' => 'Erreur pendant la mise à jour du partenaire'], 500);
 		}
@@ -86,11 +83,10 @@ class PartnerController extends Controller
 	/**
 	 * Delete Partner
 	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
-	public function destroy($id)
-	{
+	public function destroy($id): JsonResponse {
 		$partner = Partner::find($id);
 
 		if ($partner) {
