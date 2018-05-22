@@ -29,7 +29,7 @@ class VisibilitiesTableSeeder extends Seeder
                 'parent' => 'logged',
             ],
             [
-                'type' => 'contributorBDE',
+                'type' => 'contributorBde',
                 'name' => 'Tout cotisant BDE-UTC',
                 'parent' => 'cas',
             ],

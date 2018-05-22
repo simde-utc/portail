@@ -112,7 +112,7 @@ trait HasVisibility
         return AuthCas::find($user_id)->where('is_active', true)->exists();
     }
 
-    public function isContributorBDE($user_id, $model = null) {
+    public function isContributorBde($user_id, $model = null) {
         return Ginger::user(AuthCas::find($user_id)->login)->isContributor();
     }
 
