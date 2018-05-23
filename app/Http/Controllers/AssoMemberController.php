@@ -50,10 +50,10 @@ class AssoMemberController extends Controller
 	/**
 	 * Récupère une association par son id si elle existe
 	 * @param Request $request
-	 * @param int $asso_id
+	 * @param $asso_id
 	 * @return Asso
 	 */
-	protected function getAsso(Request $request, int $asso_id): Asso {
+	protected function getAsso(Request $request, $asso_id): Asso {
 		$asso = Asso::find($asso_id);
 
 		if ($asso)
@@ -104,11 +104,11 @@ class AssoMemberController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @param Request $request
-	 * @param int $asso_id
+	 * @param $asso_id
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function index(Request $request, int $asso_id): JsonResponse {
+	public function index(Request $request, $asso_id): JsonResponse {
 		$asso = $this->getAsso($request, $asso_id);
 		$choices = $this->getChoices($request, ['members', 'joiners', 'followers']);
 		$semester = Semester::getSemester($request->input('semester')) ?? Semester::getThisSemester();
@@ -133,11 +133,11 @@ class AssoMemberController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  Request $request
-	 * @param int $asso_id
+	 * @param $asso_id
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function store(Request $request, int $asso_id): JsonResponse {
+	public function store(Request $request, $asso_id): JsonResponse {
 		$asso = $this->getAsso($request, $asso_id);
 
 		if (\Scopes::isUserToken($request)) {
@@ -171,12 +171,12 @@ class AssoMemberController extends Controller
 	 * Display the specified resource.
 	 *
 	 * @param Request $request
-	 * @param int $asso_id
+	 * @param $asso_id
 	 * @param int $member_id
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function show(Request $request, int $asso_id, int $member_id): JsonResponse {
+	public function show(Request $request, $asso_id, int $member_id): JsonResponse {
 		$asso = $this->getAsso($request, $asso_id);
 		$choices = $this->getChoices($request, ['members', 'joiners', 'followers']);
 		$semester = Semester::getSemester($request->input('semester')) ?? Semester::getThisSemester();
@@ -204,12 +204,12 @@ class AssoMemberController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param Request $request
-	 * @param int $asso_id
+	 * @param $asso_id
 	 * @param int $member_id
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function update(Request $request, int $asso_id, int $member_id): JsonResponse {
+	public function update(Request $request, $asso_id, int $member_id): JsonResponse {
 		$asso = $this->getAsso($request, $asso_id);
 		$choices = $this->getChoices($request, ['members', 'joiners', 'followers']);
 		$semester = Semester::getSemester($request->input('semester')) ?? Semester::getThisSemester();
@@ -260,12 +260,12 @@ class AssoMemberController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param Request $request
-	 * @param int $asso_id
+	 * @param $asso_id
 	 * @param int $member_id
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function destroy(Request $request, int $asso_id, int $member_id): JsonResponse {
+	public function destroy(Request $request, $asso_id, int $member_id): JsonResponse {
 		$choices = $this->getChoices($request, ['members', 'joiners', 'followers']);
 		$semester = Semester::getSemester($request->input('semester')) ?? Semester::getThisSemester();
 		$member = null;
