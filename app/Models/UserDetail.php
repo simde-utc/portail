@@ -21,7 +21,7 @@ class UserDetail extends Model
 	];
 
 	public static function age(int $user_id) {
-		$birthdate = (new static)->birthdate($user_id);
+		$birthdate = self::birthdate($user_id);
 
 		if ($birthdate)
 			return $birthdate->age;
@@ -48,7 +48,7 @@ class UserDetail extends Model
 	}
 
 	public static function isMinor(int $user_id) {
-		$isMajor = (new static)->isMajor($user_id);
+		$isMajor = self::isMajor($user_id);
 
 		if (is_null($isMajor))
 			return null;
@@ -71,11 +71,11 @@ class UserDetail extends Model
 		if ($cas)
 			return $cas->login;
 		else
-			return null;
+			return Ginger::userByEmail(User::find($user_id)->email)->getLogin();
 	}
 
 	public static function isContributorBde(int $user_id) {
-		$login = (new static)->loginContributorBde($user_id);
+		$login = self::loginContributorBde($user_id);
 
 		if ($login) {
 			try {
