@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 
 trait HasVisibility
 {
+	private $isContributor = null;
     /**
      * Fonction qui renvoie une nouvelle instance du modèle si celui-ci
      * n'est pas visible par l'utilisateur.
@@ -115,7 +116,8 @@ trait HasVisibility
     }
 
     public function isContributorBDE($user_id, $model = null) {
-        return Ginger::user(AuthCas::find($user_id)->login)->isContributor();
+    	$this->isContributor ?? $this->isContributor = Ginger::user(AuthCas::find($user_id)->login)->isContributor();
+    	return $this->isContributor;
     }
 
     public function isPrivate($user_id, $model = null) {

@@ -91,9 +91,9 @@ class Controller extends BaseController
 	 * @param bool $hidePivot
 	 * @return Model
 	 */
-	protected function hidePivotData(Request $request, Model $model, bool $hidePivot = true): Model {
+	protected function hidePivotData(Request $request, Model $model, bool $hidePivot = true): ?Model {
 		if ($model === null)
-			return;
+			return null;
 
 		if ($hidePivot)
 			$model->makeHidden('pivot');
