@@ -1,51 +1,49 @@
 <?php
 
 namespace App\Traits;
+use App\Exceptions\PortailException;
 
 trait HasKeyValue
 {
-	public static function find(int $id = null, string $key = '*') {
-		return (new static)->keys($id, $key);
-	}
+	public function scopeWhereKey($query, $key) {
+		if (method_exists($this, $key))
+			throw new PortailException('Impossible de récupérer ou de modifier la donnée');
 
-	public function keys(int $id = null, string $key = '*') {
-		$collection = $id ? $this->where($this->primaryKey, $id) : $this;
+		$query = $query->where('key', strtoupper($key));
 
-		if ($key === '*')
-			return $collection->get();
+		if ($query->count() > 0)
+			return $query;
 		else
-			return $collection->where('key', strtoupper($key))->first();
+			throw new PortailException('Non trouvé');
 	}
 
-	public static function findToArray(int $id = null, string $key = '*') {
-		return (new static)->keysToArray($id, $key);
-	}
+	public function scopeKey($query, $key) {
+		$model = $this->scopeWhereKey($query, $key)->first();
 
-	public function keysToArray(int $id = null, string $key = '*') {
-		$collection = $id ? $this->where($this->primaryKey, $id) : $this;
-		$array = [];
-
-		if ($key === '*')
-			$collection = $collection->get();
+		if ($model)
+			return $model;
 		else
-			$collection = collect($collection->where('key', strtoupper($key))->first());
-
-		foreach ($collection as $model)
-			$array[strtolower($model->key)] = $model->value;
-
-		return $array;
+			throw new PortailException('Non trouvé');
 	}
 
-	public static function allToArray(int $id) {
-		$thus = (new static);
-		$array = $thus->keysToArray($id);
+	public function scopeValueOf($query, $key) {
+		$key = strtoupper($key);
 
-		if (property_exists($thus, 'valuesInFunction')) {
-			foreach ($thus->valuesInFunction as $value)
-				$array[$value] = $thus->$value($id);
-		}
+		if (method_exists($this, $key))
+			return $this->$key($query);
 
-		return $array;
+		return $this->scopeKey($query, $key)->value;
+	}
+
+	public function scopeToArray($query, $key = null) {
+		if ($key)
+			return [
+				strtolower($key) => $this->scopeValueOf($query, $key)
+			];
+		else if (count($collection = $query->get()->toArray()) > 0)
+			return array_merge(...$collection);
+		else
+			return [];
 	}
 
 	public function getAttribute($key) {
@@ -101,6 +99,7 @@ trait HasKeyValue
 				case 'array':
 					$type = $type ?? 'ARRAY';
 					$value = json_encode($value);
+					break;
 
 				default:
 					$type = 'NULL';
@@ -113,13 +112,17 @@ trait HasKeyValue
 
 			parent::setAttribute('type', $type);
 		}
-		else if ($key === 'key')
+		else if ($key === 'key') {
 			$value = strtoupper($value);
+
+			if (method_exists($this, $value))
+				throw new PortailException("Cette information ne peut pas être créée");
+		}
 
 		return parent::setAttribute($key, $value);
 	}
 
-	public function toArray($all = true) {
+	public function toArray($all = false) {
 		if ($all) {
 			$array = parent::toArray();
 			$array['value'] = $this->getAttribute('value');
@@ -133,8 +136,8 @@ trait HasKeyValue
 		}
 	}
 
-	public function toJson($all = true) {
-		return json_encode(parent::toArray($all));
+	public function toJson($all = false) {
+		return json_encode($this->toArray($all));
 	}
 
 	public function __call($method, $parameters) {
@@ -146,7 +149,7 @@ trait HasKeyValue
 			$user_id = isset($parameters[0]) ? ((int) $parameters[0]) : null;
 			unset($parameters[0]);
 
-			$model = $this->keys($user_id, $method, ...$parameters);
+			$model = $this->newQuery()->key($user_id, $method, ...$parameters);
 
 			if ($model)
 				return $model->value;

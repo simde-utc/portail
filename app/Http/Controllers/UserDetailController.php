@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\User;
 use App\Models\UserDetail;
+use App\Exceptions\PortailException;
 
 class UserDetailController extends Controller
 {
@@ -53,7 +54,8 @@ class UserDetailController extends Controller
     public function index(Request $request, int $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 
-		return response()->json(UserDetail::allToArray($user->id));
+        // On affiche chaque détail sous forme clé => valeur
+		return response()->json($user->details()->toArray());
     }
 
     /**
@@ -65,21 +67,14 @@ class UserDetailController extends Controller
     public function store(Request $request, int $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 
-		if ($user) {
-			if (method_exists((new UserDetail), $request->input('key')))
-				abort(403, "Cette information ne peut pas être crée ou modifiée");
+		if (\Scopes::isUserToken($request)) {
+			$detail = UserDetail::create(array_merge(
+				$request->input(),
+				['user_id' => $user->id]
+			));
 
-			if (\Scopes::isUserToken($request)) {
-				UserDetail::create(array_merge(
-					$request->input(),
-					['user_id' => $user->id]
-				));
-
-				return response()->json(UserDetail::find($user->id, $request->input('key'))->toArray(true));
-			}
-		}
-		else
-			abort(404, "Utilisateur non trouvé");
+			return response()->json($detail, 201);
+        }
     }
 
     /**
@@ -93,20 +88,13 @@ class UserDetailController extends Controller
             list($user_id, $key) = [$key, $user_id];
 
         $user = $this->getUser($request, $user_id);
-		$detail = UserDetail::find($user->id, $key);
 
-		if ($detail)
-			return response()->json($detail->toArray(true));
-		else {
-			$detail = UserDetail::$key($user->id);
-
-			if (!is_null($detail))
-				return response()->json([
-					$key => $detail
-				]);
-			else
-				abort(404, 'Cette personne ne possède pas ce détail');
-		}
+        try {
+            return response()->json($user->details()->toArray($key));
+        }
+        catch (PortailException $e) {
+            abort(404, 'Cette personne ne possède pas ce détail');
+        }
     }
 
     /**
@@ -123,22 +111,16 @@ class UserDetailController extends Controller
 		$user = $this->getUser($request, $user_id);
 
 		if ($user) {
-			if (method_exists((new UserDetail), $key))
-				abort(403, "Cette information ne peut pas être modifiée ou crée");
-
 			if (\Scopes::isUserToken($request)) {
-				$detail = UserDetail::find($user->id, $key);
+                try {
+                    $detail = $user->details()->key($key);
+                    $detail->value = $request->input('value', $detail->value);
 
-				if ($detail) {
-					$detail->value = $request->input('value', $detail->value);
-
-					if ($detail->update())
-						return response()->json(UserDetail::find($user->id, $key)->toArray(true));
-					else
-						abort(503, 'Erreur lors de la modification');
-				}
-				else
-					abort(404, "Détail non trouvé");
+                    return response()->json($detail);
+                }
+                catch (PortailException $e) {
+                    abort(404, 'Cette personne ne possède pas ce détail, ou il ne peut être modifié');
+                }
 			}
 		}
 		else
@@ -158,20 +140,18 @@ class UserDetailController extends Controller
 		$user = $this->getUser($request, $user_id);
 
 		if ($user) {
-			if (method_exists((new UserDetail), $key))
-				abort(403, "Cette information ne peut être supprimée");
-
 			if (\Scopes::isUserToken($request)) {
-				$detail = UserDetail::find($user->id, $key);
+                try {
+                    $detail = $user->details()->where('key', $key);
 
-				if ($detail) {
 					if ($detail->delete())
-						abort(204);
+                        abort(204);
 					else
 						abort(503, 'Erreur lors de la suppression');
-				}
-				else
-					abort(404, "Détail non trouvé");
+                }
+                catch (PortailException $e) {
+                    abort(404, 'Cette personne ne possède pas ce détail, ou il ne peut être supprimé');
+                }
 			}
 		}
 		else

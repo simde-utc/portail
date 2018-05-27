@@ -11,22 +11,20 @@ class UserDetail extends Model
 {
 	use HasKeyValue;
 
+	public $incrementing = false; // L'id n'est pas autoincrementé
 	protected $table = 'users_details';
-	protected $primaryKey = 'user_id';
+	protected $primaryKey = ['user_id', 'key'];
 	protected $fillable = [
 		'user_id', 'key', 'value', 'type',
 	];
-	protected $valuesInFunction = [
-		'age', 'major', 'minor',
-	];
 
-	public static function age(int $user_id) {
-		$birthdate = self::birthdate($user_id);
+	public function age($query) {
+		$birthdate = $query->valueOf('birthdate');
 
 		if ($birthdate)
 			return $birthdate->age;
 		else
-			return null;
+			throw new PortailException('Non trouvé');
 	}
 
 	public static function isMajor(int $user_id) {
