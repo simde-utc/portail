@@ -45,6 +45,21 @@ class UserPreferenceController extends Controller
 		else
 			abort(404, "Utilisateur non trouvé");
 	}
+
+    protected function getPreferences(Request $request, $user) {
+        $choices = $this->getChoices($request, ['global', 'asso', 'client']);
+        $token = $request->user() ? $request->user()->token() : $request->token();
+        $client = $token->client;
+
+        if (in_array('asso', $choices))
+            $choices[array_search('asso', $choices)] = 'asso_'.$client->asso_id;
+
+        if (in_array('client', $choices))
+            $choices[array_search('client', $choices)] = 'client_'.$client->id;
+
+        return $user->preferences()->whereIn('only_for', $choices);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -52,8 +67,20 @@ class UserPreferenceController extends Controller
      */
     public function index(Request $request, int $user_id = null) {
 		$user = $this->getUser($request, $user_id);
+        $groups = $this->getPreferences($request, $user)->get()->groupBy('only_for');
+        $array = [];
 
-		return response()->json(UserPreference::allToArray($user->id));
+        foreach ($groups as $only_for => $preferences) {
+            $array[$only_for] = [];
+
+            foreach ($preferences as $preference)
+                $array[$only_for] = array_merge($array[$only_for], $preference->toArray());
+        }
+
+        if (count($array) === 1)
+            return response()->json(array_values($array)[0]);
+        else
+            return response()->json($array);
     }
 
     /**
@@ -64,22 +91,28 @@ class UserPreferenceController extends Controller
      */
     public function store(Request $request, int $user_id = null) {
 		$user = $this->getUser($request, $user_id);
+        $inputs = $request->input();
 
-		if ($user) {
-			if (method_exists((new UserPreference), $request->input('key')))
-				abort(403, "Cette préférence ne peut pas être crée ou modifiée");
+        // On ajoute l'id associé
+        if ($request->input('only_for') === 'asso') {
+            $token = $request->user() ? $request->user()->token() : $request->token();
+            $inputs['only_for'] .= '_'.$token->client->asso_id;
+        }
+        else if ($request->input('only_for') === 'client') {
+            $token = $request->user() ? $request->user()->token() : $request->token();
+            $inputs['only_for'] .= '_'.$token->client->id;
+        }
+        else if ($request->input('only_for', 'global') !== 'global')
+            abort(400, 'only_for peut seulement être asso, client ou global');
 
-			if (\Scopes::isUserToken($request)) {
-				UserPreference::create(array_merge(
-					$request->input(),
-					['user_id' => $user->id]
-				));
+		if (\Scopes::isUserToken($request)) {
+			$preference = UserPreference::create(array_merge(
+				$inputs,
+				['user_id' => $user->id]
+			));
 
-				return response()->json(UserPreference::find($user->id, $request->input('key'))->toArray(true));
-			}
+			return response()->json($preference, 201);
 		}
-		else
-			abort(404, "Utilisateur non trouvé");
     }
 
     /**
@@ -93,20 +126,12 @@ class UserPreferenceController extends Controller
             list($user_id, $key) = [$key, $user_id];
 
         $user = $this->getUser($request, $user_id);
-		$detail = UserPreference::find($user->id, $key);
+		$preference = $this->getPreferences($request, $user)->key($key);
 
-		if ($detail)
-			return response()->json($detail->toArray(true));
-		else {
-			$detail = UserPreference::$key($user->id);
-
-			if (!is_null($detail))
-				return response()->json([
-					$key => $detail
-				]);
-			else
-				abort(404, 'Cette personne ne possède pas cette préférence');
-		}
+		if ($preference)
+			return response()->json($preference->toArray());
+		else
+			abort(404, 'Cette personne ne possède pas cette préférence');
     }
 
     /**
@@ -122,27 +147,20 @@ class UserPreferenceController extends Controller
 
 		$user = $this->getUser($request, $user_id);
 
-		if ($user) {
-			if (method_exists((new UserPreference), $key))
-				abort(403, "Cette préférence ne peut pas être modifiée ou crée");
+		if (\Scopes::isUserToken($request)) {
+            try {
+                $preference = $this->getPreferences($request, $user)->key($key);
+                $preference->value = $request->input('value', $preference->value);
 
-			if (\Scopes::isUserToken($request)) {
-				$detail = UserPreference::find($user->id, $key);
-
-				if ($detail) {
-					$detail->value = $request->input('value', $detail->value);
-
-					if ($detail->update())
-						return response()->json(UserPreference::find($user->id, $key)->toArray(true));
-					else
-						abort(503, 'Erreur lors de la modification');
-				}
-				else
-					abort(404, "Préférence non trouvé");
-			}
+                if ($preference->update())
+                    return response()->json($preference);
+                else
+                    abort(503, 'Erreur lors de la modification');
+            }
+            catch (PortailException $e) {
+                abort(404, 'Cette personne ne possède pas ce préférence, ou il ne peut être modifié');
+            }
 		}
-		else
-			abort(404, "Utilisateur non trouvé");
     }
 
     /**
@@ -157,24 +175,19 @@ class UserPreferenceController extends Controller
 
 		$user = $this->getUser($request, $user_id);
 
-		if ($user) {
-			if (method_exists((new UserPreference), $key))
-				abort(403, "Cette préférence ne peut être supprimée");
+		if (\Scopes::isUserToken($request)) {
+            $preference = $this->getPreferences($request, $user)->key($key);
 
-			if (\Scopes::isUserToken($request)) {
-				$detail = UserPreference::find($user->id, $key);
+            try {
 
-				if ($detail) {
-					if ($detail->delete())
-						abort(204);
-					else
-						abort(503, 'Erreur lors de la suppression');
-				}
+				if ($preference->delete())
+                    abort(204);
 				else
-					abort(404, "Préférence non trouvé");
-			}
+					abort(503, 'Erreur lors de la suppression');
+            }
+            catch (PortailException $e) {
+                abort(404, 'Cette personne ne possède pas ce détail, ou il ne peut être supprimé');
+            }
 		}
-		else
-			abort(404, "Utilisateur non trouvé");
     }
 }

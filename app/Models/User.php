@@ -8,12 +8,24 @@ use Illuminate\Notifications\Notifiable;
 use App\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
+use App\Models\UserPreference;
 use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 
 class User extends Authenticatable
 {
 	use HasApiTokens, Notifiable, HasRoles;
+
+    public static function boot() {
+        static::created(function ($model) {
+			// Ajout dans les préférences
+			UserPreference::create([
+				'user_id' => $model->id,
+				'key' => 'CONTACT_EMAIL',
+				'value'   => $model->email,
+			]);
+        });
+    }
 
 	protected $fillable = [
 		'firstname', 'lastname', 'email', 'is_active', 'last_login_at',
@@ -90,6 +102,14 @@ class User extends Authenticatable
 	}
 	public function password() {
 		return $this->hasOne('App\Models\AuthPassword');
+	}
+
+	public function details() {
+		return $this->hasMany(UserDetail::class);
+	}
+
+	public function preferences() {
+		return $this->hasMany(UserPreference::class);
 	}
 
 	public function assos() {

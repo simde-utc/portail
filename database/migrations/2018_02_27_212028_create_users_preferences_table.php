@@ -21,9 +21,10 @@ class CreateUsersPreferencesTable extends Migration
 			$table->enum('type', [
 				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
 			])->default('STRING');
+			$table->string('only_for')->default('global');
 
 			$table->timestamps();
-			$table->primary(['user_id', 'key']);
+			$table->primary(['user_id', 'key', 'only_for']);
 		});
 	}
 

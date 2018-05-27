@@ -110,21 +110,20 @@ class UserDetailController extends Controller
 
 		$user = $this->getUser($request, $user_id);
 
-		if ($user) {
-			if (\Scopes::isUserToken($request)) {
-                try {
-                    $detail = $user->details()->key($key);
-                    $detail->value = $request->input('value', $detail->value);
+		if (\Scopes::isUserToken($request)) {
+            try {
+                $detail = $user->details()->key($key);
+                $detail->value = $request->input('value', $detail->value);
 
+                if ($detail->update())
                     return response()->json($detail);
-                }
-                catch (PortailException $e) {
-                    abort(404, 'Cette personne ne possède pas ce détail, ou il ne peut être modifié');
-                }
-			}
+                else
+                    abort(503, 'Erreur lors de la modification');
+            }
+            catch (PortailException $e) {
+                abort(404, 'Cette personne ne possède pas ce détail, ou il ne peut être modifié');
+            }
 		}
-		else
-			abort(404, "Utilisateur non trouvé");
     }
 
     /**
@@ -139,22 +138,18 @@ class UserDetailController extends Controller
 
 		$user = $this->getUser($request, $user_id);
 
-		if ($user) {
-			if (\Scopes::isUserToken($request)) {
-                try {
-                    $detail = $user->details()->where('key', $key);
+		if (\Scopes::isUserToken($request)) {
+            try {
+                $detail = $user->details()->key($key);
 
-					if ($detail->delete())
-                        abort(204);
-					else
-						abort(503, 'Erreur lors de la suppression');
-                }
-                catch (PortailException $e) {
-                    abort(404, 'Cette personne ne possède pas ce détail, ou il ne peut être supprimé');
-                }
-			}
+				if ($detail->delete())
+                    abort(204);
+				else
+					abort(503, 'Erreur lors de la suppression');
+            }
+            catch (PortailException $e) {
+                abort(404, 'Cette personne ne possède pas ce détail, ou il ne peut être supprimé');
+            }
 		}
-		else
-			abort(404, "Utilisateur non trouvé");
     }
 }
