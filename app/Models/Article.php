@@ -29,4 +29,8 @@ class Article extends Model {
 	public function visibility() {
 		return $this->belongsTo('App\Models\Visibility', 'visibility_id');
 	}
+
+	public function comments() {
+		return $this->morphMany('App\Models\Comment', 'commentable');
+	}
 }

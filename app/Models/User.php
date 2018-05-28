@@ -94,6 +94,10 @@ class User extends Authenticatable
     	return $this->belongsToMany('App\Models\Event');
     }
 
+    public function comments() {
+		return $this->hasMany('App\Models\Comment');
+	}
+
 	/**
 	 * Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification
 	 *

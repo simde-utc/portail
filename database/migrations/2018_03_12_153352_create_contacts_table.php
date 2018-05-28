@@ -22,7 +22,7 @@ class CreateContactsTable extends Migration
 			$table->integer('visibility_id')->unsigned();
 			$table->foreign('visibility_id')->references('id')->on('visibilities');
 			$table->integer('contactable_id')->unsigned();
-      $table->string('contactable_type');
+      		$table->string('contactable_type');
 			$table->timestamps();
 		});
 	}
