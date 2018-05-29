@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EventRequest extends FormRequest
@@ -24,13 +25,13 @@ class EventRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'         => 'string|between:1,64'.($this->isMethod('put')?'':'|required'),
-            'description'   => 'string|between:10,800',
-            'image'         => 'nullable|image'.validation_between('url'),
-            'from'          => 'date'.($this->isMethod('put')?'':'|required'),
-            'to'            => 'date'.($this->isMethod('put')?'':'|required'),
-            'visibility_id' => 'integer|exists:visibilities,id'.($this->isMethod('put')?'':'|required'),
-            'place'         => 'nullable|string',
+	        'title' => Validation::make($this)->type('string')->length(validation_between('title'))->post('required')->get(),
+	        'description' => Validation::make($this)->type('string')->length(validation_between('article'))->post('required')->get(),
+	        'image' => Validation::make($this)->type('image')->nullable()->length(validation_between('url'))->get(),
+	        'from' => Validation::make($this)->type('date')->post('required')->get(),
+	        'to' => Validation::make($this)->type('date')->post('required')->get(),
+	        'visibility_id' => Validation::make($this)->type('integer')->exists('visibilities', 'id')->post('required')->get(),
+	        'place' => Validation::make($this)->type('string')->nullable()->length(validation_between('string'))->get(),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoomRequest extends FormRequest
@@ -24,9 +25,8 @@ class RoomRequest extends FormRequest
     public function rules()
     {
         return [
-
-            'name' => 'string|between:3,191'.($this->isMethod('put')?'':'|required'),
-            'asso_id' => 'integer'.($this->isMethod('put')?'':'|required'),
+	        'name' => Validation::make($this)->type('string')->length(validation_between('string'))->post('required')->get(),
+	        'asso_id' => Validation::make($this)->type('integer')->exists('assos', 'id')->post('required')->get(),
         ];
     }
 }

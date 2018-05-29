@@ -11,16 +11,26 @@ class DatabaseSeeder extends Seeder
 	 */
 	public function run()
 	{
+		// Prod:
 		$this->call([
+			SemestersTableSeeder::class,
 			AssosTypesTableSeeder::class,
 			AssosTableSeeder::class,
-			UsersTableSeeder::class,
 			VisibilitiesTableSeeder::class,
 			ContactsTypesTableSeeder::class,
-			GroupsTableSeeder::class,
-			RoomsTableSeeder::class,
-			ArticlesTableSeeder::class,
-			PartnersTableSeeder::class,
+			ContactsTableSeeder::class,
+			PermissionsTableSeeder::class,
+			RolesTableSeeder::class,
 		]);
+
+		if (env('APP_DEBUG', false)) {
+			$this->call([
+				UsersTableSeeder::class,
+				GroupsTableSeeder::class,
+				RoomsTableSeeder::class,
+				ArticlesTableSeeder::class,
+				PartnersTableSeeder::class,
+			]);
+		}
 	}
 }

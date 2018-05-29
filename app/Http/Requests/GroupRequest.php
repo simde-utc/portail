@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Group;
+use App\Services\Visible\Visible;
 
 class GroupRequest extends FormRequest
 {
@@ -13,10 +16,12 @@ class GroupRequest extends FormRequest
      */
     public function authorize()
     {
-        $group = Group::find($this->route('group'));
-
-        return $group && $group->is_active && $group->user_id = $this->user()->user_id;
-        // true si ce groupe existe, il est actif et l'utilisateur est le créateur du groupe.
+        if ($this->isMethod('put') || $this->isMethod('patch') || $this->isMethod('delete')) {
+            $group = Group::find($this->route('group'));
+            return $group && $this->user() && Visible::isOwner($group, $this->user()->id);
+        }
+        else
+            return true;
     }
 
     /**
@@ -26,12 +31,28 @@ class GroupRequest extends FormRequest
      */
     public function rules()
     {
-        // TODO: Vielles valeurs de la BDD, pas oublier de changer.
+	    $id = $this->group;
+
         return [
-            'name'          => 'string|between:1,64'.($this->isMethod('put')?'':'|required'),
-            'icon'          => 'string|between:3,191'.($this->isMethod('put')?'':'|required'),
-            'visibility'    => 'string|between:1,128'.($this->isMethod('put')?'':'|required'),
-            'is_active'     => 'boolean'.($this->isMethod('put')?'':'|required'),
+	        'name' => Validation::make($this)
+                        ->type('string')
+                        ->length(validation_between('name'))
+                        ->unique('groups','name,'.$id)
+                        ->post('required')
+                        ->get(),
+	        'icon' => Validation::make($this)
+                        ->type('image')
+                        ->length(validation_between('url'))
+                        ->nullable()
+                        ->get(),
+	        'visibility_id' => Validation::make($this)
+                        ->type('integer')
+                        ->exists('visibilities', 'id')
+                        ->post('required')
+                        ->get(),
+	        'is_active' => Validation::make($this)
+                        ->type('boolean')
+                        ->get(),
         ];
     }
 }

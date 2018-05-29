@@ -3,41 +3,48 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * @resource Connected User
+ *
+ * Affiche des informations sur l'utilisateur connecté
+ */
 class ConnectedUserController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Show Connected User
 	 *
-	 * @return \Illuminate\Http\Response
+	 * Renvoie des informations sur l'utilisateur connecté
+	 * @param Request $request
+	 * @return JsonResponse
 	 */
-	public function index(Request $request) {
+	public function index(Request $request): JsonResponse {
 		$user = $request->user();
 
 		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
 			$user->makeHidden('email');
 
-		if (!\Scopes::has($request, 'user-get-info-identity-names'))
-			$user->makeHidden('lastname')->makeHidden('firstname');
-
 		if (\Scopes::has($request, 'user-get-info-identity-type'))
-			$user->type = \App\Services\Visible\Visible::getType($user->id);
+			//$user->type = \App\Services\Visible\Visible::getType($user->id); TODO
 
-		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
-			$user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
+			if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
+				$user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
 
 		// Par défaut, on retourne au moins l'id de la personne
-		return $user;
+		return response()->json($user);
 	}
 
 	/**
-	 * Retourne tous les providers de la personne
+	 * List User's Providers
+	 *
+	 * Retourne tous les providers de l'utilisateur connecté
 	 * @param  Request $request
-	 * @return Json
+	 * @return array
 	 */
-	public function getProviders(Request $request) {
+	public function getProviders(Request $request): array {
 		$user = $request->user();
 		$providers = config('auth.services');
 		$result = [];
@@ -45,7 +52,7 @@ class ConnectedUserController extends Controller
 		foreach ($providers as $name => $provider) {
 			$model = resolve($provider['model']);
 
-			if ($model !== null) {
+			if ($model !== null && \Scopes::has($request, 'user-get-info-identity-auth-'.$name)) {
 				$data = $model->find($user->id);
 
 				if ($data !== null) {
@@ -59,12 +66,14 @@ class ConnectedUserController extends Controller
 	}
 
 	/**
+	 * Get User Provider
+	 *
 	 * Retourne le provider de la personne
 	 * @param  Request $request
 	 * @param  string $name
-	 * @return Json
+	 * @return JsonResponse
 	 */
-	public function getProvider(Request $request, string $name) {
+	public function getProvider(Request $request, string $name): JsonResponse {
 		$user = $request->user();
 		$provider = config('auth.services.'.$name);
 		$result = [];
@@ -72,6 +81,9 @@ class ConnectedUserController extends Controller
 		if ($provider === null)
 			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
 		else {
+			if (!\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+				return response()->json(['message' => 'Non autorisé'], 503);
+
 			$model = resolve($provider['model']);
 
 			if ($model !== null) {

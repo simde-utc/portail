@@ -59,17 +59,17 @@
                                 <code>{{ client.secret }}</code>
                             </td>
 
-                            <!-- Edit Button -->
+                            <!-- See Button -->
                             <td style="vertical-align: middle;">
-                                <a class="action-link" tabindex="-1" @click="edit(client)">
+                                <a class="action-link" tabindex="-1" @click="see(client)">
                                     Voir
                                 </a>
                             </td>
 
-                            <!-- Delete Button -->
+                            <!-- See Button -->
                             <td style="vertical-align: middle;">
-                                <a class="action-link text-danger" @click="destroy(client)">
-                                    Delete
+                                <a class="action-link" tabindex="-1" @click="edit(client)">
+                                    Modifier
                                 </a>
                             </td>
                         </tr>
@@ -92,11 +92,11 @@
 
                     <div class="modal-body">
                         <!-- Form Errors -->
-                        <div class="alert alert-danger" v-if="createForm.errors.length > 0">
+                        <div class="alert alert-danger" v-if="form.errors.length > 0">
                             <p class="mb-0"><strong>Whoops!</strong> Something went wrong!</p>
                             <br>
                             <ul>
-                                <li v-for="error in createForm.errors">
+                                <li v-for="error in form.errors">
                                     {{ error }}
                                 </li>
                             </ul>
@@ -110,7 +110,7 @@
 
                                 <div class="col-md-9">
                                     <input id="create-client-name" type="text" class="form-control"
-                                                                @keyup.enter="store" v-model="createForm.name">
+                                                                @keyup.enter="store" v-model="form.name">
 
                                     <span class="form-text text-muted">
                                         Something your users will recognize and trust.
@@ -124,7 +124,7 @@
 
                                 <div class="col-md-9">
                                     <input name="asso_id" type="number" min="0" class="form-control"
-                                                                @keyup.enter="store" v-model="createForm.asso_id">
+                                                                @keyup.enter="store" v-model="form.asso_id">
 
                                     <span class="form-text text-muted">
 										L'id de l'asso a qui créer la clé
@@ -138,11 +138,30 @@
 
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="redirect"
-                                                    @keyup.enter="store" v-model="createForm.redirect">
+                                                    @keyup.enter="store" v-model="form.redirect">
 
                                     <span class="form-text text-muted">
                                         Your application's authorization callback URL.
                                     </span>
+                                </div>
+                            </div>
+
+                            <!-- Scopes -->
+                            <div class="form-group">
+                                <label class="col-md-4 col-form-label">Scopes</label>
+
+								<div class="col-md-12">
+                                    <div v-for="(description, name) in scopes" v-if="name.startsWith('client')">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"
+                                                    @click="toggleScope(name)"
+                                                    :checked="scopeIsAssigned(name)">
+
+                                                    {{ description }}
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -150,10 +169,10 @@
 
                     <!-- Modal Actions -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
 
                         <button type="button" class="btn btn-primary" @click="store">
-                            Create
+                            Créer
                         </button>
                     </div>
                 </div>
@@ -161,7 +180,7 @@
         </div>
 
         <!-- View Client Modal -->
-        <div class="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
+        <div class="modal fade" id="modal-see-client" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -174,11 +193,11 @@
 
                     <div class="modal-body">
                         <!-- Form Errors -->
-                        <div class="alert alert-danger" v-if="editForm.errors.length > 0">
+                        <div class="alert alert-danger" v-if="form.errors.length > 0">
                             <p class="mb-0"><strong>Whoops!</strong> Something went wrong!</p>
                             <br>
                             <ul>
-                                <li v-for="error in editForm.errors">
+                                <li v-for="error in form.errors">
                                     {{ error }}
                                 </li>
                             </ul>
@@ -192,7 +211,7 @@
 
                                 <div class="col-md-9">
                                     <input id="edit-client-name" type="text" disabled class="form-control"
-                                                                @keyup.enter="update" v-model="editForm.name">
+                                                                @keyup.enter="update" v-model="form.name">
 
                                     <span class="form-text text-muted">
                                         Something your users will recognize and trust.
@@ -206,7 +225,7 @@
 
                                 <div class="col-md-9">
                                     <input type="number" min="0" disabled class="form-control"
-                                                                @keyup.enter="update" v-model="editForm.asso_id">
+                                                                @keyup.enter="update" v-model="form.asso_id">
 
                                     <span class="form-text text-muted">
                                         L'id de l'asso a qui créer la clé
@@ -220,7 +239,7 @@
 
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" disabled name="redirect"
-                                                    @keyup.enter="update" v-model="editForm.redirect">
+                                                    @keyup.enter="update" v-model="form.redirect">
 
                                     <span class="form-text text-muted">
                                         Your application's authorization callback URL.
@@ -229,14 +248,14 @@
                             </div>
 
 							<!-- Scopes -->
-                            <div class="form-group" v-if="editForm.scopes.length > 0"
-														@keyup.enter="update" v-model="editForm.scopes">
+                            <div class="form-group" v-if="form.scopes.length > 0"
+														@keyup.enter="update" v-model="form.scopes">
                                 <label class="col-md-4 col-form-label">Scopes</label>
 
                                 <div class="col-md-9">
-                                    <ul v-for="scope in editForm.scopes">
+                                    <ul v-for="scope in form.scopes">
                                         <li>
-                                            {{ scope }}
+                                            {{ scopes[scope] }}
                                         </li>
                                     </ul>
                                 </div>
@@ -247,6 +266,91 @@
                     <!-- Modal Actions -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Client Modal -->
+        <div class="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            Modifier
+                        </h4>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- Form Errors -->
+                        <div class="alert alert-danger" v-if="form.errors.length > 0">
+                            <p class="mb-0"><strong>Whoops!</strong> Something went wrong!</p>
+                            <br>
+                            <ul>
+                                <li v-for="error in form.errors">
+                                    {{ error }}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Edit Client Form -->
+                        <form role="form">
+                            <!-- Name -->
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Name</label>
+
+                                <div class="col-md-9">
+                                    <input id="edit-client-name" type="text" class="form-control"
+                                                                @keyup.enter="update" v-model="form.name">
+
+                                    <span class="form-text text-muted">
+                                        Something your users will recognize and trust.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Redirect URL -->
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Redirect URL</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="redirect"
+                                                    @keyup.enter="update" v-model="form.redirect">
+
+                                    <span class="form-text text-muted">
+                                        Your application's authorization callback URL.
+                                    </span>
+                                </div>
+                            </div>
+
+							<!-- Scopes -->
+                            <div class="form-group">
+                                <label class="col-md-4 col-form-label">Scopes</label>
+
+								<div class="col-md-12">
+                                    <div v-for="(description, name) in scopes" v-if="name.startsWith('client')">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"
+                                                    @click="toggleScope(name)"
+                                                    :checked="scopeIsAssigned(name)">
+
+                                                    {{ description }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+						<button type="button" class="btn btn-urgent" data-dismiss="modal" @click="destroy">Supprimer</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="update">Modifier</button>
                     </div>
                 </div>
             </div>
@@ -262,21 +366,17 @@
         data() {
             return {
                 clients: [],
+				client: {},
 
-                createForm: {
+				scopes: [],
+
+                form: {
                     errors: [],
 					name: '',
                     asso_id: 1,
-                    redirect: ''
-                },
-
-                editForm: {
-                    errors: [],
-                    name: '',
-					asso_id: 1,
                     redirect: '',
 					scopes: []
-                }
+                },
             };
         },
 
@@ -300,6 +400,7 @@
              */
             prepareComponent() {
                 this.getClients();
+				this.getScopes();
 
                 $('#modal-create-client').on('shown.bs.modal', () => {
                     $('#create-client-name').focus();
@@ -320,10 +421,46 @@
                         });
             },
 
+			/**
+			 * Get all of the available scopes.
+			 */
+			getScopes() {
+				axios.get('/oauth/scopes')
+						.then(response => {
+							this.scopes = response.data;
+						});
+			},
+
+            /**
+             * Toggle the given scope in the list of assigned scopes.
+             */
+            toggleScope(scope) {
+                if (this.scopeIsAssigned(scope)) {
+                    this.form.scopes = _.reject(this.form.scopes, s => s == scope);
+                } else {
+                    this.form.scopes.push(scope);
+                }
+            },
+
+            /**
+             * Determine if the given scope has been assigned to the token.
+             */
+            scopeIsAssigned(scope) {
+                return _.indexOf(this.form.scopes, scope) >= 0;
+            },
+
             /**
              * Show the form for creating new clients.
              */
             showCreateClientForm() {
+				this.form = {
+                    errors: [],
+					name: '',
+                    asso_id: 1,
+                    redirect: '',
+					scopes: []
+                };
+
                 $('#modal-create-client').modal('show');
             },
 
@@ -333,26 +470,50 @@
             store() {
                 this.persistClient(
                     'post', '/oauth/clients',
-                    this.createForm, '#modal-create-client'
+                    this.form, '#modal-create-client'
                 );
+            },
+
+            /**
+             * See the given client.
+             */
+            see(client) {
+                this.form.id = client.id;
+				this.form.name = client.name;
+                this.form.asso_id = client.asso_id;
+				this.form.redirect = client.redirect;
+
+				try {
+					this.form.scopes = JSON.parse(client.scopes);
+
+					if (this.form.scopes === null)
+						this.form.scopes = [];
+				}
+				catch (error) {
+					this.form.scopes = [];
+				}
+
+                $('#modal-see-client').modal('show');
             },
 
             /**
              * Edit the given client.
              */
             edit(client) {
-                this.editForm.id = client.id;
-                this.editForm.name = client.name;
-				this.editForm.redirect = client.redirect;
+				this.client = client;
+                this.form.id = client.id;
+				this.form.name = client.name;
+                this.form.asso_id = client.asso_id;
+				this.form.redirect = client.redirect;
 
 				try{
-					this.editForm.scopes = JSON.parse(client.scopes);
+					this.form.scopes = JSON.parse(client.scopes);
 
-					if (this.editForm.scopes === null)
-						this.editForm.scopes = [];
+					if (this.form.scopes === null)
+						this.form.scopes = [];
 				}
 				catch (error){
-					this.editForm.scopes = [];
+					this.form.scopes = [];
 				}
 
                 $('#modal-edit-client').modal('show');
@@ -363,8 +524,8 @@
              */
             update() {
                 this.persistClient(
-                    'put', '/oauth/clients/' + this.editForm.id,
-                    this.editForm, '#modal-edit-client'
+                    'put', '/oauth/clients/' + this.form.id,
+                    this.form, '#modal-edit-client'
                 );
             },
 
@@ -396,8 +557,8 @@
             /**
              * Destroy the given client.
              */
-            destroy(client) {
-                axios.delete('/oauth/clients/' + client.id)
+            destroy() {
+                axios.delete('/oauth/clients/' + this.client.id)
                         .then(response => {
                             this.getClients();
                         });

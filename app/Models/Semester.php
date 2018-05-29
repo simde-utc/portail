@@ -15,6 +15,10 @@ class Semester extends Model
         'year' => 'char',
     ];
 
+	public static function getSemester($semester) {
+		return static::where('id', $semester)->orWhere('name', $semester)->first();
+	}
+
     public static function getThisSemester($currentYear = null, $currentMonth = null, $currentDay = null) {
         if ($currentYear === null)
             $currentYear = date('y');
@@ -83,17 +87,5 @@ class Semester extends Model
                     return $thisSemester->id;
             }
         }
-    }
-
-    public function assoMember() {
-        return $this->hasMany('App\Models\AssoMember');
-    }
-
-    public function currentAssos() {
-        return $this->belongsToMany('App\Models\Asso', 'assos_members');
-    }
-
-    public function currentMembers() {
-        return $this->belongsToMany('App\Models\User', 'assos_members');
     }
 }

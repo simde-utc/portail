@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -9,20 +10,40 @@ use Laravel\Passport\Token;
 use Lcobucci\JWT\Parser;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
+/**
+ * @resource OAuth Client
+ *
+ * Gère le client OAuth
+ */
 class ClientController extends Controller
 {
-    public function index(Request $request) {
+	/**
+	 * Client Info
+	 *
+	 * Retourne les informations (scopes) sur le client en cours
+	 * @param  Request $request
+	 * @return JsonResponse
+	 */
+	public function index(Request $request): JsonResponse {
 		$bearerToken = $request->bearerToken();
-		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
 		$client = Token::find($tokenId)->client->toArray();
+
 		$client['scopes'] = json_decode($client['scopes'], true);
 
-		return $client;
-    }
+		return response()->json($client);
+	}
 
-    public function getUsers(Request $request) {
+	/**
+	 * Client Users
+	 *
+	 * Retourne les users qui ont authorisé les actions du client en cours
+	 * @param  \Illuminate\Http\Request $request
+	 * @return JsonResponse
+	 */
+	public function getUsers(Request $request): JsonResponse {
 		$bearerToken = $request->bearerToken();
-		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;
 		$tokens = Token::where('client_id', $clientId);
 
@@ -41,31 +62,45 @@ class ClientController extends Controller
 
 			array_push($result, [
 				'user_id' => $userId === '' ? null : $userId,
-				'scopes' => array_keys($scopes),
+				'scopes'  => array_keys($scopes),
 			]);
 		}
 
-		return $result;
-    }
+		return response()->json($result);
+	}
 
-    public function getUser(Request $request, int $userId) {
+	/**
+	 * Client User info
+	 *
+	 * Retourne les users qui ont authorisé les actions du client en cours
+	 * @param  \Illuminate\Http\Request $request
+	 * @param int $userId
+	 * @return JsonResponse
+	 */
+	public function getUser(Request $request, int $userId): JsonResponse {
 		$bearerToken = $request->bearerToken();
-		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;
 		$tokens = Token::where('client_id', $clientId)->where('user_id', $userId);
 
 		if ($request->input('revoked'))
 			$tokens->where('revoked', $request->input('revoked') == 1 ? 1 : 0);
 
-		return $tokens->get()->makeHidden('id')->makeHidden('session_id');
-    }
+		return response()->json($tokens->get()->makeHidden('id')->makeHidden('session_id'));
+	}
 
 	/**
-	 * Suppression des autorisations par un utilisateur pour le client
+	 * Delete User Authorizations to Client
+	 *
+	 * Supprime les autorisations d'un utilisateur pour le client
+	 *
+	 * @param Request $request
+	 * @param int $userId
+	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, int $userId) {
+	public function destroy(Request $request, int $userId): JsonResponse {
 		$bearerToken = $request->bearerToken();
-		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;
 
 		if (Token::where('client_id', $clientId)->where('user_id', $userId)->where('revoked', false)->delete() === 0)
@@ -75,9 +110,14 @@ class ClientController extends Controller
 	}
 
 	/**
-	 * Suppression des autorisations de tous les utilisateurs pour le client
+	 * Delete all Users Authorizations to Client
+	 *
+	 * Suppression les autorisations de tous les utilisateurs pour le client
+	 *
+	 * @param Request $request
+	 * @return JsonResponse
 	 */
-	public function destroyAll(Request $request) {
+	public function destroyAll(Request $request): JsonResponse {
 		$bearerToken = $request->bearerToken();
 		$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;
@@ -89,9 +129,14 @@ class ClientController extends Controller
 	}
 
 	/**
-	 * Suppression des autorisations pour l'utilisateur courrant
+	 * Delete current User Authorizations to Client
+	 *
+	 * Suppression des autorisations pour l'utilisateur courant
+	 *
+	 * @param Request $request
+	 * @return JsonResponse
 	 */
-	public function destroyCurrent(Request $request) {
+	public function destroyCurrent(Request $request): JsonResponse {
 		Token::where('client_id', $request->user()->token()->client_id)->where('user_id', $request->user()->id)->where('revoked', false)->delete();
 
 		return response()->json(['message' => 'Tokens associés à l\'utilisateur supprimés avec succès'], 202);

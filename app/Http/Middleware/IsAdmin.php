@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class IsAdmin
 {
@@ -15,10 +16,9 @@ class IsAdmin
      */
 	public function handle($request, Closure $next)
 	{
-		// if (\Auth::user() && \Auth::id() === 2)
-		if (\Auth::user())
+		if (\Auth::user() && \Auth::user()->hasOneRole('admin'))
 			return $next($request);
 
-    	return redirect('/home');
+    	throw new AuthorizationException('Il est nécessaire d\'être un administrateur');
  	}
 }

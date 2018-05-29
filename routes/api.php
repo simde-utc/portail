@@ -11,6 +11,7 @@
 |
 | Attention !! Les routes sont préfixées avec 'api/'
 */
+
 Route::prefix('v1')->group(function () {
 	// Connexions
 	Route::get('login', 'LoginController@index')->middleware('guest')->name('api/login');
@@ -18,10 +19,10 @@ Route::prefix('v1')->group(function () {
 
 	// Informations relatives à l'utlisateur
 	Route::get('user', 'ConnectedUserController@index')->middleware(Scopes::matchAnyUser())->name('api/user');
-	Route::get('user/providers', 'ConnectedUserController@getProviders')->middleware(Scopes::matchOne('user-get-info-identity-auth'))->name('api/user/providers');
-	Route::get('user/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchOne('user-get-info-identity-auth'))->name('api/user/provider');
+	Route::get('user/auths', 'ConnectedUserController@getProviders')->middleware(Scopes::matchAnyUser())->name('api/user/auths');
+	Route::get('user/auths/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchAnyUser())->name('api/user/auth');
 
-	// Informations relatives au client
+	// Gestions des authorisations données au client
 	Route::get('client', 'ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
 	Route::get('client/users', 'ClientController@getUsers')->middleware(Scopes::matchAnyClient())->name('api/client/users');
 	Route::get('client/{user_id}', 'ClientController@getUser')->middleware(Scopes::matchAnyClient())->name('api/client/user');
@@ -29,15 +30,29 @@ Route::prefix('v1')->group(function () {
 	Route::delete('client/users', 'ClientController@destroyAll')->middleware(Scopes::matchAnyClient())->name('api/client/users/delete');
 	Route::delete('client/{user_id}', 'ClientController@destroy')->middleware(Scopes::matchAnyClient())->name('api/client/user/delete');
 
+	// Ressources
+	/*
+		index : /{ressource} en GET
+		show : /{ressource}/{id} en GET
+		store : /{ressource} en POST
+		update : /{ressource}/{id} en PUT
+		destroy : /{ressource}/{id} en DELETE
+	*/
 	Route::apiResources([
+		'{resource_type}/{resource_id}/contacts' => 'ContactController',
+		'groups/{group_id}/members'		=> 'GroupMemberController',
 		'groups'		=> 'GroupController',
+		'assos'			=> 'AssoController',
+		'assos/{asso_id}/members'		=> 'AssoMemberController',
 		'assos/types'	=> 'AssoTypeController',
 		'users'			=> 'UserController',
-		'assos'			=> 'AssoController',
+		'user/roles'			=> 'UserRoleController',
+		'users/{user_id}/roles'			=> 'UserRoleController',
+		'roles'			=> 'RoleController',
 		'rooms'			=> 'RoomController',
-		'articles'		=> 'ArticleController',
 		'partners'		=> 'PartnerController',
+		'articles'		=> 'ArticleController',
 		'events'		=> 'EventController',
-		'visibilities'	=> 'VisibilityController',	
+		'visibilities'	=> 'VisibilityController',
   ]);
 });

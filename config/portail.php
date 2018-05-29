@@ -10,6 +10,27 @@ return [
 		'trans_url' => 'https://payutc.nemopay.net/validation?tra_id=',
 	],
 
+	// Définition des rôles
+	'roles' => [
+		// Roles admins
+		'admin' => [
+			'users' => 'admin',
+			'assos' => 'president',
+			'groups' => 'group admin',
+		],
+	],
+
+	// Association gérant le portail:
+	'assos' => [
+		env('APP_ASSO', 'simde') => [
+			'president' => 'superadmin',
+			'bureau' => 'admin',
+		],
+		'bde' => [
+			'president' => 'admin'
+		]
+	],
+
 	'cas' => [
 		'url'		=> 'https://cas.utc.fr/cas/'
 	],

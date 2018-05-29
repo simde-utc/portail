@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AssoRequest extends FormRequest
@@ -22,11 +23,43 @@ class AssoRequest extends FormRequest
 	 */
 	public function rules() {
 		return [
-			'name' 			=> 'string|between:3,191'.($this->isMethod('put')?'':'|required'),
-			'login' 		=> 'string|between:3,15'.($this->isMethod('put')?'':'|required'),
-			'description' 	=> 'string|between:15,800'.($this->isMethod('put')?'':'|required'),
-			'type_asso_id' 	=> 'integer|exists:assos_types,id'.($this->isMethod('put')?'':'|required'),
-			'parent_id' 	=> 'nullable|integer|exists:assos,id'.($this->isMethod('put')?'':'|required'),
+			'name' => Validation::make($this)
+						->type('string')
+						->length(validation_between('name'))
+						->unique('assos', 'name')
+						->post('required')
+						->get(),
+			'shortname' => Validation::make($this)
+						->type('string')
+						->length(validation_between('login'))
+						->unique('assos', 'shortname')
+						->post('required')
+						->get(),
+			'login' => Validation::make($this)
+						->type('string')
+						->length(validation_between('login'))
+						->unique('assos', 'login')
+						->post('required')
+						->get(),
+			'description' => Validation::make($this)
+						->type('string')
+						->length(validation_between('description'))
+						->post('required')
+						->get(),
+			'type_asso_id' => Validation::make($this)
+						->type('integer')
+						->exists('assos_types', 'id')
+						->post('required')
+						->get(),
+			'parent_id' => Validation::make($this)
+						->type('integer')
+						->exists('assos', 'id')
+						->get(),
+			'user_id' => Validation::make($this)
+						->type('integer')
+						->exists('users', 'id')
+						->post('required')
+						->get(),
 		];
 	}
 }

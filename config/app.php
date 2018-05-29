@@ -148,11 +148,6 @@ return [
 		Illuminate\View\ViewServiceProvider::class,
 
 		/*
-		 * Package Service Providers...
-		 */
-		Spatie\Permission\PermissionServiceProvider::class,
-
-		/*
 		 * Application Service Providers...
 		 */
 		App\Providers\AppServiceProvider::class,
@@ -168,6 +163,7 @@ return [
  		Ixudra\Curl\CurlServiceProvider::class,
 		App\Providers\GingerServiceProvider::class,
 		App\Providers\ScopesServiceProvider::class,
+		App\Providers\ValidationServiceProvider::class,
 		/*
 		 * API doc generator
 		 */
@@ -226,6 +222,7 @@ return [
 		'Ginger' => App\Facades\Ginger::class,
 		'Visible' => App\Services\Visible::class,
 		'Scopes' => App\Facades\Scopes::class,
+		'Validation' => App\Facades\Validation::class,
 
 	],
 

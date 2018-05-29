@@ -36,18 +36,17 @@ class LinkTokenToSession
 
 						// On ne procède uniquement sur les tokens liés à une session
 						if ($authCode != null) {
-							// On supprime les duplications du trio client/user/scopes qui ne sont plus utilisées ou sont expirées
-							Token::where('user_id', $authCode->user_id)->where('client_id', $authCode->client_id)->where('user_id', $authCode->user_id)->where('revoked', false)->whereNotNull('session_id')->get()->each(function ($tokenToDelete, $key) use ($authCode) {
-								$session = Session::find($tokenToDelete->session_id);
-
-								// Si la session a expiré ou que l'utlisateur n'est plus connecté, on supprime le token en vue d'un nouveau
-								if ($session === null || $session->user_id !== $authCode->user_id || $tokenToDelete->session_id === $authCode->session_id)
-									$tokenToDelete->delete();
-							});
-
 							$token->session_id = $authCode->session_id;
 							$token->timestamps = false;
 							$token->save();
+
+							// On supprime les duplications du trio client/user/scopes qui ne sont plus utilisées ou sont expirées
+							Token::where('user_id', $authCode->user_id)->where('client_id', $authCode->client_id)->where('user_id', $authCode->user_id)->where('id', '!=', $token->id)->get()->each(function ($tokenToDelete, $key) use ($authCode) {
+								$session = Session::find($tokenToDelete->session_id);
+								// Si la session a expiré ou que l'utlisateur n'est plus connecté, on supprime le token en vue d'un nouveau
+								if ($session === null || $tokenToDelete->session_id === $authCode->session_id)
+									$tokenToDelete->delete();
+							});
 						}
 					}
 				}

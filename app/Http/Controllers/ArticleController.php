@@ -2,89 +2,161 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ArticleRequest;
+use App\Facades\Scopes;
+use App\Models\Asso;
+use App\Models\Visibility;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
-use App\Services\Visible\ArticleVisible;
+use App\Traits\HasVisibility;
 
-class ArticleController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    //TODO Argument permettant de le passer en hide
-    public function index(Request $request)
-    {
-        $articles = Article::all();
-        if(isset($request['all'])) //Si est dans la route est mis un argument all
-            return response()->json(ArticleVisible::hide($articles), 200); //On renvoie tous les articles en cachant les non visibles
-	    //Sinon
-	    return response()->json(ArticleVisible::with($articles),200); //On ne renvoie que ceux qui sont visibles
-    }
+/**
+ * @resource Article
+ *
+ * Les articles écrits et postés par les associations
+ */
+class ArticleController extends Controller {
+	use HasVisibility; //Utilisation du Trait HasVisibility
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(ArticleRequest $request)
-    {
-        $article = Article::create($request->input());
-        if ($article)
-        	return response()->json($article, 201);
-        return response()->json(['message' => 'impossible de créer l\'article'], 500);
-    }
+	/**
+	 * Scopes Article
+	 *
+	 * Les Scopes requis pour manipuler les Articles
+	 */
+	public function __construct() {
+		$this->middleware(
+			\Scopes::matchOne(
+				['user-get-articles-followed-now', 'user-get-articles-done-now'],
+				['client-get-articles-public']
+			),
+			['only' => ['index', 'show']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				['user-manage-articles']
+			),
+			['only' => ['store', 'update', 'destroy']]
+		);
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $article = Article::find($id);
-        if ($article)
-        	return response()->json(ArticleVisible::hide($article),200); //On renvoie l'article demandé, mais en le cachant si l'user n'a pas les droits nécessaires
-	    return response()->json(['message' => 'L\'article demandé n\'a pas été trouvé'], 404);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(ArticleRequest $request, $id){
-		$article = Article::find($id);
-		if($article) {
-			$ok = $article->update($request->input());
-			if ($ok)
-				return response()->json($article, 201);
-			return response()->json(['message' => 'impossible de modifier l\'article'], 500);
+	/**
+	 * List Articles
+	 *
+	 * Retourne la liste des articles. ?all pour voir ceux en plus des assos suivies, ?notRemoved pour uniquement cacher les articles non visibles
+	 * @param \Illuminate\Http\Request $request
+	 * @return JsonResponse
+	 */
+	public function index(Request $request): JsonResponse {
+		if ($request->user()) {
+			if (isset($request['all'])) {
+				$articles = Article::with('collaborators:id,shortname')->get();
+			}
+			else {
+				$articles = Article::with('collaborators:id,shortname')->whereHas('collaborators', function ($query) use ($request) {
+					$query->whereIn('asso_id', array_merge(
+						$request->user()->currentAssos()->pluck('assos.id')->toArray()
+					));
+				})->get();
+			}
 		}
-		return response()->json(['message'=>'L\'article demandé n\'a pas été trouvé'],404);
-    }
+		else {
+			$articles = Scopes::has($request, 'client-get-articles') && isset($request['all']) ? Article::with('collaborators:id,shortname')->get() : Article::with('collaborators:id,shortname')->where('visibility_id', Visibility::where('type', 'public')->first()->id)->get();
+		}
+		return response()->json($request->user() ? $this->hide($articles, !isset($request['notRemoved'])) : $articles, 200);
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-    	$article = Article::find($id);
-    	if($article){
-			$ok = $article->delete();
-			if($ok)
-				return response()->json(['message'=>'L\'article a bien été supprimé'],200);
-			return response()->json(['message'=>'Une erreur est survenue'],500);
-	    }
-	    return response()->json(['message'=>'L\'article demandé n\'a pas été trouvé'],404);
-    }
+	/**
+	 * Create Article
+	 *
+	 * Créer un article. ?add_collaborators[ids] pour ajouter des collaborateurs lors de la création
+	 * @param ArticleRequest $request
+	 * @return JsonResponse
+	 */
+	public function store(ArticleRequest $request): JsonResponse {
+		$article = Article::create($request->input());
+
+		if (isset($request['add_collaborators'])) {
+			$collaborators = is_array($request['add_collaborators']) ? $request['add_collaborators'] : [$request['add_collaborators']];
+			foreach ($collaborators as $key => $asso_id) {
+				if (Asso::find($asso_id))
+					$article->collaborators()->attach($asso_id);
+			}
+		}
+
+		if ($article)
+			return response()->json(Article::with('collaborators:id,shortname')->find($article->id), 201);
+		else
+			return response()->json(['message' => 'Impossible de créer l\'article'], 500);
+	}
+
+	/**
+	 * Show Article
+	 *
+	 * Affiche l'article s'il existe et si l'utilisateur peut le voir.
+	 * @param Request $request
+	 * @param  int $id
+	 * @return JsonResponse
+	 */
+	public function show(Request $request, int $id): JsonResponse {
+		$article = Article::with('collaborators:id,shortname')->find($id);
+		if (!isset($article))
+			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
+		else
+			return response()->json(Scopes::has($request, 'client-get-articles') ? $article : $this->hide($article, false), 200);
+	}
+
+	/**
+	 * Update Article
+	 *
+	 * Met à jour l'article s'il existe ?add_collaborators[ids] pour ajouter des collaborateurs ?remove_collaborators[ids] pour en enlever (sauf l'asso créatrice)
+	 * @param ArticleRequest $request
+	 * @param  int $id
+	 * @return JsonResponse
+	 */
+	public function update(ArticleRequest $request, int $id): JsonResponse {
+		$article = Article::find($id);
+		if (!isset($article))
+			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
+
+		if ($article->update($request->input())) {
+
+			if (isset($request['add_collaborators'])) {
+				$collaborators = is_array($request['add_collaborators']) ? $request['add_collaborators'] : [$request['add_collaborators']];
+				foreach ($collaborators as $key => $asso_id) {
+					if (Asso::find($asso_id))
+						$article->collaborators()->attach($asso_id);
+				}
+			}
+			if (isset($request['remove_collaborators'])) {
+				$collaborators = is_array($request['remove_collaborators']) ? $request['remove_collaborators'] : [$request['remove_collaborators']];
+				foreach ($collaborators as $key => $asso_id) {
+					if (Asso::find($asso_id) && $asso_id != $article->asso_id)
+						$article->collaborators()->detach($asso_id);
+				}
+			}
+			return response()->json(Article::with('collaborators:id,shortname')->find($id), 201);
+		}
+		else
+			return response()->json(['message' => 'Impossible de modifier l\'article'], 500);
+	}
+
+	/**
+	 * Delete Article
+	 *
+	 * Supprime l'article s'il existe
+	 * @param ArticleRequest $request
+	 * @param  int $id
+	 * @return JsonResponse
+	 */
+	public function destroy(ArticleRequest $request, $id): JsonResponse {
+		$article = Article::find($id);
+		if (!isset($article))
+			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
+
+		if ($article->delete())
+			return response()->json(['message' => 'L\'article a bien été supprimé'], 200);
+		else
+			return response()->json(['message' => 'L\'article n\'a pas pu être supprimé'], 500);
+	}
 }

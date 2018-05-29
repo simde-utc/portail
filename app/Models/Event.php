@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Services\Visibility\BaseVisibility;
+use App\Traits\HasVisibility;
 
 
 class Event extends Model
 {
+    use HasVisibility;
+
     protected $table = 'events';
     protected $fillable = [
         'title', 'description', 'image', 'from', 'to', 'visibility_id', 'place',

@@ -25,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
 		// ServiceProviders de développement
 		if (!$this->app->environment('production')) {		
 			$this->app->register('Barryvdh\Debugbar\ServiceProvider');
-			$this->app->register('Asvae\ApiTester\ServiceProvider');
 		}
 		
 	}

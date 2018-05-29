@@ -10,7 +10,7 @@ class VisibilitiesTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run() : void
     {
         // Visibilités possibles, du moins permissif au plus permissif
         $visibilities = [
@@ -21,34 +21,41 @@ class VisibilitiesTableSeeder extends Seeder
             [
                 'type' => 'logged',
                 'name' => 'Toute personne connectée',
-            ],
-            [
-                'type' => 'casOrWasCas',
-                'name' => 'Toute personne connectée au CAS ou maintenant Tremplin',
+                'parent' => 'public',
             ],
             [
                 'type' => 'cas',
                 'name' => 'Toute personne connectée au CAS',
+                'parent' => 'logged',
             ],
             [
-                'type' => 'contributor',
+                'type' => 'contributorBDE',
                 'name' => 'Tout cotisant BDE-UTC',
+                'parent' => 'cas',
             ],
             [
                 'type' => 'private',
                 'name' => 'Privée aux membres',
+                'parent' => 'contributorBDE',
             ],
             [
                 'type' => 'owner',
                 'name' => 'Uniquement la personne créatrice',
+                'parent' => 'private',
+            ],
+            [
+                'type' => 'internal',
+                'name' => 'Réservé à la gestion interne du système',
+                'parent' => 'owner',
             ],
         ];
 
-        foreach ($visibilities as $key => $visibility) {
-            $id = Visibility::create($visibility)->id;
-
-			if ($key !== 0)
-				Visibility::where('type', $visibilities[$key - 1]['type'])->update(['parent_id' => $id]);
+        foreach ($visibilities as $visibility) {
+            Visibility::create([
+				'type' => $visibility['type'],
+				'name' => $visibility['name'],
+                'parent_id' => Visibility::where('type', $visibility['parent'] ?? null)->first()->id ?? null,
+			]);
         }
     }
 }
