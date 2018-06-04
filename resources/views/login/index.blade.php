@@ -11,9 +11,9 @@
 			</div>
 			<div class="card-footer bg-transparent border-success" style="text-align: center">
 				@if ($provider['registrable'])
-					<button class="btn btn-info" onClick="window.location.href = '{{ route('register.show', ['provider' => $name, 'redirect' => $redirect]) }}'">S'enregistrer</button>
+					<button class="btn btn-info" onClick="window.location.href = '{{ route('register.show', ['provider' => $name]) }}'">S'enregistrer</button>
 				@endif
-				<button class="btn btn-info" onClick="window.location.href = '{{ route('login.show', ['provider' => $name, 'redirect' => $redirect]) }}'">Se connecter</button>
+				<button class="btn btn-info" onClick="window.location.href = '{{ route('login.show', ['provider' => $name]) }}'">Se connecter</button>
 			</div>
 		</div>
 	@endforeach

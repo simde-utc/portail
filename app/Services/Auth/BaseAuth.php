@@ -130,7 +130,8 @@ abstract class BaseAuth
 		// Ajout dans les préférences
 		$userPreferences = UserPreference::create([
 			'user_id' => $user->id,
-			'email'   => $user->email,
+			'key' => 'PREFERED_EMAIL',
+			'value'   => $user->email,
 		]);
 
 		return $user;
@@ -186,6 +187,9 @@ abstract class BaseAuth
 	protected function connect(Request $request, $user, $userAuth) {
 		// Si tout est bon, on le connecte
 		if ($user !== null && $userAuth !== null) {
+			if (!$user->is_active)
+				return $this->error($request, $user, $userAuth, 'Ce compte a été désactivé');
+
 			$user->timestamps = false;
 			$user->last_login_at = new \DateTime();
 			$user->save();
@@ -208,9 +212,9 @@ abstract class BaseAuth
 	 */
 	protected function success(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect($request->query('redirect', url()->previous()));
+			return redirect(\Session::get('url.intended', '/'));
 		else
-			return redirect($request->query('redirect', url()->previous()))->withSuccess($message);
+			return redirect(\Session::get('url.intended', '/'))->withSuccess($message);
 	}
 
 	/*
@@ -218,8 +222,8 @@ abstract class BaseAuth
 	 */
 	protected function error(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect()->route($this->type.'.show', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())])->withError('Il n\'a pas été possible de vous connecter');
+			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter');
 		else
-			return redirect()->route($this->type.'.show', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())])->withError($message);
+			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError($message);
 	}
 }

@@ -42,6 +42,17 @@ return [
 							'description' => 'Gérer les nom et prénom de l\'utlisateur',
 						],
 					]
+				],
+				'details' => [
+					'description' => 'Gérer les détails de l\'utilisateur',
+					'scopes' => [
+						'birthdate' => [
+							'description' => 'Gérer la date de naisssance de l\'utilisateur'
+						],
+						'major' => [
+							'description' => 'Gérer si l\'utilisateur est majeur ou non'
+						]
+					]
 				]
 			]
 		],
@@ -64,6 +75,20 @@ return [
 						],
 						'type' => [
 							'description' => 'Connaître le type de l\'utilisateur',
+							'scopes' => [
+								'active' => [
+									'description' => 'Savoir si le compte est actif',
+								],
+								'cas' => [
+									'description' => 'Savoir si l\'utilisateur est un utilisateur CAS-UTC',
+								],
+								'contributorBde' => [
+									'description' => 'Savoir si l\'utilisateur est un cotisant BDE-UTC',
+								],
+								'admin' => [
+									'description' => 'Savoir si l\'utilisateur est un administrateur du système',
+								],
+							]
 						],
 						'auth' => [
 							'description' => 'Connaître les types de connexions de l\'utilisateur',

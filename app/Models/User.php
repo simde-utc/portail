@@ -8,18 +8,39 @@ use Illuminate\Notifications\Notifiable;
 use App\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
+use App\Models\UserPreference;
+use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 
 class User extends Authenticatable
 {
 	use HasApiTokens, Notifiable, HasRoles;
 
+    public static function boot() {
+        static::created(function ($model) {
+			// Ajout dans les préférences
+			UserPreference::create([
+				'user_id' => $model->id,
+				'key' => 'CONTACT_EMAIL',
+				'value'   => $model->email,
+			]);
+        });
+    }
+
 	protected $fillable = [
-		'firstname', 'lastname', 'email', 'last_login_at',
+		'firstname', 'lastname', 'email', 'is_active', 'last_login_at',
 	];
 
 	protected $hidden = [
 		'remember_token',
+	];
+
+	protected $casts = [
+		'is_active' => 'boolean',
+	];
+
+	public $types = [
+		'admin', 'contributorBde', 'cas', 'active',
 	];
 
 	public static function findByEmail($email) {
@@ -35,11 +56,60 @@ class User extends Authenticatable
 			return $users;
 	}
 
+	public function ban() {
+		return $this->update([
+			'is_active' => false
+		]);
+	}
+
+	public function unban() {
+		return $this->update([
+			'is_active' => true
+		]);
+	}
+
+	public function type() {
+		foreach ($this->types as $type) {
+			$method = 'is'.ucfirst($type);
+
+	        if (method_exists($this, $method) && $this->$method())
+	            return $type;
+		}
+
+		return null;
+	}
+
+	public function isActive() {
+        return $this->is_active;
+    }
+
+    public function isCas() {
+		$cas = AuthCas::find($this->id);
+
+        return $cas && $cas->where('is_active', true)->exists();
+    }
+
+    public function isContributorBde() {
+        return UserDetail::isContributorBde($this->id);
+    }
+
+    public function isAdmin() {
+        return $this->hasOneRole(config('portail.roles.admin.users'));
+    }
+
 	public function cas() {
 		return $this->hasOne('App\Models\AuthCas');
 	}
 	public function password() {
 		return $this->hasOne('App\Models\AuthPassword');
+	}
+
+	public function details() {
+		return $this->hasMany(UserDetail::class);
+	}
+
+	public function preferences() {
+		return $this->hasMany(UserPreference::class);
 	}
 
 	public function assos() {

@@ -18,9 +18,9 @@ Route::prefix('v1')->group(function () {
 	Route::get('logout', 'LoginController@destroy')->middleware(Scopes::matchAnyUser())->name('api/logout');
 
 	// Informations relatives à l'utlisateur
-	Route::get('user', 'ConnectedUserController@index')->middleware(Scopes::matchAnyUser())->name('api/user');
-	Route::get('user/auths', 'ConnectedUserController@getProviders')->middleware(Scopes::matchAnyUser())->name('api/user/auths');
-	Route::get('user/auths/{name}', 'ConnectedUserController@getProvider')->middleware(Scopes::matchAnyUser())->name('api/user/auth');
+	Route::get('user', 'LoggedUserController@index')->middleware(Scopes::matchAnyUser())->name('api/user');
+	Route::get('user/auths', 'LoggedUserController@getProviders')->middleware(Scopes::matchAnyUser())->name('api/user/auths');
+	Route::get('user/auths/{name}', 'LoggedUserController@getProvider')->middleware(Scopes::matchAnyUser())->name('api/user/auth');
 
 	// Gestions des authorisations données au client
 	Route::get('client', 'ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
@@ -39,20 +39,24 @@ Route::prefix('v1')->group(function () {
 		destroy : /{ressource}/{id} en DELETE
 	*/
 	Route::apiResources([
-		'{resource_type}/{resource_id}/contacts' => 'ContactController',
-		'groups/{group_id}/members'		=> 'GroupMemberController',
-		'groups'		=> 'GroupController',
-		'assos'			=> 'AssoController',
-		'assos/{asso_id}/members'		=> 'AssoMemberController',
-		'assos/types'	=> 'AssoTypeController',
-		'users'			=> 'UserController',
-		'user/roles'			=> 'UserRoleController',
-		'users/{user_id}/roles'			=> 'UserRoleController',
-		'roles'			=> 'RoleController',
-		'rooms'			=> 'RoomController',
-		'partners'		=> 'PartnerController',
-		'articles'		=> 'ArticleController',
-		'events'		=> 'EventController',
-		'visibilities'	=> 'VisibilityController',
+		'{resource_type}/{resource_id}/contacts'	=> 'ContactController',
+		'groups/{group_id}/members'					=> 'GroupMemberController',
+		'groups'									=> 'GroupController',
+		'assos'										=> 'AssoController',
+		'assos/{asso_id}/members'					=> 'AssoMemberController',
+		'assos/types'								=> 'AssoTypeController',
+		'users'										=> 'UserController',
+		'user/roles'								=> 'UserRoleController',
+		'users/{user_id}/roles'						=> 'UserRoleController',
+		'user/details'								=> 'UserDetailController',
+		'users/{user_id}/details'					=> 'UserDetailController',
+		'user/preferences'							=> 'UserPreferenceController',
+		'users/{user_id}/preferences'				=> 'UserPreferenceController',
+		'roles'										=> 'RoleController',
+		'rooms'										=> 'RoomController',
+		'partners'									=> 'PartnerController',
+		'articles'									=> 'ArticleController',
+		'events'									=> 'EventController',
+		'visibilities'								=> 'VisibilityController',
   ]);
 });
