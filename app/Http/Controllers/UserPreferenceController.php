@@ -52,10 +52,10 @@ class UserPreferenceController extends Controller
         $client = $token->client;
 
         if (in_array('asso', $choices))
-            $choices[array_search('asso', $choices)] = 'asso_'.$client->asso_id;
+            $choices[array_search('asso', $choices)] = 'asso-'.$client->asso_id;
 
         if (in_array('client', $choices))
-            $choices[array_search('client', $choices)] = 'client_'.$client->id;
+            $choices[array_search('client', $choices)] = 'client-'.$client->id;
 
         return $user->preferences()->whereIn('only_for', $choices);
     }

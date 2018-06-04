@@ -17,7 +17,7 @@ class UserDetail extends Model
 	protected $fillable = [
 		'user_id', 'key', 'value', 'type',
 	];
-
+	/* Vérifier les fcts ! */
 	public function age($query) {
 		$birthdate = $query->valueOf('birthdate');
 
@@ -27,8 +27,8 @@ class UserDetail extends Model
 			throw new PortailException('Non trouvé');
 	}
 
-	public static function isMajor(int $user_id) {
-		$cas = User::find($user_id)->cas;
+	public function isMajor($query) {
+		$cas = $query->first()->user->cas;
 
 		if ($cas) {
 			try {
@@ -37,7 +37,7 @@ class UserDetail extends Model
 			catch (\Exception $e) {} // Si on a pas les données CAS, on regarde avec la date de naissance
 		}
 
-		$age = (new static)->age($user_id);
+		$age = $this->age($query);
 
 		if ($age)
 			return $age >= 18;
@@ -45,8 +45,8 @@ class UserDetail extends Model
 			return null;
 	}
 
-	public static function isMinor(int $user_id) {
-		$isMajor = self::isMajor($user_id);
+	public function isMinor($query) {
+		$isMajor = $this->isMajor($query);
 
 		if (is_null($isMajor))
 			return null;
@@ -54,8 +54,8 @@ class UserDetail extends Model
 			return !$isMajor;
 	}
 
-	public static function loginCAS(int $user_id) {
-		$cas = User::find($user_id)->cas;
+	public function loginCAS($query) {
+		$cas = $query->first()->user->cas;
 
 		if ($cas)
 			return $cas->login;
@@ -63,23 +63,23 @@ class UserDetail extends Model
 			return null;
 	}
 
-	public static function loginContributorBde(int $user_id) { // TODO pour les extés
-		$cas = User::find($user_id)->cas;
+	public function loginContributorBde($query) {
+		$casLogin = $this->loginCAS($query);
 
-		if ($cas)
-			return $cas->login;
+		if ($casLogin)
+			return $casLogin;
 		else
-			return Ginger::userByEmail(User::find($user_id)->email)->getLogin();
+			return Ginger::userByEmail($query->first()->user->email)->getLogin();
 	}
 
-	public static function isContributorBde(int $user_id) {
-		$login = self::loginContributorBde($user_id);
+	public function isContributorBde($query) {
+		$login = $this->loginContributorBde($query);
 
 		if ($login) {
 			try {
 				return Ginger::user($login)->isContributor();
 			}
-			catch (\Exception $e) {} // Si on a pas les données CAS, on regarde avec la date de naissance
+			catch (\Exception $e) {}
 		}
 
 		return null;
