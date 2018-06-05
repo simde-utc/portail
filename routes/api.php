@@ -44,7 +44,6 @@ Route::prefix('v1')->group(function () {
 		'groups'									=> 'GroupController',
 		'assos'										=> 'AssoController',
 		'assos/{asso_id}/members'					=> 'AssoMemberController',
-		'assos/types'								=> 'AssoTypeController',
 		'users'										=> 'UserController',
 		'user/roles'								=> 'UserRoleController',
 		'users/{user_id}/roles'						=> 'UserRoleController',
