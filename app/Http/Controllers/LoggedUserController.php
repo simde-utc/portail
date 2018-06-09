@@ -66,12 +66,12 @@ class LoggedUserController extends Controller
 			$user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
 
 		if ($request->has('allDetails'))
-			$user->details = UserDetail::allToArray($user->id);
+			$user->details = $user->details()->toArray();
 		else if ($request->filled('withDetails')) {
 			$details = [];
 
 			foreach (explode(',', $request->input('withDetails')) as $input)
-				$details[$input] = UserDetail::$input($user->id);
+				$details[$input] = $user->details()->toArray($key);
 
 			$user->details = $details;
 		}

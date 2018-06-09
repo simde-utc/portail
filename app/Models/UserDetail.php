@@ -17,7 +17,7 @@ class UserDetail extends Model
 	protected $fillable = [
 		'user_id', 'key', 'value', 'type',
 	];
-	/* Vérifier les fcts ! */
+
 	public function age($query) {
 		$birthdate = $query->valueOf('birthdate');
 
