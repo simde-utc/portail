@@ -15,6 +15,7 @@ class CreateEventsTable extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->timestamp('begin_at')->useCurrent();
             $table->timestamp('end_at')->useCurrent();
             $table->morphs('created_by');
