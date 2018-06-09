@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasKeyValue;
-use App\Models\User;
+use App\Models\Event;
 
-class UserDetail extends Model
+class EventDetail extends Model
 {
 	use HasKeyValue;
 
@@ -16,4 +16,8 @@ class UserDetail extends Model
 	protected $fillable = [
 		'event_id', 'key', 'value', 'type',
 	];
+
+	public function event() {
+		$this->belongsTo(Event::class);
+	}
 }
