@@ -12,19 +12,25 @@ class UserPreferenceController extends Controller
     public function __construct() {
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-get-roles-users']
+				['user-get-info-preferences-global', 'user-get-info-preferences-asso', 'user-get-info-preferences-client']
 			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-set-roles-users']
+				['user-create-info-preferences-global', 'user-create-info-preferences-asso', 'user-create-info-preferences-client']
 			),
-			['only' => ['store', 'update']]
+			['only' => ['store']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-manage-roles-users']
+				['user-edit-info-preferences-global', 'user-edit-info-preferences-asso', 'user-edit-info-preferences-client']
+			),
+			['only' => ['update']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+                ['user-edit-info-preferences-global', 'user-edit-info-preferences-asso', 'user-edit-info-preferences-client']
 			),
 			['only' => ['destroy']]
 		);
@@ -46,16 +52,29 @@ class UserPreferenceController extends Controller
 			abort(404, "Utilisateur non trouvé");
 	}
 
-    protected function getPreferences(Request $request, $user) {
+    protected function getPreferences(Request $request, $user, string $verb) {
         $choices = $this->getChoices($request, ['global', 'asso', 'client']);
         $token = $request->user() ? $request->user()->token() : $request->token();
         $client = $token->client;
 
-        if (in_array('asso', $choices))
-            $choices[array_search('asso', $choices)] = 'asso-'.$client->asso_id;
+        if (in_array('asso', $choices)) {
+            if (!\Scopes::has($request, 'user-'.$verb.'-info-preferences-asso'))
+                abort(403, 'Vous n\'avez pas les droits sur les préférences de l\'association');
 
-        if (in_array('client', $choices))
+            $choices[array_search('asso', $choices)] = 'asso-'.$client->asso_id;
+        }
+
+        if (in_array('client', $choices)) {
+            if (!\Scopes::has($request, 'user-'.$verb.'-info-preferences-client'))
+                abort(403, 'Vous n\'avez pas les droits sur les préférences du client');
+
             $choices[array_search('client', $choices)] = 'client-'.$client->id;
+        }
+
+        if (in_array('global', $choices)) {
+            if (!\Scopes::has($request, 'user-'.$verb.'-info-preferences-global'))
+                abort(403, 'Vous n\'avez pas les droits sur les préférences globales de l\'utilisateur');
+        }
 
         return $user->preferences()->whereIn('only_for', $choices);
     }
@@ -67,7 +86,7 @@ class UserPreferenceController extends Controller
      */
     public function index(Request $request, int $user_id = null) {
 		$user = $this->getUser($request, $user_id);
-        $groups = $this->getPreferences($request, $user)->get()->groupBy('only_for');
+        $groups = $this->getPreferences($request, $user, 'get')->get()->groupBy('only_for');
         $array = [];
 
         foreach ($groups as $only_for => $preferences) {
@@ -95,14 +114,24 @@ class UserPreferenceController extends Controller
 
         // On ajoute l'id associé
         if ($request->input('only_for') === 'asso') {
+            if (!\Scopes::has($request, 'user-'.$verb.'-info-preferences-asso'))
+                abort(403, 'Vous n\'avez pas les droits sur les préférences de l\'association');
+
             $token = $request->user() ? $request->user()->token() : $request->token();
             $inputs['only_for'] .= '_'.$token->client->asso_id;
         }
         else if ($request->input('only_for') === 'client') {
+            if (!\Scopes::has($request, 'user-'.$verb.'-info-preferences-client'))
+                abort(403, 'Vous n\'avez pas les droits sur les préférences du client');
+
             $token = $request->user() ? $request->user()->token() : $request->token();
             $inputs['only_for'] .= '_'.$token->client->id;
         }
-        else if ($request->input('only_for', 'global') !== 'global')
+        else if ($request->input('only_for', 'global') === 'global') {
+            if (!\Scopes::has($request, 'user-'.$verb.'-info-preferences-global'))
+                abort(403, 'Vous n\'avez pas les droits sur les préférences globale de l\'utilisateur');
+        }
+        else
             abort(400, 'only_for peut seulement être asso, client ou global');
 
 		if (\Scopes::isUserToken($request)) {
@@ -126,7 +155,7 @@ class UserPreferenceController extends Controller
             list($user_id, $key) = [$key, $user_id];
 
         $user = $this->getUser($request, $user_id);
-		$preference = $this->getPreferences($request, $user)->key($key);
+		$preference = $this->getPreferences($request, $user, 'get')->key($key);
 
 		if ($preference)
 			return response()->json($preference->toArray());
@@ -149,7 +178,7 @@ class UserPreferenceController extends Controller
 
 		if (\Scopes::isUserToken($request)) {
             try {
-                $preference = $this->getPreferences($request, $user)->key($key);
+                $preference = $this->getPreferences($request, $user, 'edit')->key($key);
                 $preference->value = $request->input('value', $preference->value);
 
                 if ($preference->update())
@@ -176,7 +205,7 @@ class UserPreferenceController extends Controller
 		$user = $this->getUser($request, $user_id);
 
 		if (\Scopes::isUserToken($request)) {
-            $preference = $this->getPreferences($request, $user)->key($key);
+            $preference = $this->getPreferences($request, $user, 'manage')->key($key);
 
             try {
 

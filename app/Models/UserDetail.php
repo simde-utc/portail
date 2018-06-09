@@ -45,15 +45,6 @@ class UserDetail extends Model
 			return null;
 	}
 
-	public function isMinor($query) {
-		$isMajor = $this->isMajor($query);
-
-		if (is_null($isMajor))
-			return null;
-		else
-			return !$isMajor;
-	}
-
 	public function loginCAS($query) {
 		$cas = $query->first()->user->cas;
 

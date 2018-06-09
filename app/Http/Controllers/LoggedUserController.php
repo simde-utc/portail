@@ -14,6 +14,12 @@ use App\Http\Controllers\Controller;
  */
 class LoggedUserController extends Controller
 {
+	public function __construct() {
+		$this->middleware(
+			\Scopes::matchAnyUser()
+		);
+	}
+
 	/**
 	 * Show Connected User
 	 *
@@ -23,7 +29,7 @@ class LoggedUserController extends Controller
 	public function index(Request $request) {
 		$user = $request->user();
 
-		if (!\Scopes::has($request, 'user-get-info-identity-emails-main'))
+		if (!\Scopes::has($request, 'user-get-info-identity-email'))
 			$user->makeHidden('email');
 
 		if (\Scopes::has($request, 'user-get-info-identity-type'))
@@ -65,15 +71,33 @@ class LoggedUserController extends Controller
 		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
 			$user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
 
-		if ($request->has('allDetails'))
-			$user->details = $user->details()->toArray();
-		else if ($request->filled('withDetails')) {
+		if ($request->has('withDetails')) {
 			$details = [];
 
-			foreach (explode(',', $request->input('withDetails')) as $input)
-				$details[$input] = $user->details()->toArray($key);
+			if ($request->filled('withDetails')) {
+				foreach (explode(',', $request->input('withDetails')) as $key) {
+					try {
+						if (!\Scopes::has($request, 'user-get-info-details-'.$key))
+							abort(403, 'Vous n\'avez pas le droit d\'avoir accès à cette information');
+					} catch (\Exception $e) {
+						abort(403, 'Il n\'existe pas de détail utilisateur de ce nom: '.$key);
+					}
 
-			$user->details = $details;
+					try {
+						$details[$key] = $user->details()->valueOf($key);
+					} catch (\Exception $e) {
+						$details[$key] = null;
+					}
+				}
+
+				$user->details = $details;
+			}
+			else {
+				if (!\Scopes::has($request, 'user-get-info-details'))
+					abort(403, 'Il est nécessaire soit d\'avoir la permission d\'avoir tous les détails soient de spécifier lesquels voir');
+
+				$user->details = $user->details()->toArray();
+			}
 		}
 
 		// Par défaut, on retourne au moins l'id de la personne et son nom

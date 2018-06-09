@@ -10,25 +10,31 @@ use App\Exceptions\PortailException;
 
 class UserDetailController extends Controller
 {
-    public function __construct() {
+    public function __construct(Request $request) {
 		$this->middleware(
-			\Scopes::matchOne(
-				['user-get-roles-users']
-			),
-			['only' => ['index', 'show']]
+			\Scopes::matchAnyUser()
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-set-roles-users']
+				['user-get-info-details']
 			),
-			['only' => ['store', 'update']]
+			['only' => ['index']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-manage-roles-users']
+				['user-set-info-details']
 			),
-			['only' => ['destroy']]
+			['only' => ['store']]
 		);
+    }
+
+    protected function checkScope(Request $request, string $key, string $verb) {
+        try {
+            if (!\Scopes::has($request, 'user-'.$verb.'-info-details-'.$key))
+                abort(403, 'Vous n\'avez pas les droits sur cette information');
+        } catch (\Exception $e) {
+            abort(403, 'Il n\'existe pas de détail utilisateur de ce nom: '.$key);
+        }
     }
 
 	protected function getUser(Request $request, int $user_id = null) {
@@ -87,6 +93,7 @@ class UserDetailController extends Controller
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
+        $this->checkScope($request, $key, 'get');
         $user = $this->getUser($request, $user_id);
 
         try {
@@ -108,6 +115,7 @@ class UserDetailController extends Controller
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
+        $this->checkScope($request, $key, 'edit');
 		$user = $this->getUser($request, $user_id);
 
 		if (\Scopes::isUserToken($request)) {
@@ -136,6 +144,7 @@ class UserDetailController extends Controller
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
+        $this->checkScope($request, $key, 'manage');
 		$user = $this->getUser($request, $user_id);
 
 		if (\Scopes::isUserToken($request)) {
