@@ -57,7 +57,13 @@
                             <label for="birthdate" class="col-md-4 col-form-label text-md-right">Date de naissance</label>
 
                             <div class="col-md-6">
-                                <input id="birthdate" type="date" class="form-control" name="birthdate" max="{{ \Carbon\Carbon::now()->subYears(16)->toDateString() }}" required>
+                                <input id="birthdate" type="date" class="form-control{{ $errors->has('birthdate') ? ' is-invalid' : '' }}" name="birthdate" max="{{ \Carbon\Carbon::now()->subYears(16)->toDateString() }}" value="{{ old('birthdate') }}" required>
+
+                                @if ($errors->has('birthdate'))
+                                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('birthdate') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         </div>
 
@@ -92,9 +98,9 @@
                                     <button type="button" onclick="refreshCaptcha()" class="btn btn-success btn-refresh"><i class="fa fa-refresh"></i></button>
                                 </div>
 
-                                <input id="captcha" type="text" class="form-control" placeholder="Captcha" name="captcha" required>
+                                <input id="captcha" type="text" class="form-control{{ $errors->has('captcha') ? ' is-invalid' : '' }}" placeholder="Captcha" name="captcha" required>
                                 @if ($errors->has('captcha'))
-                                    <span class="help-block">
+                                    <span class="invalid-feedback">
                                         <strong>{{ $errors->first('captcha') }}</strong>
                                     </span>
                                 @endif

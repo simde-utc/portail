@@ -42,13 +42,19 @@ class Password extends BaseAuth
 
 	public function register(Request $request) {
 		$request->validate([
-			'email' => 'required|email',
-			'firstname' => 'required',
-			'lastname' => 'required',
-			'password' => 'required',
+			'email' => ['required', 'email', 'unique:users', 'regex:#.*(?<!utc\.fr|escom\.fr)$#'],
+			'firstname' => 'required|regex:#^[\pL\s\-]+$#u',
+			'lastname' => 'required|regex:#^[\pL\s\-]+$#u',
+			'password' => 'required|confirmed|regex:#^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$#',
+			'birthdate' => 'required|date_format:Y-m-d|before_or_equal:'.\Carbon\Carbon::now()->subYears(16)->toDateString(),
 			'captcha' => 'required|captcha'
 		],
-		['captcha.captcha' => 'Captcha invalide']);
+		[
+			'email.unique' => 'L\'adresse email a déjà était utilisée',
+			'email.regex' => 'Il n\'est pas possible de s\'enregistrer avec une adresse email utc.fr ou escom.fr (Veuillez vous connecter via CAS-UTC)',
+			'password.regex' => 'Le mot de passe doit avoir au moins: 8 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre',
+			'captcha.captcha' => 'Captcha invalide',
+		]);
 
 		return $this->create($request, [
 			'email' => $request->input('email'),
