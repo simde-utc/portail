@@ -153,6 +153,15 @@ abstract class BaseAuth
 	/**
 	 * Crée la connexion auth
 	 */
+	public function addAuth($user_id, array $info) {
+		return resolve($this->config['model'])::create(array_merge($info, [
+			'user_id' => $user_id
+		]));
+	}
+
+	/**
+	 * Crée la connexion auth
+	 */
 	protected function createAuth($id, array $info = []) {
 		return resolve($this->config['model'])::updateOrCreate([
 			'user_id' => $id,
