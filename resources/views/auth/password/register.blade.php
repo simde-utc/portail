@@ -54,6 +54,14 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="birthdate" class="col-md-4 col-form-label text-md-right">Date de naissance</label>
+
+                            <div class="col-md-6">
+                                <input id="birthdate" type="date" class="form-control" name="birthdate" max="{{ \Carbon\Carbon::now()->subYears(16)->toDateString() }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">Mot de passe</label>
 
                             <div class="col-md-6">
@@ -75,6 +83,24 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('captcha') ? ' has-error' : '' }} row">
+                            <label for="captcha" class="col-md-4 col-form-label text-md-right">Captcha</label>
+
+                            <div class="col-md-6">
+                                <div class="captcha">
+                                    <span>{!! captcha_img() !!}</span>
+                                    <button type="button" onclick="refreshCaptcha()" class="btn btn-success btn-refresh"><i class="fa fa-refresh"></i></button>
+                                </div>
+
+                                <input id="captcha" type="text" class="form-control" placeholder="Captcha" name="captcha" required>
+                                @if ($errors->has('captcha'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('captcha') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
@@ -88,4 +114,20 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+
+<script type="text/javascript">
+    var refreshCaptcha = function () {
+      $.ajax({
+         type:'GET',
+         url:'/register/password?newCaptcha',
+         success: function (data) {
+            $(".captcha span").html(data.captcha);
+         }
+      });
+    };
+</script>
+
 @endsection

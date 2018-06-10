@@ -33,8 +33,22 @@ class Password extends BaseAuth
 			return $this->show($request);
 	}
 
+	public function showRegisterForm(Request $request) {
+		if ($request->has('newCaptcha'))
+			return response()->json(['captcha' => captcha_img()]);
+		else
+			return parent::showRegisterForm($request);
+	}
+
 	public function register(Request $request) {
-		$this->type = "register";
+		$request->validate([
+			'email' => 'required|email',
+			'firstname' => 'required',
+			'lastname' => 'required',
+			'password' => 'required',
+			'captcha' => 'required|captcha'
+		],
+		['captcha.captcha' => 'Captcha invalide']);
 
 		return $this->create($request, [
 			'email' => $request->input('email'),
