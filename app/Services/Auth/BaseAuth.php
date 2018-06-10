@@ -216,8 +216,8 @@ abstract class BaseAuth
 	 */
 	protected function error(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter');
+			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter')->withInput();
 		else
-			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError($message);
+			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError($message)->withInput();
 	}
 }

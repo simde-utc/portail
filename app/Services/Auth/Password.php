@@ -27,7 +27,7 @@ class Password extends BaseAuth
 					return $this->connect($request, $user, $userAuth);
 			}
 
-			return $this->error($request, null, null, 'L\'adresse email et/ou le mot de passe est incorrecte');
+			return $this->error($request, null, null, 'L\'adresse email et/ou le mot de passe est incorrect');
 		}
 		else
 			return $this->show($request);

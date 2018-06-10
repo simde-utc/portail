@@ -110,7 +110,11 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    S'enregister
+                                    S'inscrire
+                                </button>
+
+                                <button type="button" onClick="window.location.href = '/login/password'" class="btn btn-secondary">
+                                    Se connecter
                                 </button>
                             </div>
                         </div>

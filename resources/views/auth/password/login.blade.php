@@ -11,31 +11,25 @@
                     <form method="POST" action="{{ route('login.process', ['provider' => $provider]) }}">
                         @csrf
 
+                        @if (Session::has('error'))
+                            <div class="alert alert-danger">
+                                {{ Session::get('error')}}
+                            </div>
+                        @endif
+
                         <div class="form-group row">
-                            <label for="email" class="col-sm-4 col-form-label text-md-right">E-Mail Address</label>
+                            <label for="email" class="col-sm-4 col-form-label text-md-right">Adresse email</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
+                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">Mot de passe</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
+                                <input id="password" type="password" class="form-control" name="password" required>
                             </div>
                         </div>
 
@@ -43,7 +37,7 @@
                             <div class="col-md-6 offset-md-4">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Rester connecté
                                     </label>
                                 </div>
                             </div>
@@ -52,11 +46,14 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Login
+                                    Se connecter
+                                </button>
+                                <button type="button" onClick="window.location.href = '/register/password'" class="btn btn-secondary">
+                                    S'inscrire
                                 </button>
 
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    Forgot Your Password?
+                                    Mot de passe oublié
                                 </a>
                             </div>
                         </div>
