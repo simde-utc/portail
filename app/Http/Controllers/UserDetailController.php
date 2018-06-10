@@ -10,42 +10,33 @@ use App\Exceptions\PortailException;
 
 class UserDetailController extends Controller
 {
-    public function __construct() {
+    public function __construct(Request $request) {
 		$this->middleware(
-			\Scopes::matchOne(
-				['user-get-roles-users']
-			),
-			['only' => ['index', 'show']]
+			\Scopes::matchAnyUser()
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-set-roles-users']
+				['user-get-info-details']
 			),
-			['only' => ['store', 'update']]
+			['only' => ['index']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-manage-roles-users']
+				['user-set-info-details']
 			),
-			['only' => ['destroy']]
+			['only' => ['store']]
 		);
     }
 
-	protected function getUser(Request $request, int $user_id = null) {
-        if (\Scopes::isClientToken($request))
-            $user = User::find($user_id ?? null);
-        else {
-            $user = \Auth::user();
-
-            if (!is_null($user_id) && $user->id !== $user_id)
-                abort(403, 'Il ne vous est pas autorisé d\'accéder aux rôles des autres utilisateurs');
+    protected function checkScope(Request $request, string $key, string $verb) {
+        try {
+            if (!\Scopes::has($request, 'user-'.$verb.'-info-details-'.$key))
+                abort(403, 'Vous n\'avez pas les droits sur cette information');
+        } catch (PortailException $e) {
+            abort(403, 'Il n\'existe pas de détail utilisateur de ce nom: '.$key);
         }
-
-		if ($user)
-			return $user;
-		else
-			abort(404, "Utilisateur non trouvé");
-	}
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -55,7 +46,7 @@ class UserDetailController extends Controller
 		$user = $this->getUser($request, $user_id);
 
         // On affiche chaque détail sous forme clé => valeur
-		return response()->json($user->details()->toArray());
+		return response()->json($user->details()->allToArray());
     }
 
     /**
@@ -87,6 +78,7 @@ class UserDetailController extends Controller
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
+        $this->checkScope($request, $key, 'get');
         $user = $this->getUser($request, $user_id);
 
         try {
@@ -108,6 +100,7 @@ class UserDetailController extends Controller
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
+        $this->checkScope($request, $key, 'edit');
 		$user = $this->getUser($request, $user_id);
 
 		if (\Scopes::isUserToken($request)) {
@@ -136,6 +129,7 @@ class UserDetailController extends Controller
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
+        $this->checkScope($request, $key, 'manage');
 		$user = $this->getUser($request, $user_id);
 
 		if (\Scopes::isUserToken($request)) {

@@ -41,7 +41,7 @@ class ClientController extends Controller
 	 * @param  \Illuminate\Http\Request $request
 	 * @return JsonResponse
 	 */
-	public function getUsers(Request $request): JsonResponse {
+	public function getUsersClient(Request $request): JsonResponse {
 		$bearerToken = $request->bearerToken();
 		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;
@@ -77,7 +77,7 @@ class ClientController extends Controller
 	 * @param int $userId
 	 * @return JsonResponse
 	 */
-	public function getUser(Request $request, int $userId): JsonResponse {
+	public function getUserClient(Request $request, int $userId): JsonResponse {
 		$bearerToken = $request->bearerToken();
 		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
 		$clientId = Token::find($tokenId)->client_id;

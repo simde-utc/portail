@@ -3,27 +3,31 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasVisibility;
-
+use App\Models\Calendar;
+use App\Models\Visibility;
+use App\Models\User;
+use App\Models\Asso;
+use App\Models\Group;
 
 class Event extends Model
 {
-    use HasVisibility;
-
-    protected $table = 'events';
     protected $fillable = [
-        'title', 'description', 'image', 'from', 'to', 'visibility_id', 'place',
+        'name', 'begin_at', 'end_at', 'created_by',
     ];
 
+    public function calendars() {
+        return $this->hasMany(Calendars::class, 'calendars_events');
+    }
+
 	public function users() {
-			return $this->belongsToMany('App\Models\User');
+		return $this->morphTo(User::class, 'created_by');
 	}
 
 	public function assos() {
-			return $this->belongsToMany('App\Models\Asso');
+		return $this->morphTo(Asso::class, 'created_by');
 	}
 
-	public function visibility() {
-    	return $this->hasOne('App\Models\Visibility');
-    }
+	public function groups() {
+		return $this->morphTo(Group::class, 'created_by');
+	}
 }

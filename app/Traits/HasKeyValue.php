@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use App\Exceptions\PortailException;
 use Illuminate\Database\Eloquent\Builder;
+use App\Exceptions\PortailException;
 
 trait HasKeyValue
 {
@@ -46,6 +46,24 @@ trait HasKeyValue
 			return array_merge(...$collection);
 		else
 			return [];
+	}
+
+	public function scopeAllToArray($query) {
+		$data = $this->scopeToArray($query);
+
+		if (property_exists($this, 'functionalKeys')) {
+			foreach ($this->functionalKeys as $key) {
+				if (method_exists($this, $key)) {
+					try {
+						$data[$key] = $this->scopeValueOf($query, $key);
+					} catch (PortailException $e) {
+						$data[$key] = null;
+					}
+				}
+			}
+		}
+
+		return $data;
 	}
 
 	public function getAttribute($key) {

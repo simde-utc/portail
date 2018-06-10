@@ -6,6 +6,7 @@ use Ginger;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasKeyValue;
 use App\Models\User;
+use App\Exceptions\PortailException;
 
 class UserDetail extends Model
 {
@@ -17,7 +18,24 @@ class UserDetail extends Model
 	protected $fillable = [
 		'user_id', 'key', 'value', 'type',
 	];
-	/* Vérifier les fcts ! */
+	protected $functionalKeys = [
+		'age', 'isMajor', 'loginCAS', 'loginContributorBde', 'isContributorBde'
+	];
+
+	/**
+	 * Permet de retrouver l'utilisateur sur lequel on travaille à partir d'un query
+	 */
+	protected function getUserFromQuery($query) {
+		$wheres = $query->getQuery()->wheres;
+
+		foreach ($wheres as $where) {
+			if ($where['column'] === $this->getTable().'.'.$this->primaryKey[0]	&& $where['operator'] === '=')
+				return User::find($where['value']);
+		}
+
+		return null;
+	}
+
 	public function age($query) {
 		$birthdate = $query->valueOf('birthdate');
 
@@ -28,11 +46,11 @@ class UserDetail extends Model
 	}
 
 	public function isMajor($query) {
-		$cas = $query->first()->user->cas;
+		$casLogin = $this->loginCAS($query);
 
-		if ($cas) {
+		if ($casLogin) {
 			try {
-				return Ginger::user($cas->login)->isAdult();
+				return Ginger::user($casLogin)->isAdult();
 			}
 			catch (\Exception $e) {} // Si on a pas les données CAS, on regarde avec la date de naissance
 		}
@@ -42,25 +60,20 @@ class UserDetail extends Model
 		if ($age)
 			return $age >= 18;
 		else
-			return null;
-	}
-
-	public function isMinor($query) {
-		$isMajor = $this->isMajor($query);
-
-		if (is_null($isMajor))
-			return null;
-		else
-			return !$isMajor;
+			throw new PortailException('Non trouvé');
 	}
 
 	public function loginCAS($query) {
-		$cas = $query->first()->user->cas;
+		try {
+			$cas = $this->getUserFromQuery($query)->cas;
+		} catch (\ErrorException $e) {
+			$cas = null;
+		}
 
 		if ($cas)
 			return $cas->login;
 		else
-			return null;
+			throw new PortailException('Non trouvé');
 	}
 
 	public function loginContributorBde($query) {
@@ -68,8 +81,13 @@ class UserDetail extends Model
 
 		if ($casLogin)
 			return $casLogin;
-		else
-			return Ginger::userByEmail($query->first()->user->email)->getLogin();
+		else {
+			try {
+				return Ginger::userByEmail($this->getUserFromQuery($query)->email)->getLogin();
+			} catch (\ErrorException $e) {
+				throw new PortailException('Non trouvé');
+			}
+		}
 	}
 
 	public function isContributorBde($query) {
@@ -82,6 +100,6 @@ class UserDetail extends Model
 			catch (\Exception $e) {}
 		}
 
-		return null;
+		throw new PortailException('Non trouvé');
 	}
 }

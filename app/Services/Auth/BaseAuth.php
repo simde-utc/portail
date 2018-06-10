@@ -125,13 +125,7 @@ abstract class BaseAuth
 			'email' => $info['email'],
 			'lastname' => $info['lastname'],
 			'firstname' => $info['firstname'],
-		]);
-
-		// Ajout dans les préférences
-		$userPreferences = UserPreference::create([
-			'user_id' => $user->id,
-			'key' => 'PREFERED_EMAIL',
-			'value'   => $user->email,
+			'is_active' => true,
 		]);
 
 		return $user;
@@ -186,7 +180,7 @@ abstract class BaseAuth
 	 */
 	protected function connect(Request $request, $user, $userAuth) {
 		// Si tout est bon, on le connecte
-		if ($user !== null && $userAuth !== null) {
+		if ($user && $userAuth) {
 			if (!$user->is_active)
 				return $this->error($request, $user, $userAuth, 'Ce compte a été désactivé');
 
@@ -222,8 +216,8 @@ abstract class BaseAuth
 	 */
 	protected function error(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter');
+			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter')->withInput();
 		else
-			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError($message);
+			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError($message)->withInput();
 	}
 }
