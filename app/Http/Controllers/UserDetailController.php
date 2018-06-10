@@ -36,22 +36,7 @@ class UserDetailController extends Controller
             abort(403, 'Il n\'existe pas de détail utilisateur de ce nom: '.$key);
         }
     }
-
-	protected function getUser(Request $request, int $user_id = null) {
-        if (\Scopes::isClientToken($request))
-            $user = User::find($user_id ?? null);
-        else {
-            $user = \Auth::user();
-
-            if (!is_null($user_id) && $user->id !== $user_id)
-                abort(403, 'Il ne vous est pas autorisé d\'accéder aux rôles des autres utilisateurs');
-        }
-
-		if ($user)
-			return $user;
-		else
-			abort(404, "Utilisateur non trouvé");
-	}
+    
     /**
      * Display a listing of the resource.
      *

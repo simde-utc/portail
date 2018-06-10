@@ -36,22 +36,6 @@ class UserPreferenceController extends Controller
 		);
     }
 
-	protected function getUser(Request $request, int $user_id = null) {
-        if (\Scopes::isClientToken($request))
-            $user = User::find($user_id ?? null);
-        else {
-            $user = \Auth::user();
-
-            if (!is_null($user_id) && $user->id !== $user_id)
-                abort(403, 'Il ne vous est pas autorisé d\'accéder aux rôles des autres utilisateurs');
-        }
-
-		if ($user)
-			return $user;
-		else
-			abort(404, "Utilisateur non trouvé");
-	}
-
     protected function getPreferences(Request $request, $user, string $verb) {
         $choices = $this->getChoices($request, ['global', 'asso', 'client']);
         $token = $request->user() ? $request->user()->token() : $request->token();
