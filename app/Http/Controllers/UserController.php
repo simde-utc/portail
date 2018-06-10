@@ -16,7 +16,7 @@ class UserController extends Controller
 	public function __construct() {
 		$this->middleware(
 			\Scopes::matchAnyClient(),
-			['only' => 'index']
+			['only' => 'index', 'store']
 		);
 		$this->middleware(
 			\Scopes::matchAnyUserOrClient()
@@ -39,7 +39,34 @@ class UserController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request) {
-		//
+		$user = User::create([
+			'email' => $request->input('email'),
+			'lastname' => strtoupper($request->input('lastname')),
+			'firstname' => $request->input('firstname'),
+			'is_active' => $request->input('is_active', true),
+		]);
+
+		// Envoyer un mail et vérifier en fonction de scopes
+
+		if ($request->filled('details')) {
+			foreach ($request->input('details') as $key => $value) {
+				$user->details()->create([
+					'key' => $key,
+					'value' => $value
+				]);
+			}
+		}
+
+		if ($request->filled('preferences')) {
+			foreach ($request->input('preferences') as $key => $value) {
+				$user->preferences()->create([
+					'key' => $key,
+					'value' => $value
+				]);
+			}
+		}
+
+		return response()->json($user, 201);
 	}
 
 	/**
@@ -126,7 +153,7 @@ class UserController extends Controller
 			$user = $this->hideUserData($request, $user);
 
 		// Par défaut, on retourne au moins l'id de la personne et son nom
-		return $user;
+		return response()->json($user);
 	}
 
 	/**
@@ -136,8 +163,16 @@ class UserController extends Controller
 	 * @param  int $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, $id) {
-		//
+	public function update(Request $request, int $user_id = null) {
+		$user = $this->getUser($request, $user_id);
+
+		$user->email = $request->input('email', $user->email);
+		$user->lastname = $request->input('lastname', $user->lastname);
+		$user->firstname = $request->input('firstname', $user->firstname);
+		$user->is_active = $request->input('is_active', $user->is_active);
+		$user->save();
+
+		return response()->json($user, 200);
 	}
 
 	/**
@@ -147,6 +182,6 @@ class UserController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id) {
-		//
+		abort(403, "Wow l'ami, patience, c'est galère ça...");
 	}
 }
