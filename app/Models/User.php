@@ -21,6 +21,14 @@ class User extends Authenticatable
 			// Ajout dans les préférences
 			UserPreference::create([
 				'user_id' => $model->id,
+				'key' => 'CONTACT_TO_USE',
+				'value'   => [
+					'EMAIL'
+				],
+			]);
+
+			UserPreference::create([
+				'user_id' => $model->id,
 				'key' => 'CONTACT_EMAIL',
 				'value'   => $model->email,
 			]);
@@ -39,9 +47,17 @@ class User extends Authenticatable
 		'is_active' => 'boolean',
 	];
 
+	protected $appends = [
+		'name',
+	];
+
 	public $types = [
 		'admin', 'contributorBde', 'cas', 'active',
 	];
+
+	public function getNameAttribute() {
+		return $this->firstname.' '.strtoupper($this->lastname);
+	}
 
 	public static function findByEmail($email) {
 		return static::where('email', $email)->first();

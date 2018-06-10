@@ -19,8 +19,6 @@ Route::prefix('v1')->group(function () {
 
 	// Informations relatives à l'utlisateur
 	Route::get('user', 'UserController@show')->middleware(Scopes::matchAnyUser())->name('api/user');
-	Route::get('user/auths', 'LoggedUserController@getProviders')->middleware(Scopes::matchAnyUser())->name('api/user/auths');
-	Route::get('user/auths/{name}', 'LoggedUserController@getProvider')->middleware(Scopes::matchAnyUser())->name('api/user/auth');
 
 	// Gestions des authorisations données au client
 	Route::get('client', 'ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
@@ -41,11 +39,13 @@ Route::prefix('v1')->group(function () {
 
 	Route::apiResources([
 		'users'										=> 'UserController',
+		'users/{user_id}/auths'						=> 'UserAuthController',
 		'users/{user_id}/roles'						=> 'UserRoleController',
 		'users/{user_id}/details'					=> 'UserDetailController',
 		'users/{user_id}/preferences'				=> 'UserPreferenceController',
 
 		// Routes `user` identiques à `users/{\Auth::id()}`
+		'user/auths'								=> 'UserAuthController',
 		'user/roles'								=> 'UserRoleController',
 		'user/details'								=> 'UserDetailController',
 		'user/preferences'							=> 'UserPreferenceController',
