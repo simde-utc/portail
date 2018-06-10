@@ -11,6 +11,7 @@ use App\Models\Semester;
 use App\Models\UserPreference;
 use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
+use App\Exceptions\PortailException;
 
 class User extends Authenticatable
 {
@@ -106,7 +107,11 @@ class User extends Authenticatable
     }
 
     public function isContributorBde() {
-        return $this->details()->valueOf('isContributorBde');
+		try {
+	        return $this->details()->valueOf('isContributorBde');
+		} catch (PortailException $e) {
+			return null;
+		}
     }
 
     public function isAdmin() {
