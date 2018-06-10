@@ -90,7 +90,7 @@ class User extends Authenticatable
     }
 
     public function isContributorBde() {
-        return UserDetail::isContributorBde($this->id);
+        return $this->details()->valueOf('isContributorBde');
     }
 
     public function isAdmin() {
