@@ -32,7 +32,7 @@ class UserDetailController extends Controller
         try {
             if (!\Scopes::has($request, 'user-'.$verb.'-info-details-'.$key))
                 abort(403, 'Vous n\'avez pas les droits sur cette information');
-        } catch (\Exception $e) {
+        } catch (PortailException $e) {
             abort(403, 'Il n\'existe pas de détail utilisateur de ce nom: '.$key);
         }
     }
@@ -61,7 +61,7 @@ class UserDetailController extends Controller
 		$user = $this->getUser($request, $user_id);
 
         // On affiche chaque détail sous forme clé => valeur
-		return response()->json($user->details()->toArray());
+		return response()->json($user->details()->allToArray());
     }
 
     /**

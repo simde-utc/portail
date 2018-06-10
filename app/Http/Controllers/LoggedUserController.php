@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Exceptions\PortailException;
 
 /**
  * @resource Connected User
@@ -62,7 +63,7 @@ class LoggedUserController extends Controller
 						$user->$type = true;
 					else
 						$user->$type = false;
-				} catch (\Exception $e) {
+				} catch (PortailException $e) {
 					abort(400, 'Le type '.$type.' n\'existe pas !');
 				}
 			}
@@ -71,33 +72,31 @@ class LoggedUserController extends Controller
 		if (!\Scopes::has($request, 'user-get-info-identity-timestamps'))
 			$user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
 
-		if ($request->has('withDetails')) {
+		if ($request->has('allDetails')) {
+			if (!\Scopes::has($request, 'user-get-info-details'))
+				abort(403, 'Il est nécessaire soit d\'avoir la permission d\'avoir tous les détails soient de spécifier lesquels voir');
+
+			$user->details = $user->details()->allToArray();
+		}
+		else if ($request->filled('withDetails')) {
 			$details = [];
 
-			if ($request->filled('withDetails')) {
-				foreach (explode(',', $request->input('withDetails')) as $key) {
-					try {
-						if (!\Scopes::has($request, 'user-get-info-details-'.$key))
-							abort(403, 'Vous n\'avez pas le droit d\'avoir accès à cette information');
-					} catch (\Exception $e) {
-						abort(403, 'Il n\'existe pas de détail utilisateur de ce nom: '.$key);
-					}
-
-					try {
-						$details[$key] = $user->details()->valueOf($key);
-					} catch (\Exception $e) {
-						$details[$key] = null;
-					}
+			foreach (explode(',', $request->input('withDetails')) as $key) {
+				try {
+					if (!\Scopes::has($request, 'user-get-info-details-'.$key))
+						abort(403, 'Vous n\'avez pas le droit d\'avoir accès à cette information');
+				} catch (PortailException $e) {
+					abort(403, 'Il n\'existe pas de détail utilisateur de ce nom: '.$key);
 				}
 
-				$user->details = $details;
+				try {
+					$details[$key] = $user->details()->valueOf($key);
+				} catch (PortailException $e) {
+					$details[$key] = null;
+				}
 			}
-			else {
-				if (!\Scopes::has($request, 'user-get-info-details'))
-					abort(403, 'Il est nécessaire soit d\'avoir la permission d\'avoir tous les détails soient de spécifier lesquels voir');
 
-				$user->details = $user->details()->toArray();
-			}
+			$user->details = $details;
 		}
 
 		// Par défaut, on retourne au moins l'id de la personne et son nom

@@ -93,7 +93,7 @@ class UserPreferenceController extends Controller
             $array[$only_for] = [];
 
             foreach ($preferences as $preference)
-                $array[$only_for] = array_merge($array[$only_for], $preference->toArray());
+                $array[$only_for] = array_merge($array[$only_for], $preference->allToArray());
         }
 
         if (count($array) === 1)
