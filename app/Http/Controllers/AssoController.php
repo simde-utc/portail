@@ -30,7 +30,7 @@ class AssoController extends Controller
 				\Scopes::matchOne(
 					['user-create-assos']
 				), [
-					'admin',
+					'user:admin',
 				]
 			),
 			['only' => ['store']]
@@ -46,7 +46,7 @@ class AssoController extends Controller
 				\Scopes::matchOne(
 					['user-remove-assos']
 				), [
-					'admin',
+					'user:admin',
 				]
 			),
 			['only' => ['destroy']]

@@ -36,7 +36,7 @@ class RoleController extends Controller
 				\Scopes::matchOne(
 					['user-set-roles-types-users', 'user-set-roles-types-assos', 'user-set-roles-types-groups']
 				), [
-					'admin',
+					'user:admin',
 				]
 			),
 			['only' => ['store', 'update']]
@@ -46,7 +46,7 @@ class RoleController extends Controller
 				\Scopes::matchOne(
 					['user-manage-roles-types-users', 'user-manage-roles-types-assos', 'user-manage-roles-types-groups']
 				), [
-					'admin',
+					'user:admin',
 				]
 			),
 			['only' => ['destroy']]

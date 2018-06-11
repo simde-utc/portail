@@ -53,7 +53,7 @@ class User extends Authenticatable
 	];
 
 	public $types = [
-		'admin', 'contributorBde', 'cas', 'active',
+		'admin', 'contributorBde', 'cas', 'password', 'active',
 	];
 
 	public function getNameAttribute() {
@@ -101,9 +101,13 @@ class User extends Authenticatable
     }
 
     public function isCas() {
-		$cas = AuthCas::find($this->id);
+		$cas = $this->cas;
 
         return $cas && $cas->where('is_active', true)->exists();
+    }
+
+    public function isPassword() {
+		return $this->password()->exists();
     }
 
     public function isContributorBde() {
