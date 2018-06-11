@@ -15,7 +15,6 @@ abstract class BaseAuth
 	 * !! Attributs à overrider
 	 */
 	protected $name, $config;
-	protected $type = 'login';
 
 	/**
 	 * Renvoie un lien vers le formulaire de login
@@ -153,6 +152,15 @@ abstract class BaseAuth
 	/**
 	 * Crée la connexion auth
 	 */
+	public function addAuth($user_id, array $info) {
+		return resolve($this->config['model'])::create(array_merge($info, [
+			'user_id' => $user_id
+		]));
+	}
+
+	/**
+	 * Crée la connexion auth
+	 */
 	protected function createAuth($id, array $info = []) {
 		return resolve($this->config['model'])::updateOrCreate([
 			'user_id' => $id,
@@ -216,8 +224,8 @@ abstract class BaseAuth
 	 */
 	protected function error(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter')->withInput();
+			return redirect()->route('login.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter')->withInput();
 		else
-			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError($message)->withInput();
+			return redirect()->route('login.show', ['provider' => $this->name])->withError($message)->withInput();
 	}
 }

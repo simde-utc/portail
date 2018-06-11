@@ -77,7 +77,11 @@ class UserDetail extends Model
 	}
 
 	public function loginContributorBde($query) {
-		$casLogin = $this->loginCAS($query);
+		try {
+			$casLogin = $this->loginCAS($query);
+		} catch (PortailException $e) {
+			$casLogin = null;
+		}
 
 		if ($casLogin)
 			return $casLogin;

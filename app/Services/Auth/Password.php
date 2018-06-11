@@ -65,6 +65,16 @@ class Password extends BaseAuth
 		]);
 	}
 
+
+	/**
+	 * Crée la connexion auth
+	 */
+	public function addAuth($user_id, array $info) {
+		$info['password'] = Hash::make($info['password']);
+
+		return parent::addAuth($user_id, $info);
+	}
+
 	/*
 	 * Redirige vers la bonne page en cas de succès
 	 */

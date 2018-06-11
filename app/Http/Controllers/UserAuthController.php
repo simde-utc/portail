@@ -34,19 +34,33 @@ class UserAuthController extends Controller
 		$result = [];
 
 		foreach ($providers as $name => $provider) {
-			$model = resolve($provider['model']);
-
-			if ($model !== null && \Scopes::has($request, 'user-get-info-identity-auth-'.$name)) {
-				$data = $model->find($user->id);
-
-				if ($data !== null) {
-					$result[$name] = $data;
-				}
-			}
+			if (\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+				$result[$name] = $user->$name;
 		}
 
 		// On retourne tous les providers de la personne
-		return $result;
+		return response()->json($result);
+	}
+
+	public function store(Request $request, int $user_id = null) {
+		$user = $this->getUser($request, $user_id);
+		$name = $request->input('name');
+		$provider = config('auth.services.'.$name);
+		$result = [];
+
+		if ($provider === null)
+			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
+		else {
+			if (!\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+				return response()->json(['message' => 'Non autorisé'], 503);
+
+			$class = resolve($provider['class']);
+
+			if ($class)
+				return response()->json($class->addAuth($user->id, $request->input('data')));
+			else
+				return response()->json(['message' => 'Le service '.$name.' ne permet pas à l\'utlisateur de se connecter'], 404);
+		}
 	}
 
 	/**
@@ -73,14 +87,45 @@ class UserAuthController extends Controller
 
 			$model = resolve($provider['model']);
 
-			if ($model !== null) {
-				$data = $model->find($user->id);
+			if ($model) {
+				$auth = $model->find($user->id);
 
-				if ($data !== null)
-					return $data;
+				if ($auth)
+					return response()->json($auth);
 			}
 
 			return response()->json(['message' => 'Le service '.$name.' ne permet pas à l\'utlisateur de se connecter'], 404);
+		}
+	}
+
+	public function destroy(Request $request, $user_id, $name = null) {
+        if (is_null($name))
+            list($user_id, $name) = [$name, $user_id];
+
+		$user = $this->getUser($request, $user_id);
+		$provider = config('auth.services.'.$name);
+		$result = [];
+
+		if ($provider === null)
+			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
+		else {
+			if (!\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+				return response()->json(['message' => 'Non autorisé'], 503);
+
+			$model = resolve($provider['model']);
+
+			if ($model) {
+				$auth = $model->find($user->id);
+
+				if ($auth) {
+					if ($auth->delete())
+						return abort(204);
+					else
+						return abort(500, 'Erreur lors de la suppression');
+				}
+			}
+
+			return response()->json(['message' => 'Le service '.$name.' ne peut pas être supprimé car elle ne permet pas à l\'utlisateur de se connecter'], 404);
 		}
 	}
 }

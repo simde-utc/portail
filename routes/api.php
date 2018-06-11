@@ -19,6 +19,7 @@ Route::prefix('v1')->group(function () {
 
 	// Informations relatives à l'utlisateur
 	Route::get('user', 'UserController@show')->middleware(Scopes::matchAnyUser())->name('api/user');
+	Route::patch('user', 'UserController@update')->middleware(Scopes::matchAnyUser())->name('api/user/update');
 
 	// Gestions des authorisations données au client
 	Route::get('client', 'ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
