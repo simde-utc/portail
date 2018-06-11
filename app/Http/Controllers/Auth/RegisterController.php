@@ -58,27 +58,43 @@ class RegisterController extends Controller
         ]);
     }
 
-	public function show(Request $request, $name) {
-		$provider = config("auth.services.$name");
+	public function show(Request $request, string $provider) {
+		$config = config("auth.services.$provider");
 
-		if ($provider === null || !$provider['registrable'])
+		if ($config === null || !$config['registrable'])
 			return redirect()->route('register.show', ['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
 		else
-			return resolve($provider['class'])->showRegisterForm($request);
+			return resolve($config['class'])->showRegisterForm($request);
 	}
 
 	/**
 	 * Enregistrement de l'utilisateur après passage par l'API
 	 */
-	public function register(Request $request, $name) {
-		$provider = config("auth.services.$name");
+	public function store(Request $request, $provider) {
+		$config = config("auth.services.$name");
 
-		if ($provider === null || !$provider['registrable'])
-			return redirect()->route('register.show', ['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+		if ($config === null || !$config['registrable'])
+			return redirect()->route('register.show', ['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))])->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 		else {
-			setcookie('auth_provider', $name, config('portail.cookie_lifetime'));
+			setcookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 
-			return resolve($provider['class'])->register($request);
+			return resolve($config['class'])->register($request);
 		}
+	}
+
+	/**
+	 * Action custom par provider
+	 */
+	public function update(Request $request, string $provider, string $action) {
+		$provider_class = config("auth.services.$provider.class");
+
+		if ($provider_class) {
+			$class = resolve($provider_class);
+dd($action);
+            if ($class->isACustomAction($action))
+				return $class->$action($request);
+		}
+
+		return redirect()->route('register.show', ['provider' => $provider]);
 	}
 }
