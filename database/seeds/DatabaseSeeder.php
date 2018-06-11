@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
 			RolesTableSeeder::class,
 		]);
 
-		if (env('APP_DEBUG', false)) {
+		if (config('app.debug', false)) {
 			$this->call([
 				UsersTableSeeder::class,
 				GroupsTableSeeder::class,
