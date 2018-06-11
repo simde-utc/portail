@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Cas;
 use Laravel\Passport\Token;
-// Session utile ?
 use App\Models\Session;
 
 class LoginController extends Controller
