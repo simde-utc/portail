@@ -15,7 +15,6 @@ abstract class BaseAuth
 	 * !! Attributs à overrider
 	 */
 	protected $name, $config;
-	protected $type = 'login';
 
 	/**
 	 * Renvoie un lien vers le formulaire de login
@@ -225,8 +224,8 @@ abstract class BaseAuth
 	 */
 	protected function error(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter')->withInput();
+			return redirect()->route('login.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter')->withInput();
 		else
-			return redirect()->route($this->type.'.show', ['provider' => $this->name])->withError($message)->withInput();
+			return redirect()->route('login.show', ['provider' => $this->name])->withError($message)->withInput();
 	}
 }
