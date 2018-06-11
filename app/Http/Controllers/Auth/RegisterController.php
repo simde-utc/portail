@@ -81,20 +81,4 @@ class RegisterController extends Controller
 			return resolve($config['class'])->register($request);
 		}
 	}
-
-	/**
-	 * Action custom par provider
-	 */
-	public function update(Request $request, string $provider, string $action) {
-		$provider_class = config("auth.services.$provider.class");
-
-		if ($provider_class) {
-			$class = resolve($provider_class);
-dd($action);
-            if ($class->isACustomAction($action))
-				return $class->$action($request);
-		}
-
-		return redirect()->route('register.show', ['provider' => $provider]);
-	}
 }

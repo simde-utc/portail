@@ -51,7 +51,9 @@
                                 <button type="button" onClick="window.location.href = '/register/password'" class="btn btn-secondary">
                                     S'inscrire
                                 </button>
+                            </div>
 
+                            <div class="col-md-8 offset-md-4">
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     Mot de passe oublié
                                 </a>
