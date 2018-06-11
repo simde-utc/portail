@@ -13,6 +13,7 @@
 
 // Authentication Routes
 Route::get('login', 'Auth\LoginController@index')->name('login');
+Route::get('login/captcha', 'Auth\LoginController@update')->name('login.captcha');
 Route::get('login/{provider?}', 'Auth\LoginController@show')->name('login.show');
 Route::match(['get', 'post'], 'login/{provider}/process', 'Auth\LoginController@store')->name('login.process');
 Route::match(['get', 'post'], 'logout/{redirect?}', 'Auth\LoginController@destroy')->name('logout');

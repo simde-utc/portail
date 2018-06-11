@@ -98,7 +98,7 @@
                                     <button type="button" onclick="refreshCaptcha()" class="btn btn-success btn-refresh"><i class="fa fa-refresh"></i></button>
                                 </div>
 
-                                <input id="captcha" type="text" class="form-control{{ $errors->has('captcha') ? ' is-invalid' : '' }}" placeholder="Captcha" name="captcha" required>
+                                <input id="captcha" type="text" class="form-control{{ $errors->has('captcha') ? ' is-invalid' : '' }}" name="captcha" required>
                                 @if ($errors->has('captcha'))
                                     <span class="invalid-feedback">
                                         <strong>{{ $errors->first('captcha') }}</strong>
@@ -132,7 +132,7 @@
     var refreshCaptcha = function () {
       $.ajax({
          type:'GET',
-         url:'/register/password?newCaptcha',
+         url: "{{ route('login.captcha') }}",
          success: function (data) {
             $(".captcha span").html(data.captcha);
          }

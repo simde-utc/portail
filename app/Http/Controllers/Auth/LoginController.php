@@ -80,19 +80,10 @@ class LoginController extends Controller
 	}
 
 	/**
-	 * Action custom par provider
+	 * Actualisation du captcha
 	 */
-	public function update(Request $request, string $provider, string $action) {
-		$provider_class = config("auth.services.$provider.class");
-
-		if ($provider_class) {
-			$class = resolve($provider_class);
-
-			if ($class->isACustomAction($action))
-				return $class->$action($request);
-		}
-
-		return redirect()->route('login.show', ['provider' => $provider]);
+	public function update(Request $request) {
+		return response()->json(['captcha' => captcha_img()]);
 	}
 
 	/**
