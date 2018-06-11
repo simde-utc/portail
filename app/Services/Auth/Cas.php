@@ -3,6 +3,7 @@
 namespace App\Services\Auth;
 
 use Ginger;
+use App\Models\User;
 use App\Models\AuthCas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,25 +40,30 @@ class Cas extends BaseAuth
 
 		// Renvoie une erreur différente de la 200. On passe par le CAS.
 		if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
-			return $this->updateOrCreate($request, 'login', $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'], [
-				'firstname' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
-				'lastname' 	=> $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
-				'email' 	=> $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
-			], [
-				'login' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
-				'email' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
-			]);
+			list($login, $email, $firstname, $lastname) = [
+				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
+				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
+				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
+				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
+			];
+		}
+		else {
+			// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
+			list($login, $email, $firstname, $lastname) = [
+				$ginger->getLogin(),
+				$ginger->getEmail(),
+				$ginger->getFirstname(),
+				$ginger->getLastname(),
+			];
 		}
 
-		// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
-		return $this->updateOrCreate($request, 'login', $ginger->getLogin(), [
-			'firstname' => $ginger->getFirstname(),
-			'lastname' 	=> $ginger->getLastname(),
-			'email' 	=> $ginger->getEmail(),
-		], [
-			'login' => $ginger->getLogin(),
-			'email' => $ginger->getEmail(),
-		]);
+		if ((($cas = AuthCas::findByEmail($email)) && ($user = $cas->user)) || User::findByEmail($email))
+			return $this->updateOrCreate($request, 'login', $login, compact('email', 'firstname', 'lastname'), compact('login', 'email'));
+		else {
+			Auth::guard('cas')->login($this->createUser(compact('email', 'firstname', 'lastname')));
+
+			return redirect()->route('cas.request');
+		}
 	}
 
 	public function register(Request $request) {

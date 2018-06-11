@@ -52,7 +52,7 @@ class Password extends BaseAuth
 		return $this->create($request, [
 			'email' => $request->input('email'),
 			'firstname' => $request->input('firstname'),
-            'lastname' => $request->input('lastname'),
+            'lastname' => strtoupper($request->input('lastname')),
 		], [
 			'password' => Hash::make($request->input('password')),
 		]);
