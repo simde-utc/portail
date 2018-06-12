@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Auth\Password;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
@@ -39,5 +39,21 @@ class ForgotPasswordController extends Controller
     public function showLinkRequestForm()
     {
         return view('auth.password.email');
+    }
+
+    /**
+     * Validate the email for the given request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function validateEmail(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email',
+            'captcha' => 'required|captcha',
+        ], [
+            'captcha.captcha' => 'Le Captcha est invalide',
+        ]);
     }
 }

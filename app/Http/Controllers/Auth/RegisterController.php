@@ -71,7 +71,7 @@ class RegisterController extends Controller
 	 * Enregistrement de l'utilisateur après passage par l'API
 	 */
 	public function store(Request $request, $provider) {
-		$config = config("auth.services.$name");
+		$config = config("auth.services.$provider");
 
 		if ($config === null || !$config['registrable'])
 			return redirect()->route('register.show', ['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))])->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
@@ -80,21 +80,5 @@ class RegisterController extends Controller
 
 			return resolve($config['class'])->register($request);
 		}
-	}
-
-	/**
-	 * Action custom par provider
-	 */
-	public function update(Request $request, string $provider, string $action) {
-		$provider_class = config("auth.services.$provider.class");
-
-		if ($provider_class) {
-			$class = resolve($provider_class);
-dd($action);
-            if ($class->isACustomAction($action))
-				return $class->$action($request);
-		}
-
-		return redirect()->route('register.show', ['provider' => $provider]);
 	}
 }

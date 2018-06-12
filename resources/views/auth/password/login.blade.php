@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card card-default">
-                <div class="card-header">Login</div>
+                <div class="card-header">Connexion</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login.process', ['provider' => $provider]) }}">
@@ -48,10 +48,12 @@
                                 <button type="submit" class="btn btn-primary">
                                     Se connecter
                                 </button>
-                                <button type="button" onClick="window.location.href = '/register/password'" class="btn btn-secondary">
+                                <button type="button" onClick="window.location.href = '{{ route('register.show', ['provider' => 'password']) }}'" class="btn btn-secondary">
                                     S'inscrire
                                 </button>
+                            </div>
 
+                            <div class="col-md-8 offset-md-4">
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     Mot de passe oublié
                                 </a>

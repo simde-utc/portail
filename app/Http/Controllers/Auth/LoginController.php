@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Cas;
 use Laravel\Passport\Token;
-// Session utile ?
 use App\Models\Session;
 
 class LoginController extends Controller
@@ -37,7 +36,7 @@ class LoginController extends Controller
 
 	public function __construct()	{
 		$this->middleware('guest', ['except' => 'destroy']);
-		$this->middleware('auth:web', ['only' => 'destroy']);
+		$this->middleware('auth:web,cas', ['only' => 'destroy']);
 	}
 
 	/**
@@ -50,7 +49,7 @@ class LoginController extends Controller
 		if ($provider_class === null || $request->query('see') === 'all')
 			return view('login.index');
 		else
-			return redirect()->route('login.show');
+			return redirect()->route('login.show', ['provider' => $provider]);
 	}
 
 	/**
@@ -62,7 +61,7 @@ class LoginController extends Controller
 		if ($provider_class === null)
 			return redirect()->route('login.show');
 		else {
-			return resolve($provider_class)->login($request)->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+			return resolve($provider_class)->login($request)->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 		}
 	}
 
@@ -74,25 +73,16 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
-			return redirect()->route('login')->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+			return redirect()->route('login')->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 		else
 			return resolve($provider_class)->showLoginForm($request);
 	}
 
 	/**
-	 * Action custom par provider
+	 * Actualisation du captcha
 	 */
-	public function update(Request $request, string $provider, string $action) {
-		$provider_class = config("auth.services.$provider.class");
-
-		if ($provider_class) {
-			$class = resolve($provider_class);
-
-			if ($class->isACustomAction($action))
-				return $class->$action($request);
-		}
-
-		return redirect()->route('login.show', ['provider' => $provider]);
+	public function update(Request $request) {
+		return response()->json(['captcha' => captcha_img()]);
 	}
 
 	/**
