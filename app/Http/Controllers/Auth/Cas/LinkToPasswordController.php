@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth\Cas;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use App\Services\Auth\Password;
 use App\Models\Session;
 
@@ -42,20 +43,29 @@ class LinkToPasswordController extends Controller
                 // On réaffecte notre CAS à notre ancien compte
                 $cas = $casUser->cas;
                 $cas->user_id = \Auth::guard('web')->id();
-                $cas->save();
 
                 // On actualise les données de l'utilisateur avec le cas
                 $user = \Auth::guard('web')->user();
                 $user->firstname = $casUser->firstname;
                 $user->lastname = $casUser->lastname;
-                $user->save();
-
-                // On se déconnecte du mode cas et on supprime l'utilisateur inutile
-                \Auth::guard('cas')->logout();
-                $casUser->delete();
 
                 // On respécifie notre connexion via CAS
                 Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => 'cas']);
+
+                // On se déconnecte du mode cas et on supprime l'utilisateur inutile
+                \Auth::guard('cas')->logout();
+
+                try {
+                    $casUser->delete();
+                } catch (QueryException $e) {
+                    \Session::flash('error', 'Vos deux comptes possèdent une activité antérieure et il n\'est donc pas possible de les lier. Contactez le SiMDE pour réaliser cette tâche et veuillez actualiser pour continuer');
+                    \Session::flash('old', ['email' => $request->input('email')]);
+
+                    return view('auth.cas.link');
+                }
+
+                $cas->save();
+                $user->save();
 
                 return $redirect;
             }
