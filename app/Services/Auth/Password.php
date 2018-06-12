@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class Password extends BaseAuth
 {
@@ -34,20 +35,7 @@ class Password extends BaseAuth
 	}
 
 	public function register(Request $request) {
-		$request->validate([
-			'email' => ['required', 'email', 'regex:#.*(?<!utc\.fr|escom\.fr)$#', 'unique:users'],
-			'firstname' => 'required|regex:#^[\pL\s\-]+$#u',
-			'lastname' => 'required|regex:#^[\pL\s\-]+$#u',
-			'password' => 'required|confirmed|regex:#^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$#',
-			'birthdate' => 'required|date_format:Y-m-d|before_or_equal:'.\Carbon\Carbon::now()->subYears(16)->toDateString(),
-			'captcha' => 'required|captcha'
-		],
-		[
-			'email.unique' => 'L\'adresse email est déjà utilisée',
-			'email.regex' => 'Il n\'est pas possible de s\'enregistrer avec une adresse email utc.fr ou escom.fr (Veuillez vous connecter via CAS-UTC)',
-			'password.regex' => 'Le mot de passe doit avoir au moins: 8 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre',
-			'captcha.captcha' => 'Le Captcha est invalide',
-		]);
+		$request->validate(...$this->getValidations());
 
 		return $this->create($request, [
 			'email' => $request->input('email'),
@@ -63,6 +51,14 @@ class Password extends BaseAuth
 	 * Crée la connexion auth
 	 */
 	public function addAuth($user_id, array $info) {
+		list($validation, $validationText) = $this->getValidations();
+		$info['password_confirmation'] = $info['password_confirmation'] ?? $info['password'];
+
+		Validator::make($info, [
+			'email' => $validation['email'],
+			'password' => $validation['password'],
+		], $validationText)->validate();
+
 		$info['password'] = Hash::make($info['password']);
 
 		return parent::addAuth($user_id, $info);
@@ -82,5 +78,23 @@ class Password extends BaseAuth
 		}
 		else
 			return parent::success($request, $user, $userAuth, $message);
+	}
+
+	protected function getValidations() {
+		return [
+			[
+				'email' => ['required', 'email', 'regex:#.*(?<!utc\.fr|escom\.fr)$#', 'unique:users'],
+				'firstname' => 'required|regex:#^[\pL\s\-]+$#u',
+				'lastname' => 'required|regex:#^[\pL\s\-]+$#u',
+				'password' => 'required|confirmed|regex:#^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$#',
+				'birthdate' => 'required|date_format:Y-m-d|before_or_equal:'.\Carbon\Carbon::now()->subYears(16)->toDateString(),
+				'captcha' => 'required|captcha'
+			], [
+				'email.unique' => 'L\'adresse email est déjà utilisée',
+				'email.regex' => 'Il n\'est pas possible de s\'enregistrer avec une adresse email utc.fr ou escom.fr (Veuillez vous connecter via CAS-UTC)',
+				'password.regex' => 'Le mot de passe doit avoir au moins: 8 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre',
+				'captcha.captcha' => 'Le Captcha est invalide',
+			]
+		];
 	}
 }

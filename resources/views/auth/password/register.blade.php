@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card card-default">
-                <div class="card-header">Register</div>
+                <div class="card-header">Inscription</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('register.process', ['provider' => $provider, 'redirect' => $redirect]) }}">
@@ -113,7 +113,7 @@
                                     S'inscrire
                                 </button>
 
-                                <button type="button" onClick="window.location.href = '/login/password'" class="btn btn-secondary">
+                                <button type="button" onClick="window.location.href = '{{ route('login.show', ['provider' => 'password']) }}'" class="btn btn-secondary">
                                     Se connecter
                                 </button>
                             </div>

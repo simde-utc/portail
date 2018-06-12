@@ -36,7 +36,7 @@ class LoginController extends Controller
 
 	public function __construct()	{
 		$this->middleware('guest', ['except' => 'destroy']);
-		$this->middleware('auth:web', ['only' => 'destroy']);
+		$this->middleware('auth:web,cas', ['only' => 'destroy']);
 	}
 
 	/**
@@ -49,7 +49,7 @@ class LoginController extends Controller
 		if ($provider_class === null || $request->query('see') === 'all')
 			return view('login.index');
 		else
-			return redirect()->route('login.show');
+			return redirect()->route('login.show', ['provider' => $provider]);
 	}
 
 	/**
@@ -61,7 +61,7 @@ class LoginController extends Controller
 		if ($provider_class === null)
 			return redirect()->route('login.show');
 		else {
-			return resolve($provider_class)->login($request)->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+			return resolve($provider_class)->login($request)->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 		}
 	}
 
@@ -73,7 +73,7 @@ class LoginController extends Controller
 		$provider_class = config("auth.services.$provider.class");
 
 		if ($provider_class === null)
-			return redirect()->route('login')->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+			return redirect()->route('login')->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 		else
 			return resolve($provider_class)->showLoginForm($request);
 	}
