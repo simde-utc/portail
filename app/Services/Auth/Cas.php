@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\AuthCas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Session;
 
 class Cas extends BaseAuth
 {
@@ -16,6 +17,13 @@ class Cas extends BaseAuth
 	public function __construct() {
 		$this->config = config("auth.services." . $this->name);
 		$this->casURL = config('portail.cas.url');
+	}
+
+	public function showLoginForm(Request $request) {
+		if (Auth::guard('cas')->check())
+			return redirect()->route('cas.request');
+		else
+			return parent::showLoginForm($request);
 	}
 
 	public function login(Request $request) {
@@ -57,10 +65,19 @@ class Cas extends BaseAuth
 			];
 		}
 
-		if ((($cas = AuthCas::findByEmail($email)) && ($user = $cas->user)) || User::findByEmail($email))
-			return $this->updateOrCreate($request, 'login', $login, compact('email', 'firstname', 'lastname'), compact('login', 'email'));
+		if (($cas = AuthCas::findByEmail($email)))
+			$user = $cas->user;
 		else {
-			Auth::guard('cas')->login($this->createUser(compact('email', 'firstname', 'lastname')));
+			$user = $this->updateOrCreateUser(compact('email', 'firstname', 'lastname'));
+			$cas = $this->createAuth($user->id, compact('login', 'email'));
+		}
+
+		// On vérifie qu'on a bien lié son CAS à une connexion email/mot de passe
+		if ($user->password()->exists())
+			return $this->connect($request, $user, $cas);
+		else {
+			Auth::guard('cas')->login($user);
+			Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => $this->name]);
 
 			return redirect()->route('cas.request');
 		}
@@ -88,11 +105,7 @@ class Cas extends BaseAuth
 	 * Se déconnecte du CAS de l'UTC
 	 */
 	public function logout(Request $request) {
-		// Si le personne est ou était étudiant, il faut vérifier qu'il est bien passé par le CAS
-		if (Auth::user()->cas->is_active)
-			return redirect(config('portail.cas.url').'logout');
-		else
-			return parent::logout($request);
+		return redirect(config('portail.cas.url').'logout');
 	}
 }
 
