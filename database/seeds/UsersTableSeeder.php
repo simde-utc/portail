@@ -50,13 +50,22 @@ class UsersTableSeeder extends Seeder
 					'simde' => 'developer',
 				],
 			],
-            [
-                'email'     => 'maxime.escourrou@etu.utc.fr',
-                'firstname' => 'Maxime',
-				'lastname'  => 'Escourrou',
+		    [
+			'email'     => 'maxime.escourrou@etu.utc.fr',
+			'firstname' => 'Maxime',
+					'lastname'  => 'Escourrou',
+					'role'		=> 'admin',
+					'assos'		=> [
+						'simde'	=> 'developer',
+					]
+		    ],
+			[
+				'email'     => 'licorne@utc.fr',
+				'firstname' => 'Cesar',
+				'lastname'  => 'Richard',
 				'role'		=> 'admin',
 				'assos'		=> [
-					'simde'	=> 'developer',
+					'simde'	=> 'secretaire general',
 				]
             ]
 
