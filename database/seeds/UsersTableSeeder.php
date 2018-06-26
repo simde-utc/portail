@@ -67,7 +67,16 @@ class UsersTableSeeder extends Seeder
 				'assos'		=> [
 					'simde'	=> 'secretaire general',
 				]
-            ]
+            	],
+			[
+			'email'     => 'romain.maliach-auguste@etu.utc.fr',
+			'firstname' => 'Romain',
+			'lastname'  => 'Maliach-Auguste',
+			'role'		=> 'admin',
+			'assos'		=> [
+						'simde'	=> 'developer',
+					]
+		    	]
 
 		];
 
