@@ -12,7 +12,11 @@ use App\Models\Group;
 class Event extends Model
 {
     protected $fillable = [
-        'name', 'begin_at', 'end_at', 'created_by',
+        'name', 'location_id', 'begin_at', 'end_at', 'full_day', 'created_by',
+    ];
+
+    protected $casts = [
+        'full_day' => 'boolean',
     ];
 
     public function calendars() {

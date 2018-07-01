@@ -161,6 +161,7 @@ return [
 		 * Custom Providers...
 		 */
  		Ixudra\Curl\CurlServiceProvider::class,
+		Grimzy\LaravelMysqlSpatial\SpatialServiceProvider::class,
 		App\Providers\GingerServiceProvider::class,
 		App\Providers\ScopesServiceProvider::class,
 		App\Providers\ValidationServiceProvider::class,

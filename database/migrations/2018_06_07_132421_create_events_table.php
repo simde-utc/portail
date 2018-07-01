@@ -17,7 +17,7 @@ class CreateEventsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('location_id')->unsigned();
-            $table->foreign('location_id')->references('id')->on('locations');
+            $table->foreign('location_id')->references('id')->on('places_locations');
             $table->timestamp('begin_at')->useCurrent();
             $table->timestamp('end_at')->useCurrent();
             $table->boolean('full_day')->default(false); // Les horaires seront ignorés si vrai

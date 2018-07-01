@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
 			ContactsTableSeeder::class,
 			PermissionsTableSeeder::class,
 			RolesTableSeeder::class,
+			PlacesAndLocationsTableSeeder::class,
 		]);
 
 		if (env('APP_DEBUG', false)) {
