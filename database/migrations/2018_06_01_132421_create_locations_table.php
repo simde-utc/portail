@@ -18,6 +18,7 @@ class CreateLocationsTable extends Migration
             $table->string('name', 128);
             $table->integer('place_id')->unsigned();
             $table->foreign('place_id')->references('id')->on('places');
+            $table->point('position')->nullable();
 
   			$table->timestamps();
             $table->unique(['name', 'place_id']);
