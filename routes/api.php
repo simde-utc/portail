@@ -52,6 +52,8 @@ Route::prefix('v1')->group(function () {
 		'user/preferences'							=> 'UserPreferenceController',
 		'users/{user_id}/preferences'				=> 'UserPreferenceController',
 		'roles'										=> 'RoleController',
+		'places'									=> 'PlaceController',
+		'locations'									=> 'LocationController',
 		'rooms'										=> 'RoomController',
 		'partners'									=> 'PartnerController',
 		'articles'									=> 'ArticleController',
