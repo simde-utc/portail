@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Location;
 use App\Models\Asso;
 use App\Models\Room;
 
@@ -15,21 +16,16 @@ class RoomsTableSeeder extends Seeder
     {
         $rooms = [
             [
-                'name'       => 'Salle PVDC',
-                'asso_id'          => Asso::where('login', 'pvdc')->first()->id,
-            ],
-            [
-                'name'       => 'Salle PAE',
-                'asso_id'          => Asso::where('login', 'pae')->first()->id,
-            ],
-            [
-                'name'       => 'Salle de réunion',
-                'asso_id'          => Asso::where('login', 'bde')->first()->id,
+                'location'  => 'BDE-UTC (1er étage)',
+                'asso'      => 'bde',
             ],
         ];
 
-        foreach ($rooms as $room => $values){
-            Room::create($values);
+        foreach ($rooms as $room) {
+            Room::create([
+                'location_id'   => Location::where('name', $room['location'])->first()->id,
+                'asso_id'       => Asso::where('login', $room['asso'])->first()->id,
+            ]);
         }
     }
 }

@@ -22,13 +22,13 @@ class DatabaseSeeder extends Seeder
 			PermissionsTableSeeder::class,
 			RolesTableSeeder::class,
 			PlacesAndLocationsTableSeeder::class,
+			RoomsTableSeeder::class,
 		]);
 
 		if (env('APP_DEBUG', false)) {
 			$this->call([
 				UsersTableSeeder::class,
 				GroupsTableSeeder::class,
-				RoomsTableSeeder::class,
 				ArticlesTableSeeder::class,
 				PartnersTableSeeder::class,
 			]);
