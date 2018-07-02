@@ -1,0 +1,89 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    margin-top: 75px;
+    overflow-x: hidden;
+    background: #EBECF0;
+}
+
+main {
+    height: 100%;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #3C3746;
+}
+
+.drop-shadow {
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.auth-services {
+    background: white;
+    border: none;
+    max-width: 300px;
+    min-height: 170px;
+}
+
+.auth-services .card-header {
+    background: white;
+}
+
+.auth-services .btn-primary {
+    color: black;
+    background: #EBECF0;
+    border: none;
+    max-width: 100%;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.auth-services .btn-primary:hover {
+    background: #DFE1E6;
+    border: none;
+}
+
+.auth-services .col-6 .btn-primary.left {
+    border-bottom-right-radius: 0;
+    border-right: .5px solid #DFE1E6;
+}
+
+.auth-services .col-6 .btn-primary.right {
+    border-bottom-left-radius: 0;
+}
+
+.passport-authorize .container {
+    margin-top: 30px;
+}
+
+.passport-authorize .scopes {
+    margin-top: 20px;
+}
+
+.passport-authorize .buttons {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.passport-authorize .btn {
+    width: 125px;
+}
+
+.passport-authorize .btn-approve {
+    margin-right: 15px;
+}
+
+.passport-authorize form {
+    display: inline;
+}
+
+@media (min-width: 768px) {
+    .auth-services-container {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
