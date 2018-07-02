@@ -25,6 +25,8 @@ class CreateCalendarsTable extends Migration
 
   			$table->timestamps();
             $table->unique(['name', 'owned_by_id', 'owned_by_type']);
+
+            $table->softDeletes();
   		});
     }
 

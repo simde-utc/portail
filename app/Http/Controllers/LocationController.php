@@ -111,7 +111,7 @@ class LocationController extends Controller
 		$location = Location::find($id);
 
 		if ($location) {
-			if ($location->delete())
+			if ($location->softDelete())
 				return response()->json(['message' => 'L\'emplacement a bien été supprimée'], 200);
 			else
 				return response()->json(['message' => 'Erreur lors de la suppression de l\'emplacement'], 500);

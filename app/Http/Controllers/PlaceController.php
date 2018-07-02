@@ -117,7 +117,7 @@ class PlaceController extends Controller
 		$place = Place::find($id);
 
 		if ($place) {
-			if ($place->delete())
+			if ($place->softDelete())
 				return response()->json(['message' => 'Le lieu a bien été supprimé'], 200);
 			else
 				return response()->json(['message' => 'Erreur lors de la suppression de le lieu'], 500);

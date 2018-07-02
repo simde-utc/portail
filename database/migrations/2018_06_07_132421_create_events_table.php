@@ -25,6 +25,8 @@ class CreateEventsTable extends Migration
 
   			$table->timestamps();
             $table->unique(['name', 'location_id', 'begin_at', 'end_at', 'full_day', 'created_by_id', 'created_by_type'], 'events_n_l_b_e_f_c');
+
+            $table->softDeletes();
   		});
     }
 

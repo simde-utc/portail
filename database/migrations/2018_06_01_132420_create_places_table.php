@@ -24,6 +24,8 @@ class CreatePlacesTable extends Migration
             $table->timestamps();
             $table->unique(['address', 'city', 'country']);
             $table->unique('position');
+
+            $table->softDeletes();
   		});
     }
 
