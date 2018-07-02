@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="row auth-services-container">
+<div class="row center-container">
 
 	@foreach (config('auth.services') as $name => $provider)
 		<div class="col-md-6 mb-4 mb-md-0">
@@ -17,18 +17,18 @@
 						@if ($provider['registrable'])
 							<div class="col-6 p-0">
 								<a class="btn btn-primary w-100 left" href="{{ route('register.show', ['provider' => $name]) }}">
-									S'enregistrer
+									Inscription
 								</a>
 							</div>
 							<div class="col-6 p-0">
 								<a class="btn btn-primary w-100 right" href="{{ route('login.show', ['provider' => $name]) }}">
-									Se connecter
+									Connexion
 								</a>
 							</div>
 						@else
 							<div class="col-12 p-0">
 								<a class="btn btn-primary w-100" href="{{ route('login.show', ['provider' => $name]) }}">
-									Se connecter
+									Connexion
 								</a>
 							</div>
 						@endif

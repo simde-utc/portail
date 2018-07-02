@@ -14,6 +14,19 @@ main {
     top: 0;
     width: 100%;
     background-color: #3C3746;
+    z-index: 10;
+}
+
+.btn-primary {
+    color: black;
+    background: #EBECF0;
+    border: none;
+}
+
+.btn-primary:hover {
+    color: black;
+    background: #DFE1E6;
+    border: none;
 }
 
 .drop-shadow {
@@ -25,10 +38,6 @@ main {
     border: none;
     max-width: 300px;
     min-height: 170px;
-}
-
-.auth-services .card-header {
-    background: white;
 }
 
 .auth-services .btn-primary {
@@ -80,7 +89,7 @@ main {
 }
 
 @media (min-width: 768px) {
-    .auth-services-container {
+    .center-container {
         position: absolute;
         left: 50%;
         top: 50%;

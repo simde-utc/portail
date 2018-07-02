@@ -1,12 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-	<div style="position: absolute; width: 100%; top: 50%; transform: translateY(-50%); display: flex; justify-content: center;">
-		<div>
-			<span style="color: green" class="glyphicon glyphicon-ok"></span><br />
-			Vous allez être redirigé(e) vers le CAS-UTC pour vous connecter dans quelques secondes...<br />
+	<div class="row">
+		<div class="col-md-8 drop-shadow mx-auto bg-white p-4" style="border-radius: .25rem;">
+			<span>Vous allez être redirigé(e) vers le CAS-UTC dans quelques secondes...</span>
 			<br />
-			<input type="button" id="connectCAS" value="Se connecter" onClick="window.location.href = '{{ config('portail.cas.url').'login?service='.route('login.process', ['provider' => $provider]) }}'"></input>
+			<input type="button" class="btn btn-primary mt-3" id="connectCAS" value="Se connecter" onClick="window.location.href = '{{ config('portail.cas.url').'login?service='.route('login.process', ['provider' => $provider]) }}'"></input>
 		</div>
 	</div>
 @endsection
