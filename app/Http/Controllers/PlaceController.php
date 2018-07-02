@@ -14,6 +14,33 @@ use App\Http\Controllers\Controller;
  */
 class PlaceController extends Controller
 {
+    public function __construct() {
+		$this->middleware(
+			\Scopes::matchOne(
+				['client-get-locations-places']
+			),
+			['only' => ['index', 'show']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				['client-create-locations-places']
+			),
+			['only' => ['store']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				['client-set-locations-places']
+			),
+			['only' => ['update']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				['client-manage-locations-places']
+			),
+			['only' => ['destroy']]
+		);
+    }
+
 	/**
 	 * List Places
 	 *
@@ -45,8 +72,11 @@ class PlaceController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(int $id): JsonResponse {
-		$place = Place::with('locations')->find($id);
+	public function show(Request $request, int $id): JsonResponse {
+		if (\Scopes::has($request, 'client-get-locations'))
+			$place = Place::with('locations')->find($id);
+		else
+			$place = Place::find($id);
 
 		if ($place)
 			return response()->json($place, 200);
@@ -62,7 +92,10 @@ class PlaceController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, int $id): JsonResponse {
-		$place = Place::with('locations')->find($id);
+		if (\Scopes::has($request, 'client-get-locations'))
+			$place = Place::with('locations')->find($id);
+		else
+			$place = Place::find($id);
 
 		if ($place) {
 			if ($place->update($request->input()))

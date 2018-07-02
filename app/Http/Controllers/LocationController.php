@@ -14,6 +14,33 @@ use App\Http\Controllers\Controller;
  */
 class LocationController extends Controller
 {
+    public function __construct() {
+		$this->middleware(
+			\Scopes::matchOne(
+				['client-get-locations']
+			),
+			['only' => ['index', 'show']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				['client-create-locations']
+			),
+			['only' => ['store']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				['client-set-locations']
+			),
+			['only' => ['update']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				['client-manage-locations']
+			),
+			['only' => ['destroy']]
+		);
+    }
+
 	/**
 	 * List Locations
 	 *
