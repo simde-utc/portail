@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\Traits\HasMembers;
 use \App\Traits\HasStages;
 
-class Asso extends Model
+class Asso extends Model implements CanBeOwner
 {
 	use SoftDeletes, HasStages, HasMembers {
 		HasMembers::members as membersAndFollowers;

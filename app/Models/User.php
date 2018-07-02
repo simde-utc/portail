@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Cog\Contracts\Ownership\CanBeOwner;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\HasRoles;
@@ -12,7 +13,7 @@ use App\Models\UserPreference;
 use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 
-class User extends Authenticatable
+class User extends Authenticatable implements CanBeOwner
 {
 	use HasApiTokens, Notifiable, HasRoles;
 
@@ -161,7 +162,7 @@ class User extends Authenticatable
 	}
 
     public function events() {
-    	return $this->belongsToMany('App\Models\Event');
+    	return $this->morphMany(Event::class, 'created_by');
     }
 
 	/**

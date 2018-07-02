@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasMembers;
 
-class Group extends Model
+class Group extends Model implements CanBeOwner
 {
     use SoftDeletes, HasMembers;
 

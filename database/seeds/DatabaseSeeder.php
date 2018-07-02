@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
 				GroupsTableSeeder::class,
 				ArticlesTableSeeder::class,
 				PartnersTableSeeder::class,
+				EventsTableSeeder::class,
 			]);
 		}
 	}

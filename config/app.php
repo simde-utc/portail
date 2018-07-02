@@ -162,6 +162,7 @@ return [
 		 */
  		Ixudra\Curl\CurlServiceProvider::class,
 		Grimzy\LaravelMysqlSpatial\SpatialServiceProvider::class,
+		Cog\Laravel\Ownership\Providers\OwnershipServiceProvider::class,
 		App\Providers\GingerServiceProvider::class,
 		App\Providers\ScopesServiceProvider::class,
 		App\Providers\ValidationServiceProvider::class,

@@ -36,7 +36,7 @@ class PlacesAndLocationsTableSeeder extends Seeder
 						'name'		=> 'Accueil',
 					],
 					[
-						'name'		=> 'MDE',
+						'name'		=> 'Maison Des Etudiants (MDE)',
 						'position'	=> $locations['FE'],
 					],
 					[
