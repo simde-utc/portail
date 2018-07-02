@@ -161,8 +161,12 @@ class User extends Authenticatable implements CanBeOwner
 		return $this->morphMany(Contact::class, 'contactable');
 	}
 
-    public function events() {
-    	return $this->morphMany(Event::class, 'created_by');
+    public function calendars() {
+    	return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
+    public function followedCalendars() {
+    	return $this->belongsToMany(Calendar::class, 'calendars_followers')->withTimestamps();
     }
 
 	/**

@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
 				ArticlesTableSeeder::class,
 				PartnersTableSeeder::class,
 				EventsTableSeeder::class,
+				CalendarsTableSeeder::class,
 			]);
 		}
 	}

@@ -28,7 +28,7 @@ class Event extends Model implements OwnableContract
     }
 
     public function calendars() {
-        return $this->hasMany(Calendars::class, 'calendars_events');
+        return $this->belongsToMany(Calendars::class, 'calendars_events')->withTimestamps();
     }
 
 	public function user() {
