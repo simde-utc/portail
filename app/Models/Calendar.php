@@ -23,15 +23,19 @@ class Calendar extends Model
     	return $this->hasOne(Visibility::class);
     }
 
-	public function users() {
+	public function user() {
 		return $this->morphTo(User::class, 'owned_by');
 	}
 
-	public function assos() {
+	public function asso() {
 		return $this->morphTo(Asso::class, 'owned_by');
 	}
 
-	public function groups() {
+	public function client() {
+		return $this->morphTo(Client::class, 'owned_by');
+	}
+
+	public function group() {
 		return $this->morphTo(Group::class, 'owned_by');
 	}
 }

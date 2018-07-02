@@ -15,7 +15,7 @@ class CreateCalendarsTable extends Migration
     {
         Schema::create('calendars', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name', 128);
             $table->string('description')->nullable();
             $table->string('color', 9)->nullable();
 			$table->integer('visibility_id')->unsigned();
@@ -24,6 +24,7 @@ class CreateCalendarsTable extends Migration
             $table->morphs('owned_by');
 
   			$table->timestamps();
+            $table->unique(['name', 'owned_by_id', 'owned_by_type']);
   		});
     }
 

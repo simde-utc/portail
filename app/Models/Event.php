@@ -23,15 +23,19 @@ class Event extends Model
         return $this->hasMany(Calendars::class, 'calendars_events');
     }
 
-	public function users() {
+	public function user() {
 		return $this->morphTo(User::class, 'created_by');
 	}
 
-	public function assos() {
+	public function asso() {
 		return $this->morphTo(Asso::class, 'created_by');
 	}
 
-	public function groups() {
+	public function client() {
+		return $this->morphTo(Client::class, 'created_by');
+	}
+
+	public function group() {
 		return $this->morphTo(Group::class, 'created_by');
 	}
 }
