@@ -31106,35 +31106,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     /*
@@ -31920,9 +31891,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     /*
@@ -32028,7 +31996,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_typeof(error.response.data) === 'object') {
                     _this3.form.errors = _.flatten(_.toArray(error.response.data.errors));
                 } else {
-                    _this3.form.errors = ['Something went wrong. Please try again.'];
+                    _this3.form.errors = ['Une erreur est survenue. Veuillez réessayer.'];
                 }
             });
         },
@@ -32092,79 +32060,68 @@ var render = function() {
   return _c("div", [
     _c("div", [
       _c("div", { staticClass: "card drop-shadow mb-4" }, [
-        _c("div", { staticClass: "card-body" }, [
-          _c("div", { staticClass: "row" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-6 text-right" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-primary",
-                  attrs: { tabindex: "-1" },
-                  on: { click: _vm.showCreateTokenForm }
-                },
-                [_vm._v("Créer un token")]
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _vm.tokens.length === 0
-            ? _c("p", { staticClass: "mb-0" }, [
-                _vm._v(
-                  "Vous n'avez pas encore crée de token d'accès personnel."
+        _c(
+          "div",
+          { staticClass: "card-body" },
+          [
+            _c("div", { staticClass: "row" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-6 text-right" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { tabindex: "-1" },
+                    on: { click: _vm.showCreateTokenForm }
+                  },
+                  [_vm._v("Créer un token")]
                 )
               ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.tokens.length > 0
-            ? _c("table", { staticClass: "table table-borderless mb-0" }, [
-                _vm._m(1),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.tokens, function(token) {
-                    return _c("tr", [
+            ]),
+            _vm._v(" "),
+            _vm.tokens.length === 0
+              ? _c("p", { staticClass: "mb-0" }, [
+                  _vm._v(
+                    "Vous n'avez pas encore crée de token d'accès personnel."
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.tokens, function(token) {
+              return _vm.tokens.length > 0
+                ? _c("dl", { staticClass: "row mb-3" }, [
+                    _c("dt", { staticClass: "col-sm-3" }, [
+                      _c("span", { staticClass: "d-block mb-2" }, [
+                        _vm._v(_vm._s(token.name))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("dd", { staticClass: "col-sm-9" }, [
                       _c(
-                        "td",
-                        { staticStyle: { "vertical-align": "middle" } },
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-sm mb-1",
+                          attrs: { tabindex: "-1" },
+                          on: {
+                            click: function($event) {
+                              _vm.revoke(token)
+                            }
+                          }
+                        },
                         [
                           _vm._v(
-                            "\n                                " +
-                              _vm._s(token.name) +
-                              "\n                            "
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        { staticStyle: { "vertical-align": "middle" } },
-                        [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "action-link text-danger",
-                              on: {
-                                click: function($event) {
-                                  _vm.revoke(token)
-                                }
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\n                                    Delete\n                                "
-                              )
-                            ]
+                            "\n                            Supprimer\n                        "
                           )
                         ]
                       )
                     ])
-                  })
-                )
-              ])
-            : _vm._e()
-        ])
+                  ])
+                : _vm._e()
+            })
+          ],
+          2
+        )
       ])
     ]),
     _vm._v(" "),
@@ -32175,14 +32132,14 @@ var render = function() {
         attrs: { id: "modal-create-token", tabindex: "-1", role: "dialog" }
       },
       [
-        _c("div", { staticClass: "modal-dialog" }, [
+        _c("div", { staticClass: "modal-dialog modal-lg" }, [
           _c("div", { staticClass: "modal-content" }, [
-            _vm._m(2),
-            _vm._v(" "),
             _c("div", { staticClass: "modal-body" }, [
+              _vm._m(1),
+              _vm._v(" "),
               _vm.form.errors.length > 0
                 ? _c("div", { staticClass: "alert alert-danger" }, [
-                    _vm._m(3),
+                    _vm._m(2),
                     _vm._v(" "),
                     _c("br"),
                     _vm._v(" "),
@@ -32214,11 +32171,11 @@ var render = function() {
                 },
                 [
                   _c("div", { staticClass: "form-group row" }, [
-                    _c("label", { staticClass: "col-md-4 col-form-label" }, [
-                      _vm._v("Name")
+                    _c("label", { staticClass: "col-md-3 col-form-label" }, [
+                      _vm._v("Nom :")
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col-md-6" }, [
+                    _c("div", { staticClass: "col-md-9" }, [
                       _c("input", {
                         directives: [
                           {
@@ -32247,14 +32204,14 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { staticClass: "col-md-4 col-form-label" }, [
-                      _vm._v("Scopes")
+                  _c("div", { staticClass: "form-group row" }, [
+                    _c("label", { staticClass: "col-md-3 col-form-label" }, [
+                      _vm._v("Scopes :")
                     ]),
                     _vm._v(" "),
                     _c(
                       "div",
-                      { staticClass: "col-md-12" },
+                      { staticClass: "col-md-9" },
                       _vm._l(_vm.scopes, function(description, name) {
                         return name.startsWith("user")
                           ? _c("div", [
@@ -32272,9 +32229,18 @@ var render = function() {
                                     }
                                   }),
                                   _vm._v(
-                                    "\n\n                                                " +
-                                      _vm._s(description) +
-                                      "\n                                        "
+                                    "\n\n                                                 \n\n                                                "
+                                  ),
+                                  _c(
+                                    "span",
+                                    {
+                                      attrs: {
+                                        "data-toggle": "tooltip",
+                                        "data-placement": "right",
+                                        title: description
+                                      }
+                                    },
+                                    [_vm._v(_vm._s(name))]
                                   )
                                 ])
                               ])
@@ -32284,32 +32250,23 @@ var render = function() {
                     )
                   ])
                 ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "modal-footer" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-secondary",
-                  attrs: { type: "button", "data-dismiss": "modal" }
-                },
-                [_vm._v("Close")]
               ),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary",
-                  attrs: { type: "button" },
-                  on: { click: _vm.store }
-                },
-                [
-                  _vm._v(
-                    "\n                        Create\n                    "
+              _c("div", { staticClass: "row" }, [
+                _vm._m(3),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-6 text-right" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "button" },
+                      on: { click: _vm.store }
+                    },
+                    [_vm._v("Créer le token")]
                   )
-                ]
-              )
+                ])
+              ])
             ])
           ])
         ])
@@ -32323,25 +32280,23 @@ var render = function() {
         attrs: { id: "modal-access-token", tabindex: "-1", role: "dialog" }
       },
       [
-        _c("div", { staticClass: "modal-dialog" }, [
+        _c("div", { staticClass: "modal-dialog modal-lg" }, [
           _c("div", { staticClass: "modal-content" }, [
-            _vm._m(4),
-            _vm._v(" "),
             _c("div", { staticClass: "modal-body" }, [
+              _vm._m(4),
+              _vm._v(" "),
               _c("p", [
                 _vm._v(
-                  "\n                        Here is your new personal access token. This is the only time it will be shown so don't lose it!\n                        You may now use this token to make API requests.\n                    "
+                  "\n                        Voici votre token d'accès personnel. C'est la seule fois qu'il sera affiché, ne le perdez pas ! Vous pouvez maintenant utiliser ce token pour faire des requêtes à l'API.\n                    "
                 )
               ]),
               _vm._v(" "),
-              _c(
-                "textarea",
-                { staticClass: "form-control", attrs: { rows: "10" } },
-                [_vm._v(_vm._s(_vm.accessToken))]
-              )
-            ]),
-            _vm._v(" "),
-            _vm._m(5)
+              _c("div", { staticClass: "bg-light rounded-corners p-2 mb-3" }, [
+                _c("code", [_vm._v(_vm._s(_vm.accessToken))])
+              ]),
+              _vm._v(" "),
+              _vm._m(5)
+            ])
           ])
         ])
       ]
@@ -32363,80 +32318,90 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [_c("th", [_vm._v("Name")]), _vm._v(" "), _c("th")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h4", { staticClass: "modal-title" }, [
-        _vm._v("\n                        Create Token\n                    ")
+    return _c("div", { staticClass: "row mb-3" }, [
+      _c("div", { staticClass: "col-6" }, [
+        _c("h4", [_c("b", [_vm._v("Créer un token")])])
       ]),
       _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-hidden": "true"
-          }
-        },
-        [_vm._v("×")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", { staticClass: "mb-0" }, [
-      _c("strong", [_vm._v("Whoops!")]),
-      _vm._v(" Something went wrong!")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h4", { staticClass: "modal-title" }, [
-        _vm._v(
-          "\n                        Personal Access Token\n                    "
+      _c("div", { staticClass: "col-6 text-right" }, [
+        _c(
+          "button",
+          {
+            staticClass: "close",
+            attrs: {
+              type: "button",
+              "data-dismiss": "modal",
+              "aria-hidden": "true"
+            }
+          },
+          [_vm._v("×")]
         )
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-hidden": "true"
-          }
-        },
-        [_vm._v("×")]
-      )
+      ])
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
+    return _c("p", { staticClass: "mb-0" }, [_c("strong", [_vm._v("Erreur")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-6 text-left" }, [
       _c(
         "button",
         {
-          staticClass: "btn btn-secondary",
+          staticClass: "btn btn-primary",
           attrs: { type: "button", "data-dismiss": "modal" }
         },
-        [_vm._v("Close")]
+        [_vm._v("Annuler")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row mb-3" }, [
+      _c("div", { staticClass: "col-6" }, [
+        _c("h4", [_c("b", [_vm._v("Token d'accès personnel")])])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-6 text-right" }, [
+        _c(
+          "button",
+          {
+            staticClass: "close",
+            attrs: {
+              type: "button",
+              "data-dismiss": "modal",
+              "aria-hidden": "true"
+            }
+          },
+          [_vm._v("×")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-6 text-left" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-6 text-right" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary",
+            attrs: { type: "button", "data-dismiss": "modal" }
+          },
+          [_vm._v("Fermer")]
+        )
+      ])
     ])
   }
 ]
@@ -32468,108 +32433,101 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "card drop-shadow mb-4" }, [
-      _c("div", { staticClass: "card-body" }, [
-        _c("div", { staticClass: "row" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-6 text-right" }, [
-            _c(
-              "a",
-              {
-                staticClass: "btn btn-primary",
-                attrs: { tabindex: "-1" },
-                on: { click: _vm.showCreateClientForm }
-              },
-              [_vm._v("Créer un client")]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _vm.clients.length === 0
-          ? _c("p", { staticClass: "mb-0" }, [
-              _vm._v("Vous n'avez pas encore crée de client OAuth.")
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.clients.length > 0
-          ? _c("table", { staticClass: "table table-borderless mb-0" }, [
-              _vm._m(1),
-              _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "card-body" },
+        [
+          _c("div", { staticClass: "row" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-6 text-right" }, [
               _c(
-                "tbody",
-                _vm._l(_vm.clients, function(client) {
-                  return _c("tr", [
-                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
-                      _vm._v(
-                        "\n                                " +
-                          _vm._s(client.id) +
-                          "\n                            "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
-                      _vm._v(
-                        "\n                                " +
-                          _vm._s(client.name) +
-                          "\n                            "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
-                      _vm._v(
-                        "\n                                " +
-                          _vm._s(client.asso_id) +
-                          "\n                            "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
-                      _c("code", [_vm._v(_vm._s(client.secret))])
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-link",
-                          attrs: { tabindex: "-1" },
-                          on: {
-                            click: function($event) {
-                              _vm.see(client)
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                                    Voir\n                                "
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-link",
-                          attrs: { tabindex: "-1" },
-                          on: {
-                            click: function($event) {
-                              _vm.edit(client)
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                                    Modifier\n                                "
-                          )
-                        ]
-                      )
-                    ])
-                  ])
-                })
+                "a",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { tabindex: "-1" },
+                  on: { click: _vm.showCreateClientForm }
+                },
+                [_vm._v("Créer un client")]
               )
             ])
-          : _vm._e()
-      ])
+          ]),
+          _vm._v(" "),
+          _vm.clients.length === 0
+            ? _c("p", { staticClass: "mb-0" }, [
+                _vm._v("Vous n'avez pas encore crée de client OAuth.")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.clients, function(client) {
+            return _vm.clients.length > 0
+              ? _c("dl", { staticClass: "row mb-3" }, [
+                  _c("dt", { staticClass: "col-sm-3" }, [
+                    _c("span", { staticClass: "d-block mb-2" }, [
+                      _vm._v(_vm._s(client.name))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary btn-sm mb-1",
+                        attrs: { tabindex: "-1" },
+                        on: {
+                          click: function($event) {
+                            _vm.see(client)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Voir\n                        "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary btn-sm mb-1",
+                        attrs: { tabindex: "-1" },
+                        on: {
+                          click: function($event) {
+                            _vm.edit(client)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Modifier\n                        "
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("dd", { staticClass: "col-sm-9" }, [
+                    _vm._v(
+                      "\n                        ID Client : " +
+                        _vm._s(client.id) +
+                        " "
+                    ),
+                    _c("br"),
+                    _vm._v(
+                      "\n                        ID Asso : " +
+                        _vm._s(client.asso_id) +
+                        " "
+                    ),
+                    _c("br"),
+                    _vm._v("\n                        Secret : "),
+                    _c("code", [_vm._v(_vm._s(client.secret))]),
+                    _vm._v(" "),
+                    _c("br")
+                  ])
+                ])
+              : _vm._e()
+          })
+        ],
+        2
+      )
     ]),
     _vm._v(" "),
     _c(
@@ -32582,11 +32540,11 @@ var render = function() {
         _c("div", { staticClass: "modal-dialog modal-lg" }, [
           _c("div", { staticClass: "modal-content" }, [
             _c("div", { staticClass: "modal-body" }, [
-              _vm._m(2),
+              _vm._m(1),
               _vm._v(" "),
               _vm.form.errors.length > 0
                 ? _c("div", { staticClass: "alert alert-danger" }, [
-                    _vm._m(3),
+                    _vm._m(2),
                     _vm._v(" "),
                     _c("br"),
                     _vm._v(" "),
@@ -32809,7 +32767,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "row" }, [
-                _vm._m(4),
+                _vm._m(3),
                 _vm._v(" "),
                 _c("div", { staticClass: "col-6 text-right" }, [
                   _c(
@@ -32839,7 +32797,7 @@ var render = function() {
         _c("div", { staticClass: "modal-dialog modal-lg" }, [
           _c("div", { staticClass: "modal-content" }, [
             _c("div", { staticClass: "modal-body" }, [
-              _vm._m(5),
+              _vm._m(4),
               _vm._v(" "),
               _c("form", { attrs: { role: "form" } }, [
                 _c("div", { staticClass: "form-group row" }, [
@@ -33049,7 +33007,7 @@ var render = function() {
                   : _vm._e()
               ]),
               _vm._v(" "),
-              _vm._m(6)
+              _vm._m(5)
             ])
           ])
         ])
@@ -33066,11 +33024,11 @@ var render = function() {
         _c("div", { staticClass: "modal-dialog modal-lg" }, [
           _c("div", { staticClass: "modal-content" }, [
             _c("div", { staticClass: "modal-body" }, [
-              _vm._m(7),
+              _vm._m(6),
               _vm._v(" "),
               _vm.form.errors.length > 0
                 ? _c("div", { staticClass: "alert alert-danger" }, [
-                    _vm._m(8),
+                    _vm._m(7),
                     _vm._v(" "),
                     _c("br"),
                     _vm._v(" "),
@@ -33236,7 +33194,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "row" }, [
-                _vm._m(9),
+                _vm._m(8),
                 _vm._v(" "),
                 _c("div", { staticClass: "col-6 text-right" }, [
                   _c(
@@ -33274,24 +33232,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-6" }, [
       _c("h5", { staticClass: "mb-4" }, [_c("b", [_vm._v("Clients OAuth")])])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("ID Client")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Nom")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("ID Asso")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Secret")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Action")])
-      ])
     ])
   },
   function() {

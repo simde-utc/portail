@@ -15,51 +15,22 @@
                 <p class="mb-0" v-if="clients.length === 0">Vous n'avez pas encore crée de client OAuth.</p>
 
                 <!-- OAuth Clients -->
-                <table class="table table-borderless mb-0" v-if="clients.length > 0">
-                    <thead>
-                        <tr>
-                            <th>ID Client</th>
-                            <th>Nom</th>
-							<th>ID Asso</th>
-                            <th>Secret</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr v-for="client in clients">
-                            <!-- ID -->
-                            <td style="vertical-align: middle;">
-                                {{ client.id }}
-                            </td>
-
-                            <!-- Name -->
-                            <td style="vertical-align: middle;">
-                                {{ client.name }}
-                            </td>
-
-                            <!-- Asso id -->
-                            <td style="vertical-align: middle;">
-                                {{ client.asso_id }}
-                            </td>
-
-                            <!-- Secret -->
-                            <td style="vertical-align: middle;">
-                                <code>{{ client.secret }}</code>
-                            </td>
-
-                            <!-- Actions -->
-                            <td style="vertical-align: middle;">
-                                <button class="btn btn-link" tabindex="-1" @click="see(client)">
-                                    Voir
-                                </button>
-                                <button class="btn btn-link" tabindex="-1" @click="edit(client)">
-                                    Modifier
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <dl class="row mb-3" v-if="clients.length > 0" v-for="client in clients">
+                    <dt class="col-sm-3">
+                        <span class="d-block mb-2">{{ client.name }}</span> 
+                        <button class="btn btn-primary btn-sm mb-1" tabindex="-1" @click="see(client)">
+                            Voir
+                        </button>
+                        <button class="btn btn-primary btn-sm mb-1" tabindex="-1" @click="edit(client)">
+                            Modifier
+                        </button>
+                    </dt>
+                    <dd class="col-sm-9">
+                        ID Client : {{ client.id }} <br/>
+                        ID Asso : {{ client.asso_id }} <br />
+                        Secret : <code>{{ client.secret }}</code> <br />
+                    </dd>
+                </dl>
             </div>
         </div>
 

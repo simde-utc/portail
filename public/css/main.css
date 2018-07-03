@@ -29,8 +29,22 @@ main {
     border: none;
 }
 
+.form-control {
+    background: #EBECF0;
+    border: 0;
+}
+
+.form-control:focus {
+    background: #EBECF0;
+    border: 0;
+}
+
 .drop-shadow {
     box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.bg-light {
+    background: #EBECF0;
 }
 
 .rounded-corners {
