@@ -7,24 +7,19 @@
 <template>
     <div>
         <div>
-            <div class="card card-default">
-                <div class="card-header">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>
-                            Personal Access Tokens
-                        </span>
-
-                        <a class="action-link" tabindex="-1" @click="showCreateTokenForm">
-                            Create New Token
-                        </a>
-                    </div>
-                </div>
-
+            <div class="card drop-shadow mb-4">
                 <div class="card-body">
-                    <!-- No Tokens Notice -->
-                    <p class="mb-0" v-if="tokens.length === 0">
-                        You have not created any personal access tokens.
-                    </p>
+                    <div class="row">
+                        <div class="col-6">
+                            <h5 class="mb-4"><b>Tokens d'accès personnel</b></h5>
+                        </div>
+
+                        <div class="col-6 text-right">
+                            <a class="btn btn-primary" tabindex="-1" @click="showCreateTokenForm">Créer un token</a>
+                        </div>
+                    </div>
+
+                    <p class="mb-0" v-if="tokens.length === 0">Vous n'avez pas encore crée de token d'accès personnel.</p>
 
                     <!-- Personal Access Tokens -->
                     <table class="table table-borderless mb-0" v-if="tokens.length > 0">

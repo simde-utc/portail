@@ -4,19 +4,13 @@
 <div style="height: 100%; vertical-align: middle;">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card card-default">
-                <div class="card-header">Dashboard</div>
+            <h4 class="my-4"><b>Dashboard</b></h4>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    Bonjour, {{ Auth::user()->lastname }} {{ Auth::user()->firstname }} !
+            @if (session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
                 </div>
-            </div>
+            @endif
 			<passport-clients></passport-clients>
 			<passport-authorized-clients></passport-authorized-clients>
 			<passport-personal-access-tokens></passport-personal-access-tokens>
