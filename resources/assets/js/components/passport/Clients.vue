@@ -4,7 +4,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-6">
-                        <h5 class="mb-4"><b>Clients OAuth</b></h5>
+                        <h5><b>Clients OAuth</b></h5>
                     </div>
 
                     <div class="col-6 text-right">
@@ -12,10 +12,10 @@
                     </div>
                 </div>
 
-                <p class="mb-0" v-if="clients.length === 0">Vous n'avez pas encore crée de client OAuth.</p>
+                <p class="mt-3 mb-0" v-if="clients.length === 0">Vous n'avez pas encore crée de client OAuth.</p>
 
                 <!-- OAuth Clients -->
-                <dl class="row mb-3" v-if="clients.length > 0" v-for="client in clients">
+                <dl class="row mt-3 mb-0" v-if="clients.length > 0" v-for="client in clients">
                     <dt class="col-sm-3">
                         <span class="d-block mb-2">{{ client.name }}</span> 
                         <button class="btn btn-primary btn-sm mb-1" tabindex="-1" @click="see(client)">

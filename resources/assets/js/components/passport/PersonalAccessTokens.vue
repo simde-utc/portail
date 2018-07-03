@@ -1,38 +1,30 @@
-<style scoped>
-    .action-link {
-        cursor: pointer;
-    }
-</style>
-
 <template>
     <div>
-        <div>
-            <div class="card drop-shadow mb-4">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <h5 class="mb-4"><b>Tokens d'accès personnel</b></h5>
-                        </div>
-
-                        <div class="col-6 text-right">
-                            <a class="btn btn-primary" tabindex="-1" @click="showCreateTokenForm">Créer un token</a>
-                        </div>
+        <div class="card drop-shadow mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h5><b>Tokens d'accès personnel</b></h5>
                     </div>
 
-                    <p class="mb-0" v-if="tokens.length === 0">Vous n'avez pas encore crée de token d'accès personnel.</p>
-
-                    <!-- Personal Access Tokens -->
-                    <dl class="row mb-3" v-if="tokens.length > 0" v-for="token in tokens">
-                        <dt class="col-sm-3">
-                            <span class="d-block mb-2">{{ token.name }}</span>
-                        </dt>
-                        <dd class="col-sm-9">
-                            <button class="btn btn-primary btn-sm mb-1" tabindex="-1" @click="revoke(token)">
-                                Supprimer
-                            </button>
-                        </dd>
-                    </dl>
+                    <div class="col-6 text-right">
+                        <a class="btn btn-primary" tabindex="-1" @click="showCreateTokenForm">Créer un token</a>
+                    </div>
                 </div>
+
+                <p class="mt-3 mb-0" v-if="tokens.length === 0">Vous n'avez pas encore crée de token d'accès personnel.</p>
+
+                <!-- Personal Access Tokens -->
+                <dl class="row mt-3 mb-0" v-if="tokens.length > 0" v-for="token in tokens">
+                    <dt class="col-sm-3">
+                        <span class="d-block mb-2">{{ token.name }}</span>
+                    </dt>
+                    <dd class="col-sm-9">
+                        <button class="btn btn-primary btn-sm mb-1" tabindex="-1" @click="revoke(token)">
+                            Supprimer
+                        </button>
+                    </dd>
+                </dl>
             </div>
         </div>
 

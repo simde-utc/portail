@@ -63,8 +63,6 @@ main {
     background: #EBECF0;
     border: none;
     max-width: 100%;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
 }
 
 .auth-services .btn-primary:hover {
@@ -72,13 +70,13 @@ main {
     border: none;
 }
 
-.auth-services .col-6 .btn-primary.left {
-    border-bottom-right-radius: 0;
-    border-right: .5px solid #DFE1E6;
+.card-fused-buttons .col-6 .btn-primary.left {
+    border-radius: 0 0 0 .25rem;
+    border-right: 1px solid #DFE1E6;
 }
 
-.auth-services .col-6 .btn-primary.right {
-    border-bottom-left-radius: 0;
+.card-fused-buttons .col-6 .btn-primary.right {
+    border-radius: 0 0 .25rem 0;
 }
 
 .passport-authorize .container {

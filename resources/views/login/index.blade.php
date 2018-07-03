@@ -5,7 +5,7 @@
 
 	@foreach (config('auth.services') as $name => $provider)
 		<div class="col-md-6 mb-4 mb-md-0">
-			<div class="auth-services drop-shadow card mx-auto">
+			<div class="auth-services card-fused-buttons drop-shadow card mx-auto">
 				<div class="card-body">
 					<b class="d-block mb-2">{{ $provider['name'] }}</b>
 
