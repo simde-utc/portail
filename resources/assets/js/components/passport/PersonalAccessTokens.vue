@@ -1,76 +1,50 @@
-<style scoped>
-    .action-link {
-        cursor: pointer;
-    }
-</style>
-
 <template>
     <div>
-        <div>
-            <div class="card card-default">
-                <div class="card-header">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>
-                            Personal Access Tokens
-                        </span>
+        <div class="card drop-shadow mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h5><b>Tokens d'accès personnel</b></h5>
+                    </div>
 
-                        <a class="action-link" tabindex="-1" @click="showCreateTokenForm">
-                            Create New Token
-                        </a>
+                    <div class="col-6 text-right">
+                        <a class="btn btn-primary" tabindex="-1" @click="showCreateTokenForm">Créer un token</a>
                     </div>
                 </div>
 
-                <div class="card-body">
-                    <!-- No Tokens Notice -->
-                    <p class="mb-0" v-if="tokens.length === 0">
-                        You have not created any personal access tokens.
-                    </p>
+                <p class="mt-3 mb-0" v-if="tokens.length === 0">Vous n'avez pas encore crée de token d'accès personnel.</p>
 
-                    <!-- Personal Access Tokens -->
-                    <table class="table table-borderless mb-0" v-if="tokens.length > 0">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr v-for="token in tokens">
-                                <!-- Client Name -->
-                                <td style="vertical-align: middle;">
-                                    {{ token.name }}
-                                </td>
-
-                                <!-- Delete Button -->
-                                <td style="vertical-align: middle;">
-                                    <a class="action-link text-danger" @click="revoke(token)">
-                                        Delete
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <!-- Personal Access Tokens -->
+                <dl class="row mt-3 mb-0" v-if="tokens.length > 0" v-for="token in tokens">
+                    <dt class="col-sm-3">
+                        <span class="d-block mb-2">{{ token.name }}</span>
+                    </dt>
+                    <dd class="col-sm-9">
+                        <button class="btn btn-primary btn-sm mb-1" tabindex="-1" @click="revoke(token)">
+                            Supprimer
+                        </button>
+                    </dd>
+                </dl>
             </div>
         </div>
 
         <!-- Create Token Modal -->
         <div class="modal fade" id="modal-create-token" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">
-                            Create Token
-                        </h4>
-
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-
                     <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <h4><b>Créer un token</b></h4>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                        </div>
+
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="form.errors.length > 0">
-                            <p class="mb-0"><strong>Whoops!</strong> Something went wrong!</p>
+                            <p class="mb-0"><strong>Erreur</strong></p>
                             <br>
                             <ul>
                                 <li v-for="error in form.errors">
@@ -83,18 +57,18 @@
                         <form role="form" @submit.prevent="store">
                             <!-- Name -->
                             <div class="form-group row">
-                                <label class="col-md-4 col-form-label">Name</label>
+                                <label class="col-md-3 col-form-label">Nom :</label>
 
-                                <div class="col-md-6">
+                                <div class="col-md-9">
                                     <input id="create-token-name" type="text" class="form-control" name="name" v-model="form.name">
                                 </div>
                             </div>
 
                             <!-- Scopes -->
-                            <div class="form-group">
-                                <label class="col-md-4 col-form-label">Scopes</label>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Scopes :</label>
 
-                                <div class="col-md-12">
+                                <div class="col-md-9">
                                     <div v-for="(description, name) in scopes" v-if="name.startsWith('user')">
                                         <div class="checkbox">
                                             <label>
@@ -102,22 +76,25 @@
                                                     @click="toggleScope(name)"
                                                     :checked="scopeIsAssigned(name)">
 
-                                                    {{ description }}
+                                                    &nbsp;
+
+                                                    <span data-toggle="tooltip" data-placement="right" :title="description">{{ name }}</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </form>
-                    </div>
 
-                    <!-- Modal Actions -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                        <button type="button" class="btn btn-primary" @click="store">
-                            Create
-                        </button>
+                        <!-- Modal Actions -->
+                        <div class="row">
+                            <div class="col-6 text-left">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="btn btn-primary" @click="store">Créer le token</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -125,28 +102,35 @@
 
         <!-- Access Token Modal -->
         <div class="modal fade" id="modal-access-token" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">
-                            Personal Access Token
-                        </h4>
-
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-
                     <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <h4><b>Token d'accès personnel</b></h4>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                        </div>
+
                         <p>
-                            Here is your new personal access token. This is the only time it will be shown so don't lose it!
-                            You may now use this token to make API requests.
+                            Voici votre token d'accès personnel. C'est la seule fois qu'il sera affiché, ne le perdez pas ! Vous pouvez maintenant utiliser ce token pour faire des requêtes à l'API.
                         </p>
 
-                        <textarea class="form-control" rows="10">{{ accessToken }}</textarea>
-                    </div>
+                        <div class="bg-light rounded-corners p-2 mb-3">
+                            <code>{{ accessToken }}</code>
+                        </div>
 
-                    <!-- Modal Actions -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <!-- Modal Actions -->
+                        <div class="row">
+                            <div class="col-6 text-left">
+                                
+                            </div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -250,7 +234,7 @@
                             if (typeof error.response.data === 'object') {
                                 this.form.errors = _.flatten(_.toArray(error.response.data.errors));
                             } else {
-                                this.form.errors = ['Something went wrong. Please try again.'];
+                                this.form.errors = ['Une erreur est survenue. Veuillez réessayer.'];
                             }
                         });
             },

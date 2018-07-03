@@ -4,10 +4,10 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card card-default">
-                <div class="card-header">Connexion</div>
-
+            <div class="card drop-shadow">
                 <div class="card-body">
+                    <h4 class="mb-4"><b>Connexion</b></h4>
+
                     <form method="POST" action="{{ route('login.process', ['provider' => $provider]) }}">
                         @csrf
 
@@ -18,7 +18,7 @@
                         @endif
 
                         <div class="form-group row">
-                            <label for="email" class="col-sm-4 col-form-label text-md-right">Adresse email</label>
+                            <label for="email" class="col-sm-4 col-form-label">Adresse email :</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
@@ -26,14 +26,14 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">Mot de passe</label>
+                            <label for="password" class="col-md-4 col-form-label">Mot de passe :</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control" name="password" required>
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row mb-2">
                             <div class="col-md-6 offset-md-4">
                                 <div class="checkbox">
                                     <label>
@@ -45,15 +45,9 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Se connecter
+                                <button type="submit" class="btn btn-primary px-4">
+                                    Connexion
                                 </button>
-                                <button type="button" onClick="window.location.href = '{{ route('register.show', ['provider' => 'password']) }}'" class="btn btn-secondary">
-                                    S'inscrire
-                                </button>
-                            </div>
-
-                            <div class="col-md-8 offset-md-4">
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     Mot de passe oublié
                                 </a>
