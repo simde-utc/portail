@@ -93,7 +93,7 @@
                     <div class="modal-body">
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="form.errors.length > 0">
-                            <p class="mb-0"><strong>Whoops!</strong> Something went wrong!</p>
+                            <p class="mb-0"><strong>Erreur</strong></p>
                             <br>
                             <ul>
                                 <li v-for="error in form.errors">
@@ -109,7 +109,7 @@
                                 <label class="col-md-3 col-form-label">Name</label>
 
                                 <div class="col-md-9">
-                                    <input id="create-client-name" type="text" class="form-control"
+                                    <input id="create-client-name" type="text" class="form-control" value="TEST" 
                                                                 @keyup.enter="store" v-model="form.name">
 
                                     <span class="form-text text-muted">
@@ -137,7 +137,7 @@
                                 <label class="col-md-3 col-form-label">Redirect URL</label>
 
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="redirect"
+                                    <input type="text" class="form-control" name="redirect" value="http://example.com" 
                                                     @keyup.enter="store" v-model="form.redirect">
 
                                     <span class="form-text text-muted">
@@ -194,7 +194,7 @@
                     <div class="modal-body">
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="form.errors.length > 0">
-                            <p class="mb-0"><strong>Whoops!</strong> Something went wrong!</p>
+                            <p class="mb-0"><strong>Erreur</strong></p>
                             <br>
                             <ul>
                                 <li v-for="error in form.errors">
@@ -286,7 +286,7 @@
                     <div class="modal-body">
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="form.errors.length > 0">
-                            <p class="mb-0"><strong>Whoops!</strong> Something went wrong!</p>
+                            <p class="mb-0"><strong>Erreur</strong></p>
                             <br>
                             <ul>
                                 <li v-for="error in form.errors">
@@ -546,10 +546,11 @@
                         $(modal).modal('hide');
                     })
                     .catch(error => {
+                        console.log(error.response.data);
                         if (typeof error.response.data === 'object') {
                             form.errors = _.flatten(_.toArray(error.response.data.errors));
                         } else {
-                            form.errors = ['Something went wrong. Please try again.'];
+                            form.errors = ['Une erreur est survenue. Veuillez réessayer'];
                         }
                     });
             },
