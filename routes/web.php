@@ -24,4 +24,3 @@ Route::match(['get', 'post'], 'register/{provider?}/process', 'Auth\RegisterCont
 
 // Vues temporaires, uniquement de l'affichage de liens
 Route::get('/', 'HomeController@welcome')->name('welcome');
-Route::get('home', 'HomeController@index')->name('home');
