@@ -20,8 +20,9 @@ class RolesTableSeeder extends Seeder
 				'description' => 'Personne ayant réellement tous les droits sur le service',
 				'limited_at' => 1,
 				'permissions' => [
-					'superadmin',
-					'admin',
+					'utilisateur',
+					'asso',
+					'groupe',
 				]
 			],
 			[
@@ -32,7 +33,9 @@ class RolesTableSeeder extends Seeder
 					'superadmin',
 				],
 				'permissions' => [
-					'admin',
+					'utilisateur',
+					'asso',
+					'groupe',
 				]
 			],
 			[
@@ -43,6 +46,10 @@ class RolesTableSeeder extends Seeder
 				'only_for' => 'assos',
 				'permissions' => [
 					'tresorie',
+                    'billetterie',
+                    'calendrier',
+                    'evenement',
+                    'article',
 				]
 			],
 			[
@@ -56,6 +63,10 @@ class RolesTableSeeder extends Seeder
 				],
 				'permissions' => [
 					'tresorie',
+                    'billetterie',
+                    'calendrier',
+                    'evenement',
+                    'article',
 				]
 			],
 			[
@@ -64,8 +75,13 @@ class RolesTableSeeder extends Seeder
 				'description' => 'Administrateur de l\'organisation',
 				'limited_at' => 1,
 				'only_for' => 'assos',
-				'parents' => [
-					'vice-president',
+                'parents' => [
+                    'vice-president',
+                ],
+                'permissions' => [
+                    'calendrier',
+                    'evenement',
+                    'article',
 				],
 			],
 			[
@@ -74,8 +90,13 @@ class RolesTableSeeder extends Seeder
 				'description' => 'Adjoint du secrétaire',
 				'limited_at' => 4,
 				'only_for' => 'assos',
-				'parents' => [
-					'secretaire general',
+                'parents' => [
+                    'secretaire general',
+                ],
+				'permissions' => [
+                    'calendrier',
+                    'evenement',
+                    'article',
 				],
 			],
 			[
@@ -89,6 +110,7 @@ class RolesTableSeeder extends Seeder
 				],
 				'permissions' => [
 					'tresorie',
+                    'evenement',
 				]
 			],
 			[
@@ -102,6 +124,7 @@ class RolesTableSeeder extends Seeder
 				],
 				'permissions' => [
 					'tresorie',
+                    'evenement',
 				]
 			],
 			[
@@ -116,6 +139,9 @@ class RolesTableSeeder extends Seeder
                     'tresorier',
 					'vice-tresorier',
 				],
+				'permissions' => [
+                    'evenement',
+				]
 			],
 			[
 				'type' => 'resp informatique',
@@ -125,6 +151,11 @@ class RolesTableSeeder extends Seeder
 				'only_for' => 'assos',
 				'parents' => [
 					'bureau',
+				],
+				'permissions' => [
+                    'calendrier',
+                    'evenement',
+                    'article'
 				],
 			],
 			[
@@ -145,6 +176,10 @@ class RolesTableSeeder extends Seeder
 				'parents' => [
 					'bureau',
 				],
+				'permissions' => [
+                    'evenement',
+                    'article'
+				],
 			],
 			[
 				'type' => 'communication',
@@ -164,9 +199,12 @@ class RolesTableSeeder extends Seeder
 				'parents' => [
 					'bureau',
 				],
+				'permissions' => [
+                    'evenement',
+				],
 			],
 			[
-				'type' => 'annimation',
+				'type' => 'animation',
 				'name' => 'Chargé de l\'animation',
 				'description' => 'Membre de l\'équipe animation de l\'association',
 				'only_for' => 'assos',
@@ -182,6 +220,9 @@ class RolesTableSeeder extends Seeder
 				'only_for' => 'assos',
 				'parents' => [
 					'bureau',
+				],
+				'permissions' => [
+                    'evenement',
 				],
 			],
 			[
@@ -202,6 +243,9 @@ class RolesTableSeeder extends Seeder
 				'parents' => [
 					'bureau',
 				],
+				'permissions' => [
+                    'evenement',
+				],
 			],
 			[
 				'type' => 'logistique',
@@ -220,6 +264,9 @@ class RolesTableSeeder extends Seeder
 				'parents' => [
 					'bureau',
 				],
+				'permissions' => [
+                    'evenement',
+				],
 			],
 			[
 				'type' => 'membre',
@@ -236,6 +283,9 @@ class RolesTableSeeder extends Seeder
 				'description' => 'Administrateur du groupe',
 				'limited_at' => 1,
 				'only_for' => 'groups',
+				'permissions' => [
+                    'group member',
+				],
 			],
 		];
 
