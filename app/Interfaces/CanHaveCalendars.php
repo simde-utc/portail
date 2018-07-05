@@ -8,4 +8,6 @@ Interface CanHaveCalendars {
      * @return boolean
      */
     public function isCalendarAccessibleBy(int $user_id): bool;
+
+    public function isCalendarManageableBy(int $user_id): bool;
 }

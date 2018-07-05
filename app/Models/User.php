@@ -239,4 +239,8 @@ class User extends Authenticatable implements CanBeOwner, CanHaveCalendars
 	public function isCalendarAccessibleBy(int $user_id): bool {
 		return $this->id == $user_id;
 	}
+
+	public function isCalendarManageableBy(int $user_id): bool {
+		return $this->id == $user_id;
+	}
 }

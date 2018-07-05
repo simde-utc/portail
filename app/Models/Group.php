@@ -45,4 +45,8 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars
 	public function isCalendarAccessibleBy(int $user_id): bool {
 		return $this->currentMembers()->wherePivot($user_id)->exists();
 	}
+
+	public function isCalendarManageableBy(int $user_id): bool {
+		return $this->user_id === $user_id;
+	}
 }

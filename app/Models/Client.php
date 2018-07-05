@@ -16,6 +16,10 @@ class Client extends PassportClient implements CanHaveCalendars
     }
 
 	public function isCalendarAccessibleBy(int $user_id): bool {
-		return $this->asso()->currentMembers()->wherePivot($user_id)->exists();
+		return $this->asso()->isCalendarAccessibleBy($user_id);
+	}
+
+	public function isCalendarManageableBy(int $user_id): bool {
+		return $this->asso()->isCalendarManageableBy($user_id);
 	}
 }
