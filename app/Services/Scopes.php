@@ -30,6 +30,9 @@ class Scopes {
 	 */
 	protected $scopes;
 
+	// Correspond au header spécifiant le type de requête pour un token transient (correspond au token du portail front)
+	const HEADER_REQUEST_TYPE = 'X-Portail-Request-Type';
+
 	public function __construct() {
 		$this->scopes = config('scopes');
 	}
@@ -437,16 +440,18 @@ class Scopes {
 	 * @return boolean
 	 */
 	public function isUserToken(Request $request) {
-		return $request->user() !== null;
+		return $request->user() !== null
+			|| ($this->getToken($request)->transient() && $request->header(self::HEADER_REQUEST_TYPE) == 'user');
 	}
 
 	/**
-	 * Retourne si le token est du type User
+	 * Retourne si le token est du type Client ou si le token est transient et de type client
 	 * @param  Request $request
 	 * @return boolean
 	 */
 	public function isClientToken(Request $request) {
-		return $request->user() === null;
+		return $request->user() === null
+			|| ($this->getToken($request)->transient() && $request->header(self::HEADER_REQUEST_TYPE) == 'client');
 	}
 
 	public function isUserOrClientToken(Request $request) {
