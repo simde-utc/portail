@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Cog\Contracts\Ownership\CanBeOwner;
+use App\Interfaces\CanHaveCalendars;
+use App\Interfaces\CanHaveEvents;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\HasRoles;
@@ -13,7 +15,7 @@ use App\Models\UserPreference;
 use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 
-class User extends Authenticatable implements CanBeOwner
+class User extends Authenticatable implements CanBeOwner, CanHaveCalendars
 {
 	use HasApiTokens, Notifiable, HasRoles;
 
@@ -232,5 +234,9 @@ class User extends Authenticatable implements CanBeOwner
             return $contact->contactable_id == Auth::user()->id;
         } else
         	return false;
+	}
+
+	public function isCalendarAccessibleBy(int $user_id): bool {
+		return $this->id == $user_id;
 	}
 }

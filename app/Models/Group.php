@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasMembers;
+use App\Interfaces\CanHaveCalendars;
 
-class Group extends Model implements CanBeOwner
+class Group extends Model implements CanBeOwner, CanHaveCalendars
 {
     use SoftDeletes, HasMembers;
 
@@ -39,5 +40,9 @@ class Group extends Model implements CanBeOwner
     // Mais on permet sa suppression s'il est assigné à un seul groupe
 	public function isRoleForIdDeletable($role, $id) {
 		return true;
+	}
+
+	public function isCalendarAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot($user_id)->exists();
 	}
 }

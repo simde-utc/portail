@@ -46,12 +46,15 @@ class LinkTokenToSession
                     @list($name, $value) = explode(' ', preg_replace('/\s+/', ' ', $header));
 
                     if ($name === 'Location:') {
-                        list(, $args) = explode('#', $value);
-                        $atQuery = explode('&', $args)[0];
+                        @list(, $args) = explode('#', $value);
 
-                        $this->attachToken(explode('=', $atQuery)[1], true);
+                        if (isset($args)) {
+                            $atQuery = explode('&', $args)[0];
 
-                        break;
+                            $this->attachToken(explode('=', $atQuery)[1], true);
+
+                            break;
+                        }
                     }
                 }
             }

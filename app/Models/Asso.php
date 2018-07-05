@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\Traits\HasMembers;
 use \App\Traits\HasStages;
+use App\Interfaces\CanHaveCalendars;
 
-class Asso extends Model implements CanBeOwner
+class Asso extends Model implements CanBeOwner, CanHaveCalendars
 {
 	use SoftDeletes, HasStages, HasMembers {
 		HasMembers::members as membersAndFollowers;
@@ -145,5 +146,9 @@ class Asso extends Model implements CanBeOwner
             return ($this->hasOneRole('resp communication', ['user_id' => \Auth::id()]) || \Auth::user()->hasOneRole('admin'));
         } else
         	return false;
+	}
+
+	public function isCalendarAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot($user_id)->exists();
 	}
 }

@@ -19,7 +19,15 @@ class Calendar extends Model implements OwnableContract
         'name', 'description', 'color', 'visibility_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
     ];
 
+    protected $hidden = [
+        'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
+    ];
+
     public function owned_by() {
+        return $this->morphTo();
+    }
+
+    public function created_by() {
         return $this->morphTo();
     }
 
@@ -28,7 +36,7 @@ class Calendar extends Model implements OwnableContract
     }
 
 	public function visibility() {
-    	return $this->hasOne(Visibility::class);
+    	return $this->belongsTo(Visibility::class);
     }
 
 	public function user() {

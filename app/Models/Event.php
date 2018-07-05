@@ -10,21 +10,30 @@ use App\Models\Visibility;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Group;
+use App\Traits\HasVisibility;
 
 class Event extends Model implements OwnableContract
 {
-    use HasMorphOwner;
+    use HasMorphOwner, HasVisibility;
 
     protected $fillable = [
-        'name', 'location_id', 'begin_at', 'end_at', 'full_day', 'owned_by_id', 'owned_by_type',
+        'name', 'location_id', 'visibility_id', 'begin_at', 'end_at', 'full_day', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
     ];
 
     protected $casts = [
         'full_day' => 'boolean',
     ];
 
+    protected $hidden = [
+        'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
+    ];
+
     public function owned_by() {
         return $this->morphTo();
+    }
+
+	public function visibility() {
+    	return $this->belongsTo(Visibility::class);
     }
 
     public function calendars() {
