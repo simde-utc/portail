@@ -19527,7 +19527,7 @@ var Example = function (_Component) {
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
                                 { className: 'card-body' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('ul', null)
+                                'I\'m an example component!'
                             )
                         )
                     )

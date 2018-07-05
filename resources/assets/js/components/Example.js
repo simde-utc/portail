@@ -2,6 +2,22 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 export default class Example extends Component {
+    constructor(props) { 
+        super(props); 
+ 
+        this.state = { 
+            assos: [] 
+        } 
+    } 
+ 
+    componentDidMount() { 
+        axios.get('/api/v1/assos') 
+            .then(response => { 
+                console.log(response); 
+                this.setState({ assos: response.data }); 
+            }); 
+    }
+
     render() {
         return (
             <div className="container">
