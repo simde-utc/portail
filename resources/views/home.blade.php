@@ -11,9 +11,12 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <passport-authorized-clients></passport-authorized-clients>
+
+            <div id="example">
+
+            {{-- <passport-authorized-clients></passport-authorized-clients>
 			<passport-clients></passport-clients>
-			<passport-personal-access-tokens></passport-personal-access-tokens>
+			<passport-personal-access-tokens></passport-personal-access-tokens> --}}
         </div>
     </div>
 </div>
