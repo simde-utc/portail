@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 
-export default class Example extends Component {
+class Example extends Component {
     constructor(props) { 
         super(props); 
  
@@ -16,7 +15,6 @@ export default class Example extends Component {
                 'X-Portail-Request-Type': 'client',
             }
         }).then(response => { 
-            console.log(response); 
             this.setState({ assos: response.data });
         });
     }
@@ -40,6 +38,4 @@ export default class Example extends Component {
     }
 }
 
-if (document.getElementById('example')) {
-    ReactDOM.render(<Example />, document.getElementById('example'));
-}
+export default Example;
