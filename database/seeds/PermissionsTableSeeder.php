@@ -14,25 +14,25 @@ class PermissionsTableSeeder extends Seeder
     {
 		$permissions = [
 			[
-				'type' => 'tresorie',
-				'name' => 'Trésorie',
-				'description' => 'Gestion de la trésorie de l\'association',
+				'type' => 'treasury',
+				'name' => 'Trésorerie',
+				'description' => 'Gestion de la trésorerie de l\'association',
                 'only_for' => 'assos',
 			],
 			[
-				'type' => 'billetterie',
+				'type' => 'ticketing',
 				'name' => 'Billetterie',
 				'description' => 'Gestion de la billetterie de l\'association',
                 'only_for' => 'assos',
 			],
 			[
-				'type' => 'calendrier',
+				'type' => 'calendar',
 				'name' => 'Calendrier',
 				'description' => 'Gestion des calendriers de l\'association',
                 'only_for' => 'assos',
 			],
 			[
-				'type' => 'evenement',
+				'type' => 'event',
 				'name' => 'Evènement',
 				'description' => 'Gestion des évènements de l\'association',
                 'only_for' => 'assos',
@@ -44,13 +44,13 @@ class PermissionsTableSeeder extends Seeder
                 'only_for' => 'assos',
 			],
 			[
-				'type' => 'groupe membre',
+				'type' => 'group member',
 				'name' => 'Membre',
 				'description' => 'Gestion des membres du groupe',
                 'only_for' => 'groups',
 			],
 			[
-				'type' => 'utilisateur',
+				'type' => 'user',
 				'name' => 'Utilisateur',
 				'description' => 'Gestion des utilisateurs',
 			],
@@ -60,7 +60,7 @@ class PermissionsTableSeeder extends Seeder
 				'description' => 'Gestion des associations',
 			],
 			[
-				'type' => 'groupe',
+				'type' => 'group',
 				'name' => 'Groupe',
 				'description' => 'Gestion des groupes',
 			],
