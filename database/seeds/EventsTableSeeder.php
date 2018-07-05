@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Location;
+use App\Models\Visibility;
 use App\Models\EventDetail;
 use App\Models\Event;
 use Carbon\Carbon;
@@ -23,23 +24,36 @@ class EventsTableSeeder extends Seeder
 				'location'	=> 'Picasso (RDC)',
 				'begin_at'	=> '2018-04-01 16:30',
 				'end_at'	=> '2018-04-01 21:30',
+				'visibility'=> 'private',
+				'created_by'=> User::find(1),
 				'owner'		=> User::find(1),
 			],
 			[
-				'name'     	=> 'LA13',
+				'name'     	=> 'Petite chose perso',
+				'location'	=> 'Picasso (RDC)',
+				'begin_at'	=> '2018-03-05 16:30',
+				'end_at'	=> '2018-03-05 21:30',
+				'visibility'=> 'private',
+				'created_by'=> User::find(1),
+				'owner'		=> User::find(1),
+			],
+			[
+				'name'     	=> 'TD LA13',
 				'location'	=> 'Bâtiment B',
-				'begin_at'	=> '2018-04-01 16:30',
-				'end_at'	=> '2018-04-01 21:30',
+				'begin_at'	=> '2018-04-01 10:15',
+				'end_at'	=> '2018-04-01 12:15',
+				'visibility'=> 'cas',
 				'owner'		=> Asso::find(6), // Théoriquement ici, ça devrait être le client emploidutemps
 				'details'	=> [
 					'semester' => 'P18',
 				],
 			],
 			[
-				'name'     	=> 'MT90/91',
+				'name'     	=> 'Amphi MT90/91',
 				'location'	=> 'Bâtiment A',
-				'begin_at'	=> '2018-04-01 16:30',
-				'end_at'	=> '2018-04-01 21:30',
+				'begin_at'	=> '2018-04-01 08:00',
+				'end_at'	=> '2018-04-01 10:00',
+				'visibility'=> 'cas',
 				'owner'		=> Asso::find(6), // Théoriquement ici, ça devrait être le client emploidutemps
 				'details'	=> [
 					'semester' => 'P18',
@@ -50,6 +64,8 @@ class EventsTableSeeder extends Seeder
 				'location'	=> 'Salle de réunion 1 (1er étage)',
 				'begin_at'	=> '2018-04-03 16:30',
 				'end_at'	=> '2018-04-03 18:30',
+				'visibility'=> 'private',
+				'created_by'=> User::find(1),
 				'owner'		=> Asso::find(6),
 				'details'	=> [
 					'description' 	=> 'Réunion de présentation et de recrutement',
@@ -63,6 +79,8 @@ class EventsTableSeeder extends Seeder
 				'location'	=> 'Salle de réunion 1 (1er étage)',
 				'begin_at'	=> '2018-04-10 16:30',
 				'end_at'	=> '2018-04-10 18:30',
+				'visibility'=> 'private',
+				'created_by'=> User::find(2),
 				'owner'		=> Asso::find(6),
 				'details'	=> [
 					'description' 	=> 'Réunion de préparation',
@@ -78,7 +96,9 @@ class EventsTableSeeder extends Seeder
 				'begin_at'	=> '2018-09-07',
 				'end_at'	=> '2018-09-07',
 				'full_day'	=> true,
+				'created_by'=> User::find(3),
 				'owner'		=> Asso::find(1),
+				'visibility'=> 'public',
 				'details'	=> [
 					'categories' 	=> [
 						'ASSOS', 'RENCONTRES'
@@ -89,11 +109,14 @@ class EventsTableSeeder extends Seeder
 
 		foreach ($events as $event) {
 			$model = Event::create([
-				'name'			=> $event['name'],
-				'location_id'	=> Location::where('name', $event['location'])->first()->id,
-				'begin_at'		=> Carbon::parse($event['begin_at']),
-				'end_at'		=> Carbon::parse($event['end_at']),
-				'full_day'		=> $event['full_day'] ?? false,
+				'name'				=> $event['name'],
+				'location_id'		=> Location::where('name', $event['location'])->first()->id,
+				'begin_at'			=> Carbon::parse($event['begin_at']),
+				'end_at'			=> Carbon::parse($event['end_at']),
+				'visibility_id'		=> Visibility::findByType($event['visibility'])->first()->id,
+				'full_day'			=> $event['full_day'] ?? false,
+				'created_by_id'		=> isset($event['created_by']) ? $event['created_by']->id : null,
+				'created_by_type'	=> isset($event['created_by']) ? get_class($event['created_by']) : null,
 			])->changeOwnerTo($event['owner']);
 
 			$model->save();

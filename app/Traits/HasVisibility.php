@@ -126,16 +126,15 @@ trait HasVisibility
 		if ($model === null)
 			return false;
 
+		if ($model->user_id && $model->user_id == $user_id)
+			return true;
+
 		try {
 			return $model->currentAllMembers()->wherePivot('user_id', $user_id)->count() > 0;
 		}
 		catch (Exception $e) {}
 
         return false;
-    }
-
-    public function isOwner($user_id, $model) {
-        return $model->user_id === $user_id;
     }
 
     public function isInternal($user_id, $model = null) {

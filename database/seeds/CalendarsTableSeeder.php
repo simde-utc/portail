@@ -23,17 +23,19 @@ class CalendarsTableSeeder extends Seeder
 				'name'     		=> 'Personnel',
 				'description'	=> 'Calendrier personnel',
 				'color'			=> '#00FF00',
-				'visibility'	=> 'owner', // Private ou owner revient au même pour un user
+				'visibility'	=> 'private',
+				'created_by'	=> User::find(1),
 				'owner'			=> User::find(1),
 				'events'		=> [
 					'Petit pic des familles',
+					'Petite chose perso'
 				],
 			],
 			[
 				'name'     		=> 'Assos',
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
-				'visibility'	=> 'owner', // Private ou owner revient au même pour un user
+				'visibility'	=> 'private',
 				'owner'			=> User::find(1),
 				'events'		=> [
 					'Première réunion - Portail',
@@ -44,7 +46,7 @@ class CalendarsTableSeeder extends Seeder
 				'name'     		=> 'Assos',
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
-				'visibility'	=> 'owner', // Private ou owner revient au même pour un user
+				'visibility'	=> 'private',
 				'owner'			=> User::find(2),
 				'events'		=> [
 					'Seconde réunion - Portail',
@@ -54,7 +56,7 @@ class CalendarsTableSeeder extends Seeder
 				'name'     		=> 'Assos',
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
-				'visibility'	=> 'owner', // Private ou owner revient au même pour un user
+				'visibility'	=> 'private',
 				'owner'			=> User::find(3),
 				'events'		=> [
 					'Première réunion - Portail',
@@ -65,7 +67,7 @@ class CalendarsTableSeeder extends Seeder
 				'name'     		=> 'Assos',
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
-				'visibility'	=> 'owner', // Private ou owner revient au même pour un user
+				'visibility'	=> 'private',
 				'owner'			=> User::find(4),
 				'events'		=> [
 					'Seconde réunion - Portail',
@@ -157,10 +159,12 @@ class CalendarsTableSeeder extends Seeder
 
 		foreach ($calendars as $calendar) {
 			$model = Calendar::create([
-				'name'			=> $calendar['name'],
-				'description'	=> $calendar['description'],
-				'color'			=> $calendar['color'],
-				'visibility_id'	=> Visibility::findByType($calendar['visibility'])->id,
+				'name'				=> $calendar['name'],
+				'description'		=> $calendar['description'],
+				'color'				=> $calendar['color'],
+				'visibility_id'		=> Visibility::findByType($calendar['visibility'])->id,
+				'created_by_id'		=> isset($calendar['created_by']) ? $calendar['created_by']->id : null,
+				'created_by_type'	=> isset($calendar['created_by']) ? get_class($calendar['created_by']) : null,
 			])->changeOwnerTo($calendar['owner']);
 
 			$model->save();

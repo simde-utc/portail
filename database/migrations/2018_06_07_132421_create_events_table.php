@@ -21,6 +21,9 @@ class CreateEventsTable extends Migration
             $table->timestamp('begin_at')->useCurrent();
             $table->timestamp('end_at')->useCurrent();
             $table->boolean('full_day')->default(false); // Les horaires seront ignorés si vrai
+			$table->integer('visibility_id')->unsigned();
+			$table->foreign('visibility_id')->references('id')->on('visibilities');
+            $table->nullableMorphs('created_by');
             $table->nullableMorphs('owned_by');
 
   			$table->timestamps();
