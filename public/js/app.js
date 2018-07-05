@@ -19499,7 +19499,11 @@ var Example = function (_Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
-            axios.get('/api/v1/assos').then(function (response) {
+            axios.get('/api/v1/assos', {
+                headers: {
+                    'X-Portail-Request-Type': 'client'
+                }
+            }).then(function (response) {
                 console.log(response);
                 _this2.setState({ assos: response.data });
             });

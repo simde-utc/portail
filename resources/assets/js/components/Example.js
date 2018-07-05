@@ -11,11 +11,14 @@ export default class Example extends Component {
     } 
  
     componentDidMount() { 
-        axios.get('/api/v1/assos') 
-            .then(response => { 
-                console.log(response); 
-                this.setState({ assos: response.data }); 
-            }); 
+        axios.get('/api/v1/assos', {
+            headers: {
+                'X-Portail-Request-Type': 'client',
+            }
+        }).then(response => { 
+            console.log(response); 
+            this.setState({ assos: response.data });
+        });
     }
 
     render() {
