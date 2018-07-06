@@ -48,6 +48,8 @@ class Clients extends Component {
 
     viewClient(client, e) {
         this.setState({ client: client });
+
+        //$('#viewClient').modal('show');
     }
 
     handleInputChange(e) {
@@ -88,20 +90,18 @@ class Clients extends Component {
         axios({ method: method, url: url, data: form })
             .then(response => {
                 this.getClients();
+                
+                document.getElementById("hideModalBtn").click();
 
-                console.log(response);
+                var form = {
+                    errors: [],
+                    name: '',
+                    asso_id: '',
+                    redirect: '',
+                    scopes: []
+                }
 
-                $("#createModal").modal('hide');
-
-                // var form = {
-                //     errors: [],
-                //     name: '',
-                //     asso_id: '',
-                //     redirect: '',
-                //     scopes: []
-                // }
-
-                // this.setState({ form: form });
+                this.setState({ form: form });
             })
             .catch(error => {                
                 form.errors = ['Une erreur est survenue. Veuillez réessayer'];
@@ -158,7 +158,7 @@ class Clients extends Component {
                                         <h4><b>Créer un client</b></h4>
                                     </div>
                                     <div className="col-6 text-right">
-                                        <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <button id="hideModalBtn" type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     </div>
                                 </div>
 
@@ -238,77 +238,74 @@ class Clients extends Component {
                         </div>
                     </div>
                 </div>
+
+                <div className="modal fade" id="viewModal" tabindex="-1" role="dialog">
+                    <div className="modal-dialog modal-lg">
+                        <div className="modal-content">
+                            <div className="modal-body">
+                                <div className="row mb-3">
+                                    <div className="col-6">
+                                        <h4><b>Voir</b></h4>
+                                    </div>
+                                    <div className="col-6 text-right">
+                                        <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    </div>
+                                </div>
+
+                                <form role="form">
+                                    <div className="form-group row">
+                                        <label className="col-md-3 col-form-label">Nom :</label>
+
+                                        <div className="col-md-9">
+                                            <input type="text" disabled className="form-control" />
+
+                                            <span className="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group row">
+                                        <label className="col-md-3 col-form-label">ID Asso :</label>
+
+                                        <div className="col-md-9">
+                                            <input type="number" min="0" disabled className="form-control" />
+
+                                            <span className="form-text text-muted">L'ID de l'asso pour qui la clé est créee.</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group row">
+                                        <label className="col-md-3 col-form-label">Redirection :</label>
+
+                                        <div className="col-md-9">
+                                            <input type="text" className="form-control" disabled name="redirect" />
+
+                                            <span className="form-text text-muted">Adresse de redirection après authentification.</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group row" v-if="form.scopes.length > 0">
+                                        <label className="col-md-3 col-form-label">Scopes :</label>
+
+                                        <div className="col-md-9">
+                                            <span className="d-block mb-1" v-for="scope in form.scopes">
+                                                <code>scope</code> : scopes[scope]
+                                            </span>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <div className="row">
+                                    <div className="col-12 text-right">
+                                        <button type="button" className="btn btn-primary" data-dismiss="modal">Fermer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
 
-
-        // <div className="modal fade" id="modal-see-client" tabindex="-1" role="dialog">
-        //     <div className="modal-dialog modal-lg">
-        //         <div className="modal-content">
-        //             <div className="modal-body">
-        //                 <div className="row mb-3">
-        //                     <div className="col-6">
-        //                         <h4><b>Voir</b></h4>
-        //                     </div>
-        //                     <div className="col-6 text-right">
-        //                         <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        //                     </div>
-        //                 </div>
-
-        //                 <form role="form">
-        //                     <div className="form-group row">
-        //                         <label className="col-md-3 col-form-label">Nom :</label>
-
-        //                         <div className="col-md-9">
-        //                             <input id="edit-client-name" type="text" disabled className="form-control"
-        //                                                         keyup.enter="update" v-model="form.name">
-
-        //                             <span className="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
-        //                         </div>
-        //                     </div>
-
-        //                     <div className="form-group row">
-        //                         <label className="col-md-3 col-form-label">ID Asso :</label>
-
-        //                         <div className="col-md-9">
-        //                             <input type="number" min="0" disabled className="form-control"
-        //                                                         keyup.enter="update" v-model="form.asso_id">
-
-        //                             <span className="form-text text-muted">L'ID de l'asso pour qui la clé est créee.</span>
-        //                         </div>
-        //                     </div>
-
-        //                     <div className="form-group row">
-        //                         <label className="col-md-3 col-form-label">Redirection :</label>
-
-        //                         <div className="col-md-9">
-        //                             <input type="text" className="form-control" disabled name="redirect"
-        //                                             keyup.enter="update" v-model="form.redirect">
-
-        //                             <span className="form-text text-muted">Adresse de redirection après authentification.</span>
-        //                         </div>
-        //                     </div>
-
-        //                     <div className="form-group row" v-if="form.scopes.length > 0" keyup.enter="update" v-model="form.scopes">
-        //                         <label className="col-md-3 col-form-label">Scopes :</label>
-
-        //                         <div className="col-md-9">
-        //                             <span className="d-block mb-1" v-for="scope in form.scopes">
-        //                                 <code>{{ scope }}</code> : {{ scopes[scope] }}
-        //                             </span>
-        //                         </div>
-        //                     </div>
-        //                 </form>
-
-        //                 <div className="row">
-        //                     <div className="col-12 text-right">
-        //                         <button type="button" className="btn btn-primary" data-dismiss="modal">Fermer</button>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
 
         // <div className="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
         //     <div className="modal-dialog modal-lg">

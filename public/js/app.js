@@ -39180,6 +39180,8 @@ var Clients = function (_Component) {
         key: 'viewClient',
         value: function viewClient(client, e) {
             this.setState({ client: client });
+
+            //$('#viewClient').modal('show');
         }
     }, {
         key: 'handleInputChange',
@@ -39224,19 +39226,17 @@ var Clients = function (_Component) {
             axios({ method: method, url: url, data: form }).then(function (response) {
                 _this4.getClients();
 
-                console.log(response);
+                document.getElementById("hideModalBtn").click();
 
-                $("#createModal").modal('hide');
+                var form = {
+                    errors: [],
+                    name: '',
+                    asso_id: '',
+                    redirect: '',
+                    scopes: []
+                };
 
-                // var form = {
-                //     errors: [],
-                //     name: '',
-                //     asso_id: '',
-                //     redirect: '',
-                //     scopes: []
-                // }
-
-                // this.setState({ form: form });
+                _this4.setState({ form: form });
             }).catch(function (error) {
                 form.errors = ['Une erreur est survenue. Veuillez réessayer'];
                 _this4.setState({ form: form });
@@ -39368,7 +39368,7 @@ var Clients = function (_Component) {
                                         { className: 'col-6 text-right' },
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'button',
-                                            { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-hidden': 'true' },
+                                            { id: 'hideModalBtn', type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-hidden': 'true' },
                                             '\xD7'
                                         )
                                     )
@@ -39514,76 +39514,147 @@ var Clients = function (_Component) {
                             )
                         )
                     )
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'modal fade', id: 'viewModal', tabindex: '-1', role: 'dialog' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'modal-dialog modal-lg' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'modal-content' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'modal-body' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'row mb-3' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'col-6' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'h4',
+                                            null,
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'b',
+                                                null,
+                                                'Voir'
+                                            )
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'col-6 text-right' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'button',
+                                            { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-hidden': 'true' },
+                                            '\xD7'
+                                        )
+                                    )
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'form',
+                                    { role: 'form' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'form-group row' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'label',
+                                            { className: 'col-md-3 col-form-label' },
+                                            'Nom :'
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-md-9' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', disabled: true, className: 'form-control' }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'span',
+                                                { className: 'form-text text-muted' },
+                                                'Le nom qui s\'affichera pour vos utilisateurs.'
+                                            )
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'form-group row' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'label',
+                                            { className: 'col-md-3 col-form-label' },
+                                            'ID Asso :'
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-md-9' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'number', min: '0', disabled: true, className: 'form-control' }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'span',
+                                                { className: 'form-text text-muted' },
+                                                'L\'ID de l\'asso pour qui la cl\xE9 est cr\xE9ee.'
+                                            )
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'form-group row' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'label',
+                                            { className: 'col-md-3 col-form-label' },
+                                            'Redirection :'
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-md-9' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'form-control', disabled: true, name: 'redirect' }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'span',
+                                                { className: 'form-text text-muted' },
+                                                'Adresse de redirection apr\xE8s authentification.'
+                                            )
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'form-group row', 'v-if': 'form.scopes.length > 0' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'label',
+                                            { className: 'col-md-3 col-form-label' },
+                                            'Scopes :'
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-md-9' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'span',
+                                                { className: 'd-block mb-1', 'v-for': 'scope in form.scopes' },
+                                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                    'code',
+                                                    null,
+                                                    'scope'
+                                                ),
+                                                ' : scopes[scope]'
+                                            )
+                                        )
+                                    )
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'row' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'col-12 text-right' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'button',
+                                            { type: 'button', className: 'btn btn-primary', 'data-dismiss': 'modal' },
+                                            'Fermer'
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
                 )
             );
-
-            // <div className="modal fade" id="modal-see-client" tabindex="-1" role="dialog">
-            //     <div className="modal-dialog modal-lg">
-            //         <div className="modal-content">
-            //             <div className="modal-body">
-            //                 <div className="row mb-3">
-            //                     <div className="col-6">
-            //                         <h4><b>Voir</b></h4>
-            //                     </div>
-            //                     <div className="col-6 text-right">
-            //                         <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            //                     </div>
-            //                 </div>
-
-            //                 <form role="form">
-            //                     <div className="form-group row">
-            //                         <label className="col-md-3 col-form-label">Nom :</label>
-
-            //                         <div className="col-md-9">
-            //                             <input id="edit-client-name" type="text" disabled className="form-control"
-            //                                                         keyup.enter="update" v-model="form.name">
-
-            //                             <span className="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
-            //                         </div>
-            //                     </div>
-
-            //                     <div className="form-group row">
-            //                         <label className="col-md-3 col-form-label">ID Asso :</label>
-
-            //                         <div className="col-md-9">
-            //                             <input type="number" min="0" disabled className="form-control"
-            //                                                         keyup.enter="update" v-model="form.asso_id">
-
-            //                             <span className="form-text text-muted">L'ID de l'asso pour qui la clé est créee.</span>
-            //                         </div>
-            //                     </div>
-
-            //                     <div className="form-group row">
-            //                         <label className="col-md-3 col-form-label">Redirection :</label>
-
-            //                         <div className="col-md-9">
-            //                             <input type="text" className="form-control" disabled name="redirect"
-            //                                             keyup.enter="update" v-model="form.redirect">
-
-            //                             <span className="form-text text-muted">Adresse de redirection après authentification.</span>
-            //                         </div>
-            //                     </div>
-
-            //                     <div className="form-group row" v-if="form.scopes.length > 0" keyup.enter="update" v-model="form.scopes">
-            //                         <label className="col-md-3 col-form-label">Scopes :</label>
-
-            //                         <div className="col-md-9">
-            //                             <span className="d-block mb-1" v-for="scope in form.scopes">
-            //                                 <code>{{ scope }}</code> : {{ scopes[scope] }}
-            //                             </span>
-            //                         </div>
-            //                     </div>
-            //                 </form>
-
-            //                 <div className="row">
-            //                     <div className="col-12 text-right">
-            //                         <button type="button" className="btn btn-primary" data-dismiss="modal">Fermer</button>
-            //                     </div>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //     </div>
-            // </div>
 
             // <div className="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
             //     <div className="modal-dialog modal-lg">
