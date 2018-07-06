@@ -1,99 +1,56 @@
-<style scoped>
-    .action-link {
-        cursor: pointer;
-    }
-</style>
-
 <template>
     <div>
-        <div class="card card-default">
-            <div class="card-header">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>
-                        OAuth Clients
-                    </span>
-
-                    <a class="action-link" tabindex="-1" @click="showCreateClientForm">
-                        Create New Client
-                    </a>
-                </div>
-            </div>
-
+        <div class="card drop-shadow mb-4">
             <div class="card-body">
-                <!-- Current Clients -->
-                <p class="mb-0" v-if="clients.length === 0">
-                    You have not created any OAuth clients.
-                </p>
+                <div class="row">
+                    <div class="col-6">
+                        <h5><b>Clients OAuth</b></h5>
+                    </div>
 
-                <table class="table table-borderless mb-0" v-if="clients.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Client ID</th>
-                            <th>Name</th>
-							<th>Asso id</th>
-                            <th>Secret</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
+                    <div class="col-6 text-right">
+                        <a class="btn btn-primary" tabindex="-1" @click="showCreateClientForm">Créer un client</a>
+                    </div>
+                </div>
 
-                    <tbody>
-                        <tr v-for="client in clients">
-                            <!-- ID -->
-                            <td style="vertical-align: middle;">
-                                {{ client.id }}
-                            </td>
+                <p class="mt-3 mb-0" v-if="clients.length === 0">Vous n'avez pas encore crée de client OAuth.</p>
 
-                            <!-- Name -->
-                            <td style="vertical-align: middle;">
-                                {{ client.name }}
-                            </td>
-
-                            <!-- Asso id -->
-                            <td style="vertical-align: middle;">
-                                {{ client.asso_id }}
-                            </td>
-
-                            <!-- Secret -->
-                            <td style="vertical-align: middle;">
-                                <code>{{ client.secret }}</code>
-                            </td>
-
-                            <!-- See Button -->
-                            <td style="vertical-align: middle;">
-                                <a class="action-link" tabindex="-1" @click="see(client)">
-                                    Voir
-                                </a>
-                            </td>
-
-                            <!-- See Button -->
-                            <td style="vertical-align: middle;">
-                                <a class="action-link" tabindex="-1" @click="edit(client)">
-                                    Modifier
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- OAuth Clients -->
+                <dl class="row mt-3 mb-0" v-if="clients.length > 0" v-for="client in clients">
+                    <dt class="col-sm-3">
+                        <span class="d-block mb-2">{{ client.name }}</span> 
+                        <button class="btn btn-primary btn-sm mb-1" tabindex="-1" @click="see(client)">
+                            Voir
+                        </button>
+                        <button class="btn btn-primary btn-sm mb-1" tabindex="-1" @click="edit(client)">
+                            Modifier
+                        </button>
+                    </dt>
+                    <dd class="col-sm-9">
+                        ID Client : {{ client.id }} <br/>
+                        ID Asso : {{ client.asso_id }} <br />
+                        Secret : <code>{{ client.secret }}</code> <br />
+                    </dd>
+                </dl>
             </div>
         </div>
 
         <!-- Create Client Modal -->
         <div class="modal fade" id="modal-create-client" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">
-                            Create Client
-                        </h4>
-
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-
                     <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <h4><b>Créer un client</b></h4>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                        </div>
+
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="form.errors.length > 0">
-                            <p class="mb-0"><strong>Whoops!</strong> Something went wrong!</p>
+                            <p class="mb-0"><strong>Erreur</strong></p>
                             <br>
                             <ul>
                                 <li v-for="error in form.errors">
@@ -106,51 +63,46 @@
                         <form role="form">
                             <!-- Name -->
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Name</label>
+                                <label class="col-md-3 col-form-label">Nom :</label>
 
                                 <div class="col-md-9">
-                                    <input id="create-client-name" type="text" class="form-control"
-                                                                @keyup.enter="store" v-model="form.name">
+                                    <input id="create-client-name" type="text" class="form-control" @keyup.enter="store" v-model="form.name">
 
-                                    <span class="form-text text-muted">
-                                        Something your users will recognize and trust.
-                                    </span>
+                                    <span class="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
                                 </div>
                             </div>
 
                             <!-- Asso -->
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Asso id</label>
+                                <label class="col-md-3 col-form-label">ID Asso :</label>
 
                                 <div class="col-md-9">
-                                    <input name="asso_id" type="number" min="0" class="form-control"
-                                                                @keyup.enter="store" v-model="form.asso_id">
+                                    <input name="asso_id" type="number" min="0" class="form-control" @keyup.enter="store" v-model="form.asso_id">
 
                                     <span class="form-text text-muted">
-										L'id de l'asso a qui créer la clé
+										L'ID de l'asso pour qui la clé est créee.
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Redirect URL -->
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Redirect URL</label>
+                                <label class="col-md-3 col-form-label">Redirection :</label>
 
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="redirect"
-                                                    @keyup.enter="store" v-model="form.redirect">
+                                    <input type="text" class="form-control" name="redirect" value="http://example.com" @keyup.enter="store" v-model="form.redirect">
 
                                     <span class="form-text text-muted">
-                                        Your application's authorization callback URL.
+                                        Adresse de redirection après authentification.
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Scopes -->
-                            <div class="form-group">
-                                <label class="col-md-4 col-form-label">Scopes</label>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Scopes :</label>
 
-								<div class="col-md-12">
+								<div class="col-md-9">
                                     <div v-for="(description, name) in scopes" v-if="name.startsWith('client')">
                                         <div class="checkbox">
                                             <label>
@@ -158,22 +110,25 @@
                                                     @click="toggleScope(name)"
                                                     :checked="scopeIsAssigned(name)">
 
-                                                    {{ description }}
+                                                &nbsp;
+
+                                                <span data-toggle="tooltip" data-placement="right" :title="description">{{ name }}</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </form>
-                    </div>
 
-                    <!-- Modal Actions -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-
-                        <button type="button" class="btn btn-primary" @click="store">
-                            Créer
-                        </button>
+                        <!-- Modal Actions -->
+                        <div class="row">
+                            <div class="col-6 text-left">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="btn btn-primary" @click="store">Créer le client</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -181,91 +136,73 @@
 
         <!-- View Client Modal -->
         <div class="modal fade" id="modal-see-client" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">
-                            Voir
-                        </h4>
-
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-
                     <div class="modal-body">
-                        <!-- Form Errors -->
-                        <div class="alert alert-danger" v-if="form.errors.length > 0">
-                            <p class="mb-0"><strong>Whoops!</strong> Something went wrong!</p>
-                            <br>
-                            <ul>
-                                <li v-for="error in form.errors">
-                                    {{ error }}
-                                </li>
-                            </ul>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <h4><b>Voir</b></h4>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
                         </div>
 
                         <!-- Edit Client Form -->
                         <form role="form">
                             <!-- Name -->
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Name</label>
+                                <label class="col-md-3 col-form-label">Nom :</label>
 
                                 <div class="col-md-9">
                                     <input id="edit-client-name" type="text" disabled class="form-control"
                                                                 @keyup.enter="update" v-model="form.name">
 
-                                    <span class="form-text text-muted">
-                                        Something your users will recognize and trust.
-                                    </span>
+                                    <span class="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
                                 </div>
                             </div>
 
                             <!-- Asso -->
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Asso id</label>
+                                <label class="col-md-3 col-form-label">ID Asso :</label>
 
                                 <div class="col-md-9">
                                     <input type="number" min="0" disabled class="form-control"
                                                                 @keyup.enter="update" v-model="form.asso_id">
 
-                                    <span class="form-text text-muted">
-                                        L'id de l'asso a qui créer la clé
-                                    </span>
+                                    <span class="form-text text-muted">L'ID de l'asso pour qui la clé est créee.</span>
                                 </div>
                             </div>
 
                             <!-- Redirect URL -->
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Redirect URL</label>
+                                <label class="col-md-3 col-form-label">Redirection :</label>
 
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" disabled name="redirect"
                                                     @keyup.enter="update" v-model="form.redirect">
 
-                                    <span class="form-text text-muted">
-                                        Your application's authorization callback URL.
-                                    </span>
+                                    <span class="form-text text-muted">Adresse de redirection après authentification.</span>
                                 </div>
                             </div>
 
 							<!-- Scopes -->
-                            <div class="form-group" v-if="form.scopes.length > 0"
-														@keyup.enter="update" v-model="form.scopes">
-                                <label class="col-md-4 col-form-label">Scopes</label>
+                            <div class="form-group row" v-if="form.scopes.length > 0" @keyup.enter="update" v-model="form.scopes">
+                                <label class="col-md-3 col-form-label">Scopes :</label>
 
                                 <div class="col-md-9">
-                                    <ul v-for="scope in form.scopes">
-                                        <li>
-                                            {{ scopes[scope] }}
-                                        </li>
-                                    </ul>
+                                    <span class="d-block mb-1" v-for="scope in form.scopes">
+                                        <code>{{ scope }}</code> : {{ scopes[scope] }}
+                                    </span>
                                 </div>
                             </div>
                         </form>
-                    </div>
 
-                    <!-- Modal Actions -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <div class="row">
+                            <div class="col-12 text-right">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -273,20 +210,21 @@
 
         <!-- Edit Client Modal -->
         <div class="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">
-                            Modifier
-                        </h4>
-
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-
                     <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <h4><b>Modifier un client</b></h4>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                        </div>
+
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="form.errors.length > 0">
-                            <p class="mb-0"><strong>Whoops!</strong> Something went wrong!</p>
+                            <p class="mb-0"><strong>Erreur</strong></p>
                             <br>
                             <ul>
                                 <li v-for="error in form.errors">
@@ -299,37 +237,33 @@
                         <form role="form">
                             <!-- Name -->
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Name</label>
+                                <label class="col-md-3 col-form-label">Nom :</label>
 
                                 <div class="col-md-9">
                                     <input id="edit-client-name" type="text" class="form-control"
                                                                 @keyup.enter="update" v-model="form.name">
 
-                                    <span class="form-text text-muted">
-                                        Something your users will recognize and trust.
-                                    </span>
+                                    <span class="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
                                 </div>
                             </div>
 
                             <!-- Redirect URL -->
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Redirect URL</label>
+                                <label class="col-md-3 col-form-label">Redirection :</label>
 
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="redirect"
                                                     @keyup.enter="update" v-model="form.redirect">
 
-                                    <span class="form-text text-muted">
-                                        Your application's authorization callback URL.
-                                    </span>
+                                    <span class="form-text text-muted">Adresse de redirection après authentification.</span>
                                 </div>
                             </div>
 
 							<!-- Scopes -->
-                            <div class="form-group">
-                                <label class="col-md-4 col-form-label">Scopes</label>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Scopes :</label>
 
-								<div class="col-md-12">
+								<div class="col-md-9">
                                     <div v-for="(description, name) in scopes" v-if="name.startsWith('client')">
                                         <div class="checkbox">
                                             <label>
@@ -337,20 +271,26 @@
                                                     @click="toggleScope(name)"
                                                     :checked="scopeIsAssigned(name)">
 
-                                                    {{ description }}
+                                                    &nbsp;
+
+                                                    <span data-toggle="tooltip" data-placement="right" :title="description">{{ name }}</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </form>
-                    </div>
 
-                    <!-- Modal Actions -->
-                    <div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-						<button type="button" class="btn btn-urgent" data-dismiss="modal" @click="destroy">Supprimer</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="update">Modifier</button>
+                        <!-- Modal Actions -->
+                        <div class="row">
+                            <div class="col-6 text-left">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="btn btn-danger mr-2" data-dismiss="modal" @click="destroy">Supprimer</button>
+                                <button type="button" class="btn btn-primary" @click="store">Modifier le client</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -549,7 +489,7 @@
                         if (typeof error.response.data === 'object') {
                             form.errors = _.flatten(_.toArray(error.response.data.errors));
                         } else {
-                            form.errors = ['Something went wrong. Please try again.'];
+                            form.errors = ['Une erreur est survenue. Veuillez réessayer'];
                         }
                     });
             },

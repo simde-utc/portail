@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
@@ -65,6 +66,8 @@ class Handler extends ExceptionHandler
 	        // Return a JSON response with the response array and status code
 	        return response()->json($response, $this->isHttpException($exception) ? $exception->getStatusCode() : 400);
 	    }
+        else if ($exception instanceof AuthorizationException)
+            return redirect('/home');
 
         return parent::render($request, $exception);
     }

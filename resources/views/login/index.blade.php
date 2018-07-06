@@ -1,21 +1,42 @@
 @extends('layouts.app')
 
 @section('content')
-<div style="position: absolute; width: 100%; top: 50%; transform: translateY(-50%); display: flex; justify-content: center;">
-	@foreach (config('auth.services') as $name => $provider)
-		<div class="card border-info mb-3" style="max-width: 18rem; margin: 15px; flex-basis: 100%">
-			<div class="card-header">{{ $provider['name'] }}</div>
+<div class="row center-container">
 
-			<div class="card-body text-info">
-				<h5 class="card-title">{{ $provider['description'] }}</h5>
-			</div>
-			<div class="card-footer bg-transparent border-success" style="text-align: center">
-				@if ($provider['registrable'])
-					<button class="btn btn-info" onClick="window.location.href = '{{ route('register.show', ['provider' => $name]) }}'">S'enregistrer</button>
-				@endif
-				<button class="btn btn-info" onClick="window.location.href = '{{ route('login.show', ['provider' => $name]) }}'">Se connecter</button>
+	@foreach (config('auth.services') as $name => $provider)
+		<div class="col-md-6 mb-4 mb-md-0">
+			<div class="auth-services card-fused-buttons drop-shadow card mx-auto">
+				<div class="card-body">
+					<b class="d-block mb-2">{{ $provider['name'] }}</b>
+
+					{{ $provider['description'] }}
+				</div>
+
+				<div class="card-footer bg-transparent p-0">
+					<div class="row m-0">
+						@if ($provider['registrable'])
+							<div class="col-6 p-0">
+								<a class="btn btn-primary w-100 left" href="{{ route('register.show', ['provider' => $name]) }}">
+									Inscription
+								</a>
+							</div>
+							<div class="col-6 p-0">
+								<a class="btn btn-primary w-100 right" href="{{ route('login.show', ['provider' => $name]) }}">
+									Connexion
+								</a>
+							</div>
+						@else
+							<div class="col-12 p-0">
+								<a class="btn btn-primary w-100" href="{{ route('login.show', ['provider' => $name]) }}">
+									Connexion
+								</a>
+							</div>
+						@endif
+					</div>
+				</div>
 			</div>
 		</div>
 	@endforeach
+
 </div>
 @endsection

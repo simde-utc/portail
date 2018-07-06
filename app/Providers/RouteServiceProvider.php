@@ -66,9 +66,18 @@ class RouteServiceProvider extends ServiceProvider
      * @return void
      */
     protected function mapWebRoutes() {
-        Route::middleware('web')
-            ->namespace($this->namespace)
-            ->group(base_path('routes/web.php'));
+        $services = config('auth.services');
+        $route = Route::middleware('web')
+            ->namespace($this->namespace);
+
+        $route->group(base_path('routes/web.php'));
+
+		foreach ($services as $provider => $data) {
+            $file = base_path('routes/auth/'.$provider.'.php');
+            if (file_exists($file))
+                $route->group($file);
+        }
+
     }
 
     /**

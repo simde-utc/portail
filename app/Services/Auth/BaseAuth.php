@@ -148,6 +148,18 @@ abstract class BaseAuth
 		return $user;
 	}
 
+	/**
+	 * Création ou mis à jour de l'utilisateur User
+	 */
+	protected function updateOrCreateUser(array $info) {
+		$user = User::findByEmail($info['email']);
+
+		if ($user)
+			return $this->updateUser($user->id, $info);
+		else
+			return $this->createUser($info);
+	}
+
 
 	/**
 	 * Crée la connexion auth
@@ -200,7 +212,7 @@ abstract class BaseAuth
 			$userAuth->last_login_at = new \DateTime();
 			$userAuth->save();
 
-			Auth::login($user);
+			Auth::guard('web')->login($user);
 			Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => $this->name]);
 
 			return $this->success($request, $user, $userAuth);
