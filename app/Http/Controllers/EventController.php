@@ -32,7 +32,7 @@ class EventController extends Controller
 		$event->created_by = $this->hideData($request, $event->created_by);
 		$event->owned_by = $this->hideData($request, $event->owned_by);
 
-		$event->makeHidden('visibility_id');
+		$event->makeHidden(['location_id', 'visibility_id']);
 
 		return $event;
 	}
@@ -118,7 +118,7 @@ class EventController extends Controller
 		$event = Event::create($inputs);
 
 		if ($event) {
-			$event->calendars()->assign($calendar);
+			$event->calendars()->attach($calendar);
 
 			return response()->json($event, 201);
 		}
@@ -162,7 +162,7 @@ class EventController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy($id): JsonResponse {
+	public function destroy(Request $request, int $id): JsonResponse {
 		$event = $this->getEvent($request, $id, true);
 		$event->softDelete();
 

@@ -147,7 +147,7 @@ class CalendarController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy($id): JsonResponse {
+	public function destroy(Request $request, int $id): JsonResponse {
 		$calendar = $this->getCalendar($request, $id, true);
 		$calendar->softDelete();
 

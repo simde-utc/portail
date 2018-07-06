@@ -59,7 +59,7 @@ Route::prefix('v1')->group(function () {
 		'rooms'											=> 'RoomController',
 		'events'										=> 'EventController',
 		'calendars'										=> 'CalendarController',
-		'calendars/{calendar_id}/event'					=> 'CalendarEventController',
+		'calendars/{calendar_id}/events'				=> 'CalendarEventController',
 		'partners'										=> 'PartnerController',
 		'articles'										=> 'ArticleController',
 		'visibilities'									=> 'VisibilityController',

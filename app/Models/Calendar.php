@@ -5,11 +5,6 @@ namespace App\Models;
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Event;
-use App\Models\Visibility;
-use App\Models\User;
-use App\Models\Asso;
-use App\Models\Group;
 
 class Calendar extends Model implements OwnableContract
 {
@@ -58,4 +53,12 @@ class Calendar extends Model implements OwnableContract
 	public function group() {
 		return $this->morphTo(Group::class, 'owned_by');
 	}
+
+    public function isCalendarAccessibleBy(int $user_id): bool {
+        return $this->owned_by->isCalendarAccessibleBy($user_id);
+    }
+
+    public function isCalendarManageableBy(int $user_id): bool {
+        return $this->owned_by->isCalendarManageableBy($user_id);
+    }
 }
