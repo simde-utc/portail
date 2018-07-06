@@ -134,26 +134,23 @@ class CalendarEventController extends Controller
 		$calendar = $this->getCalendar($request, $calendar_id, true);
 		$user = \Auth::user();
 
-		if ($request->filled('event_ids')) {
-			$events = [];
+		$events = [];
 
+		if ($request->filled('event_ids')) {
 			foreach ($request->input('event_ids') as $event_id) {
 				$events[] = $this->getEvent($request, $event_id);
+				$calendar->events()->attach(end($events));
 			}
 		}
 		else { // event_id
-			$events = [$this->getEvent($request, $request->input('event_id'))];
+			$events[] = $this->getEvent($request, $request->input('event_id'));
 			$calendar->events()->attach($events[0]);
 		}
 
 		foreach ($events as $event)
 			$this->hideEventData($request, $event);
 
-		if ($calendar)
-			return response()->json($events, 201);
-		else
-			return response()->json(['message' => 'Impossible de créer le calendrier'], 500);
-
+		return response()->json($events, 201);
 	}
 
 	/**

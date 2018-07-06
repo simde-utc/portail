@@ -19,7 +19,7 @@
  *       + remove:  supprimer une donnée
  */
 
-// Toutes les routes commencant par client-{verbe}-caelndar-
+// Toutes les routes commencant par client-{verbe}-calendar-
 return [
 	'description' => 'Calendrier universitaire',
 	'verbs' => [
