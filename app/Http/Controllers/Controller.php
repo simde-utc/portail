@@ -17,6 +17,33 @@ class Controller extends BaseController
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 	/**
+	 * Renvoie les inforamtions sur un utilisateur via son id ou sur l'utilisateur actuellement connecté
+	 * @param Request $request
+	 * @param int|null $user_id
+	 * @param bool $accessOtherUsers = false
+	 * @return User
+	 */
+	 protected function getUser(Request $request, int $user_id = null, bool $accessOtherUsers = false): User {
+		if ($accessOtherUsers)
+			$user = $user_id ? User::find($user_id) : \Auth::user();
+		else {
+			if (\Scopes::isClientToken($request))
+				$user = User::find($user_id ?? null);
+			else {
+				$user = \Auth::user();
+
+				if (!is_null($user_id) && $user->id !== $user_id)
+				abort(403, 'Vous n\'avez pas le droit d\'accéder aux données d\'un autre utilisateur');
+			}
+		}
+
+ 		if ($user)
+ 			return $user;
+ 		else
+ 			abort(404, "Utilisateur non trouvé");
+ 	}
+
+	/**
 	 * Permet de savoir quoi afficher
 	 * @param  Request $request
 	 * @param  array $choices
@@ -49,7 +76,6 @@ class Controller extends BaseController
 	 * @return Collection|null
 	 */
 	protected function hideUsersData(Request $request, Collection $users, bool $hidePivot = true): ?Collection {
-
 		if ($users === null)
 			return null;
 
@@ -74,12 +100,10 @@ class Controller extends BaseController
 		if ($user === null)
 			return null;
 
-		$user->name = $user->firstname.' '.strtoupper($user->lastname);
-
 		if ($user->id === \Auth::id())
 			$user->me = true;
 
-		$user->makeHidden(['firstname', 'lastname', 'email', 'last_login_at', 'created_at', 'updated_at']);
+		$user->makeHidden(['firstname', 'lastname', 'email', 'is_active', 'last_login_at', 'created_at', 'updated_at']);
 
 		return $this->hidePivotData($request, $user, $hidePivot);
 	}

@@ -51,6 +51,8 @@ class RouteServiceProvider extends ServiceProvider
 		Passport::routes();
 		Passport::tokensCan(Scopes::all());
 
+        Passport::enableImplicitGrant();
+
 		Route::prefix('oauth')
 			->group(base_path('routes/oauth.php'));
     }

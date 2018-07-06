@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
 			$table->string('email', validation_max('email'))->unique();
 			$table->string('firstname', validation_max('name'))->nullable();
 			$table->string('lastname', validation_max('name'))->nullable();
+			$table->boolean('is_active')->default(1);
 			$table->rememberToken();
 			$table->timestamps();
 			$table->timestamp('last_login_at')->nullable();
