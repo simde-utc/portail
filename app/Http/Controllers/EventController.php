@@ -38,7 +38,7 @@ class EventController extends Controller
 	}
 
 	protected function getEvent(Request $request, int $id, bool $needRights = false) {
-		$event = Event::with(['owned_by', 'created_by', 'visibility'])->find($id);
+		$event = Event::with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->find($id);
 
 		if ($event) {
 			if (!$this->isVisible($event))
@@ -76,7 +76,7 @@ class EventController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse {
-		$events = Event::with(['owned_by', 'created_by', 'visibility'])->get()->map(function ($event) use ($request) {
+		$events = Event::with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->get()->map(function ($event) use ($request) {
 			return $this->hideEventData($request, $event);
 		});
 
@@ -109,7 +109,7 @@ class EventController extends Controller
 		$inputs['created_by_type'] = get_class($creater);
 		$inputs['owned_by_id'] = $owner->id;
 		$inputs['owned_by_type'] = get_class($owner);
-		
+
 		$calendar = Calendar::find($inputs['calendar_id']);
 
 		if (!$calendar->owned_by->isCalendarManageableBy(\Auth::id()))

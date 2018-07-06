@@ -19,6 +19,18 @@ class Location extends Model
         'position',
     ];
 
+    protected $appends = [
+        'place',
+    ];
+
+    protected $hidden = [
+        'place_id',
+    ];
+
+    public function getPlaceAttribute() {
+        return $this->place()->first();
+    }
+
     public function place() {
         return $this->belongsTo(Place::class);
     }

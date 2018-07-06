@@ -39,6 +39,14 @@ class Event extends Model implements OwnableContract
         return $this->belongsToMany(Calendar::class, 'calendars_events')->withTimestamps();
     }
 
+    public function location() {
+        return $this->belongsTo(Location::class);
+    }
+
+    public function details() {
+        return $this->hasMany(EventDetail::class);
+    }
+
 	public function user() {
 		return $this->morphTo(User::class, 'owned_by');
 	}
