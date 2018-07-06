@@ -70,7 +70,7 @@
 "use strict";
 
 
-var bind = __webpack_require__(3);
+var bind = __webpack_require__(4);
 var isBuffer = __webpack_require__(22);
 
 /*global toString:true*/
@@ -378,6 +378,20 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+if (false) {
+  module.exports = require('./cjs/react.production.min.js');
+} else {
+  module.exports = __webpack_require__(40);
+}
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
@@ -397,10 +411,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(4);
+    adapter = __webpack_require__(5);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(4);
+    adapter = __webpack_require__(5);
   }
   return adapter;
 }
@@ -474,7 +488,7 @@ module.exports = defaults;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -516,7 +530,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 module.exports = emptyFunction;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -534,7 +548,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -545,7 +559,7 @@ var settle = __webpack_require__(26);
 var buildURL = __webpack_require__(28);
 var parseHeaders = __webpack_require__(29);
 var isURLSameOrigin = __webpack_require__(30);
-var createError = __webpack_require__(5);
+var createError = __webpack_require__(6);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(31);
 
 module.exports = function xhrAdapter(config) {
@@ -721,7 +735,7 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -746,7 +760,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -758,7 +772,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -781,20 +795,6 @@ Cancel.prototype.toString = function toString() {
 Cancel.prototype.__CANCEL__ = true;
 
 module.exports = Cancel;
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-if (false) {
-  module.exports = require('./cjs/react.production.min.js');
-} else {
-  module.exports = __webpack_require__(41);
-}
 
 
 /***/ }),
@@ -991,7 +991,7 @@ module.exports = emptyObject;
 
 
 
-var emptyFunction = __webpack_require__(2);
+var emptyFunction = __webpack_require__(3);
 
 /**
  * Similar to invariant but only logs a warning if the condition is not met.
@@ -1061,7 +1061,7 @@ module.exports = warning;
 var printWarning = function() {};
 
 if (true) {
-  var ReactPropTypesSecret = __webpack_require__(42);
+  var ReactPropTypesSecret = __webpack_require__(41);
   var loggedTypeFailures = {};
 
   printWarning = function(text) {
@@ -1147,7 +1147,7 @@ module.exports = checkPropTypes;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(15);
-module.exports = __webpack_require__(55);
+module.exports = __webpack_require__(58);
 
 
 /***/ }),
@@ -1156,11 +1156,11 @@ module.exports = __webpack_require__(55);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_App_js__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_App_js__ = __webpack_require__(54);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -18405,9 +18405,9 @@ module.exports = __webpack_require__(21);
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(3);
+var bind = __webpack_require__(4);
 var Axios = __webpack_require__(23);
-var defaults = __webpack_require__(1);
+var defaults = __webpack_require__(2);
 
 /**
  * Create an instance of Axios
@@ -18440,9 +18440,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(7);
+axios.Cancel = __webpack_require__(8);
 axios.CancelToken = __webpack_require__(38);
-axios.isCancel = __webpack_require__(6);
+axios.isCancel = __webpack_require__(7);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -18490,7 +18490,7 @@ function isSlowBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(1);
+var defaults = __webpack_require__(2);
 var utils = __webpack_require__(0);
 var InterceptorManager = __webpack_require__(33);
 var dispatchRequest = __webpack_require__(34);
@@ -18785,7 +18785,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 "use strict";
 
 
-var createError = __webpack_require__(5);
+var createError = __webpack_require__(6);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -19220,8 +19220,8 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(35);
-var isCancel = __webpack_require__(6);
-var defaults = __webpack_require__(1);
+var isCancel = __webpack_require__(7);
+var defaults = __webpack_require__(2);
 var isAbsoluteURL = __webpack_require__(36);
 var combineURLs = __webpack_require__(37);
 
@@ -19380,7 +19380,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 "use strict";
 
 
-var Cancel = __webpack_require__(7);
+var Cancel = __webpack_require__(8);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -19472,8 +19472,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 40 */,
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19498,7 +19497,7 @@ var _assign = __webpack_require__(9);
 var invariant = __webpack_require__(10);
 var emptyObject = __webpack_require__(11);
 var warning = __webpack_require__(12);
-var emptyFunction = __webpack_require__(2);
+var emptyFunction = __webpack_require__(3);
 var checkPropTypes = __webpack_require__(13);
 
 // TODO: this is special because it gets imported during build.
@@ -20966,7 +20965,7 @@ module.exports = react;
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20985,7 +20984,7 @@ module.exports = ReactPropTypesSecret;
 
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21025,12 +21024,12 @@ if (false) {
   checkDCE();
   module.exports = require('./cjs/react-dom.production.min.js');
 } else {
-  module.exports = __webpack_require__(44);
+  module.exports = __webpack_require__(43);
 }
 
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21052,18 +21051,18 @@ if (true) {
 'use strict';
 
 var invariant = __webpack_require__(10);
-var React = __webpack_require__(8);
+var React = __webpack_require__(1);
 var warning = __webpack_require__(12);
-var ExecutionEnvironment = __webpack_require__(45);
+var ExecutionEnvironment = __webpack_require__(44);
 var _assign = __webpack_require__(9);
-var emptyFunction = __webpack_require__(2);
+var emptyFunction = __webpack_require__(3);
 var checkPropTypes = __webpack_require__(13);
-var getActiveElement = __webpack_require__(46);
-var shallowEqual = __webpack_require__(47);
-var containsNode = __webpack_require__(48);
+var getActiveElement = __webpack_require__(45);
+var shallowEqual = __webpack_require__(46);
+var containsNode = __webpack_require__(47);
 var emptyObject = __webpack_require__(11);
-var hyphenateStyleName = __webpack_require__(51);
-var camelizeStyleName = __webpack_require__(53);
+var hyphenateStyleName = __webpack_require__(50);
+var camelizeStyleName = __webpack_require__(52);
 
 // Relying on the `invariant()` implementation lets us
 // have preserve the format and params in the www builds.
@@ -38467,7 +38466,7 @@ module.exports = reactDom;
 
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38506,7 +38505,7 @@ var ExecutionEnvironment = {
 module.exports = ExecutionEnvironment;
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38548,7 +38547,7 @@ function getActiveElement(doc) /*?DOMElement*/{
 module.exports = getActiveElement;
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38619,7 +38618,7 @@ function shallowEqual(objA, objB) {
 module.exports = shallowEqual;
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38634,7 +38633,7 @@ module.exports = shallowEqual;
  * 
  */
 
-var isTextNode = __webpack_require__(49);
+var isTextNode = __webpack_require__(48);
 
 /*eslint-disable no-bitwise */
 
@@ -38662,7 +38661,7 @@ function containsNode(outerNode, innerNode) {
 module.exports = containsNode;
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38677,7 +38676,7 @@ module.exports = containsNode;
  * @typechecks
  */
 
-var isNode = __webpack_require__(50);
+var isNode = __webpack_require__(49);
 
 /**
  * @param {*} object The object to check.
@@ -38690,7 +38689,7 @@ function isTextNode(object) {
 module.exports = isTextNode;
 
 /***/ }),
-/* 50 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38718,7 +38717,7 @@ function isNode(object) {
 module.exports = isNode;
 
 /***/ }),
-/* 51 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38733,7 +38732,7 @@ module.exports = isNode;
 
 
 
-var hyphenate = __webpack_require__(52);
+var hyphenate = __webpack_require__(51);
 
 var msPattern = /^ms-/;
 
@@ -38760,7 +38759,7 @@ function hyphenateStyleName(string) {
 module.exports = hyphenateStyleName;
 
 /***/ }),
-/* 52 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38796,7 +38795,7 @@ function hyphenate(string) {
 module.exports = hyphenate;
 
 /***/ }),
-/* 53 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38811,7 +38810,7 @@ module.exports = hyphenate;
 
 
 
-var camelize = __webpack_require__(54);
+var camelize = __webpack_require__(53);
 
 var msPattern = /^-ms-/;
 
@@ -38839,7 +38838,7 @@ function camelizeStyleName(string) {
 module.exports = camelizeStyleName;
 
 /***/ }),
-/* 54 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38874,26 +38873,15 @@ function camelize(string) {
 module.exports = camelize;
 
 /***/ }),
-/* 55 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */
+/* 54 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Navbar_js__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Passport_AuthorizedClients_js__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Passport_Clients_js__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Navbar_js__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Passport_AuthorizedClients_js__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Passport_Clients_js__ = __webpack_require__(57);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -38957,11 +38945,11 @@ var App = function (_Component) {
 /* harmony default export */ __webpack_exports__["a"] = (App);
 
 /***/ }),
-/* 62 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -38995,11 +38983,11 @@ var Navbar = function (_Component) {
 /* harmony default export */ __webpack_exports__["a"] = (Navbar);
 
 /***/ }),
-/* 63 */
+/* 56 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -39114,11 +39102,11 @@ var AuthorizedClients = function (_Component) {
 /* harmony default export */ __webpack_exports__["a"] = (AuthorizedClients);
 
 /***/ }),
-/* 64 */
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -39139,7 +39127,16 @@ var Clients = function (_Component) {
         var _this = _possibleConstructorReturn(this, (Clients.__proto__ || Object.getPrototypeOf(Clients)).call(this, props));
 
         _this.state = {
-            clients: []
+            clients: [],
+            client: [],
+            scopes: [],
+            form: {
+                errors: [],
+                name: '',
+                asso_id: 1,
+                redirect: '',
+                scopes: []
+            }
         };
         return _this;
     }
@@ -39147,167 +39144,107 @@ var Clients = function (_Component) {
     _createClass(Clients, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
+            this.getClients();
+            this.getTokens();
+        }
+    }, {
+        key: 'getClients',
+        value: function getClients() {
             var _this2 = this;
 
             axios.get('/oauth/clients').then(function (response) {
-                console.log(response.data);
                 _this2.setState({ clients: response.data });
             });
         }
+    }, {
+        key: 'getTokens',
+        value: function getTokens() {
+            var _this3 = this;
 
-        // <div className="modal fade" id="modal-see-client" tabindex="-1" role="dialog">
-        //     <div className="modal-dialog modal-lg">
-        //         <div className="modal-content">
-        //             <div className="modal-body">
-        //                 <div className="row mb-3">
-        //                     <div className="col-6">
-        //                         <h4><b>Voir</b></h4>
-        //                     </div>
-        //                     <div className="col-6 text-right">
-        //                         <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        //                     </div>
-        //                 </div>
+            axios.get('/oauth/scopes').then(function (response) {
+                var scopes = [];
 
-        //                 <form role="form">
-        //                     <div className="form-group row">
-        //                         <label className="col-md-3 col-form-label">Nom :</label>
+                Object.keys(response.data).forEach(function (key) {
+                    if (key.startsWith('client')) {
+                        scopes.push({
+                            'name': key,
+                            'description': response.data[key]
+                        });
+                    }
+                });
 
-        //                         <div className="col-md-9">
-        //                             <input id="edit-client-name" type="text" disabled className="form-control"
-        //                                                         keyup.enter="update" v-model="form.name">
+                _this3.setState({ scopes: scopes });
+            });
+        }
+    }, {
+        key: 'viewClient',
+        value: function viewClient(client, e) {
+            this.setState({ client: client });
+        }
+    }, {
+        key: 'handleInputChange',
+        value: function handleInputChange(e) {
+            var name = e.target.name;
+            var value = e.target.value;
+            var oldForm = this.state.form;
 
-        //                             <span className="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
-        //                         </div>
-        //                     </div>
+            var form = {
+                errors: oldForm.errors,
+                name: oldForm.name,
+                asso_id: oldForm.asso_id,
+                redirect: oldForm.redirect,
+                scopes: oldForm.scopes
+            };
 
-        //                     <div className="form-group row">
-        //                         <label className="col-md-3 col-form-label">ID Asso :</label>
+            if (name === "scope") {
+                var i = form.scopes.indexOf(value);
+                if (i == -1) {
+                    form.scopes.push(value);
+                } else {
+                    form.scopes.splice(i, 1);
+                }
+            } else {
+                form[name] = e.target.value;
+            }
 
-        //                         <div className="col-md-9">
-        //                             <input type="number" min="0" disabled className="form-control"
-        //                                                         keyup.enter="update" v-model="form.asso_id">
+            // console.log(form);
 
-        //                             <span className="form-text text-muted">L'ID de l'asso pour qui la clé est créee.</span>
-        //                         </div>
-        //                     </div>
+            this.setState({ form: form });
+        }
+    }, {
+        key: 'handleSubmit',
+        value: function handleSubmit(method, url, e) {
+            var _this4 = this;
 
-        //                     <div className="form-group row">
-        //                         <label className="col-md-3 col-form-label">Redirection :</label>
+            e.preventDefault();
 
-        //                         <div className="col-md-9">
-        //                             <input type="text" className="form-control" disabled name="redirect"
-        //                                             keyup.enter="update" v-model="form.redirect">
+            var form = this.state.form;
+            form.errors = [];
 
-        //                             <span className="form-text text-muted">Adresse de redirection après authentification.</span>
-        //                         </div>
-        //                     </div>
+            console.log(form);
 
-        //                     <div className="form-group row" v-if="form.scopes.length > 0" keyup.enter="update" v-model="form.scopes">
-        //                         <label className="col-md-3 col-form-label">Scopes :</label>
+            axios({ method: method, url: url, data: form }).then(function (response) {
+                _this4.getClients();
 
-        //                         <div className="col-md-9">
-        //                             <span className="d-block mb-1" v-for="scope in form.scopes">
-        //                                 <code>{{ scope }}</code> : {{ scopes[scope] }}
-        //                             </span>
-        //                         </div>
-        //                     </div>
-        //                 </form>
+                $("#createModal").modal('hide');
 
-        //                 <div className="row">
-        //                     <div className="col-12 text-right">
-        //                         <button type="button" className="btn btn-primary" data-dismiss="modal">Fermer</button>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
+                // var form = {
+                //     errors: [],
+                //     name: '',
+                //     asso_id: '',
+                //     redirect: '',
+                //     scopes: []
+                // }
 
-        // <div className="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
-        //     <div className="modal-dialog modal-lg">
-        //         <div className="modal-content">
-        //             <div className="modal-body">
-        //                 <div className="row mb-3">
-        //                     <div className="col-6">
-        //                         <h4><b>Modifier un client</b></h4>
-        //                     </div>
-        //                     <div className="col-6 text-right">
-        //                         <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        //                     </div>
-        //                 </div>
-
-        //                 <div className="alert alert-danger" v-if="form.errors.length > 0">
-        //                     <p className="mb-0"><strong>Erreur</strong></p>
-        //                     <br>
-        //                     <ul>
-        //                         <li v-for="error in form.errors">
-        //                             {{ error }}
-        //                         </li>
-        //                     </ul>
-        //                 </div>
-
-        //                 <form role="form">
-        //                     <div className="form-group row">
-        //                         <label className="col-md-3 col-form-label">Nom :</label>
-
-        //                         <div className="col-md-9">
-        //                             <input id="edit-client-name" type="text" className="form-control"
-        //                                                         keyup.enter="update" v-model="form.name">
-
-        //                             <span className="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
-        //                         </div>
-        //                     </div>
-
-        //                     <div className="form-group row">
-        //                         <label className="col-md-3 col-form-label">Redirection :</label>
-
-        //                         <div className="col-md-9">
-        //                             <input type="text" className="form-control" name="redirect"
-        //                                             keyup.enter="update" v-model="form.redirect">
-
-        //                             <span className="form-text text-muted">Adresse de redirection après authentification.</span>
-        //                         </div>
-        //                     </div>
-
-        //                     <div className="form-group row">
-        //                         <label className="col-md-3 col-form-label">Scopes :</label>
-
-        //                         <div className="col-md-9">
-        //                             <div v-for="(description, name) in scopes" v-if="name.startsWith('client')">
-        //                                 <div className="checkbox">
-        //                                     <label>
-        //                                         <input type="checkbox"
-        //                                             click="toggleScope(name)"
-        //                                             :checked="scopeIsAssigned(name)">
-
-        //                                             &nbsp;
-
-        //                                             <span data-toggle="tooltip" data-placement="right" :title="description">{{ name }}</span>
-        //                                     </label>
-        //                                 </div>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </form>
-
-        //                 <div className="row">
-        //                     <div className="col-6 text-left">
-        //                         <button type="button" className="btn btn-primary" data-dismiss="modal">Annuler</button>
-        //                     </div>
-        //                     <div className="col-6 text-right">
-        //                         <button type="button" className="btn btn-danger mr-2" data-dismiss="modal" click="destroy">Supprimer</button>
-        //                         <button type="button" className="btn btn-primary" click="store">Modifier le client</button>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
-
+                // this.setState({ form: form });
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
     }, {
         key: 'render',
         value: function render() {
-            var clients = void 0;
+            var _this5 = this;
 
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
@@ -39344,47 +39281,55 @@ var Clients = function (_Component) {
                                 )
                             )
                         ),
-                        this.state.clients.length > 0 ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'dl',
-                            { className: 'row mt-3 mb-0', 'v-for': 'client in clients' },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'dt',
-                                { className: 'col-sm-3' },
+                        this.state.clients.length > 0 ? this.state.clients.map(function (client, i) {
+                            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'dl',
+                                { key: i, className: 'row mt-3 mb-0' },
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'span',
-                                    { className: 'd-block mb-2' },
-                                    'client.name'
+                                    'dt',
+                                    { className: 'col-sm-3' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'span',
+                                        { className: 'd-block mb-2' },
+                                        client.name
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'button',
+                                        { className: 'btn btn-primary btn-sm mb-1 mr-1', onClick: function onClick(e) {
+                                                return _this5.viewClient(client, e);
+                                            } },
+                                        'Voir'
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'button',
+                                        { className: 'btn btn-primary btn-sm mb-1', click: 'edit(client)' },
+                                        'Modifier'
+                                    )
                                 ),
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'button',
-                                    { className: 'btn btn-primary btn-sm mb-1', tabindex: '-1', click: 'see(client)' },
-                                    'Voir'
-                                ),
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'button',
-                                    { className: 'btn btn-primary btn-sm mb-1', tabindex: '-1', click: 'edit(client)' },
-                                    'Modifier'
+                                    'dd',
+                                    { className: 'col-sm-9' },
+                                    'ID Client : ',
+                                    client.id,
+                                    ' ',
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
+                                    'ID Asso : ',
+                                    client.asso_id,
+                                    ' ',
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
+                                    'Secret : ',
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'code',
+                                        null,
+                                        client.secret
+                                    ),
+                                    ' ',
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null)
                                 )
-                            ),
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'dd',
-                                { className: 'col-sm-9' },
-                                'ID Client : client.id ',
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-                                'ID Asso : client.asso_id ',
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-                                'Secret : ',
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'code',
-                                    null,
-                                    'client.secret'
-                                ),
-                                ' ',
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null)
-                            )
-                        ) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            );
+                        }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'p',
-                            { className: 'mt-3 mb-0', 'v-if': 'clients.length === 0' },
+                            { className: 'mt-3 mb-0' },
                             'Vous n\'avez pas encore cr\xE9e de client OAuth.'
                         )
                     )
@@ -39427,7 +39372,7 @@ var Clients = function (_Component) {
                                         )
                                     )
                                 ),
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                this.state.form.errors.length > 0 ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                     'div',
                                     { className: 'alert alert-danger', 'v-if': 'form.errors.length > 0' },
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -39449,10 +39394,12 @@ var Clients = function (_Component) {
                                             'error'
                                         )
                                     )
-                                ),
+                                ) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', null),
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                     'form',
-                                    { role: 'form' },
+                                    { onSubmit: function onSubmit(e) {
+                                            return _this5.handleSubmit('post', 'oauth/clients', e);
+                                        } },
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                         'div',
                                         { className: 'form-group row' },
@@ -39464,7 +39411,9 @@ var Clients = function (_Component) {
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'div',
                                             { className: 'col-md-9' },
-                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'create-client-name', type: 'text', className: 'form-control' }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'create-client-name', type: 'text', className: 'form-control', name: 'name', onChange: function onChange(e) {
+                                                    return _this5.handleInputChange(e);
+                                                } }),
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'span',
                                                 { className: 'form-text text-muted' },
@@ -39483,7 +39432,9 @@ var Clients = function (_Component) {
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'div',
                                             { className: 'col-md-9' },
-                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { name: 'asso_id', type: 'number', min: '0', className: 'form-control' }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { name: 'asso_id', type: 'number', min: '0', className: 'form-control', onChange: function onChange(e) {
+                                                    return _this5.handleInputChange(e);
+                                                } }),
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'span',
                                                 { className: 'form-text text-muted' },
@@ -39502,7 +39453,9 @@ var Clients = function (_Component) {
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'div',
                                             { className: 'col-md-9' },
-                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'form-control', name: 'redirect', value: 'http://example.com' }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'form-control', name: 'redirect', onChange: function onChange(e) {
+                                                    return _this5.handleInputChange(e);
+                                                } }),
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'span',
                                                 { className: 'form-text text-muted' },
@@ -39521,47 +39474,47 @@ var Clients = function (_Component) {
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'div',
                                             { className: 'col-md-9' },
-                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                                'div',
-                                                null,
-                                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            this.state.scopes.length > 0 ? this.state.scopes.map(function (scope, i) {
+                                                return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                     'div',
-                                                    { className: 'checkbox' },
+                                                    { key: i, className: 'checkbox' },
                                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                         'label',
                                                         null,
-                                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'checkbox' }),
+                                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'checkbox', name: 'scope', value: scope.name, onChange: function onChange(e) {
+                                                                return _this5.handleInputChange(e);
+                                                            } }),
                                                         '\xA0',
                                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                             'span',
-                                                            { 'data-toggle': 'tooltip', 'data-placement': 'right' },
-                                                            'name'
+                                                            { 'data-toggle': 'tooltip', 'data-placement': 'right', title: scope.description },
+                                                            scope.name
                                                         )
                                                     )
-                                                )
-                                            )
-                                        )
-                                    )
-                                ),
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'div',
-                                    { className: 'row' },
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'div',
-                                        { className: 'col-6 text-left' },
-                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                            'button',
-                                            { type: 'button', className: 'btn btn-primary', 'data-dismiss': 'modal' },
-                                            'Annuler'
+                                                );
+                                            }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', null)
                                         )
                                     ),
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                         'div',
-                                        { className: 'col-6 text-right' },
+                                        { className: 'row' },
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                            'button',
-                                            { type: 'button', className: 'btn btn-primary' },
-                                            'Cr\xE9er le client'
+                                            'div',
+                                            { className: 'col-6 text-left' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'button',
+                                                { type: 'button', className: 'btn btn-primary', 'data-dismiss': 'modal' },
+                                                'Annuler'
+                                            )
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-6 text-right' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'button',
+                                                { type: 'submit', className: 'btn btn-primary' },
+                                                'Cr\xE9er le client'
+                                            )
                                         )
                                     )
                                 )
@@ -39570,6 +39523,155 @@ var Clients = function (_Component) {
                     )
                 )
             );
+
+            // <div className="modal fade" id="modal-see-client" tabindex="-1" role="dialog">
+            //     <div className="modal-dialog modal-lg">
+            //         <div className="modal-content">
+            //             <div className="modal-body">
+            //                 <div className="row mb-3">
+            //                     <div className="col-6">
+            //                         <h4><b>Voir</b></h4>
+            //                     </div>
+            //                     <div className="col-6 text-right">
+            //                         <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            //                     </div>
+            //                 </div>
+
+            //                 <form role="form">
+            //                     <div className="form-group row">
+            //                         <label className="col-md-3 col-form-label">Nom :</label>
+
+            //                         <div className="col-md-9">
+            //                             <input id="edit-client-name" type="text" disabled className="form-control"
+            //                                                         keyup.enter="update" v-model="form.name">
+
+            //                             <span className="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
+            //                         </div>
+            //                     </div>
+
+            //                     <div className="form-group row">
+            //                         <label className="col-md-3 col-form-label">ID Asso :</label>
+
+            //                         <div className="col-md-9">
+            //                             <input type="number" min="0" disabled className="form-control"
+            //                                                         keyup.enter="update" v-model="form.asso_id">
+
+            //                             <span className="form-text text-muted">L'ID de l'asso pour qui la clé est créee.</span>
+            //                         </div>
+            //                     </div>
+
+            //                     <div className="form-group row">
+            //                         <label className="col-md-3 col-form-label">Redirection :</label>
+
+            //                         <div className="col-md-9">
+            //                             <input type="text" className="form-control" disabled name="redirect"
+            //                                             keyup.enter="update" v-model="form.redirect">
+
+            //                             <span className="form-text text-muted">Adresse de redirection après authentification.</span>
+            //                         </div>
+            //                     </div>
+
+            //                     <div className="form-group row" v-if="form.scopes.length > 0" keyup.enter="update" v-model="form.scopes">
+            //                         <label className="col-md-3 col-form-label">Scopes :</label>
+
+            //                         <div className="col-md-9">
+            //                             <span className="d-block mb-1" v-for="scope in form.scopes">
+            //                                 <code>{{ scope }}</code> : {{ scopes[scope] }}
+            //                             </span>
+            //                         </div>
+            //                     </div>
+            //                 </form>
+
+            //                 <div className="row">
+            //                     <div className="col-12 text-right">
+            //                         <button type="button" className="btn btn-primary" data-dismiss="modal">Fermer</button>
+            //                     </div>
+            //                 </div>
+            //             </div>
+            //         </div>
+            //     </div>
+            // </div>
+
+            // <div className="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
+            //     <div className="modal-dialog modal-lg">
+            //         <div className="modal-content">
+            //             <div className="modal-body">
+            //                 <div className="row mb-3">
+            //                     <div className="col-6">
+            //                         <h4><b>Modifier un client</b></h4>
+            //                     </div>
+            //                     <div className="col-6 text-right">
+            //                         <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            //                     </div>
+            //                 </div>
+
+            //                 <div className="alert alert-danger" v-if="form.errors.length > 0">
+            //                     <p className="mb-0"><strong>Erreur</strong></p>
+            //                     <br>
+            //                     <ul>
+            //                         <li v-for="error in form.errors">
+            //                             {{ error }}
+            //                         </li>
+            //                     </ul>
+            //                 </div>
+
+            //                 <form role="form">
+            //                     <div className="form-group row">
+            //                         <label className="col-md-3 col-form-label">Nom :</label>
+
+            //                         <div className="col-md-9">
+            //                             <input id="edit-client-name" type="text" className="form-control"
+            //                                                         keyup.enter="update" v-model="form.name">
+
+            //                             <span className="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
+            //                         </div>
+            //                     </div>
+
+            //                     <div className="form-group row">
+            //                         <label className="col-md-3 col-form-label">Redirection :</label>
+
+            //                         <div className="col-md-9">
+            //                             <input type="text" className="form-control" name="redirect"
+            //                                             keyup.enter="update" v-model="form.redirect">
+
+            //                             <span className="form-text text-muted">Adresse de redirection après authentification.</span>
+            //                         </div>
+            //                     </div>
+
+            //                     <div className="form-group row">
+            //                         <label className="col-md-3 col-form-label">Scopes :</label>
+
+            //                         <div className="col-md-9">
+            //                             <div v-for="(description, name) in scopes" v-if="name.startsWith('client')">
+            //                                 <div className="checkbox">
+            //                                     <label>
+            //                                         <input type="checkbox"
+            //                                             click="toggleScope(name)"
+            //                                             :checked="scopeIsAssigned(name)">
+
+            //                                             &nbsp;
+
+            //                                             <span data-toggle="tooltip" data-placement="right" :title="description">{{ name }}</span>
+            //                                     </label>
+            //                                 </div>
+            //                             </div>
+            //                         </div>
+            //                     </div>
+            //                 </form>
+
+            //                 <div className="row">
+            //                     <div className="col-6 text-left">
+            //                         <button type="button" className="btn btn-primary" data-dismiss="modal">Annuler</button>
+            //                     </div>
+            //                     <div className="col-6 text-right">
+            //                         <button type="button" className="btn btn-danger mr-2" data-dismiss="modal" click="destroy">Supprimer</button>
+            //                         <button type="button" className="btn btn-primary" click="store">Modifier le client</button>
+            //                     </div>
+            //                 </div>
+            //             </div>
+            //         </div>
+            //     </div>
+            // </div>
         }
     }]);
 
@@ -39577,6 +39679,12 @@ var Clients = function (_Component) {
 }(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);
 
 /* harmony default export */ __webpack_exports__["a"] = (Clients);
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
