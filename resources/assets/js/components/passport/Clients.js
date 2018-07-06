@@ -85,11 +85,11 @@ class Clients extends Component {
         var form = this.state.form;
         form.errors = [];
 
-        console.log(form);
-
         axios({ method: method, url: url, data: form })
             .then(response => {
                 this.getClients();
+
+                console.log(response);
 
                 $("#createModal").modal('hide');
 
@@ -103,8 +103,9 @@ class Clients extends Component {
 
                 // this.setState({ form: form });
             })
-            .catch(error => {
-                console.log(error);
+            .catch(error => {                
+                form.errors = ['Une erreur est survenue. Veuillez réessayer'];
+                this.setState({ form: form });
             });
     }
 
@@ -165,11 +166,7 @@ class Clients extends Component {
                                     <div className="alert alert-danger" v-if="form.errors.length > 0">
                                         <p className="mb-0"><strong>Erreur</strong></p>
                                         <br />
-                                        <ul>
-                                            <li>
-                                                error
-                                            </li>
-                                        </ul>
+                                        Une erreur est survenue. Veuillez réessayer.
                                     </div>
                                 ) : (<span></span>)}
 

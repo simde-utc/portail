@@ -39221,10 +39221,10 @@ var Clients = function (_Component) {
             var form = this.state.form;
             form.errors = [];
 
-            console.log(form);
-
             axios({ method: method, url: url, data: form }).then(function (response) {
                 _this4.getClients();
+
+                console.log(response);
 
                 $("#createModal").modal('hide');
 
@@ -39238,7 +39238,8 @@ var Clients = function (_Component) {
 
                 // this.setState({ form: form });
             }).catch(function (error) {
-                console.log(error);
+                form.errors = ['Une erreur est survenue. Veuillez réessayer'];
+                _this4.setState({ form: form });
             });
         }
     }, {
@@ -39385,15 +39386,7 @@ var Clients = function (_Component) {
                                         )
                                     ),
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'ul',
-                                        null,
-                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                            'li',
-                                            null,
-                                            'error'
-                                        )
-                                    )
+                                    'Une erreur est survenue. Veuillez r\xE9essayer.'
                                 ) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', null),
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                     'form',
