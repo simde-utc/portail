@@ -44,7 +44,7 @@ class CalendarController extends Controller
 				abort(403, 'Vous n\'avez pas le droit de consulter ce calendrier');
 
 			if ($needRights && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
-				abort(403, 'Vous n\'avez pas les droit suffisant');
+				abort(403, 'Vous n\'avez pas les droits suffisants');
 
 			return $calendar;
 		}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Event;
+use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -108,11 +109,19 @@ class EventController extends Controller
 		$inputs['created_by_type'] = get_class($creater);
 		$inputs['owned_by_id'] = $owner->id;
 		$inputs['owned_by_type'] = get_class($owner);
+		
+		$calendar = Calendar::find($inputs['calendar_id']);
+
+		if (!$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
+			abort(403, 'Vous n\'avez pas les droits suffisants pour ajouter cet évènenement à ce calendrier');
 
 		$event = Event::create($inputs);
 
-		if ($event)
+		if ($event) {
+			$event->calendars()->assign($calendar);
+
 			return response()->json($event, 201);
+		}
 		else
 			return response()->json(['message' => 'Impossible de créer le évènenement'], 500);
 
