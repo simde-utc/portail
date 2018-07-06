@@ -43,10 +43,22 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars
 	}
 
 	public function isCalendarAccessibleBy(int $user_id): bool {
-		return $this->currentMembers()->wherePivot($user_id)->exists();
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
 	public function isCalendarManageableBy(int $user_id): bool {
-		return $this->user_id === $user_id;
+		return $this->hasOnePermission('group calendar', [
+			'user_id' => $user_id,
+		]);
+	}
+
+	public function isEventAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isEventManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('group event', [
+			'user_id' => $user_id,
+		]);
 	}
 }

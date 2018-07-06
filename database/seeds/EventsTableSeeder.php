@@ -113,7 +113,7 @@ class EventsTableSeeder extends Seeder
 				'location_id'		=> Location::where('name', $event['location'])->first()->id,
 				'begin_at'			=> Carbon::parse($event['begin_at']),
 				'end_at'			=> Carbon::parse($event['end_at']),
-				'visibility_id'		=> Visibility::findByType($event['visibility'])->first()->id,
+				'visibility_id'		=> Visibility::findByType($event['visibility'])->id,
 				'full_day'			=> $event['full_day'] ?? false,
 				'created_by_id'		=> isset($event['created_by']) ? $event['created_by']->id : null,
 				'created_by_type'	=> isset($event['created_by']) ? get_class($event['created_by']) : null,

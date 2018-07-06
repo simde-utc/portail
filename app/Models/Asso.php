@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\Traits\HasMembers;
 use \App\Traits\HasStages;
+use App\Interfaces\CanHaveEvents;
 use App\Interfaces\CanHaveCalendars;
 
-class Asso extends Model implements CanBeOwner, CanHaveCalendars
+class Asso extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 {
 	use SoftDeletes, HasStages, HasMembers {
 		HasMembers::members as membersAndFollowers;
@@ -149,11 +150,21 @@ class Asso extends Model implements CanBeOwner, CanHaveCalendars
 	}
 
 	public function isCalendarAccessibleBy(int $user_id): bool {
-		return $this->currentMembers()->wherePivot($user_id)->exists();
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
 	public function isCalendarManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('calendrier', [
+		return $this->hasOnePermission('calendar', [
+			'user_id' => $user_id,
+		]);
+	}
+
+	public function isEventAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isEventManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('event', [
 			'user_id' => $user_id,
 		]);
 	}

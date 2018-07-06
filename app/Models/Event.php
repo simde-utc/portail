@@ -5,11 +5,6 @@ namespace App\Models;
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Calendar;
-use App\Models\Visibility;
-use App\Models\User;
-use App\Models\Asso;
-use App\Models\Group;
 use App\Traits\HasVisibility;
 
 class Event extends Model implements OwnableContract
@@ -28,6 +23,10 @@ class Event extends Model implements OwnableContract
         'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
     ];
 
+    public function created_by() {
+        return $this->morphTo();
+    }
+
     public function owned_by() {
         return $this->morphTo();
     }
@@ -37,7 +36,7 @@ class Event extends Model implements OwnableContract
     }
 
     public function calendars() {
-        return $this->belongsToMany(Calendars::class, 'calendars_events')->withTimestamps();
+        return $this->belongsToMany(Calendar::class, 'calendars_events')->withTimestamps();
     }
 
 	public function user() {
