@@ -39198,6 +39198,21 @@ var Clients = function (_Component) {
             $("#viewModal").modal('toggle');
         }
     }, {
+        key: 'editClient',
+        value: function editClient(client, e) {
+            this.setState({ client: client });
+            $("#editModal").modal('toggle');
+        }
+    }, {
+        key: 'deleteClient',
+        value: function deleteClient(client, e) {
+            var _this4 = this;
+
+            axios.delete('/oauth/clients/' + this.state.client.id).then(function (response) {
+                _this4.getClients();
+            });
+        }
+    }, {
         key: 'handleInputChange',
         value: function handleInputChange(e) {
             var name = e.target.name;
@@ -39228,7 +39243,7 @@ var Clients = function (_Component) {
     }, {
         key: 'handleSubmit',
         value: function handleSubmit(method, url, e) {
-            var _this4 = this;
+            var _this5 = this;
 
             e.preventDefault();
 
@@ -39236,7 +39251,7 @@ var Clients = function (_Component) {
             form.errors = [];
 
             axios({ method: method, url: url, data: form }).then(function (response) {
-                _this4.getClients();
+                _this5.getClients();
 
                 var form = {
                     errors: [],
@@ -39246,18 +39261,18 @@ var Clients = function (_Component) {
                     scopes: []
                 };
 
-                _this4.setState({ form: form });
+                _this5.setState({ form: form });
 
                 $("#createModal").modal('toggle');
             }).catch(function (error) {
                 form.errors = ['Une erreur est survenue. Veuillez réessayer'];
-                _this4.setState({ form: form });
+                _this5.setState({ form: form });
             });
         }
     }, {
         key: 'render',
         value: function render() {
-            var _this5 = this;
+            var _this6 = this;
 
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
@@ -39309,13 +39324,15 @@ var Clients = function (_Component) {
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                         'button',
                                         { className: 'btn btn-primary btn-sm mb-1 mr-1', onClick: function onClick(e) {
-                                                return _this5.viewClient(client, e);
+                                                return _this6.viewClient(client, e);
                                             } },
                                         'Voir'
                                     ),
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                         'button',
-                                        { className: 'btn btn-primary btn-sm mb-1', click: 'edit(client)' },
+                                        { className: 'btn btn-primary btn-sm mb-1', onClick: function onClick(e) {
+                                                return _this6.editClient(client, e);
+                                            } },
                                         'Modifier'
                                     )
                                 ),
@@ -39403,7 +39420,7 @@ var Clients = function (_Component) {
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                     'form',
                                     { onSubmit: function onSubmit(e) {
-                                            return _this5.handleSubmit('post', 'oauth/clients', e);
+                                            return _this6.handleSubmit('post', 'oauth/clients', e);
                                         } },
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                         'div',
@@ -39417,7 +39434,7 @@ var Clients = function (_Component) {
                                             'div',
                                             { className: 'col-md-9' },
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'create-client-name', type: 'text', className: 'form-control', name: 'name', onChange: function onChange(e) {
-                                                    return _this5.handleInputChange(e);
+                                                    return _this6.handleInputChange(e);
                                                 } }),
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'span',
@@ -39438,7 +39455,7 @@ var Clients = function (_Component) {
                                             'div',
                                             { className: 'col-md-9' },
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { name: 'asso_id', type: 'number', min: '0', className: 'form-control', onChange: function onChange(e) {
-                                                    return _this5.handleInputChange(e);
+                                                    return _this6.handleInputChange(e);
                                                 } }),
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'span',
@@ -39459,7 +39476,7 @@ var Clients = function (_Component) {
                                             'div',
                                             { className: 'col-md-9' },
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'form-control', name: 'redirect', onChange: function onChange(e) {
-                                                    return _this5.handleInputChange(e);
+                                                    return _this6.handleInputChange(e);
                                                 } }),
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'span',
@@ -39487,7 +39504,7 @@ var Clients = function (_Component) {
                                                         'label',
                                                         null,
                                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'checkbox', name: 'scope', value: scope.name, onChange: function onChange(e) {
-                                                                return _this5.handleInputChange(e);
+                                                                return _this6.handleInputChange(e);
                                                             } }),
                                                         '\xA0',
                                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -39671,89 +39688,198 @@ var Clients = function (_Component) {
                             )
                         )
                     )
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'modal fade', id: 'editModal', tabindex: '-1', role: 'dialog' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'modal-dialog modal-lg' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'modal-content' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'modal-body' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'row mb-3' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'col-6' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'h4',
+                                            null,
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'b',
+                                                null,
+                                                'Modifier un client'
+                                            )
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'col-6 text-right' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'button',
+                                            { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-hidden': 'true' },
+                                            '\xD7'
+                                        )
+                                    )
+                                ),
+                                this.state.form.errors.length > 0 ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'alert alert-danger', 'v-if': 'form.errors.length > 0' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'p',
+                                        { className: 'mb-0' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'strong',
+                                            null,
+                                            'Erreur'
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
+                                    'Une erreur est survenue. Veuillez r\xE9essayer.'
+                                ) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', null),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'form',
+                                    { onSubmit: function onSubmit(e) {
+                                            return _this6.handleSubmit('post', 'oauth/clients', e);
+                                        } },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'form-group row' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'label',
+                                            { className: 'col-md-3 col-form-label' },
+                                            'Nom :'
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-md-9' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'create-client-name', type: 'text', className: 'form-control', name: 'name', value: this.state.client.name, onChange: function onChange(e) {
+                                                    return _this6.handleInputChange(e);
+                                                } }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'span',
+                                                { className: 'form-text text-muted' },
+                                                'Le nom qui s\'affichera pour vos utilisateurs.'
+                                            )
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'form-group row' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'label',
+                                            { className: 'col-md-3 col-form-label' },
+                                            'ID Asso :'
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-md-9' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { name: 'asso_id', type: 'number', min: '0', className: 'form-control', value: this.state.client.asso_id, onChange: function onChange(e) {
+                                                    return _this6.handleInputChange(e);
+                                                } }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'span',
+                                                { className: 'form-text text-muted' },
+                                                'L\'ID de l\'asso pour qui la cl\xE9 est cr\xE9ee.'
+                                            )
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'form-group row' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'label',
+                                            { className: 'col-md-3 col-form-label' },
+                                            'Redirection :'
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-md-9' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'form-control', name: 'redirect', value: this.state.client.redirect, onChange: function onChange(e) {
+                                                    return _this6.handleInputChange(e);
+                                                } }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'span',
+                                                { className: 'form-text text-muted' },
+                                                'Adresse de redirection apr\xE8s authentification.'
+                                            )
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'form-group row' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'label',
+                                            { className: 'col-md-3 col-form-label' },
+                                            'Scopes :'
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-md-9' },
+                                            this.state.scopes.length > 0 ? this.state.scopes.map(function (scope, i) {
+                                                var isChecked = false;
+                                                if (_this6.state.client.scopes && _this6.state.client.scopes.indexOf(scope.name) != -1) isChecked = true;
+
+                                                return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                    'div',
+                                                    { key: i, className: 'checkbox' },
+                                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                        'label',
+                                                        null,
+                                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'checkbox', name: 'scope', value: scope.name, onChange: function onChange(e) {
+                                                                return _this6.handleInputChange(e);
+                                                            }, checked: isChecked ? "checked" : false }),
+                                                        '\xA0',
+                                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                            'span',
+                                                            { 'data-toggle': 'tooltip', 'data-placement': 'right', title: scope.description },
+                                                            scope.name
+                                                        )
+                                                    )
+                                                );
+                                            }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', null)
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'row' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-6 text-left' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'button',
+                                                { type: 'button', className: 'btn btn-primary', 'data-dismiss': 'modal' },
+                                                'Annuler'
+                                            )
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'col-6 text-right' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'button',
+                                                { type: 'button', className: 'btn btn-danger mr-2', 'data-dismiss': 'modal', onClick: function onClick(e) {
+                                                        return _this6.deleteClient(_this6.state.client, e);
+                                                    } },
+                                                'Supprimer'
+                                            ),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'button',
+                                                { type: 'submit', className: 'btn btn-primary' },
+                                                'Modifier le client'
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
                 )
             );
-
-            // <div className="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
-            //     <div className="modal-dialog modal-lg">
-            //         <div className="modal-content">
-            //             <div className="modal-body">
-            //                 <div className="row mb-3">
-            //                     <div className="col-6">
-            //                         <h4><b>Modifier un client</b></h4>
-            //                     </div>
-            //                     <div className="col-6 text-right">
-            //                         <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            //                     </div>
-            //                 </div>
-
-            //                 <div className="alert alert-danger" v-if="form.errors.length > 0">
-            //                     <p className="mb-0"><strong>Erreur</strong></p>
-            //                     <br>
-            //                     <ul>
-            //                         <li v-for="error in form.errors">
-            //                             {{ error }}
-            //                         </li>
-            //                     </ul>
-            //                 </div>
-
-            //                 <form role="form">
-            //                     <div className="form-group row">
-            //                         <label className="col-md-3 col-form-label">Nom :</label>
-
-            //                         <div className="col-md-9">
-            //                             <input id="edit-client-name" type="text" className="form-control"
-            //                                                         keyup.enter="update" v-model="form.name">
-
-            //                             <span className="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
-            //                         </div>
-            //                     </div>
-
-            //                     <div className="form-group row">
-            //                         <label className="col-md-3 col-form-label">Redirection :</label>
-
-            //                         <div className="col-md-9">
-            //                             <input type="text" className="form-control" name="redirect"
-            //                                             keyup.enter="update" v-model="form.redirect">
-
-            //                             <span className="form-text text-muted">Adresse de redirection après authentification.</span>
-            //                         </div>
-            //                     </div>
-
-            //                     <div className="form-group row">
-            //                         <label className="col-md-3 col-form-label">Scopes :</label>
-
-            //                         <div className="col-md-9">
-            //                             <div v-for="(description, name) in scopes" v-if="name.startsWith('client')">
-            //                                 <div className="checkbox">
-            //                                     <label>
-            //                                         <input type="checkbox"
-            //                                             click="toggleScope(name)"
-            //                                             :checked="scopeIsAssigned(name)">
-
-            //                                             &nbsp;
-
-            //                                             <span data-toggle="tooltip" data-placement="right" :title="description">{{ name }}</span>
-            //                                     </label>
-            //                                 </div>
-            //                             </div>
-            //                         </div>
-            //                     </div>
-            //                 </form>
-
-            //                 <div className="row">
-            //                     <div className="col-6 text-left">
-            //                         <button type="button" className="btn btn-primary" data-dismiss="modal">Annuler</button>
-            //                     </div>
-            //                     <div className="col-6 text-right">
-            //                         <button type="button" className="btn btn-danger mr-2" data-dismiss="modal" click="destroy">Supprimer</button>
-            //                         <button type="button" className="btn btn-primary" click="store">Modifier le client</button>
-            //                     </div>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //     </div>
-            // </div>
         }
     }]);
 
