@@ -25,7 +25,23 @@ class Clients extends Component {
 
     getClients() {
         axios.get('/oauth/clients').then(response => {
-            this.setState({ clients: response.data });
+            var clients = response.data;
+
+            clients.map(function(client) {
+                try {
+                    client.scopes = JSON.parse(client.scopes);
+
+                    if (client.scopes === null) {
+                        client.scopes = [];
+                    }
+                }
+                catch (error) {
+                    console.log(error);
+                    client.scopes = [];
+                }
+            });
+
+            this.setState({ clients: clients });
         });
     }
 
@@ -48,8 +64,7 @@ class Clients extends Component {
 
     viewClient(client, e) {
         this.setState({ client: client });
-
-        //$('#viewClient').modal('show');
+        $("#viewModal").modal('toggle');
     }
 
     handleInputChange(e) {
@@ -76,8 +91,6 @@ class Clients extends Component {
             form[name] = e.target.value;
         }
 
-        // console.log(form);
-
         this.setState({ form: form });
     }
 
@@ -91,8 +104,6 @@ class Clients extends Component {
             .then(response => {
                 this.getClients();
                 
-                document.getElementById("hideModalBtn").click();
-
                 var form = {
                     errors: [],
                     name: '',
@@ -102,6 +113,8 @@ class Clients extends Component {
                 }
 
                 this.setState({ form: form });
+
+                $("#createModal").modal('toggle');
             })
             .catch(error => {                
                 form.errors = ['Une erreur est survenue. Veuillez réessayer'];
@@ -257,7 +270,7 @@ class Clients extends Component {
                                         <label className="col-md-3 col-form-label">Nom :</label>
 
                                         <div className="col-md-9">
-                                            <input type="text" disabled className="form-control" />
+                                            <input type="text" disabled className="form-control" value={ this.state.client.name } />
 
                                             <span className="form-text text-muted">Le nom qui s'affichera pour vos utilisateurs.</span>
                                         </div>
@@ -267,7 +280,7 @@ class Clients extends Component {
                                         <label className="col-md-3 col-form-label">ID Asso :</label>
 
                                         <div className="col-md-9">
-                                            <input type="number" min="0" disabled className="form-control" />
+                                            <input type="number" min="0" disabled className="form-control" value={ this.state.client.asso_id } />
 
                                             <span className="form-text text-muted">L'ID de l'asso pour qui la clé est créee.</span>
                                         </div>
@@ -277,7 +290,7 @@ class Clients extends Component {
                                         <label className="col-md-3 col-form-label">Redirection :</label>
 
                                         <div className="col-md-9">
-                                            <input type="text" className="form-control" disabled name="redirect" />
+                                            <input type="text" className="form-control" disabled value={ this.state.client.redirect } />
 
                                             <span className="form-text text-muted">Adresse de redirection après authentification.</span>
                                         </div>
@@ -287,9 +300,15 @@ class Clients extends Component {
                                         <label className="col-md-3 col-form-label">Scopes :</label>
 
                                         <div className="col-md-9">
-                                            <span className="d-block mb-1" v-for="scope in form.scopes">
-                                                <code>scope</code> : scopes[scope]
-                                            </span>
+                                        { this.state.client.scopes ? (
+                                            this.state.client.scopes.map((scope, i) => 
+                                                <span key={i} className="d-block mb-1">
+                                                    <code>{ scope }</code> : scopes[scope]
+                                                </span>
+                                            )
+                                        ) : (
+                                            <span>Pas de scopes client.</span>
+                                        )}
                                         </div>
                                     </div>
                                 </form>

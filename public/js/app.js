@@ -39153,7 +39153,22 @@ var Clients = function (_Component) {
             var _this2 = this;
 
             axios.get('/oauth/clients').then(function (response) {
-                _this2.setState({ clients: response.data });
+                var clients = response.data;
+
+                clients.map(function (client) {
+                    try {
+                        client.scopes = JSON.parse(client.scopes);
+
+                        if (client.scopes === null) {
+                            client.scopes = [];
+                        }
+                    } catch (error) {
+                        console.log(error);
+                        client.scopes = [];
+                    }
+                });
+
+                _this2.setState({ clients: clients });
             });
         }
     }, {
@@ -39180,8 +39195,7 @@ var Clients = function (_Component) {
         key: 'viewClient',
         value: function viewClient(client, e) {
             this.setState({ client: client });
-
-            //$('#viewClient').modal('show');
+            $("#viewModal").modal('toggle');
         }
     }, {
         key: 'handleInputChange',
@@ -39209,8 +39223,6 @@ var Clients = function (_Component) {
                 form[name] = e.target.value;
             }
 
-            // console.log(form);
-
             this.setState({ form: form });
         }
     }, {
@@ -39226,8 +39238,6 @@ var Clients = function (_Component) {
             axios({ method: method, url: url, data: form }).then(function (response) {
                 _this4.getClients();
 
-                document.getElementById("hideModalBtn").click();
-
                 var form = {
                     errors: [],
                     name: '',
@@ -39237,6 +39247,8 @@ var Clients = function (_Component) {
                 };
 
                 _this4.setState({ form: form });
+
+                $("#createModal").modal('toggle');
             }).catch(function (error) {
                 form.errors = ['Une erreur est survenue. Veuillez réessayer'];
                 _this4.setState({ form: form });
@@ -39567,7 +39579,7 @@ var Clients = function (_Component) {
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'div',
                                             { className: 'col-md-9' },
-                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', disabled: true, className: 'form-control' }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', disabled: true, className: 'form-control', value: this.state.client.name }),
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'span',
                                                 { className: 'form-text text-muted' },
@@ -39586,7 +39598,7 @@ var Clients = function (_Component) {
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'div',
                                             { className: 'col-md-9' },
-                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'number', min: '0', disabled: true, className: 'form-control' }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'number', min: '0', disabled: true, className: 'form-control', value: this.state.client.asso_id }),
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'span',
                                                 { className: 'form-text text-muted' },
@@ -39605,7 +39617,7 @@ var Clients = function (_Component) {
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'div',
                                             { className: 'col-md-9' },
-                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'form-control', disabled: true, name: 'redirect' }),
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'form-control', disabled: true, value: this.state.client.redirect }),
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'span',
                                                 { className: 'form-text text-muted' },
@@ -39624,15 +39636,21 @@ var Clients = function (_Component) {
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'div',
                                             { className: 'col-md-9' },
-                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            this.state.client.scopes ? this.state.client.scopes.map(function (scope, i) {
+                                                return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                    'span',
+                                                    { key: i, className: 'd-block mb-1' },
+                                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                        'code',
+                                                        null,
+                                                        scope
+                                                    ),
+                                                    ' : scopes[scope]'
+                                                );
+                                            }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'span',
-                                                { className: 'd-block mb-1', 'v-for': 'scope in form.scopes' },
-                                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                                    'code',
-                                                    null,
-                                                    'scope'
-                                                ),
-                                                ' : scopes[scope]'
+                                                null,
+                                                'Pas de scopes client.'
                                             )
                                         )
                                     )
