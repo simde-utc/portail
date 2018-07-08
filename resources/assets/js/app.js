@@ -1,21 +1,20 @@
-
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes React and other helpers. It's a great starting point while
- * building robust, powerful web applications using React + Laravel.
- */
-
-require('./bootstrap');
-
-/**
- * Next, we will create a fresh React component instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 
-import App from './components/App.js';
+import { Route } from 'react-router-dom';
 
-ReactDOM.render((<App />), document.getElementById('root'));
+import Navbar from './components/Navbar.js';
+import AuthorizedClients from './components/Passport/AuthorizedClients.js';
+import Clients from './components/Passport/Clients.js';
+
+class App extends Component {
+    render() {
+        return (
+            <div>
+                <Navbar />
+                <Route exact path="/" component={ScreensDashboard} />        
+            </div>
+        );
+    }
+}
+
+export default App;
