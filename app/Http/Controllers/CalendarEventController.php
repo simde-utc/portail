@@ -67,6 +67,10 @@ class CalendarEventController extends Controller
 			if ($needRights && !$event->owned_by->isEventManageableBy(\Auth::id()))
 				abort(403, 'Vous n\'avez pas les droit suffisant');
 
+			$event->participants = $event->participants->map(function ($user) use ($request) {
+				return $this->hideUserData($request, $user);
+			});
+
 			return $event;
 		}
 

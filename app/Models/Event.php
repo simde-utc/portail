@@ -35,6 +35,14 @@ class Event extends Model implements OwnableContract
     	return $this->belongsTo(Visibility::class);
     }
 
+    public function getParticipantsAttribute() {
+        return $this->calendars->map(function ($calendar) {
+            return $calendar->owned_by;
+        })->filter(function ($owner) {
+            return $owner instanceof User;
+        });
+    }
+
     public function calendars() {
         return $this->belongsToMany(Calendar::class, 'calendars_events')->withTimestamps();
     }
@@ -62,12 +70,4 @@ class Event extends Model implements OwnableContract
 	public function group() {
 		return $this->morphTo(Group::class, 'owned_by');
 	}
-
-    public function isEventAccessibleBy(int $user_id): bool {
-        return $this->owned_by->isEventAccessibleBy($user_id);
-    }
-
-    public function isEventManageableBy(int $user_id): bool {
-        return $this->owned_by->isEventManageableBy($user_id);
-    }
 }
