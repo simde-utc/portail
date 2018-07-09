@@ -2,18 +2,19 @@ import React, { Component } from 'react';
 
 import { Route } from 'react-router-dom';
 
-import ScreensDashboard from './screens/Dashboard.js';
+import ScreensDashboard from './screens/Dashboard';
 
-import Navbar from './components/Navbar.js';
-import AuthorizedClients from './components/Passport/AuthorizedClients.js';
-import Clients from './components/Passport/Clients.js';
+import Navbar from './components/Navbar';
+
 
 class App extends Component {
     render() {
         return (
             <div>
                 <Navbar />
-                <Route exact path="/" component={ScreensDashboard} />        
+                <div style={{ marginTop: '66px' }}>
+                	<Route exact path="/" component={ScreensDashboard} />        
+                </div>
             </div>
         );
     }

@@ -17,6 +17,9 @@ import ReactDOM from 'react-dom';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
+// Add Semantic CSS
+import '../../semantic/dist/semantic.min.css';
+
 import App from './App.js';
 
 ReactDOM.render((
