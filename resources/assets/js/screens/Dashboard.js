@@ -19,3 +19,5 @@ class ScreensDashboard extends Component {
         );
     }
 }
+
+export default ScreensDashboard;

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import { Route } from 'react-router-dom';
 
+import ScreensDashboard from './screens/Dashboard.js';
+
 import Navbar from './components/Navbar.js';
 import AuthorizedClients from './components/Passport/AuthorizedClients.js';
 import Clients from './components/Passport/Clients.js';
