@@ -18,6 +18,17 @@ class Calendar extends Model implements OwnableContract
         'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
     ];
 
+	protected static $types = [
+		'user' => User::class,
+		'asso' => Asso::class,
+		'group' => User::class,
+		'client' => Client::class,
+	];
+
+    public static function getTypes() {
+        return static::$types;
+    }
+
     public function owned_by() {
         return $this->morphTo();
     }

@@ -36,6 +36,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'private',
+				'created_by'	=> User::find(1),
 				'owner'			=> User::find(1),
 				'events'		=> [
 					'Première réunion - Portail',
@@ -47,6 +48,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'private',
+				'created_by'	=> User::find(2),
 				'owner'			=> User::find(2),
 				'events'		=> [
 					'Seconde réunion - Portail',
@@ -57,6 +59,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'private',
+				'created_by'	=> User::find(3),
 				'owner'			=> User::find(3),
 				'events'		=> [
 					'Première réunion - Portail',
@@ -68,6 +71,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'private',
+				'created_by'	=> User::find(4),
 				'owner'			=> User::find(4),
 				'events'		=> [
 					'Seconde réunion - Portail',
@@ -78,6 +82,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier de tous mes cours',
 				'color'			=> '#FFC0CB',
 				'visibility'	=> 'cas',
+				'created_by'	=> Asso::find(6),
 				'owner'			=> User::find(1),
 				'events'		=> [
 					'LA13'
@@ -88,6 +93,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier de tous mes cours',
 				'color'			=> '#FFC0CB',
 				'visibility'	=> 'cas',
+				'created_by'	=> Asso::find(6),
 				'owner'			=> User::find(2),
 				'events'		=> [
 					'MT90/91'
@@ -98,6 +104,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier de tous mes cours',
 				'color'			=> '#FFC0CB',
 				'visibility'	=> 'cas',
+				'created_by'	=> Asso::find(6),
 				'owner'			=> User::find(3),
 				'events'		=> [
 					'MT90/91'
@@ -108,6 +115,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier des évènements du BDE-UTC',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'public',
+				'created_by'	=> Asso::find(1),
 				'owner'			=> Asso::find(1),
 				'events'		=> [
 					'JDA'
@@ -122,6 +130,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier des réunions du BDE-UTC',
 				'color'			=> '#FF0000',
 				'visibility'	=> 'private', // Visible que par les membres
+				'created_by'	=> Asso::find(1),
 				'owner'			=> Asso::find(1),
 				'followers'		=> [
 					User::find(1)
@@ -132,6 +141,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier des évènements du SiMDE',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'public',
+				'created_by'	=> Asso::find(6),
 				'owner'			=> Asso::find(6),
 				'followers'		=> [
 					User::find(1),
@@ -143,6 +153,7 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier des réunions du SiMDE',
 				'color'			=> '#FF0000',
 				'visibility'	=> 'private', // Visible que par les membres
+				'created_by'	=> Asso::find(6),
 				'owner'			=> Asso::find(6),
 				'events'		=> [
 					'Première réunion - Portail',
@@ -163,8 +174,8 @@ class CalendarsTableSeeder extends Seeder
 				'description'		=> $calendar['description'],
 				'color'				=> $calendar['color'],
 				'visibility_id'		=> Visibility::findByType($calendar['visibility'])->id,
-				'created_by_id'		=> isset($calendar['created_by']) ? $calendar['created_by']->id : null,
-				'created_by_type'	=> isset($calendar['created_by']) ? get_class($calendar['created_by']) : null,
+				'created_by_id'		=> $calendar['created_by']->id,
+				'created_by_type'	=> get_class($calendar['created_by']),
 			])->changeOwnerTo($calendar['owner']);
 
 			$model->save();

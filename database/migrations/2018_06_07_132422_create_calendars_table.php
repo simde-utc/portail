@@ -20,7 +20,7 @@ class CreateCalendarsTable extends Migration
             $table->string('color', 9)->nullable();
 			$table->integer('visibility_id')->unsigned();
 			$table->foreign('visibility_id')->references('id')->on('visibilities');
-            $table->nullableMorphs('created_by');
+            $table->morphs('created_by');
             $table->nullableMorphs('owned_by');
 
   			$table->timestamps();

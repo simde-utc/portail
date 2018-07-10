@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Calendar;
+use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,9 +22,47 @@ class CalendarController extends Controller
 {
 	use HasVisibility;
 
+	protected $types;
+
+	public function populateScopes($begin, $end) {
+		return array_map(function ($type) use ($begin, $end) {
+			return $begin.'-'.$type.'s-'.$end;
+		}, array_keys($this->types));
+	}
+
+	public function classToType($class) {
+		return array_search($class, $this->types);
+	}
+
 	public function __construct() {
+		$this->types = Calendar::getTypes();
+
 		$this->middleware(
-			\Scopes::matchAnyUser()
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('client-get-calendars', 'created'),
+				$this->populateScopes('client-get-calendars', 'owned-client')
+			)),
+			['only' => ['index', 'show']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('client-create-calendars', 'created')
+			)),
+			['only' => ['store']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('client-set-calendars', 'created'),
+				$this->populateScopes('client-set-calendars', 'owned-client')
+			)),
+			['only' => ['update']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('client-manage-calendars', 'created'),
+				$this->populateScopes('client-manage-calendars', 'owned-client')
+			)),
+			['only' => ['delete']]
 		);
 	}
 
@@ -36,20 +75,39 @@ class CalendarController extends Controller
 		return $calendar;
 	}
 
-	protected function getCalendar(Request $request, int $id, bool $needRights = false) {
+	protected function getCalendar(Request $request, int $id, string $verb = 'get', bool $needRights = false) {
 		$calendar = Calendar::with(['owned_by', 'created_by', 'visibility'])->find($id);
 
 		if ($calendar) {
-			if (!$this->isVisible($calendar))
+			if (!$this->tokenCanSeeCalendar($request, $calendar, $verb))
 				abort(403, 'Vous n\'avez pas le droit de consulter ce calendrier');
 
-			if ($needRights && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
+			if ($needRights && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
 				abort(403, 'Vous n\'avez pas les droits suffisants');
 
 			return $calendar;
 		}
 
 		abort(404, 'Impossible de trouver le calendrier');
+	}
+
+	protected function tokenCanSeeCalendar(Request $request, Calendar $calendar, string $verb) {
+		if (\Scopes::isClientToken($request)) {
+			if (\Scopes::hasOne($request, 'client-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned'))
+				return true;
+
+			if (\Scopes::hasOne($request, 'client-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned-client') && $calendar->created_by_type === Client::class)
+				return true;
+
+			if (\Scopes::hasOne($request, 'client-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-created'))
+				return true;
+		}
+		else {
+			// TODO MAnque els scopes
+			return $this->isVisible($calendar);
+		}
+
+		return false;
 	}
 
 	public function isPrivate($user_id, $model = null) {
@@ -69,11 +127,13 @@ class CalendarController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse {
-		$calendars = Calendar::with(['owned_by', 'created_by', 'visibility'])->get()->map(function ($calendar) use ($request) {
+		$calendars = Calendar::with(['owned_by', 'created_by', 'visibility'])->get()->filter(function ($calendar) use ($request) {
+			return $this->tokenCanSeeCalendar($request, $calendar, 'get');
+		})->map(function ($calendar) use ($request) {
 			return $this->hideCalendarData($request, $calendar);
 		});
 
-		return response()->json($calendars, 200);
+		return response()->json(array_values($calendars->toArray()), 200);
 	}
 
 	/**
@@ -85,13 +145,22 @@ class CalendarController extends Controller
 	public function store(Request $request): JsonResponse {
 		$inputs = $request->all();
 
-		if (\Scopes::isUserToken($request))
+		if (\Scopes::isUserToken($request)) {
 			$creater = \Auth::user();
-		else {
-			// A faire au choix
+			$owner = \Auth::user();
 		}
+		else {
+			if ($request->filled('created_by_id')) {
+				if (!\Scopes::hasOne($request, 'client-create-calendars-'.$request->input('created_by_type').'s-created'))
+					abort(403);
 
-		$owner = \Auth::id();
+				$creater = resolve($this->types[$request->input('created_by_type')])->find($request->input('created_by_id'));
+			}
+			else if ($request->input('created_by_type', 'client') === 'client')
+				$creater = \Scopes::getToken()->client();
+			else if ($request->input('created_by_type', 'client') === 'asso')
+				$creater = \Scopes::getToken()->client()->asso;
+		}
 
 		if (!($owner instanceof CanHaveCalendars))
 			abort(400, 'Le owner doit au moins pouvoir avoir un calendrier');
@@ -133,7 +202,7 @@ class CalendarController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, $id): JsonResponse {
-		$calendar = $this->getCalendar($request, $id, true);
+		$calendar = $this->getCalendar($request, $id, 'set', true);
 
 		if ($calendar->update($request->input()))
 			return response()->json($this->hideCalendarData($calendar), 200);
@@ -148,7 +217,7 @@ class CalendarController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(Request $request, int $id): JsonResponse {
-		$calendar = $this->getCalendar($request, $id, true);
+		$calendar = $this->getCalendar($request, $id, 'manage', true);
 		$calendar->softDelete();
 
 		abort(204);
