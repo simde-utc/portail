@@ -7,7 +7,6 @@ use App\Models\Visibility;
 use App\Models\User;
 use App\Models\AuthCas;
 use App\Facades\Ginger;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -81,9 +80,11 @@ trait HasVisibility
      *
      * @return bool
      */
-    public function isVisible(Model $model) { // TODO Il faut faire passer un userid en option
+    public function isVisible(Model $model, int $user_id = null) { // TODO Il faut faire passer un userid en option
+		$user_id = $user_id ?? Auth::id();
+
         // Si on est pas connecté, on regarde si la visibilité est publique ou non
-        if (Auth::id() === null)
+        if ($user_id === null)
             return is_null($model->visibility_id) || ($model->visibility_id === Visibility::getTopStage()->first()->id);
 
         // Si le modèle n'a pas de visibilité, on prend la première visibilité, la plus ouverte.
@@ -97,7 +98,7 @@ trait HasVisibility
 
         $type = 'is'.ucfirst($visibility->type);
 
-        if (method_exists(get_class(), $type) && $this->$type(Auth::id(), $model))
+        if (method_exists(get_class(), $type) && $this->$type($user_id, $model))
             return true;
 
         return false;
