@@ -90,7 +90,8 @@
         });
     </script>
 
-    <script src="{{ asset('js/index.js') }}"></script>
+    {{-- Script React --}}
+    {{-- <script src="{{ asset('js/index.js') }}"></script> --}}
 
     @yield('script')
 </body>

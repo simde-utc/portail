@@ -23,4 +23,8 @@ Route::get('register/{provider?}', 'Auth\RegisterController@show')->name('regist
 Route::match(['get', 'post'], 'register/{provider?}/process', 'Auth\RegisterController@store')->name('register.process');
 
 // Vues temporaires, uniquement de l'affichage de liens
-Route::get('/', 'HomeController@welcome')->name('welcome');
+Route::get('/home', 'HomeController@welcome')->name('welcome');
+
+// Route principale vers React
+Route::get('/', 'HomeController@react')->name('react');
+
