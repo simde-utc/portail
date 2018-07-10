@@ -19,63 +19,41 @@ use App\Traits\HasVisibility;
  */
 class UserCalendarController extends Controller
 {
-	use HasVisibility;
 	// TODO getCalendar prend pas en compte les user customs
+
 	public function __construct() {
+		$this->types = Calendar::getTypes();
+
 		$this->middleware(
-			\Scopes::matchAnyUser()
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-get-calendars', 'followed'),
+				$this->populateScopes('client-get-calendars', 'followed')
+			)),
+			['only' => ['index', 'show']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-create-calendars', 'followed'),
+				$this->populateScopes('client-create-calendars', 'followed')
+			)),
+			['only' => ['store']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-set-calendars', 'followed'),
+				$this->populateScopes('client-set-calendars', 'followed')
+			)),
+			['only' => ['update']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-manage-calendars', 'followed'),
+				$this->populateScopes('client-manage-calendars', 'followed')
+			)),
+			['only' => ['delete']]
 		);
 	}
-
-	protected function hideCalendarData(Request $request, $calendar) {
-		$calendar->created_by = $this->hideData($request, $calendar->created_by);
-		$calendar->owned_by = $this->hideData($request, $calendar->owned_by);
-
-		$calendar->makeHidden('visibility_id');
-
-		return $calendar;
-	}
-
-	protected function getUser(Request $request, int $user_id = null) {
-        if (\Scopes::isClientToken($request))
-            $user = User::find($user_id ?? null);
-        else {
-            $user = \Auth::user();
-
-            if (!is_null($user_id) && $user->id !== $user_id)
-                abort(403, 'Il ne vous est pas autorisé d\'accéder aux calendriers des autres utilisateurs');
-        }
-
-		if ($user)
-			return $user;
-		else
-			abort(404, "Utilisateur non trouvé");
-	}
-
-	protected function getCalendar(Request $request, int $id) {
-		$calendar = Calendar::with(['owned_by', 'created_by', 'visibility'])->find($id);
-
-		if ($calendar) {
-			if (!$this->isVisible($calendar))
-				abort(403, 'Vous n\'avez pas le droit de suivre ce calendrier');
-
-			return $calendar;
-		}
-
-		abort(404, 'Impossible de trouver le calendrier');
-	}
-
-	public function isPrivate($user_id, $model = null) {
-		if ($model === null)
-			return false;
-
-		// Si c'est privée, uniquement les followers et ceux qui possèdent le droit peuvent le voir
-		if ($model->followers()->wherePivot('user_id', $user_id)->exists())
-			return true;
-
-		return $model->owned_by->isCalendarAccessibleBy($user_id);
-    }
-
+	
 	/**
 	 * List Calendars
 	 *
