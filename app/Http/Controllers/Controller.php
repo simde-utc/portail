@@ -52,7 +52,7 @@ class Controller extends BaseController
 	 */
 	protected function getUser(Request $request, int $user_id = null): User {
         if (\Scopes::isClientToken($request))
-            $user = User::find($user_id ?? null);
+            $user = $user_id ? User::find($user_id) : null;
         else {
             $user = \Auth::user();
 

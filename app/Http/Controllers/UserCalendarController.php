@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Calendar;
+use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -54,7 +55,7 @@ class UserCalendarController extends AbstractCalendarController
 				$this->populateScopes('user-manage-calendars-users-followed'),
 				$this->populateScopes('client-manage-calendars-users-followed')
 			),
-			['only' => ['delete']]
+			['only' => ['destroy']]
 		);
 	}
 
@@ -89,8 +90,9 @@ class UserCalendarController extends AbstractCalendarController
 		if (in_array('owned', $choices)) {
 			if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-owned'))
 				$calendars = $user->calendars()->with(['owned_by', 'created_by', 'visibility'])->get();
-			else
+			else {
 				$calendars = $user->calendars()->with(['owned_by', 'created_by', 'visibility'])->where('created_by_type', Client::class)->where('created_by_id', \Scopes::getClient($request)->id)->get();
+			}
 		}
 
 		$followed = [];
@@ -122,12 +124,12 @@ class UserCalendarController extends AbstractCalendarController
 	public function store(Request $request, int $user_id = null): JsonResponse {
 		$user = $this->getUser($request, $user_id);
 		$calendars = [];
-		$calendar_ids = $request->input('calendar_ids', $request->input('calendar_id'));
+		$calendar_ids = $request->input('calendar_ids', [$request->input('calendar_id')]);
 
 		foreach ($calendar_ids as $calendar_id) {
 			$calendar = $this->getCalendar($request, $user, $calendar_id);
 
-			$user->followedCalendars()->attach($events);
+			$user->followedCalendars()->attach($calendar);
 			$calendars[] = $calendar;
 		}
 

@@ -22,7 +22,7 @@
 // Toutes les routes commencant par user-{verbe}-calendar-
 return [
 	'description' => 'Calendriers',
-	'icon' => 'calendar-alt',
+	'icon' => 'calendar',
 	'verbs' => [
 		'manage' => [
 			'description' => 'Gérer tout les calendriers',
