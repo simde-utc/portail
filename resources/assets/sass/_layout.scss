@@ -1,10 +1,10 @@
 body {
-	margin-top: $navbar-min-height;
-	// margin-bottom: 33px;		/* dégeu */
+	padding-top: $navbar-min-height;
+	// padding-bottom: 33px;		/* dégeu */
 	overflow-x: hidden;
 }
 
-main {
+html, body, main, #root {
 	height: 100%;
 }
 

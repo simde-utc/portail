@@ -19,6 +19,8 @@
   z-index: $zindex-modal;
   display: none;
   overflow: hidden;
+  background-color: rgba(0,0,0,.5);  
+
   // Prevent Chrome on Windows from adding a focus outline. For details, see
   // https://github.com/twbs/bootstrap/pull/10951.
   outline: 0;
@@ -26,6 +28,10 @@
   // gnarly iOS Safari bug: https://bugs.webkit.org/show_bug.cgi?id=158342
   // See also https://github.com/twbs/bootstrap/issues/17695
 
+  &.show {
+    display: block;
+  }
+  &.show,
   .modal-open & {
     overflow-x: hidden;
     overflow-y: auto;
@@ -44,8 +50,10 @@
   .modal.fade & {
     @include transition($modal-transition);
     transform: translate(0, -25%);
+    opacity: 0;
   }
   .modal.show & {
+    opacity: 1;
     transform: translate(0, 0);
   }
 }

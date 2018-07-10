@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Container, Header } from 'semantic-ui-react';
 
 import AuthorizedClients from './../components/Passport/AuthorizedClients.js';
 import Clients from './../components/Passport/Clients.js';
@@ -8,16 +7,12 @@ import PersonalAccessTokens from './../components/Passport/PersonalAccessTokens.
 class ScreensDashboard extends Component {
 	render() {
 		return (
-			<Container>
-				<div className="row justify-content-center">
-					<div className="col-md-8">
-						<Header as='h1'>Dashboard</Header>
-
-						<AuthorizedClients />
-						<Clients />
-					</div>
-				</div>
-			</Container>
+			<div className="container">
+				<h1>Dashboard</h1>
+				<AuthorizedClients />
+				<Clients />
+				<PersonalAccessTokens />
+			</div>
 		);
 	}
 }
