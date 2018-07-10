@@ -20,11 +20,17 @@ use App\Traits\HasVisibility;
  */
 abstract class AbstractCalendarController extends Controller
 {
+	use HasVisibility;
+
 	protected $types;
 
-	public function populateScopes($begin, $end) {
+	public function __construct() {
+		$this->types = Calendar::getTypes();
+	}
+
+	public function populateScopes($begin, $end = null) {
 		return array_map(function ($type) use ($begin, $end) {
-			return $begin.'-'.$type.'s-'.$end;
+			return $begin.'-'.$type.($end ? 's-'.$end : 's');
 		}, array_keys($this->types));
 	}
 
@@ -41,11 +47,11 @@ abstract class AbstractCalendarController extends Controller
 		return $calendar;
 	}
 
-	protected function getCalendar(Request $request, int $id, string $verb = 'get', bool $needRights = false) {
+	protected function getCalendar(Request $request, User $user, int $id, string $verb = 'get', bool $needRights = false) {
 		$calendar = Calendar::with(['owned_by', 'created_by', 'visibility'])->find($id);
 
 		if ($calendar) {
-			if (!$this->tokenCanSeeCalendar($request, $calendar, $verb))
+			if (!$this->tokenCanSeeCalendar($request, $calendar, $verb) || ($user && !$this->isVisible($calendar, $user->id)))
 				abort(403, 'Vous n\'avez pas le droit de consulter ce calendrier');
 
 			if ($needRights && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
@@ -58,22 +64,13 @@ abstract class AbstractCalendarController extends Controller
 	}
 
 	protected function tokenCanSeeCalendar(Request $request, Calendar $calendar, string $verb) {
-		if (\Scopes::isClientToken($request)) {
-			if (\Scopes::hasOne($request, 'client-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned'))
-				return true;
+		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
 
-			if (\Scopes::hasOne($request, 'client-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned-client') && $calendar->created_by_type === Client::class)
-				return true;
-
-			if (\Scopes::hasOne($request, 'client-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-created'))
-				return true;
-		}
-		else {
-			// TODO MAnque els scopes
-			return $this->isVisible($calendar);
-		}
-
-		return false;
+		return (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned'))
+			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned-client'))
+			 	&& $calendar->created_by_type === Client::class
+				&& $calendar->created_by_id === \Scopes::getClient($request)->id)
+			|| (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-created'));
 	}
 
 	public function isPrivate($user_id, $model = null) {

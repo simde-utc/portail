@@ -42,6 +42,20 @@ return [
 						],
 						'followed' => [
 							'description' => 'Gérer les calendriers que chaque utilisateur suit',
+							'scopes' => [
+								'users' => [
+									'description' => 'Gérer les calendriers utilisateurs que chaque utilisateur suit',
+								],
+								'assos' => [
+									'description' => 'Gérer les calendriers associatifs que chaque utilisateur suit',
+								],
+								'groups' => [
+									'description' => 'Gérer les calendriers de groupe que chaque utilisateur suit',
+								],
+								'clients' => [
+									'description' => 'Gérer les calendriers clients que chaque utilisateur suit',
+								],
+							]
 						],
 					]
 				],
@@ -59,9 +73,6 @@ return [
 								]
 							]
 						],
-						'followed' => [
-							'description' => 'Gérer les calendriers que chaque association suit',
-						],
 					]
 				],
 				'groups' => [
@@ -78,9 +89,6 @@ return [
 								]
 							]
 						],
-						'followed' => [
-							'description' => 'Gérer les calendriers que chaque groupe suit',
-						],
 					]
 				],
 				'clients' => [
@@ -96,9 +104,6 @@ return [
 									'description' => 'Gérer les calendriers que chaque client possède et que mon client crée'
 								]
 							]
-						],
-						'followed' => [
-							'description' => 'Gérer les calendriers que chaque client suit',
 						],
 					]
 				],
@@ -123,6 +128,20 @@ return [
 						],
 						'followed' => [
 							'description' => 'Récupérer les calendriers que chaque utilisateur suit',
+							'scopes' => [
+								'users' => [
+									'description' => 'Récupérer les calendriers utilisateurs que chaque utilisateur suit',
+								],
+								'assos' => [
+									'description' => 'Récupérer les calendriers associatifs que chaque utilisateur suit',
+								],
+								'groups' => [
+									'description' => 'Récupérer les calendriers de groupe que chaque utilisateur suit',
+								],
+								'clients' => [
+									'description' => 'Récupérer les calendriers clients que chaque utilisateur suit',
+								],
+							]
 						],
 					]
 				],
@@ -140,9 +159,6 @@ return [
 								]
 							]
 						],
-						'followed' => [
-							'description' => 'Récupérer les calendriers que chaque association suit',
-						],
 					]
 				],
 				'groups' => [
@@ -159,9 +175,6 @@ return [
 								]
 							]
 						],
-						'followed' => [
-							'description' => 'Récupérer les calendriers que chaque groupe suit',
-						],
 					]
 				],
 				'clients' => [
@@ -177,9 +190,6 @@ return [
 									'description' => 'Récupérer les calendriers que chaque client possède et que mon client crée'
 								]
 							]
-						],
-						'followed' => [
-							'description' => 'Récupérer les calendriers que chaque client suit',
 						],
 					]
 				],
@@ -203,7 +213,21 @@ return [
 							]
 						],
 						'followed' => [
-							'description' => 'Modifier et ajouter les calendriers que chaque utilisateur suit',
+							'description' => 'Modifier et créer les calendriers que chaque utilisateur suit',
+							'scopes' => [
+								'users' => [
+									'description' => 'Modifier et créer les calendriers utilisateurs que chaque utilisateur suit',
+								],
+								'assos' => [
+									'description' => 'Modifier et créer les calendriers associatifs que chaque utilisateur suit',
+								],
+								'groups' => [
+									'description' => 'Modifier et créer les calendriers de groupe que chaque utilisateur suit',
+								],
+								'clients' => [
+									'description' => 'Modifier et créer les calendriers clients que chaque utilisateur suit',
+								],
+							]
 						],
 					]
 				],
@@ -221,9 +245,6 @@ return [
 								]
 							]
 						],
-						'followed' => [
-							'description' => 'Modifier et créer les calendriers que chaque association suit',
-						],
 					]
 				],
 				'groups' => [
@@ -239,9 +260,6 @@ return [
 									'description' => 'Modifier et créer les calendriers que chaque groupe possède et que mon client crée'
 								]
 							]
-						],
-						'followed' => [
-							'description' => 'Modifier et créer les calendriers que chaque groupe suit',
 						],
 					]
 				],
@@ -259,9 +277,6 @@ return [
 								]
 							]
 						],
-						'followed' => [
-							'description' => 'Modifier et créer les calendriers que chaque client suit',
-						],
 					]
 				],
 			]
@@ -276,42 +291,32 @@ return [
 							'description' => 'Créer des calendriers pour chaque utilisateur',
 						],
 						'followed' => [
-							'description' => 'Faire suivre des calendriers pour chaque utilisateur',
+							'description' => 'Faire suivre des calendriers à chaque utilisateur',
+							'scopes' => [
+								'users' => [
+									'description' => 'Faire suivre des calendriers utilisateurs à chaque utilisateur',
+								],
+								'assos' => [
+									'description' => 'Faire suivre des calendriers associatifs à chaque utilisateur',
+								],
+								'groups' => [
+									'description' => 'Faire suivre des calendriers de groupe à chaque utilisateur',
+								],
+								'clients' => [
+									'description' => 'Faire suivre des calendriers de client à chaque utilisateur',
+								],
+							]
 						],
 					]
 				],
 				'assos' => [
-					'description' => 'Créer et faire suivre des calendriers pour chaque association',
-					'scopes' => [
-						'owned' => [
-							'description' => 'Créer des calendriers pour chaque association',
-						],
-						'followed' => [
-							'description' => 'Faire suivre des calendriers pour chaque association',
-						],
-					]
+					'description' => 'Créer des calendriers pour chaque association',
 				],
 				'groups' => [
-					'description' => 'Créer et faire suivre des calendriers pour chaque groupe',
-					'scopes' => [
-						'owned' => [
-							'description' => 'Créer des calendriers pour chaque groupe',
-						],
-						'followed' => [
-							'description' => 'Faire suivre des calendriers pour chaque groupe',
-						],
-					]
+					'description' => 'Créer des calendriers pour chaque groupe',
 				],
 				'clients' => [
-					'description' => 'Créer et faire suivre des calendriers pour chaque client',
-					'scopes' => [
-						'owned' => [
-							'description' => 'Créer des calendriers pour chaque client',
-						],
-						'followed' => [
-							'description' => 'Faire suivre des calendriers pour chaque client',
-						],
-					]
+					'description' => 'Créer des calendriers pour chaque client',
 				],
 			]
 		],

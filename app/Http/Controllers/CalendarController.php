@@ -8,7 +8,7 @@ use App\Models\Calendar;
 use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AbstractCalendarController;
 use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\HasVisibility;
@@ -18,11 +18,11 @@ use App\Traits\HasVisibility;
  *
  * Gestion des calendriers
  */
-class CalendarController extends Controller
+class CalendarController extends AbstractCalendarController
 {
 	public function __construct() {
-		$this->types = Calendar::getTypes();
-
+		parent::__construct();
+		
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
 				$this->populateScopes('client-get-calendars', 'created'),
@@ -60,11 +60,11 @@ class CalendarController extends Controller
 	public function index(Request $request): JsonResponse {
 		$calendars = Calendar::with(['owned_by', 'created_by', 'visibility'])->get()->filter(function ($calendar) use ($request) {
 			return $this->tokenCanSeeCalendar($request, $calendar, 'get');
-		})->map(function ($calendar) use ($request) {
+		})->values()->map(function ($calendar) use ($request) {
 			return $this->hideCalendarData($request, $calendar);
 		});
 
-		return response()->json(array_values($calendars->toArray()), 200);
+		return response()->json($calendar, 200);
 	}
 
 	/**

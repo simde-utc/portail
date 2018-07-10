@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Group;
+use App\Models\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -107,25 +108,27 @@ class Controller extends BaseController
 	}
 
 	protected function hideAssoData(Request $request, Asso $asso) {
-		$asso->makeHidden(['login', 'description', 'type_asso_id', 'parent_id', 'created_at', 'updated_at', 'deleted_at']);
+		return $asso->makeHidden(['login', 'description', 'type_asso_id', 'parent_id', 'created_at', 'updated_at', 'deleted_at']);
 	}
 
 	protected function hideGroupData(Request $request, Group $group) {
-		$group->makeHidden(['icon', 'created_at', 'updated_at', 'deleted_at']);
+		return $group->makeHidden(['icon', 'created_at', 'updated_at', 'deleted_at']);
 	}
 
-	protected function hideClientData(Request $request, Group $client) {
-		$group->makeHidden(['user_id', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'asso_id', 'created_at', 'updated_at', 'scopes']);
+	protected function hideClientData(Request $request, Client $client) {
+		return $client->makeHidden(['user_id', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'asso_id', 'created_at', 'updated_at', 'scopes']);
 	}
 
 	protected function hideData(Request $request, $data) {
 		if ($data != null) {
 			if ($data instanceof User)
-				$this->hideUserData($request, $data);
+				$data = $this->hideUserData($request, $data);
 			else if ($data instanceof Asso)
-				$this->hideAssoData($request, $data);
+				$data = $this->hideAssoData($request, $data);
 			else if ($data instanceof Group)
-				$this->hideGroupData($request, $data);
+				$data = $this->hideGroupData($request, $data);
+			else if ($data instanceof Client)
+				$data = $this->hideClientData($request, $data);
 
 			$namespace = explode('\\', get_class($data));
 			$data['type'] = strtolower(end($namespace));
