@@ -15,15 +15,15 @@ class App extends Component {
 		return (
 			<div className="h-100">
 				<Navbar />
-				<div className="row h-100">
+				<div className="d-flex w-100 h-100">
 					<Sidebar />
-					<div className="col p-4">
+					<main className="col p-4">
 						<Switch>
 							<Route path="/" exact component={ Home } />
 							<Route path="/dashboard" export component={ ScreensDashboard } />        
 							<Route component={ RouteNotFound } />
 						</Switch>
-					</div>
+					</main>
 				</div>
 			</div>
 		);

@@ -1,11 +1,19 @@
+html {
+	overflow: hidden;
+}
+
 body {
 	padding-top: $navbar-min-height;
 	// padding-bottom: 33px;		/* dégeu */
-	overflow-x: hidden;
 }
 
 html, body, main, #root {
 	height: 100%;
+}
+
+main {
+	background-color: $white;
+	box-shadow: 0 0 10px rgba(0,0,0,0.3)
 }
 
 .navbar {
