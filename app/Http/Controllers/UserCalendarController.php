@@ -8,6 +8,7 @@ use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\AbstractCalendarController;
 use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\HasVisibility;
@@ -17,62 +18,97 @@ use App\Traits\HasVisibility;
  *
  * Gestion des calendriers
  */
-class UserCalendarController extends Controller
+class UserCalendarController extends AbstractCalendarController
 {
 	// TODO getCalendar prend pas en compte les user customs
 
 	public function __construct() {
-		$this->types = Calendar::getTypes();
+		parent::__construct();
 
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-get-calendars', 'followed'),
-				$this->populateScopes('client-get-calendars', 'followed')
+				['user-get-calendars-users-owned-client'],
+				$this->populateScopes('user-get-calendars-users-followed')
+			), array_merge(
+				['client-get-calendars-users-owned-client'],
+				$this->populateScopes('client-get-calendars-users-followed')
 			)),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-create-calendars', 'followed'),
-				$this->populateScopes('client-create-calendars', 'followed')
-			)),
+			\Scopes::matchOne(
+				$this->populateScopes('user-create-calendars-users-followed'),
+				$this->populateScopes('client-create-calendars-users-followed')
+			),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-set-calendars', 'followed'),
-				$this->populateScopes('client-set-calendars', 'followed')
-			)),
+			\Scopes::matchOne(
+				$this->populateScopes('user-set-calendars-users-followed'),
+				$this->populateScopes('client-set-calendars-users-followed')
+			),
 			['only' => ['update']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-manage-calendars', 'followed'),
-				$this->populateScopes('client-manage-calendars', 'followed')
-			)),
+			\Scopes::matchOne(
+				$this->populateScopes('user-manage-calendars-users-followed'),
+				$this->populateScopes('client-manage-calendars-users-followed')
+			),
 			['only' => ['delete']]
 		);
 	}
-	
+
+	protected function tokenCanSeeCalendar(Request $request, Calendar $calendar, string $verb) {
+		if (parent::tokenCanSeeCalendar($request, $calendar, $verb))
+			return true;
+		else
+			return (\Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-'.$verb.'-calendars-users-followed-'.$this->classToType($calendar->owned_by_type).'s'));
+	}
+
 	/**
 	 * List Calendars
 	 *
 	 * @return JsonResponse
 	 */
 	public function index(Request $request, int $user_id = null): JsonResponse {
+		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
 		$user = $this->getUser($request, $user_id);
-		$choices = $this->getChoices($request, ['owned', 'followed']);
 		$calendars = collect();
+		$choices = [];
 
-		if (in_array('owned', $choices))
-			$calendars = $user->calendars()->with(['owned_by', 'created_by', 'visibility'])->get()->map(function ($calendar) use ($request) {
-				return $this->hideCalendarData($request, $calendar);
-			});
+		if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-owned-client'))
+			$choices[] = 'owned';
 
-		if (in_array('followed', $choices))
-			$calendars = $calendars->merge($user->followedCalendars()->with(['owned_by', 'created_by', 'visibility'])->get()->map(function ($calendar) use ($request) {
-				return $this->hideCalendarData($request, $calendar);
-			}));
+		foreach ($this->types as $type => $class) {
+			if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-followed-'.$type.'s'))
+				$choices[] = 'followed-'.$type.'s';
+		}
+
+		$choices = $this->getChoices($request, $choices);
+
+		if (in_array('owned', $choices)) {
+			if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-owned'))
+				$calendars = $user->calendars()->with(['owned_by', 'created_by', 'visibility'])->get();
+			else
+				$calendars = $user->calendars()->with(['owned_by', 'created_by', 'visibility'])->where('created_by_type', Client::class)->where('created_by_id', \Scopes::getClient($request)->id)->get();
+		}
+
+		$followed = [];
+
+		foreach ($this->types as $type => $class) {
+			if (in_array('followed-'.$type.'s', $choices))
+				$followed[] = $class;
+		}
+
+		if (count($followed) > 0) {
+			$calendars = $calendars->merge(
+				$user->followedCalendars()->with(['owned_by', 'created_by', 'visibility'])->whereIn('owned_by_type', $followed)->get()
+			);
+		}
+
+		$calendars = $calendars->map(function ($calendar) use ($request) {
+			return $this->hideCalendarData($request, $calendar);
+		});
 
 		return response()->json($calendars, 200);
 	}
@@ -86,16 +122,13 @@ class UserCalendarController extends Controller
 	public function store(Request $request, int $user_id = null): JsonResponse {
 		$user = $this->getUser($request, $user_id);
 		$calendars = [];
+		$calendar_ids = $request->input('calendar_ids', $request->input('calendar_id'));
 
-		if ($request->filled('calendar_ids')) {
-			foreach ($request->input('calendar_ids') as $calendar_id) {
-				$calendars[] = $this->getCalendar($request, $calendar_id);
-				$user->followedCalendars()->attach(end($events));
-			}
-		}
-		else { // calendar_id
-			$calendars[] = $this->getCalendar($request, $request->input('calendar_id'));
-			$user->followedCalendars()->attach($calendars[0]);
+		foreach ($calendar_ids as $calendar_id) {
+			$calendar = $this->getCalendar($request, $user, $calendar_id);
+
+			$user->followedCalendars()->attach($events);
+			$calendars[] = $calendar;
 		}
 
 		foreach ($calendars as $calendar)
@@ -115,12 +148,12 @@ class UserCalendarController extends Controller
             list($user_id, $id) = [$id, $user_id];
 
 		$user = $this->getUser($request, $user_id);
+		$calendar = $this->getCalendar($request, $user, $id);
 		$calendar_ids = $user->calendars()->pluck('calendars.id')->merge($user->followedCalendars()->pluck('calendars.id'));
 
 		if (!$calendar_ids->contains($id))
 			abort(404, 'Le calendrier n\'est pas suivi par la personne ou n\'existe pas');
 
-		$calendar = $this->getCalendar($request, $id);
 		$calendar = $this->hideCalendarData($request, $calendar);
 
 		return response()->json($calendar, 200);
@@ -147,10 +180,11 @@ class UserCalendarController extends Controller
 			list($user_id, $id) = [$id, $user_id];
 
 		$user = $this->getUser($request, $user_id);
+		$calendar = $this->getCalendar($request, $user, $id);
 		$calendar_ids = $user->followedCalendars()->pluck('calendars.id');
 
 		if ($calendar_ids->contains($id)) {
-			$user->followedCalendars()->detach(Calendar::find($id));
+			$user->followedCalendars()->detach($calendar);
 
 			abort(204);
 		}
