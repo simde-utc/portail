@@ -462,7 +462,7 @@ class Scopes {
 		return true;
 	}
 
-	protected function getToken(Request $request) {
+	public function getToken(Request $request) {
 		if ($request->user() === null) {
 			$bearerToken = $request->bearerToken();
 			$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
@@ -471,6 +471,10 @@ class Scopes {
 		}
 		else
 			return $request->user()->token();
+	}
+
+	public function getClient(Request $request) {
+		return $this->getToken($request)->client;
 	}
 
 	/**
