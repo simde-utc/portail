@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-
 import { Route } from 'react-router-dom';
 
 import ScreensDashboard from './screens/Dashboard';
-
 import Navbar from './components/Navbar';
-
 
 class App extends Component {
     render() {

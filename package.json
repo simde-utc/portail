@@ -11,17 +11,19 @@
 	},
 	"devDependencies": {
 		"axios": "^0.18.0",
+		"babel-preset-react": "^6.23.0",
+		"browser-sync": "^2.24.5",
+		"browser-sync-webpack-plugin": "^2.0.1",
+		"cross-env": "^5.2.0",
+		"laravel-mix": "^2.1.11",
+		"lodash": "^4.17.10",
 		"react": "^16.4.0",
 		"react-dom": "^16.4.0",
 		"react-redux": "^5.0.7",
 		"react-router-dom": "^4.3.1",
 		"redux": "^4.0.0",
-		"babel-preset-react": "^6.23.0",
-		"cross-env": "^5.2.0",
-		"laravel-mix": "^2.1.11",
-		"lodash": "^4.17.10",
-		"semantic-ui-react": "^0.82.0",
-		"semantic-ui": "^2.3.3"
+		"semantic-ui": "^2.3.3",
+		"semantic-ui-react": "^0.82.0"
 	},
 	"dependencies": []
 }
