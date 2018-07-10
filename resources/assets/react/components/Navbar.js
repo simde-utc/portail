@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 
 class Navbar extends Component { 
@@ -6,12 +7,18 @@ class Navbar extends Component {
 		return (
 			<nav className="navbar navbar-expand-md navbar-dark fixed-top">
 				<div className="container">
-					<a className="navbar-brand" href="/">Portail des Assos</a>
+					<Link className="navbar-brand" to="/">Portail des Assos</Link>
 					<button className="navbar-toggler">
 						<span className="navbar-toggler-icon"></span>
 					</button>
 
 					<div className="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul className="navbar-nav">
+							<li className="nav-item">
+								<Link className="nav-link" to="/dashboard">Dashboard</Link>
+							</li>
+						</ul>
+
 						<ul className="navbar-nav ml-auto">
 							{ this.props.isAuthenticated ? (
 								<li className="nav-item dropdown">
@@ -34,6 +41,8 @@ class Navbar extends Component {
 										Se connecter <span className="caret"></span>
 									</a>
 									<div className="dropdown-menu">
+										<a className="dropdown-item" href="/login">Tout voir</a>
+
 									{/*
 										@foreach (config('auth.services') as $name => $provider)
 											<a className="dropdown-item" href="{{ route('login.show', ['provider' => $name, 'redirect' => $redirect ?? url()->previous()]) }}">
