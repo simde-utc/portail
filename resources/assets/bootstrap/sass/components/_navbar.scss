@@ -16,6 +16,7 @@
 // other navbar variations.
 
 .navbar {
+  min-height: $navbar-min-height;
   position: relative;
   display: flex;
   flex-wrap: wrap; // allow us to do the line break for collapsing content
@@ -231,7 +232,8 @@
   }
 
   .navbar-toggler-icon {
-    background-image: $navbar-light-toggler-icon-bg;
+    // TODO : FIX this, problem with the variable
+    // background-image: $navbar-light-toggler-icon-bg;
   }
 
   .navbar-text {
@@ -248,6 +250,7 @@
 
 // White links against a dark background
 .navbar-dark {
+  background-color: $dark;
   .navbar-brand {
     color: $navbar-dark-active-color;
 
@@ -283,7 +286,8 @@
   }
 
   .navbar-toggler-icon {
-    background-image: $navbar-dark-toggler-icon-bg;
+    // TODO : FIX this, problem with the variable
+    // background-image: $navbar-dark-toggler-icon-bg;
   }
 
   .navbar-text {

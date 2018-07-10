@@ -8,11 +8,19 @@
 	{{-- CSRF Token --}}
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<title>BDE-UTC - Portail des Associations</title>
+
+    {{-- Bootstrap 4 --}}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+
+    {{-- Font Awesome 5 --}}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+    {{-- Custom Stylesheet --}}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
+	{{-- React --}}
 	<div id="root"></div>
-
-	{{-- React Script --}}
 	<script src="{{ asset('js/index.js') }}"></script>
 </body>
 </html>

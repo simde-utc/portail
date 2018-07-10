@@ -20,17 +20,20 @@
 */
 
 // stylelint-disable
-$white:    #fff !default;
-$gray-100: #f8f9fa !default;
-$gray-200: #e9ecef !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #adb5bd !default;
-$gray-600: #6c757d !default;
-$gray-700: #495057 !default;
-$gray-800: #343a40 !default;
-$gray-900: #212529 !default;
-$black:    #000 !default;
+$white:      #fff !default;
+$gray-100:   #f8f9fa !default;
+$gray-200:   #e9ecef !default;
+$gray-300:   #dee2e6 !default;
+$gray-400:   #ced4da !default;
+$gray-500:   #adb5bd !default;
+$gray-600:   #6c757d !default;
+$gray-700:   #495057 !default;
+$gray-800:   #343a40 !default;
+$gray-900:   #212529 !default;
+$black:      #000 !default;
+// Custom grays
+$gray-light: #ebecf0 !default;
+$gray-dark:  #3c3746 !default;
 
 $grays: () !default;
 $grays: map-merge((
@@ -70,7 +73,8 @@ $colors: map-merge((
   "cyan":       $cyan,
   "white":      $white,
   "gray":       $gray-600,
-  "gray-dark":  $gray-800
+  "gray-light": $gray-light,
+  "gray-dark":  $gray-dark
 ), $colors);
 
 $primary:       $blue !default;
@@ -79,8 +83,8 @@ $success:       $green !default;
 $info:          $cyan !default;
 $warning:       $yellow !default;
 $danger:        $red !default;
-$light:         $gray-100 !default;
-$dark:          $gray-800 !default;
+$light:         $gray-light !default;
+$dark:          $gray-dark !default;
 
 $theme-colors: () !default;
 $theme-colors: map-merge((
@@ -163,8 +167,8 @@ $sizes: map-merge((
 | Settings for the `<body>` element.
 */
 
-$body-bg:                   $white !default;
-$body-color:                $gray-900 !default;
+$body-bg:                   $gray-light !default;
+$body-color:                $gray-dark !default;
 
 
 /*
@@ -695,6 +699,7 @@ $nav-divider-margin-y:              ($spacer / 2) !default;
 |--------------------------------------------------------------------------
 */
 
+$navbar-min-height:                 60px !default;
 $navbar-padding-y:                  ($spacer / 2) !default;
 $navbar-padding-x:                  $spacer !default;
 

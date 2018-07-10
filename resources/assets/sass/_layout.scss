@@ -1,16 +1,14 @@
 body {
-	margin-top: 75px;
-	margin-bottom: 33px;		/* dégeu */
+	margin-top: $navbar-min-height;
+	// margin-bottom: 33px;		/* dégeu */
 	overflow-x: hidden;
 }
+
 main {
 	height: 100%;
 }
 
 .navbar {
-	position: fixed;
-	width: 100%;
-	background-color: #fff;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
-// Top & bottom
+
