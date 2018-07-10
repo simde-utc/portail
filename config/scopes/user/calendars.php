@@ -288,6 +288,9 @@ return [
 				'users' => [
 					'description' => 'Créer et faire suivre des calendriers pour l\'utilisateur',
 					'scopes' => [
+						'created' => [
+							'description' => 'Créer des calendriers au nom de l\'utilisateur',
+						],
 						'owned' => [
 							'description' => 'Créer des calendriers pour l\'utilisateur',
 						],
@@ -312,12 +315,36 @@ return [
 				],
 				'assos' => [
 					'description' => 'Créer des calendriers pour chaque association',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer des calendriers au nom d\'une association de l\'utilisateur',
+						],
+						'owned' => [
+							'description' => 'Créer des calendriers pour une association de l\'utilisateur',
+						],
+					]
 				],
 				'groups' => [
 					'description' => 'Créer des calendriers pour chaque groupe',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer des calendriers au nom d\'un groupe de l\'utilisateur',
+						],
+						'owned' => [
+							'description' => 'Créer des calendriers pour un groupe de l\'utilisateur',
+						],
+					]
 				],
 				'clients' => [
 					'description' => 'Créer des calendriers pour chaque client',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer des calendriers au nom d\'un client de l\'utilisateur',
+						],
+						'owned' => [
+							'description' => 'Créer des calendriers pour un client de l\'utilisateur',
+						],
+					]
 				],
 			]
 		],

@@ -47,7 +47,7 @@ abstract class AbstractCalendarController extends Controller
 		return $calendar;
 	}
 
-	protected function getCalendar(Request $request, User $user, int $id, string $verb = 'get', bool $needRights = false) {
+	protected function getCalendar(Request $request, User $user = null, int $id, string $verb = 'get', bool $needRights = false) {
 		$calendar = Calendar::with(['owned_by', 'created_by', 'visibility'])->find($id);
 
 		if ($calendar) {

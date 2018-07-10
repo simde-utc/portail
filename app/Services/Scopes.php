@@ -116,12 +116,12 @@ class Scopes {
 	private function nextVerbs(string $verb, $up = false) {
 		if ($up) {
 			switch ($verb) {
-				case 'get':
 				case 'set':
 				case 'remove':
 					return ['manage'];
 					break;
 
+				case 'get':
 				case 'create':
 				case 'edit':
 					return ['set'];
