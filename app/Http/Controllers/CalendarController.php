@@ -22,7 +22,7 @@ class CalendarController extends AbstractCalendarController
 {
 	public function __construct() {
 		parent::__construct();
-		// TODO ajouter des scopes comme owned-client pour owned-assos
+
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
 				$this->populateScopes('user-get-calendars', 'created'),

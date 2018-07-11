@@ -95,14 +95,27 @@ abstract class AbstractCalendarController extends Controller
 	protected function tokenCanSee(Request $request, $model, string $verb, string $type = 'calendars') {
 		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
 
-		return (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned'))
-			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned-client'))
-			 	&& $model->created_by_type === Client::class
+		if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned'))
+			return true;
+
+
+		if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned-client'))
+		 		&& $model->created_by_type === Client::class
 				&& $model->created_by_id === \Scopes::getClient($request)->id)
 			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned-asso'))
-			 	&& $model->created_by_type === Asso::class
-				&& $model->created_by_id === \Scopes::getClient($request)->asso->id)
-			|| (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-created'));
+		 		&& $model->created_by_type === Asso::class
+				&& $model->created_by_id === \Scopes::getClient($request)->asso->id)) {
+			if (\Scopes::isUserToken($request)) {
+				$functionToCall = 'is'.($type === 'calendars' ? 'Calendar' : 'Event').($verb === 'get' ? 'Accessible' : 'Manageable').'By';
+
+				if ($model->owned_by->$functionToCall(\Auth::id()))
+					return true;
+			}
+			else
+				return true;
+		}
+
+		return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-created');
 	}
 
 	public function isPrivate($user_id, $model = null) {
