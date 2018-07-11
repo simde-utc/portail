@@ -331,7 +331,7 @@ return [
 							'description' => 'Créer des calendriers pour l\'utilisateur',
 							'scopes' => [
 								'client' => [
-									'description' => 'Créer des calendriers pour l\'utilisateur au noom de mon application'
+									'description' => 'Créer des calendriers pour l\'utilisateur au nom de mon application'
 								],
 								'asso' => [
 									'description' => 'Créer les calendriers pour l\'utilisateur possède et que mon association crée'
@@ -367,7 +367,7 @@ return [
 							'description' => 'Créer des calendriers pour une association de l\'utilisateur',
 							'scopes' => [
 								'client' => [
-									'description' => 'Créer des calendriers pour des associations de l\'utilisateur au noom de mon application'
+									'description' => 'Créer des calendriers pour des associations de l\'utilisateur au nom de mon application'
 								],
 								'asso' => [
 									'description' => 'Créer les calendriers pour chaque association de l\'utilisateur possède et que mon association crée'
@@ -386,7 +386,7 @@ return [
 							'description' => 'Créer des calendriers pour un groupe de l\'utilisateur',
 							'scopes' => [
 								'client' => [
-									'description' => 'Créer des calendriers pour des groupes de l\'utilisateur au noom de mon application'
+									'description' => 'Créer des calendriers pour des groupes de l\'utilisateur au nom de mon application'
 								],
 								'asso' => [
 									'description' => 'Créer les calendriers pour chaque groupe de l\'utilisateur possède et que mon association crée'
@@ -405,7 +405,7 @@ return [
 							'description' => 'Créer des calendriers pour un client de l\'utilisateur',
 							'scopes' => [
 								'client' => [
-									'description' => 'Créer des calendriers pour des applications de l\'utilisateur au noom de mon application'
+									'description' => 'Créer des calendriers pour des applications de l\'utilisateur au nom de mon application'
 								],
 								'asso' => [
 									'description' => 'Créer les calendriers pour chaque application de l\'utilisateur possède et que mon association crée'

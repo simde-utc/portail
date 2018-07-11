@@ -47,11 +47,20 @@ abstract class AbstractCalendarController extends Controller
 		return $calendar;
 	}
 
+	protected function hideEventData(Request $request, $event) {
+		$event->created_by = $this->hideData($request, $event->created_by);
+		$event->owned_by = $this->hideData($request, $event->owned_by);
+
+		$event->makeHidden(['location_id', 'visibility_id']);
+
+		return $event;
+	}
+
 	protected function getCalendar(Request $request, User $user = null, int $id, string $verb = 'get', bool $needRights = false) {
 		$calendar = Calendar::with(['owned_by', 'created_by', 'visibility'])->find($id);
 
 		if ($calendar) {
-			if (!$this->tokenCanSeeCalendar($request, $calendar, $verb) || ($user && !$this->isVisible($calendar, $user->id)))
+			if (!$this->tokenCanSee($request, $calendar, $verb) || ($user && !$this->isVisible($calendar, $user->id)))
 				abort(403, 'Vous n\'avez pas le droit de consulter ce calendrier');
 
 			if ($needRights && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
@@ -63,17 +72,37 @@ abstract class AbstractCalendarController extends Controller
 		abort(404, 'Impossible de trouver le calendrier');
 	}
 
-	protected function tokenCanSeeCalendar(Request $request, Calendar $calendar, string $verb) {
+	protected function getEvent(Request $request, User $user = null, int $id, bool $needRights = false) {
+		$event = Event::with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->find($id);
+
+		if ($event) {
+			if (!$this->tokenCanSee($request, $event, $verb, 'events') || ($user && !$this->isVisible($event, $user->id)))
+				abort(403, 'Vous n\'avez pas le droit de consulter ce évènenement');
+
+			if ($needRights && !$event->owned_by->isEventManageableBy(\Auth::id()))
+				abort(403, 'Vous n\'avez pas les droit suffisant');
+
+			$event->participants = $event->participants->map(function ($user) use ($request) {
+				return $this->hideUserData($request, $user);
+			});
+
+			return $event;
+		}
+
+		abort(404, 'Impossible de trouver le évènenement');
+	}
+
+	protected function tokenCanSee(Request $request, $model, string $verb, string $type = 'calendars') {
 		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
 
-		return (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned'))
-			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned-client'))
-			 	&& $calendar->created_by_type === Client::class
-				&& $calendar->created_by_id === \Scopes::getClient($request)->id)
-			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned-asso'))
-			 	&& $calendar->created_by_type === Asso::class
-				&& $calendar->created_by_id === \Scopes::getClient($request)->asso->id)
-			|| (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-created'));
+		return (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned'))
+			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned-client'))
+			 	&& $model->created_by_type === Client::class
+				&& $model->created_by_id === \Scopes::getClient($request)->id)
+			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned-asso'))
+			 	&& $model->created_by_type === Asso::class
+				&& $model->created_by_id === \Scopes::getClient($request)->asso->id)
+			|| (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-created'));
 	}
 
 	public function isPrivate($user_id, $model = null) {

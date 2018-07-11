@@ -329,7 +329,7 @@ return [
 						'description' => 'Créer des calendriers pour chaque utilisateur',
 						'scopes' => [
 							'client' => [
-								'description' => 'Créer des calendriers pour chaque utilisateur au noom de mon application'
+								'description' => 'Créer des calendriers pour chaque utilisateur au nom de mon application'
 							],
 							'asso' => [
 								'description' => 'Créer les calendriers pour chaque utilisateur au nom de mon association'
@@ -384,7 +384,7 @@ return [
 						'description' => 'Créer des calendriers pour un groupe de chaque utilisateur',
 						'scopes' => [
 							'client' => [
-								'description' => 'Créer des calendriers pour des groupes de chaque utilisateur au noom de mon application'
+								'description' => 'Créer des calendriers pour des groupes de chaque utilisateur au nom de mon application'
 							],
 							'asso' => [
 								'description' => 'Créer les calendriers pour des groupes de chaque utilisateur au nom de mon association'
@@ -403,7 +403,7 @@ return [
 						'description' => 'Créer des calendriers pour un client de chaque utilisateur',
 						'scopes' => [
 							'client' => [
-								'description' => 'Créer des calendriers pour des applications de chaque utilisateur au noom de mon application'
+								'description' => 'Créer des calendriers pour des applications de chaque utilisateur au nom de mon application'
 							],
 							'asso' => [
 								'description' => 'Créer les calendriers pour des applications de chaque utilisateur au nom de mon association'

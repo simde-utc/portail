@@ -114,7 +114,7 @@ class CalendarController extends AbstractCalendarController
 	 */
 	public function index(Request $request): JsonResponse {
 		$calendars = Calendar::with(['owned_by', 'created_by', 'visibility'])->get()->filter(function ($calendar) use ($request) {
-			return $this->tokenCanSeeCalendar($request, $calendar, 'get');
+			return $this->tokenCanSee($request, $calendar, 'get');
 		})->values()->map(function ($calendar) use ($request) {
 			return $this->hideCalendarData($request, $calendar);
 		});
