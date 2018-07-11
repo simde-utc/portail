@@ -46,7 +46,6 @@ class Clients extends Component {
 		this.toggle(key, false);
 	}
 
-
 	render() {
 		// Modals
 		const clientCreationModal = (

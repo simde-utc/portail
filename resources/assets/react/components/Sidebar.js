@@ -8,14 +8,14 @@ class Sidebar extends Component {
 			<div className="sidebar col-md-3 col-xl-2 d-none d-md-flex flex-column justify-content-between">
 				<div className="sidebar-inner">
 					<div className="sidebar-group">
-						<h6 className="sidebar-header">Actualités</h6>
+						<h6 className="sidebar-header">ACTUALITÉS</h6>
 						<Link className="sidebar-link" to="/"><i className="fas fa-newspaper"></i>Flux</Link>
 						<Link className="sidebar-link" to="/"><i className="fas fa-newspaper"></i>Actualités UTC</Link>
 						<Link className="sidebar-link" to="/"><i className="fas fa-newspaper"></i>Actualités Assos</Link>
 					</div>
 
 					<div className="sidebar-group">
-						<h6 className="sidebar-header">Raccourcis</h6>
+						<h6 className="sidebar-header">RACCOURCIS</h6>
 						<Link className="sidebar-link" to="/"><i className="fas fa-school"></i>ENT UTC</Link>
 						<Link className="sidebar-link" to="/"><i className="fas fa-paper-plane"></i>Webmail</Link>
 						<Link className="sidebar-link" to="/"><i className="fas fa-book"></i>Moodle</Link>
@@ -25,13 +25,13 @@ class Sidebar extends Component {
 					</div>
 
 					<div className="sidebar-group">
-						<h6 className="sidebar-header">Mes Associations</h6>
+						<h6 className="sidebar-header">MES ASSOCIATIONS</h6>
 						<Link className="sidebar-link" to="/"><i className="fas fa-beer"></i>Pic'Asso</Link>
 						<Link className="sidebar-link" to="/"><i className="fas fa-code"></i>SiMDE</Link>
 					</div>
 
 					<div className="sidebar-group">
-						<h6 className="sidebar-header">Mes Groupes</h6>
+						<h6 className="sidebar-header">MES GROUPES</h6>
 						<Link className="sidebar-link" to="/"><i className="fas fa-sad-tear"></i>Samyest Mauch</Link>
 						<Link className="sidebar-link" to="/"><i className="fas fa-skull"></i>Woolly Woolly Bang Bang</Link>
 					</div>

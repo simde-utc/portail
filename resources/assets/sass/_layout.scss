@@ -5,6 +5,7 @@ html {
 body {
 	padding-top: $navbar-min-height;
 	// padding-bottom: 33px;		/* dégeu */
+    background: $white;
 }
 
 html, body, main, #root {
@@ -13,7 +14,6 @@ html, body, main, #root {
 
 main {
 	background-color: $white;
-	box-shadow: 0 0 10px rgba(0,0,0,0.3)
 }
 
 .navbar {
