@@ -37,7 +37,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Gérer les calendriers que chaque utilisateur possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Gérer les calendriers que chaque utilisateur possède et que mon association crée'
+								],
 							]
 						],
 						'followed' => [
@@ -70,7 +73,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Gérer les calendriers que chaque association possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Gérer les calendriers que chaque association possède et que mon association crée'
+								],
 							]
 						],
 					]
@@ -86,7 +92,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Gérer les calendriers que chaque groupe possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Gérer les calendriers que chaque groupe possède et que mon association crée'
+								],
 							]
 						],
 					]
@@ -102,7 +111,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Gérer les calendriers que chaque client possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Gérer les calendriers que chaque client possède et que mon association crée'
+								],
 							]
 						],
 					]
@@ -123,7 +135,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Récupérer les calendriers que chaque utilisateur possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Récupérer les calendriers que chaque utilisateur possède et que mon association crée'
+								],
 							]
 						],
 						'followed' => [
@@ -156,7 +171,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Récupérer les calendriers que chaque association possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Récupérer les calendriers que chaque association possède et que mon association crée'
+								],
 							]
 						],
 					]
@@ -172,7 +190,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Récupérer les calendriers que chaque groupe possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Récupérer les calendriers que chaque groupe possède et que mon association crée'
+								],
 							]
 						],
 					]
@@ -188,7 +209,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Récupérer les calendriers que chaque client possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Récupérer les calendriers que chaque client possède et que mon association crée'
+								],
 							]
 						],
 					]
@@ -209,7 +233,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Modifier et créer les calendriers que chaque utilisateur possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Modifier et créer les calendriers que chaque utilisateur possède et que mon association crée'
+								],
 							]
 						],
 						'followed' => [
@@ -242,7 +269,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Modifier et créer les calendriers que chaque association possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Modifier et créer les calendriers que chaque association possède et que mon association crée'
+								],
 							]
 						],
 					]
@@ -258,7 +288,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Modifier et créer les calendriers que chaque groupe possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Modifier et créer les calendriers que chaque groupe possède et que mon association crée'
+								],
 							]
 						],
 					]
@@ -274,7 +307,10 @@ return [
 							'scopes' => [
 								'client' => [
 									'description' => 'Modifier et créer les calendriers que chaque client possède et que mon client crée'
-								]
+								],
+								'asso' => [
+									'description' => 'Modifier et créer les calendriers que chaque client possède et que mon association crée'
+								],
 							]
 						],
 					]
@@ -282,6 +318,7 @@ return [
 			]
 		],
 		'create' => [
+			'description' => 'Créer et faire suivre des calendriers',
 			'users' => [
 				'description' => 'Créer et faire suivre des calendriers pour chaque utilisateur',
 				'scopes' => [
@@ -293,7 +330,10 @@ return [
 						'scopes' => [
 							'client' => [
 								'description' => 'Créer des calendriers pour chaque utilisateur au noom de mon application'
-							]
+							],
+							'asso' => [
+								'description' => 'Créer les calendriers pour chaque utilisateur au nom de mon association'
+							],
 						]
 					],
 					'followed' => [
@@ -325,8 +365,11 @@ return [
 						'description' => 'Créer des calendriers pour une association de chaque utilisateur',
 						'scopes' => [
 							'client' => [
-								'description' => 'Créer des calendriers pour des associations de chaque utilisateur au noom de mon application'
-							]
+								'description' => 'Créer des calendriers pour des associations de chaque utilisateur au nom de mon application'
+							],
+							'asso' => [
+								'description' => 'Créer les calendriers pour des associations de chaque utilisateur au nom de mon association'
+							],
 						]
 					],
 				]
@@ -342,7 +385,10 @@ return [
 						'scopes' => [
 							'client' => [
 								'description' => 'Créer des calendriers pour des groupes de chaque utilisateur au noom de mon application'
-							]
+							],
+							'asso' => [
+								'description' => 'Créer les calendriers pour des groupes de chaque utilisateur au nom de mon association'
+							],
 						]
 					],
 				]
@@ -358,7 +404,10 @@ return [
 						'scopes' => [
 							'client' => [
 								'description' => 'Créer des calendriers pour des applications de chaque utilisateur au noom de mon application'
-							]
+							],
+							'asso' => [
+								'description' => 'Créer les calendriers pour des applications de chaque utilisateur au nom de mon association'
+							],
 						]
 					],
 				]

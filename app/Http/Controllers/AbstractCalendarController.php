@@ -70,6 +70,9 @@ abstract class AbstractCalendarController extends Controller
 			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned-client'))
 			 	&& $calendar->created_by_type === Client::class
 				&& $calendar->created_by_id === \Scopes::getClient($request)->id)
+			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-owned-asso'))
+			 	&& $calendar->created_by_type === Asso::class
+				&& $calendar->created_by_id === \Scopes::getClient($request)->asso->id)
 			|| (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$this->classToType($calendar->owned_by_type).'s-created'));
 	}
 

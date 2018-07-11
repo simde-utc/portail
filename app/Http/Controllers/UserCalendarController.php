@@ -28,10 +28,10 @@ class UserCalendarController extends AbstractCalendarController
 
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
-				['user-get-calendars-users-owned-client'],
+				['user-get-calendars-users-owned-client', 'user-get-calendars-users-owned-asso'],
 				$this->populateScopes('user-get-calendars-users-followed')
 			), array_merge(
-				['client-get-calendars-users-owned-client'],
+				['client-get-calendars-users-owned-client', 'client-get-calendars-users-owned-asso'],
 				$this->populateScopes('client-get-calendars-users-followed')
 			)),
 			['only' => ['index', 'show']]
@@ -77,7 +77,7 @@ class UserCalendarController extends AbstractCalendarController
 		$calendars = collect();
 		$choices = [];
 
-		if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-owned-client'))
+		if (\Scopes::hasOne($request, [$scopeHead.'-get-calendars-users-owned-client', $scopeHead.'-get-calendars-users-owned-asso']))
 			$choices[] = 'owned';
 
 		foreach ($this->types as $type => $class) {
@@ -91,7 +91,11 @@ class UserCalendarController extends AbstractCalendarController
 			if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-owned'))
 				$calendars = $user->calendars()->with(['owned_by', 'created_by', 'visibility'])->get();
 			else {
-				$calendars = $user->calendars()->with(['owned_by', 'created_by', 'visibility'])->where('created_by_type', Client::class)->where('created_by_id', \Scopes::getClient($request)->id)->get();
+				if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-owned-client'))
+					$calendars = $user->calendars()->with(['owned_by', 'created_by', 'visibility'])->where('created_by_type', Client::class)->where('created_by_id', \Scopes::getClient($request)->id)->get();
+
+				if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-owned-asso'))
+					$calendars = $calendar->merge($user->calendars()->with(['owned_by', 'created_by', 'visibility'])->where('created_by_type', Asso::class)->where('created_by_id', \Scopes::getClient($request)->asso->id)->get());
 			}
 		}
 

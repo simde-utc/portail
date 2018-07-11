@@ -26,20 +26,24 @@ class CalendarController extends AbstractCalendarController
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
 				$this->populateScopes('user-get-calendars', 'created'),
-				$this->populateScopes('user-get-calendars', 'owned-client')
+				$this->populateScopes('user-get-calendars', 'owned-client'),
+				$this->populateScopes('user-get-calendars', 'owned-asso')
 			), array_merge(
 				$this->populateScopes('client-get-calendars', 'created'),
-				$this->populateScopes('client-get-calendars', 'owned-client')
+				$this->populateScopes('client-get-calendars', 'owned-client'),
+				$this->populateScopes('client-get-calendars', 'owned-asso')
 			)),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
 				$this->populateScopes('user-set-calendars', 'owned-client'),
+				$this->populateScopes('user-set-calendars', 'owned-asso'),
 				$this->populateScopes('user-create-calendars', 'owned'),
 				$this->populateScopes('user-create-calendars', 'created')
 			), array_merge(
 				$this->populateScopes('client-set-calendars', 'owned-client'),
+				$this->populateScopes('client-set-calendars', 'owned-asso'),
 				$this->populateScopes('client-create-calendars', 'owned'),
 				$this->populateScopes('client-create-calendars', 'created')
 			)),
@@ -48,20 +52,24 @@ class CalendarController extends AbstractCalendarController
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
 				$this->populateScopes('user-set-calendars', 'created'),
-				$this->populateScopes('user-set-calendars', 'owned-client')
+				$this->populateScopes('user-set-calendars', 'owned-client'),
+				$this->populateScopes('user-set-calendars', 'owned-asso')
 			), array_merge(
 				$this->populateScopes('client-set-calendars', 'created'),
-				$this->populateScopes('client-set-calendars', 'owned-client')
+				$this->populateScopes('client-set-calendars', 'owned-client'),
+				$this->populateScopes('client-set-calendars', 'owned-asso')
 			)),
 			['only' => ['update']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
 				$this->populateScopes('user-manage-calendars', 'created'),
-				$this->populateScopes('user-manage-calendars', 'owned-client')
+				$this->populateScopes('user-manage-calendars', 'owned-client'),
+				$this->populateScopes('user-manage-calendars', 'owned-asso')
 			), array_merge(
 				$this->populateScopes('client-manage-calendars', 'created'),
-				$this->populateScopes('client-manage-calendars', 'owned-client')
+				$this->populateScopes('client-manage-calendars', 'owned-client'),
+				$this->populateScopes('client-manage-calendars', 'owned-asso')
 			)),
 			['only' => ['destroy']]
 		);
@@ -69,11 +77,15 @@ class CalendarController extends AbstractCalendarController
 
 	public function getCreaterOrOwner(Request $request, string $verb = 'create', string $type = 'created') {
 		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
+		$scope = $scopeHead.'-'.$verb.'-calendars-'.$request->input($type.'_by_type',\Scopes::isClientToken($request) ? 'client' : 'user').'s-'.$type;
 
-		if ($request->filled($type.'_by_type')) {
-			if (!\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$request->input($type.'_by_type').'s-'.$type))
+		if ($type === 'owned')
+			$scope = array_keys(\Scopes::getRelatives($scopeHead.'-'.$verb.'-calendars-'.$request->input($type.'_by_type').'s-'.$type));
+
+		if (!\Scopes::hasOne($request, $scope))
 			abort(403, 'Il ne vous est pas autorisé de créer de calendriers');
 
+		if ($request->filled($type.'_by_type')) {
 			if ($request->filled($type.'_by_id')) {
 				$createrOrOwner = resolve($this->types[$request->input($type.'_by_type')])->find($request->input($type.'_by_id'));
 
@@ -85,7 +97,8 @@ class CalendarController extends AbstractCalendarController
 			else if ($request->input($type.'_by_type', 'client') === 'asso')
 				$createrOrOwner = \Scopes::getClient($request)->asso;
 		}
-		else
+
+		if (!isset($createrOrOwner))
 			$createrOrOwner = \Scopes::isClientToken($request) ? \Scopes::getClient($request) : \Auth::user();
 
 		if (!($createrOrOwner instanceof CanHaveCalendars))
@@ -120,10 +133,14 @@ class CalendarController extends AbstractCalendarController
 
 		$owner = $this->getCreaterOrOwner($request, 'create', 'owned');
 
-		if ($request->input('created_by_type', 'client') === 'client'
+		if ($request->input('created_by_type') === 'client'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
-			&& \Scopes::hasOne('-calendars-create-'.$this->classToType(get_class($owner)).'-owned-client'))
-			$createrOrOwner = Client::find(\Scopes::getClient($request)->id);
+			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
+			$creater = Client::find(\Scopes::getClient($request)->id);
+		else if ($request->input('created_by_type') === 'asso'
+			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
+			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
+			$creater = \Scopes::getClient($request)->asso;
 		else
 			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
 
