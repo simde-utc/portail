@@ -9,6 +9,7 @@ use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\AbstractCalendarController;
 use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveEvents;
 use App\Traits\HasVisibility;
@@ -18,7 +19,7 @@ use App\Traits\HasVisibility;
  *
  * Gestion des évènements
  */
-class EventController extends Controller
+class EventController extends AbstractCalendarController
 {
 	use HasVisibility;
 
@@ -26,35 +27,6 @@ class EventController extends Controller
 		$this->middleware(
 			\Scopes::matchAnyUser()
 		);
-	}
-
-	protected function hideEventData(Request $request, $event) {
-		$event->created_by = $this->hideData($request, $event->created_by);
-		$event->owned_by = $this->hideData($request, $event->owned_by);
-
-		$event->makeHidden(['location_id', 'visibility_id']);
-
-		return $event;
-	}
-
-	protected function getEvent(Request $request, int $id, bool $needRights = false) {
-		$event = Event::with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->find($id);
-
-		if ($event) {
-			if (!$this->isVisible($event))
-				abort(403, 'Vous n\'avez pas le droit de consulter ce évènenement');
-
-			if ($needRights && !$event->owned_by->isEventManageableBy(\Auth::id()))
-				abort(403, 'Vous n\'avez pas les droit suffisant');
-
-			$event->participants = $event->participants->map(function ($user) use ($request) {
-				return $this->hideUserData($request, $user);
-			});
-			
-			return $event;
-		}
-
-		abort(404, 'Impossible de trouver le évènenement');
 	}
 
 	public function isPrivate($user_id, $model = null) {
