@@ -102,7 +102,7 @@ class EventController extends AbstractCalendarController
 		if (!isset($createrOrOwner))
 			$createrOrOwner = \Scopes::isClientToken($request) ? \Scopes::getClient($request) : \Auth::user();
 
-		if (!($createrOrOwner instanceof CanHaveCalendars))
+		if (!($createrOrOwner instanceof CanHaveEvents))
 			abort(400, 'La personne créatrice/possédeur doit au moins pouvoir avoir un calendrier');
 
 		return $createrOrOwner;
@@ -149,25 +149,25 @@ class EventController extends AbstractCalendarController
 	public function store(Request $request): JsonResponse {
 		$inputs = $request->all();
 
-		if (\Scopes::isUserToken($request))
-			$creater = \Auth::user();
-		else {
-			// A faire au choix
-		}
+		$owner = $this->getCreaterOrOwner($request, 'create', 'owned');
 
-		$owner = \Auth::id();
-
-		if (!($owner instanceof CanHaveEvents))
-			abort(400, 'Le owner doit au moins pouvoir avoir un évènenement');
-		if (!($owner instanceof CanHaveEvents))
-			abort(400, 'Le owner doit au moins pouvoir avoir un évènenement');
+		if ($request->input('created_by_type') === 'client'
+			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
+			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
+			$creater = Client::find(\Scopes::getClient($request)->id);
+		else if ($request->input('created_by_type') === 'asso'
+			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
+			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
+			$creater = \Scopes::getClient($request)->asso;
+		else
+			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
 
 		$inputs['created_by_id'] = $creater->id;
 		$inputs['created_by_type'] = get_class($creater);
 		$inputs['owned_by_id'] = $owner->id;
 		$inputs['owned_by_type'] = get_class($owner);
 
-		$calendar = Calendar::find($inputs['calendar_id']);
+		$calendar = $this->getCalendar($request, \Auth::user(), Calendar::find($inputs['calendar_id']));
 
 		if (!$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
 			abort(403, 'Vous n\'avez pas les droits suffisants pour ajouter cet évènenement à ce calendrier');
@@ -175,13 +175,12 @@ class EventController extends AbstractCalendarController
 		$event = Event::create($inputs);
 
 		if ($event) {
-			$event->calendars()->attach($calendar);
-
+			$event = $this->getEvent($request, \Auth::user(), $event->id);
+			$event = $this->hideEventData($request, $event);
 			return response()->json($event, 201);
 		}
 		else
-			return response()->json(['message' => 'Impossible de créer le évènenement'], 500);
-
+			return response()->json(['message' => 'Impossible de créer l\'évènenement'], 500);
 	}
 
 	/**
@@ -191,7 +190,7 @@ class EventController extends AbstractCalendarController
 	 * @return JsonResponse
 	 */
 	public function show(Request $request, int $id): JsonResponse {
-		$event = $this->getEvent($request, $id);
+		$event = $this->getEvent($request, \Auth::user(), $id);
 		$event = $this->hideEventData($request, $event);
 
 		return response()->json($event, 200);
@@ -205,12 +204,20 @@ class EventController extends AbstractCalendarController
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, $id): JsonResponse {
-		$event = $this->getEvent($request, $id, true);
+		$event = $this->getEvent($request, \Auth::user(), $id, 'set', true);
+		$inputs = $request->all();
 
-		if ($event->update($request->input()))
+		if ($request->filled('owned_by_type')) {
+			$owner = $this->getCreaterOrOwner($request, 'set', 'owned');
+
+			$inputs['owned_by_id'] = $owner->id;
+			$inputs['owned_by_type'] = get_class($owner);
+		}
+
+		if ($event->update($inputs))
 			return response()->json($this->hideEventData($event), 200);
 		else
-			abort(500, 'Impossible de modifier le évènenement');
+			abort(500, 'Impossible de modifier le calendrier');
 	}
 
 	/**
@@ -220,7 +227,7 @@ class EventController extends AbstractCalendarController
 	 * @return JsonResponse
 	 */
 	public function destroy(Request $request, int $id): JsonResponse {
-		$event = $this->getEvent($request, $id, true);
+		$event = $this->getEvent($request, \Auth::user(), $id, true);
 		$event->softDelete();
 
 		abort(204);
