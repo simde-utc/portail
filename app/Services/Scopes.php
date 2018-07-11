@@ -69,10 +69,14 @@ class Scopes {
 				foreach ($categorie['verbs'] as $verb => $data) {
 					$prefix = $type.'-'.$verb.'-'.$name;
 
-					if (isset($data['scopes']))
+					try {
+						if (isset($data['scopes']))
 						$scopes = array_merge($scopes, $this->generate($prefix, $data['scopes']));
 
-					$scopes[$prefix] = $data['description'];
+						$scopes[$prefix] = $data['description'];
+					} catch (\Exception $e) {
+						throw new \Exception('Le scope '.$prefix.' est mal défini !');
+					}
 				}
 			}
 		}
