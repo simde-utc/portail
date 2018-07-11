@@ -14,8 +14,11 @@ require('./bootstrap');
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+// Redux
+import { Provider } from 'react-redux';
+import store from './store';
 
 // Add Semantic CSS
 // import '../semantic/dist/semantic.min.css';
@@ -23,7 +26,9 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import App from './App.js';
 
 ReactDOM.render((
-    <Router>
-        <App />
-    </Router>
+	<Provider store={ store }>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</Provider>
 ), document.getElementById('root'));
