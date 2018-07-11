@@ -167,7 +167,7 @@ class CalendarController extends AbstractCalendarController
 	 * @return JsonResponse
 	 */
 	public function show(Request $request, int $id): JsonResponse {
-		$calendar = $this->getCalendar($request, $id);
+		$calendar = $this->getCalendar($request, \Auth::user(), $id);
 		$calendar = $this->hideCalendarData($request, $calendar);
 
 		return response()->json($calendar, 200);
@@ -181,7 +181,7 @@ class CalendarController extends AbstractCalendarController
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, $id): JsonResponse {
-		$calendar = $this->getCalendar($request, $id, 'set', true);
+		$calendar = $this->getCalendar($request, \Auth::user(), $id, 'set', true);
 		$inputs = $request->all();
 
 		if ($request->filled('owned_by_type')) {
@@ -204,7 +204,7 @@ class CalendarController extends AbstractCalendarController
 	 * @return JsonResponse
 	 */
 	public function destroy(Request $request, int $id): JsonResponse {
-		$calendar = $this->getCalendar($request, $id, 'manage', true);
+		$calendar = $this->getCalendar($request, \Auth::user(), $id, 'manage', true);
 		$calendar->softDelete();
 
 		abort(204);

@@ -21,8 +21,6 @@ use App\Traits\HasVisibility;
  */
 class UserCalendarController extends AbstractCalendarController
 {
-	// TODO getCalendar prend pas en compte les user customs
-
 	public function __construct() {
 		parent::__construct();
 
