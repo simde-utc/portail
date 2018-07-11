@@ -293,6 +293,11 @@ return [
 						],
 						'owned' => [
 							'description' => 'Créer des calendriers pour l\'utilisateur',
+							'scopes' => [
+								'client' => [
+									'description' => 'Créer des calendriers pour l\'utilisateur au noom de mon application'
+								]
+							]
 						],
 						'followed' => [
 							'description' => 'Faire suivre des calendriers à l\'utilisateur',
@@ -321,6 +326,11 @@ return [
 						],
 						'owned' => [
 							'description' => 'Créer des calendriers pour une association de l\'utilisateur',
+							'scopes' => [
+								'client' => [
+									'description' => 'Créer des calendriers pour des associations de l\'utilisateur au noom de mon application'
+								]
+							]
 						],
 					]
 				],
@@ -332,6 +342,11 @@ return [
 						],
 						'owned' => [
 							'description' => 'Créer des calendriers pour un groupe de l\'utilisateur',
+							'scopes' => [
+								'client' => [
+									'description' => 'Créer des calendriers pour des groupes de l\'utilisateur au noom de mon application'
+								]
+							]
 						],
 					]
 				],
@@ -343,6 +358,11 @@ return [
 						],
 						'owned' => [
 							'description' => 'Créer des calendriers pour un client de l\'utilisateur',
+							'scopes' => [
+								'client' => [
+									'description' => 'Créer des calendriers pour des applications de l\'utilisateur au noom de mon application'
+								]
+							]
 						],
 					]
 				],

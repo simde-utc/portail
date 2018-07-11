@@ -22,7 +22,7 @@ class CalendarController extends AbstractCalendarController
 {
 	public function __construct() {
 		parent::__construct();
-
+		// TODO ajouter des scopes comme owned-client pour owned-assos
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
 				$this->populateScopes('user-get-calendars', 'created'),
@@ -71,13 +71,13 @@ class CalendarController extends AbstractCalendarController
 		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
 
 		if ($request->filled($type.'_by_type')) {
-			if ($request->filled($type.'_by_id')) {
-				if (!\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$request->input($type.'_by_type').'s-'.$type))
-					abort(403, 'Il ne vous est pas autorisé de créer de calendriers');
+			if (!\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-calendars-'.$request->input($type.'_by_type').'s-'.$type))
+			abort(403, 'Il ne vous est pas autorisé de créer de calendriers');
 
+			if ($request->filled($type.'_by_id')) {
 				$createrOrOwner = resolve($this->types[$request->input($type.'_by_type')])->find($request->input($type.'_by_id'));
 
-				if ($createrOrOwner->isCalendarManageableBy(\Auth::id()))
+				if (\Auth::id() && !$createrOrOwner->isCalendarManageableBy(\Auth::id()))
 					abort(403, 'L\'utilisateur n\'a pas les droits de création');
 			}
 			else if ($request->input($type.'_by_type', 'client') === 'client')
@@ -118,8 +118,14 @@ class CalendarController extends AbstractCalendarController
 	public function store(Request $request): JsonResponse {
 		$inputs = $request->all();
 
-		$creater = $this->getCreaterOrOwner($request, 'create', 'created');
 		$owner = $this->getCreaterOrOwner($request, 'create', 'owned');
+
+		if ($request->input('created_by_type', 'client') === 'client'
+			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
+			&& \Scopes::hasOne('-calendars-create-'.$this->classToType(get_class($owner)).'-owned-client'))
+			$createrOrOwner = Client::find(\Scopes::getClient($request)->id);
+		else
+			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
 
 		$inputs['created_by_id'] = $creater->id;
 		$inputs['created_by_type'] = get_class($creater);
