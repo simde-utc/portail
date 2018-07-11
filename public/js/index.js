@@ -44137,74 +44137,78 @@ var Navbar = function (_Component) {
 				'nav',
 				{ className: 'navbar navbar-expand-md navbar-dark fixed-top' },
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["b" /* Link */],
-					{ className: 'navbar-brand', to: '/' },
-					'Portail des Assos'
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					'button',
-					{ className: 'navbar-toggler' },
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'navbar-toggler-icon' })
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 					'div',
-					{ className: 'collapse navbar-collapse', id: 'navbarSupportedContent' },
+					{ className: 'container' },
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						'ul',
-						{ className: 'navbar-nav' },
-						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							'li',
-							{ className: 'nav-item' },
-							__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-								__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["b" /* Link */],
-								{ className: 'nav-link', to: '/dashboard' },
-								'Dashboard'
-							)
-						)
+						__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["b" /* Link */],
+						{ className: 'navbar-brand', to: '/' },
+						'Portail des Assos'
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						'ul',
-						{ className: 'navbar-nav ml-auto' },
-						this.props.isAuthenticated ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							'li',
-							{ className: 'nav-item dropdown' },
+						'button',
+						{ className: 'navbar-toggler' },
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'navbar-toggler-icon' })
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						'div',
+						{ className: 'collapse navbar-collapse', id: 'navbarSupportedContent' },
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+							'ul',
+							{ className: 'navbar-nav' },
 							__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-								'a',
-								{ className: 'nav-link dropdown-toggle' },
-								this.props.name,
-								' ',
-								__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'caret' })
-							),
-							__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-								'div',
-								{ className: 'dropdown-menu' },
+								'li',
+								{ className: 'nav-item' },
 								__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-									'a',
-									{ className: 'dropdown-item', href: '/logout', onClick: 'event.preventDefault(); document.getElementById(\'logout-form\').submit();' },
-									'Se d\xE9connecter'
-								),
-								__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-									'form',
-									{ id: 'logout-form', action: '/logout', method: 'POST', style: 'display: none;' },
-									'csrf'
+									__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["b" /* Link */],
+									{ className: 'nav-link', to: '/dashboard' },
+									'Dashboard'
 								)
 							)
-						) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							'li',
-							{ className: 'nav-item dropdown' },
-							__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-								'a',
-								{ className: 'nav-link dropdown-toggle' },
-								'Se connecter ',
-								__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'caret' })
-							),
-							__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-								'div',
-								{ className: 'dropdown-menu' },
+						),
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+							'ul',
+							{ className: 'navbar-nav ml-auto' },
+							this.props.isAuthenticated ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+								'li',
+								{ className: 'nav-item dropdown' },
 								__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 									'a',
-									{ className: 'dropdown-item', href: '/login' },
-									'Tout voir'
+									{ className: 'nav-link dropdown-toggle' },
+									this.props.name,
+									' ',
+									__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'caret' })
+								),
+								__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+									'div',
+									{ className: 'dropdown-menu' },
+									__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+										'a',
+										{ className: 'dropdown-item', href: '/logout', onClick: 'event.preventDefault(); document.getElementById(\'logout-form\').submit();' },
+										'Se d\xE9connecter'
+									),
+									__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+										'form',
+										{ id: 'logout-form', action: '/logout', method: 'POST', style: 'display: none;' },
+										'csrf'
+									)
+								)
+							) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+								'li',
+								{ className: 'nav-item dropdown' },
+								__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+									'a',
+									{ className: 'nav-link dropdown-toggle' },
+									'Se connecter ',
+									__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'caret' })
+								),
+								__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+									'div',
+									{ className: 'dropdown-menu' },
+									__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+										'a',
+										{ className: 'dropdown-item', href: '/login' },
+										'Tout voir'
+									)
 								)
 							)
 						)
