@@ -19,9 +19,9 @@ class Sidebar extends Component {
 						<Link className="sidebar-link" to="/"><i className="fas fa-school"></i>ENT UTC</Link>
 						<Link className="sidebar-link" to="/"><i className="fas fa-paper-plane"></i>Webmail</Link>
 						<Link className="sidebar-link" to="/"><i className="fas fa-book"></i>Moodle</Link>
-						<Link className="sidebar-link" to="/"><i className="fas fa-calendar-alt"></i>Évènements</Link>
-						<Link className="sidebar-link" to="/"><i className="fas fa-hands-helping"></i>Associations</Link>
-						<Link className="sidebar-link" to="/"><i className="fas fa-users"></i>Groupes</Link>
+						<Link className="sidebar-link" to="/evenements"><i className="fas fa-calendar-alt"></i>Évènements</Link>
+						<Link className="sidebar-link" to="/assos"><i className="fas fa-hands-helping"></i>Associations</Link>
+						<Link className="sidebar-link" to="/groupes"><i className="fas fa-users"></i>Groupes</Link>
 					</div>
 
 					<div className="sidebar-group">

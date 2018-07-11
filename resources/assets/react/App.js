@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import ScreensDashboard from './screens/Dashboard';
+// Components
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 
+// Screens
+import DashboardScreen from './screens/Dashboard';
+import AssosListScreen from './screens/AssosList';
+
 class App extends Component {
 	render() {
-		const routes = [
-		]
+		// Fake Components
 		const RouteNotFound = () => (<div><h1>404</h1></div>)
 		const Home = () => (<div><h1>Home</h1></div>)
 
@@ -20,7 +23,8 @@ class App extends Component {
 					<main className="col p-4">
 						<Switch>
 							<Route path="/" exact component={ Home } />
-							<Route path="/dashboard" export component={ ScreensDashboard } />        
+							<Route path="/dashboard" export component={ DashboardScreen } />        
+							<Route path="/assos" export component={ AssosListScreen } />        
 							<Route component={ RouteNotFound } />
 						</Switch>
 					</main>
