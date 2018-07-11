@@ -268,11 +268,6 @@ main {
   background-color: #fff;
 }
 
-.navbar {
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
 .sidebar {
   min-width: 250px;
   overflow: auto;
