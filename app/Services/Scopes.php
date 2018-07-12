@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Parser;
 use Laravel\Passport\Token;
+use App\Models\Client;
 
 /**
  * Cette classe permet de récupérer des informations concernant un membre de l'UTC
@@ -478,7 +479,9 @@ class Scopes {
 	}
 
 	public function getClient(Request $request) {
-		return $this->getToken($request)->client;
+		$clientFromPassport = $this->getToken($request)->client;
+
+		return $clientFromPassport ? Client::find($clientFromPassport->id) : null;
 	}
 
 	/**

@@ -91,7 +91,7 @@ class CalendarController extends AbstractCalendarController
 					abort(403, 'L\'utilisateur n\'a pas les droits de création');
 			}
 			else if ($request->input($type.'_by_type', 'client') === 'client')
-				$createrOrOwner = Client::find(\Scopes::getClient($request)->id);
+				$createrOrOwner = \Scopes::getClient($request);
 			else if ($request->input($type.'_by_type', 'client') === 'asso')
 				$createrOrOwner = \Scopes::getClient($request)->asso;
 		}
@@ -134,7 +134,7 @@ class CalendarController extends AbstractCalendarController
 		if ($request->input('created_by_type') === 'client'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
 			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
-			$creater = Client::find(\Scopes::getClient($request)->id);
+			$creater = \Scopes::getClient($request);
 		else if ($request->input('created_by_type') === 'asso'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
 			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
@@ -179,11 +179,11 @@ class CalendarController extends AbstractCalendarController
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, $id): JsonResponse {
-		$calendar = $this->getCalendar($request, \Auth::user(), $id, 'set', true);
+		$calendar = $this->getCalendar($request, \Auth::user(), $id, 'edit', true);
 		$inputs = $request->all();
 
 		if ($request->filled('owned_by_type')) {
-			$owner = $this->getCreaterOrOwner($request, 'set', 'owned');
+			$owner = $this->getCreaterOrOwner($request, 'edit', 'owned');
 
 			$inputs['owned_by_id'] = $owner->id;
 			$inputs['owned_by_type'] = get_class($owner);
