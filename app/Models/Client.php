@@ -16,6 +16,14 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
         return $this->belongsTo(Asso::class);
     }
 
+    public function calendars() {
+    	return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
+    public function events() {
+    	return $this->morphMany(Event::class, 'owned_by');
+    }
+
 	public function isCalendarAccessibleBy(int $user_id): bool {
 		return $this->asso()->currentMembers->wherePivot('user_id', $user_id)->exists();
 	}

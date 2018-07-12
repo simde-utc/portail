@@ -4,6 +4,12 @@ namespace App\Interfaces;
 
 Interface CanHaveCalendars {
     /**
+     * Renvoie la liste des calendriers
+     * @return MorphMany
+     */
+    public function calendars();
+
+    /**
      * Permet d'indiquer si la personne à le droit de voir les calendriers appartenant au modèle
      * @return boolean
      */

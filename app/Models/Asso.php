@@ -49,11 +49,7 @@ class Asso extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 	public function collaboratedArticles(){
 		return $this->belongsToMany('App\Models\Article', 'articles_collaborators');
 	}
-
-	public function events() {
-		return $this->belongsToMany(Event::class);
-	}
-
+	
 	public function parent() {
 	    return $this->hasOne(Asso::class, 'parent_id');
     }
@@ -149,6 +145,10 @@ class Asso extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
         	return false;
 	}
 
+    public function calendars() {
+    	return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
 	public function isCalendarAccessibleBy(int $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
@@ -158,6 +158,10 @@ class Asso extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 			'user_id' => $user_id,
 		]);
 	}
+
+    public function events() {
+    	return $this->morphMany(Events::class, 'owned_by');
+    }
 
 	public function isEventAccessibleBy(int $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();

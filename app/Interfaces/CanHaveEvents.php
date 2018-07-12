@@ -4,6 +4,11 @@ namespace App\Interfaces;
 
 Interface CanHaveEvents {
     /**
+     * Renvoie la liste des évènements
+     * @return MorphMany
+     */
+    public function events();
+    /**
      * Permet d'indiquer si la personne à le droit de voir les évènements appartenant au modèle
      * @return boolean
      */
