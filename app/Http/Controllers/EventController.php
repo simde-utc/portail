@@ -38,14 +38,12 @@ class EventController extends AbstractCalendarController
 		);
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-set-events', 'owned-client'),
-				$this->populateScopes('user-set-events', 'owned-asso'),
-				$this->populateScopes('user-create-events', 'owned'),
+				$this->populateScopes('user-create-events', 'owned-client'),
+				$this->populateScopes('user-create-events', 'owned-asso'),
 				$this->populateScopes('user-create-events', 'created')
 			), array_merge(
-				$this->populateScopes('client-set-events', 'owned-client'),
-				$this->populateScopes('client-set-events', 'owned-asso'),
-				$this->populateScopes('client-create-events', 'owned'),
+				$this->populateScopes('client-create-events', 'owned-client'),
+				$this->populateScopes('client-create-events', 'owned-asso'),
 				$this->populateScopes('client-create-events', 'created')
 			)),
 			['only' => ['store']]
@@ -94,7 +92,7 @@ class EventController extends AbstractCalendarController
 					abort(403, 'L\'utilisateur n\'a pas les droits de création');
 			}
 			else if ($request->input($type.'_by_type', 'client') === 'client')
-				$createrOrOwner = Client::find(\Scopes::getClient($request)->id);
+				$createrOrOwner = \Scopes::getClient($request);
 			else if ($request->input($type.'_by_type', 'client') === 'asso')
 				$createrOrOwner = \Scopes::getClient($request)->asso;
 		}
@@ -114,8 +112,8 @@ class EventController extends AbstractCalendarController
 
 		// Si c'est privée, uniquement les personnes ayant un calendrier contenant cet event peuvent le voir
 		$user = User::find($user_id);
-		$calendar_ids = $user->calendars->pluck('id')->merge($user->followedCalendars->pluck('id'));
-		$event_calendar_ids = $model->calendars->pluck('id');
+		$calendar_ids = $user->calendars()->get(['id'])->pluck('id')->merge($user->followedCalendars()->get(['id'])->pluck('id'));
+		$event_calendar_ids = $model->calendars()->get(['id'])->pluck('id');
 
 		$model->makeHidden('calendars');
 
@@ -154,7 +152,7 @@ class EventController extends AbstractCalendarController
 		if ($request->input('created_by_type') === 'client'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
 			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
-			$creater = Client::find(\Scopes::getClient($request)->id);
+			$creater = \Scopes::getClient($request)->id;
 		else if ($request->input('created_by_type') === 'asso'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
 			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
@@ -167,9 +165,9 @@ class EventController extends AbstractCalendarController
 		$inputs['owned_by_id'] = $owner->id;
 		$inputs['owned_by_type'] = get_class($owner);
 
-		$calendar = $this->getCalendar($request, \Auth::user(), Calendar::find($inputs['calendar_id']));
+		$calendar = $this->getCalendar($request, \Auth::user(), Calendar::find($inputs['calendar_id']), 'edit');
 
-		if (!$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
+		if (!$calendar->owned_by->isEventManageableBy(\Auth::id()))
 			abort(403, 'Vous n\'avez pas les droits suffisants pour ajouter cet évènenement à ce calendrier');
 
 		$event = Event::create($inputs);

@@ -37,27 +37,25 @@ class CalendarController extends AbstractCalendarController
 		);
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-set-calendars', 'owned-client'),
-				$this->populateScopes('user-set-calendars', 'owned-asso'),
-				$this->populateScopes('user-create-calendars', 'owned'),
+				$this->populateScopes('user-create-calendars', 'owned-client'),
+				$this->populateScopes('user-create-calendars', 'owned-asso'),
 				$this->populateScopes('user-create-calendars', 'created')
 			), array_merge(
-				$this->populateScopes('client-set-calendars', 'owned-client'),
-				$this->populateScopes('client-set-calendars', 'owned-asso'),
-				$this->populateScopes('client-create-calendars', 'owned'),
+				$this->populateScopes('client-create-calendars', 'owned-client'),
+				$this->populateScopes('client-create-calendars', 'owned-asso'),
 				$this->populateScopes('client-create-calendars', 'created')
 			)),
 			['only' => ['store']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-set-calendars', 'created'),
-				$this->populateScopes('user-set-calendars', 'owned-client'),
-				$this->populateScopes('user-set-calendars', 'owned-asso')
+				$this->populateScopes('user-edit-calendars', 'created'),
+				$this->populateScopes('user-edit-calendars', 'owned-client'),
+				$this->populateScopes('user-edit-calendars', 'owned-asso')
 			), array_merge(
-				$this->populateScopes('client-set-calendars', 'created'),
-				$this->populateScopes('client-set-calendars', 'owned-client'),
-				$this->populateScopes('client-set-calendars', 'owned-asso')
+				$this->populateScopes('client-edit-calendars', 'created'),
+				$this->populateScopes('client-edit-calendars', 'owned-client'),
+				$this->populateScopes('client-edit-calendars', 'owned-asso')
 			)),
 			['only' => ['update']]
 		);

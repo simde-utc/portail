@@ -43,8 +43,8 @@ class UserCalendarController extends AbstractCalendarController
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				$this->populateScopes('user-set-calendars-users-followed'),
-				$this->populateScopes('client-set-calendars-users-followed')
+				$this->populateScopes('user-edit-calendars-users-followed'),
+				$this->populateScopes('client-edit-calendars-users-followed')
 			),
 			['only' => ['update']]
 		);

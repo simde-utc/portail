@@ -318,6 +318,104 @@ return [
 				],
 			]
 		],
+		'edit' => [
+			'description' => 'Modifier les calendriers',
+			'scopes' => [
+				'users' => [
+					'description' => 'Modifier les calendriers de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les calendriers que l\'utilisateur a créé',
+						],
+						'owned' => [
+							'description' => 'Modifier les calendriers que l\'utilisateur possède',
+							'scopes' => [
+								'client' => [
+									'description' => 'Modifier les calendriers que l\'utilisateur possède et que mon client crée'
+								],
+								'asso' => [
+									'description' => 'Modifier les calendriers que l\'utilisateur possède et que mon association crée'
+								],
+							]
+						],
+						'followed' => [
+							'description' => 'Modifier les calendriers que l\'utilisateur suit',
+							'scopes' => [
+								'users' => [
+									'description' => 'Modifier les calendriers utilisateurs que l\'utilisateur suit',
+								],
+								'assos' => [
+									'description' => 'Modifier les calendriers associatifs que l\'utilisateur suit',
+								],
+								'groups' => [
+									'description' => 'Modifier les calendriers de groupe que l\'utilisateur suit',
+								],
+								'clients' => [
+									'description' => 'Modifier les calendriers clients que l\'utilisateur suit',
+								],
+							]
+						],
+					]
+				],
+				'assos' => [
+					'description' => 'Modifier les calendriers de chaque association',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les calendriers que chaque association a créé',
+						],
+						'owned' => [
+							'description' => 'Modifier les calendriers que chaque association possède',
+							'scopes' => [
+								'client' => [
+									'description' => 'Modifier les calendriers que chaque association possède et que mon client crée'
+								],
+								'asso' => [
+									'description' => 'Modifier les calendriers que chaque association de l\'utilisateur possède et que mon association crée'
+								],
+							]
+						],
+					]
+				],
+				'groups' => [
+					'description' => 'Modifier les calendriers de chaque groupe',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les calendriers que chaque groupe a créé',
+						],
+						'owned' => [
+							'description' => 'Modifier les calendriers que chaque groupe possède',
+							'scopes' => [
+								'client' => [
+									'description' => 'Modifier les calendriers que chaque groupe possède et que mon client crée'
+								],
+								'asso' => [
+									'description' => 'Modifier les calendriers que chaque groupe de l\'utilisateur possède et que mon association crée'
+								],
+							]
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Modifier les calendriers de chaque client',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les calendriers que chaque client a créé',
+						],
+						'owned' => [
+							'description' => 'Modifier les calendriers que chaque client possède',
+							'scopes' => [
+								'client' => [
+									'description' => 'Modifier les calendriers que chaque client possède et que mon client crée'
+								],
+								'asso' => [
+									'description' => 'Modifier les calendriers que chaque client de l\'utilisateur possède et que mon association crée'
+								],
+							]
+						],
+					]
+				],
+			]
+		],
 		'create' => [
 			'description' => 'Créer et faire suivre des calendriers',
 			'scopes' => [
