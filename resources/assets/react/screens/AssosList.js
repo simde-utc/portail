@@ -4,7 +4,8 @@ import { fetchAssos } from '../actions/assos';
 
 @connect(store => {
 	return {
-		assos: store.assos.assos
+		assos: store.assos.assos,
+		fetching: store.assos.fetching
 	}
 })
 class AssosListScreen extends Component {
@@ -14,7 +15,6 @@ class AssosListScreen extends Component {
 	}
 
 	render() {
-		console.log(this.props.assos)
 		return (
 			<div className="container">
 				<h1>Liste des associations</h1>

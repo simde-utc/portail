@@ -16,7 +16,7 @@ export default function assosReducer(state = {
 				...state,
 				fetching: false,
 				fetched: true,
-				assos: action.payload
+				assos: action.payload.data
 			}
 			break;
 		case 'FETCH_ASSOS_REJECTED':
