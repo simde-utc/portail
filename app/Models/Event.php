@@ -5,11 +5,10 @@ namespace App\Models;
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasVisibility;
 
 class Event extends Model implements OwnableContract
 {
-    use HasMorphOwner, HasVisibility;
+    use HasMorphOwner;
 
     protected $fillable = [
         'name', 'location_id', 'visibility_id', 'begin_at', 'end_at', 'full_day', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',

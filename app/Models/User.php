@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Cog\Contracts\Ownership\CanBeOwner;
 use App\Interfaces\CanHaveCalendars;
+use App\Interfaces\CanHaveContacts;
 use App\Interfaces\CanHaveEvents;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -16,7 +17,7 @@ use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 use App\Exceptions\PortailException;
 
-class User extends Authenticatable implements CanBeOwner, CanHaveCalendars, CanHaveEvents
+class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
 	use HasApiTokens, Notifiable, HasRoles;
 
@@ -184,18 +185,6 @@ class User extends Authenticatable implements CanBeOwner, CanHaveCalendars, CanH
 		return $this->hasMany('App\Models\Group');
 	}
 
-	public function contact() {
-		return $this->morphMany(Contact::class, 'contactable');
-	}
-
-    public function calendars() {
-    	return $this->morphMany(Calendar::class, 'owned_by');
-    }
-
-    public function events() {
-    	return $this->morphMany(Event::class, 'owned_by');
-    }
-
     public function followedCalendars() {
     	return $this->belongsToMany(Calendar::class, 'calendars_followers')->withTimestamps();
     }
@@ -238,6 +227,11 @@ class User extends Authenticatable implements CanBeOwner, CanHaveCalendars, CanH
 		return false;
 	}
 
+	public function contacts() {
+		return $this->morphMany(Contact::class, 'owned_by');
+	}
+
+
 	// Par défaut, un role n'est pas supprimable s'il a déjà été assigné
     // Mais on permet sa suppression s'il est assigné à un seul groupe
 	public function isRoleForIdDeletable($role, $id) {
@@ -265,6 +259,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveCalendars, CanH
         	return false;
 	}
 
+    public function calendars() {
+    	return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
 	public function isCalendarAccessibleBy(int $user_id): bool {
 		return $this->id == $user_id;
 	}
@@ -272,6 +270,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveCalendars, CanH
 	public function isCalendarManageableBy(int $user_id): bool {
 		return $this->id == $user_id;
 	}
+
+    public function events() {
+    	return $this->morphMany(Event::class, 'owned_by');
+    }
 
 	public function isEventAccessibleBy(int $user_id): bool {
 		return $this->id == $user_id;

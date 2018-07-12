@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\Traits\HasMembers;
 use \App\Traits\HasStages;
+use App\Interfaces\CanHaveContacts;
 use App\Interfaces\CanHaveEvents;
 use App\Interfaces\CanHaveCalendars;
 
-class Asso extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
+class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
 	use SoftDeletes, HasStages, HasMembers {
 		HasMembers::members as membersAndFollowers;
@@ -20,6 +21,25 @@ class Asso extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 		HasMembers::getUserRoles as getUsersRolesInThisAssociation;
 	}
 
+    public static function boot() {
+        static::created(function ($model) {
+			// On crée automatiquement des moyens de contacts !
+			Contact::create([
+				'name' => 'Adresse email',
+				'value' => $model->login.'@assos.utc.fr',
+				'contact_type_id' => ContactType::where('name', 'Adresse email')->first()->id,
+				'visibility_id' => Visibility::findByType('public')->id,
+			])->changeOwnerTo($model)->save();
+
+			Contact::create([
+				'name' => 'Site Web',
+				'value' => 'https://assos.utc.fr/'.$model->login.'/',
+				'contact_type_id' => ContactType::where('name', 'Url')->first()->id,
+				'visibility_id' => Visibility::findByType('public')->id,
+			])->changeOwnerTo($model)->save();
+        });
+    }
+
 	protected $roleRelationTable = 'assos_members';
 
 	protected $fillable = [
@@ -28,10 +48,6 @@ class Asso extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 
 	public function type() {
 		return $this->belongsTo(AssoType::class, 'type_asso_id');
-	}
-
-	public function contact() {
-		return $this->morphMany(Contact::class, 'contactable');
 	}
 
 	public function rooms() {
@@ -49,7 +65,7 @@ class Asso extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 	public function collaboratedArticles(){
 		return $this->belongsToMany('App\Models\Article', 'articles_collaborators');
 	}
-	
+
 	public function parent() {
 	    return $this->hasOne(Asso::class, 'parent_id');
     }
@@ -122,6 +138,10 @@ class Asso extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 		}
 
 		return $this;
+	}
+
+	public function contacts() {
+		return $this->morphMany(Contact::class, 'owned_by');
 	}
 
 	/**
