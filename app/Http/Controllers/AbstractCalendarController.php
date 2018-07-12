@@ -60,8 +60,11 @@ abstract class AbstractCalendarController extends Controller
 		$calendar = Calendar::with(['owned_by', 'created_by', 'visibility'])->find($id);
 
 		if ($calendar) {
-			if (!$this->tokenCanSee($request, $calendar, $verb) || ($user && !$this->isVisible($calendar, $user->id)))
-				abort(403, 'Vous n\'avez pas le droit de consulter ce calendrier');
+			if (!$this->tokenCanSee($request, $calendar, $verb))
+				abort(403, 'L\'application n\'a pas les droits sur ce calendrier');
+
+			 if ($user && !$this->isVisible($calendar, $user->id))
+				abort(403, 'Vous n\'avez pas les droits sur ce calendrier');
 
 			if ($needRights && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
 				abort(403, 'Vous n\'avez pas les droits suffisants');
@@ -76,11 +79,14 @@ abstract class AbstractCalendarController extends Controller
 		$event = Event::with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->find($id);
 
 		if ($event) {
-			if (!$this->tokenCanSee($request, $event, $verb, 'events') || ($user && !$this->isVisible($event, $user->id)))
-				abort(403, 'Vous n\'avez pas le droit de consulter ce évènenement');
+			if (!$this->tokenCanSee($request, $event, $verb, 'events'))
+				abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
+
+			if ($user && !$this->isVisible($event, $user->id))
+				abort(403, 'Vous n\'avez pas les droits sur cet évènenement');
 
 			if ($needRights && !$event->owned_by->isEventManageableBy(\Auth::id()))
-				abort(403, 'Vous n\'avez pas les droit suffisant');
+				abort(403, 'Vous n\'avez pas les droits suffisants');
 
 			$event->participants = $event->participants->map(function ($user) use ($request) {
 				return $this->hideUserData($request, $user);
@@ -97,7 +103,6 @@ abstract class AbstractCalendarController extends Controller
 
 		if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned'))
 			return true;
-
 
 		if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned-client'))
 		 		&& $model->created_by_type === Client::class

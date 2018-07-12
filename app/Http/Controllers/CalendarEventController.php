@@ -9,7 +9,7 @@ use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AbstractCalendarController;
 use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\HasVisibility;
@@ -19,70 +19,106 @@ use App\Traits\HasVisibility;
  *
  * Gestion des évenements des calendriers
  */
-class CalendarEventController extends Controller
+class CalendarEventController extends AbstractCalendarController
 {
-	use HasVisibility;
-
 	public function __construct() {
-		$this->middleware(
-			\Scopes::matchAnyUser()
+		parent::__construct();
+
+		$this->middleware(array_merge(
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-get-calendars', 'created'),
+				$this->populateScopes('user-get-calendars', 'owned-client'),
+				$this->populateScopes('user-get-calendars', 'owned-asso')
+			), array_merge(
+				$this->populateScopes('client-get-calendars', 'created'),
+				$this->populateScopes('client-get-calendars', 'owned-client'),
+				$this->populateScopes('client-get-calendars', 'owned-asso')
+			)),
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-get-events', 'created'),
+				$this->populateScopes('user-get-events', 'owned-client'),
+				$this->populateScopes('user-get-events', 'owned-asso')
+			), array_merge(
+				$this->populateScopes('client-get-events', 'created'),
+				$this->populateScopes('client-get-events', 'owned-client'),
+				$this->populateScopes('client-get-events', 'owned-asso')
+			))),
+			['only' => ['index', 'show']]
+		);
+		$this->middleware(array_merge(
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-edit-calendars', 'created'),
+				$this->populateScopes('user-edit-calendars', 'owned-client'),
+				$this->populateScopes('user-edit-calendars', 'owned-asso')
+			), array_merge(
+				$this->populateScopes('client-edit-calendars', 'created'),
+				$this->populateScopes('client-edit-calendars', 'owned-client'),
+				$this->populateScopes('client-edit-calendars', 'owned-asso')
+			)),
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-get-events', 'created'),
+				$this->populateScopes('user-get-events', 'owned-client'),
+				$this->populateScopes('user-get-events', 'owned-asso')
+			), array_merge(
+				$this->populateScopes('client-get-events', 'created'),
+				$this->populateScopes('client-get-events', 'owned-client'),
+				$this->populateScopes('client-get-events', 'owned-asso')
+			))),
+			['only' => ['store']]
+		);
+		$this->middleware(array_merge(
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-edit-calendars', 'created'),
+				$this->populateScopes('user-edit-calendars', 'owned-client'),
+				$this->populateScopes('user-edit-calendars', 'owned-asso')
+			), array_merge(
+				$this->populateScopes('client-edit-calendars', 'created'),
+				$this->populateScopes('client-edit-calendars', 'owned-client'),
+				$this->populateScopes('client-edit-calendars', 'owned-asso')
+			)),
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-get-events', 'created'),
+				$this->populateScopes('user-get-events', 'owned-client'),
+				$this->populateScopes('user-get-events', 'owned-asso')
+			), array_merge(
+				$this->populateScopes('client-get-events', 'created'),
+				$this->populateScopes('client-get-events', 'owned-client'),
+				$this->populateScopes('client-get-events', 'owned-asso')
+			))),
+			['only' => ['update']]
+		);
+		$this->middleware(array_merge(
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-edit-calendars', 'created'),
+				$this->populateScopes('user-edit-calendars', 'owned-client'),
+				$this->populateScopes('user-edit-calendars', 'owned-asso')
+			), array_merge(
+				$this->populateScopes('client-edit-calendars', 'created'),
+				$this->populateScopes('client-edit-calendars', 'owned-client'),
+				$this->populateScopes('client-edit-calendars', 'owned-asso')
+			)),
+			\Scopes::matchOne(array_merge(
+				$this->populateScopes('user-get-events', 'created'),
+				$this->populateScopes('user-get-events', 'owned-client'),
+				$this->populateScopes('user-get-events', 'owned-asso')
+			), array_merge(
+				$this->populateScopes('client-get-events', 'created'),
+				$this->populateScopes('client-get-events', 'owned-client'),
+				$this->populateScopes('client-get-events', 'owned-asso')
+			))),
+			['only' => ['destroy']]
 		);
 	}
 
-	protected function hideEventData(Request $request, $event) {
-		$event->created_by = $this->hideData($request, $event->created_by);
-		$event->owned_by = $this->hideData($request, $event->owned_by);
-
-		$event->makeHidden(['location_id', 'visibility_id']);
-
-		if ($event->pivot)
-			$event->pivot->makeHidden(['calendar_id', 'event_id']);
-
-		return $event;
-	}
-
-	protected function getCalendar(Request $request, int $id, bool $needRights = false) {
-		$calendar = Calendar::with('events')->find($id);
-
-		if ($calendar) {
-			if (!$this->isVisible($calendar))
-				abort(403, 'Vous n\'avez pas le droit de consulter ce calendrier');
-
-			if ($needRights && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
-				abort(403, 'Vous n\'avez pas les droits suffisants');
-
-			return $calendar;
-		}
-
-		abort(404, 'Impossible de trouver le calendrier');
-	}
-
-	protected function getEvent(Request $request, int $id, bool $needRights = false) {
-		$event = Event::with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->find($id);
-
-		if ($event) {
-			if (!$this->isVisible($event))
-				abort(403, 'Vous n\'avez pas le droit de consulter ce évènenement');
-
-			if ($needRights && !$event->owned_by->isEventManageableBy(\Auth::id()))
-				abort(403, 'Vous n\'avez pas les droit suffisant');
-
-			$event->participants = $event->participants->map(function ($user) use ($request) {
-				return $this->hideUserData($request, $user);
-			});
-
-			return $event;
-		}
-
-		abort(404, 'Impossible de trouver le évènenement');
-	}
-
-	protected function getEventFromCalendar(Request $request, Calendar $calendar, int $id) {
+	protected function getEventFromCalendar(Request $request, User $user, Calendar $calendar, int $id) {
 		$event = $calendar->events()->with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->find($id);
 
 		if ($event) {
-			if (!$this->isVisible($event))
-				abort(403, 'Vous n\'avez pas le droit de consulter ce évènenement');
+			if (!$this->tokenCanSee($request, $event, 'get', 'events'))
+				abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
+
+			if ($user && !$this->isVisible($event, $user->id))
+				abort(403, 'Vous n\'avez pas les droits sur cet évènenement');
 
 			return $event;
 		}
@@ -120,8 +156,10 @@ class CalendarEventController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request, int $calendar_id): JsonResponse {
-		$calendar = $this->getCalendar($request, $calendar_id);
-		$events = $calendar->events()->with(['visibility', 'location', 'created_by', 'owned_by'])->get()->map(function ($event) use ($request) {
+		$calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
+		$events = $calendar->events()->with(['visibility', 'location', 'created_by', 'owned_by'])->get()->filter(function ($event) use ($request) {
+			return $this->tokenCanSee($request, $event, 'get', 'events');
+		})->values()->map(function ($event) use ($request) {
 			return $this->hideEventData($request, $event);
 		});
 
@@ -164,8 +202,8 @@ class CalendarEventController extends Controller
 	 * @return JsonResponse
 	 */
 	public function show(Request $request, int $calendar_id, int $id): JsonResponse {
-		$calendar = $this->getCalendar($request, $calendar_id);
-		$event = $this->getEventFromCalendar($request, $calendar, $id);
+		$calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
+		$event = $this->getEventFromCalendar($request, \Auth::user(), $calendar, $id);
 
 		return response()->json($this->hideEventData($request, $event), 200);
 	}
@@ -181,15 +219,23 @@ class CalendarEventController extends Controller
 	}
 
 	/**
-	 * Delete Calendar
+	 * On retire l'évènement du calendrier courant
 	 *
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
 	public function destroy(Request $request, int $calendar_id, $id): JsonResponse {
-		$calendar = $this->getCalendar($request, $id, true);
-		$calendar->softDelete();
+		$calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
+		$event = $this->getEventFromCalendar($request, \Auth::user(), $calendar, $id);
 
+		$calendar_ids = $event->owner->calendars()->get(['calendars.id'])->pluck('id');
+		$event_calendar_ids = $event->calendars()->get(['calendars.id'])->pluck('id');
+
+		// On vérifie que celui qui possède l'event, possède l'évènement dans au moins 2 de ses calendriers
+		if (count($calendar_ids->intersect($event_calendar_ids)) === 1 && $calendar_ids->contains($calendar_id))
+			abort(400, 'L\'évènement doit au moins appartenir à un calendrier du propriétaire de l\'évènement');
+
+		$calendar->events()->detach($event);
 		abort(204);
 	}
 }
