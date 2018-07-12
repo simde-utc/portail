@@ -3,6 +3,11 @@ export const fetchAssos = () => ({
 	payload: axios.get("/api/v1/assos?all")
 })
 
+export const fetchAsso = (id) => ({
+	type: "FETCH_ASSO",
+	payload: axios.get("/api/v1/assos/" + id)
+})
+
 export const fetchFakeAssos = () => ({
 	type: "FETCH_ASSOS_FULFILLED",
 	payload: {data : [

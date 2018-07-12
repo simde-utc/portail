@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class AssoChildrenList extends Component { 
 	render() {
@@ -8,12 +9,14 @@ class AssoChildrenList extends Component {
 		if (level > 2) 	liClass += ' list-subitem'
 		return(
 			<li className={ liClass }>
-				<span className={ (level == 1) ? 'list-header' : '' }>
-					{ asso.shortname }
-				</span>
+				<Link className={ (level == 1) ? 'list-header' : 'list-link' } 
+					to={ 'asso/' + asso.login }>{ asso.shortname }</Link>
 				{ asso.children.length > 0 ? (
 					<ul className="list-row">
-						{ asso.children.map(child => (<AssoChildrenList key={ child.id } asso={child} level={level+1} />)) }
+						{ asso.children.map(child => (
+							<AssoChildrenList key={ child.id } 
+								asso={child} level={level+1} />
+							)) }
 					</ul>
 				) : null }
 			</li>
