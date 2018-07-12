@@ -20,7 +20,7 @@ class App extends Component {
 				<Navbar />
 				<div className="d-flex w-100 h-100">
 					<Sidebar />
-					<main className="col p-4">
+					<main className="col p-4 loader-container">
 						<Switch>
 							<Route path="/" exact component={ Home } />
 							<Route path="/dashboard" export component={ DashboardScreen } />        
