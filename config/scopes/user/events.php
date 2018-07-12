@@ -22,7 +22,7 @@
 // Toutes les routes commencant par user-{verbe}-events-
 return [
 	'description' => 'Evènements',
-	'icon' => 'calendar-o',
+	'icon' => 'calendar',
 	'verbs' => [
 		'manage' => [
 			'description' => 'Gérer tout les évènements',
