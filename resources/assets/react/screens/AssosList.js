@@ -32,8 +32,10 @@ class AssosListScreen extends Component {
 				let parent;
 				while(nextParents.length > 0) {
 					parent = nextParents.pop();
+					// On arrête si on a trouvé le parent
 					if (parent.id === asso.parent_id)
 						break;
+					// Sinon on ajoute ses enfants à la liste de recherche 
 					else
 						nextParents = nextParents.concat(parent.children);
 				}
@@ -43,7 +45,7 @@ class AssosListScreen extends Component {
 
 		return (
 			<div className="container">
-				<h1>Liste des associations</h1>
+				<h1 className="title">Liste des associations</h1>
 				<span className={"loader large" + (this.props.fetching ? ' active' : '') }></span>
 
 				<ul className="row list-row">
