@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Cog\Contracts\Ownership\CanBeOwner;
+use App\Interfaces\CanHaveCalendars;
+use App\Interfaces\CanHaveEvents;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\HasRoles;
@@ -13,7 +16,7 @@ use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 use App\Exceptions\PortailException;
 
-class User extends Authenticatable
+class User extends Authenticatable implements CanBeOwner, CanHaveCalendars
 {
 	use HasApiTokens, Notifiable, HasRoles;
 
@@ -185,8 +188,16 @@ class User extends Authenticatable
 		return $this->morphMany(Contact::class, 'contactable');
 	}
 
+    public function calendars() {
+    	return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
     public function events() {
-    	return $this->belongsToMany('App\Models\Event');
+    	return $this->morphMany(Event::class, 'owned_by');
+    }
+
+    public function followedCalendars() {
+    	return $this->belongsToMany(Calendar::class, 'calendars_followers')->withTimestamps();
     }
 
 	/**
@@ -252,5 +263,21 @@ class User extends Authenticatable
             return $contact->contactable_id == Auth::user()->id;
         } else
         	return false;
+	}
+
+	public function isCalendarAccessibleBy(int $user_id): bool {
+		return $this->id == $user_id;
+	}
+
+	public function isCalendarManageableBy(int $user_id): bool {
+		return $this->id == $user_id;
+	}
+
+	public function isEventAccessibleBy(int $user_id): bool {
+		return $this->id == $user_id;
+	}
+
+	public function isEventManageableBy(int $user_id): bool {
+		return $this->id == $user_id;
 	}
 }

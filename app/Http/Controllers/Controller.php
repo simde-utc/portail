@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Asso;
+use App\Models\Group;
+use App\Models\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -68,6 +71,28 @@ class Controller extends BaseController
 		return $choices;
 	}
 
+	/**
+	 * Permet de récupérer l'utilisateur en fonction du token mais aussi de l'utilisateur donné
+	 * @param  Request $request
+	 * @param  int/null  $user_id
+	 * @return User
+	 */
+	protected function getUser(Request $request, int $user_id = null): User {
+        if (\Scopes::isClientToken($request))
+            $user = $user_id ? User::find($user_id) : null;
+        else {
+            $user = \Auth::user();
+
+            if (!is_null($user_id) && $user->id !== $user_id)
+                abort(403, 'Il ne vous est pas autorisé d\'accéder aux données des autres utilisateurs');
+        }
+
+		if ($user)
+			return $user;
+		else
+			abort(404, "Utilisateur non trouvé");
+	}
+
 	/**Cache les données des utilisateurs dans une collection
 	 *
 	 * @param Request $request
@@ -96,7 +121,6 @@ class Controller extends BaseController
 	 * @return User|null
 	 */
 	protected function hideUserData(Request $request, User $user, bool $hidePivot = true): ?User {
-
 		if ($user === null)
 			return null;
 
@@ -106,6 +130,36 @@ class Controller extends BaseController
 		$user->makeHidden(['firstname', 'lastname', 'email', 'is_active', 'last_login_at', 'created_at', 'updated_at']);
 
 		return $this->hidePivotData($request, $user, $hidePivot);
+	}
+
+	protected function hideAssoData(Request $request, Asso $asso) {
+		return $asso->makeHidden(['login', 'description', 'type_asso_id', 'parent_id', 'created_at', 'updated_at', 'deleted_at']);
+	}
+
+	protected function hideGroupData(Request $request, Group $group) {
+		return $group->makeHidden(['icon', 'created_at', 'updated_at', 'deleted_at']);
+	}
+
+	protected function hideClientData(Request $request, Client $client) {
+		return $client->makeHidden(['user_id', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'asso_id', 'created_at', 'updated_at', 'scopes']);
+	}
+
+	protected function hideData(Request $request, $data) {
+		if ($data != null) {
+			if ($data instanceof User)
+				$data = $this->hideUserData($request, $data);
+			else if ($data instanceof Asso)
+				$data = $this->hideAssoData($request, $data);
+			else if ($data instanceof Group)
+				$data = $this->hideGroupData($request, $data);
+			else if ($data instanceof Client)
+				$data = $this->hideClientData($request, $data);
+
+			$namespace = explode('\\', get_class($data));
+			$data['type'] = strtolower(end($namespace));
+		}
+
+		return $data;
 	}
 
 	/**Cache les données de pivot dans un modèle

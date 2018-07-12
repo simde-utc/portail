@@ -35,18 +35,13 @@ class VisibilitiesTableSeeder extends Seeder
             ],
             [
                 'type' => 'private',
-                'name' => 'Privée aux membres',
+                'name' => 'Privée',
                 'parent' => 'contributorBDE',
-            ],
-            [
-                'type' => 'owner',
-                'name' => 'Uniquement la personne créatrice',
-                'parent' => 'private',
             ],
             [
                 'type' => 'internal',
                 'name' => 'Réservé à la gestion interne du système',
-                'parent' => 'owner',
+                'parent' => 'private',
             ],
         ];
 

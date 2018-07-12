@@ -30,8 +30,8 @@ return response()->json($group, 200);
     "error": "Vous ne pouvez pas voir cela.",
     "visibility": {
         "id": 10,
-        "type": "owner",
-        "name": "Uniquement la personne créatrice"
+        "type": "private",
+        "name": "Privée"
     }
 }
 ```
@@ -46,7 +46,7 @@ $groups = Group::all()->map(function ($group) {
 
 ### getVisibilityType()
 
-Permet de renvoyer le type de la visibilité actuelle de l'utilisateur. 
+Permet de renvoyer le type de la visibilité actuelle de l'utilisateur.
 
 ### isVisible()
 

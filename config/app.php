@@ -161,6 +161,8 @@ return [
 		 * Custom Providers...
 		 */
  		Ixudra\Curl\CurlServiceProvider::class,
+		Grimzy\LaravelMysqlSpatial\SpatialServiceProvider::class,
+		Cog\Laravel\Ownership\Providers\OwnershipServiceProvider::class,
 		Mews\Captcha\CaptchaServiceProvider::class,
 		App\Providers\GingerServiceProvider::class,
 		App\Providers\ScopesServiceProvider::class,

@@ -91,19 +91,11 @@ class GroupMemberController extends Controller
 	public function store(Request $request, int $group_id): JsonResponse {
 		$group = $this->getGroup($request, $group_id);
 
-		if ($group->visibility_id >= Visibility::findByType('owner')->id)
-			$data = [
-				'semester_id'  => $request->input('semester_id', 0),
-				'role_id'      => $request->input('role_id', null),
-				'validated_by' => \Auth::id(),
-			];
-		else {
-			$data = [
-				'semester_id' => $request->input('semester_id', 0),
-				'role_id'     => $request->input('role_id', null),
-			];
-			// TODO: Envoyer un mail d'invitation dans le groupe
-		}
+		$data = [
+			'semester_id' => $request->input('semester_id', 0),
+			'role_id'     => $request->input('role_id', null),
+		];
+		// TODO: Envoyer un mail d'invitation dans le groupe
 
 		try {
 			$group->assignMembers($request->input('member_ids', []), $data);
