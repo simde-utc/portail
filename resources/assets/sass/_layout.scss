@@ -20,3 +20,21 @@ main {
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.list-row {
+	padding: 0;
+	margin-bottom: map-get($spacers, 1);
+}
+
+.list-item,
+.list-header {
+	display: block;
+}
+.list-subitem {
+	font-size: 0.9em;
+	padding-left: map-get($spacers, 2);
+}
+
+.list-header {
+	font-weight: bold;
+	margin-bottom: map-get($spacers, 1);
+}

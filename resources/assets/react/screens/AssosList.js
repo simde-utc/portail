@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchFakeAssos } from '../actions/assos';
+import { fetchAssos } from '../actions/assos';
 
 import AssoChildrenList from '../components/AssoChildrenList';
 
@@ -13,7 +13,7 @@ import AssoChildrenList from '../components/AssoChildrenList';
 class AssosListScreen extends Component {
 
 	componentWillMount() {
-		this.props.dispatch(fetchFakeAssos())
+		this.props.dispatch(fetchAssos())
 	}
 
 	render() {
@@ -36,7 +36,6 @@ class AssosListScreen extends Component {
 						break;
 					else
 						nextParents = nextParents.concat(parent.children);
-					// TODO concat ?
 				}
 				parent.children.push(asso);
 			}
@@ -47,9 +46,9 @@ class AssosListScreen extends Component {
 				<h1>Liste des associations</h1>
 				<span className={"loader large" + (this.props.fetching ? ' active' : '') }></span>
 
-				<ul className="list-group">
+				<ul className="row list-row">
 					{ assosTree.map(asso => (
-						<AssoChildrenList key={asso.id} asso={asso} level="1" />
+						<AssoChildrenList key={asso.id} asso={asso} level={1} />
 					)) }
 					</ul>
 			</div>

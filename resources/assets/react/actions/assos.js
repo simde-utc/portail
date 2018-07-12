@@ -1,6 +1,6 @@
 export const fetchAssos = () => ({
 	type: "FETCH_ASSOS",
-	payload: axios.get("/api/v1/assos")
+	payload: axios.get("/api/v1/assos?all")
 })
 
 export const fetchFakeAssos = () => ({
@@ -18,6 +18,9 @@ export const fetchFakeAssos = () => ({
 		{ id: 10, 	parent_id: 3,		shortname: 'azd3', 		login: 'azd3'	},
 		{ id: 11, 	parent_id: 4,		shortname: 'azd4', 		login: 'azd4'	},
 		{ id: 12, 	parent_id: 5,		shortname: 'azd5', 		login: 'azd5'	},
-		{ id: 12, 	parent_id: 7,		shortname: 'OOOOOOOOOOOO', 		login: 'OOOOOOOOOOOO'	},
+		{ id: 13, 	parent_id: 7,		shortname: 'Ah bon', 	login: 'Ah bon'	},
+		{ id: 14, 	parent_id: 13,		shortname: 'Okay', 		login: 'Okay'	},
+		{ id: 15, 	parent_id: 14,		shortname: 'Okay', 		login: 'Okay'	},
+		{ id: 16, 	parent_id: 15,		shortname: 'Okay', 		login: 'Okay'	},
 	]}
 })
