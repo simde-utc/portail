@@ -1,6 +1,7 @@
 /**
  * ActionTypes Creator
  * Fonction qui permet de créer les types d'actions CRUD
+ * @param      {string}   name    Le nom de la ressource au singulier en capital 
  */
 export const createActionTypes = (name) => ({
 	getAll: `GET_ALL_${name}`,
@@ -18,25 +19,25 @@ export const createActionTypes = (name) => ({
  * @param      {Object}   overrides      Surcharge du set d'actions
  */
 export const createCrudActionSet = (actionTypes, uri, overrides = {}) => ({
-	getAll: () => ({
+	getAll: (queryParams = '') => ({
 		type: actionTypes.getAll,
-		payload: axios.get(`/api/v1/${name}`)
+		payload: axios.get(`/api/v1/${uri}${queryParams}`)
 	}),
 	getOne: (id) => ({
 		type: actionTypes.getOne,
-		payload: axios.get(`/api/v1/${name}/${id}`)
+		payload: axios.get(`/api/v1/${uri}/${id}`)
 	}),
 	create: (data) => ({
 		type: actionTypes.create,
-		payload: axios.post(`/api/v1/${name}`)
+		payload: axios.post(`/api/v1/${uri}`)
 	}),
 	update: (id, data) => ({
 		type: actionTypes.update,
-		payload: axios.put(`/api/v1/${name}/${id}`)
+		payload: axios.put(`/api/v1/${uri}/${id}`)
 	}),
 	delete: (id) => ({
 		type: actionTypes.delete,
-		payload: axios.delete(`/api/v1/${name}/${id}`)
+		payload: axios.delete(`/api/v1/${uri}/${id}`)
 	}),
 	...overrides
 })
@@ -58,13 +59,17 @@ const initialCrudState = {
  */
 export const createCrudReducer = (actionTypes, initialState = initialCrudState, overrides = {}) => (state = initialState, action) => {
 	let reducerMap = {}
-	actionTypes.forEach(type => {
-		reducerMap[`${type}_PENDING`] 	= {...state, fetching: true }
-		reducerMap[`${type}_FULLFILED`] = {...state, fetching: false, data: action.payload }
-		reducerMap[`${type}_REJECTED`] 	= {...state, fetching: false, error: action.payload }
+	Object.values(actionTypes).forEach(type => {
+		reducerMap[`${type}_PENDING`] 	= (state, action) => ({...state, fetching: true, fetched: false })
+		reducerMap[`${type}_FULFILLED`] = (state, action) => ({...state, fetching: false, fetched: true, data: action.payload.data })
+		reducerMap[`${type}_REJECTED`] 	= (state, action) => ({...state, fetching: false, fetched: false, error: action.payload })
 	})
 
-	return overrides[action.type] || reducer[action.type] || state;
+	if (overrides[action.type])
+		return overrides[action.type](state, action)
+	if (reducerMap[action.type])
+		return reducerMap[action.type](state, action)
+	return state;
 }
 
 
