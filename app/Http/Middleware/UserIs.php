@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Auth\Access\AuthorizationException;
 
-class isUser
+class UserIs
 {
     /**
      * Handle an incoming request.
