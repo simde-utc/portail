@@ -17,6 +17,7 @@ class AssoDetailScreen extends Component {
 		const { asso, fetching, fetched } = this.props.asso;
 		if (fetching | !fetched)
 			return (<span className="loader huge active"></span>);
+		
 		let actions = [];
 		if (asso.user.is_follower)
 			actions.push(<button key="subscription" 
