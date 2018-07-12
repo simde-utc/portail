@@ -16,7 +16,7 @@ use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 use App\Exceptions\PortailException;
 
-class User extends Authenticatable implements CanBeOwner, CanHaveCalendars
+class User extends Authenticatable implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 {
 	use HasApiTokens, Notifiable, HasRoles;
 

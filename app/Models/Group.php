@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasMembers;
+use App\Interfaces\CanHaveEvents;
 use App\Interfaces\CanHaveCalendars;
 
-class Group extends Model implements CanBeOwner, CanHaveCalendars
+class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 {
     use SoftDeletes, HasMembers;
 
@@ -42,6 +43,10 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars
 		return true;
 	}
 
+    public function calendars() {
+    	return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
 	public function isCalendarAccessibleBy(int $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
@@ -51,6 +56,10 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars
 			'user_id' => $user_id,
 		]);
 	}
+
+    public function events() {
+    	return $this->morphMany(Event::class, 'owned_by');
+    }
 
 	public function isEventAccessibleBy(int $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
