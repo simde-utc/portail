@@ -1,17 +1,27 @@
 import produce from 'immer';
 
+
+// Suffixes des actions asynchrones
+export const ASYNC_SUFFIXES = {
+	loading: 'LOADING',
+	success: 'SUCCESS',
+	error: 'ERROR'
+}
+
+
 /**
  * ActionTypes Creator
  * Fonction qui permet de créer les types d'actions CRUD
  * @param      {string}   name    Le nom de la ressource au singulier en capital 
  */
-export const createActionTypes = (name) => ({
+export const createCrudTypes = (name) => ({
 	getAll: `GET_ALL_${name}`,
 	getOne: `GET_ONE_${name}`,
 	create: `CREATE_${name}`,
 	update: `UPDATE_${name}`,
 	delete: `DELETE_${name}`
 });
+
 
 /**
  * ActionCreator Creator
@@ -20,10 +30,10 @@ export const createActionTypes = (name) => ({
  * @param      {string}   uri            L'uri CRUD de la ressource
  * @param      {Object}   overrides      Surcharge du set d'actions
  */
-export const createCrudActionSet = (actionTypes, uri, overrides = {}) => ({
+export const createCrudActions = (actionTypes, uri, overrides = {}) => ({
 	getAll: (queryParams = '') => ({
 		type: actionTypes.getAll,
-		meta: { affectsAll: true, arrayAction: 'update', timestamp: Date.now() },
+		meta: { affectsAll: true, arrayAction: 'updateAll', timestamp: Date.now() },
 		payload: axios.get(`/api/v1/${uri}${queryParams}`)
 	}),
 	getOne: (id, queryParams = '') => ({
@@ -49,13 +59,15 @@ export const createCrudActionSet = (actionTypes, uri, overrides = {}) => ({
 	...overrides
 })
 
-const initialCrudState = {
+
+export const initialCrudState = {
 	data: [],
 	error: null,
 	fetching: false,
 	fetched: false,
 	lastUpdate: null
 }
+
 /**
  * Reducer Creator
  * Génère un reducer à partir d'un set d'action CRUD
@@ -65,15 +77,20 @@ const initialCrudState = {
  * @return     {Object}  Un reducer
  */
 export const createCrudReducer = (actionTypes, initialState = initialCrudState, overrides = {}) => (state = initialState, action) => {
+	// reducerMap est une map (action => reducer function) créée à partir des actionTypes
 	let reducerMap = {}
 	Object.values(actionTypes).forEach(type => {
 		// Request started
-		reducerMap[`${type}_PENDING`] 	= (state, action) => ({...state, fetching: true, fetched: false })
+		reducerMap[`${type}_${ASYNC_SUFFIXES.loading}`] = (state, action) => ({...state, fetching: true, fetched: false })
 
 		// Request succeeded
-		reducerMap[`${type}_FULFILLED`] = produce((draft, action) => {
+		// Ici on utilise le package immer qui s'occupe de l'immutabilité du state par draft
+		reducerMap[`${type}_${ASYNC_SUFFIXES.success}`] = (state, action) => produce(state, draft => {
+			// Update status
 			draft.fetching = false;
 			draft.fetched = true;
+			draft.lastUpdate = action.meta.timestamp
+
 			if (action.meta.affectsAll) {
 				// Full copy if affects all data
 				draft.data = action.payload.data;
@@ -82,47 +99,39 @@ export const createCrudReducer = (actionTypes, initialState = initialCrudState, 
 				let idx;
 				switch (action.meta.arrayAction) {
 					case 'create':
+						// Add new object to array
 						draft.data.push(action.payload.data);
 						break;
 					case 'update':
-						idx = draft.data.indexOf(resource => resource.id == action.meta.id);
+						// Get the index of the resource in the array
+						idx = draft.data.findIndex(resource => resource.id == action.payload.data.id);
 						if (idx === -1)		// Create if it doesn't exist
 							draft.data.push(action.payload.data);
-						else
+						else				// Else modify
 							draft.data[idx] = action.payload.data;
 						break;
 					case 'delete':
-						idx = draft.data.indexOf(resource => resource.id == action.meta.id);
-						draft.data.splice(idx, 1);
+						// Get the index of the resource in the array
+						idx = draft.data.findIndex(resource => resource.id == action.payload.data.id);
+						if (idx !== -1) 	// Delete data if exists
+							draft.data.splice(idx, 1);
 						break;
 				}
 			}
+			return draft;
 		})
 		
 		// Request failed
-		reducerMap[`${type}_REJECTED`] 	= (state, action) => ({...state, fetching: false, fetched: false, error: action.payload })
+		reducerMap[`${type}_${ASYNC_SUFFIXES.error}`] 	= (state, action) => ({...state, fetching: false, fetched: false, error: action.payload })
 	})
 
+	// Si le gestionnaire d'action est surchargé, utiliser cette version
 	if (overrides.hasOwnProperty(action.type))
 		return overrides[action.type](state, action)
-	if (reducerMap.hasOwnProperty(action.type)) {
+	// Sinon s'il s'agit d'une action CRUD, utiliser celle de reducerMap
+	if (reducerMap.hasOwnProperty(action.type))
 		return reducerMap[action.type](state, action)
-	}
+	// Sinon rien
 	return state;
 }
 
-
-/**
- * Examples d'utilisation
-
-// ActionTypes
-const userTypes = createActionTypes("USER")
-
-// Reducer
-const userReducer = createCrudReducer(userTypes, {}, overrides?)
-
-// Actions
-const userActions = createCrudActionSet(userTypes, 'users', { create: (data) => { ... } })
-usersAction.create({...})
-
-*/

@@ -18,7 +18,5 @@ Les composants réutilisables se trouvent dans `components/`. Ils sont utilisés
 ## Redux
 
 Redux est utilisé pour gérer les données dans un store.
-Pour plus d'informations, [regardez cette playlist](https://www.youtube.com/watch?v=1w-oQ-i1XB8&index=15&list=PLoYCgNOIyGABj2GQSlDRjgvXtqfDxKm5b).
-
-
-Les reducers et actions se trouvent dans des dossiers éponymes.
+Toute l'implémentation de Redux est faite dans le dossier `redux/`.
+Pour plus d'informations, [lisez la documentation ici.](./redux.md)

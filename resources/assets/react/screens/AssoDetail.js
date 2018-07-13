@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchAsso } from '../actions/assos';
-import { assosActions } from '../actions.js'
+import { assosActions } from '../redux/actions';
 
 @connect((store, props) => {
 	return {
@@ -18,25 +17,24 @@ class AssoDetailScreen extends Component {
 
 	render() {
 		const { asso, fetching, fetched } = this.props;
-		console.log(this.props)
 		if (fetching || !fetched)
 			return (<span className="loader huge active"></span>);
 
-		console.log(asso)
-
 		let actions = [];
-		if (asso.user.is_follower)
-			actions.push(<button key="subscription" 
-				className="my-1 btn btn-outline-warning">Se désabonner</button>)
-		else
-			actions.push(<button key="subscription" 
-				className="my-1 btn btn-success">S'abonner</button>)
+		if (asso.user) {
+			if (asso.user.is_follower)
+				actions.push(<button key="subscription" 
+					className="my-1 btn btn-outline-warning">Se désabonner</button>)
+			else
+				actions.push(<button key="subscription" 
+					className="my-1 btn btn-success">S'abonner</button>)
+		}
 
 		return (
 			<div className="container">
 				<h1 className="title">{ asso.name }</h1>
 
-				<div className="my-1 d-flex">{ actions }</div>
+				{ actions.length > 0 && <div className="my-1 d-flex">{ actions }</div> }
 
 				<span>{ asso.type.description }</span>
 				<p className="my-3">{ asso.description }</p>
