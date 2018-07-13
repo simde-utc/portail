@@ -15,6 +15,7 @@ class AssosListScreen extends Component {
 
 	render() {
 		console.log(this.props.assos)
+		
 		return (
 			<div className="container">
 				<h1>Liste des associations</h1>

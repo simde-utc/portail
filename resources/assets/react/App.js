@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 
 // Screens
+import HomeScreen from './screens/Home.js';
 import DashboardScreen from './screens/Dashboard';
 import AssosListScreen from './screens/AssosList';
 
@@ -13,7 +14,6 @@ class App extends Component {
 	render() {
 		// Fake Components
 		const RouteNotFound = () => (<div><h1>404</h1></div>)
-		const Home = () => (<div><h1>Home</h1></div>)
 
 		return (
 			<div className="h-100">
@@ -22,7 +22,7 @@ class App extends Component {
 					<Sidebar />
 					<main className="col p-4">
 						<Switch>
-							<Route path="/" exact component={ Home } />
+							<Route exact path="/" component={ HomeScreen } />
 							<Route path="/dashboard" export component={ DashboardScreen } />        
 							<Route path="/assos" export component={ AssosListScreen } />        
 							<Route component={ RouteNotFound } />
