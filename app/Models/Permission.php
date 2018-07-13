@@ -26,15 +26,35 @@ class Permission extends Model
         return $this->belongsToMany(User::class, 'users_permissions');
     }
 
-	public static function find(int $id, bool $is_system = true) {
-		return static::where('id', $id)->where('is_system', $is_system)->first();
+	public static function find(int $id, string $only_for = null) {
+        $permissions = static::where('id', $id);
+
+		if ($only_for !== null) {
+			$group = explode('-', $only_for)[0] ?? $only_for;
+
+			$permissions->where(function ($query) use ($group, $only_for) {
+				$query->where('only_for', $group)->orWhere('only_for', $only_for);
+			});
+		}
+
+		return $permissions->first();
 	}
 
-    public static function findByType(string $type, bool $is_system = true) {
-		return static::where('type', $type)->where('is_system', $is_system)->first();
+    public static function findByType(string $type, string $only_for = null) {
+        $permissions = static::where('type', $type);
+
+		if ($only_for !== null) {
+			$group = explode('-', $only_for)[0] ?? $only_for;
+
+			$permissions->where(function ($query) use ($group, $only_for) {
+				$query->where('only_for', $group)->orWhere('only_for', $only_for);
+			});
+		}
+
+		return $permissions->first();
     }
 
-	public static function getPermission($permissions, bool $is_system = true) {
+	public static function getPermission($permissions, string $only_for = null) {
         if (is_string($permissions))
             return static::findByType($permissions, $is_system);
         else if (is_int($permissions))
@@ -43,9 +63,15 @@ class Permission extends Model
 			return $permission;
 	}
 
-	public static function getPermissions($permissions, bool $is_system = true) {
-		if (is_array($permissions))
-			return static::whereIn('id', $permissions)->orWhereIn('type', $permissions)->where('is_system', $is_system)->get();
+	public static function getPermissions($permissions, string $only_for = null) {
+        $group = explode('-', $only_for)[0] ?? $only_for;
+
+        if (is_array($permissions))
+			return static::where(function ($query) use ($permissions) {
+				$query->whereIn('id', $permissions)->orWhereIn('type', $permissions);
+			})->where(function ($query) use ($group, $only_for) {
+				$query->where('only_for', $group)->orWhere('only_for', $only_for);
+			})->get();
 		else if ($permissions instanceof \Illuminate\Database\Eloquent\Model)
 			return collect($permissions);
 		else

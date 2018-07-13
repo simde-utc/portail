@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Parser;
 use Laravel\Passport\Token;
+use App\Models\Client;
 
 /**
  * Cette classe permet de récupérer des informations concernant un membre de l'UTC
@@ -69,10 +70,14 @@ class Scopes {
 				foreach ($categorie['verbs'] as $verb => $data) {
 					$prefix = $type.'-'.$verb.'-'.$name;
 
-					if (isset($data['scopes']))
+					try {
+						if (isset($data['scopes']))
 						$scopes = array_merge($scopes, $this->generate($prefix, $data['scopes']));
 
-					$scopes[$prefix] = $data['description'];
+						$scopes[$prefix] = $data['description'];
+					} catch (\Exception $e) {
+						throw new \Exception('Le scope '.$prefix.' est mal défini !');
+					}
 				}
 			}
 		}
@@ -116,12 +121,12 @@ class Scopes {
 	private function nextVerbs(string $verb, $up = false) {
 		if ($up) {
 			switch ($verb) {
-				case 'get':
 				case 'set':
 				case 'remove':
 					return ['manage'];
 					break;
 
+				case 'get':
 				case 'create':
 				case 'edit':
 					return ['set'];
@@ -462,7 +467,7 @@ class Scopes {
 		return true;
 	}
 
-	protected function getToken(Request $request) {
+	public function getToken(Request $request) {
 		if ($request->user() === null) {
 			$bearerToken = $request->bearerToken();
 			$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
@@ -471,6 +476,12 @@ class Scopes {
 		}
 		else
 			return $request->user()->token();
+	}
+
+	public function getClient(Request $request) {
+		$clientFromPassport = $this->getToken($request)->client;
+
+		return $clientFromPassport ? Client::find($clientFromPassport->id) : null;
 	}
 
 	/**

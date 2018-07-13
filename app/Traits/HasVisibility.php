@@ -7,7 +7,6 @@ use App\Models\Visibility;
 use App\Models\User;
 use App\Models\AuthCas;
 use App\Facades\Ginger;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -81,9 +80,11 @@ trait HasVisibility
      *
      * @return bool
      */
-    public function isVisible(Model $model) {
+    public function isVisible(Model $model, int $user_id = null) { // TODO Il faut faire passer un userid en option
+		$user_id = $user_id ?? Auth::id();
+
         // Si on est pas connecté, on regarde si la visibilité est publique ou non
-        if (Auth::id() === null)
+        if ($user_id === null)
             return is_null($model->visibility_id) || ($model->visibility_id === Visibility::getTopStage()->first()->id);
 
         // Si le modèle n'a pas de visibilité, on prend la première visibilité, la plus ouverte.
@@ -97,7 +98,7 @@ trait HasVisibility
 
         $type = 'is'.ucfirst($visibility->type);
 
-        if (method_exists(get_class(), $type) && $this->$type(Auth::id(), $model))
+        if (method_exists(get_class(), $type) && $this->$type($user_id, $model))
             return true;
 
         return false;
@@ -126,16 +127,15 @@ trait HasVisibility
 		if ($model === null)
 			return false;
 
+		if ($model->user_id && $model->user_id == $user_id)
+			return true;
+
 		try {
 			return $model->currentAllMembers()->wherePivot('user_id', $user_id)->count() > 0;
 		}
 		catch (Exception $e) {}
 
         return false;
-    }
-
-    public function isOwner($user_id, $model) {
-        return $model->user_id === $user_id;
     }
 
     public function isInternal($user_id, $model = null) {

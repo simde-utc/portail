@@ -21,15 +21,18 @@ class DatabaseSeeder extends Seeder
 			ContactsTableSeeder::class,
 			PermissionsTableSeeder::class,
 			RolesTableSeeder::class,
+			PlacesAndLocationsTableSeeder::class,
+			RoomsTableSeeder::class,
 		]);
 
 		if (config('app.debug', false)) {
 			$this->call([
 				UsersTableSeeder::class,
 				GroupsTableSeeder::class,
-				RoomsTableSeeder::class,
 				ArticlesTableSeeder::class,
 				PartnersTableSeeder::class,
+				EventsTableSeeder::class,
+				CalendarsTableSeeder::class,
 			]);
 		}
 	}

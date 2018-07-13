@@ -6,14 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
-    // TODO : Add RoomController + function index()
+	protected $table = 'reservations_rooms';
+
 	protected $fillable = [
-		'name','asso_id',
+		'location_id', 'asso_id',
 	];
 
-	protected $table = 'rooms';
+	public function location() {
+		return $this->belongsTo(Location::class);
+	}
 
     public function asso() {
-        return $this->belongsTo('App\Models\Asso');
+        return $this->belongsTo(Asso::class);
     }
 }

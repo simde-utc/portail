@@ -62,10 +62,9 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'user' => \App\Http\Middleware\isUser::class,
+        'user' => \App\Http\Middleware\UserIs::class,
 		'checkPassport' => \App\Http\Middleware\CheckPassport::class,
 		'linkTokenToSession' => \App\Http\Middleware\LinkTokenToSession::class,
 		'forceJson' => \App\Http\Middleware\ForceJson::class,
-        'admin' => \App\Http\Middleware\IsAdmin::class,
     ];
 }

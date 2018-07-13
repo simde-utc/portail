@@ -19,26 +19,37 @@
  *       + remove:  supprimer une donnée
  */
 
-// Toutes les routes commencant par client-{verbe}-caelndar-
+// Toutes les routes commencant par client-{verbe}-locations-
 return [
-	'description' => 'Calendrier universitaire',
+	'description' => 'Emplacements et lieux',
 	'verbs' => [
-		'get' => [
-			'description' => 'Récupérer le calendrier universitaire',
-			'scopes' => [
-				'semester' => [
-					'description' => 'Récupérer l\'actuel semestre universitaire'
+		'manage' => [
+			'description' => 'Gérer totalement les lieux et les emplacements',			'scopes' => [
+				'places' => [
+					'description' => 'Gérer totalement les emplacements',
 				],
-				'semesters' => [
-					'description' => 'Récupérer les différents semestres universitaires'
-				],
-				'year' => [
-					'description' => 'Récupérer l\'actuel année universitaire'
-				],
-				'years' => [
-					'description' => 'Récupérer les différentes années universitaires'
-				]
 			]
-		]
-	]
+		],
+		'set' => [
+			'description' => 'Modifier et créer des lieux et des emplacements',			'scopes' => [
+				'places' => [
+					'description' => 'Modifier et créer des emplacements',
+				],
+			]
+		],
+		'get' => [
+			'description' => 'Récupérer les lieux et les emplacements',			'scopes' => [
+				'places' => [
+					'description' => 'Récupérer les emplacements',
+				],
+			]
+		],
+		'create' => [
+			'description' => 'Créer de nouveaux lieux et emplacements',			'scopes' => [
+				'places' => [
+					'description' => 'Créer de nouveaux emplacements',
+				],
+			]
+		],
+    ]
 ];

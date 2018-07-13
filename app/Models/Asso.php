@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\Traits\HasMembers;
 use \App\Traits\HasStages;
+use App\Interfaces\CanHaveEvents;
+use App\Interfaces\CanHaveCalendars;
 
-class Asso extends Model
+class Asso extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 {
 	use SoftDeletes, HasStages, HasMembers {
 		HasMembers::members as membersAndFollowers;
@@ -46,11 +49,7 @@ class Asso extends Model
 	public function collaboratedArticles(){
 		return $this->belongsToMany('App\Models\Article', 'articles_collaborators');
 	}
-
-	public function events() {
-		return $this->belongsToMany(Event::class);
-	}
-
+	
 	public function parent() {
 	    return $this->hasOne(Asso::class, 'parent_id');
     }
@@ -144,5 +143,33 @@ class Asso extends Model
             return ($this->hasOneRole('resp communication', ['user_id' => \Auth::id()]) || \Auth::user()->hasOneRole('admin'));
         } else
         	return false;
+	}
+
+    public function calendars() {
+    	return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
+	public function isCalendarAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isCalendarManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('calendar', [
+			'user_id' => $user_id,
+		]);
+	}
+
+    public function events() {
+    	return $this->morphMany(Events::class, 'owned_by');
+    }
+
+	public function isEventAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isEventManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('event', [
+			'user_id' => $user_id,
+		]);
 	}
 }
