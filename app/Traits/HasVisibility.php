@@ -12,8 +12,13 @@ use Illuminate\Database\Eloquent\Model;
 
 trait HasVisibility
 {
-	private $isContributor = null;
-    /**
+	/**
+	 * Permet de savoir si un même type de ressource est visible pour une même visibilité à un même utilisateur
+	 * @var array of arrays
+	 */
+	private $is = [];
+
+	/**
      * Fonction qui renvoie une nouvelle instance du modèle si celui-ci
      * n'est pas visible par l'utilisateur.
      *
@@ -48,7 +53,7 @@ trait HasVisibility
             }
         }
 
-        return $collection;
+        return $collection->values();
     }
 
     protected function hideModel(Model $model, bool $remove = true, $callback = null) {
@@ -81,7 +86,7 @@ trait HasVisibility
      * @return bool
      */
     public function isVisible(Model $model, int $user_id = null) { // TODO Il faut faire passer un userid en option
-		$user_id = $user_id ?? Auth::id();
+		$user_id = $user_id ?? \Auth::id();
 
         // Si on est pas connecté, on regarde si la visibilité est publique ou non
         if ($user_id === null)
@@ -98,10 +103,13 @@ trait HasVisibility
 
         $type = 'is'.ucfirst($visibility->type);
 
-        if (method_exists(get_class(), $type) && $this->$type($user_id, $model))
-            return true;
+		if (!isset($this->is[$user_id]))
+			$this->is[$user_id] = [];
 
-        return false;
+		if (!isset($this->is[$user_id][$visibility->type]))
+			$this->is[$user_id][$visibility->type] = (method_exists(get_class(), $type) && $this->$type($user_id, $model));
+
+		return $this->is[$user_id][$visibility->type];
     }
 
     public function isPublic($user_id = null, $model = null) {
@@ -123,20 +131,7 @@ trait HasVisibility
     	return $this->isContributor;
     }
 
-    public function isPrivate($user_id, $model = null) {
-		if ($model === null)
-			return false;
-
-		if ($model->user_id && $model->user_id == $user_id)
-			return true;
-
-		try {
-			return $model->currentAllMembers()->wherePivot('user_id', $user_id)->count() > 0;
-		}
-		catch (Exception $e) {}
-
-        return false;
-    }
+    abstract public function isPrivate($user_id, $model = null);
 
     public function isInternal($user_id, $model = null) {
         return User::find($user_id)->hasOneRole('superadmin');
