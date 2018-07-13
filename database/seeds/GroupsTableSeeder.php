@@ -29,9 +29,9 @@ class GroupsTableSeeder extends Seeder
             ],
 			[
 				'user_id'       => User::find(2)->id,
-				'name'          => 'Stalker c\'est quoi ?',
+				'name'          => 'Mon groupe sur invitation <3',
 				'icon'          => null,
-				'visibility_id' => Visibility::where('type', 'owner')->first()->id,
+				'visibility_id' => Visibility::where('type', 'private')->first()->id,
 			],
         ];
 

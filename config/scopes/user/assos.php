@@ -22,7 +22,7 @@
 // Toutes les routes commencant par user-{verbe}-assos-
 return [
 	'description' => 'Associations',
-	'icon' => 'handshake-o',
+	'icon' => 'handshake',
 	'verbs' => [
 		'manage' => [
 			'description' => 'Gérer les associations suivies et faites par l\'utilisateur',

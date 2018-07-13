@@ -16,7 +16,7 @@ class CreateReservationsTable extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('room_id')->unsigned();
-            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('room_id')->references('id')->on('reservations_rooms');
             $table->integer('asso_id')->unsigned();
             $table->foreign('asso_id')->references('id')->on('assos');
             $table->integer('user_id')->unsigned();
@@ -24,8 +24,8 @@ class CreateReservationsTable extends Migration
             $table->integer('reservation_type_id')->unsigned();
             $table->foreign('reservation_type_id')->references('id')->on('reservations_types');
             $table->string('description', 250)->nullable();
-            $table->timestamp('from')->nullable();
-            $table->timestamp('to')->nullable();
+            $table->timestamp('from')->useCurrent();
+            $table->timestamp('to')->useCurrent();
             $table->index(['room_id', 'asso_id', 'user_id', 'from']);
             $table->index(['room_id', 'asso_id', 'user_id', 'to']);
         });

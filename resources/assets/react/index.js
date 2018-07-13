@@ -18,7 +18,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 // Redux
 import { Provider } from 'react-redux';
-import store from './store';
+import store from './redux/store';
 
 // Add Semantic CSS
 // import '../semantic/dist/semantic.min.css';

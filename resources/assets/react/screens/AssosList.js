@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { assosActions } from '../actions.js';
+import { assosActions } from '../redux/actions';
 
 import AssoChildrenList from '../components/AssoChildrenList';
 

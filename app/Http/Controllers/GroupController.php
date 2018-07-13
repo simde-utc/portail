@@ -76,27 +76,17 @@ class GroupController extends Controller
 		$group->user_id = \Auth::id();
 		$group->name = $request->name;
 		$group->icon = $request->icon;
-		$group->visibility_id = $request->visibility_id ?? Visibility::findByType('owner')->id;
+		$group->visibility_id = $request->visibility_id ?? Visibility::findByType('private')->id;
 
 		if ($group->save()) { // Le créateur du groupe devient automatiquement admin et membre de son groupe
 			// Les ids des membres à ajouter seront passé dans la requête.
 			// ids est un array de user ids.
-			if ($request->filled('member_ids')) {
-				if ($group->visibility_id === Visibility::findByType('owner')->id)
-					$data = [
-						'semester_id'  => $request->input('semester_id', 0),
-						'validated_by' => $group->user_id,
-					];
-			}
-			else {
-				$data = [
-					'semester_id' => $request->input('semester_id', 0),
-				];
-				// TODO: Envoyer un mail d'invitation dans le groupe
-			}
+			// TODO: Envoyer un mail d'invitation dans le groupe
 
 			try {
-				$group->assignMembers($request->input('member_ids', []), $data);
+				$group->assignMembers($request->input('member_ids', []), [
+					'semester_id' => $request->input('semester_id', 0),
+				]);
 			} catch (PortailException $e) {
 				return response()->json(["message" => $e->getMessage()], 400);
 			}
@@ -169,22 +159,11 @@ class GroupController extends Controller
 
 		if ($group->save()) {
 			if ($request->filled('member_ids')) {
-				if ($group->visibility_id >= Visibility::findByType('owner')->id)
-					$data = [
-						'semester_id'  => $request->input('semester_id', 0),
-						'validated_by' => $group->user_id,
-						'removed_by'   => $group->user_id,
-					];
-				else {
-					$data = [
+				try {
+					$group->syncMembers(array_merge($request->member_ids, [\Auth::id()]), [
 						'semester_id' => $request->input('semester_id', 0),
 						'removed_by'  => $group->user_id,
-					];
-					// TODO: Envoyer un mail d'invitation dans le groupe
-				}
-
-				try {
-					$group->syncMembers(array_merge($request->member_ids, [\Auth::id()]), $data, \Auth::id());
+					], \Auth::id());
 				} catch (PortailException $e) {
 					return response()->json(["message" => $e->getMessage()], 400);
 				}
