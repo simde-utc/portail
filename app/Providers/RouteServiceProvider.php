@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
-use App\Facades\Scopes;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -49,7 +48,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapPassportRoutes() {
 		Passport::routes();
-		Passport::tokensCan(Scopes::all());
+		Passport::tokensCan(\Scopes::all());
 
         Passport::enableImplicitGrant();
 

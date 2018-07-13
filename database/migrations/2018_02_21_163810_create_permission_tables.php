@@ -19,7 +19,7 @@ class CreatePermissionTables extends Migration
 			$table->string('name', 128);
 			$table->string('description');
 			$table->string('limited_at')->nullable();
-			$table->string('only_for', 64)->default('global');
+			$table->string('only_for', 64)->default('users');
 
 			$table->timestamps();
 			$table->unique(['type', 'only_for']);
@@ -31,7 +31,7 @@ class CreatePermissionTables extends Migration
 			$table->string('name', 128);
 			$table->string('description');
 			$table->string('limited_at')->nullable();
-			$table->string('only_for', 64)->default('global');
+			$table->string('only_for', 64)->default('users');
 
 			$table->timestamps();
 			$table->unique(['type', 'only_for']);
