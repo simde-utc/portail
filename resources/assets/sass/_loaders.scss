@@ -1,0 +1,191 @@
+/* Semantic UI Loaders */
+
+$loader-width: 0.3em;
+
+.loader-container {
+	position: relative;
+}
+
+.loader {
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: 0px;
+	text-align: center;
+	z-index: 1000;
+	transform: translateX(-50%) translateY(-50%);
+
+	&.active, &.visible  { display: block; }
+	&.disabled,	&.hidden { display: none; }
+
+	// Static Shape
+	&:after, &:before {
+		position: absolute;
+		content: '';
+		top: 0%;
+		left: 50%;
+		width: 100%;
+		height: 100%;
+		border-radius: 500rem;
+	}
+	&:before {
+		border: $loader-width solid rgba(0, 0, 0, 0.2);
+	}
+	&:after {
+		animation: loader 0.6s linear;
+		animation-iteration-count: infinite;
+		border-color: $gray-dark transparent transparent;
+		border-style: solid;
+		border-width: $loader-width;
+		box-shadow: 0px 0px 0px 1px transparent;
+	}
+
+
+	/********************************
+	 *		Variations
+	 ********************************/
+	&.indeterminate:after {
+		animation-direction: reverse;
+		animation-duration: 1.2s;
+	}
+
+	&.inverted {
+		color: rgba(255, 255, 255, 0.9);
+		&:before { border-color: rgba(255, 255, 255, 0.15); }
+		&:after  { border-top-color: #FFFFFF; }
+	}
+	&.primary:after  { border-top-color: $primary; }
+
+	/********************************
+	 *		Sizes
+	 ********************************/
+	&.mini:before,
+	&.mini:after {
+		width: 1rem;
+		height: 1rem;
+		margin: 0em 0em 0em -0.5rem;
+	}
+	&.tiny:before,
+	&.tiny:after {
+		width: 1.14285714rem;
+		height: 1.14285714rem;
+		margin: 0em 0em 0em -0.57142857rem;
+	}
+	&.small:before,
+	&.small:after {
+		width: 1.71428571rem;
+		height: 1.71428571rem;
+		margin: 0em 0em 0em -0.85714286rem;
+	}
+	&:before,
+	&:after {
+		width: 2.28571429rem;
+		height: 2.28571429rem;
+		margin: 0em 0em 0em -1.14285714rem;
+	}
+	&.large:before,
+	&.large:after {
+		width: 3.42857143rem;
+		height: 3.42857143rem;
+		margin: 0em 0em 0em -1.71428571rem;
+	}
+	&.big:before,
+	&.big:after {
+		width: 3.71428571rem;
+		height: 3.71428571rem;
+		margin: 0em 0em 0em -1.85714286rem;
+	}
+	&.huge:before,
+	&.huge:after {
+		width: 4.14285714rem;
+		height: 4.14285714rem;
+		margin: 0em 0em 0em -2.07142857rem;
+	}
+	&.massive:before,
+	&.massive:after {
+		width: 4.57142857rem;
+		height: 4.57142857rem;
+		margin: 0em 0em 0em -2.28571429rem;
+	}
+}
+@keyframes loader {
+	from { transform: rotate(0deg); }
+	to   { transform: rotate(360deg); }
+}
+
+
+/*-------------------
+	Coupling
+--------------------*/
+
+
+/* Show inside active dimmer */
+.dimmer .loader {
+	display: block;
+}
+
+/* Black Dimmer */
+.dimmer .loader {
+	color: rgba(255, 255, 255, 0.9);
+}
+.dimmer .loader:before {
+	border-color: rgba(255, 255, 255, 0.15);
+}
+.dimmer .loader:after {
+	border-color: #FFFFFF transparent transparent;
+}
+
+/* White Dimmer (Inverted) */
+.inverted.dimmer .loader {
+	color: rgba(0, 0, 0, 0.87);
+}
+.inverted.dimmer .loader:before {
+	border-color: rgba(0, 0, 0, 0.1);
+}
+.inverted.dimmer .loader:after {
+	border-color: #767676 transparent transparent;
+}
+
+
+/*******************************
+Types
+*******************************/
+
+
+/*-------------------
+	Text
+--------------------*/
+
+.text.loader {
+	width: auto !important;
+	height: auto !important;
+	text-align: center;
+	font-style: normal;
+}
+
+
+/*-------------------
+Inline
+--------------------*/
+
+.inline.loader {
+	position: relative;
+	vertical-align: middle;
+	margin: 0em;
+	left: 0em;
+	top: 0em;
+	transform: none;
+}
+.inline.loader.active,
+.inline.loader.visible {
+	display: inline-block;
+}
+
+/* Centered Inline */
+.centered.inline.loader.active,
+.centered.inline.loader.visible {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}

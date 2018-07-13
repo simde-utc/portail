@@ -26,4 +26,13 @@ class HomeController extends Controller
 	public function welcome() {
 		return view('home');
 	}
+
+	/**
+	 * All React Pages
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function react() {
+		return view('react');
+	}
 }

@@ -31,13 +31,15 @@ class CheckUser
 				if (!$request->user() || !$request->user()->token())
 	            	throw new AuthenticationException;
 
-				$tokenScopes = $request->user()->token()->scopes;
-				// On vérifie pour chaque ensemble de scopes
-		        foreach ($scopes as $scopeList) {
-					// Qu'on en possède au moins un parmi la liste
-		            if (empty(array_intersect($tokenScopes, $scopeList)))
-						throw new MissingScopeException($scopes);
-		        }
+				if (!$request->user()->token()->transient()) {
+					$tokenScopes = $request->user()->token()->scopes;
+					// On vérifie pour chaque ensemble de scopes
+					foreach ($scopes as $scopeList) {
+						// Qu'on en possède au moins un parmi la liste
+						if (empty(array_intersect($tokenScopes, $scopeList)))
+							throw new MissingScopeException($scopes);
+					}
+				}
 
 				return $next($request);
 			}, 'api');
