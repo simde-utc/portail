@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasMembers;
+use App\Interfaces\CanHaveEvents;
+use App\Interfaces\CanHaveCalendars;
 
-class Group extends Model
+class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 {
     use SoftDeletes, HasMembers;
 
@@ -38,5 +41,33 @@ class Group extends Model
     // Mais on permet sa suppression s'il est assigné à un seul groupe
 	public function isRoleForIdDeletable($role, $id) {
 		return true;
+	}
+
+    public function calendars() {
+    	return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
+	public function isCalendarAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isCalendarManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('group calendar', [
+			'user_id' => $user_id,
+		]);
+	}
+
+    public function events() {
+    	return $this->morphMany(Event::class, 'owned_by');
+    }
+
+	public function isEventAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isEventManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('group event', [
+			'user_id' => $user_id,
+		]);
 	}
 }

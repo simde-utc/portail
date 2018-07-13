@@ -44,12 +44,14 @@ Route::prefix('v1')->group(function () {
 		'users/{user_id}/roles'						=> 'UserRoleController',
 		'users/{user_id}/details'					=> 'UserDetailController',
 		'users/{user_id}/preferences'				=> 'UserPreferenceController',
+		'users/{user_id}/calendars'					=> 'UserCalendarController',
 
 		// Routes `user` identiques à `users/{\Auth::id()}`
 		'user/auths'								=> 'UserAuthController',
 		'user/roles'								=> 'UserRoleController',
 		'user/details'								=> 'UserDetailController',
 		'user/preferences'							=> 'UserPreferenceController',
+		'user/calendars'							=> 'UserCalendarController',
 	]);
 
 	Route::apiResources([
@@ -59,10 +61,13 @@ Route::prefix('v1')->group(function () {
 		'assos'										=> 'AssoController',
 		'assos/{asso_id}/members'					=> 'AssoMemberController',
 		'roles'										=> 'RoleController',
+		'locations'									=> 'LocationController',
 		'rooms'										=> 'RoomController',
+		'events'									=> 'EventController',
+		'calendars'									=> 'CalendarController',
+		'calendars/{calendar_id}/events'			=> 'CalendarEventController',
 		'partners'									=> 'PartnerController',
 		'articles'									=> 'ArticleController',
-		'events'									=> 'EventController',
 		'visibilities'								=> 'VisibilityController',
   ]);
 });
