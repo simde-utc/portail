@@ -10,7 +10,7 @@ class AssoChildrenList extends Component {
 		return(
 			<li className={ liClass }>
 				<Link className={ (level == 1) ? 'list-header' : 'list-link' } 
-					to={ 'asso/' + asso.login }>{ asso.shortname }</Link>
+					to={ 'assos/' + asso.login }>{ asso.shortname }</Link>
 				{ asso.children.length > 0 ? (
 					<ul className="list-row">
 						{ asso.children.map(child => (

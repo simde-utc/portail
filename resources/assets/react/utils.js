@@ -1,3 +1,5 @@
+import produce from 'immer';
+
 /**
  * ActionTypes Creator
  * Fonction qui permet de créer les types d'actions CRUD
@@ -21,33 +23,38 @@ export const createActionTypes = (name) => ({
 export const createCrudActionSet = (actionTypes, uri, overrides = {}) => ({
 	getAll: (queryParams = '') => ({
 		type: actionTypes.getAll,
+		meta: { affectsAll: true, arrayAction: 'update', timestamp: Date.now() },
 		payload: axios.get(`/api/v1/${uri}${queryParams}`)
 	}),
-	getOne: (id) => ({
+	getOne: (id, queryParams = '') => ({
 		type: actionTypes.getOne,
-		payload: axios.get(`/api/v1/${uri}/${id}`)
+		meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
+		payload: axios.get(`/api/v1/${uri}/${id}${queryParams}`)
 	}),
 	create: (data) => ({
 		type: actionTypes.create,
+		meta: { affectsAll: false, arrayAction: 'insert', timestamp: Date.now() },
 		payload: axios.post(`/api/v1/${uri}`)
 	}),
 	update: (id, data) => ({
 		type: actionTypes.update,
+		meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
 		payload: axios.put(`/api/v1/${uri}/${id}`)
 	}),
 	delete: (id) => ({
 		type: actionTypes.delete,
+		meta: { affectsAll: false, arrayAction: 'delete', timestamp: Date.now() },
 		payload: axios.delete(`/api/v1/${uri}/${id}`)
 	}),
 	...overrides
 })
 
-
 const initialCrudState = {
-	data: null,
+	data: [],
 	error: null,
 	fetching: false,
-	fetched: false
+	fetched: false,
+	lastUpdate: null
 }
 /**
  * Reducer Creator
@@ -60,15 +67,47 @@ const initialCrudState = {
 export const createCrudReducer = (actionTypes, initialState = initialCrudState, overrides = {}) => (state = initialState, action) => {
 	let reducerMap = {}
 	Object.values(actionTypes).forEach(type => {
+		// Request started
 		reducerMap[`${type}_PENDING`] 	= (state, action) => ({...state, fetching: true, fetched: false })
-		reducerMap[`${type}_FULFILLED`] = (state, action) => ({...state, fetching: false, fetched: true, data: action.payload.data })
+
+		// Request succeeded
+		reducerMap[`${type}_FULFILLED`] = produce((draft, action) => {
+			draft.fetching = false;
+			draft.fetched = true;
+			if (action.meta.affectsAll) {
+				// Full copy if affects all data
+				draft.data = action.payload.data;
+			} else {
+				// Single element copy
+				let idx;
+				switch (action.meta.arrayAction) {
+					case 'create':
+						draft.data.push(action.payload.data);
+						break;
+					case 'update':
+						idx = draft.data.indexOf(resource => resource.id == action.meta.id);
+						if (idx === -1)		// Create if it doesn't exist
+							draft.data.push(action.payload.data);
+						else
+							draft.data[idx] = action.payload.data;
+						break;
+					case 'delete':
+						idx = draft.data.indexOf(resource => resource.id == action.meta.id);
+						draft.data.splice(idx, 1);
+						break;
+				}
+			}
+		})
+		
+		// Request failed
 		reducerMap[`${type}_REJECTED`] 	= (state, action) => ({...state, fetching: false, fetched: false, error: action.payload })
 	})
 
-	if (overrides[action.type])
+	if (overrides.hasOwnProperty(action.type))
 		return overrides[action.type](state, action)
-	if (reducerMap[action.type])
+	if (reducerMap.hasOwnProperty(action.type)) {
 		return reducerMap[action.type](state, action)
+	}
 	return state;
 }
 

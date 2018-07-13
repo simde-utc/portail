@@ -1,9 +1,9 @@
 import { createActionTypes } from './utils';
 
-export const userActionTypes = createActionTypes('USER');
-export const assoActionTypes = createActionTypes('ASSO');
+export const usersActionTypes = createActionTypes('USERS');
+export const assosActionTypes = createActionTypes('ASSOS');
 
 export default {
-	user: userActionTypes,
-	asso: assoActionTypes,
+	users: usersActionTypes,
+	assos: assosActionTypes,
 }

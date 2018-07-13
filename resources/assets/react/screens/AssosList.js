@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchAssos } from '../actions/assos';
-import { assoActions } from '../actions.js';
+import { assosActions } from '../actions.js';
 
 import AssoChildrenList from '../components/AssoChildrenList';
 
 @connect(store => {
-	console.log(store)
 	return {
-		assos: store.asso.data,
-		fetching: store.asso.fetching,
-		fetched: store.asso.fetched
+		assos: store.assos.data,
+		fetching: store.assos.fetching,
+		fetched: store.assos.fetched
 	}
 })
 class AssosListScreen extends Component {
 
 	componentWillMount() {
-		console.log(assoActions.getAll())
-		this.props.dispatch(assoActions.getAll('?all'))
+		this.props.dispatch(assosActions.getAll('?all'))
 	}
 
 	render() {
@@ -25,10 +22,9 @@ class AssosListScreen extends Component {
 		let assosTree = [];
 		if (this.props.fetched)
 			this.props.assos.forEach(asso => {
-				asso.children = [];
 				if (asso.parent_id === null | asso.parent_id === 1) {
 					// Ajout à la racine si BDE ou Poles
-					assosTree.push(asso);
+					assosTree.push({ ...asso, children: [] });
 				} else {
 					// Recherche du parent par recherche en largeur de l'arbre
 					// TODO : cas où parent n'existe pas ?
@@ -44,7 +40,8 @@ class AssosListScreen extends Component {
 						else
 							nextParents = nextParents.concat(parent.children);
 					}
-					parent.children.push(asso);
+					// Ajout en tant que fils des parents
+					parent.children.push({ ...asso, children: [] });
 				}
 			})
 
