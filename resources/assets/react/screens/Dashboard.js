@@ -8,7 +8,7 @@ class DashboardScreen extends Component {
 	render() {
 		return (
 			<div className="container">
-				<h1>Dashboard</h1>
+				<h1 className="title">Dashboard</h1>
 				<AuthorizedClients />
 				<Clients />
 				<PersonalAccessTokens />

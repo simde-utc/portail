@@ -34,12 +34,11 @@ class Clients extends Component {
 	}
 
 	toggle(key, force = null) {
-		this.setState(prevState => {
-			let newState = { togglers: {} };
-			newState.togglers[key] = (force == null) ? !prevState.togglers[key] : force
-			console.log(newState);
-			return newState;
-		});
+		this.setState(prevState => ({
+			togglers: {
+				[key]: (force == null) ? !prevState.togglers[key] : force
+			}
+		}));
 	}
 
 	handleModalClose(key) {

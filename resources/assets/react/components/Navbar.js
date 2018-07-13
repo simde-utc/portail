@@ -13,11 +13,7 @@ class Navbar extends Component {
 	}
 
 	toggle(key) {
-		let newState = {};
-		this.setState(prevState => {
-			newState[key] = !prevState[key];
-			return newState;
-		});
+		return this.setState(prevState => ({ [key]: !prevState[key] }));
 	}
 
 	render() {

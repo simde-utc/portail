@@ -9,6 +9,7 @@ import Sidebar from './components/Sidebar';
 import HomeScreen from './screens/Home.js';
 import DashboardScreen from './screens/Dashboard';
 import AssosListScreen from './screens/AssosList';
+import AssoDetailScreen from './screens/AssoDetail';
 
 class App extends Component {
 	render() {
@@ -20,11 +21,12 @@ class App extends Component {
 				<Navbar />
 				<div className="d-flex w-100 h-100">
 					<Sidebar />
-					<main className="col p-4">
+					<main className="col loader-container">
 						<Switch>
-							<Route exact path="/" component={ HomeScreen } />
-							<Route path="/dashboard" export component={ DashboardScreen } />        
-							<Route path="/assos" export component={ AssosListScreen } />        
+							<Route path="/" exact component={ Home } />
+							<Route path="/dashboard" component={ DashboardScreen } />
+							<Route path="/assos" exact component={ AssosListScreen } />
+							<Route path="/assos/:login" component={ AssoDetailScreen } />
 							<Route component={ RouteNotFound } />
 						</Switch>
 					</main>

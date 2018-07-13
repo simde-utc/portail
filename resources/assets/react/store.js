@@ -5,7 +5,11 @@ import promise from 'redux-promise-middleware';
 import { createLogger } from 'redux-logger'
 import thunk from 'redux-thunk';
 
-import reducers from './reducers';
-const middleware = applyMiddleware(promise(), thunk, createLogger());
+import reducers from './reducers.js';
+const middleware = applyMiddleware(
+	thunk,
+	promise(),
+	createLogger({ collapse: true })
+);
 
 export default createStore(reducers, middleware);

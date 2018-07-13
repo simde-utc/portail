@@ -1,25 +1,25 @@
-export default function assosReducer(state = {
-	assos: [],
+export default function assoReducer(state = {
+	asso: null,
 	fetching: false,
 	fetched: false,
 	error: null,
 }, action) {
 	switch (action.type) {
-		case 'FETCH_ASSOS_PENDING':
+		case 'FETCH_ASSO_PENDING':
 			return {
 				...state,
 				fetching: true
 			};
 			break;
-		case 'FETCH_ASSOS_FULFILLED':
+		case 'FETCH_ASSO_FULFILLED':
 			return {
 				...state,
 				fetching: false,
 				fetched: true,
-				assos: action.payload.data
+				asso: action.payload.data
 			}
 			break;
-		case 'FETCH_ASSOS_REJECTED':
+		case 'FETCH_ASSO_REJECTED':
 			return {
 				...state,
 				fetching: false,
