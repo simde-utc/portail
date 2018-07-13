@@ -227,36 +227,22 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		return false;
 	}
 
-	public function contacts() {
-		return $this->morphMany(Contact::class, 'owned_by');
-	}
-
-
 	// Par défaut, un role n'est pas supprimable s'il a déjà été assigné
     // Mais on permet sa suppression s'il est assigné à un seul groupe
 	public function isRoleForIdDeletable($role, $id) {
 		return true;
 	}
 
-	/**
-	 * Permet de vérifier si l'utilisateur peut créer un contact pour ce model.
-	 *
-	 * @return bool
-	 */
-	public function canCreateContact() {
-		return true;
+	public function contacts() {
+		return $this->morphMany(Contact::class, 'owned_by');
 	}
 
-	/**
-	 * Permet de vérifier si l'utilisateur peut modifier/supprimer un contact pour ce model.
-	 *
-	 * @return bool
-	 */
-	public function canModifyContact($contact) {
-		if ($contact->contactable == $this) {
-            return $contact->contactable_id == Auth::user()->id;
-        } else
-        	return false;
+	public function isContactAccessibleBy(int $user_id): bool {
+		return $this->id == $user_id;
+	}
+
+	public function isContactManageableBy(int $user_id): bool {
+		return $this->id == $user_id;
 	}
 
     public function calendars() {

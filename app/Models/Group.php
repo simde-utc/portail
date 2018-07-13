@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasMembers;
 use App\Interfaces\CanHaveEvents;
 use App\Interfaces\CanHaveCalendars;
+use App\Interfaces\CanHaveContacts;
 
-class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
+class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts
 {
     use SoftDeletes, HasMembers;
 
@@ -41,6 +42,20 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     // Mais on permet sa suppression s'il est assigné à un seul groupe
 	public function isRoleForIdDeletable($role, $id) {
 		return true;
+	}
+
+    public function contacts() {
+    	return $this->morphMany(Contact::class, 'owned_by');
+    }
+
+	public function isContactAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isContactManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('group contact', [
+			'user_id' => $user_id,
+		]);
 	}
 
     public function calendars() {
