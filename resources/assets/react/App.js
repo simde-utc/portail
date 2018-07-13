@@ -23,7 +23,7 @@ class App extends Component {
 					<Sidebar />
 					<main className="col loader-container">
 						<Switch>
-							<Route path="/" exact component={ Home } />
+							<Route path="/" exact component={ HomeScreen } />
 							<Route path="/dashboard" component={ DashboardScreen } />
 							<Route path="/assos" exact component={ AssosListScreen } />
 							<Route path="/assos/:login" component={ AssoDetailScreen } />
