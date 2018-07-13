@@ -22,7 +22,9 @@ class CreateContactsTable extends Migration
 			$table->integer('visibility_id')->unsigned();
 			$table->foreign('visibility_id')->references('id')->on('visibilities');
 			$table->nullableMorphs('owned_by');
+
 			$table->timestamps();
+			$table->unique(['name', 'contact_type_id', 'owned_by_type', 'owned_by_id']);
 		});
 	}
 

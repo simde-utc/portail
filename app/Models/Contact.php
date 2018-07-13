@@ -4,14 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
-use Cog\Contracts\Ownership\Ownable;
+use Cog\Contracts\Ownership\Ownable as OwnableContract;
+use App\Exceptions\PortailException;
 
-class Contact extends Model implements Ownable
+class Contact extends Model implements OwnableContract
 {
     use HasMorphOwner;
 
+    public static function boot() {
+        $verificator = function ($model) {
+            if ($type = $model->type) {
+                if (!preg_match("/$type->pattern/", $model->value))
+                    throw new PortailException('L\'entrée n\'est pas valide et ne correspond pas au type de contact "'.$type->name.'"', 400);
+            }
+            else
+                throw new PortailException('Le type donné n\'existe pas', 400);
+        };
+
+        static::creating($verificator);
+        static::updating($verificator);
+    }
+
     protected $fillable = [
-        'value', 'description', 'contact_type_id', 'visibility_id', 'owned_by_id', 'owned_by_type'
+        'name', 'value', 'contact_type_id', 'visibility_id', 'owned_by_id', 'owned_by_type'
     ];
 
     protected $with = [
@@ -19,7 +34,7 @@ class Contact extends Model implements Ownable
     ];
 
     protected $hidden = [
-        'visibility_id', 'owned_by_id', 'owned_by_type',
+        'contact_type_id', 'visibility_id', 'owned_by_id', 'owned_by_type',
     ];
 
     public function owned_by() {

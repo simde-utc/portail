@@ -13,7 +13,7 @@ class ContactType extends Model
     ];
 
     protected $hidden = [
-        'id', 'pattern', 'created_at', 'updated_at',
+        'id', 'created_at', 'updated_at',
     ];
 
 
