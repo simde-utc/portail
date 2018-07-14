@@ -287,6 +287,32 @@ class Scopes {
 	}
 
 	/**
+	 * Cette fonction permet de retrouver les plus petits scopes du scope donné
+	 * (très utile pour lister les scopes minimum dans les controlleurs)
+	 * @param  string $scope
+	 * @return array
+	 */
+	public function getDeepestChilds(string $scope) {
+		$current = $this->find($scope)[$scope];
+		$deepestChilds = [];
+
+		if ($current === [] || $current === null)
+			return [];
+
+		if (!isset($current['scopes']) || count($current['scopes']) === 0)
+			return [$scope];
+
+		foreach ($current['scopes'] as $child => $data) {
+			$deepestChilds = array_merge(
+				$deepestChilds,
+				$this->getDeepestChilds($scope.'-'.$child)
+			);
+		}
+
+		return $deepestChilds;
+	}
+
+	/**
 	 * Retourne la liste des scopes et des ses parents (prise en compte de l'héridité des verbes)
 	 *
 	 * @param array $scopes
