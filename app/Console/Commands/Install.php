@@ -150,14 +150,6 @@ class Install extends Command
 			$this->call("db:seed");
 		$bar->advance();
 
-		// API Generation
-		$this->info(' [Quick Install] Generating api');
-		$this->callSilent('api:generate', [
-			'--routePrefix' => 'api/*',
-		]);
-		$this->info('API Doc and collection.json generated');
-		$bar->advance();
-
 		// Optimization
 		$this->info(' [Quick Install] Optimizing');
 		$this->call('quick:optimize');
