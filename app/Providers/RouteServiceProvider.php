@@ -36,6 +36,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapApiRoutes();
 
+        // A définir en dernier
         $this->mapWebRoutes();
     }
 
@@ -69,14 +70,14 @@ class RouteServiceProvider extends ServiceProvider
         $route = Route::middleware('web')
             ->namespace($this->namespace);
 
-        $route->group(base_path('routes/web.php'));
-
 		foreach ($services as $provider => $data) {
             $file = base_path('routes/auth/'.$provider.'.php');
             if (file_exists($file))
-                $route->group($file);
+                $route->prefix('login/'.$provider)->group($file);
         }
 
+        // A définir en dernier car la route '/' override tout
+        $route->group(base_path('routes/web.php'));
     }
 
     /**
