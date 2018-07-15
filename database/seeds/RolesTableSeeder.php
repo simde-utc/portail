@@ -49,6 +49,7 @@ class RolesTableSeeder extends Seeder
                     'ticketing',
                     'calendar',
                     'event',
+                    'contact',
                     'article',
 				]
 			],
@@ -66,6 +67,7 @@ class RolesTableSeeder extends Seeder
                     'ticketing',
                     'calendar',
                     'event',
+                    'contact',
                     'article',
 				]
 			],
@@ -81,6 +83,7 @@ class RolesTableSeeder extends Seeder
                 'permissions' => [
                     'calendar',
                     'event',
+                    'contact',
                     'article',
 				],
 			],
@@ -96,11 +99,12 @@ class RolesTableSeeder extends Seeder
 				'permissions' => [
                     'calendar',
                     'event',
+                    'contact',
                     'article',
 				],
 			],
 			[
-				'type' => 'treasuryr',
+				'type' => 'treasury',
 				'name' => 'Trésorier',
 				'description' => 'Responsable de la trésorie',
 				'limited_at' => 1,
@@ -114,13 +118,13 @@ class RolesTableSeeder extends Seeder
 				]
 			],
 			[
-				'type' => 'vice-treasuryr',
+				'type' => 'vice-treasury',
 				'name' => 'Vice-Trésorier',
 				'description' => 'Co-responsable de la trésorie',
 				'limited_at' => 4,
 				'only_for' => 'assos',
 				'parents' => [
-                    'treasuryr',
+                    'treasury',
 				],
 				'permissions' => [
 					'treasury',
@@ -136,8 +140,8 @@ class RolesTableSeeder extends Seeder
 					'vice-president',
                     'secretaire general',
 					'vice-secretaire',
-                    'treasuryr',
-					'vice-treasuryr',
+                    'treasury',
+					'vice-treasury',
 				],
 				'permissions' => [
                     'event',
@@ -285,6 +289,19 @@ class RolesTableSeeder extends Seeder
 				'only_for' => 'groups',
 				'permissions' => [
                     'group member',
+                    'group calendar',
+                    'group event',
+                    'group contact',
+				],
+			],
+			[
+				'type' => 'group planner',
+				'name' => 'Planificateur',
+				'description' => 'Personne planifiant les évènements et les calendriers du groupe',
+				'only_for' => 'groups',
+				'permissions' => [
+                    'group calendar',
+                    'group event',
 				],
 			],
 		];

@@ -66,12 +66,19 @@ class Permission extends Model
 	public static function getPermissions($permissions, string $only_for = null) {
         $group = explode('-', $only_for)[0] ?? $only_for;
 
-        if (is_array($permissions))
-			return static::where(function ($query) use ($permissions) {
+        if (is_array($permissions)) {
+			$query = static::where(function ($query) use ($permissions) {
 				$query->whereIn('id', $permissions)->orWhereIn('type', $permissions);
-			})->where(function ($query) use ($group, $only_for) {
-				$query->where('only_for', $group)->orWhere('only_for', $only_for);
-			})->get();
+			});
+
+			if ($only_for) {
+				$query = $query->where(function ($query) use ($group, $only_for) {
+					$query->where('only_for', $group)->orWhere('only_for', $only_for);
+				});
+			}
+
+			return $query->get();
+        }
 		else if ($permissions instanceof \Illuminate\Database\Eloquent\Model)
 			return collect($permissions);
 		else

@@ -63,15 +63,21 @@ class Role extends Model
 			return $role;
 	}
 
-	public static function getRoles($roles, string $only_for = 'users') {
+	public static function getRoles($roles, string $only_for = null) {
 		$group = explode('-', $only_for)[0] ?? $only_for;
 
 		if (is_array($roles)) {
-			return static::where(function ($query) use ($roles) {
+			$query = static::where(function ($query) use ($roles) {
 				$query->whereIn('id', $roles)->orWhereIn('type', $roles);
-			})->where(function ($query) use ($group, $only_for) {
-				$query->where('only_for', $group)->orWhere('only_for', $only_for);
-			})->get();
+			});
+
+			if ($only_for) {
+				$query = $query->where(function ($query) use ($group, $only_for) {
+					$query->where('only_for', $group)->orWhere('only_for', $only_for);
+				});
+			}
+
+			return $query->get();
 		}
 		else if ($roles instanceof \Illuminate\Database\Eloquent\Model)
 			return collect($roles);
@@ -139,13 +145,13 @@ class Role extends Model
 	}
 
 	public function givePermissionTo($permissions) {
-		$this->permissions()->withTimestamps()->attach(Permission::getPermissions(stringToArray($permissions), $this->only_for === 'users'));
+		$this->permissions()->withTimestamps()->attach(Permission::getPermissions(stringToArray($permissions), $this->only_for));
 
 		return $this;
 	}
 
 	public function removePermissionTo($permissions) {
-		$this->permissions()->withTimestamps()->detach(Permission::getPermissions(stringToArray($permissions), $this->only_for === 'users'));
+		$this->permissions()->withTimestamps()->detach(Permission::getPermissions(stringToArray($permissions), $this->only_for));
 
 		return $this;
 	}

@@ -52,6 +52,7 @@ Route::prefix('v1')->group(function () {
 		'user/details'								=> 'UserDetailController',
 		'user/preferences'							=> 'UserPreferenceController',
 		'user/calendars'							=> 'UserCalendarController',
+		'user/contacts'								=> 'ContactController',
 	]);
 
 	Route::apiResources([

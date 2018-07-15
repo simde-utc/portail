@@ -15,12 +15,11 @@ class DatabaseSeeder extends Seeder
 		$this->call([
 			SemestersTableSeeder::class,
 			AssosTypesTableSeeder::class,
-			AssosTableSeeder::class,
 			VisibilitiesTableSeeder::class,
-			ContactsTypesTableSeeder::class,
-			ContactsTableSeeder::class,
 			PermissionsTableSeeder::class,
 			RolesTableSeeder::class,
+			ContactsTypesTableSeeder::class,
+			AssosTableSeeder::class,
 			PlacesAndLocationsTableSeeder::class,
 			RoomsTableSeeder::class,
 		]);
@@ -33,6 +32,7 @@ class DatabaseSeeder extends Seeder
 				PartnersTableSeeder::class,
 				EventsTableSeeder::class,
 				CalendarsTableSeeder::class,
+				ContactsTableSeeder::class,
 			]);
 		}
 	}
