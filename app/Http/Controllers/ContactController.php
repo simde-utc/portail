@@ -24,21 +24,41 @@ class ContactController extends Controller
 	public function __construct() {
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-get-info'],
-				['client-get-users', 'client-get-assos']
+				\Scopes::getDeepestChilds('user-get-contacts'),
+				\Scopes::getDeepestChilds('client-get-contacts')
 			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-get-info'],
-				['client-manage-users', 'client-manage-assos']
+				\Scopes::getDeepestChilds('user-create-contacts'),
+				\Scopes::getDeepestChilds('client-create-contacts')
 			),
-			['only' => ['store', 'update', 'destroy']]
+			['only' => ['store']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				\Scopes::getDeepestChilds('user-set-contacts'),
+				\Scopes::getDeepestChilds('client-set-contacts')
+			),
+			['only' => ['update']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				\Scopes::getDeepestChilds('user-manage-contacts'),
+				\Scopes::getDeepestChilds('client-manage-contacts')
+			),
+			['only' => ['destroy']]
 		);
 	}
 
-	public function getContact(Request $request) {
+	protected function checkTokenRights(Request $request, string $verb = 'get') {
+		if (!\Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-contacts-'.\ModelResolver::getName($request->resource)))
+			abort(503, 'L\'application n\'a pas le droit de voir les contacts de cette ressource');
+	}
+
+	public function getContact(Request $request, string $verb = 'get') {
+		$this->checkRessource($request, $verb);
 		$contact = $request->resource->contacts()->where('id', $request->contact)->first();
 
 		if ($contact) {
@@ -66,6 +86,7 @@ class ContactController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(ContactRequest $request): JsonResponse {
+		$this->checkTokenRights($request);
 		$contacts = $this->hide($request->resource->contacts);
 
 		return response()->json($contacts, 200);
@@ -78,6 +99,8 @@ class ContactController extends Controller
 	 * @return JsonResponse
 	 */
 	public function store(ContactRequest $request): JsonResponse {
+		$this->checkTokenRights($request, 'create');
+
 		if (\Auth::id() && !$request->resource->isContactManageableBy(\Auth::id()))
 			abort(503, 'Il n\'est pas possible à l\'utilisateur de créer un contact pour cette ressource');
 
@@ -111,7 +134,7 @@ class ContactController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(ContactRequest $request): JsonResponse {
-		$contact = $this->getContact($request);
+		$contact = $this->getContact($request, 'set');
 
 		if (\Auth::id() && !$contact->owned_by->isContactManageableBy(\Auth::id()))
 			abort(503, 'Il n\'est pas possible à l\'utilisateur de modifier le contact pour cette ressource');
@@ -129,10 +152,10 @@ class ContactController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(ContactRequest $request): JsonResponse {
-		$contact = $this->getContact($request);
+		$contact = $this->getContact($request, 'manage');
 
 		if (\Auth::id() && !$contact->owned_by->isContactManageableBy(\Auth::id()))
-			abort(503, 'Il n\'est pas possible à l\'utilisateur de modifier le contact pour cette ressource');
+			abort(503, 'Il n\'est pas possible à l\'utilisateur de supprimer le contact pour cette ressource');
 
 		if ($contact->delete())
 			abort(204);
