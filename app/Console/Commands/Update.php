@@ -37,7 +37,7 @@ class Update extends Command
 	 */
 	public function handle()
 	{
-		$bar = $this->output->createProgressBar(9);
+		$bar = $this->output->createProgressBar(7);
 		$bar->advance();
 
 		// Clear all
@@ -68,14 +68,6 @@ class Update extends Command
 
 		if ($this->confirm('Seed the database ?'))
 			$this->call("db:seed");
-		$bar->advance();
-
-		// API Generation
-		$this->info(' [Quick Update] Generating api');
-		$this->callSilent('api:generate', [
-			'--routePrefix' => 'api/*',
-		]);
-		$this->info('API Doc and collection.json generated');
 		$bar->advance();
 
 		// Optimization
