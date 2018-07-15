@@ -67,11 +67,11 @@ class Install extends Command
 			$this->changeEnv('APP_NAME', '"'.$value.'"');
 			$subBar->advance();
 
-			$value = $this->choice('Environment ?', ['develop', 'production', 'testing'], 0);
+			$value = $this->choice('Environment ?', ['develop', 'production'], 0);
 			$this->changeEnv('APP_ENV', $value);
 			$subBar->advance();
 
-			$value = $this->choice('Debug mode ?', ['true', 'false'], 0);
+			$value = $this->choice('Debug mode ?', ['true', 'false'], ($value === 'develop' ? 0 : 1));
 			$this->changeEnv('APP_DEBUG', $value);
 			$subBar->advance();
 
@@ -128,11 +128,6 @@ class Install extends Command
 		shell_exec('npm install');
 		$bar->advance();
 
-		// Clear all
-		$this->info(' [Quick Install] Cleaning');
-		$this->call('quick:clear');
-		$bar->advance();
-
 		// Configuration
 		$this->info(' [Quick Install] Setting keys');
 		$this->call('key:generate');
@@ -148,6 +143,11 @@ class Install extends Command
 
 		if ($this->confirm('Seed the database ?'))
 			$this->call("db:seed");
+		$bar->advance();
+
+		// Clear all
+		$this->info(' [Quick Install] Cleaning');
+		$this->call('quick:clear');
 		$bar->advance();
 
 		// Optimization
