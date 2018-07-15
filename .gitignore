@@ -14,7 +14,12 @@ npm-debug.log
 yarn-error.log
 .env
 .ftpconfig
-public/js/app.js
 package-lock\.json
-public/css/app.css
+# Front generated filed
+public/js/app\.js
+public/css/app\.css
+public/css/bootstrap\.css
+public/js/index\.js
 public/docs/*
+
+public/mix-manifest\.json

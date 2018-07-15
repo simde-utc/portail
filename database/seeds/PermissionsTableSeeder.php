@@ -38,8 +38,14 @@ class PermissionsTableSeeder extends Seeder
                 'only_for' => 'assos',
 			],
 			[
+				'type' => 'contact',
+				'name' => 'Contact',
+				'description' => 'Gestion des moyens de contact de l\'association',
+                'only_for' => 'assos',
+			],
+			[
 				'type' => 'article',
-				'name' => 'Articles',
+				'name' => 'Article',
 				'description' => 'Gestion des articles de l\'association',
                 'only_for' => 'assos',
 			],
@@ -47,6 +53,24 @@ class PermissionsTableSeeder extends Seeder
 				'type' => 'group member',
 				'name' => 'Membre',
 				'description' => 'Gestion des membres du groupe',
+                'only_for' => 'groups',
+			],
+			[
+				'type' => 'group calendar',
+				'name' => 'Calendrier',
+				'description' => 'Gestion des calendriers du groupe',
+                'only_for' => 'groups',
+			],
+			[
+				'type' => 'group event',
+				'name' => 'Evènement',
+				'description' => 'Gestion des évènements du groupe',
+                'only_for' => 'groups',
+			],
+			[
+				'type' => 'group contact',
+				'name' => 'Contact',
+				'description' => 'Gestion des contacts du groupe',
                 'only_for' => 'groups',
 			],
 			[

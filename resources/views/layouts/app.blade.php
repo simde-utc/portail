@@ -10,15 +10,18 @@
 
     <title>BDE-UTC : Portail des associations</title>
 
-    <!-- Styles -->
+    <!-- Bootstrap 4 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+    <!-- Font Awesome 5 -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+    <!-- Stylesheets --->
     {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 </head>
 <body>
-    <div id="app">
+    <div>
         <nav class="navbar navbar-expand-md navbar-dark">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">Portail des associations</a>
@@ -68,6 +71,9 @@
             </div>
         </nav>
 
+        <div id="root">
+        </div>
+
         <div class="container">
             @yield('content')
         </div>
@@ -83,6 +89,9 @@
             $('[data-toggle="tooltip"]').tooltip()
         });
     </script>
+
+    {{-- Script React --}}
+    {{-- <script src="{{ asset('js/index.js') }}"></script> --}}
 
     @yield('script')
 </body>

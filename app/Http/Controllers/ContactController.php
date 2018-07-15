@@ -10,14 +10,11 @@ use App\Models\Contact;
 use App\Models\ContactType;
 use App\Models\Visibility;
 use App\Traits\HasVisibility;
+use App\Interfaces\CanHaveCalendars;
 
 class ContactController extends Controller
 {
 	use HasVisibility;
-
-	/* TODO(Natan) :
-		- finir les scopes
-	*/
 
 	/**
 	 * Scopes Group
@@ -27,19 +24,60 @@ class ContactController extends Controller
 	public function __construct() {
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-get-info'],
-				['client-get-users', 'client-get-assos']
+				\Scopes::getDeepestChilds('user-get-contacts'),
+				\Scopes::getDeepestChilds('client-get-contacts')
 			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				['user-manage-info'],
-				['client-manage-users', 'client-manage-assos']
+				\Scopes::getDeepestChilds('user-create-contacts'),
+				\Scopes::getDeepestChilds('client-create-contacts')
 			),
-			['only' => ['store', 'update', 'destroy']]
+			['only' => ['store']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				\Scopes::getDeepestChilds('user-set-contacts'),
+				\Scopes::getDeepestChilds('client-set-contacts')
+			),
+			['only' => ['update']]
+		);
+		$this->middleware(
+			\Scopes::matchOne(
+				\Scopes::getDeepestChilds('user-manage-contacts'),
+				\Scopes::getDeepestChilds('client-manage-contacts')
+			),
+			['only' => ['destroy']]
 		);
 	}
+
+	protected function checkTokenRights(Request $request, string $verb = 'get') {
+		if (!\Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-contacts-'.\ModelResolver::getName($request->resource)))
+			abort(503, 'L\'application n\'a pas le droit de voir les contacts de cette ressource');
+	}
+
+	public function getContact(Request $request, string $verb = 'get') {
+		$this->checkRessource($request, $verb);
+		$contact = $request->resource->contacts()->where('id', $request->contact)->first();
+
+		if ($contact) {
+			if (\Auth::id() && !$this->isVisible($contact, \Auth::id()))
+				abort(503, 'Vous n\'avez pas le droit de voir ce contact');
+
+			return $contact;
+		}
+		else
+			abort(404, "Ce contact n'existe pas pour cette ressource");
+	}
+
+	public function isPrivate($user_id, $model = null) {
+		if ($model === null)
+			return false;
+
+		// Si c'est privée on vérifie si on a le droit d'accès
+		return $model->owned_by->isContactAccessibleBy($user_id);
+    }
 
 	/**
 	 * Display a listing of the resource.
@@ -48,8 +86,8 @@ class ContactController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(ContactRequest $request): JsonResponse {
-		$model = $request->resource;
-		$contacts = $this->hide($model->contact);
+		$this->checkTokenRights($request);
+		$contacts = $this->hide($request->resource->contacts);
 
 		return response()->json($contacts, 200);
 	}
@@ -61,30 +99,20 @@ class ContactController extends Controller
 	 * @return JsonResponse
 	 */
 	public function store(ContactRequest $request): JsonResponse {
-		if ($request->resource->canCreateContact()) {
+		$this->checkTokenRights($request, 'create');
 
-			$contact_type = ContactType::find($request->contact_type_id);
+		if (\Auth::id() && !$request->resource->isContactManageableBy(\Auth::id()))
+			abort(503, 'Il n\'est pas possible à l\'utilisateur de créer un contact pour cette ressource');
 
-			// Si on trouve le type, on peut valider le body.
-			if ($contact_type && preg_match("/$contact_type->pattern/", $request->body)) {
-				$contact = new Contact;
-				$contact->body = $request->body;
-				$contact->description = $request->description;
-				$contact->contact_type_id = $request->contact_type_id;
-				$contact->visibility_id = $request->visibility_id ?? Visibility::getTopStage()->first()->id;
-				$contact->contactable_id = $request->resource_id;
-				$contact->contactable_type = $request->model;
+		$contact = Contact::create($request->input());
 
-				if ($contact->save()) {
-					$contact = Contact::with('type')->find($contact->id);
-					return response()->json($contact, 201);
-				}
-				else
-					abort(500, "Impossible de créer le contact");
-			}
-			else
-				abort(400, "Le type de contact n'a pu être identifié ou est invalide.");
+		if ($contact) {
+			$contact->changeOwnerTo($request->resource)->save();
+
+			return response()->json(Contact::find($contact->id), 201);
 		}
+		else
+			abort(500, "Impossible de créer le contact");
 	}
 
 	/**
@@ -94,14 +122,9 @@ class ContactController extends Controller
 	 * @return JsonResponse
 	 */
 	public function show(ContactRequest $request): JsonResponse {
-		$contact = $request->resource->contact()->where('id', $request->contact)->first();
+		$contact = $this->getContact($request);
 
-		if ($contact) {
-			$contact = $this->hide($contact);
-			return response()->json($contact, 200);
-		}
-		else
-			abort(404, "Ce contact n'existe pas pour cette ressource.");
+		return response()->json($contact, 200);
 	}
 
 	/**
@@ -111,51 +134,15 @@ class ContactController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(ContactRequest $request): JsonResponse {
-		$contact = $request->resource->contact()->where('id', $request->contact)->first();
+		$contact = $this->getContact($request, 'set');
 
-		if ($contact && $request->resource->canModifyContact($contact)) {
+		if (\Auth::id() && !$contact->owned_by->isContactManageableBy(\Auth::id()))
+			abort(503, 'Il n\'est pas possible à l\'utilisateur de modifier le contact pour cette ressource');
 
-			// Tous les cas possibles.
-			if ($request->has('body') && $request->has('contact_type_id')) {
-				$contact_type = ContactType::find($request->contact_type_id);
-				$contact_body = $request->body;
-			}
-			else if ($request->has('body') && !$request->has('contact_type_id')) {
-				$contact_type = $contact->type;
-				$contact_body = $request->body;
-			}
-			else if (!$request->has('body') && $request->has('contact_type_id')) {
-				$contact_type = ContactType::find($request->contact_type_id);
-				$contact_body = $contact->body;
-			}
-			else {
-				$contact_type = $contact->type;
-				$contact_body = $contact->body;
-			}
-
-			// On valide avec le regex.
-			if (preg_match($contact_type->pattern, $contact_body)) {
-				$contact->body = $contact_body;
-				$contact->contact_type_id = $contact_type->id;
-			}
-			else
-				abort(400, "Le type de contact n'a pu être identifié ou est invalide.");
-
-			// Autres données.
-			if ($request->has('description'))
-				$contact->description = $request->description;
-
-			if ($request->has('visibility_id'))
-				$contact->visibility_id = $request->visibility_id;
-
-			if ($contact->save()) {
-				return response()->json($contact, 200);
-			}
-			else
-				abort(500, "Impossible de modifier le groupe");
-		}
+		if ($contact->update($request->input()))
+			return response()->json(Contact::find($contact->id), 201);
 		else
-			abort(404, "Ce contact n'existe pas pour cette ressource.");
+			abort(500, "Impossible de modifier le contact");
 	}
 
 	/**
@@ -165,15 +152,14 @@ class ContactController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(ContactRequest $request): JsonResponse {
-		$contact = $request->resource->contact()->where('id', $request->contact)->first();
+		$contact = $this->getContact($request, 'manage');
 
-		if ($contact && $request->resource->canModifyContact($contact)) {
-			if ($contact->delete())
-				return response()->json(["message" => "Contact supprimé."], 204);
-			else
-				abort(500, "Impossible de supprimer le contact.");
-		}
+		if (\Auth::id() && !$contact->owned_by->isContactManageableBy(\Auth::id()))
+			abort(503, 'Il n\'est pas possible à l\'utilisateur de supprimer le contact pour cette ressource');
+
+		if ($contact->delete())
+			abort(204);
 		else
-			abort(404, "Ce contact n'existe pas pour cette ressource.");
+			abort(500, "Impossible de supprimer le contact");
 	}
 }

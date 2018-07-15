@@ -65,6 +65,21 @@ class GroupController extends Controller
 		return response()->json($groups, 200);
 	}
 
+	public function isPrivate($user_id, $model = null) {
+		if ($model === null)
+			return false;
+
+		if ($model->user_id && $model->user_id == $user_id)
+			return true;
+
+		try {
+			return $model->currentAllMembers()->wherePivot('user_id', $user_id)->count() > 0;
+		}
+		catch (Exception $e) {}
+
+        return false;
+    }
+
 	/**
 	 * Store a newly created resource in storage.
 	 *
