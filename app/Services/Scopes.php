@@ -486,6 +486,15 @@ class Scopes {
 		return $request->user() === null;
 	}
 
+	/**
+	 * Récupérer le type de token (sert pour connaitre le header des scopes)
+	 * @param  Request $request
+	 * @return string	'client' / 'user'
+	 */
+	public function getTokenType(Request $request) {
+		return $this->isClientToken($request) ? 'client' : 'user';
+	}
+
 	public function isUserOrClientToken(Request $request) {
 		if ($request->user() === null) {
 			$bearerToken = $request->bearerToken();
