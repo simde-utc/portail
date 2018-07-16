@@ -26,6 +26,10 @@ class Article extends Model {
 		return $this->belongsTo('App\Models\Asso');
 	}
 
+	public function tags() {
+		return $this->morphToMany('App\Models\Tag', 'tags_used');
+	}
+
 	public function visibility() {
 		return $this->belongsTo('App\Models\Visibility', 'visibility_id');
 	}

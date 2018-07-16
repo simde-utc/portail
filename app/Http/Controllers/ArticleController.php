@@ -65,10 +65,10 @@ class ArticleController extends Controller {
 	public function index(Request $request): JsonResponse {
 		if ($request->user()) {
 			if (isset($request['all'])) {
-				$articles = Article::with('collaborators:id,shortname')->get();
+				$articles = Article::with(['collaborators:id,shortname', 'tags:name,description'])->get();
 			}
 			else {
-				$articles = Article::with('collaborators:id,shortname')->whereHas('collaborators', function ($query) use ($request) {
+				$articles = Article::with(['collaborators:id,shortname', 'tags:name,description'])->whereHas('collaborators', function ($query) use ($request) {
 					$query->whereIn('asso_id', array_merge(
 						$request->user()->currentAssos()->pluck('assos.id')->toArray()
 					));
