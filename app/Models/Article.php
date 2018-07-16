@@ -12,6 +12,11 @@ class Article extends Model {
 		'title', 'content', 'image', 'toBePublished', 'visibility_id', 'asso_id',
 	];
 
+	protected $with = [
+		'collaborators:id,shortname',
+		'tags:name,description'
+	]
+
 	public static function boot() {
 		static::created(function ($model) {
 			$model->collaborators()->attach($model['asso_id']);
