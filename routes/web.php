@@ -27,6 +27,5 @@ Route::match(['get', 'post'], 'register/{provider?}/process', 'Auth\RegisterCont
 
 // Route principale et Autres vers React
 Route::get('/', 'HomeController@react')->name('react');
-// Route::any('{whatever}', 'HomeController@react')->where('whatever', '.*');
-Route::any('{whatever}', 'HomeController@react')->where('whatever', '^((?!\/oauth).)*');
+Route::any('{whatever}', 'HomeController@react')->where('whatever', '.*');
 

@@ -15,7 +15,7 @@ class Article extends Model {
 	protected $with = [
 		'collaborators:id,shortname',
 		'tags:name,description'
-	]
+	];
 
 	public static function boot() {
 		static::created(function ($model) {
