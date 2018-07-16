@@ -29,4 +29,3 @@ Route::match(['get', 'post'], 'register/{provider?}/process', 'Auth\RegisterCont
 Route::get('/', 'HomeController@react')->name('react');
 Route::any('{whatever}', 'HomeController@react')->where('whatever', '.*');
 
-
