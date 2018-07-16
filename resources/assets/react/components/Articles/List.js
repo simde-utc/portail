@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { articlesActions } from '../../redux/actions.js';
 
+import Article from './Article.js';
+
 @connect(store => {
     return {
         articles: store.articles.data,
@@ -16,14 +18,13 @@ class ArticlesList extends Component {
     }
 
     render() {
+        console.log(this.props.articles);
+
         return (
             <div>
                 { (this.props.fetched) ? (
                     this.props.articles.map(article => (
-                        <div className="Article">
-                            <h1>{ article.title }</h1>
-                            <p>{ article.content }</p>
-                        </div>
+                        <Article article={article} />
                     ))
                 ) : (
                     <div></div>
