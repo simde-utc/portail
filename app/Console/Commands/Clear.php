@@ -37,12 +37,14 @@ class Clear extends Command
 	 */
 	public function handle()
 	{
+		shell_exec('composer dump-autoload');
+
 		$this->call('view:clear');
 		$this->call('route:clear');
 		$this->call('config:clear');
-		$this->call('debugbar:clear');
 		$this->call('auth:clear-resets');
 		$this->call('cache:clear');
 		$this->call('clear-compiled');
+		$this->call('clear');
 	}
 }
