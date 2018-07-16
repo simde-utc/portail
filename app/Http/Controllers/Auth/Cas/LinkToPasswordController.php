@@ -10,7 +10,7 @@ use App\Models\Session;
 
 class LinkToPasswordController extends Controller
 {
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
