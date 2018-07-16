@@ -28,16 +28,16 @@ trait HasStages
 			$collection = collect();
 
 			foreach ($before as $model) {
-				$childs = $model->childs()->with($with);
+				$children = $model->children()->with($with);
 
         		foreach ($data as $key => $value) {
                     if (!\Schema::hasColumn($tableName, $key))
                         throw new PortailException('L\'attribut "'.$key.'" n\'existe pas');
 
-                    $childs = $childs->where($key, $value);
+                    $children = $children->where($key, $value);
                 }
 
-				$collection = $collection->merge($childs->get());
+				$collection = $collection->merge($children->get());
 			}
 		}
 
@@ -50,24 +50,24 @@ trait HasStages
 		$toAdd = $collection;
 
 		for ($i = $from ?? 0; is_null($to) || $i < $to; $i++) {
-			$toAddChilds = $toAdd;
+			$toAddChildren = $toAdd;
 			$toAdd = collect();
 
-            if (count($toAddChilds) === 0)
+            if (count($toAddChildren) === 0)
                 break;
 
-			foreach ($toAddChilds as $model) {
-				$childs = $model->childs()->with($with);
+			foreach ($toAddChildren as $model) {
+				$children = $model->children()->with($with);
 
                 foreach ($data as $key => $value) {
                     if (!\Schema::hasColumn($tableName, $key))
                         throw new PortailException('L\'attribut "'.$key.'" n\'existe pas');
 
-                    $childs = $childs->where($key, $value);
+                    $children = $children->where($key, $value);
                 }
 
-				$model->childs = $childs->get();
-				$toAdd = $toAdd->merge($model->childs);
+				$model->children = $children->get();
+				$toAdd = $toAdd->merge($model->children);
 			}
 		}
 

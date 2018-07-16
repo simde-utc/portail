@@ -25,15 +25,15 @@ class EventController extends AbstractController
 
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChilds('user-get-calendars', 'client-get-calendars'),
-				\Scopes::matchOneOfDeepestChilds('user-get-events', 'client-get-events')
+				\Scopes::matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
+				\Scopes::matchOneOfDeepestChildren('user-get-events', 'client-get-events')
 			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChilds('user-edit-calendars', 'client-edit-calendars'),
-				\Scopes::matchOneOfDeepestChilds('user-get-events', 'client-get-events')
+				\Scopes::matchOneOfDeepestChildren('user-edit-calendars', 'client-edit-calendars'),
+				\Scopes::matchOneOfDeepestChildren('user-get-events', 'client-get-events')
 			),
 			['only' => ['update', 'store', 'destroy']]
 		);

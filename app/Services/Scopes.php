@@ -296,9 +296,9 @@ class Scopes {
 	 * @param  string/array $scope
 	 * @return array
 	 */
-	public function getDeepestChilds($scope) {
+	public function getDeepestChildren($scope) {
 		if (is_array($scope))
-			return array_merge(...array_map($scope, $this->getDeepestChilds));
+			return array_merge(...array_map($scope, $this->getDeepestChildren));
 
 		$find = $this->find($scope);
 
@@ -306,7 +306,7 @@ class Scopes {
 			throw new PortailException('Scope non trouvé');
 
 		$current = $find[$scope];
-		$deepestChilds = [];
+		$deepestChildren = [];
 
 		if ($current === [] || $current === null)
 			return [];
@@ -315,13 +315,13 @@ class Scopes {
 			return [$scope];
 
 		foreach ($current['scopes'] as $child => $data) {
-			$deepestChilds = array_merge(
-				$deepestChilds,
-				$this->getDeepestChilds($scope.'-'.$child)
+			$deepestChildren = array_merge(
+				$deepestChildren,
+				$this->getDeepestChildren($scope.'-'.$child)
 			);
 		}
 
-		return $deepestChilds;
+		return $deepestChildren;
 	}
 
 	/**
@@ -478,10 +478,10 @@ class Scopes {
 	 * @param  string/array $scope
 	 * @param  string/array $scopes2
 	 */
-	public function matchOneOfDeepestChilds($scope = null, $scopes2 = null) {
+	public function matchOneOfDeepestChildren($scope = null, $scopes2 = null) {
 		return $this->matchOne(
-			$scope ? $this->getDeepestChilds($scope) : null,
-			$scope2 ? $this->getDeepestChilds($scope2) : null
+			$scope ? $this->getDeepestChildren($scope) : null,
+			$scope2 ? $this->getDeepestChildren($scope2) : null
 		);
 	}
 

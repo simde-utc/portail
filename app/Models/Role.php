@@ -101,7 +101,7 @@ class Role extends Model
 		return $this->belongsToMany(Permission::class, 'roles_permissions');
 	}
 
-	public function childs(): BelongsToMany {
+	public function children(): BelongsToMany {
 		return $this->belongsToMany(Role::class, 'roles_parents', 'parent_id', 'role_id');
 	}
 
@@ -109,17 +109,17 @@ class Role extends Model
 		return $this->belongsToMany(Role::class, 'roles_parents', 'role_id', 'parent_id');
 	}
 
-	public function allChilds() {
-		$childs = collect();
+	public function allChildren() {
+		$children = collect();
 
-		foreach ($this->childs as $child) {
-			$childs->push($child);
+		foreach ($this->children as $child) {
+			$children->push($child);
 
-			$childs = $childs->merge($child->allChilds());
-			$child->makeHidden('childs');
+			$children = $children->merge($child->allChildren());
+			$child->makeHidden('children');
 		}
 
-		return $childs->unique('id');
+		return $children->unique('id');
 	}
 
 	public function allParents() {
@@ -128,7 +128,7 @@ class Role extends Model
 		foreach ($this->parents as $parent) {
 			$parents->push($parent);
 
-			$parents = $parents->merge($parent->allChilds());
+			$parents = $parents->merge($parent->allChildren());
 			$parent->makeHidden('parents');
 		}
 
@@ -166,7 +166,7 @@ class Role extends Model
 		if ($toAdd->find($this->id))
 			throw new PortailException('Il n\'est pas possible de s\'auto-hériter', 400);
 
-		if ($toAdd->whereIn('id', $this->childs()->get(['id'])->pluck('id'))->count() > 0)
+		if ($toAdd->whereIn('id', $this->children()->get(['id'])->pluck('id'))->count() > 0)
 			throw new PortailException('Il n\'est pas possible d\'hériter de ses enfants', 400);
 
 		$this->parents()->withTimestamps()->attach($toAdd);
@@ -196,7 +196,7 @@ class Role extends Model
 		if ($toAdd->find($this->id))
 			throw new PortailException('Il n\'est pas possible de s\'auto-hériter', 400);
 
-		if ($toAdd->whereIn('id', $this->childs()->get(['id'])->pluck('id'))->count() > 0)
+		if ($toAdd->whereIn('id', $this->children()->get(['id'])->pluck('id'))->count() > 0)
 			throw new PortailException('Il n\'est pas possible d\'hériter de ses enfants', 400);
 
 		$this->parents()->withTimestamps()->sync($roles);
@@ -220,7 +220,7 @@ class Role extends Model
 
 	public function isDeletable() {
 		// On ne permet la suppression de rôles parents
-		if ($this->childs()->count() > 0)
+		if ($this->children()->count() > 0)
 			return false;
 
 		@list($tableName, $id) = explode('-', $this->only_for);

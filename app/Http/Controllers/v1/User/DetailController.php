@@ -12,19 +12,19 @@ class DetailController extends Controller
 {
     public function __construct(Request $request) {
         $this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-get-info-details', 'client-get-info-details'),
+            \Scopes::matchOneOfDeepestChildren('user-get-info-details', 'client-get-info-details'),
             ['only' => ['index', 'show']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-create-info-details', 'client-create-info-details'),
+            \Scopes::matchOneOfDeepestChildren('user-create-info-details', 'client-create-info-details'),
             ['only' => ['store']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-edit-info-details', 'client-edit-info-details'),
+            \Scopes::matchOneOfDeepestChildren('user-edit-info-details', 'client-edit-info-details'),
             ['only' => ['update']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-manage-info-details', 'client-manage-info-details'),
+            \Scopes::matchOneOfDeepestChildren('user-manage-info-details', 'client-manage-info-details'),
             ['only' => ['destroy']]
         );
     }

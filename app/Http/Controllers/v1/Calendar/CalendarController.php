@@ -24,19 +24,19 @@ class CalendarController extends AbstractController
 		parent::__construct();
 
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-get-calendars', 'client-get-calendars'),
+			\Scopes::matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-create-calendars', 'client-create-calendars'),
+			\Scopes::matchOneOfDeepestChildren('user-create-calendars', 'client-create-calendars'),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-edit-calendars', 'client-edit-calendars'),
+			\Scopes::matchOneOfDeepestChildren('user-edit-calendars', 'client-edit-calendars'),
 			['only' => ['update']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-manage-calendars', 'client-manage-calendars'),
+			\Scopes::matchOneOfDeepestChildren('user-manage-calendars', 'client-manage-calendars'),
 			['only' => ['destroy']]
 		);
 	}

@@ -27,15 +27,15 @@ class ArticleController extends Controller {
 	 */
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-get-articles', 'client-get-articles'),
+			\Scopes::matchOneOfDeepestChildren('user-get-articles', 'client-get-articles'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-set-articles', 'client-set-articles'),
+			\Scopes::matchOneOfDeepestChildren('user-set-articles', 'client-set-articles'),
 			['only' => ['store', 'update']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-manage-articles', 'client-manage-articles'),
+			\Scopes::matchOneOfDeepestChildren('user-manage-articles', 'client-manage-articles'),
 			['only' => ['destroy']]
 		);
 	}

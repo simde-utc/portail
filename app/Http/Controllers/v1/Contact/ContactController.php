@@ -23,29 +23,29 @@ class ContactController extends Controller
 	public function __construct() {
 		$this->middleware(
 			\Scopes::matchOne(
-				\Scopes::getDeepestChilds('user-get-contacts'),
-				\Scopes::getDeepestChilds('client-get-contacts')
+				\Scopes::getDeepestChildren('user-get-contacts'),
+				\Scopes::getDeepestChildren('client-get-contacts')
 			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				\Scopes::getDeepestChilds('user-create-contacts'),
-				\Scopes::getDeepestChilds('client-create-contacts')
+				\Scopes::getDeepestChildren('user-create-contacts'),
+				\Scopes::getDeepestChildren('client-create-contacts')
 			),
 			['only' => ['store']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				\Scopes::getDeepestChilds('user-set-contacts'),
-				\Scopes::getDeepestChilds('client-set-contacts')
+				\Scopes::getDeepestChildren('user-set-contacts'),
+				\Scopes::getDeepestChildren('client-set-contacts')
 			),
 			['only' => ['update']]
 		);
 		$this->middleware(
 			\Scopes::matchOne(
-				\Scopes::getDeepestChilds('user-manage-contacts'),
-				\Scopes::getDeepestChilds('client-manage-contacts')
+				\Scopes::getDeepestChildren('user-manage-contacts'),
+				\Scopes::getDeepestChildren('client-manage-contacts')
 			),
 			['only' => ['destroy']]
 		);

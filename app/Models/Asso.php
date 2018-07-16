@@ -70,7 +70,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	    return $this->hasOne(Asso::class, 'parent_id');
     }
 
-	public function childs() {
+	public function children() {
 		return $this->hasMany(Asso::class, 'parent_id', 'id');
     }
 
@@ -108,8 +108,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 			foreach ($asso->getUsersRolesInThisAssociation($user_id, $semester_id) as $role) {
 				$roles->push($role);
 
-				$roles = $roles->merge($role->allChilds());
-				$role->makeHidden('childs');
+				$roles = $roles->merge($role->allChildren());
+				$role->makeHidden('children');
 			}
 
 			$parent_id = $asso->parent_id;

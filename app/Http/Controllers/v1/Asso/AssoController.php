@@ -20,24 +20,24 @@ class AssoController extends Controller
 {
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-get-assos', 'client-get-assos'),
+			\Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChilds('user-create-assos', 'client-create-assos'), [
+				\Scopes::matchOneOfDeepestChildren('user-create-assos', 'client-create-assos'), [
 					'user:admin',
 				]
 			),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-set-assos', 'client-set-assos'),
+			\Scopes::matchOneOfDeepestChildren('user-set-assos', 'client-set-assos'),
 			['only' => ['update']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChilds('user-remove-assos', 'client-remove-assos'), [
+				\Scopes::matchOneOfDeepestChildren('user-remove-assos', 'client-remove-assos'), [
 					'user:admin',
 				]
 			),
@@ -152,9 +152,9 @@ class AssoController extends Controller
 	 * @throws PortailException
 	 */
 	public function show(Request $request, $id): JsonResponse {
-		$asso = Asso::with(isset($request['withChilds']) ? [
+		$asso = Asso::with(isset($request['withChildren']) ? [
 			'type:id,name,description',
-			'childs',
+			'children',
 		] : [
 			'type:id,name,description',
 		])->withTrashed();
@@ -274,7 +274,7 @@ class AssoController extends Controller
 			$asso = Asso::where('login', $id)->first();
 
 		if ($asso) {
-			if ($asso->childs()->count() > 0)
+			if ($asso->children()->count() > 0)
 				abort(400, 'Il n\'est pas possible de supprimer une association parente');
 
 			if (!\Auth::user()->hasOneRole('admin'))

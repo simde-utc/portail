@@ -16,15 +16,15 @@ class RoleController extends Controller
 {
 	public function __construct() {
         $this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-get-roles-users', 'client-get-roles-users'),
+            \Scopes::matchOneOfDeepestChildren('user-get-roles-users', 'client-get-roles-users'),
             ['only' => ['index', 'show']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-set-roles-users', 'client-set-roles-users'),
+            \Scopes::matchOneOfDeepestChildren('user-set-roles-users', 'client-set-roles-users'),
             ['only' => ['store', 'update']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-manage-roles-users', 'client-manage-roles-users'),
+            \Scopes::matchOneOfDeepestChildren('user-manage-roles-users', 'client-manage-roles-users'),
             ['only' => ['destroy']]
         );
 	}

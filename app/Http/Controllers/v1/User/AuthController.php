@@ -17,19 +17,19 @@ class UserAuthController extends Controller
 {
 	public function __construct() {
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-get-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-get-info-identity-auth'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-create-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-create-info-identity-auth'),
 			['only' => ['store']]
 		);
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-set-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-set-info-identity-auth'),
 			['only' => ['update']]
 		);
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChilds('user-manage-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-manage-info-identity-auth'),
 			['only' => ['destroy']]
 		);
 	}

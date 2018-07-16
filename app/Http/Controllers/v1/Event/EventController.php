@@ -24,19 +24,19 @@ class EventController extends AbstractController
 		parent::__construct();
 
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-get-events', 'client-get-events'),
+			\Scopes::matchOneOfDeepestChildren('user-get-events', 'client-get-events'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-create-events', 'client-create-events'),
+			\Scopes::matchOneOfDeepestChildren('user-create-events', 'client-create-events'),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-set-events', 'client-set-events'),
+			\Scopes::matchOneOfDeepestChildren('user-set-events', 'client-set-events'),
 			['only' => ['update']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-manage-events', 'client-manage-events'),
+			\Scopes::matchOneOfDeepestChildren('user-manage-events', 'client-manage-events'),
 			['only' => ['destroy']]
 		);
 	}

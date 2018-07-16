@@ -17,22 +17,22 @@ class MemberController extends Controller
 	public function __construct() { // TODO Vérifier les scopes
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChilds('user-get-assos', 'client-get-assos'),
-				\Scopes::matchOneOfDeepestChilds(['user-get-assos-followed', 'user-get-roles-assos'], ['client-get-assos-followed', 'client-get-roles-assos'])
+				\Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos'),
+				\Scopes::matchOneOfDeepestChildren(['user-get-assos-followed', 'user-get-roles-assos'], ['client-get-assos-followed', 'client-get-roles-assos'])
 			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChilds('user-set-assos', 'client-set-assos'),
-				\Scopes::matchOneOfDeepestChilds(['user-set-assos-followed', 'user-set-roles-assos'], ['client-set-assos-followed', 'client-set-roles-assos'])
+				\Scopes::matchOneOfDeepestChildren('user-set-assos', 'client-set-assos'),
+				\Scopes::matchOneOfDeepestChildren(['user-set-assos-followed', 'user-set-roles-assos'], ['client-set-assos-followed', 'client-set-roles-assos'])
 			),
 			['only' => ['store', 'update']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChilds('user-manage-assos', 'client-manage-assos'),
-				\Scopes::matchOneOfDeepestChilds(['user-manage-assos-followed', 'user-manage-roles-assos'], ['client-manage-assos-followed', 'client-manage-roles-assos'])
+				\Scopes::matchOneOfDeepestChildren('user-manage-assos', 'client-manage-assos'),
+				\Scopes::matchOneOfDeepestChildren(['user-manage-assos-followed', 'user-manage-roles-assos'], ['client-manage-assos-followed', 'client-manage-roles-assos'])
 			),
 			['only' => ['destroy']]
 		);

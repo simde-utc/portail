@@ -27,12 +27,12 @@ class RoleController extends Controller
 	 */
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChilds('user-get-roles-types'),
+			\Scopes::matchOneOfDeepestChildren('user-get-roles-types'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChilds('user-set-roles-types'), [
+				\Scopes::matchOneOfDeepestChildren('user-set-roles-types'), [
 					'user:admin',
 				]
 			),
@@ -40,7 +40,7 @@ class RoleController extends Controller
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChilds('user-manage-roles-types'), [
+				\Scopes::matchOneOfDeepestChildren('user-manage-roles-types'), [
 					'user:admin',
 				]
 			),
@@ -156,7 +156,7 @@ class RoleController extends Controller
 	 * @return JsonResponse
 	 */
 	public function show(Request $request, $id): JsonResponse {
-		$role = $request->has('withChilds') ? Role::with('childs') : new Role;
+		$role = $request->has('withChildren') ? Role::with('children') : new Role;
 		$role = $request->has('withParents') ? $role->with('parents') : $role;
 
 		// On vérifie que la ressource possède des rôles
@@ -183,7 +183,7 @@ class RoleController extends Controller
 	 * @throws PortailException
 	 */
 	public function update(Request $request, $id): JsonResponse {
-		$role = $request->has('withChilds') ? Role::with('childs') : new Role;
+		$role = $request->has('withChildren') ? Role::with('children') : new Role;
 		$role = $request->has('withParents') ? $role->with('parents') : $role;
 
 		$role = is_numeric($id) ? $role->find($id) : $role->where('type', $id)->first();
@@ -208,7 +208,7 @@ class RoleController extends Controller
 			if ($request->filled('parent_ids')) {
 				$role->syncParentRole($request->parent_ids); // Attention ! Ici on change tous ses parents
 
-				$role = $request->has('withChilds') ? $role->with('childs') : $role;
+				$role = $request->has('withChildren') ? $role->with('children') : $role;
 				$role = $request->has('withParents') ? $role->with('parents') : $role;
 				$role = is_numeric($id) ? $role->find($id) : $role->where('type', $id)->first();
 			}
