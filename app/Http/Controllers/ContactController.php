@@ -53,7 +53,7 @@ class ContactController extends Controller
 	}
 
 	protected function checkTokenRights(Request $request, string $verb = 'get') {
-		if (!\Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-contacts-'.\ModelResolver::getName($request->resource)))
+		if (!\Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-contacts-'.\ModelResolver::getCategory($request->resource)))
 			abort(503, 'L\'application n\'a pas le droit de voir les contacts de cette ressource');
 	}
 
@@ -62,8 +62,13 @@ class ContactController extends Controller
 		$contact = $request->resource->contacts()->where('id', $request->contact)->first();
 
 		if ($contact) {
-			if (\Auth::id() && !$this->isVisible($contact, \Auth::id()))
-				abort(503, 'Vous n\'avez pas le droit de voir ce contact');
+			if (\Auth::id()) {
+				if (!$this->isVisible($contact, \Auth::id()))
+					abort(503, 'Vous n\'avez pas le droit de voir ce contact');
+
+				if ($verb !== 'get' && !$request->resource->isContactManageableBy(\Auth::id()))
+					abort(503, 'Il n\'est pas possible à l\'utilisateur de gérer un contact pour cette ressource');
+			}
 
 			return $contact;
 		}
@@ -101,9 +106,6 @@ class ContactController extends Controller
 	public function store(ContactRequest $request): JsonResponse {
 		$this->checkTokenRights($request, 'create');
 
-		if (\Auth::id() && !$request->resource->isContactManageableBy(\Auth::id()))
-			abort(503, 'Il n\'est pas possible à l\'utilisateur de créer un contact pour cette ressource');
-
 		$contact = Contact::create($request->input());
 
 		if ($contact) {
@@ -136,9 +138,6 @@ class ContactController extends Controller
 	public function update(ContactRequest $request): JsonResponse {
 		$contact = $this->getContact($request, 'set');
 
-		if (\Auth::id() && !$contact->owned_by->isContactManageableBy(\Auth::id()))
-			abort(503, 'Il n\'est pas possible à l\'utilisateur de modifier le contact pour cette ressource');
-
 		if ($contact->update($request->input()))
 			return response()->json(Contact::find($contact->id), 201);
 		else
@@ -153,9 +152,6 @@ class ContactController extends Controller
 	 */
 	public function destroy(ContactRequest $request): JsonResponse {
 		$contact = $this->getContact($request, 'manage');
-
-		if (\Auth::id() && !$contact->owned_by->isContactManageableBy(\Auth::id()))
-			abort(503, 'Il n\'est pas possible à l\'utilisateur de supprimer le contact pour cette ressource');
 
 		if ($contact->delete())
 			abort(204);
