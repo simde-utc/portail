@@ -65,10 +65,10 @@ class ArticleController extends Controller {
 	public function index(Request $request): JsonResponse {
 		if ($request->user()) {
 			if (isset($request['all'])) {
-				$articles = Article::with('collaborators:id,shortname')->get();
+				$articles = Article::with('collaborators:id,login,shortname')->get();
 			}
 			else {
-				$articles = Article::with('collaborators:id,shortname')->whereHas('collaborators', function ($query) use ($request) {
+				$articles = Article::with('collaborators:id,login,shortname')->whereHas('collaborators', function ($query) use ($request) {
 					$query->whereIn('asso_id', array_merge(
 						$request->user()->currentAssos()->pluck('assos.id')->toArray()
 					));
@@ -100,7 +100,7 @@ class ArticleController extends Controller {
 		}
 
 		if ($article)
-			return response()->json(Article::with('collaborators:id,shortname')->find($article->id), 201);
+			return response()->json(Article::with('collaborators:id,login,shortname')->find($article->id), 201);
 		else
 			return response()->json(['message' => 'Impossible de créer l\'article'], 500);
 	}
@@ -114,7 +114,7 @@ class ArticleController extends Controller {
 	 * @return JsonResponse
 	 */
 	public function show(Request $request, int $id): JsonResponse {
-		$article = Article::with('collaborators:id,shortname')->find($id);
+		$article = Article::with('collaborators:id,login,shortname')->find($id);
 		if (!isset($article))
 			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
 		else
@@ -150,7 +150,7 @@ class ArticleController extends Controller {
 						$article->collaborators()->detach($asso_id);
 				}
 			}
-			return response()->json(Article::with('collaborators:id,shortname')->find($id), 201);
+			return response()->json(Article::with('collaborators:id,login,shortname')->find($id), 201);
 		}
 		else
 			return response()->json(['message' => 'Impossible de modifier l\'article'], 500);

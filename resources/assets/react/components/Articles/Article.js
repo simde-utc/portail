@@ -40,7 +40,7 @@ class Article extends Component {
                 <div className="col-md-3 media mt-1 mb-3 mb-md-0">
                     <img className="align-self-start img-fluid rounded-circle mr-2" src="http://via.placeholder.com/50x50" />
                     <div className="media-body">
-                        <Link to="/">{ this.props.article.collaborators[0].shortname }</Link>
+                        <Link to={ "/assos/" + this.props.article.collaborators[0].login }>{ this.props.article.collaborators[0].shortname }</Link>
                         <span className="d-block text-muted small">{ getTime(this.props.article.created_at) }</span>
                     </div>
                 </div>
