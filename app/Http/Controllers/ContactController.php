@@ -58,7 +58,7 @@ class ContactController extends Controller
 	}
 
 	public function getContact(Request $request, string $verb = 'get') {
-		$this->checkRessource($request, $verb);
+		$this->checkTokenRights($request, $verb);
 		$contact = $request->resource->contacts()->where('id', $request->contact)->first();
 
 		if ($contact) {

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Exceptions\PortailException;
-use Laravel\Passport\Client;
+use App\Models\Client;
 use App\Models\Asso;
 use App\Models\Role;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
