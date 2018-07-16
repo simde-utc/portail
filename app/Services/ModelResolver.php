@@ -34,7 +34,7 @@ class ModelResolver {
 	}
 
 	public function getModelFromCategory($name, $instance = null) {
-		if (substr($name, -1) === 'ies')
+		if (substr($name, -3) === 'ies')
 			$singular = substr($name, 0, -1).'y';
 		else
 			$singular = substr($name, 0, -1);
@@ -43,6 +43,17 @@ class ModelResolver {
 	}
 
 	public function getName($modelName) {
-		return (new \ReflectionClass($modelName))->getShortName();
+		return strtolower((new \ReflectionClass($modelName))->getShortName());
+	}
+
+	public function getCategory($modelName) {
+		$name = $this->getName($modelName);
+
+		if (substr($name, 0, -1) === 'y')
+			return substr($name, 0, -1).'ies';
+		else if (substr($name, 0, -1) === 's')
+			return $name;
+		else
+			return $name.'s';
 	}
 }
