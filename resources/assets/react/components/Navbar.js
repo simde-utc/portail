@@ -31,8 +31,11 @@ class Navbar extends Component {
 							<li className="nav-item">
 								<Link className="nav-link" to="/dashboard">Dashboard</Link>
 							</li>
+							<li className="nav-item">
+								<Link className="nav-link" to="/me">Profile</Link>
+							</li>
 						</ul>
-						<ul className="navbar-nav ml-auto">
+						<ul className="navbar-nav ml-auto">							
 							{ this.props.isAuthenticated ? (
 								<li className="nav-item dropdown">
 									<a className="nav-link dropdown-toggle">
