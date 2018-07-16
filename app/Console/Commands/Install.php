@@ -126,6 +126,7 @@ class Install extends Command
 
 		$this->info(' [Quick Install] Installing Node dependencies');
 		shell_exec('npm install');
+		shell_exec('npm run dev');
 		$bar->advance();
 
 		// Configuration

@@ -52,6 +52,7 @@ class Update extends Command
 
 		$this->info(' [Quick Update] Updating Node dependencies');
 		shell_exec('npm update');
+		shell_exec('npm run dev');
 		$bar->advance();
 
 		// Clear all
