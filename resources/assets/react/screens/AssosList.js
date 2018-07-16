@@ -16,7 +16,6 @@ class AssosListScreen extends Component {
 	}
 
 	render() {
-		console.warn(this.props)
 		// Construction de l'arbre des assos
 		let assosTree = [];
 		if (this.props.fetched)
