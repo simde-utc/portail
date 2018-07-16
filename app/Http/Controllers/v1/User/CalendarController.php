@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\User;
 
+use App\Http\Controllers\v1\Calendar\AbstractController;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Calendar;
 use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\AbstractCalendarController;
 use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\HasVisibility;
@@ -19,7 +18,7 @@ use App\Traits\HasVisibility;
  *
  * Gestion des calendriers
  */
-class UserCalendarController extends AbstractCalendarController
+class CalendarController extends AbstractController
 {
 	public function __construct() {
 		parent::__construct();

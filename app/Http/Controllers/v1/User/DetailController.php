@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\User;
 
+use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\Request;
-
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Exceptions\PortailException;
 
-class UserDetailController extends Controller
+class DetailController extends Controller
 {
     public function __construct(Request $request) {
 		$this->middleware(
@@ -36,7 +36,7 @@ class UserDetailController extends Controller
             abort(403, 'Il n\'existe pas de détail utilisateur de ce nom: '.$key);
         }
     }
-    
+
     /**
      * Display a listing of the resource.
      *

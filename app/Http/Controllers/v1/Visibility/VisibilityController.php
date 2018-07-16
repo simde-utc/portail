@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Visibility;
 
+use App\Http\Controllers\v1\Controller;
 use App\Http\Requests\VisibilityRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

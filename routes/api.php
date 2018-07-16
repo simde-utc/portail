@@ -12,22 +12,22 @@
 | Attention !! Les routes sont préfixées avec 'api/'
 */
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->namespace('App\Http\Controllers\v1')->group(function () {
 	// Connexions
-	Route::get('login', 'LoginController@index')->middleware('guest')->name('api/login');
-	Route::get('logout', 'LoginController@destroy')->middleware(Scopes::matchAnyUser())->name('api/logout');
+	Route::get('login', 'Client\LoginController@index')->middleware('guest')->name('api/login');
+	Route::get('logout', 'Client\LoginController@destroy')->middleware(Scopes::matchAnyUser())->name('api/logout');
 
 	// Informations relatives à l'utlisateur
-	Route::get('user', 'UserController@show')->middleware(Scopes::matchAnyUser())->name('api/user');
-	Route::patch('user', 'UserController@update')->middleware(Scopes::matchAnyUser())->name('api/user/update');
+	Route::get('user', 'User\UserController@show')->middleware(Scopes::matchAnyUser())->name('api/user');
+	Route::patch('user', 'User\UserController@update')->middleware(Scopes::matchAnyUser())->name('api/user/update');
 
 	// Gestions des authorisations données au client
-	Route::get('client', 'ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
-	Route::get('client/users', 'ClientController@getUsersClient')->middleware(Scopes::matchAnyClient())->name('api/client/users');
-	Route::get('client/{user_id}', 'ClientController@getUserClient')->middleware(Scopes::matchAnyClient())->name('api/client/user');
-	Route::delete('client', 'ClientController@destroyCurrent')->middleware(Scopes::matchAnyUser())->name('api/client/delete');
-	Route::delete('client/users', 'ClientController@destroyAll')->middleware(Scopes::matchAnyClient())->name('api/client/users/delete');
-	Route::delete('client/{user_id}', 'ClientController@destroy')->middleware(Scopes::matchAnyClient())->name('api/client/user/delete');
+	Route::get('client', 'Client\ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
+	Route::get('client/users', 'Client\ClientController@getUsersClient')->middleware(Scopes::matchAnyClient())->name('api/client/users');
+	Route::get('client/{user_id}', 'Client\ClientController@getUserClient')->middleware(Scopes::matchAnyClient())->name('api/client/user');
+	Route::delete('client', 'Client\ClientController@destroyCurrent')->middleware(Scopes::matchAnyUser())->name('api/client/delete');
+	Route::delete('client/users', 'Client\ClientController@destroyAll')->middleware(Scopes::matchAnyClient())->name('api/client/users/delete');
+	Route::delete('client/{user_id}', 'Client\ClientController@destroy')->middleware(Scopes::matchAnyClient())->name('api/client/user/delete');
 
 	// Ressources
 	/*
@@ -39,36 +39,37 @@ Route::prefix('v1')->group(function () {
 	*/
 
 	Route::apiResources([
-		'users'										=> 'UserController',
-		'users/{user_id}/auths'						=> 'UserAuthController',
-		'users/{user_id}/roles'						=> 'UserRoleController',
-		'users/{user_id}/details'					=> 'UserDetailController',
-		'users/{user_id}/preferences'				=> 'UserPreferenceController',
-		'users/{user_id}/calendars'					=> 'UserCalendarController',
+		'users'										=> 'User\UserController',
+		'users/{user_id}/auths'						=> 'User\AuthController',
+		'users/{user_id}/roles'						=> 'User\RoleController',
+		'users/{user_id}/details'					=> 'User\DetailController',
+		'users/{user_id}/preferences'				=> 'User\PreferenceController',
+		'users/{user_id}/calendars'					=> 'User\CalendarController',
 
 		// Routes `user` identiques à `users/{\Auth::id()}`
-		'user/auths'								=> 'UserAuthController',
-		'user/roles'								=> 'UserRoleController',
-		'user/details'								=> 'UserDetailController',
-		'user/preferences'							=> 'UserPreferenceController',
-		'user/calendars'							=> 'UserCalendarController',
-		'user/contacts'								=> 'ContactController',
+		'user/auths'								=> 'User\AuthController',
+		'user/roles'								=> 'User\RoleController',
+		'user/details'								=> 'User\DetailController',
+		'user/preferences'							=> 'User\PreferenceController',
+		'user/calendars'							=> 'User\CalendarController',
+		'user/contacts'								=> 'Contact\ContactController',
 	]);
 
 	Route::apiResources([
-		'{resource_type}/{resource_id}/contacts'	=> 'ContactController',
-		'groups/{group_id}/members'					=> 'GroupMemberController',
-		'groups'									=> 'GroupController',
-		'assos'										=> 'AssoController',
-		'assos/{asso_id}/members'					=> 'AssoMemberController',
-		'roles'										=> 'RoleController',
-		'locations'									=> 'LocationController',
-		'rooms'										=> 'RoomController',
-		'events'									=> 'EventController',
-		'calendars'									=> 'CalendarController',
-		'calendars/{calendar_id}/events'			=> 'CalendarEventController',
-		'partners'									=> 'PartnerController',
-		'articles'									=> 'ArticleController',
-		'visibilities'								=> 'VisibilityController',
+		'{resource_type}/{resource_id}/contacts'	=> 'Contact\ContactController',
+		'groups/{group_id}/members'					=> 'Group\MemberController',
+		'groups'									=> 'Group\GroupController',
+		'assos'										=> 'Asso\AssoController',
+		'assos/{asso_id}/members'					=> 'Asso\MemberController',
+		'roles'										=> 'Role\RoleController',
+		'places'									=> 'Location\PlaceController',
+		'locations'									=> 'Location\LocationController',
+		'rooms'										=> 'Location\RoomController',
+		'events'									=> 'Event\EventController',
+		'calendars'									=> 'Calendar\CalendarController',
+		'calendars/{calendar_id}/events'			=> 'Calendar\EventController',
+		'partners'									=> 'Partner\PartnerController',
+		'articles'									=> 'Article\ArticleController',
+		'visibilities'								=> 'Article\VisibilityController',
   ]);
 });

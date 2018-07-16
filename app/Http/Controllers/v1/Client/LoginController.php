@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Client;
 
+use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
-use Route;
-use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\AuthService;
 use App\Models\Session;
 
@@ -26,7 +24,7 @@ class LoginController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(): JsonResponse {
-		if (Auth::check())
+		if (\Auth::check())
 			return $this->alreadyConnected();
 
 		$services = config('auth.services');

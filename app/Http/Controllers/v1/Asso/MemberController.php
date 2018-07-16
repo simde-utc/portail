@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Asso;
 
-use App\Models\User;
+use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
+use App\Models\User;
 use App\Models\Asso;
 use App\Models\Semester;
 use App\Models\Role;
 use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;
 
-class AssoMemberController extends Controller
+class MemberController extends Controller
 {
 	public function __construct() {
 		$this->middleware(

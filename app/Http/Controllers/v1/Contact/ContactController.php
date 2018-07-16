@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Contact;
 
-use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\Request;
-
 use App\Http\Requests\ContactRequest;
 use App\Models\Contact;
 use App\Models\ContactType;

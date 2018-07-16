@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Client;
 
+use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
 use Laravel\Passport\Token;
 use Lcobucci\JWT\Parser;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;

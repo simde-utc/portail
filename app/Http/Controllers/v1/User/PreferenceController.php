@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\User;
 
+use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\Request;
-
 use App\Models\User;
 use App\Models\UserPreference;
 
-class UserPreferenceController extends Controller
+class PreferenceController extends Controller
 {
     public function __construct() {
 		$this->middleware(

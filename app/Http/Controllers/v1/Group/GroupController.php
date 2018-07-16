@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Group;
 
+use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
 use App\Models\Group;
 use App\Http\Requests\GroupRequest;
 use App\Models\Visibility;

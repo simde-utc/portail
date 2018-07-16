@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Group;
 
+use App\Http\Controllers\v1\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
 use App\Models\Group;
 use App\Services\Visible\Visible;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;
 
-class GroupMemberController extends Controller
+class MemberController extends Controller
 {
 	public function __construct() {
 		$this->middleware(

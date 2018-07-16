@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Partner;
 
+use App\Http\Controllers\v1\Controller;
 use App\Http\Requests\PartnerRequest;
 use App\Models\Partner;
 use Illuminate\Http\JsonResponse;

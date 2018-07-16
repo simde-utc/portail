@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Calendar;
 
 use App\Models\User;
 use App\Models\Asso;
@@ -9,7 +9,6 @@ use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
-use App\Http\Controllers\AbstractCalendarController;
 use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\HasVisibility;
@@ -19,7 +18,7 @@ use App\Traits\HasVisibility;
  *
  * Gestion des évenements des calendriers
  */
-class CalendarEventController extends AbstractCalendarController
+class EventController extends AbstractController
 {
 	public function __construct() {
 		parent::__construct();

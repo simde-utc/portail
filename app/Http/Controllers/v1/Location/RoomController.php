@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Location;
 
+use App\Http\Controllers\v1\Controller;
 use App\Models\Room;
 use App\Http\Requests\RoomRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 /**
  * @resource Room

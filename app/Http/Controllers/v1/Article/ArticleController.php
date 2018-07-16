@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Article;
 
+use App\Http\Controllers\v1\Controller;
 use App\Facades\Scopes;
 use App\Models\Asso;
 use App\Models\Visibility;

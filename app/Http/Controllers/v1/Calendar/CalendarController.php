@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1\Calendar;
 
 use App\Models\User;
 use App\Models\Asso;
@@ -18,7 +18,7 @@ use App\Traits\HasVisibility;
  *
  * Gestion des calendriers
  */
-class CalendarController extends AbstractCalendarController
+class CalendarController extends AbstractController
 {
 	public function __construct() {
 		parent::__construct();
