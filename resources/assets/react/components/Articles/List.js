@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { articlesActions } from '../../actions.js';
+import { articlesActions } from '../../redux/actions.js';
 
 @connect(store => {
     return {
