@@ -45,7 +45,7 @@
 
                                 <input type="hidden" name="state" value="{{ $request->state }}">
                                 <input type="hidden" name="client_id" value="{{ $client->id }}">
-                                <button class="btn btn-primary text-danger w-100 left">Refuser</button>
+                                <button type="submit" class="btn btn-primary text-danger w-100 left">Refuser</button>
                             </form>
                         </div>
                         <div class="col-6 p-0">
