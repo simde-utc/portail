@@ -11,6 +11,10 @@
 |
 */
 
+// Route principale et Autres vers React
+Route::get('/', 'HomeController@react')->name('react');
+Route::any('{whatever}', 'HomeController@react')->where('whatever', '.*');
+
 // Authentication Routes
 Route::get('login', 'Auth\LoginController@index')->name('login');
 Route::get('login/captcha', 'Auth\LoginController@update')->name('login.captcha');
@@ -21,12 +25,4 @@ Route::match(['get', 'post'], 'logout/{redirect?}', 'Auth\LoginController@destro
 // Basic Registration
 Route::get('register/{provider?}', 'Auth\RegisterController@show')->name('register.show');
 Route::match(['get', 'post'], 'register/{provider?}/process', 'Auth\RegisterController@store')->name('register.process');
-
-// Vues temporaires, uniquement de l'affichage de liens
-// Route::get('/home', 'HomeController@welcome')->name('welcome');
-
-// Route principale et Autres vers React
-Route::get('/', 'HomeController@react')->name('react');
-Route::any('{whatever}', 'HomeController@react')->where('whatever', '.*');
-
 
