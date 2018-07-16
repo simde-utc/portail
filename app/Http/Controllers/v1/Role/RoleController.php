@@ -27,16 +27,12 @@ class RoleController extends Controller
 	 */
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOne(
-				['user-get-roles-types-users', 'user-get-roles-types-assos', 'user-get-roles-types-groups']
-			),
+			\Scopes::matchOneOfDeepestChilds('user-get-roles-types'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne(
-					['user-set-roles-types-users', 'user-set-roles-types-assos', 'user-set-roles-types-groups']
-				), [
+				\Scopes::matchOneOfDeepestChilds('user-set-roles-types'), [
 					'user:admin',
 				]
 			),
@@ -44,9 +40,7 @@ class RoleController extends Controller
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne(
-					['user-manage-roles-types-users', 'user-manage-roles-types-assos', 'user-manage-roles-types-groups']
-				), [
+				\Scopes::matchOneOfDeepestChilds('user-manage-roles-types'), [
 					'user:admin',
 				]
 			),

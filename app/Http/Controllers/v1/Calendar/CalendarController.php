@@ -24,51 +24,19 @@ class CalendarController extends AbstractController
 		parent::__construct();
 
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-get-calendars', 'created'),
-				$this->populateScopes('user-get-calendars', 'owned-client'),
-				$this->populateScopes('user-get-calendars', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-get-calendars', 'created'),
-				$this->populateScopes('client-get-calendars', 'owned-client'),
-				$this->populateScopes('client-get-calendars', 'owned-asso')
-			)),
+			\Scopes::matchOneOfDeepestChilds('user-get-calendars', 'client-get-calendars'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-create-calendars', 'owned-client'),
-				$this->populateScopes('user-create-calendars', 'owned-asso'),
-				$this->populateScopes('user-create-calendars', 'created')
-			), array_merge(
-				$this->populateScopes('client-create-calendars', 'owned-client'),
-				$this->populateScopes('client-create-calendars', 'owned-asso'),
-				$this->populateScopes('client-create-calendars', 'created')
-			)),
+			\Scopes::matchOneOfDeepestChilds('user-create-calendars', 'client-create-calendars'),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-edit-calendars', 'created'),
-				$this->populateScopes('user-edit-calendars', 'owned-client'),
-				$this->populateScopes('user-edit-calendars', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-edit-calendars', 'created'),
-				$this->populateScopes('client-edit-calendars', 'owned-client'),
-				$this->populateScopes('client-edit-calendars', 'owned-asso')
-			)),
+			\Scopes::matchOneOfDeepestChilds('user-edit-calendars', 'client-edit-calendars'),
 			['only' => ['update']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-manage-calendars', 'created'),
-				$this->populateScopes('user-manage-calendars', 'owned-client'),
-				$this->populateScopes('user-manage-calendars', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-manage-calendars', 'created'),
-				$this->populateScopes('client-manage-calendars', 'owned-client'),
-				$this->populateScopes('client-manage-calendars', 'owned-asso')
-			)),
+			\Scopes::matchOneOfDeepestChilds('user-manage-calendars', 'client-manage-calendars'),
 			['only' => ['destroy']]
 		);
 	}

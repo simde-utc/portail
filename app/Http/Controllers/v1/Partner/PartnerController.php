@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
  */
 class PartnerController extends Controller
 {
+	// TODO
+
 	/**
 	 * List Partners
 	 *

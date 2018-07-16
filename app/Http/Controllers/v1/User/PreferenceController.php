@@ -10,30 +10,22 @@ use App\Models\UserPreference;
 class PreferenceController extends Controller
 {
     public function __construct() {
-		$this->middleware(
-			\Scopes::matchOne(
-				['user-get-info-preferences-global', 'user-get-info-preferences-asso', 'user-get-info-preferences-client']
-			),
-			['only' => ['index', 'show']]
-		);
-		$this->middleware(
-			\Scopes::matchOne(
-				['user-create-info-preferences-global', 'user-create-info-preferences-asso', 'user-create-info-preferences-client']
-			),
-			['only' => ['store']]
-		);
-		$this->middleware(
-			\Scopes::matchOne(
-				['user-edit-info-preferences-global', 'user-edit-info-preferences-asso', 'user-edit-info-preferences-client']
-			),
-			['only' => ['update']]
-		);
-		$this->middleware(
-			\Scopes::matchOne(
-                ['user-edit-info-preferences-global', 'user-edit-info-preferences-asso', 'user-edit-info-preferences-client']
-			),
-			['only' => ['destroy']]
-		);
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-get-info-preferences', 'client-get-info-preferences'),
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-create-info-preferences', 'client-create-info-preferences'),
+            ['only' => ['store']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-edit-info-preferences', 'client-edit-info-preferences'),
+            ['only' => ['update']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-manage-info-preferences', 'client-manage-info-preferences'),
+            ['only' => ['destroy']]
+        );
     }
 
     protected function getPreferences(Request $request, $user, string $verb) {

@@ -293,10 +293,13 @@ class Scopes {
 	/**
 	 * Cette fonction permet de retrouver les plus petits scopes du scope donné
 	 * (très utile pour lister les scopes minimum dans les controlleurs)
-	 * @param  string $scope
+	 * @param  string/array $scope
 	 * @return array
 	 */
-	public function getDeepestChilds(string $scope) {
+	public function getDeepestChilds($scope) {
+		if (is_array($scope))
+			return array_merge(...array_map($scope, $this->getDeepestChilds));
+
 		$find = $this->find($scope);
 
 		if (!isset($find[$scope]))
@@ -449,7 +452,6 @@ class Scopes {
 		else
 			return $this->matchAny($scopes2, $scopes);
 
-
 		return $this->matchAny($scopes, $scopes2);
 
 		return $this->matchAny($middleware !== 'client', $middleware !== 'user', $scopeList);
@@ -469,6 +471,18 @@ class Scopes {
 			return $this->matchAny($scopes, $scopes2, false);
 		else
 			return $this->matchAny($scopes2, $scopes, false);
+	}
+
+	/**
+	 * Crée le middleware pour vérifier qu'un scope possède au moins un des plus petits enfants des scopes donnés
+	 * @param  string/array $scope
+	 * @param  string/array $scopes2
+	 */
+	public function matchOneOfDeepestChilds($scope = null, $scopes2 = null) {
+		return $this->matchOne(
+			$scope ? $this->getDeepestChilds($scope) : null,
+			$scope2 ? $this->getDeepestChilds($scope2) : null
+		);
 	}
 
 	/**

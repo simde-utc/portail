@@ -23,89 +23,19 @@ class EventController extends AbstractController
 	public function __construct() {
 		parent::__construct();
 
-		$this->middleware(array_merge(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-get-calendars', 'created'),
-				$this->populateScopes('user-get-calendars', 'owned-client'),
-				$this->populateScopes('user-get-calendars', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-get-calendars', 'created'),
-				$this->populateScopes('client-get-calendars', 'owned-client'),
-				$this->populateScopes('client-get-calendars', 'owned-asso')
-			)),
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-get-events', 'created'),
-				$this->populateScopes('user-get-events', 'owned-client'),
-				$this->populateScopes('user-get-events', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-get-events', 'created'),
-				$this->populateScopes('client-get-events', 'owned-client'),
-				$this->populateScopes('client-get-events', 'owned-asso')
-			))),
+		$this->middleware(
+			array_merge(
+				\Scopes::matchOneOfDeepestChilds('user-get-calendars', 'client-get-calendars'),
+				\Scopes::matchOneOfDeepestChilds('user-get-events', 'client-get-events')
+			),
 			['only' => ['index', 'show']]
 		);
-		$this->middleware(array_merge(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-edit-calendars', 'created'),
-				$this->populateScopes('user-edit-calendars', 'owned-client'),
-				$this->populateScopes('user-edit-calendars', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-edit-calendars', 'created'),
-				$this->populateScopes('client-edit-calendars', 'owned-client'),
-				$this->populateScopes('client-edit-calendars', 'owned-asso')
-			)),
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-get-events', 'created'),
-				$this->populateScopes('user-get-events', 'owned-client'),
-				$this->populateScopes('user-get-events', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-get-events', 'created'),
-				$this->populateScopes('client-get-events', 'owned-client'),
-				$this->populateScopes('client-get-events', 'owned-asso')
-			))),
-			['only' => ['store']]
-		);
-		$this->middleware(array_merge(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-edit-calendars', 'created'),
-				$this->populateScopes('user-edit-calendars', 'owned-client'),
-				$this->populateScopes('user-edit-calendars', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-edit-calendars', 'created'),
-				$this->populateScopes('client-edit-calendars', 'owned-client'),
-				$this->populateScopes('client-edit-calendars', 'owned-asso')
-			)),
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-get-events', 'created'),
-				$this->populateScopes('user-get-events', 'owned-client'),
-				$this->populateScopes('user-get-events', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-get-events', 'created'),
-				$this->populateScopes('client-get-events', 'owned-client'),
-				$this->populateScopes('client-get-events', 'owned-asso')
-			))),
-			['only' => ['update']]
-		);
-		$this->middleware(array_merge(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-edit-calendars', 'created'),
-				$this->populateScopes('user-edit-calendars', 'owned-client'),
-				$this->populateScopes('user-edit-calendars', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-edit-calendars', 'created'),
-				$this->populateScopes('client-edit-calendars', 'owned-client'),
-				$this->populateScopes('client-edit-calendars', 'owned-asso')
-			)),
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-get-events', 'created'),
-				$this->populateScopes('user-get-events', 'owned-client'),
-				$this->populateScopes('user-get-events', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-get-events', 'created'),
-				$this->populateScopes('client-get-events', 'owned-client'),
-				$this->populateScopes('client-get-events', 'owned-asso')
-			))),
-			['only' => ['destroy']]
+		$this->middleware(
+			array_merge(
+				\Scopes::matchOneOfDeepestChilds('user-edit-calendars', 'client-edit-calendars'),
+				\Scopes::matchOneOfDeepestChilds('user-get-events', 'client-get-events')
+			),
+			['only' => ['update', 'store', 'destroy']]
 		);
 	}
 

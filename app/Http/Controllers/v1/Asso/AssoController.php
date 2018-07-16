@@ -20,32 +20,24 @@ class AssoController extends Controller
 {
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOne(
-				['user-get-assos-joined-now', 'user-get-assos-followed-now']
-			),
+			\Scopes::matchOneOfDeepestChilds('user-get-assos', 'client-get-assos'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne(
-					['user-create-assos']
-				), [
+				\Scopes::matchOneOfDeepestChilds('user-create-assos', 'client-create-assos'), [
 					'user:admin',
 				]
 			),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(
-				['user-set-assos']
-			),
+			\Scopes::matchOneOfDeepestChilds('user-set-assos', 'client-set-assos'),
 			['only' => ['update']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne(
-					['user-remove-assos']
-				), [
+				\Scopes::matchOneOfDeepestChilds('user-remove-assos', 'client-remove-assos'), [
 					'user:admin',
 				]
 			),

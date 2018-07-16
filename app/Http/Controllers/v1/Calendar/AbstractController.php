@@ -28,16 +28,6 @@ abstract class AbstractController extends Controller
 		$this->types = Calendar::getTypes();
 	}
 
-	public function populateScopes($begin, $end = null) {
-		return array_map(function ($type) use ($begin, $end) {
-			return $begin.'-'.$type.($end ? 's-'.$end : 's');
-		}, array_keys($this->types));
-	}
-
-	public function classToType($class) {
-		return array_search($class, $this->types);
-	}
-
 	protected function hideCalendarData(Request $request, $calendar) {
 		$calendar->created_by = $this->hideData($request, $calendar->created_by);
 		$calendar->owned_by = $this->hideData($request, $calendar->owned_by);

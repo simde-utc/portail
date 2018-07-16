@@ -27,17 +27,16 @@ class ArticleController extends Controller {
 	 */
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOne(
-				['user-get-articles-followed-now', 'user-get-articles-done-now'],
-				['client-get-articles-public']
-			),
+			\Scopes::matchOneOfDeepestChilds('user-get-articles', 'client-get-articles'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(
-				['user-manage-articles']
-			),
-			['only' => ['store', 'update', 'destroy']]
+			\Scopes::matchOneOfDeepestChilds('user-set-articles', 'client-set-articles'),
+			['only' => ['store', 'update']]
+		);
+		$this->middleware(
+			\Scopes::matchOneOfDeepestChilds('user-manage-articles', 'client-manage-articles'),
+			['only' => ['destroy']]
 		);
 	}
 

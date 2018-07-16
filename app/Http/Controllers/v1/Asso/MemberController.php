@@ -14,34 +14,25 @@ use Illuminate\Support\Collection;
 
 class MemberController extends Controller
 {
-	public function __construct() {
+	public function __construct() { // TODO Vérifier les scopes
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne(
-					['user-get-assos-joined-now', 'user-get-assos-followed-now']
-				), \Scopes::matchOne(
-				['user-get-roles-assos']
-			)
+				\Scopes::matchOneOfDeepestChilds('user-get-assos', 'client-get-assos'),
+				\Scopes::matchOneOfDeepestChilds(['user-get-assos-followed', 'user-get-roles-assos'], ['client-get-assos-followed', 'client-get-roles-assos'])
 			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne(
-					['user-set-assos-joined-now', 'user-set-assos-followed-now']
-				), \Scopes::matchOne(
-				['user-set-roles-assos']
-			)
+				\Scopes::matchOneOfDeepestChilds('user-set-assos', 'client-set-assos'),
+				\Scopes::matchOneOfDeepestChilds(['user-set-assos-followed', 'user-set-roles-assos'], ['client-set-assos-followed', 'client-set-roles-assos'])
 			),
 			['only' => ['store', 'update']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne(
-					['user-manage-assos-joined-now', 'user-manage-assos-followed-now']
-				), \Scopes::matchOne(
-				['user-manage-roles-assos']
-			)
+				\Scopes::matchOneOfDeepestChilds('user-manage-assos', 'client-manage-assos'),
+				\Scopes::matchOneOfDeepestChilds(['user-manage-assos-followed', 'user-manage-roles-assos'], ['client-manage-assos-followed', 'client-manage-roles-assos'])
 			),
 			['only' => ['destroy']]
 		);

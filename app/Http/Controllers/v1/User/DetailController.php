@@ -11,21 +11,22 @@ use App\Exceptions\PortailException;
 class DetailController extends Controller
 {
     public function __construct(Request $request) {
-		$this->middleware(
-			\Scopes::matchAnyUser()
-		);
-		$this->middleware(
-			\Scopes::matchOne(
-				['user-get-info-details']
-			),
-			['only' => ['index']]
-		);
-		$this->middleware(
-			\Scopes::matchOne(
-				['user-set-info-details']
-			),
-			['only' => ['store']]
-		);
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-get-info-details', 'client-get-info-details'),
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-create-info-details', 'client-create-info-details'),
+            ['only' => ['store']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-edit-info-details', 'client-edit-info-details'),
+            ['only' => ['update']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-manage-info-details', 'client-manage-info-details'),
+            ['only' => ['destroy']]
+        );
     }
 
     protected function checkScope(Request $request, string $key, string $verb) {

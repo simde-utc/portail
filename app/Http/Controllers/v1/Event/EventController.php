@@ -24,51 +24,19 @@ class EventController extends AbstractController
 		parent::__construct();
 
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-get-events', 'created'),
-				$this->populateScopes('user-get-events', 'owned-client'),
-				$this->populateScopes('user-get-events', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-get-events', 'created'),
-				$this->populateScopes('client-get-events', 'owned-client'),
-				$this->populateScopes('client-get-events', 'owned-asso')
-			)),
+			\Scopes::matchOneOfDeepestChilds('user-get-events', 'client-get-events'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-create-events', 'owned-client'),
-				$this->populateScopes('user-create-events', 'owned-asso'),
-				$this->populateScopes('user-create-events', 'created')
-			), array_merge(
-				$this->populateScopes('client-create-events', 'owned-client'),
-				$this->populateScopes('client-create-events', 'owned-asso'),
-				$this->populateScopes('client-create-events', 'created')
-			)),
+			\Scopes::matchOneOfDeepestChilds('user-create-events', 'client-create-events'),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-set-events', 'created'),
-				$this->populateScopes('user-set-events', 'owned-client'),
-				$this->populateScopes('user-set-events', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-set-events', 'created'),
-				$this->populateScopes('client-set-events', 'owned-client'),
-				$this->populateScopes('client-set-events', 'owned-asso')
-			)),
+			\Scopes::matchOneOfDeepestChilds('user-set-events', 'client-set-events'),
 			['only' => ['update']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				$this->populateScopes('user-manage-events', 'created'),
-				$this->populateScopes('user-manage-events', 'owned-client'),
-				$this->populateScopes('user-manage-events', 'owned-asso')
-			), array_merge(
-				$this->populateScopes('client-manage-events', 'created'),
-				$this->populateScopes('client-manage-events', 'owned-client'),
-				$this->populateScopes('client-manage-events', 'owned-asso')
-			)),
+			\Scopes::matchOneOfDeepestChilds('user-manage-events', 'client-manage-events'),
 			['only' => ['destroy']]
 		);
 	}

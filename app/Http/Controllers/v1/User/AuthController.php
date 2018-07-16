@@ -17,7 +17,20 @@ class UserAuthController extends Controller
 {
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchAnyUser()
+            \Scopes::matchOneOfDeepestChilds('user-get-info-identity-auth'),
+			['only' => ['index', 'show']]
+		);
+		$this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-create-info-identity-auth'),
+			['only' => ['store']]
+		);
+		$this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-set-info-identity-auth'),
+			['only' => ['update']]
+		);
+		$this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-manage-info-identity-auth'),
+			['only' => ['destroy']]
 		);
 	}
 
@@ -51,7 +64,7 @@ class UserAuthController extends Controller
 		if ($provider === null)
 			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
 		else {
-			if (!\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+			if (!\Scopes::has($request, 'user-create-info-identity-auth-'.$name))
 				return response()->json(['message' => 'Non autorisé'], 503);
 
 			$class = resolve($provider['class']);
@@ -109,7 +122,7 @@ class UserAuthController extends Controller
 		if ($provider === null)
 			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
 		else {
-			if (!\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+			if (!\Scopes::has($request, 'user-manage-info-identity-auth-'.$name))
 				return response()->json(['message' => 'Non autorisé'], 503);
 
 			$model = resolve($provider['model']);

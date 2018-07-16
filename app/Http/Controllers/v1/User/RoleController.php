@@ -15,24 +15,18 @@ use App\Exceptions\PortailException;
 class RoleController extends Controller
 {
 	public function __construct() {
-		$this->middleware(
-			\Scopes::matchOne(
-				['user-get-roles-users']
-			),
-			['only' => ['index', 'show']]
-		);
-		$this->middleware(
-			\Scopes::matchOne(
-				['user-set-roles-users']
-			),
-			['only' => ['store', 'update']]
-		);
-		$this->middleware(
-			\Scopes::matchOne(
-				['user-manage-roles-users']
-			),
-			['only' => ['destroy']]
-		);
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-get-roles-users', 'client-get-roles-users'),
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-set-roles-users', 'client-set-roles-users'),
+            ['only' => ['store', 'update']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChilds('user-manage-roles-users', 'client-manage-roles-users'),
+            ['only' => ['destroy']]
+        );
 	}
 
 	/**

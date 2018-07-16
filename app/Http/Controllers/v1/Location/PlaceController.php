@@ -16,27 +16,19 @@ class PlaceController extends Controller
 {
     public function __construct() {
 		$this->middleware(
-			\Scopes::matchOne(
-				['client-get-locations-places']
-			),
+            \Scopes::matchOneOfDeepestChilds('client-get-locations-places'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(
-				['client-create-locations-places']
-			),
+            \Scopes::matchOneOfDeepestChilds('client-create-locations-places'),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(
-				['client-set-locations-places']
-			),
+            \Scopes::matchOneOfDeepestChilds('client-set-locations-places'),
 			['only' => ['update']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(
-				['client-manage-locations-places']
-			),
+            \Scopes::matchOneOfDeepestChilds('client-manage-locations-places'),
 			['only' => ['destroy']]
 		);
     }

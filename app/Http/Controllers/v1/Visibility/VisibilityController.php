@@ -16,6 +16,8 @@ use App\Models\Visibility;
  */
 class VisibilityController extends Controller
 {
+	// TODO
+
 	/**
 	 * List Visibilities
 	 * @return JsonResponse

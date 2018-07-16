@@ -24,34 +24,19 @@ class CalendarController extends AbstractController
 		parent::__construct();
 
 		$this->middleware(
-			\Scopes::matchOne(array_merge(
-				['user-get-calendars-users-owned-client', 'user-get-calendars-users-owned-asso'],
-				$this->populateScopes('user-get-calendars-users-followed')
-			), array_merge(
-				['client-get-calendars-users-owned-client', 'client-get-calendars-users-owned-asso'],
-				$this->populateScopes('client-get-calendars-users-followed')
-			)),
+			\Scopes::matchOneOfDeepestChilds(['user-get-calendars-users-owned', 'user-get-calendars-users-followed'], ['client-get-calendars-users-owned', 'client-get-calendars-users-followed']),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(
-				$this->populateScopes('user-create-calendars-users-followed'),
-				$this->populateScopes('client-create-calendars-users-followed')
-			),
+			\Scopes::matchOneOfDeepestChilds('user-create-calendars-users-followed', 'client-create-calendars-users-followed'),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(
-				$this->populateScopes('user-edit-calendars-users-followed'),
-				$this->populateScopes('client-edit-calendars-users-followed')
-			),
+			\Scopes::matchOneOfDeepestChilds('user-edit-calendars-users-followed', 'client-edit-calendars-users-followed'),
 			['only' => ['update']]
 		);
 		$this->middleware(
-			\Scopes::matchOne(
-				$this->populateScopes('user-manage-calendars-users-followed'),
-				$this->populateScopes('client-manage-calendars-users-followed')
-			),
+			\Scopes::matchOneOfDeepestChilds('user-manage-calendars-users-followed', 'client-manage-calendars-users-followed'),
 			['only' => ['destroy']]
 		);
 	}
