@@ -12,7 +12,7 @@
 | Attention !! Les routes sont préfixées avec 'api/'
 */
 
-Route::prefix('v1')->namespace('App\Http\Controllers\v1')->group(function () {
+Route::prefix('v1')->namespace('v1')->group(function () {
 	// Connexions
 	Route::get('login', 'Client\LoginController@index')->middleware('guest')->name('api/login');
 	Route::get('logout', 'Client\LoginController@destroy')->middleware(Scopes::matchAnyUser())->name('api/logout');
