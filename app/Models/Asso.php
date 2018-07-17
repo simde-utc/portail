@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\Traits\Model\HasMembers;
 use \App\Traits\Model\HasStages;
-use App\Interfaces\CanHaveContacts;
-use App\Interfaces\CanHaveEvents;
-use App\Interfaces\CanHaveCalendars;
+use App\Interfaces\Controller\v1\CanHaveContacts;
+use App\Interfaces\Controller\v1\CanHaveEvents;
+use App\Interfaces\Controller\v1\CanHaveCalendars;
 
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {

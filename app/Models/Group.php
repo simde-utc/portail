@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Model\HasMembers;
-use App\Interfaces\CanHaveEvents;
-use App\Interfaces\CanHaveCalendars;
-use App\Interfaces\CanHaveContacts;
+use App\Interfaces\Controller\v1\CanHaveEvents;
+use App\Interfaces\Controller\v1\CanHaveCalendars;
+use App\Interfaces\Controller\v1\CanHaveContacts;
 
 class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts
 {
