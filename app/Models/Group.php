@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\HasMembers;
+use App\Traits\Model\HasMembers;
 use App\Interfaces\CanHaveEvents;
 use App\Interfaces\CanHaveCalendars;
 use App\Interfaces\CanHaveContacts;

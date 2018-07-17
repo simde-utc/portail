@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasKeyValue;
+use App\Traits\Model\HasKeyValue;
 
 class UserPreference extends Model
 {

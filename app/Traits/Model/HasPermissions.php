@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace App\Traits\Model;
 
 use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;

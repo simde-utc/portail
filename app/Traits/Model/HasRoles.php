@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Traits;
+namespace App\Traits\Model;
 
 use App\Exceptions\PortailException;
-use App\Traits\HasPermissions;
+use App\Traits\Model\HasPermissions;
 use Illuminate\Support\Collection;
 use App\Models\Role;
 use App\Models\Semester;

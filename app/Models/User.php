@@ -9,7 +9,7 @@ use App\Interfaces\CanHaveContacts;
 use App\Interfaces\CanHaveEvents;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use App\Traits\HasRoles;
+use App\Traits\Model\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
 use App\Models\UserPreference;

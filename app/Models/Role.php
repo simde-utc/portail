@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasStages;
-use App\Traits\HasPermissions;
+use App\Traits\Model\HasStages;
+use App\Traits\Model\HasPermissions;
 use App\Models\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Exceptions\PortailException;

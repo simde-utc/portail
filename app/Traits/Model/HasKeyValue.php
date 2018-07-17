@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace App\Traits\Model;
 
 use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\PortailException;

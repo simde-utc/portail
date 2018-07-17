@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\HasRoles;
+use App\Traits\Model\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;

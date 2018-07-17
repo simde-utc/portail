@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Ginger;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasKeyValue;
+use App\Traits\Model\HasKeyValue;
 use App\Models\User;
 use App\Exceptions\PortailException;
 
