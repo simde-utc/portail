@@ -22,11 +22,11 @@ Route::get('scopes/categories', '\App\Services\Scopes@getAllByCategories');
 Route::get('clients', '\App\Http\Controllers\Passport\ClientController@index')
 		->middleware(['forceJson', 'web', 'auth']);
 Route::post('clients', '\App\Http\Controllers\Passport\ClientController@store')
-		->middleware(['forceJson', 'web', 'auth', 'user:admin']);
+		->middleware(['forceJson', 'web', 'auth', 'permission:client']);
 Route::put('clients/{client_id}', '\App\Http\Controllers\Passport\ClientController@update')
-		->middleware(['forceJson', 'web', 'auth', 'user:admin']);
+		->middleware(['forceJson', 'web', 'auth', 'permission:client']);
 Route::delete('clients/{client_id}', '\App\Http\Controllers\Passport\ClientController@destroy')
-		->middleware(['forceJson', 'web', 'auth', 'user:admin']);
+		->middleware(['forceJson', 'web', 'auth', 'permission:client']);
 
 // Authorizations
 Route::get('authorize', '\Laravel\Passport\Http\Controllers\AuthorizationController@authorize')

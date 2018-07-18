@@ -88,6 +88,11 @@ class PermissionsTableSeeder extends Seeder
 				'name' => 'Groupe',
 				'description' => 'Gestion des groupes',
 			],
+			[
+				'type' => 'client',
+				'name' => 'Client',
+				'description' => 'Gestion des clients',
+			],
 		];
 
 		foreach ($permissions as $permission) {

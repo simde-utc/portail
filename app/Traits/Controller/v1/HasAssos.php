@@ -13,7 +13,7 @@ trait HasAssos
 	 * @param $asso_id
 	 * @return Asso
 	 */
-	protected function getAsso(Request $request, $asso_id): Asso {
+	protected function getAsso(Request $request, int $asso_id, bool $withTrashed = false): Asso {
 		$asso = Asso::find($asso_id);
 
 		if ($asso)

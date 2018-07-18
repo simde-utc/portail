@@ -14,7 +14,7 @@ use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 class ClientController extends Controller
 {
     public function index(Request $request) {
-		if (\Auth::user()->hasOneRole('admin'))
+		if (\Auth::user()->hasOnePermission('client'))
 			return Client::all()->makeVisible('secret');
 		else {
 			$roles = Role::getRoleAndItsParents('resp info');
