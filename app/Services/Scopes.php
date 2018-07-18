@@ -478,7 +478,7 @@ class Scopes {
 	 * @param  string/array $scope
 	 * @param  string/array $scopes2
 	 */
-	public function matchOneOfDeepestChildren($scope = null, $scopes2 = null) {
+	public function matchOneOfDeepestChildren($scope = null, $scope2 = null) {
 		return $this->matchOne(
 			$scope ? $this->getDeepestChildren($scope) : null,
 			$scope2 ? $this->getDeepestChildren($scope2) : null
