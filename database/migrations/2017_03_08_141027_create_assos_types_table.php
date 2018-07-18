@@ -15,8 +15,8 @@ class CreateAssosTypesTable extends Migration
 	{
 		Schema::create('assos_types', function (Blueprint $table) {
 			$table->increments('id');
-			$table->string('name', validation_max('name'))->unique();
-			$table->string('description'); // Ce champ permettra par exemple d'avoir plusieurs types de 1901 avec des comportements différents mais une unique description : "Association loi 1901".
+			$table->string('type', validation_max('name'))->unique();
+			$table->string('name', validation_max('name'));
 			$table->timestamps();
 		});
 	}

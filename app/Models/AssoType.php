@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
-class AssoType extends Model // TODO A changer en type et name
+class AssoType extends Model
 {
     protected $table = 'assos_types';
 
     protected $fillable = [
-        'name', 'description',
+        'type', 'name',
+    ];
+
+    protected $must = [
+        'type', 'name',
     ];
 
     public function asso() {
