@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Model\HasMembers;
@@ -25,10 +24,26 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
 	protected $roleRelationTable = 'groups_members';
-    protected $fillable = ['name', 'user_id', 'icon_id', 'visibility_id', 'is_active'];
-    protected $casts = ['is_active' => 'boolean'];
-    protected $dates = ['deleted_at'];
-    protected $hidden = ['user_id', 'visibility_id']; // On les caches car on récupère directement le user et la vibility dans le controller
+
+    protected $fillable = [
+        'name', 'user_id', 'icon_id', 'visibility_id', 'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    protected $dates = [
+        'deleted_at',
+    ];
+
+    protected $hidden = [
+        'user_id', 'visibility_id',
+    ]; // On les caches car on récupère directement le user et la vibility dans le controller
+
+    public function hideData(array $params = []): Model {
+        return $this->makeHidden(['icon', 'created_at', 'updated_at', 'deleted_at']);
+    }
 
     public function owner() {
         return $this->belongsTo(User::class, 'user_id');

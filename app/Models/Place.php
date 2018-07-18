@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 
 class Place extends Model
@@ -16,6 +15,10 @@ class Place extends Model
     protected $spatialFields = [
         'position',
     ];
+
+	public function hideData(array $params = []): Model {
+		return $this; // TODO
+	}
 
     public function locations() {
         return $this->hasMany(Location::class);

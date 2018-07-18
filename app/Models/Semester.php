@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class Semester extends Model
 {
     protected $fillable = [
@@ -14,6 +12,10 @@ class Semester extends Model
         'is_spring' => 'boolean',
         'year' => 'char',
     ];
+
+	public function hideData(array $params = []): Model {
+		return $this; // TODO
+	}
 
 	public static function getSemester($semester) {
 		return static::where('id', $semester)->orWhere('name', $semester)->first();

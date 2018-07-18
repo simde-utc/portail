@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class ReservationType extends Model
 {
     protected $table = 'reservations_types';
     // TODO !
+
+	public function hideData(array $params = []): Model {
+		return $this; // TODO
+	}
 }

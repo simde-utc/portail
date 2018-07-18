@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Ginger;
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\Model\HasKeyValue;
 use App\Models\User;
 use App\Exceptions\PortailException;
@@ -13,14 +11,24 @@ class UserDetail extends Model
 	use HasKeyValue;
 
 	public $incrementing = false; // L'id n'est pas autoincrementé
+
 	protected $table = 'users_details';
-	protected $primaryKey = ['user_id', 'key'];
+
+	protected $primaryKey = [
+		'user_id', 'key',
+	];
+
 	protected $fillable = [
 		'user_id', 'key', 'value', 'type',
 	];
+
 	protected $functionalKeys = [
-		'age', 'isMajor', 'loginCAS', 'loginContributorBde', 'isContributorBde'
+		'age', 'isMajor', 'loginCAS', 'loginContributorBde', 'isContributorBde',
 	];
+
+	public function hideData(array $params = []): Model {
+		return $this; // TODO
+	}
 
 	/**
 	 * Permet de retrouver l'utilisateur sur lequel on travaille à partir d'un query
@@ -50,7 +58,7 @@ class UserDetail extends Model
 
 		if ($casLogin) {
 			try {
-				return Ginger::user($casLogin)->isAdult();
+				return \Ginger::user($casLogin)->isAdult();
 			}
 			catch (\Exception $e) {} // Si on a pas les données CAS, on regarde avec la date de naissance
 		}
@@ -87,7 +95,7 @@ class UserDetail extends Model
 			return $casLogin;
 		else {
 			try {
-				return Ginger::userByEmail($this->getUserFromQuery($query)->email)->getLogin();
+				return \Ginger::userByEmail($this->getUserFromQuery($query)->email)->getLogin();
 			} catch (\ErrorException $e) {
 				throw new PortailException('Non trouvé');
 			}
@@ -99,7 +107,7 @@ class UserDetail extends Model
 
 		if ($login) {
 			try {
-				return Ginger::user($login)->isContributor();
+				return \Ginger::user($login)->isContributor();
 			}
 			catch (\Exception $e) {}
 		}

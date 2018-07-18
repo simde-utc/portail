@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Article extends Model {
-
+class Article extends Model // TODO transformer en Morph
+{
 	protected $table = 'articles';
 
 	protected $fillable = [
@@ -16,6 +14,10 @@ class Article extends Model {
 		static::created(function ($model) {
 			$model->collaborators()->attach($model['asso_id']);
 		});
+	}
+
+	public function hideData(array $params = []): Model {
+		return $this; // TODO
 	}
 
 	public function collaborators() {

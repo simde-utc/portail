@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
-use Illuminate\Database\Eloquent\Model;
 
 class Calendar extends Model implements OwnableContract
 {
@@ -18,15 +17,13 @@ class Calendar extends Model implements OwnableContract
         'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
     ];
 
-	protected static $types = [
-		'user' => User::class,
-		'asso' => Asso::class,
-		'group' => User::class,
-		'client' => Client::class,
-	];
+    public function hideData(array $param = []): Model {
+        $this->created_by = $this->created_by->hideData();
+        $this->owned_by = $this->owned_by->hideData();
 
-    public static function getTypes() {
-        return static::$types;
+        $this->makeHidden('visibility_id');
+
+        return $this;
     }
 
     public function owned_by() {

@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 abstract class Auth extends Model
 {
 	public $incrementing = false; // L'id n'est pas autoincrementé

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
 class AuthPassword extends Auth
@@ -14,6 +13,10 @@ class AuthPassword extends Auth
 	protected $hidden = [
 		'password',
 	];
+
+	public function hideData(array $params = []): Model {
+		return $this; // TODO
+	}
 
 	public function user() {
 		return $this->belongsTo('App\Models\User');

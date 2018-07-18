@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class AuthCas extends Auth
 {
 	protected $fillable = [
@@ -13,6 +11,10 @@ class AuthCas extends Auth
 	protected $casts = [
 		'is_active' => 'boolean', // Si on se connecte via passsword, on désactive tout ce qui est relié au CAS car on suppose qu'il n'est plus étudiant
 	];
+
+	public function hideData(array $params = []): Model {
+		return $this; // TODO
+	}
 
 	public static function findByEmail($email) {
 		return (new static)->where('email', $email)->first();

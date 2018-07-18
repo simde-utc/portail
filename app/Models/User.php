@@ -60,6 +60,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		'admin', 'contributorBde', 'cas', 'password', 'active',
 	];
 
+	public function hideData() {
+		return $this->makeHidden(['firstname', 'lastname', 'email', 'is_active', 'last_login_at', 'created_at', 'updated_at']);
+	}
+
 	public function getNameAttribute() {
 		return $this->firstname.' '.strtoupper($this->lastname);
 	}

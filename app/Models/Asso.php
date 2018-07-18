@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Cog\Contracts\Ownership\CanBeOwner;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\Traits\Model\HasMembers;
 use \App\Traits\Model\HasStages;
@@ -21,7 +20,13 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		HasMembers::getUserRoles as getUsersRolesInThisAssociation;
 	}
 
-    public static function boot() {
+	protected $fillable = [
+		'name', 'shortname', 'login', 'description', 'type_asso_id', 'parent_id',
+	];
+
+	protected $roleRelationTable = 'assos_members';
+
+	public static function boot() {
         static::created(function ($model) {
 			// On crée automatiquement des moyens de contacts !
 			Contact::create([
@@ -40,11 +45,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
         });
     }
 
-	protected $roleRelationTable = 'assos_members';
-
-	protected $fillable = [
-		'name', 'shortname', 'login', 'description', 'type_asso_id', 'parent_id',
-	];
+	public function hideData(array $param = []): Model {
+		return $this->makeHidden(['login', 'description', 'type_asso_id', 'parent_id', 'created_at', 'updated_at', 'deleted_at']);
+	}
 
 	public function type() {
 		return $this->belongsTo(AssoType::class, 'type_asso_id');
@@ -120,24 +123,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
 	public function getLastUserWithRole($role) {
 		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
-	}
-
-	public function hide() {
-		$this->makeHidden('type_asso_id');
-
-		if ($this->pivot) {
-			$this->pivot->makeHidden(['user_id', 'asso_id']);
-
-			if ($this->pivot->semester_id === 0)
-				$this->pivot->makeHidden('semester_id');
-		}
-
-		if ($this->sub) {
-			foreach ($this->sub as $sub)
-				$this->hideAssoData();
-		}
-
-		return $this;
 	}
 
 	public function contacts() {

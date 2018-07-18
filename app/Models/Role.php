@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\Model\HasStages;
 use App\Traits\Model\HasPermissions;
 use App\Models\Permission;
@@ -17,14 +16,15 @@ class Role extends Model
 		'limited_at' => 'integer',
 	];
 
-	/**
-	 * Méthode appelée au chargement du trait
-	 */
     public static function boot() {
         static::deleting(function ($model) {
 			return resolve('\\App\\Models\\'.studly_case(str_singular(explode('-', $model->only_for)[0])))->beforeDeletingRole($model);
         });
     }
+
+	public function hideData(array $params = []): Model {
+		return $this; // TODO
+	}
 
 	public static function find(int $id, string $only_for = null) {
 		$roles = static::where('id', $id);

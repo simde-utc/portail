@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Traits\Model\HasRoles;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
 class Permission extends Model
 {
     use HasRoles;
+
+	public function hideData(array $params = []): Model {
+		return $this; // TODO
+	}
 
     public static function create(array $attributes = []) {
         if (static::where('type', $attributes['type'] ?? null)->first())
