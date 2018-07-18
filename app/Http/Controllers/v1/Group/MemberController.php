@@ -8,12 +8,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Services\Visible\Visible;
-use App\Models\Visibility;
 use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;
+use App\Traits\Controller\v1\HasGroups;
 
 class MemberController extends Controller
 {
+	use HasGroups;
+
 	public function __construct() {
 		$this->middleware(
 			\Scopes::matchOneOfDeepestChildren('user-get-groups', 'client-get-groups'),
@@ -24,48 +26,6 @@ class MemberController extends Controller
 	}
 
 	/**
-	 * Renvoie le groupe demandé
-	 *
-	 * @param Request $request
-	 * @param int $group_id
-	 * @return Group
-	 */
-	protected function getGroup(Request $request, int $group_id): Group {
-		$group = Group::find($group_id);
-
-		if ($group) {
-			if ($group->user_id === \Auth::id())
-				return $group;
-			else if ($group->hasOneMember(\Auth::id())) {
-				if ($group->visibility_id <= Visibility::findByType('private')->id)
-					return $group;
-			}
-		}
-
-		abort(404, "Groupe non trouvé");
-	}
-
-	/**
-	 * @param Request $request
-	 * @param Collection $users
-	 * @param bool $hidePivot
-	 * @return Collection
-	 */
-	protected function hideUsersData(Request $request, Collection $users, bool $hidePivot = false): Collection {
-		return parent::hideUsersData($request, $users, $hidePivot);
-	}
-
-	/**
-	 * @param Request $request
-	 * @param User $user
-	 * @param bool $hidePivot
-	 * @return User
-	 */
-	protected function hideUserData(Request $request, User $user, bool $hidePivot = false): User {
-		return parent::hideUserData($request, $user, $hidePivot);
-	}
-
-	/**
 	 * Display a listing of the resource.
 	 *
 	 * @param Request $request
@@ -73,7 +33,9 @@ class MemberController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request, int $group_id): JsonResponse {
-		return response()->json($this->hideUsersData($request, $this->getGroup($request, $group_id)->currentAllMembers));
+		return response()->json($this->getGroup($request, $group_id)->currentAllMembers->map(function ($member) {
+			return $member->hideData();
+		}));
 	}
 
 	/**
@@ -98,7 +60,11 @@ class MemberController extends Controller
 			return response()->json(["message" => $e->getMessage()], 400);
 		}
 
-		return response()->json($this->hideUsersData($request, $group->currentAllMembers));
+		$members = $group->currentAllMembers->map(function ($member) {
+			return $member->hideData();
+		});
+
+		return response()->json($members);
 	}
 
 	/**
@@ -114,7 +80,7 @@ class MemberController extends Controller
 		$member = $group->currentAllMembers()->where('id', $member_id)->first();
 
 		if ($member)
-			return response()->json($this->hideUserData($request, $member));
+			return response()->json($member->hideData());
 		else
 			abort(404, 'Cette personne ne fait pas partie du groupe');
 	}
@@ -154,7 +120,7 @@ class MemberController extends Controller
 				return response()->json(["message" => $e->getMessage()], 400);
 			}
 
-			return response()->json($this->hideUserData($request, $group->currentAllMembers()->where('user_id', $member_id)->first()));
+			return response()->json($group->currentAllMembers()->where('user_id', $member_id)->first()->hideData());
 		}
 		else
 			abort(404, 'Cette personne ne fait pas partie du groupe');
@@ -180,7 +146,11 @@ class MemberController extends Controller
 
 			$group->removeMembers($member_id, $data, \Auth::id());
 
-			return response()->json($this->hideUserData($request, $this->getGroup($request, $group_id)->currentAllMembers));
+			$members = $group->currentAllMembers->map(function ($member) {
+				return $member->hideData();
+			});
+
+			return response()->json($members);
 		}
 		else
 			abort(404, 'Cette personne ne faisait déjà pas partie du groupe');

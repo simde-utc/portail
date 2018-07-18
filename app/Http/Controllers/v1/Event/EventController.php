@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\v1\Event;
 
-use App\Http\Controllers\v1\Calendar\AbstractController;
+use App\Http\Controllers\v1\Controller;
+use App\Traits\Controller\v1\HasEvents;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Event;
@@ -18,8 +19,10 @@ use App\Traits\HasVisibility;
  *
  * Gestion des évènements
  */
-class EventController extends AbstractController
+class EventController extends Controller
 {
+	use HasEvents;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -42,20 +45,20 @@ class EventController extends AbstractController
 	}
 
 	public function getCreaterOrOwner(Request $request, string $verb = 'create', string $type = 'created') {
-		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
-		$scope = $scopeHead.'-'.$verb.'-events-'.$request->input($type.'_by_type',\Scopes::isClientToken($request) ? 'client' : 'user').'s-'.$type;
+		$scopeHead = \Scopes::getTokenType($request);
+		$scope = $scopeHead.'-'.$verb.'-events-'.$request->input($type.'_by_type', $scopeHead.'s-'.$type);
 
 		if ($type === 'owned')
 			$scope = array_keys(\Scopes::getRelatives($scopeHead.'-'.$verb.'-events-'.$request->input($type.'_by_type').'s-'.$type));
 
 		if (!\Scopes::hasOne($request, $scope))
-			abort(403, 'Il ne vous est pas autorisé de créer de calendriers');
+			abort(403, 'Il ne vous est pas autorisé de créer de évènements');
 
 		if ($request->filled($type.'_by_type')) {
 			if ($request->filled($type.'_by_id')) {
 				$createrOrOwner = resolve($this->types[$request->input($type.'_by_type')])->find($request->input($type.'_by_id'));
 
-				if (\Auth::id() && !$createrOrOwner->isCalendarManageableBy(\Auth::id()))
+				if (\Auth::id() && !$createrOrOwner->isEventManageableBy(\Auth::id()))
 					abort(403, 'L\'utilisateur n\'a pas les droits de création');
 			}
 			else if ($request->input($type.'_by_type', 'client') === 'client')
@@ -73,23 +76,6 @@ class EventController extends AbstractController
 		return $createrOrOwner;
 	}
 
-	public function isPrivate($user_id, $model = null) {
-		if ($model === null)
-			return false;
-
-		// Si c'est privée, uniquement les personnes ayant un calendrier contenant cet event peuvent le voir
-		$user = User::find($user_id);
-		$calendar_ids = $user->calendars()->get(['id'])->pluck('id')->merge($user->followedCalendars()->get(['id'])->pluck('id'));
-		$event_calendar_ids = $model->calendars()->get(['id'])->pluck('id');
-
-		$model->makeHidden('calendars');
-
-		if (count($calendar_ids->intersect($event_calendar_ids)) !== 0)
-			return true;
-
-		return $model->owned_by->isEventAccessibleBy($user_id);
-    }
-
 	/**
 	 * List Events
 	 *
@@ -99,7 +85,7 @@ class EventController extends AbstractController
 		$events = Event::with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->get()->filter(function ($event) use ($request) {
 			return $this->tokenCanSee($request, $event, 'get', 'events');
 		})->values()->map(function ($event) use ($request) {
-			return $this->hideEventData($request, $event);
+			return $event->hideData();
 		});
 
 		return response()->json($events, 200);
@@ -141,8 +127,8 @@ class EventController extends AbstractController
 
 		if ($event) {
 			$event = $this->getEvent($request, \Auth::user(), $event->id);
-			$event = $this->hideEventData($request, $event);
-			return response()->json($event, 201);
+
+			return response()->json($event->hideData(), 201);
 		}
 		else
 			return response()->json(['message' => 'Impossible de créer l\'évènenement'], 500);
@@ -156,9 +142,8 @@ class EventController extends AbstractController
 	 */
 	public function show(Request $request, int $id): JsonResponse {
 		$event = $this->getEvent($request, \Auth::user(), $id);
-		$event = $this->hideEventData($request, $event);
 
-		return response()->json($event, 200);
+		return response()->json($event->hideData(), 200);
 	}
 
 	/**
@@ -180,7 +165,7 @@ class EventController extends AbstractController
 		}
 
 		if ($event->update($inputs))
-			return response()->json($this->hideEventData($event), 200);
+			return response()->json($event->hideData(), 200);
 		else
 			abort(500, 'Impossible de modifier le calendrier');
 	}

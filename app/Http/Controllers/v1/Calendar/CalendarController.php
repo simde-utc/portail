@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\v1\Calendar;
 
+use App\Http\Controllers\v1\Controller;
+use App\Traits\Controller\v1\HasCalendars;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Calendar;
 use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\AbstractCalendarController;
 use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\HasVisibility;
@@ -18,8 +19,10 @@ use App\Traits\HasVisibility;
  *
  * Gestion des calendriers
  */
-class CalendarController extends AbstractController
+class CalendarController extends Controller
 {
+	use HasCalendars;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -81,8 +84,8 @@ class CalendarController extends AbstractController
 	public function index(Request $request): JsonResponse {
 		$calendars = Calendar::with(['owned_by', 'created_by', 'visibility'])->get()->filter(function ($calendar) use ($request) {
 			return $this->tokenCanSee($request, $calendar, 'get');
-		})->values()->map(function ($calendar) use ($request) {
-			return $this->hideCalendarData($request, $calendar);
+		})->values()->map(function ($calendar) {
+			return $calendar->hideData();
 		});
 
 		return response()->json($calendars, 200);
@@ -119,8 +122,8 @@ class CalendarController extends AbstractController
 
 		if ($calendar) {
 			$calendar = $this->getCalendar($request, \Auth::user(), $calendar->id);
-			$calendar = $this->hideCalendarData($request, $calendar);
-			return response()->json($calendar, 201);
+
+			return response()->json($calendar->hideData(), 201);
 		}
 		else
 			return response()->json(['message' => 'Impossible de créer le calendrier'], 500);
@@ -134,9 +137,8 @@ class CalendarController extends AbstractController
 	 */
 	public function show(Request $request, int $id): JsonResponse {
 		$calendar = $this->getCalendar($request, \Auth::user(), $id);
-		$calendar = $this->hideCalendarData($request, $calendar);
 
-		return response()->json($calendar, 200);
+		return response()->json($calendar->hideData(), 200);
 	}
 
 	/**
@@ -158,7 +160,7 @@ class CalendarController extends AbstractController
 		}
 
 		if ($calendar->update($inputs))
-			return response()->json($this->hideCalendarData($calendar), 200);
+			return response()->json($calendar->hideData(), 200);
 		else
 			abort(500, 'Impossible de modifier le calendrier');
 	}

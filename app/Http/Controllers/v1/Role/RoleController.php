@@ -120,7 +120,7 @@ class RoleController extends Controller
 			$roles = $roles->get();
 		}
 
-		return response()->json($this->hideRoles($request, $roles), 200);
+		return response()->json($roles->hideData(), 200);
 	}
 
 	/**
@@ -142,7 +142,7 @@ class RoleController extends Controller
 			if ($request->filled('parent_ids'))
 				$role->assignParentRole($request->parent_ids);
 
-			return response()->json($role, 201);
+			return response()->json($roles->hideData(), 201);
 		}
 		else
 			abort(500, 'Impossible de créer le role');
@@ -168,7 +168,7 @@ class RoleController extends Controller
 		if ($role) {
 			$role->nbr_assigned = $role->users()->where('semester_id', Semester::getThisSemester()->id)->count();
 
-			return response()->json($role, 200);
+			return response()->json($roles->hideData(), 200);
 		}
 		else
 			abort(404, "Role non trouvé");
@@ -213,7 +213,7 @@ class RoleController extends Controller
 				$role = is_numeric($id) ? $role->find($id) : $role->where('type', $id)->first();
 			}
 
-			return response()->json($role, 200);
+			return response()->json($roles->hideData(), 200);
 		}
 		else
 			abort(500, 'Impossible de créer le role');

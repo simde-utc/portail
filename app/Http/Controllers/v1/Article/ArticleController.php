@@ -17,8 +17,11 @@ use App\Traits\HasVisibility;
  *
  * Les articles écrits et postés par les associations
  */
-class ArticleController extends Controller {
-	use HasVisibility; //Utilisation du Trait HasVisibility
+class ArticleController extends Controller
+{
+	use HasVisibility;
+
+	// TODO abort
 
 	/**
 	 * Scopes Article

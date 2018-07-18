@@ -11,9 +11,12 @@ use App\Http\Requests\UserRequest;
 use App\Services\Visible\Visible;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
+use App\Traits\Controller\v1\HasUsers;
 
 class RoleController extends Controller
 {
+	use HasUsers;
+
 	public function __construct() {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-roles-users', 'client-get-roles-users'),

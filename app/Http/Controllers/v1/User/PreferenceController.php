@@ -6,9 +6,12 @@ use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserPreference;
+use App\Traits\Controller\v1\HasUsers;
 
 class PreferenceController extends Controller
 {
+    use HasUsers;
+    
     public function __construct() {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-info-preferences', 'client-get-info-preferences'),

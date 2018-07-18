@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use App\Exceptions\PortailException;
+use App\Traits\Controller\v1\HasUsers;
 
 /**
  * @resource Connected User
@@ -15,6 +16,8 @@ use App\Exceptions\PortailException;
  */
 class UserAuthController extends Controller
 {
+	use HasUsers;
+
 	public function __construct() {
 		$this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-info-identity-auth'),

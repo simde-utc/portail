@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\v1\Calendar;
 
+use App\Http\Controllers\v1\Controller;
+use App\Traits\Controller\v1\HasCalendars;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Event;
@@ -18,8 +20,10 @@ use App\Traits\HasVisibility;
  *
  * Gestion des évenements des calendriers
  */
-class EventController extends AbstractController
+class EventController extends Controller
 {
+	use HasCalendars;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -39,46 +43,6 @@ class EventController extends AbstractController
 		);
 	}
 
-	protected function getEventFromCalendar(Request $request, User $user, Calendar $calendar, int $id) {
-		$event = $calendar->events()->with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->find($id);
-
-		if ($event) {
-			if (!$this->tokenCanSee($request, $event, 'get', 'events'))
-				abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
-
-			if ($user && !$this->isVisible($event, $user->id))
-				abort(403, 'Vous n\'avez pas les droits sur cet évènenement');
-
-			return $event;
-		}
-
-		abort(404, 'L\'évènement n\'existe pas ou ne fait pas parti du calendrier');
-	}
-
-	public function isPrivate($user_id, $model = null) {
-		if ($model === null)
-			return false;
-
-		// Si c'est privée, uniquement les followers et ceux qui possèdent le droit peuvent le voir
-		if ($model instanceof Calendar) {
-			if ($model->followers()->wherePivot('user_id', $user_id)->exists())
-				return true;
-		}
-		else if ($model instanceof Event) {
-			// Si c'est privée, uniquement les personnes ayant un calendrier contenant cet event peuvent le voir
-			$user = User::find($user_id);
-			$calendar_ids = $user->calendars->pluck('id')->merge($user->followedCalendars->pluck('id'));
-			$event_calendar_ids = $model->calendars->pluck('id');
-
-			$model->makeHidden('calendars');
-
-			if (count($calendar_ids->intersect($event_calendar_ids)) !== 0)
-				return true;
-		}
-
-		return $model->owned_by->isCalendarAccessibleBy($user_id);
-    }
-
 	/**
 	 * List Calendars
 	 *
@@ -89,7 +53,7 @@ class EventController extends AbstractController
 		$events = $calendar->events()->with(['visibility', 'location', 'created_by', 'owned_by'])->get()->filter(function ($event) use ($request) {
 			return $this->tokenCanSee($request, $event, 'get', 'events');
 		})->values()->map(function ($event) use ($request) {
-			return $this->hideEventData($request, $event);
+			return $event->hideData();
 		});
 
 		return response()->json($events, 200);
@@ -119,7 +83,7 @@ class EventController extends AbstractController
 		}
 
 		foreach ($events as $event)
-			$this->hideEventData($request, $event);
+			$event = $event->hideData();
 
 		return response()->json($events, 201);
 	}
@@ -134,7 +98,7 @@ class EventController extends AbstractController
 		$calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
 		$event = $this->getEventFromCalendar($request, \Auth::user(), $calendar, $id);
 
-		return response()->json($this->hideEventData($request, $event), 200);
+		return response()->json($event->hideData(), 200);
 	}
 
 	/**
@@ -165,6 +129,7 @@ class EventController extends AbstractController
 			abort(400, 'L\'évènement doit au moins appartenir à un calendrier du propriétaire de l\'évènement');
 
 		$calendar->events()->detach($event);
+		
 		abort(204);
 	}
 }

@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Exceptions\PortailException;
+use App\Traits\Controller\v1\HasUsers;
 
 class DetailController extends Controller
 {
+    use HasUsers;
+
     public function __construct(Request $request) {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-info-details', 'client-get-info-details'),

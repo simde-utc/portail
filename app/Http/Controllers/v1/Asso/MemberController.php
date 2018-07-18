@@ -11,9 +11,12 @@ use App\Models\Semester;
 use App\Models\Role;
 use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;
+use App\Traits\Controller\v1\HasAssos;
 
 class MemberController extends Controller
 {
+	use HasAssos;
+
 	public function __construct() { // TODO Vérifier les scopes
 		$this->middleware(
 			array_merge(
@@ -39,29 +42,6 @@ class MemberController extends Controller
 	}
 
 	/**
-	 * Récupère une association par son id si elle existe
-	 * @param Request $request
-	 * @param $asso_id
-	 * @return Asso
-	 */
-	protected function getAsso(Request $request, $asso_id): Asso {
-		$asso = Asso::find($asso_id);
-
-		if ($asso)
-			return $asso;
-		else
-			abort(404, "Assocation non trouvée");
-	}
-
-	protected function hideUsersData(Request $request, Collection $users, bool $hidePivot = false): Collection {
-		return parent::hideUsersData($request, $users, $hidePivot);
-	}
-
-	protected function hideUserData(Request $request, User $user, bool $hidePivot = false): User {
-		return parent::hideUserData($request, $user, $hidePivot);
-	}
-
-	/**
 	 * On ajoute les droits admin en fonction du rôle qu'on a dans les assos
 	 * @param Asso $asso
 	 * @param Model $pivot
@@ -70,6 +50,7 @@ class MemberController extends Controller
 	protected function addUserRoles($asso, $pivot): ?string {
 		if (!is_null($pivot->validated_by)) {
 			$adminAssos = config('portail.assos', []);
+
 			if (isset($adminAssos[$asso->login])) {
 				$adminRoles = $adminAssos[$asso->login];
 				$role = Role::getRole($pivot->role_id);
@@ -117,7 +98,11 @@ class MemberController extends Controller
 		if (\Scopes::has($request, 'user-get-assos-followed-now') && in_array('followers', $choices))
 			$members = $members->merge($asso->followers()->where('semester_id', $semester->id)->get());
 
-		return response()->json($this->hideUsersData($request, $members), 200);
+		$members = $members->map(function ($member) {
+			return $member->hideData();
+		});
+
+		return response()->json($members, 200);
 	}
 
 	/**
@@ -155,7 +140,7 @@ class MemberController extends Controller
 		if ($new = $this->addUserRoles($asso, $member->pivot))
 			$member->new_user_role = $new;
 
-		return response()->json($this->hideUserData($request, $member));
+		return response()->json($member->hideData());
 	}
 
 	/**
@@ -186,7 +171,7 @@ class MemberController extends Controller
 			$member = $asso->followers()->where('semester_id', $semester->id)->wherePivot('user_id', $member_id)->first();
 
 		if ($member)
-			return response()->json($this->hideUserData($request, $member));
+			return response()->json($member->hideData());
 		else
 			abort(404, 'Cette personne ne fait pas partie de l\'association (ou vous ne pouvez pas le voir)');
 	}
@@ -241,7 +226,7 @@ class MemberController extends Controller
 			if ($new = $this->addUserRoles($asso, $member->pivot))
 				$member->new_user_role = $new;
 
-			return response()->json($this->hideUserData($request, $member));
+			return response()->json($member->hideData());
 		}
 		else
 			abort(404, 'Cette personne ne fait pas partie de l\'association');

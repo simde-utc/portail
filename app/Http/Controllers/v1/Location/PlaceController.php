@@ -6,6 +6,7 @@ use App\Http\Controllers\v1\Controller;
 use App\Models\Place;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Traits\Controller\v1\HasPlaces;
 
 /**
  * @resource Place
@@ -14,6 +15,8 @@ use Illuminate\Http\Request;
  */
 class PlaceController extends Controller
 {
+    use HasPlaces;
+
     public function __construct() {
 		$this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-get-locations-places'),
@@ -54,7 +57,7 @@ class PlaceController extends Controller
 		if ($place)
 			return response()->json($place, 200);
 		else
-			return response()->json(['message' => 'Impossible de créer le lieu'], 500);
+			abort(500, 'Impossible de créer le lieu');
 
 	}
 
@@ -65,15 +68,9 @@ class PlaceController extends Controller
 	 * @return JsonResponse
 	 */
 	public function show(Request $request, int $id): JsonResponse {
-		if (\Scopes::has($request, 'client-get-locations'))
-			$place = Place::with('locations')->find($id);
-		else
-			$place = Place::find($id);
+        $place = $this->getPlace($request, $id);
 
-		if ($place)
-			return response()->json($place, 200);
-		else
-			return response()->json(['message' => 'Impossible de trouver le lieu'], 500);
+		return response()->json($place, 200);
 	}
 
 	/**
@@ -84,19 +81,12 @@ class PlaceController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, int $id): JsonResponse {
-		if (\Scopes::has($request, 'client-get-locations'))
-			$place = Place::with('locations')->find($id);
-		else
-			$place = Place::find($id);
+        $place = $this->getPlace($request, $id);
 
-		if ($place) {
-			if ($place->update($request->input()))
-				return response()->json($place, 201);
-			else
-				return response()->json(['message' => 'Impossible d\'actualiser le lieu'], 500);
-		}
+		if ($place->update($request->input()))
+			return response()->json($place, 201);
 		else
-			return response()->json(['message' => 'Impossible de trouver le lieu'], 500);
+            abort(500, 'Impossible d\'actualiser le lieu');
 	}
 
 	/**
@@ -106,15 +96,11 @@ class PlaceController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(int $id): JsonResponse {
-		$place = Place::find($id);
+        $place = $this->getPlace($request, $id);
 
-		if ($place) {
-			if ($place->softDelete())
-				return response()->json(['message' => 'Le lieu a bien été supprimé'], 200);
-			else
-				return response()->json(['message' => 'Erreur lors de la suppression de le lieu'], 500);
-		}
+		if ($place->softDelete())
+            abort(204);
 		else
-			return response()->json(['message' => 'Impossible de trouver le lieu'], 500);
+			abort(500, 'Erreur lors de la suppression de le lieu');
 	}
 }

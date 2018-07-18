@@ -109,7 +109,7 @@ class AssoController extends Controller
 		}
 
 		foreach ($assos as $asso)
-			$asso->hide();
+			$asso->hideData();
 
 		return response()->json($assos, 200);
 	}

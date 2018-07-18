@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1\User;
 use App\Http\Controllers\v1\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Traits\Controller\v1\HasUsers;
 
 /**
  * @resource User
@@ -13,6 +14,8 @@ use Illuminate\Http\Request;
  */
 class UserController extends Controller
 {
+	use HasUsers;
+
 	public function __construct() {
 		$this->middleware(
 			\Scopes::matchAnyClient(),
@@ -150,7 +153,7 @@ class UserController extends Controller
 			}
 		}
 		else
-			$user = $this->hideUserData($request, $user);
+			$user = $user->hideData();
 
 		// Par défaut, on retourne au moins l'id de la personne et son nom
 		return response()->json($user);

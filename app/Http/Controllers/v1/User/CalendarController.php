@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\v1\User;
 
-use App\Http\Controllers\v1\Calendar\AbstractController;
+use App\Http\Controllers\v1\Controller;
+use App\Traits\Controller\v1\HasCalendars;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Calendar;
@@ -18,8 +19,10 @@ use App\Traits\HasVisibility;
  *
  * Gestion des calendriers
  */
-class CalendarController extends AbstractController
+class CalendarController extends Controller
 {
+	use HasCalendars;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -94,8 +97,8 @@ class CalendarController extends AbstractController
 			);
 		}
 
-		$calendars = $calendars->map(function ($calendar) use ($request) {
-			return $this->hideCalendarData($request, $calendar);
+		$calendars = $calendars->map(function ($calendar) {
+			return $calendar->hideData();
 		});
 
 		return response()->json($calendars, 200);
@@ -119,8 +122,9 @@ class CalendarController extends AbstractController
 			$calendars[] = $calendar;
 		}
 
-		foreach ($calendars as $calendar)
-			$this->hideCalendarData($request, $calendar);
+		$calendars = $calendars->map(function ($calendar) {
+			return $calendar->hideData();
+		});
 
 		return response()->json($calendars, 201);
 	}
@@ -142,9 +146,7 @@ class CalendarController extends AbstractController
 		if (!$calendar_ids->contains($id))
 			abort(404, 'Le calendrier n\'est pas suivi par la personne ou n\'existe pas');
 
-		$calendar = $this->hideCalendarData($request, $calendar);
-
-		return response()->json($calendar, 200);
+		return response()->json($calendar->hideData(), 200);
 	}
 
 	/**

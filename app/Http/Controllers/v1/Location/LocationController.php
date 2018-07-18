@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
  */
 class LocationController extends Controller
 {
+    // TODO get
+    // TODO abort
+
     public function __construct() {
 		$this->middleware(
 			\Scopes::matchOne(

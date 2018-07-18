@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Http\Requests\GroupRequest;
 use App\Models\Visibility;
-use App\Traits\HasVisibility;
 use App\Exceptions\PortailException;
+use App\Traits\Controller\v1\HasGroups;
 
 /**
  * Gestion des groupes utilisateurs
@@ -18,7 +18,7 @@ use App\Exceptions\PortailException;
  */
 class GroupController extends Controller
 {
-	use HasVisibility;
+	use HasGroups;
 
 	/**
 	 * Scopes Group
@@ -44,37 +44,16 @@ class GroupController extends Controller
 	 */
 	public function index(Request $request): JsonResponse {
 		// On inclue les relations et on les formattent.
-		$groups = Group::with([
-			                      'owner',
-			                      'visibility',
-		                      ])->get();
+		$groups = Group::with(['owner', 'visibility'])->get();
 
 		if (\Auth::id()) {
-			$groups = $this->hide($groups, true, function ($group) use ($request) {
-				$this->hideUserData($request, $group->owner);
-
-				return $group;
+			$groups = $this->hide($groups, true, function ($group) {
+				return $group->hideData();
 			});
 		}
 
 		return response()->json($groups, 200);
 	}
-
-	public function isPrivate($user_id, $model = null) {
-		if ($model === null)
-			return false;
-
-		if ($model->user_id && $model->user_id == $user_id)
-			return true;
-
-		try {
-			return $model->currentAllMembers()->wherePivot('user_id', $user_id)->count() > 0;
-		}
-		catch (Exception $e) {}
-
-        return false;
-    }
-
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -101,14 +80,9 @@ class GroupController extends Controller
 				return response()->json(["message" => $e->getMessage()], 400);
 			}
 
-			$group = Group::with([
-				                     'owner',
-				                     'visibility',
-			                     ])->find($group->id);
+			$group = Group::with(['owner', 'visibility'])->find($group->id);
 
-			$this->hideUserData($request, $group->owner);
-
-			return response()->json($group, 201);
+			return response()->json($group->hideData(), 201);
 		}
 		else
 			abort(500, 'Impossible de créer le groupe');
@@ -123,16 +97,11 @@ class GroupController extends Controller
 	 */
 	public function show(Request $request, $id): JsonResponse {
 		// On inclue les relations et on les formattent.
-		$group = Group::with([
-			                     'owner',
-			                     'visibility',
-		                     ])->find($id);
+		$group = Group::with(['owner', 'visibility'])->find($id);
 
 		if (\Auth::id()) {
 			$group = $this->hide($group, false, function ($group) use ($request) {
-				$this->hideUserData($request, $group->owner);
-
-				return $group;
+				return $group->hideData();
 			});
 		}
 
@@ -179,14 +148,9 @@ class GroupController extends Controller
 				}
 			}
 
-			$group = Group::with([
-				                     'owner',
-				                     'visibility',
-			                     ])->find($id);
+			$group = Group::with(['owner', 'visibility',])->find($id);
 
-			$this->hideUserData($request, $group->owner);
-
-			return response()->json($group, 200);
+			return response()->json($group->hideData(), 200);
 		}
 		else
 			abort(500, 'Impossible de modifier le groupe');
