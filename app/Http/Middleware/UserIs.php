@@ -29,10 +29,8 @@ class UserIs
 				if (\Auth::user()->$method() === $wrongIfEqual)
 					throw new AuthorizationException('L\'utilisateur n\'est pas de ce type: '.$type);
 			}
-
-			return $next($request);
 		}
-		else
-    		throw new AuthorizationException('L\'utilisateur n\'est pas connecté');
+
+		return $next($request);
  	}
 }
