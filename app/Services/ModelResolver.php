@@ -21,7 +21,7 @@ class ModelResolver {
 	}
 
 	public function getModelName($name) {
-		return $this->namespace.'\\'.ucfirst($name);
+		return $this->namespace.'\\'.$this->toCamelCase($name);
 	}
 
 	public function getModel($name, $instance = null) {
@@ -43,7 +43,7 @@ class ModelResolver {
 	}
 
 	public function getName($modelName) {
-		return strtolower((new \ReflectionClass($modelName))->getShortName());
+		return $this->toSnakeCase((new \ReflectionClass($modelName))->getShortName(), '_');
 	}
 
 	public function getCategory($modelName) {
@@ -55,5 +55,15 @@ class ModelResolver {
 			return $name;
 		else
 			return $name.'s';
+	}
+
+	public function toCamelCase($name, $delimiter = '') {
+		return str_replace('_', $delimiter, ucwords($name, '_'));
+	}
+
+	public function toSnakeCase($name, $delimiter = '_') {
+		$name[0] = strtolower($name[0]);
+
+		return strtolower(preg_replace('/([A-Z])/', $delimiter.'\\1', $name));
 	}
 }
