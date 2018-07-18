@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Hash;
 
-class AuthPassword extends Auth
+class AuthPassword extends Auth // TODO must
 {
 	protected $fillable = [
 	 	'user_id', 'password', 'last_login_at',
@@ -14,12 +14,8 @@ class AuthPassword extends Auth
 		'password',
 	];
 
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
-
 	public function user() {
-		return $this->belongsTo('App\Models\User');
+		return $this->belongsTo(User::class);
 	}
 
 	public function getUserByIdentifiant($email) {

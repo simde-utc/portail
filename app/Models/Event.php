@@ -21,14 +21,9 @@ class Event extends Model implements OwnableContract
         'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
     ];
 
-    public function hideData(array $params = []): Model {
-        $this->created_by = $this->created_by->hideData();
-        $this->owned_by = $this->owned_by->hideData();
-
-        $this->makeHidden(['location_id', 'visibility_id']);
-
-        return $this;
-    }
+    protected $must = [
+        'begin_at', 'end_at', 'full_day',
+    ];
 
     public function created_by() {
         return $this->morphTo();

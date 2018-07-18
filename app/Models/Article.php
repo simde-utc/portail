@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Article extends Model // TODO transformer en Morph
+class Article extends Model // TODO transformer en Morph // TODO with / must
 {
 	protected $table = 'articles';
 
@@ -16,19 +16,15 @@ class Article extends Model // TODO transformer en Morph
 		});
 	}
 
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
-
 	public function collaborators() {
-		return $this->belongsToMany('App\Models\Asso', 'articles_collaborators');
+		return $this->belongsToMany(Asso::class, 'articles_collaborators');
 	}
 
 	public function asso() {
-		return $this->belongsTo('App\Models\Asso');
+		return $this->belongsTo(Asso::class);
 	}
 
 	public function visibility() {
-		return $this->belongsTo('App\Models\Visibility', 'visibility_id');
+		return $this->belongsTo(Visibility::class, 'visibility_id');
 	}
 }

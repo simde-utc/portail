@@ -6,7 +6,7 @@ use App\Traits\Model\HasKeyValue;
 use App\Models\User;
 use App\Exceptions\PortailException;
 
-class UserDetail extends Model
+class UserDetail extends Model // TODO $must ?
 {
 	use HasKeyValue;
 
@@ -25,10 +25,6 @@ class UserDetail extends Model
 	protected $functionalKeys = [
 		'age', 'isMajor', 'loginCAS', 'loginContributorBde', 'isContributorBde',
 	];
-
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
 
 	/**
 	 * Permet de retrouver l'utilisateur sur lequel on travaille à partir d'un query

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Semester extends Model
+class Semester extends Model // TODO $must
 {
     protected $fillable = [
         'name', 'is_spring', 'year', 'begining_at', 'ending_at',
@@ -12,10 +12,6 @@ class Semester extends Model
         'is_spring' => 'boolean',
         'year' => 'char',
     ];
-
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
 
 	public static function getSemester($semester) {
 		return static::where('id', $semester)->orWhere('name', $semester)->first();

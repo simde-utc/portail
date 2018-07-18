@@ -6,7 +6,7 @@ use App\Models\Visibility;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Traits\Model\HasStages;
 
-class Visibility extends Model
+class Visibility extends Model // TODO $must?
 {
     use HasStages;
 
@@ -19,10 +19,6 @@ class Visibility extends Model
 	protected $hidden = [
 		'created_at', 'updated_at'
 	];
-
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
 
 	public static function findByType($type) {
 		return static::where('type', $type)->first();

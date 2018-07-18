@@ -14,7 +14,7 @@ trait HasAssos
 	 * @return Asso
 	 */
 	protected function getAsso(Request $request, int $asso_id, bool $withTrashed = false): Asso {
-		$asso = Asso::find($asso_id);
+		$asso = ($withTrashed ? Asso::withTrashed() : new Asso)->find($asso_id);
 
 		if ($asso)
 			return $asso;

@@ -44,10 +44,6 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		'firstname', 'lastname', 'email', 'is_active', 'last_login_at',
 	];
 
-	protected $hidden = [
-		'remember_token',
-	];
-
 	protected $casts = [
 		'is_active' => 'boolean',
 	];
@@ -56,13 +52,13 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		'name',
 	];
 
+	protected $hidden = [
+		'remember_token',
+	];
+
 	public $types = [
 		'admin', 'contributorBde', 'cas', 'password', 'active',
 	];
-
-	public function hideData() {
-		return $this->makeHidden(['firstname', 'lastname', 'email', 'is_active', 'last_login_at', 'created_at', 'updated_at']);
-	}
 
 	public function getNameAttribute() {
 		return $this->firstname.' '.strtoupper($this->lastname);

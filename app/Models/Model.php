@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
-use App\Interfaces\Model\CanHideData;
+use App\Traits\Model\HasHiddenData;
 
-abstract class Model extends BaseModel implements CanHideData
+abstract class Model extends BaseModel
 {
-    public function getModelAttribute() {
-        return \ModelResolver::getName($this);
-    }
+    use HasHiddenData;
 }

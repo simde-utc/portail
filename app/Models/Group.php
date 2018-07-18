@@ -39,11 +39,11 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 
     protected $hidden = [
         'user_id', 'visibility_id',
-    ]; // On les caches car on récupère directement le user et la vibility dans le controller
+    ];
 
-    public function hideData(array $params = []): Model {
-        return $this->makeHidden(['icon', 'created_at', 'updated_at', 'deleted_at']);
-    }
+    protected $must = [
+        'icon_id'
+    ];
 
     public function owner() {
         return $this->belongsTo(User::class, 'user_id');

@@ -12,7 +12,7 @@ use App\Interfaces\Controller\v1\CanHaveCalendars;
 
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
-	use SoftDeletes, HasStages, HasMembers {
+	use HasStages, HasMembers, SoftDeletes {
 		HasMembers::members as membersAndFollowers;
 		HasMembers::currentMembers as currentMembersAndFollowers;
 		HasMembers::joiners as protected joinersFromHasMembers;
@@ -22,6 +22,18 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
 	protected $fillable = [
 		'name', 'shortname', 'login', 'description', 'type_asso_id', 'parent_id',
+	];
+
+	protected $hidden = [
+		'type_asso_id', 'parent_id',
+	];
+
+	protected $with = [
+		'type', 'parent',
+	];
+
+	protected $must = [
+		'name', 'shortname',
 	];
 
 	protected $roleRelationTable = 'assos_members';
@@ -45,10 +57,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
         });
     }
 
-	public function hideData(array $param = []): Model {
-		return $this->makeHidden(['login', 'description', 'type_asso_id', 'parent_id', 'created_at', 'updated_at', 'deleted_at']);
-	}
-
 	public function type() {
 		return $this->belongsTo(AssoType::class, 'type_asso_id');
 	}
@@ -62,15 +70,15 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function articles() {
-		return $this->belongsToMany(Article::class, 'assos_articles');
+		return $this->hasMany(Article::class);
 	}
 
-	public function collaboratedArticles(){
-		return $this->belongsToMany('App\Models\Article', 'articles_collaborators');
+	public function collaboratedArticles() {
+		return $this->belongsToMany(Article::class, 'articles_collaborators');
 	}
 
 	public function parent() {
-	    return $this->hasOne(Asso::class, 'parent_id');
+	    return $this->hasOne(Asso::class, 'id', 'parent_id');
     }
 
 	public function children() {

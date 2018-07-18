@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Traits\Model\HasKeyValue;
 
-class UserPreference extends Model
+class UserPreference extends Model // TODO $must ?
 {
 	use HasKeyValue;
 
@@ -19,10 +19,6 @@ class UserPreference extends Model
 	protected $fillable = [
 		'user_id', 'key', 'value', 'type', 'only_for',
 	];
-
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
 
 	public function scopeOnlyFor($query, $only_for) {
 		return $query->where('only_for', $only_for);

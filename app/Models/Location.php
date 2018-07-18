@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 
-class Location extends Model
+class Location extends Model // TODO $mst
 {
     use SpatialTrait;
 
@@ -25,10 +25,6 @@ class Location extends Model
     protected $hidden = [
         'place_id',
     ];
-
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
 
     public function place() {
         return $this->belongsTo(Place::class);

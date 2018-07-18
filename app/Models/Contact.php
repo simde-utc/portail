@@ -6,7 +6,7 @@ use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use App\Exceptions\PortailException;
 
-class Contact extends Model implements OwnableContract
+class Contact extends Model implements OwnableContract // TODO $must
 {
     use HasMorphOwner;
 
@@ -35,10 +35,6 @@ class Contact extends Model implements OwnableContract
         static::creating($verificator);
         static::updating($verificator);
     }
-
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
 
     public function owned_by() {
         return $this->morphTo();

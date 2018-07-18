@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Traits\Model\HasKeyValue;
 use App\Models\Event;
 
-class EventDetail extends Model
+class EventDetail extends Model // TODO $must ?
 {
 	use HasKeyValue;
 
@@ -20,10 +20,6 @@ class EventDetail extends Model
 	protected $fillable = [
 		'event_id', 'key', 'value', 'type',
 	];
-	
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
 
 	public function event() {
 		$this->belongsTo(Event::class);

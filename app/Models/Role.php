@@ -8,7 +8,7 @@ use App\Models\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Exceptions\PortailException;
 
-class Role extends Model
+class Role extends Model // TODO $must ?
 {
 	use HasStages, HasPermissions;
 
@@ -21,10 +21,6 @@ class Role extends Model
 			return resolve('\\App\\Models\\'.studly_case(str_singular(explode('-', $model->only_for)[0])))->beforeDeletingRole($model);
         });
     }
-
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
 
 	public static function find(int $id, string $only_for = null) {
 		$roles = static::where('id', $id);

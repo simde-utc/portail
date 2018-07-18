@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class AssoType extends Model // TODO A changer en type name
+class AssoType extends Model // TODO A changer en type et name
 {
     protected $table = 'assos_types';
 
@@ -10,11 +10,7 @@ class AssoType extends Model // TODO A changer en type name
         'name', 'description',
     ];
 
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
-
     public function asso() {
-        return $this->hasMany('App\Models\Asso');
+        return $this->hasMany(Asso::class);
     }
 }

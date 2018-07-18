@@ -17,14 +17,9 @@ class Calendar extends Model implements OwnableContract
         'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
     ];
 
-    public function hideData(array $param = []): Model {
-        $this->created_by = $this->created_by->hideData();
-        $this->owned_by = $this->owned_by->hideData();
-
-        $this->makeHidden('visibility_id');
-
-        return $this;
-    }
+    protected $with = [
+        'created_by', 'owned_by',
+    ];
 
     public function owned_by() {
         return $this->morphTo();

@@ -14,9 +14,9 @@ class ContactType extends Model
         'id', 'created_at', 'updated_at',
     ];
 
-	public function hideData(array $params = []): Model {
-		return $this; // TODO
-	}
+    protected $must = [
+        'pattern',
+    ];
 
     public function contacts() {
         return $this->hasMany(Contact::class);
