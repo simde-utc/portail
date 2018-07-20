@@ -29,6 +29,10 @@ class LinkToPasswordController extends Controller
         if ($request->filled('password_confirmation')) {
             (new Password)->addAuth(\Auth::guard('cas')->id(), $request->input());
 
+            \Auth::guard('cas')->user()->update([
+                'email' => $request->input('email')
+            ]);
+
             \Auth::guard('web')->login(\Auth::guard('cas')->user());
             \Auth::guard('cas')->logout();
 
