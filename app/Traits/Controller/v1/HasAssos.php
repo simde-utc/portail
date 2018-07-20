@@ -3,6 +3,7 @@
 namespace App\Traits\Controller\v1;
 
 use App\Models\Asso;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 
 trait HasAssos
@@ -13,8 +14,11 @@ trait HasAssos
 	 * @param $asso_id
 	 * @return Asso
 	 */
-	protected function getAsso(Request $request, int $asso_id, bool $withTrashed = false): Asso {
-		$asso = ($withTrashed ? Asso::withTrashed() : new Asso)->find($asso_id);
+	protected function getAsso(Request $request, $asso_id): Asso {
+		if (is_numeric($asso_id))
+			$asso = Asso::find($asso_id);
+		else
+			$asso = Asso::findByLogin($asso_id);
 
 		if ($asso)
 			return $asso;
