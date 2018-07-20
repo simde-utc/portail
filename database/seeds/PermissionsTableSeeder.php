@@ -38,6 +38,12 @@ class PermissionsTableSeeder extends Seeder
                 'only_for' => 'assos',
 			],
 			[
+				'type' => 'asso_data',
+				'name' => 'Informations',
+				'description' => 'Gestion des informations concernant l\'association',
+                'only_for' => 'assos',
+			],
+			[
 				'type' => 'contact',
 				'name' => 'Contact',
 				'description' => 'Gestion des moyens de contact de l\'association',

@@ -24,64 +24,154 @@ return [
 	'description' => 'Associations',
 	'verbs' => [
 		'manage' => [
-			'description' => 'Gérer totalement toutes les associations',
+			'description' => 'Gérer les associations suivies et faites par les utilisateurs',
 			'scopes' => [
-				'followers' => [
-					'description' => 'Gérer totalement toutes les personnes suivant des associations',
+				'joined' => [
+					'description' => 'Gérer les associations faites par les utilisateurs',
 					'scopes' => [
 						'now' => [
-							'description' => 'Gérer totalement toutes les personnes suivant des associations de l\'actuel semestre',
+							'description' => 'Gérer les associations faites par les utilisateurs durant l\'actuel semestre',
 						],
 					]
 				],
-				'members' => [
-					'description' => 'Gérer totalement tous les members des associations',
+				'joining' => [
+					'description' => 'Gérer les associations que les utilisateurs souhaitent rejoindre',
 					'scopes' => [
 						'now' => [
-							'description' => 'Gérer totalement tous les membres des associations de l\'actuel semestre',
+							'description' => 'Gérer les associations que les utilisateurs souhaitent rejoindre durant l\'actuel semestre',
+						],
+					]
+				],
+				'followed' => [
+					'description' => 'Gérer les associations suivies par les utilisateurs',
+					'scopes' => [
+						'now' => [
+							'description' => 'Gérer les associations suivies par les utilisateurs durant l\'actuel semestre',
 						],
 					]
 				],
 			]
 		],
 		'get' => [
-			'description' => 'Récupérer la liste des utilisateurs',
+			'description' => 'Récupérer toutes les associations suivies et faites par les utilisateurs',
 			'scopes' => [
-				'followers' => [
-					'description' => 'Récupérer la liste des personnes suivant des associations',
+				'joined' => [
+					'description' => 'Récupérer toutes les associations faites par les utilisateurs',
 					'scopes' => [
 						'now' => [
-							'description' => 'Récupérer la liste des personnes suivant des associations de l\'actuel semestre',
-						]
+							'description' => 'Récupérer toutes les associations faites par les utilisateurs durant l\'actuel semestre',
+						],
+					]
+				],
+				'joining' => [
+					'description' => 'Récupérer toutes les associations que les utilisateurs souhaitent rejoindre',
+					'scopes' => [
+						'now' => [
+							'description' => 'Récupérer toutes les associations que les utilisateurs souhaitent rejoindre durant l\'actuel semestre',
+						],
+					]
+				],
+				'followed' => [
+					'description' => 'Récupérer toutes les associations suivies par les utilisateurs',
+					'scopes' => [
+						'now' => [
+							'description' => 'Récupérer toutes les associations suivies par les utilisateurs durant l\'actuel semestre',
+						],
 					]
 				],
 				'members' => [
-					'description' => 'Récupérer la liste des members des associations',
+					'description' => 'Récupérer tous les membres des associations suivies et faites par les utilisateurs',
 					'scopes' => [
 						'now' => [
-							'description' => 'Récupérer la liste des members des associations de l\'actuel semestre',
-						]
+							'description' => 'Récupérer tous les membres des associations suivies et faites par les utilisateurs durant l\'actuel semestre',
+						],
 					]
 				],
 			]
 		],
 		'set' => [
-			'description' => "Gérer la création et la modification d'utilisateurs",
+			'description' => 'Ajouter et modifier les associations suivies et faites par les utilisateurs',
 			'scopes' => [
-				'followers' => [
-					'description' => 'Gérer la création et la modification des personnes suivant des associations',
+				'joined' => [
+					'description' => 'Ajouter et modifier les associations faites par les utilisateurs',
 					'scopes' => [
 						'now' => [
-							'description' => 'Gérer la création et la modification des personnes suivant des associations de l\'actuel semestre',
-						]
+							'description' => 'Ajouter et modifier les associations faites par les utilisateurs durant l\'actuel semestre',
+						],
 					]
 				],
-				'members' => [
-					'description' => 'Gérer la création et la modification des members des associations',
+				'joining' => [
+					'description' => 'Ajouter et modifier les associations que les utilisateurs souhaitent rejoindre',
 					'scopes' => [
 						'now' => [
-							'description' => 'Gérer la création et la modification des members des associations de l\'actuel semestre',
-						]
+							'description' => 'Ajouter et modifier les associations que les utilisateurs souhaitent rejoindre durant l\'actuel semestre',
+						],
+					]
+				],
+				'followed' => [
+					'description' => 'Ajouter et modifier les associations suivies par les utilisateurs',
+					'scopes' => [
+						'now' => [
+							'description' => 'Ajouter et modifier les associations suivies par les utilisateurs durant l\'actuel semestre',
+						],
+					]
+				],
+			]
+		],
+		'create' => [
+			'description' => 'Ajouter des associations suivies et faites par les utilisateurs',
+			'scopes' => [
+				'joined' => [
+					'description' => 'Ajouter des associations faites par les utilisateurs',
+					'scopes' => [
+						'now' => [
+							'description' => 'Ajouter des associations faites par les utilisateurs durant l\'actuel semestre',
+						],
+					]
+				],
+				'joining' => [
+					'description' => 'Ajouter des associations que les utilisateurs souhaitent rejoindre',
+					'scopes' => [
+						'now' => [
+							'description' => 'Ajouter des associations que les utilisateurs souhaitent rejoindre durant l\'actuel semestre',
+						],
+					]
+				],
+				'followed' => [
+					'description' => 'Ajouter des associations suivies par les utilisateurs',
+					'scopes' => [
+						'now' => [
+							'description' => 'Ajouter des associations suivies par les utilisateurs durant l\'actuel semestre',
+						],
+					]
+				],
+			]
+		],
+		'remove' => [
+			'description' => 'Supprimer des associations suivies et faites par les utilisateurs',
+			'scopes' => [
+				'joined' => [
+					'description' => 'Supprimer des associations faites par les utilisateurs',
+					'scopes' => [
+						'now' => [
+							'description' => 'Supprimer des associations faites par les utilisateurs durant l\'actuel semestre',
+						],
+					]
+				],
+				'joining' => [
+					'description' => 'Supprimer des associations que les utilisateurs souhaitent rejoindre',
+					'scopes' => [
+						'now' => [
+							'description' => 'Supprimer des associations que les utilisateurs souhaitent rejoindre durant l\'actuel semestre',
+						],
+					]
+				],
+				'followed' => [
+					'description' => 'Supprimer des associations suivies par les utilisateurs',
+					'scopes' => [
+						'now' => [
+							'description' => 'Supprimer des associations suivies par les utilisateurs durant l\'actuel semestre',
+						],
 					]
 				],
 			]

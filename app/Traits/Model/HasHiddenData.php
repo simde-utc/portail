@@ -17,10 +17,16 @@ Trait HasHiddenData {
      * Cette méthode permet de cacher automatiquement des données des sous-modèles pour le retour json
      * @return Model
     */
-    public function hideSubData(): Model {
+    public function hideSubData(bool $addSubModelName = false): Model {
         foreach ($this->with ?? [] as $sub) {
-            if ($this->$sub)
-                $this->$sub = $this->$sub->hideData();
+            if ($this->$sub) {
+                if ($this->$sub instanceof Model)
+                    $this->$sub = $this->$sub->hideData($addSubModelName);
+                else {
+                    foreach ($this->$sub as $index => $subSub)
+                        $this->$sub[$index] = $subSub->hideData($addSubModelName);
+                }
+            }
         }
 
         return $this;
@@ -30,15 +36,16 @@ Trait HasHiddenData {
     * Cette méthode permet de cacher automatiquement des données du modèle pour le retour json
     * @return Model
     */
-    public function hideData(): Model {
+    public function hideData(bool $addModelName = false): Model {
         $this->makeHidden(array_diff(
             array_keys($this->toArray()),
             $this->must ?? [],
             ['id', 'name', 'model'] // On affiche au moins l'id, le nom et le modèle !
         ));
 
-        // On fait définir l'attibut modèle
-        $this->model = $this->model;
+        // On fait définir l'attibut modèle si on le demande
+        if ($addModelName)
+            $this->model = $this->model;
 
         return $this->hideSubData() ?? $this;
     }
