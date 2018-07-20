@@ -54,7 +54,11 @@ class Scopes {
 			if (isset($data['scopes']))
 				$scopes = array_merge($scopes, $this->generate($prefix, $data['scopes']));
 
-			$scopes[$prefix] = $data['description'];
+			try {
+				$scopes[$prefix] = $data['description'];
+			} catch (\Exception $e) {
+				throw new PortailException('Mauvaise définition (description) du scope '.$prefix);
+			}
 		}
 
 		return $scopes;
@@ -297,13 +301,16 @@ class Scopes {
 	 * @return array
 	 */
 	public function getDeepestChildren($scope) {
-		if (is_array($scope))
-			return array_merge(...array_map($scope, $this->getDeepestChildren));
+		if (is_array($scope)) {
+			return array_merge(...array_map(function ($one) {
+				return $this->getDeepestChildren($one);
+			}, $scope));
+		}
 
 		$find = $this->find($scope);
 
 		if (!isset($find[$scope]))
-			throw new PortailException('Scope non trouvé');
+			throw new PortailException('Scope '.$scope.' non trouvé');
 
 		$current = $find[$scope];
 		$deepestChildren = [];
