@@ -5,7 +5,7 @@ use App\Exceptions\PortailException;
 
 trait HasStages
 {
-    public static function getTopStage(array $data = [], $with = []) {
+    public static function getTopStage(array $data = [], $with = [], Callable $callback = null) {
         $tableName = (new static)->getTable();
         $model = static::whereNull('parent_id')->with($with);
 
@@ -16,12 +16,17 @@ trait HasStages
             $model = $model->where($key, $value);
         }
 
-		return $model->get();
+        $collection = $model->get();
+
+        if ($callback)
+            $collection = $callback($collection) ?? $collection;
+
+		return $collection;
     }
 
-    public static function getStage(int $stage, array $data = [], $with = []) {
+    public static function getStage(int $stage, array $data = [], $with = [], Callable $callback = null) {
         $tableName = (new static)->getTable();
-        $collection = static::getTopStage($data, $with);
+        $collection = static::getTopStage($data, $with, $callback);
 
 		for ($i = 0; $i < $stage; $i++) {
 			$before = $collection;
@@ -37,16 +42,20 @@ trait HasStages
                     $children = $children->where($key, $value);
                 }
 
-				$collection = $collection->merge($children->get());
+                $children = $children->get();
+                if ($callback)
+                    $children = $callback($children) ?? $children;
+
+				$collection = $collection->merge($children);
 			}
 		}
 
 		return $collection;
 	}
 
-	public static function getStages(int $from = null, int $to = null, array $data = [], $with = []) {
+	public static function getStages(int $from = null, int $to = null, array $data = [], $with = [], Callable $callback = null) {
         $tableName = (new static)->getTable();
-        $collection = static::getStage($from ?? 0, $data, $with);
+        $collection = static::getStage($from ?? 0, $data, $with, $callback);
 		$toAdd = $collection;
 
 		for ($i = $from ?? 0; is_null($to) || $i < $to; $i++) {
@@ -66,7 +75,11 @@ trait HasStages
                     $children = $children->where($key, $value);
                 }
 
-				$model->children = $children->get();
+                $children = $children->get();
+                if ($callback)
+                    $children = $callback($children) ?? $children;
+
+				$model->children = $children;
 				$toAdd = $toAdd->merge($model->children);
 			}
 		}
