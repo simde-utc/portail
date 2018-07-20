@@ -26,19 +26,19 @@ class AssoController extends Controller
 
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos'),
+			\Scopes::matchOneOfDeepestChildren('user-get-assos-members', 'client-get-assos-members'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-create-assos', 'client-set-assos'),
+			\Scopes::matchOneOfDeepestChildren('user-create-assos-members', 'client-create-assos-members'),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-set-assos', 'client-set-assos'),
+			\Scopes::matchOneOfDeepestChildren('user-edit-assos-members', 'client-edit-assos-members'),
 			['only' => ['update']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-remove-assos', 'client-manage-assos'),
+			\Scopes::matchOneOfDeepestChildren('user-remove-assos-members', 'client-remove-assos-members'),
 			['only' => ['destroy']]
 		);
 	}
@@ -47,13 +47,13 @@ class AssoController extends Controller
 		$scopeHead = \Scopes::getTokenType($request);
 
 		if ($request->filled('semester')) {
-			if (in_array('joined', $choices) && !\Scopes::hasOne($request, $scopeHead.'-get-assos-joined-now'))
+			if (in_array('joined', $choices) && !\Scopes::hasOne($request, $scopeHead.'-get-assos-members-joined-now'))
 				throw new PortailException('Vous n\'avez pas les droits pour spécifier un semestre particulier pour récupérer les associations rejoins par l\'utilisateur');
 
-			if (in_array('joining', $choices) && !\Scopes::hasOne($request, $scopeHead.'-get-assos-joining-now'))
+			if (in_array('joining', $choices) && !\Scopes::hasOne($request, $scopeHead.'-get-assos-members-joining-now'))
 				throw new PortailException('Vous n\'avez pas les droits pour spécifier un semestre particulier pour récupérer les associations que l\'utilisateur a demandé à rejoindre');
 
-			if (in_array('followed', $choices) && !\Scopes::hasOne($request, $scopeHead.'-get-assos-followed-now'))
+			if (in_array('followed', $choices) && !\Scopes::hasOne($request, $scopeHead.'-get-assos-members-followed-now'))
 				throw new PortailException('Vous n\'avez pas les droits pour spécifier un semestre particulier pour récupérer les associations que l\'utilisateur suit');
 
 			return Semester::getSemester($request->input('semester'));
@@ -67,7 +67,7 @@ class AssoController extends Controller
 		$choices = [];
 
 		foreach ($initialChoices as $choice) {
-			if (\Scopes::hasOne($request, $scopeHead.'-get-assos-'.$choice.'-now'))
+			if (\Scopes::hasOne($request, $scopeHead.'-get-assos-members-'.$choice.'-now'))
 				$choices[] = $choice;
 		}
 

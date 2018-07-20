@@ -28,18 +28,18 @@ class AssoController extends Controller
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne('user-create-assos', 'client-set-assos'),
+				\Scopes::matchOne('user-create-assos', 'client-create-assos'),
 				['permission:asso']
 			),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOne('user-set-assos', 'client-set-assos'),
+			\Scopes::matchOne('user-edit-assos', 'client-edit-assos'),
 			['only' => ['update']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne('user-remove-assos', 'client-manage-assos'),
+				\Scopes::matchOne('user-remove-assos', 'client-remove-assos'),
 				['permission:asso']
 			),
 			['only' => ['destroy']]

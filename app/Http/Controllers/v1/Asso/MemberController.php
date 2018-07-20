@@ -17,25 +17,48 @@ class MemberController extends Controller
 {
 	use HasAssos;
 
-	public function __construct() { // TODO Vérifier les scopes
+	public function __construct() {
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos'),
-				\Scopes::matchOneOfDeepestChildren(['user-get-assos-followed', 'user-get-roles-assos'], ['client-get-assos-followed', 'client-get-roles-assos'])
+				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
+				\Scopes::matchOneOfDeepestChildren('user-get-assos-members', 'client-get-assos-members'), // Pouvoir voir les assos membres
+				\Scopes::matchOneOfDeepestChildren(
+					['user-get-assos-followed', 'user-get-roles-assos'],
+					['client-get-assos-followed', 'client-get-roles-assos']
+				) // Pouvoir voir les assos que l'ont suit (donc pas de role) ou pouvoir voir les roles assos de l'utlisateur
 			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChildren('user-set-assos', 'client-set-assos'),
-				\Scopes::matchOneOfDeepestChildren(['user-set-assos-followed', 'user-set-roles-assos'], ['client-set-assos-followed', 'client-set-roles-assos'])
+				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
+				\Scopes::matchOneOfDeepestChildren('user-create-assos-members', 'client-create-assos-members'), // Pouvoir créé des assos membres
+				\Scopes::matchOneOfDeepestChildren(
+					['user-create-assos-followed', 'user-create-roles-assos'],
+					['client-create-assos-followed', 'client-create-roles-assos']
+				) // Pouvoir créer des assos que l'ont suit (donc pas de role) ou pouvoir créer des roles assos pour l'utlisateur
 			),
-			['only' => ['store', 'update']]
+			['only' => ['store']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChildren('user-manage-assos', 'client-manage-assos'),
-				\Scopes::matchOneOfDeepestChildren(['user-manage-assos-followed', 'user-manage-roles-assos'], ['client-manage-assos-followed', 'client-manage-roles-assos'])
+				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
+				\Scopes::matchOneOfDeepestChildren('user-edit-assos-members', 'client-edit-assos-members'), // Pouvoir modifier les assos membres
+				\Scopes::matchOneOfDeepestChildren(
+					['user-edit-assos-followed', 'user-edit-roles-assos'],
+					['client-edit-assos-followed', 'client-edit-roles-assos']
+				) // Pouvoir modifier les assos que l'ont suit (donc pas de role) ou pouvoir créer des roles assos pour l'utlisateur
+			),
+			['only' => ['update']]
+		);
+		$this->middleware(
+			array_merge(
+				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
+				\Scopes::matchOneOfDeepestChildren('user-remove-assos-members', 'client-remove-assos-members'), // Pouvoir retirer les assos membres
+				\Scopes::matchOneOfDeepestChildren(
+					['user-remove-assos-followed', 'user-remove-roles-assos'],
+					['client-remove-assos-followed', 'client-remove-roles-assos']
+				) // Pouvoir retirer les assos que l'ont suit (donc pas de role) ou pouvoir retirer les roles assos de l'utlisateur
 			),
 			['only' => ['destroy']]
 		);
