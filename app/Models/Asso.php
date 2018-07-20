@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use \App\Traits\Model\HasMembers;
-use \App\Traits\Model\HasStages;
+use App\Traits\Model\HasMembers;
+use App\Traits\Model\HasStages;
 use App\Interfaces\Controller\v1\CanHaveContacts;
 use App\Interfaces\Controller\v1\CanHaveEvents;
 use App\Interfaces\Controller\v1\CanHaveCalendars;
@@ -56,6 +56,10 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 			])->changeOwnerTo($model)->save();
         });
     }
+
+	public function scopeFindByLogin($query, string $login) {
+		return $query->where('login', $login)->first();
+	}
 
 	public function type() {
 		return $this->belongsTo(AssoType::class, 'type_asso_id');

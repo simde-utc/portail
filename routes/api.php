@@ -45,6 +45,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
 		'users/{user_id}/details'					=> 'User\DetailController',
 		'users/{user_id}/preferences'				=> 'User\PreferenceController',
 		'users/{user_id}/calendars'					=> 'User\CalendarController',
+		'users/{user_id}/assos'						=> 'User\AssoController',
 
 		// Routes `user` identiques à `users/{\Auth::id()}`
 		'user/auths'								=> 'User\AuthController',
@@ -53,6 +54,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
 		'user/preferences'							=> 'User\PreferenceController',
 		'user/calendars'							=> 'User\CalendarController',
 		'user/contacts'								=> 'Contact\ContactController',
+		'user/assos'								=> 'User\AssoController',
 	]);
 
 	Route::apiResources([
