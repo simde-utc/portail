@@ -161,10 +161,13 @@ return [
 		 * Custom Providers...
 		 */
  		Ixudra\Curl\CurlServiceProvider::class,
+		Grimzy\LaravelMysqlSpatial\SpatialServiceProvider::class,
+		Cog\Laravel\Ownership\Providers\OwnershipServiceProvider::class,
 		Mews\Captcha\CaptchaServiceProvider::class,
 		App\Providers\GingerServiceProvider::class,
 		App\Providers\ScopesServiceProvider::class,
 		App\Providers\ValidationServiceProvider::class,
+		App\Providers\ModelResolverServiceProvider::class,
 		/*
 		 * API doc generator
 		 */
@@ -224,7 +227,7 @@ return [
 		'Visible' => App\Services\Visible::class,
 		'Scopes' => App\Facades\Scopes::class,
 		'Validation' => App\Facades\Validation::class,
-
+		'ModelResolver' => App\Facades\ModelResolver::class,
 	],
 
 	'ginger_key' => env('GINGER_KEY'),

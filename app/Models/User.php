@@ -3,9 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Cog\Contracts\Ownership\CanBeOwner;
+use App\Interfaces\Controller\v1\CanHaveCalendars;
+use App\Interfaces\Controller\v1\CanHaveContacts;
+use App\Interfaces\Controller\v1\CanHaveEvents;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use App\Traits\HasRoles;
+use App\Traits\Model\HasRoles;
+use App\Traits\Model\HasHiddenData;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
 use App\Models\UserPreference;
@@ -13,9 +18,9 @@ use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 use App\Exceptions\PortailException;
 
-class User extends Authenticatable
+class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
-	use HasApiTokens, Notifiable, HasRoles;
+	use HasHiddenData, HasApiTokens, Notifiable, HasRoles;
 
     public static function boot() {
         static::created(function ($model) {
@@ -40,16 +45,16 @@ class User extends Authenticatable
 		'firstname', 'lastname', 'email', 'is_active', 'last_login_at',
 	];
 
-	protected $hidden = [
-		'remember_token',
-	];
-
 	protected $casts = [
 		'is_active' => 'boolean',
 	];
 
 	protected $appends = [
 		'name',
+	];
+
+	protected $hidden = [
+		'remember_token',
 	];
 
 	public $types = [
@@ -181,12 +186,8 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\Group');
 	}
 
-	public function contact() {
-		return $this->morphMany(Contact::class, 'contactable');
-	}
-
-    public function events() {
-    	return $this->belongsToMany('App\Models\Event');
+    public function followedCalendars() {
+    	return $this->belongsToMany(Calendar::class, 'calendars_followers')->withTimestamps();
     }
 
 	/**
@@ -233,24 +234,39 @@ class User extends Authenticatable
 		return true;
 	}
 
-	/**
-	 * Permet de vérifier si l'utilisateur peut créer un contact pour ce model.
-	 *
-	 * @return bool
-	 */
-	public function canCreateContact() {
-		return true;
+	public function contacts() {
+		return $this->morphMany(Contact::class, 'owned_by');
 	}
 
-	/**
-	 * Permet de vérifier si l'utilisateur peut modifier/supprimer un contact pour ce model.
-	 *
-	 * @return bool
-	 */
-	public function canModifyContact($contact) {
-		if ($contact->contactable == $this) {
-            return $contact->contactable_id == Auth::user()->id;
-        } else
-        	return false;
+	public function isContactAccessibleBy(int $user_id): bool {
+		return $this->id == $user_id;
+	}
+
+	public function isContactManageableBy(int $user_id): bool {
+		return $this->id == $user_id;
+	}
+
+    public function calendars() {
+    	return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
+	public function isCalendarAccessibleBy(int $user_id): bool {
+		return $this->id == $user_id;
+	}
+
+	public function isCalendarManageableBy(int $user_id): bool {
+		return $this->id == $user_id;
+	}
+
+    public function events() {
+    	return $this->morphMany(Event::class, 'owned_by');
+    }
+
+	public function isEventAccessibleBy(int $user_id): bool {
+		return $this->id == $user_id;
+	}
+
+	public function isEventManageableBy(int $user_id): bool {
+		return $this->id == $user_id;
 	}
 }

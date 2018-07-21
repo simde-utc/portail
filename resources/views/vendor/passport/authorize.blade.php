@@ -5,7 +5,9 @@
         <div class="col-md-8">
             <div class="card card-fused-buttons drop-shadow mb-4">
                 <div class="card-body">
-                    <h5 class="mb-3"><b>Demande d'autorisation</b></h5>
+                    <h5 class="mb-3">
+                        Demande d'accès à vos données par l'association <strong>{{ \App\Models\Asso::find($client->asso_id)->name }}</strong>
+                    </h5>
 
                     <!-- Introduction -->
                     <p><b>{{ $client->name }}</b> requiert votre permission pour accéder à votre compte.</p>
@@ -15,11 +17,21 @@
                         <div>
                                 <p><b>Cette application pourra :</b></p>
 
-                                <ul>
-                                    @foreach ($scopes as $scope)
-                                        <li>{{ $scope->description }}</li>
+                                <table>
+                                    @foreach (\Scopes::getByCategories(explode(' ', $request->input('scope'))) as $categorie)
+										<tr>
+											<td style="width: 50px; text-align: center"><i class="fa fa-{{ $categorie['icon'] }} fa-2x text-center"/></i></td>
+											<td>{{ $categorie['description'] }}</td>
+										</tr>
+										<tr><td></td><td>
+											<ul>
+												@foreach ($categorie['scopes'] as $description)
+													<li>{{ $description }}</li>
+												@endforeach
+											</ul>
+										</tr></td>
                                     @endforeach
-                                </ul>
+                                </table>
                         </div>
                     @endif
                 </div>
@@ -33,7 +45,7 @@
 
                                 <input type="hidden" name="state" value="{{ $request->state }}">
                                 <input type="hidden" name="client_id" value="{{ $client->id }}">
-                                <button class="btn btn-primary text-danger w-100 left">Refuser</button>
+                                <button type="submit" class="btn btn-primary text-danger w-100 left">Refuser</button>
                             </form>
                         </div>
                         <div class="col-6 p-0">

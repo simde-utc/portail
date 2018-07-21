@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasStages;
-use App\Traits\HasPermissions;
+use App\Traits\Model\HasStages;
+use App\Traits\Model\HasPermissions;
 use App\Models\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Exceptions\PortailException;
 
-class Role extends Model
+class Role extends Model // TODO $must ?
 {
 	use HasStages, HasPermissions;
 
@@ -17,9 +16,6 @@ class Role extends Model
 		'limited_at' => 'integer',
 	];
 
-	/**
-	 * Méthode appelée au chargement du trait
-	 */
     public static function boot() {
         static::deleting(function ($model) {
 			return resolve('\\App\\Models\\'.studly_case(str_singular(explode('-', $model->only_for)[0])))->beforeDeletingRole($model);
@@ -63,15 +59,21 @@ class Role extends Model
 			return $role;
 	}
 
-	public static function getRoles($roles, string $only_for = 'users') {
+	public static function getRoles($roles, string $only_for = null) {
 		$group = explode('-', $only_for)[0] ?? $only_for;
 
 		if (is_array($roles)) {
-			return static::where(function ($query) use ($roles) {
+			$query = static::where(function ($query) use ($roles) {
 				$query->whereIn('id', $roles)->orWhereIn('type', $roles);
-			})->where(function ($query) use ($group, $only_for) {
-				$query->where('only_for', $group)->orWhere('only_for', $only_for);
-			})->get();
+			});
+
+			if ($only_for) {
+				$query = $query->where(function ($query) use ($group, $only_for) {
+					$query->where('only_for', $group)->orWhere('only_for', $only_for);
+				});
+			}
+
+			return $query->get();
 		}
 		else if ($roles instanceof \Illuminate\Database\Eloquent\Model)
 			return collect($roles);
@@ -95,7 +97,7 @@ class Role extends Model
 		return $this->belongsToMany(Permission::class, 'roles_permissions');
 	}
 
-	public function childs(): BelongsToMany {
+	public function children(): BelongsToMany {
 		return $this->belongsToMany(Role::class, 'roles_parents', 'parent_id', 'role_id');
 	}
 
@@ -103,17 +105,17 @@ class Role extends Model
 		return $this->belongsToMany(Role::class, 'roles_parents', 'role_id', 'parent_id');
 	}
 
-	public function allChilds() {
-		$childs = collect();
+	public function allChildren() {
+		$children = collect();
 
-		foreach ($this->childs as $child) {
-			$childs->push($child);
+		foreach ($this->children as $child) {
+			$children->push($child);
 
-			$childs = $childs->merge($child->allChilds());
-			$child->makeHidden('childs');
+			$children = $children->merge($child->allChildren());
+			$child->makeHidden('children');
 		}
 
-		return $childs->unique('id');
+		return $children->unique('id');
 	}
 
 	public function allParents() {
@@ -122,7 +124,7 @@ class Role extends Model
 		foreach ($this->parents as $parent) {
 			$parents->push($parent);
 
-			$parents = $parents->merge($parent->allChilds());
+			$parents = $parents->merge($parent->allChildren());
 			$parent->makeHidden('parents');
 		}
 
@@ -139,13 +141,13 @@ class Role extends Model
 	}
 
 	public function givePermissionTo($permissions) {
-		$this->permissions()->withTimestamps()->attach(Permission::getPermissions(stringToArray($permissions), $this->only_for === 'users'));
+		$this->permissions()->withTimestamps()->attach(Permission::getPermissions(stringToArray($permissions), $this->only_for));
 
 		return $this;
 	}
 
 	public function removePermissionTo($permissions) {
-		$this->permissions()->withTimestamps()->detach(Permission::getPermissions(stringToArray($permissions), $this->only_for === 'users'));
+		$this->permissions()->withTimestamps()->detach(Permission::getPermissions(stringToArray($permissions), $this->only_for));
 
 		return $this;
 	}
@@ -160,7 +162,7 @@ class Role extends Model
 		if ($toAdd->find($this->id))
 			throw new PortailException('Il n\'est pas possible de s\'auto-hériter', 400);
 
-		if ($toAdd->whereIn('id', $this->childs()->get(['id'])->pluck('id'))->count() > 0)
+		if ($toAdd->whereIn('id', $this->children()->get(['id'])->pluck('id'))->count() > 0)
 			throw new PortailException('Il n\'est pas possible d\'hériter de ses enfants', 400);
 
 		$this->parents()->withTimestamps()->attach($toAdd);
@@ -190,7 +192,7 @@ class Role extends Model
 		if ($toAdd->find($this->id))
 			throw new PortailException('Il n\'est pas possible de s\'auto-hériter', 400);
 
-		if ($toAdd->whereIn('id', $this->childs()->get(['id'])->pluck('id'))->count() > 0)
+		if ($toAdd->whereIn('id', $this->children()->get(['id'])->pluck('id'))->count() > 0)
 			throw new PortailException('Il n\'est pas possible d\'hériter de ses enfants', 400);
 
 		$this->parents()->withTimestamps()->sync($roles);
@@ -214,7 +216,7 @@ class Role extends Model
 
 	public function isDeletable() {
 		// On ne permet la suppression de rôles parents
-		if ($this->childs()->count() > 0)
+		if ($this->children()->count() > 0)
 			return false;
 
 		@list($tableName, $id) = explode('-', $this->only_for);

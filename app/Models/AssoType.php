@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class AssoType extends Model
 {
+    protected $table = 'assos_types';
+
     protected $fillable = [
-        'name', 'description',
+        'type', 'name',
+    ];
+
+    protected $must = [
+        'type', 'name',
     ];
 
     public function asso() {
-        return $this->hasMany('App\Models\Asso');
+        return $this->hasMany(Asso::class);
     }
-
-    protected $table = 'assos_types';
 }

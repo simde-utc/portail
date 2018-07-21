@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-class PortailException extends \Exception {
-	public function __construct($message, $code = 400, $previous = null) {
-		return parent::__construct($message, $code, $previous);
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
+class PortailException extends HttpException {
+	public function __construct(string $message = null, int $statusCode = 400, \Exception $previous = null, array $headers = array(), ?int $code = 0) {
+		return parent::__construct($statusCode, $message, $previous, $headers, $code);
 	}
 }

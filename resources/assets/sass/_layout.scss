@@ -1,16 +1,55 @@
-body {
-	margin-top: 75px;
-	margin-bottom: 33px;		/* dégeu */
-	overflow-x: hidden;
+html {
+	overflow: hidden;
 }
-main {
+
+body {
+	padding-top: $navbar-min-height;
+	// padding-bottom: 33px;		/* dégeu */
+    background: $white;
+}
+
+html, body, main, #root {
 	height: 100%;
 }
 
-.navbar {
-	position: fixed;
-	width: 100%;
-	background-color: #fff;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+main {
+	background-color: $white;
 }
-// Top & bottom
+
+.navbar {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/*
+|--------------------------------------------------------------------------
+|	List
+|--------------------------------------------------------------------------
+*/
+
+.list-row {
+	padding: 0;
+	margin-bottom: map-get($spacers, 1);
+}
+
+.list-item,
+.list-header {
+	display: block;
+}
+.list-subitem {
+	font-size: 0.9em;
+	padding-left: map-get($spacers, 2);
+}
+
+.list-header {
+	font-weight: bold;
+	margin-bottom: map-get($spacers, 1);
+}
+
+.list-header,
+.list-link {
+	color: $body-color;
+	&:hover {
+		color: $primary;
+		text-decoration: none;
+	}
+}

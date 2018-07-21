@@ -11,10 +11,10 @@ class ContactsTableSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
+    {/*
         $contacts = [
             [
-                'body' => '01 02 03 04 05',
+                'value' => '01 02 03 04 05',
                 'description' => 'Principal',
                 'contact_type_id' => 3,
                 'visibility_id' => 1,
@@ -32,6 +32,6 @@ class ContactsTableSeeder extends Seeder
                 'contactable_id' => $contact['contactable_id'],
                 'contactable_type' => $contact['contactable_type'],
             ]);
-        }
+        }*/
     }
 }

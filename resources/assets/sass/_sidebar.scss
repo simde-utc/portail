@@ -1,0 +1,51 @@
+.sidebar {
+	min-width: 250px;
+	overflow: auto; 
+	padding: map-get($spacers, 3) 0;
+	background: $bg-grey;
+}
+
+.sidebar-inner {
+	padding: 0 map-get($spacers, 3);
+}
+
+.sidebar-group {
+	margin-bottom: map-get($spacers, 3);
+}
+
+.sidebar-header {
+	color: $gray-600;
+	font-weight: $font-weight-bold;
+	font-size: $font-size-sm * .875;
+	margin-bottom: map-get($spacers, 1);
+}
+
+.sidebar-link {
+	color: $gray-dark;
+	display: block;
+	margin-top: 1px;
+	margin-bottom: 1px;
+	padding: 5px 10px;
+	border-radius: 3px;
+	&:hover {
+		color: $black;
+		background-color: $white;
+		text-decoration: none;
+	}
+	&.active {
+		background-color: $white;
+	}
+
+	// Icon
+	i {
+		width: 20px;
+		text-align: center;
+		margin-right: map-get($spacers, 2);
+	}
+}
+
+.sidebar-footer {
+	margin-top: auto;
+	margin-bottom: 0;
+	text-align: center;
+}
