@@ -24,5 +24,5 @@ Route::match(['get', 'post'], 'register/{provider?}/process', 'Auth\RegisterCont
 
 // React route
 Route::any('{whatever}', function () {
-    return view('home');
+    return view('react');
 })->where('whatever', '.*')->name('home');
