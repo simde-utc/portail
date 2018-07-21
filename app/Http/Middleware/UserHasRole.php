@@ -16,16 +16,19 @@ class UserHasRole
      */
 	public function handle($request, Closure $next, ...$args)
 	{
+		if (count($args) === 0)
+			throw new \Exception('Il est nécessaire de spécifier au moins un rôle');
+
 		if (\Auth::user()) {
 			foreach ($args as $role) {
 				if ($wrongIfEqual = ($role[0] === '!'))
 					$role = substr($role, 1);
 
-				if (\Auth::user()->hasOneRole($role) === $wrongIfEqual)
-					throw new AuthorizationException('L\'utilisateur n\'a pas le role: '.$role);
+				if (\Auth::user()->hasOneRole($role) !== $wrongIfEqual)
+					return $next($request);
 			}
 		}
 
-		return $next($request);
+		throw new AuthorizationException('L\'utilisateur ne possède aucun rôle: '.implode(', ', $args));
  	}
 }

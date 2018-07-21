@@ -16,7 +16,10 @@ class UserIs
      */
 	public function handle($request, Closure $next, ...$args)
 	{
-		if (\Auth::user()) {
+		if (count($args) === 0)
+			throw new \Exception('Il est nécessaire de spécifier au moins un type');
+
+		if (\Auth::id()) {
 			foreach ($args as $type) {
 				if ($wrongIfEqual = ($type[0] === '!'))
 					$type = substr($type, 1);
@@ -26,11 +29,11 @@ class UserIs
 				if (!method_exists(\Auth::user(), $method))
 					throw new \Exception('Le type '.$type.' n\'existe pas !');
 
-				if (\Auth::user()->$method() === $wrongIfEqual)
-					throw new AuthorizationException('L\'utilisateur n\'est pas de ce type: '.$type);
+				if (\Auth::user()->$method() !== $wrongIfEqual)
+					return $next($request);
 			}
 		}
 
-		return $next($request);
+		throw new AuthorizationException('L\'utilisateur n\'est d\'aucun type: '.implode(', ', $args));
  	}
 }

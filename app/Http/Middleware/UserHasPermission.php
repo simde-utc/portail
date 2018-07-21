@@ -16,16 +16,19 @@ class UserHasPermission
      */
 	public function handle($request, Closure $next, ...$args)
 	{
+		if (count($args) === 0)
+			throw new \Exception('Il est nécessaire de spécifier au moins un permission');
+
 		if (\Auth::user()) {
 			foreach ($args as $permission) {
 				if ($wrongIfEqual = ($permission[0] === '!'))
 					$permission = substr($permission, 1);
 
-				if (\Auth::user()->hasOnePermission($permission) === $wrongIfEqual)
-					throw new AuthorizationException('L\'utilisateur n\'a pas le permission: '.$permission);
+				if (\Auth::user()->hasOnePermission($permission) !== $wrongIfEqual)
+					return $next($request);
 			}
 		}
 
-		return $next($request);
+		throw new AuthorizationException('L\'utilisateur ne possède aucune permission: '.implode(', ', $args));
  	}
 }
