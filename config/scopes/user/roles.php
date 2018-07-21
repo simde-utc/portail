@@ -81,19 +81,47 @@ return [
 			]
 	    ],
 	    'set' => [
-            'description' => 'Modifier tous les types de rôles et les rôles de l\'utilisateur (rôles systèmes, rôles associations, rôles groupes)',
+            'description' => 'Modifier et ajouter des types de rôles et les rôles de l\'utilisateur (rôles systèmes, rôles associations, rôles groupes)',
 			'scopes' => [
                 'types' => [
-                    'description' => 'Modifier toutes les types de rôles (rôles systèmes, rôles associations, rôles groupes)',
+                    'description' => 'Modifier et ajouter des types de rôles (rôles systèmes, rôles associations, rôles groupes)',
                     'scopes' => [
                         'users' => [
-        					'description' => 'Modifier toutes les types de rôles au sein du système',
+        					'description' => 'Modifier et ajouter des types de rôles au sein du système',
                         ],
         				'assos' => [
-        					'description' => 'Modifier toutes les types de rôles au sein des associations',
+        					'description' => 'Modifier et ajouter des types de rôles au sein des associations',
         				],
         				'groups' => [
-        					'description' => 'Modifier toutes les types de rôles au sein des groupes',
+        					'description' => 'Modifier et ajouter des types de rôles au sein des groupes',
+        				],
+                    ]
+                ],
+				'users' => [
+					'description' => 'Modifier et assigner des rôles de l\'utilisateur au sein du système',
+                ],
+				'assos' => [
+					'description' => 'Modifier et assigner des rôles de l\'utilisateur au sein des associations',
+				],
+				'groups' => [
+					'description' => 'Modifier et assigner des rôles de l\'utilisateur au sein des groupes',
+				],
+			]
+	    ],
+	    'edit' => [
+            'description' => 'Modifier les types de rôles et les rôles de l\'utilisateur (rôles systèmes, rôles associations, rôles groupes)',
+			'scopes' => [
+                'types' => [
+                    'description' => 'Modifier les types de rôles (rôles systèmes, rôles associations, rôles groupes)',
+                    'scopes' => [
+                        'users' => [
+        					'description' => 'Modifier les types de rôles au sein du système',
+                        ],
+        				'assos' => [
+        					'description' => 'Modifier les types de rôles au sein des associations',
+        				],
+        				'groups' => [
+        					'description' => 'Modifier les types de rôles au sein des groupes',
         				],
                     ]
                 ],
@@ -105,6 +133,62 @@ return [
 				],
 				'groups' => [
 					'description' => 'Modifier les rôles de l\'utilisateur au sein des groupes',
+				],
+			]
+	    ],
+	    'create' => [
+            'description' => 'Ajouter des types de rôles et les rôles de l\'utilisateur (rôles systèmes, rôles associations, rôles groupes)',
+			'scopes' => [
+                'types' => [
+                    'description' => 'Ajouter des types de rôles (rôles systèmes, rôles associations, rôles groupes)',
+                    'scopes' => [
+                        'users' => [
+        					'description' => 'Ajouter des types de rôles au sein du système',
+                        ],
+        				'assos' => [
+        					'description' => 'Ajouter des types de rôles au sein des associations',
+        				],
+        				'groups' => [
+        					'description' => 'Ajouter des types de rôles au sein des groupes',
+        				],
+                    ]
+                ],
+				'users' => [
+					'description' => 'Assigner des rôles de l\'utilisateur au sein du système',
+                ],
+				'assos' => [
+					'description' => 'Assigner des rôles de l\'utilisateur au sein des associations',
+				],
+				'groups' => [
+					'description' => 'Assigner des rôles de l\'utilisateur au sein des groupes',
+				],
+			]
+	    ],
+	    'remove' => [
+            'description' => 'Supprimer des types de rôles et les rôles de l\'utilisateur (rôles systèmes, rôles associations, rôles groupes)',
+			'scopes' => [
+                'types' => [
+                    'description' => 'Supprimer des types de rôles (rôles systèmes, rôles associations, rôles groupes)',
+                    'scopes' => [
+                        'users' => [
+        					'description' => 'Supprimer des types de rôles au sein du système',
+                        ],
+        				'assos' => [
+        					'description' => 'Supprimer des types de rôles au sein des associations',
+        				],
+        				'groups' => [
+        					'description' => 'Supprimer des types de rôles au sein des groupes',
+        				],
+                    ]
+                ],
+				'users' => [
+					'description' => 'Retirer des rôles de l\'utilisateur au sein du système',
+                ],
+				'assos' => [
+					'description' => 'Retirer des rôles de l\'utilisateur au sein des associations',
+				],
+				'groups' => [
+					'description' => 'Retirer des rôles de l\'utilisateur au sein des groupes',
 				],
 			]
 	    ],

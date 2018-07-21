@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Visibility;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Traits\HasStages;
+use App\Traits\Model\HasStages;
 
-class Visibility extends Model
+class Visibility extends Model // TODO $must?
 {
     use HasStages;
 

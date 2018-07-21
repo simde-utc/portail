@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
-use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model implements OwnableContract
 {
@@ -20,6 +19,10 @@ class Event extends Model implements OwnableContract
 
     protected $hidden = [
         'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
+    ];
+
+    protected $must = [
+        'begin_at', 'end_at', 'full_day',
     ];
 
     public function created_by() {

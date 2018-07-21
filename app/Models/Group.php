@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\HasMembers;
-use App\Interfaces\CanHaveEvents;
-use App\Interfaces\CanHaveCalendars;
-use App\Interfaces\CanHaveContacts;
+use App\Traits\Model\HasMembers;
+use App\Interfaces\Controller\v1\CanHaveEvents;
+use App\Interfaces\Controller\v1\CanHaveCalendars;
+use App\Interfaces\Controller\v1\CanHaveContacts;
 
 class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts
 {
@@ -25,10 +24,26 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
 	protected $roleRelationTable = 'groups_members';
-    protected $fillable = ['name', 'user_id', 'icon_id', 'visibility_id', 'is_active'];
-    protected $casts = ['is_active' => 'boolean'];
-    protected $dates = ['deleted_at'];
-    protected $hidden = ['user_id', 'visibility_id']; // On les caches car on récupère directement le user et la vibility dans le controller
+
+    protected $fillable = [
+        'name', 'user_id', 'icon_id', 'visibility_id', 'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    protected $dates = [
+        'deleted_at',
+    ];
+
+    protected $hidden = [
+        'user_id', 'visibility_id',
+    ];
+
+    protected $must = [
+        'icon_id'
+    ];
 
     public function owner() {
         return $this->belongsTo(User::class, 'user_id');

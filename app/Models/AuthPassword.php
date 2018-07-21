@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
-class AuthPassword extends Auth
+class AuthPassword extends Auth // TODO must
 {
 	protected $fillable = [
 	 	'user_id', 'password', 'last_login_at',
@@ -16,7 +15,7 @@ class AuthPassword extends Auth
 	];
 
 	public function user() {
-		return $this->belongsTo('App\Models\User');
+		return $this->belongsTo(User::class);
 	}
 
 	public function getUserByIdentifiant($email) {

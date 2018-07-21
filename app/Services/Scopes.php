@@ -54,7 +54,11 @@ class Scopes {
 			if (isset($data['scopes']))
 				$scopes = array_merge($scopes, $this->generate($prefix, $data['scopes']));
 
-			$scopes[$prefix] = $data['description'];
+			try {
+				$scopes[$prefix] = $data['description'];
+			} catch (\Exception $e) {
+				throw new PortailException('Mauvaise définition (description) du scope '.$prefix);
+			}
 		}
 
 		return $scopes;
@@ -293,17 +297,23 @@ class Scopes {
 	/**
 	 * Cette fonction permet de retrouver les plus petits scopes du scope donné
 	 * (très utile pour lister les scopes minimum dans les controlleurs)
-	 * @param  string $scope
+	 * @param  string/array $scope
 	 * @return array
 	 */
-	public function getDeepestChilds(string $scope) {
+	public function getDeepestChildren($scope) {
+		if (is_array($scope)) {
+			return array_merge(...array_map(function ($one) {
+				return $this->getDeepestChildren($one);
+			}, $scope));
+		}
+
 		$find = $this->find($scope);
 
 		if (!isset($find[$scope]))
-			throw new PortailException('Scope non trouvé');
+			throw new PortailException('Scope '.$scope.' non trouvé');
 
 		$current = $find[$scope];
-		$deepestChilds = [];
+		$deepestChildren = [];
 
 		if ($current === [] || $current === null)
 			return [];
@@ -312,13 +322,13 @@ class Scopes {
 			return [$scope];
 
 		foreach ($current['scopes'] as $child => $data) {
-			$deepestChilds = array_merge(
-				$deepestChilds,
-				$this->getDeepestChilds($scope.'-'.$child)
+			$deepestChildren = array_merge(
+				$deepestChildren,
+				$this->getDeepestChildren($scope.'-'.$child)
 			);
 		}
 
-		return $deepestChilds;
+		return $deepestChildren;
 	}
 
 	/**
@@ -449,7 +459,6 @@ class Scopes {
 		else
 			return $this->matchAny($scopes2, $scopes);
 
-
 		return $this->matchAny($scopes, $scopes2);
 
 		return $this->matchAny($middleware !== 'client', $middleware !== 'user', $scopeList);
@@ -469,6 +478,18 @@ class Scopes {
 			return $this->matchAny($scopes, $scopes2, false);
 		else
 			return $this->matchAny($scopes2, $scopes, false);
+	}
+
+	/**
+	 * Crée le middleware pour vérifier qu'un scope possède au moins un des plus petits enfants des scopes donnés
+	 * @param  string/array $scope
+	 * @param  string/array $scopes2
+	 */
+	public function matchOneOfDeepestChildren($scope = null, $scope2 = null) {
+		return $this->matchOne(
+			$scope ? $this->getDeepestChildren($scope) : null,
+			$scope2 ? $this->getDeepestChildren($scope2) : null
+		);
 	}
 
 	/**

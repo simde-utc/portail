@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Partner extends Model
+class Partner extends Model // TODO $must ?
 {
-    protected $fillable = ['name', 'description', 'image'];
     protected $table = 'partners';
+
+    protected $fillable = [
+        'name', 'description', 'image',
+    ];
 }

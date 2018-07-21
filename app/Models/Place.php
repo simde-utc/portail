@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 
-class Place extends Model
+class Place extends Model // TODO $must
 {
     use SpatialTrait;
 

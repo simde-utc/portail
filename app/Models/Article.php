@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Article extends Model {
-
+class Article extends Model // TODO transformer en Morph // TODO with / must
+{
 	protected $table = 'articles';
 
 	protected $fillable = [
@@ -24,11 +22,11 @@ class Article extends Model {
 	}
 
 	public function collaborators() {
-		return $this->belongsToMany('App\Models\Asso', 'articles_collaborators');
+		return $this->belongsToMany(Asso::class, 'articles_collaborators');
 	}
 
 	public function asso() {
-		return $this->belongsTo('App\Models\Asso');
+		return $this->belongsTo(Asso::class);
 	}
 
 	public function tags() {
@@ -36,6 +34,6 @@ class Article extends Model {
 	}
 
 	public function visibility() {
-		return $this->belongsTo('App\Models\Visibility', 'visibility_id');
+		return $this->belongsTo(Visibility::class, 'visibility_id');
 	}
 }
