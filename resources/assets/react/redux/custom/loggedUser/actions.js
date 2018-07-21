@@ -7,15 +7,6 @@ const updateUserPropActionCreator = (nodePath, uriPath) => ({
 })
 
 const loggedUserActions = {
-	tryLogin: function() {
-		return (dispatch, getState) => {
-			console.log(this)
-			console.log(getState())
-			// L'utilisateur n'est pas récupéré
-			if (window._.isEmpty(getState().loggedUser.data))
-				return dispatch(this.getInfo());
-		}
-	},
 	// Get User properties
 	getInfo: () => updateUserPropActionCreator('info', ''),
 	getAuths: () => updateUserPropActionCreator('auths', '/auths'),

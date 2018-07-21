@@ -10,7 +10,17 @@ const loggedUserReducer = (state = { ...initialCrudState, data: {} }, action) =>
 	// Async Actions started and failed
 	Object.values(loggedUserTypes).forEach(type => {
 		reducerMap[`${type}_${ASYNC_SUFFIXES.loading}`] = (state, action) => ({ ...state, fetching: true, fetched: false })
-		reducerMap[`${type}_${ASYNC_SUFFIXES.error}`] 	= (state, action) => ({ ...state, fetching: false, fetched: false, error: action.payload })
+		reducerMap[`${type}_${ASYNC_SUFFIXES.error}`] 	= (state, action) => produce(state, draft => {
+			// Update status
+			draft.fetching = false;
+			draft.fetched = false;
+			draft.lastUpdate = action.meta.timestamp
+
+			// Unauthenticated => Clear user
+			if (action.payload.response.status == 400)
+				draft.data = {};
+			return draft;	
+		})
 	})
 
 	// Update d'une propiété de l'utilisateur (info, roles...) 
