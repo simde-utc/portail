@@ -22,8 +22,6 @@ class AssoController extends Controller
 {
 	use HasUsers, HasAssos;
 
-	protected $initialChoices = ['joined', 'joining', 'followed'];
-
 	public function __construct() {
 		$this->middleware(
 			\Scopes::matchOneOfDeepestChildren('user-get-assos-members', 'client-get-assos-members'),
@@ -43,37 +41,6 @@ class AssoController extends Controller
 		);
 	}
 
-	protected function getSemester(Request $request, array $choices) {
-		$scopeHead = \Scopes::getTokenType($request);
-
-		if ($request->filled('semester')) {
-			if (in_array('joined', $choices) && !\Scopes::hasOne($request, $scopeHead.'-get-assos-members-joined-now'))
-				throw new PortailException('Vous n\'avez pas les droits pour spécifier un semestre particulier pour récupérer les associations rejoins par l\'utilisateur');
-
-			if (in_array('joining', $choices) && !\Scopes::hasOne($request, $scopeHead.'-get-assos-members-joining-now'))
-				throw new PortailException('Vous n\'avez pas les droits pour spécifier un semestre particulier pour récupérer les associations que l\'utilisateur a demandé à rejoindre');
-
-			if (in_array('followed', $choices) && !\Scopes::hasOne($request, $scopeHead.'-get-assos-members-followed-now'))
-				throw new PortailException('Vous n\'avez pas les droits pour spécifier un semestre particulier pour récupérer les associations que l\'utilisateur suit');
-
-			return Semester::getSemester($request->input('semester'));
-		}
-
-		return Semester::getThisSemester();
-	}
-
-	protected function getChoices(Request $request, array $initialChoices) {
-		$scopeHead = \Scopes::getTokenType($request);
-		$choices = [];
-
-		foreach ($initialChoices as $choice) {
-			if (\Scopes::hasOne($request, $scopeHead.'-get-assos-members-'.$choice.'-now'))
-				$choices[] = $choice;
-		}
-
-		return parent::getChoices($request, $choices);
-	}
-
 	/**
 	 * List Associations
 	 *
@@ -84,7 +51,7 @@ class AssoController extends Controller
 	 */
 	public function index(AssoRequest $request, int $user_id = null): JsonResponse {
 		$user = $this->getUser($request, $user_id);
-		$choices = $this->getChoices($request, $this->initialChoices);
+		$choices = $this->getChoices($request);
 		$semester = $this->getSemester($request, $choices);
 
 		$assos = collect()->merge(
@@ -121,18 +88,11 @@ class AssoController extends Controller
 			list($user_id, $id) = [$id, $user_id];
 
 		$user = $this->getUser($request, $user_id);
-		$choices = $this->getChoices($request, $this->initialChoices);
+		$choices = $this->getChoices($request);
 		$semester = $this->getSemester($request, $choices);
-		$asso = $this->getAsso($request, $id, true);
+		$asso = $this->getAsso($request, $id, $user, $semester);
 
-		$asso = (in_array('joined', $choices) ? $user->joinedAssos()->where('semester_id', $semester->id)->where('asso_id', $asso->id)->first() : null)
-			?? (in_array('joining', $choices) ? $user->joiningAssos()->where('semester_id', $semester->id)->where('asso_id', $asso->id)->first() : null)
-			?? (in_array('followed', $choices) ? $user->followedAssos()->where('semester_id', $semester->id)->where('asso_id', $asso->id)->first() : null);
-
-		if ($asso)
-			return response()->json($asso->hideSubData(), 200);
-		else
-			abort(404, "Assocation non trouvée");
+		return response()->json($asso->hideSubData(), 200);
 	}
 
 	/**
