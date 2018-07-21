@@ -18,18 +18,22 @@ class RoleController extends Controller
 	use HasUsers;
 
 	public function __construct() {
-        $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-get-roles-users', 'client-get-roles-users'),
-            ['only' => ['index', 'show']]
-        );
-        $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-set-roles-users', 'client-set-roles-users'),
-            ['only' => ['store', 'update']]
-        );
-        $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-manage-roles-users', 'client-manage-roles-users'),
-            ['only' => ['destroy']]
-        );
+		$this->middleware(
+			\Scopes::matchOneOfDeepestChildren('user-get-roles-users', 'client-get-roles-users'),
+			['only' => ['index', 'show']]
+		);
+		$this->middleware(
+			\Scopes::matchOneOfDeepestChildren('user-create-roles-users', 'client-create-roles-users'),
+			['only' => ['store']]
+		);
+		$this->middleware(
+			\Scopes::matchOneOfDeepestChildren('user-edit-roles-users', 'client-edit-roles-users'),
+			['only' => ['update']]
+		);
+		$this->middleware(
+			\Scopes::matchOneOfDeepestChildren('user-remove-roles-users', 'client-remove-roles-users'),
+			['only' => ['destroy']]
+		);
 	}
 
 	/**

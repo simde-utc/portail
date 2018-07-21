@@ -27,22 +27,27 @@ class RoleController extends Controller
 	 */
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-get-roles-types'),
+			\Scopes::matchOneOfDeepestChildren('user-get-roles-types', 'client-get-roles-types'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChildren('user-set-roles-types'), [
-					'user:admin',
-				]
+				\Scopes::matchOneOfDeepestChildren('user-create-roles-types', 'client-create-roles-types'),
+				['user:admin']
 			),
-			['only' => ['store', 'update']]
+			['only' => ['store']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOneOfDeepestChildren('user-manage-roles-types'), [
-					'user:admin',
-				]
+				\Scopes::matchOneOfDeepestChildren('user-edit-roles-types', 'client-edit-roles-types'),
+				['user:admin']
+			),
+			['only' => ['update']]
+		);
+		$this->middleware(
+			array_merge(
+				\Scopes::matchOneOfDeepestChildren('user-remove-roles-types', 'client-remove-roles-types'),
+				['user:admin']
 			),
 			['only' => ['destroy']]
 		);
