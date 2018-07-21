@@ -15,10 +15,9 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
     + Création de la clé : `php artisan key:generate`
 - Créer la base de données `portail` à la mano
 - Création des tables et des données : `php artisan migrate:fresh --seed`
-- Installation de OAuth2:
- 	+ Installation interne: `php artisan passport:install`
-	+ Installation des paquets JS: `npm install` (très long)
-	+ Installation des dépendances JS: `npm run dev` (assez long)
+- Installation du Frontend:
+	+ Installation des dépendances JS: `npm install` (très long)
+	+ Compilation de l'application frontend: `npm run dev` (assez long)
 - Lancer l'application via :
     + Artisan : `php artisan serve` et aller sur http://localhost:8000
     + Wamp/Apache : aller directement sur le dossier `public` de l'installation via Wamp

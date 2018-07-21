@@ -9,6 +9,7 @@ import Sidebar from './components/Sidebar';
 import DashboardScreen from './screens/Dashboard';
 import AssosListScreen from './screens/AssosList';
 import AssoDetailScreen from './screens/AssoDetail';
+import ProfileScreen from './screens/Profile';
 
 class App extends Component {
 	render() {
@@ -27,6 +28,7 @@ class App extends Component {
 							<Route path="/dashboard" component={ DashboardScreen } />
 							<Route path="/assos" exact component={ AssosListScreen } />
 							<Route path="/assos/:login" component={ AssoDetailScreen } />
+							<Route path="/me" component={ ProfileScreen } />
 							<Route component={ RouteNotFound } />
 						</Switch>
 					</main>

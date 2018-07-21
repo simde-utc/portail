@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import loggedUserActions from '../redux/custom/loggedUser/actions';
 
-
-class Navbar extends Component { 
+@connect(store => ({
+	user: store.loggedUser.data.info
+}))
+class Navbar extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			loginMethods: {},
 			collapse: false,
 			loginDropdown: false
-		}
+		};
 		this.toggle.bind(this);
+	}
+
+	componentWillMount() {
+		// Get User Info
+		this.props.dispatch(loggedUserActions.getInfo())
+		// Get Login Methods
+		axios.get('/api/v1/login').then(response => this.setState({ loginMethods: response.data}))
 	}
 
 	toggle(key) {
@@ -18,57 +30,53 @@ class Navbar extends Component {
 
 	render() {
 		const { collapse, loginDropdown } = this.state;
+		const { user } = this.props;
+		const loginMethods = Object.entries(this.state.loginMethods).map(([key, loginMethod]) => (
+			<a key={ key } className="dropdown-item" href={ loginMethod.url } title={ loginMethod.description }>
+				{ loginMethod.name }
+			</a>
+		))
+		const isAuthenticated = Boolean(user);
 		return (
 			<nav className="navbar navbar-expand-md navbar-dark fixed-top">
 				<div className="container-fluid">
 					<Link className="navbar-brand" to="/">Portail des Assos</Link>
 					<button className="navbar-toggler text-white" onClick={() => this.toggle('collapse')}>
 						<span className="fas fa-bars"></span>
-					</button>				
+					</button>
 
 					<div className={"collapse navbar-collapse" + (collapse ? ' show' : '')}>
 						<ul className="navbar-nav">
 							<li className="nav-item">
 								<Link className="nav-link" to="/dashboard">Dashboard</Link>
 							</li>
+							<li className="nav-item">
+								<Link className="nav-link" to="/me">Profile</Link>
+							</li>
 						</ul>
 						<ul className="navbar-nav ml-auto">
-							{ this.props.isAuthenticated ? (
+							{ isAuthenticated ? (
 								<li className="nav-item dropdown">
-									<a className="nav-link dropdown-toggle">
-										{ this.props.name } <span className="caret"></span>
+									<a className="nav-link dropdown-toggle" onClick={() => this.toggle('loginDropdown')}>
+										{ user.name } <span className="caret"></span>
 									</a>
-									<div className="dropdown-menu">
-										<a className="dropdown-item" href="/logout" onClick="event.preventDefault(); document.getElementById('logout-form').submit();">
+									<div className={"dropdown-menu" + (loginDropdown ? ' show' : '')}>
+										<a className="dropdown-item" href="/logout">
 											Se déconnecter
 										</a>
-
-											<form id="logout-form" action="/logout" method="POST" style="display: none;">
-												csrf
-											</form>
-										</div>
-									</li>
-								) : (
-									<li className="nav-item dropdown">
-										<a className="nav-link dropdown-toggle" onClick={() => this.toggle('loginDropdown')}>
-											Se connecter <span className="caret"></span>
-										</a>
-										<div className={"dropdown-menu" + (loginDropdown ? ' show' : '')}>
-											<a className="dropdown-item" href="/login">Tout voir</a>
-
-									{/*
-										@foreach (config('auth.services') as $name => $provider)
-											<a className="dropdown-item" href="{{ route('login.show', ['provider' => $name, 'redirect' => $redirect ?? url()->previous()]) }}">
-												{{ $provider['name'] }}
-											</a>
-										@endforeach
-											<a className="dropdown-item" href="{{ route('login', ['see' => 'all', 'redirect' => $redirect ?? url()->previous()]) }}">
-												Tout voir
-											</a>
-									*/}
 									</div>
 								</li>
-							)}
+							) : (
+								<li className="nav-item dropdown">
+									<a className="nav-link dropdown-toggle" onClick={() => this.toggle('loginDropdown')}>
+										Se connecter <span className="caret"></span>
+									</a>
+									<div className={"dropdown-menu" + (loginDropdown ? ' show' : '')}>
+										{ loginMethods }
+										<a className="dropdown-item" href="/login">Tout voir</a>
+									</div>
+								</li>
+							) }
 						</ul>
 					</div>
 				</div>

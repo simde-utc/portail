@@ -1,11 +1,21 @@
 import { combineReducers } from 'redux';
 import { createCrudReducer } from './utils';
-import actionTypes from './types';
+import crudActionTypes from './types';
 
-const usersReducer = createCrudReducer(actionTypes.users)
-const assosReducer = createCrudReducer(actionTypes.assos)
+// CRUD Reducers
+const usersReducer = createCrudReducer(crudActionTypes.users)
+const assosReducer = createCrudReducer(crudActionTypes.assos)
 
+// Custom Reducers
+import loggedUserReducer from './custom/loggedUser/reducers';
+
+
+// Combine
 export default combineReducers({
+	// CRUD
 	users: usersReducer,
 	assos: assosReducer,
+
+	// Custom
+	loggedUser: loggedUserReducer,
 });
