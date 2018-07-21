@@ -16,7 +16,6 @@ class ProfileScreen extends Component {
 	}
 
 	load(name) {
-		console.log("load", name)
 		let action = null;
 		switch (name) {
 			case 'info':

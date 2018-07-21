@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import loggedUserActions from '../redux/custom/loggedUser/actions';
 
-
+@connect(store => ({
+	user: store.loggedUser.data.info
+}))
 class Navbar extends Component { 
 	constructor(props) {
 		super(props)
@@ -12,12 +16,17 @@ class Navbar extends Component {
 		this.toggle.bind(this);
 	}
 
+	componentWillMount() {
+		this.props.dispatch(loggedUserActions.getInfo())
+	}
+
 	toggle(key) {
 		return this.setState(prevState => ({ [key]: !prevState[key] }));
 	}
 
 	render() {
 		const { collapse, loginDropdown } = this.state;
+		const { user } = this.props;
 		return (
 			<nav className="navbar navbar-expand-md navbar-dark fixed-top">
 				<div className="container-fluid">
