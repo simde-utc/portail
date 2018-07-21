@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import loggedUserActions from '../redux/custom/loggedUser/actions';
 
 // Profile Components
-import UserInfo from '../components/profile/UserInfo';
-import AssociativeCarreer from '../components/profile/AssociativeCarreer';
+import UserInfo from '../components/Profile/UserInfo';
+import AssociativeCarreer from '../components/Profile/AssociativeCarreer';
 
 @connect(store => ({
 	user: store.loggedUser.data,

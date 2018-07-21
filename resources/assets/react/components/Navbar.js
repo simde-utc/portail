@@ -6,7 +6,7 @@ import loggedUserActions from '../redux/custom/loggedUser/actions';
 @connect(store => ({
 	user: store.loggedUser.data.info
 }))
-class Navbar extends Component { 
+class Navbar extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -33,7 +33,7 @@ class Navbar extends Component {
 					<Link className="navbar-brand" to="/">Portail des Assos</Link>
 					<button className="navbar-toggler text-white" onClick={() => this.toggle('collapse')}>
 						<span className="fas fa-bars"></span>
-					</button>				
+					</button>
 
 					<div className={"collapse navbar-collapse" + (collapse ? ' show' : '')}>
 						<ul className="navbar-nav">
@@ -44,7 +44,7 @@ class Navbar extends Component {
 								<Link className="nav-link" to="/me">Profile</Link>
 							</li>
 						</ul>
-						<ul className="navbar-nav ml-auto">							
+						<ul className="navbar-nav ml-auto">
 							{ this.props.isAuthenticated ? (
 								<li className="nav-item dropdown">
 									<a className="nav-link dropdown-toggle">
