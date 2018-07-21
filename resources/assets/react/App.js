@@ -29,7 +29,7 @@ class App extends Component {
 							<Route path="/dashboard" component={ DashboardScreen } />
 							<Route path="/assos" exact component={ AssosListScreen } />
 							<Route path="/assos/:login" component={ AssoDetailScreen } />
-							<Route path="/me" component={ ProfileScreen } />
+							<Route path="/profile" component={ ProfileScreen } />
 							<Route component={ RouteNotFound } />
 						</Switch>
 					</main>

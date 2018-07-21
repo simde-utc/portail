@@ -36,3 +36,14 @@
   .d-print-flex         { display: flex !important; }
   .d-print-inline-flex  { display: inline-flex !important; }
 }
+
+
+
+//
+// Display on hover
+//
+
+.d-hover-zone {
+  .d-hover { display: none; }
+  &:hover .d-hover { display: block; }
+}
