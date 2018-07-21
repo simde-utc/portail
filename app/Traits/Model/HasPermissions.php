@@ -48,8 +48,8 @@ trait HasPermissions
 		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$addPermissions = [];
 
-		if (isset($data['validated_by']))
-			$manageablePermissions = $this->getUserPermissions($data['validated_by']);
+		if (isset($data['validated_by']) || \Auth::id())
+			$manageablePermissions = $this->getUserPermissions($data['validated_by'] ?? \Auth::id());
 
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
 			if (!$force) {
@@ -60,7 +60,7 @@ trait HasPermissions
 						throw new PortailException('Le nombre de personnes ayant cette permission a été dépassé. Limité à '.$permission->limited_at);
 				}
 
-				if (isset($data['validated_by'])) {
+				if (isset($data['validated_by']) || \Auth::id()) {
 					if (!$manageablePermissions->contains('id', $permission->id) && !$manageablePermissions->contains('type', 'admin'))
 						throw new PortailException('La personne demandant la validation n\'est pas habilitée à donner cette permission: '.$permission->name);
 				}
@@ -90,11 +90,11 @@ trait HasPermissions
 		$updatedData['semester_id'] = $updatedData['semester_id'] ?? Semester::getThisSemester()->id;
 		$updatedPermissions = [];
 
-		if (isset($updatedData['validated_by']))
-			$manageablePermissions = $this->getUserPermissions($updatedData['validated_by']);
+		if (isset($updatedData['validated_by']) || \Auth::id())
+			$manageablePermissions = $this->getUserPermissions($updatedData['validated_by'] ?? \Auth::id());
 
 		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
-			if (!$force && isset($updatedData['validated_by'])) {
+			if (!$force && (isset($updatedData['validated_by']) || \Auth::id())) {
 				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
 					throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier cette permission: '.$permission->name);
 			}
@@ -127,6 +127,7 @@ trait HasPermissions
     public function removePermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
 		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$delPermissions = [];
+        $removed_by = $removed_by ?? \Auth::id();
 
 		if ($removed_by !== null)
 			$manageablePermissions = $this->getUserPermissions($removed_by);

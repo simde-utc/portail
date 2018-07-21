@@ -58,8 +58,8 @@ trait HasRoles
 		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$addRoles = [];
 
-		if (isset($data['validated_by']))
-			$manageableRoles = $this->getUserRoles($data['validated_by']);
+		if (isset($data['validated_by']) || \Auth::id())
+			$manageableRoles = $this->getUserRoles($data['validated_by'] ?? \Auth::id());
 
 		$nbr = @count($roles) ?? 1;
 		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
@@ -76,7 +76,7 @@ trait HasRoles
 						throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. Limité à '.$role->limited_at);
 				}
 
-				if (isset($data['validated_by'])) {
+				if (isset($data['validated_by']) || \Auth::id()) {
 					if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', config('portail.roles.admin.'.$this->getTable())))
 						throw new PortailException('La personne demandant la validation n\'est pas habilitée à donner ce rôle: '.$role->name);
 				}
@@ -107,8 +107,8 @@ trait HasRoles
 		$updatedData['semester_id'] = $updatedData['semester_id'] ?? Semester::getThisSemester()->id;
 		$updatedRoles = [];
 
-		if (isset($updatedData['validated_by']))
-			$manageableRoles = $this->getUserRoles($updatedData['validated_by']);
+		if (isset($updatedData['validated_by']) || \Auth::id())
+			$manageableRoles = $this->getUserRoles($updatedData['validated_by'] ?? \Auth::id());
 
 		$nbr = @count($roles) ?? 1;
 		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
@@ -117,7 +117,7 @@ trait HasRoles
   			throw new PortailException('Certains rôles donnés n\'ont pas pu être trouvé');
 
 		foreach ($roles as $role) {
-			if (!$force && isset($updatedData['validated_by'])) {
+			if (!$force && (isset($updatedData['validated_by']) || \Auth::id())) {
 				if (!$manageableRoles->contains('id', $role->id) && (!$manageableRoles->contains('type', config('portail.roles.admin.'.$this->getTable())) || $role->allChildren->contains('type', config('portail.roles.admin.'.$this->getTable()))))
 					throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier ce rôle: '.$role->name);
 			}
@@ -151,6 +151,7 @@ trait HasRoles
     public function removeRoles($roles, array $data = [], int $removed_by = null, bool $force = false) {
 		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$delRoles = [];
+		$removed_by = $removed_by ?? \Auth::id();
 
 		if ($removed_by !== null)
 			$manageableRoles = $this->getUserRoles($removed_by);
@@ -275,6 +276,7 @@ trait HasRoles
 			$role->makeHidden('children');
 		}
 
+		// On ajoute les rôles de l'utilisateur sur le système
 		if ($this->getTable() !== 'users' && $user_id) {
 			foreach (User::find($user_id)->getUserRoles(null, $semester_id) as $userRole)
 				$roles->push($userRole);
