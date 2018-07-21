@@ -23,9 +23,10 @@ class MemberController extends Controller
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-get-assos-members', 'client-get-assos-members'), // Pouvoir voir les assos membres
 				\Scopes::matchOneOfDeepestChildren(
-					['user-get-assos-followed', 'user-get-roles-assos'],
-					['client-get-assos-followed', 'client-get-roles-assos']
-				) // Pouvoir voir les assos que l'ont suit (donc pas de role) ou pouvoir voir les roles assos de l'utlisateur
+					['user-get-assos-members-followed', 'user-get-roles-assos'],
+					['client-get-assos-members-followed', 'client-get-roles-assos']
+				), // Pouvoir voir les assos que l'ont suit (donc pas de role) ou pouvoir voir les roles assos de l'utlisateur
+				['user:cas,contributerBde']
 			),
 			['only' => ['index', 'show']]
 		);
@@ -34,9 +35,10 @@ class MemberController extends Controller
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-create-assos-members', 'client-create-assos-members'), // Pouvoir créé des assos membres
 				\Scopes::matchOneOfDeepestChildren(
-					['user-create-assos-followed', 'user-create-roles-assos'],
-					['client-create-assos-followed', 'client-create-roles-assos']
-				) // Pouvoir créer des assos que l'ont suit (donc pas de role) ou pouvoir créer des roles assos pour l'utlisateur
+					['user-create-assos-members-followed', 'user-create-roles-assos'],
+					['client-create-assos-members-followed', 'client-create-roles-assos']
+				), // Pouvoir créer des assos que l'ont suit (donc pas de role) ou pouvoir créer des roles assos pour l'utlisateur
+				['user:cas,contributerBde']
 			),
 			['only' => ['store']]
 		);
@@ -45,9 +47,10 @@ class MemberController extends Controller
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-edit-assos-members', 'client-edit-assos-members'), // Pouvoir modifier les assos membres
 				\Scopes::matchOneOfDeepestChildren(
-					['user-edit-assos-followed', 'user-edit-roles-assos'],
-					['client-edit-assos-followed', 'client-edit-roles-assos']
-				) // Pouvoir modifier les assos que l'ont suit (donc pas de role) ou pouvoir créer des roles assos pour l'utlisateur
+					['user-edit-assos-members-followed', 'user-edit-roles-assos'],
+					['client-edit-assos-members-followed', 'client-edit-roles-assos']
+				), // Pouvoir modifier les assos que l'ont suit (donc pas de role) ou pouvoir créer des roles assos pour l'utlisateur
+				['user:cas,contributerBde']
 			),
 			['only' => ['update']]
 		);
@@ -56,9 +59,10 @@ class MemberController extends Controller
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-remove-assos-members', 'client-remove-assos-members'), // Pouvoir retirer les assos membres
 				\Scopes::matchOneOfDeepestChildren(
-					['user-remove-assos-followed', 'user-remove-roles-assos'],
-					['client-remove-assos-followed', 'client-remove-roles-assos']
-				) // Pouvoir retirer les assos que l'ont suit (donc pas de role) ou pouvoir retirer les roles assos de l'utlisateur
+					['user-remove-assos-members-followed', 'user-remove-roles-assos'],
+					['client-remove-assos-members-followed', 'client-remove-roles-assos']
+				), // Pouvoir retirer les assos que l'ont suit (donc pas de role) ou pouvoir retirer les roles assos de l'utlisateur
+				['user:cas,contributerBde']
 			),
 			['only' => ['destroy']]
 		);
@@ -101,27 +105,17 @@ class MemberController extends Controller
 	 * @param Request $request
 	 * @param $asso_id
 	 * @return JsonResponse
-	 * @throws PortailException
 	 */
 	public function index(Request $request, $asso_id): JsonResponse {
+		$choices = $this->getChoices($request);
+		$semester = $this->getSemester($request, $choices);
 		$asso = $this->getAsso($request, $asso_id);
-		$choices = $this->getChoices($request, ['members', 'joiners', 'followers']);
-		$semester = Semester::getSemester($request->input('semester')) ?? Semester::getThisSemester();
-		$members = collect();
 
-		if ($request->input('semester') && !\Scopes::hasOne($request, ['user-get-assos-joined', 'user-get-assos-joining', 'user-get-assos-followed']))
-			throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes user-get-assos-joined ou user-get-assos-joining ou user-get-assos-followeds');
-
-		if (\Scopes::has($request, 'user-get-assos-joined-now') && in_array('members', $choices))
-			$members = $members->merge($asso->members()->where('semester_id', $semester->id)->get());
-
-		if (\Scopes::has($request, 'user-get-assos-joining-now') && in_array('joiners', $choices))
-			$members = $members->merge($asso->joiners()->where('semester_id', $semester->id)->get());
-
-		if (\Scopes::has($request, 'user-get-assos-followed-now') && in_array('followers', $choices))
-			$members = $members->merge($asso->followers()->where('semester_id', $semester->id)->get());
-
-		$members = $members->map(function ($member) {
+		$members = collect()->merge(
+			in_array('joined', $choices) ? $asso->members()->where('semester_id', $semester->id)->get() : collect(),
+			in_array('joining', $choices) ? $asso->joiners()->where('semester_id', $semester->id)->get() : collect(),
+			in_array('followed', $choices) ? $asso->followers()->where('semester_id', $semester->id)->get() : collect()
+		)->map(function ($member) {
 			return $member->hideData();
 		});
 
@@ -134,31 +128,33 @@ class MemberController extends Controller
 	 * @param  Request $request
 	 * @param $asso_id
 	 * @return JsonResponse
-	 * @throws PortailException
 	 */
 	public function store(Request $request, $asso_id): JsonResponse {
+		$user = $this->getUser($request, \Auth::id() ?? $request->input('user_id'));
+		$semester = $this->getSemester($request, $choices, 'create');
 		$asso = $this->getAsso($request, $asso_id);
+		$scopeHead = \Scopes::getTokenType($request);
 
-		if (\Scopes::isUserToken($request)) {
-			if ($request->input('role_id')) {
-				if (!\Scopes::hasOne($request, ['user-set-assos-joining-now', 'user-set-assos-joined-now']))
-					abort(403, 'Vous n\'être pas autorisé à assigner un rôle');
+		if ($request->input('role_id')) {
+			if (!\Scopes::hasOne($request, $scopeHead.'-create-assos-members-joining-now'))
+				abort(403, 'Vous n\'être pas autorisé à assigner un rôle');
 
-				$asso->assignMembers(\Auth::id(), [
-					'role_id' => $request->input('role_id'),
-				]);
-			}
-			else {
-				if (!\Scopes::hasOne($request, ['user-set-assos-joining-now', 'user-set-assos-joined-now']))
-					abort(403, 'Vous n\'être pas autorisé à créer un membre sans rôle');
-
-				$asso->assignMembers(\Auth::id(), [
-					'validated_by' => \Auth::id(),
-				]);
-			}
-
-			$member = $asso->allMembers()->wherePivot('user_id', \Auth::id())->first();
+			$asso->assignMembers(\Auth::id(), [
+				'role_id' => $request->input('role_id'),
+				'semester_id' => $semester->id
+			]);
 		}
+		else {
+			if (!\Scopes::hasOne($request, 'user-set-assos-members-followed-now'))
+				abort(403, 'Vous n\'être pas autorisé à faire suivre une association');
+
+			$asso->assignMembers(\Auth::id(), [
+				'validated_by' => \Auth::id(),
+				'semester_id' => $semester->id
+			]);
+		}
+
+		$member = $asso->allMembers()->wherePivot('user_id', \Auth::id())->first();
 
 		if ($new = $this->addUserRoles($asso, $member->pivot))
 			$member->new_user_role = $new;
@@ -176,27 +172,12 @@ class MemberController extends Controller
 	 * @throws PortailException
 	 */
 	public function show(Request $request, $asso_id, int $member_id): JsonResponse {
+		$choices = $this->getChoices($request);
+		$semester = $this->getSemester($request, $choices);
 		$asso = $this->getAsso($request, $asso_id);
-		$choices = $this->getChoices($request, ['members', 'joiners', 'followers']);
-		$semester = Semester::getSemester($request->input('semester')) ?? Semester::getThisSemester();
-		$member = null;
+		$user = $this->getUserFromAsso($request, $asso, $member_id, $semester);
 
-		if ($request->input('semester') && !\Scopes::hasOne($request, ['user-get-assos-joined', 'user-get-assos-joining', 'user-get-assos-followed']))
-			throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes user-get-assos-joined ou user-get-assos-joining ou user-get-assos-followeds');
-
-		if (\Scopes::has($request, 'user-get-assos-joined-now') && in_array('members', $choices))
-			$member = $asso->members()->where('semester_id', $semester->id)->wherePivot('user_id', $member_id)->first();
-
-		if (is_null($member) && \Scopes::has($request, 'user-get-assos-joining-now') && in_array('joiners', $choices))
-			$member = $asso->joiners()->where('semester_id', $semester->id)->wherePivot('user_id', $member_id)->first();
-
-		if (is_null($member) && \Scopes::has($request, 'user-get-assos-followed-now') && in_array('followers', $choices))
-			$member = $asso->followers()->where('semester_id', $semester->id)->wherePivot('user_id', $member_id)->first();
-
-		if ($member)
-			return response()->json($member->hideData());
-		else
-			abort(404, 'Cette personne ne fait pas partie de l\'association (ou vous ne pouvez pas le voir)');
+		return response()->json($user->hideData(), 200);
 	}
 
 	/**
@@ -209,50 +190,36 @@ class MemberController extends Controller
 	 * @throws PortailException
 	 */
 	public function update(Request $request, $asso_id, int $member_id): JsonResponse {
+		$choices = $this->getChoices($request);
+		$semester = $this->getSemester($request, $choices);
 		$asso = $this->getAsso($request, $asso_id);
-		$choices = $this->getChoices($request, ['members', 'joiners', 'followers']);
-		$semester = Semester::getSemester($request->input('semester')) ?? Semester::getThisSemester();
-		$member = null;
+		$user = $this->getUserFromAsso($request, $asso, $member_id, $semester);
+		$scopeHead = \Scopes::getTokenType($request);
 
-		if ($request->input('semester') && !\Scopes::hasOne($request, ['user-get-assos-joined', 'user-get-assos-joining', 'user-get-assos-followed']))
-			throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes user-get-assos-joined ou user-get-assos-joining ou user-get-assos-followeds');
-
-		if (\Scopes::has($request, 'user-get-assos-joined-now') && in_array('members', $choices))
-			$member = $asso->members()->where('semester_id', $semester->id)->wherePivot('user_id', $member_id)->first();
-
-		if (is_null($member) && \Scopes::has($request, 'user-get-assos-joining-now') && in_array('joiners', $choices))
-			$member = $asso->joiners()->where('semester_id', $semester->id)->wherePivot('user_id', $member_id)->first();
-
-		if (is_null($member) && \Scopes::has($request, 'user-get-assos-followed-now') && in_array('followers', $choices))
-			$member = $asso->followers()->where('semester_id', $semester->id)->wherePivot('user_id', $member_id)->first();
-
-		if ($member) {
-			$role_id = $request->input('role_id', $member->pivot->role_id);
-
-			if ($request->input('role_id') && !\Scopes::hasOne($request, ['user-set-assos-joining-now', 'user-set-assos-joined-now']))
-				abort(403, 'Vous n\'être pas autorisé à modifier un rôle');
-			else if (is_null($request->input('role_id')) && !\Scopes::hasOne($request, ['user-set-assos-joining-now', 'user-set-assos-joined-now']))
-				abort(403, 'Vous n\'être pas autorisé à créer un membre sans rôle');
-
-			// Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité
-			$force = Role::getRole(config('portail.roles.admin.assos'))->id === $role_id && $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id();
+		if ($request->has('validate')) {
+			if (!\Scopes::hasAll($request, [$scopeHead.'-create-assos-members-joining-now', $scopeHead.'-create-assos-members-joined-now']))
+				abort(403, 'Vous n\'être pas autorisé à confirmer un rôle');
 
 			$asso->updateMembers($member_id, [
-				'semester_id' => $member->pivot->semester_id,
+				'semester_id' => $user->pivot->semester_id,
 			], [
-				                     'role_id'      => $role_id,
-				                     'validated_by' => \Auth::id(),
-			                     ], $force);
-
-			$member = $asso->currentAllMembers()->where('user_id', $member_id)->first();
-
-			if ($new = $this->addUserRoles($asso, $member->pivot))
-				$member->new_user_role = $new;
-
-			return response()->json($member->hideData());
+	            'validated_by' => \Auth::id(),
+	        ], Role::getRole(config('portail.roles.admin.assos'))->id === $user->pivot->role_id
+				&& $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id());
+			// Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité
 		}
-		else
-			abort(404, 'Cette personne ne fait pas partie de l\'association');
+		else {
+			if (!\Scopes::hasOne($request, $scopeHead.'-create-assos-members-'.($user->pivot->validated_by ? 'joined': 'joining').'-now'))
+				abort(403, 'Vous n\'être pas autorisé à assigner un rôle');
+
+			$asso->updateMembers($member_id, [
+				'semester_id' => $user->pivot->semester_id,
+			], [
+	            'role_id' => $request->input('role_id', $user->pivot->role_id),
+	        ]);
+		}
+
+		return response()->json($this->getUserFromAsso($request, $asso, $member_id, $semester)->hideData());
 	}
 
 	/**
@@ -265,30 +232,16 @@ class MemberController extends Controller
 	 * @throws PortailException
 	 */
 	public function destroy(Request $request, $asso_id, int $member_id): JsonResponse {
-		$choices = $this->getChoices($request, ['members', 'joiners', 'followers']);
-		$semester = Semester::getSemester($request->input('semester')) ?? Semester::getThisSemester();
-		$member = null;
+		$choices = $this->getChoices($request);
+		$semester = $this->getSemester($request, $choices, 'remove');
+		$asso = $this->getAsso($request, $asso_id);
+		$user = $this->getUserFromAsso($request, $asso, $member_id, $semester);
 
-		if ($request->input('semester') && !\Scopes::hasOne($request, ['user-get-assos-joined', 'user-get-assos-joining', 'user-get-assos-followed']))
-			throw new PortailException('Il n\'est pas possible de définir un semestre particulier sans les scopes user-get-assos-joined ou user-get-assos-joining ou user-get-assos-followeds');
-
-		if (\Scopes::has($request, 'user-get-assos-joined-now') && in_array('members', $choices))
-			$member = $asso->members()->where('semester_id', $semester->id)->wherePivot('user_id', $member_id)->first();
-
-		if (is_null($member) && \Scopes::has($request, 'user-get-assos-joining-now') && in_array('joiners', $choices))
-			$member = $asso->joiners()->where('semester_id', $semester->id)->wherePivot('user_id', $member_id)->first();
-
-		if (is_null($member) && \Scopes::has($request, 'user-get-assos-followed-now') && in_array('followers', $choices))
-			$member = $asso->followers()->where('semester_id', $semester->id)->wherePivot('user_id', $member_id)->first();
-
-		if ($member) {
-			$asso->removeMembers($member_id, [
-				'semester_id' => $semester->id,
-			], \Auth::id());
-
-			abort(203);
-		}
+		if ($asso->removeMembers($user, [
+			'semester_id' => $user->pivot->semester_id,
+		], \Auth::id()))
+			abort(204);
 		else
-			abort(404, 'Cette personne ne faisait déjà pas partie de l\'association (ou vous ne pouvez pas le voir)');
+			abort(500, 'Impossible de retirer la personne de l\'association');
 	}
 }
