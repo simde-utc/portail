@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 
-class Sidebar extends Component { 
+class Sidebar extends React.Component { 
 	render() {
 		return (
 			<div className="sidebar col-md-3 col-xl-2 d-none d-md-flex flex-column justify-content-between">
@@ -11,7 +11,7 @@ class Sidebar extends Component {
 						<h6 className="sidebar-header d-hover-zone">
 							ACTUALITÉS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/news" />
 						</h6>
-						<NavLink className="sidebar-link" to="/"><i className="fas fa-newspaper"></i>Flux</NavLink>
+						<NavLink exact className="sidebar-link" to="/"><i className="fas fa-newspaper"></i>Flux</NavLink>
 						<NavLink className="sidebar-link" to="/news/utc"><i className="fas fa-newspaper"></i>Actualités UTC</NavLink>
 						<NavLink className="sidebar-link" to="/news/assos"><i className="fas fa-newspaper"></i>Actualités Assos</NavLink>
 					</div>

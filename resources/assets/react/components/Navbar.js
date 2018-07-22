@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import loggedUserActions from '../redux/custom/loggedUser/actions';
 
 @connect(store => ({
 	user: store.loggedUser.data.info
 }))
-class Navbar extends Component {
+class Navbar extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -40,7 +40,7 @@ class Navbar extends Component {
 		return (
 			<nav className="navbar navbar-expand-md navbar-dark fixed-top">
 				<div className="container-fluid">
-					<Link className="navbar-brand" to="/">Portail des Assos</Link>
+					<NavLink className="navbar-brand" to="/">Portail des Assos</NavLink>
 					<button className="navbar-toggler text-white" onClick={() => this.toggle('collapse')}>
 						<span className="fas fa-bars"></span>
 					</button>
@@ -55,8 +55,8 @@ class Navbar extends Component {
 										{ user.name } <span className="caret"></span>
 									</a>
 									<div className={"dropdown-menu" + (loginDropdown ? ' show' : '')}>
-										<Link className="dropdown-item" to="/dashboard">Dashboard</Link>
-										<Link className="dropdown-item" to="/profile">Mon profil</Link>
+										<NavLink className="dropdown-item" to="/dashboard">Dashboard</NavLink>
+										<NavLink className="dropdown-item" to="/profile">Mon profil</NavLink>
 										<a className="dropdown-item" href="/logout">Se déconnecter</a>
 									</div>
 								</li>

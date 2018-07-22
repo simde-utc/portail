@@ -15,7 +15,7 @@ const middlewares = applyMiddleware(
 	promise({
 		promiseTypeSuffixes: Object.values(ASYNC_SUFFIXES)
 	}),
-	createLogger({ collapse: true })
+	createLogger({ collapsed: true })
 );
 
 
