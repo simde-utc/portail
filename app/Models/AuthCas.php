@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class AuthCas extends Auth
+class AuthCas extends Auth // TODO must
 {
 	protected $fillable = [
 	 	'user_id', 'login', 'email', 'last_login_at', 'is_active',
@@ -19,7 +17,7 @@ class AuthCas extends Auth
 	}
 
 	public function user() {
-		return $this->belongsTo('App\Models\User');
+		return $this->belongsTo(User::class);
 	}
 
 	public function getUserByIdentifiant($login) {

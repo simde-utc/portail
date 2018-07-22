@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Exceptions\PortailException;
-use Laravel\Passport\Client;
+use App\Models\Client;
 use App\Models\Asso;
 use App\Models\Role;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
@@ -14,7 +14,7 @@ use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 class ClientController extends Controller
 {
     public function index(Request $request) {
-		if (\Auth::user()->hasOneRole('admin'))
+		if (\Auth::user()->hasOnePermission('client'))
 			return Client::all()->makeVisible('secret');
 		else {
 			$roles = Role::getRoleAndItsParents('resp info');

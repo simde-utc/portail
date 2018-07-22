@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Redirect, Switch } from 'react-router-dom';
 
 // Components
 import Navbar from './components/Navbar';
@@ -10,6 +10,7 @@ import HomeScreen from './screens/Home.js';
 import DashboardScreen from './screens/Dashboard';
 import AssosListScreen from './screens/AssosList';
 import AssoDetailScreen from './screens/AssoDetail';
+import ProfileScreen from './screens/Profile';
 
 class App extends Component {
 	render() {
@@ -23,10 +24,12 @@ class App extends Component {
 					<Sidebar />
 					<main className="col loader-container">
 						<Switch>
-							<Route path="/" exact component={ HomeScreen } />
+							<Route path="/" exact component={ Home } />
+							<Route path="/home" exact render={ () => (<Redirect to="/" />) } />
 							<Route path="/dashboard" component={ DashboardScreen } />
 							<Route path="/assos" exact component={ AssosListScreen } />
 							<Route path="/assos/:login" component={ AssoDetailScreen } />
+							<Route path="/profile" component={ ProfileScreen } />
 							<Route component={ RouteNotFound } />
 						</Switch>
 					</main>

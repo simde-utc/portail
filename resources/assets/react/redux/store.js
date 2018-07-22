@@ -6,8 +6,11 @@ import promise from 'redux-promise-middleware';
 import { createLogger } from 'redux-logger'
 import thunk from 'redux-thunk';
 
-import reducers from './reducers.js';
-const middleware = applyMiddleware(
+// Import Reducers
+import reducers from './reducers';
+
+// Configure Middlewares
+const middlewares = applyMiddleware(
 	thunk,
 	promise({
 		promiseTypeSuffixes: Object.values(ASYNC_SUFFIXES)
@@ -15,4 +18,6 @@ const middleware = applyMiddleware(
 	createLogger({ collapse: true })
 );
 
-export default createStore(reducers, middleware);
+
+
+export default createStore(reducers, middlewares);

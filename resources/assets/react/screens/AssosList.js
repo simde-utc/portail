@@ -4,13 +4,11 @@ import { assosActions } from '../redux/actions';
 
 import AssoChildrenList from '../components/AssoChildrenList';
 
-@connect(store => {
-	return {
-		assos: store.assos.data,
-		fetching: store.assos.fetching,
-		fetched: store.assos.fetched
-	}
-})
+@connect(store => ({
+	assos: store.assos.data,
+	fetching: store.assos.fetching,
+	fetched: store.assos.fetched
+}))
 class AssosListScreen extends Component {
 
 	componentWillMount() {

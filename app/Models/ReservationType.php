@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ReservationType extends Model
+class ReservationType extends Model // TODO $must $fillable
 {
     protected $table = 'reservations_types';
-    // TODO !
 }

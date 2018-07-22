@@ -10,7 +10,7 @@ use App\Models\Session;
 
 class LinkToPasswordController extends Controller
 {
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -28,6 +28,10 @@ class LinkToPasswordController extends Controller
     public function store(Request $request) {
         if ($request->filled('password_confirmation')) {
             (new Password)->addAuth(\Auth::guard('cas')->id(), $request->input());
+
+            \Auth::guard('cas')->user()->update([
+                'email' => $request->input('email')
+            ]);
 
             \Auth::guard('web')->login(\Auth::guard('cas')->user());
             \Auth::guard('cas')->logout();

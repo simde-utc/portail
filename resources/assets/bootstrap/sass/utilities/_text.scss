@@ -15,13 +15,13 @@
 // Responsive alignment
 
 @each $breakpoint in map-keys($grid-breakpoints) {
-  @include media-breakpoint-up($breakpoint) {
-    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+	@include media-breakpoint-up($breakpoint) {
+		$infix: breakpoint-infix($breakpoint, $grid-breakpoints);
 
-    .text#{$infix}-left   { text-align: left !important; }
-    .text#{$infix}-right  { text-align: right !important; }
-    .text#{$infix}-center { text-align: center !important; }
-  }
+		.text#{$infix}-left   { text-align: left !important; }
+		.text#{$infix}-right  { text-align: right !important; }
+		.text#{$infix}-center { text-align: center !important; }
+	}
 }
 
 // Transformation
@@ -42,7 +42,7 @@
 .text-white { color: $white !important; }
 
 @each $color, $value in $theme-colors {
-  @include text-emphasis-variant(".text-#{$color}", $value);
+	@include text-emphasis-variant(".text-#{$color}", $value);
 }
 
 .text-body { color: $body-color !important; }
@@ -54,5 +54,5 @@
 // Misc
 
 .text-hide {
-  @include text-hide($ignore-warning: true);
+	@include text-hide($ignore-warning: true);
 }

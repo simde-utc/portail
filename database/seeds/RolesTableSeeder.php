@@ -23,6 +23,7 @@ class RolesTableSeeder extends Seeder
 					'user',
 					'asso',
 					'group',
+                    'client',
 				]
 			],
 			[
@@ -36,6 +37,7 @@ class RolesTableSeeder extends Seeder
 					'user',
 					'asso',
 					'group',
+                    'client',
 				]
 			],
 			[
@@ -51,6 +53,7 @@ class RolesTableSeeder extends Seeder
                     'event',
                     'contact',
                     'article',
+                    'asso_data',
 				]
 			],
 			[
@@ -69,6 +72,7 @@ class RolesTableSeeder extends Seeder
                     'event',
                     'contact',
                     'article',
+                    'asso_data',
 				]
 			],
 			[
@@ -85,6 +89,7 @@ class RolesTableSeeder extends Seeder
                     'event',
                     'contact',
                     'article',
+                    'asso_data',
 				],
 			],
 			[
@@ -101,6 +106,7 @@ class RolesTableSeeder extends Seeder
                     'event',
                     'contact',
                     'article',
+                    'asso_data',
 				],
 			],
 			[
@@ -182,7 +188,8 @@ class RolesTableSeeder extends Seeder
 				],
 				'permissions' => [
                     'event',
-                    'article'
+                    'article',
+                    'asso_data',
 				],
 			],
 			[

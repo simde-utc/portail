@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use App\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\Model\HasRoles;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
-class Permission extends Model
+class Permission extends Model // TODO $must ? $fillable
 {
     use HasRoles;
 
