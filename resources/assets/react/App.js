@@ -24,7 +24,7 @@ class App extends Component {
 					<Sidebar />
 					<main className="col loader-container">
 						<Switch>
-							<Route path="/" exact component={ Home } />
+							<Route path="/" exact component={ HomeScreen } />
 							<Route path="/home" exact render={ () => (<Redirect to="/" />) } />
 							<Route path="/dashboard" component={ DashboardScreen } />
 							<Route path="/assos" exact component={ AssosListScreen } />
