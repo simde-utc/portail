@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 
 // Screens
+import RouteNotFoundScreen from './screens/RouteNotFound';
 import DashboardScreen from './screens/Dashboard';
 import AssosListScreen from './screens/AssosList';
 import AssoDetailScreen from './screens/AssoDetail';
@@ -14,8 +15,7 @@ import ProfileScreen from './screens/Profile';
 class App extends Component {
 	render() {
 		// Fake Components
-		const RouteNotFound = () => (<div><h1>404</h1></div>)
-		const Home = () => (<div><h1>Home</h1></div>)
+		const Home = () => (<div className="container"><h1 className="title">Home</h1></div>)
 
 		return (
 			<div className="h-100">
@@ -30,7 +30,7 @@ class App extends Component {
 							<Route path="/assos" exact component={ AssosListScreen } />
 							<Route path="/assos/:login" component={ AssoDetailScreen } />
 							<Route path="/profile" component={ ProfileScreen } />
-							<Route component={ RouteNotFound } />
+							<Route component={ RouteNotFoundScreen } />
 						</Switch>
 					</main>
 				</div>
