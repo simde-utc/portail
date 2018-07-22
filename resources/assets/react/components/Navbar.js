@@ -47,12 +47,6 @@ class Navbar extends Component {
 
 					<div className={"collapse navbar-collapse" + (collapse ? ' show' : '')}>
 						<ul className="navbar-nav">
-							<li className="nav-item">
-								<Link className="nav-link" to="/dashboard">Dashboard</Link>
-							</li>
-							<li className="nav-item">
-								<Link className="nav-link" to="/profile">Profile</Link>
-							</li>
 						</ul>
 						<ul className="navbar-nav ml-auto">
 							{ isAuthenticated ? (
@@ -61,9 +55,9 @@ class Navbar extends Component {
 										{ user.name } <span className="caret"></span>
 									</a>
 									<div className={"dropdown-menu" + (loginDropdown ? ' show' : '')}>
-										<a className="dropdown-item" href="/logout">
-											Se déconnecter
-										</a>
+										<Link className="dropdown-item" to="/dashboard">Dashboard</Link>
+										<Link className="dropdown-item" to="/profile">Mon profil</Link>
+										<a className="dropdown-item" href="/logout">Se déconnecter</a>
 									</div>
 								</li>
 							) : (

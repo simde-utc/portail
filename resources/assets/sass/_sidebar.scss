@@ -31,9 +31,11 @@
 		color: $black;
 		background-color: $white;
 		text-decoration: none;
+		box-shadow: $box-shadow-center-sm;
 	}
 	&.active {
 		background-color: $white;
+		font-weight: $font-weight-semibold;
 	}
 
 	// Icon
