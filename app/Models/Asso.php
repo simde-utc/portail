@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use \App\Traits\HasMembers;
-use \App\Traits\HasStages;
+use App\Traits\Model\HasMembers;
+use App\Traits\Model\HasStages;
+use App\Interfaces\Controller\v1\CanHaveContacts;
+use App\Interfaces\Controller\v1\CanHaveEvents;
+use App\Interfaces\Controller\v1\CanHaveCalendars;
 
-class Asso extends Model
+class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
-	use SoftDeletes, HasStages, HasMembers {
+	use HasStages, HasMembers, SoftDeletes {
 		HasMembers::members as membersAndFollowers;
 		HasMembers::currentMembers as currentMembersAndFollowers;
 		HasMembers::joiners as protected joinersFromHasMembers;
@@ -17,18 +20,49 @@ class Asso extends Model
 		HasMembers::getUserRoles as getUsersRolesInThisAssociation;
 	}
 
-	protected $roleRelationTable = 'assos_members';
-
 	protected $fillable = [
 		'name', 'shortname', 'login', 'description', 'type_asso_id', 'parent_id',
 	];
 
-	public function type() {
-		return $this->belongsTo(AssoType::class, 'type_asso_id');
+	protected $hidden = [
+		'type_asso_id', 'parent_id',
+	];
+
+	protected $with = [
+		'type', 'parent',
+	];
+
+	protected $must = [
+		'name', 'shortname',
+	];
+
+	protected $roleRelationTable = 'assos_members';
+
+	public static function boot() {
+        static::created(function ($model) {
+			// On crée automatiquement des moyens de contacts !
+			Contact::create([
+				'name' => 'Adresse email',
+				'value' => $model->login.'@assos.utc.fr',
+				'contact_type_id' => ContactType::where('name', 'Adresse email')->first()->id,
+				'visibility_id' => Visibility::findByType('public')->id,
+			])->changeOwnerTo($model)->save();
+
+			Contact::create([
+				'name' => 'Site Web',
+				'value' => 'https://assos.utc.fr/'.$model->login.'/',
+				'contact_type_id' => ContactType::where('name', 'Url')->first()->id,
+				'visibility_id' => Visibility::findByType('public')->id,
+			])->changeOwnerTo($model)->save();
+        });
+    }
+
+	public function scopeFindByLogin($query, string $login) {
+		return $query->where('login', $login)->first();
 	}
 
-	public function contact() {
-		return $this->morphMany(Contact::class, 'contactable');
+	public function type() {
+		return $this->belongsTo(AssoType::class, 'type_asso_id');
 	}
 
 	public function rooms() {
@@ -40,22 +74,18 @@ class Asso extends Model
 	}
 
 	public function articles() {
-		return $this->belongsToMany(Article::class, 'assos_articles');
+		return $this->hasMany(Article::class);
 	}
 
-	public function collaboratedArticles(){
-		return $this->belongsToMany('App\Models\Article', 'articles_collaborators');
-	}
-
-	public function events() {
-		return $this->belongsToMany(Event::class);
+	public function collaboratedArticles() {
+		return $this->belongsToMany(Article::class, 'articles_collaborators');
 	}
 
 	public function parent() {
-	    return $this->hasOne(Asso::class, 'parent_id');
+	    return $this->hasOne(Asso::class, 'id', 'parent_id');
     }
 
-	public function childs() {
+	public function children() {
 		return $this->hasMany(Asso::class, 'parent_id', 'id');
     }
 
@@ -93,8 +123,8 @@ class Asso extends Model
 			foreach ($asso->getUsersRolesInThisAssociation($user_id, $semester_id) as $role) {
 				$roles->push($role);
 
-				$roles = $roles->merge($role->allChilds());
-				$role->makeHidden('childs');
+				$roles = $roles->merge($role->allChildren());
+				$role->makeHidden('children');
 			}
 
 			$parent_id = $asso->parent_id;
@@ -107,42 +137,45 @@ class Asso extends Model
 		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
 	}
 
-	public function hide() {
-		$this->makeHidden('type_asso_id');
-
-		if ($this->pivot) {
-			$this->pivot->makeHidden(['user_id', 'asso_id']);
-
-			if ($this->pivot->semester_id === 0)
-				$this->pivot->makeHidden('semester_id');
-		}
-
-		if ($this->sub) {
-			foreach ($this->sub as $sub)
-				$this->hideAssoData();
-		}
-
-		return $this;
+	public function contacts() {
+		return $this->morphMany(Contact::class, 'owned_by');
 	}
 
-	/**
-	 * Permet de vérifier si l'utilisateur peut créer un contact pour ce model.
-	 *
-	 * @return bool
-	 */
-	public function canCreateContact() {
-		return ($this->hasOneRole('resp communication', ['user_id' => \Auth::id()]) || \Auth::user()->hasOneRole('admin'));
+	public function isContactAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
-	/**
-	 * Permet de vérifier si l'utilisateur peut modifier/supprimer un contact pour ce model.
-	 *
-	 * @return bool
-	 */
-	public function canModifyContact($contact) {
-		if ($contact->contactable == $this) {
-            return ($this->hasOneRole('resp communication', ['user_id' => \Auth::id()]) || \Auth::user()->hasOneRole('admin'));
-        } else
-        	return false;
+	public function isContactManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('contact', [
+			'user_id' => $user_id,
+		]);
+	}
+
+    public function calendars() {
+    	return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
+	public function isCalendarAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isCalendarManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('calendar', [
+			'user_id' => $user_id,
+		]);
+	}
+
+    public function events() {
+    	return $this->morphMany(Events::class, 'owned_by');
+    }
+
+	public function isEventAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isEventManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('event', [
+			'user_id' => $user_id,
+		]);
 	}
 }

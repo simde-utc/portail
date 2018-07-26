@@ -19,7 +19,7 @@ class CheckPassport
     {
 		$input = $request->all();
 		// On vérifie la requête uniquement s'il s'agit d'une authentification par client uniquement
-        if (isset($input['grant_type']) && ($input['grant_type'] === 'client_credentials' || $input['grant_type'] === 'password')) {
+        if (isset($input['grant_type']) && $input['grant_type'] === 'client_credentials') {
 			if (isset($input['scope']))
 				throw new \Exception('Les scopes sont définis à l\'avance pour chaque clé, il ne faut pas les définir dans la requête');
 

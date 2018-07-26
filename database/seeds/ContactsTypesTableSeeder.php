@@ -20,19 +20,19 @@ class ContactsTypesTableSeeder extends Seeder
         ],
         [
             'name' => 'Url',
-            'pattern' => '\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))',
+            'pattern' => '\b(([\w-]+:\\/\\/?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|\\/)))',
         ],
         [
             'name' => 'Numéro de téléphone',
-            'pattern' => '\+?[^0-9 \.]',
+            'pattern' => '\+?[^0-9 \.]*',
         ],
         [
             'name' => 'Facebook',
-            'pattern' => '(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?',
+            'pattern' => '(?:(?:http|https):\\/\\/)?(?:www.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?',
         ],
         [
             'name' => 'Twitter',
-            'pattern' => '(https?:)?\/\/(www\.)?twitter.com\/(#!\/)?([^\/ ].)+',
+            'pattern' => '(https?:)?\\/\\/(www\.)?twitter.com\/(#!\/)?([^\/ ].)+',
         ],
         [
             'name' => 'LinkedIn',

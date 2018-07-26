@@ -23,16 +23,19 @@ class CheckAuth
 		// On vérifie que l'utilisateur lié au token est toujours connecté
 		if ($request->user() !== null) {
 			$token = $request->user()->token();
-			$client = Client::find($token->client_id);
 
-			// On vérifie uniquement pour les tokens qui ne sont pas un token personnel ou lié à une application sans session
-			if ($client !== null && !$client->personal_access_client && !$client->password_client) {
-				$session = Session::find($token->session_id);
+			if (!$token->transient()) {
+				$client = Client::find($token->client_id);
 
-				if ($session === null)
-					return response()->json(['message' => 'La session est invalide ou a expiré'], 403);
-				elseif ($session->user_id !== $request->user()->id)
-					return response()->json(['message' => 'L\'utilisateur n\'est plus connecté'], 410);
+				// On vérifie uniquement pour les tokens qui ne sont pas un token personnel ou lié à une application sans session
+				if ($client !== null && !$client->personal_access_client && !$client->password_client) {
+					$session = Session::find($token->session_id);
+
+					if ($session === null)
+						return response()->json(['message' => 'La session est invalide ou a expiré'], 403);
+					elseif ($session->user_id !== $request->user()->id)
+						return response()->json(['message' => 'L\'utilisateur n\'est plus connecté'], 410);
+				}
 			}
 		}
 

@@ -11,22 +11,16 @@
 |
 */
 
-// Password reset
-Route::get('password/reset',  'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::match(['get', 'head'], 'password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset');
-Route::get('password/done',  'Auth\ResetPasswordController@done');
-
 // Authentication Routes
 Route::get('login', 'Auth\LoginController@index')->name('login');
+Route::get('login/captcha', 'Auth\LoginController@update')->name('login.captcha');
 Route::get('login/{provider?}', 'Auth\LoginController@show')->name('login.show');
-Route::match(['get', 'post'], 'login/{provider}/process', 'Auth\LoginController@login')->name('login.process');
-Route::match(['get', 'post'], 'logout/{redirection?}', 'Auth\LoginController@logout')->name('logout');
+Route::match(['get', 'post'], 'login/{provider}/process', 'Auth\LoginController@store')->name('login.process');
+Route::match(['get', 'post'], 'logout/{redirect?}', 'Auth\LoginController@destroy')->name('logout');
 
 // Basic Registration
 Route::get('register/{provider?}', 'Auth\RegisterController@show')->name('register.show');
-Route::post('register/{provider?}/process', 'Auth\RegisterController@register')->name('register.process');
+Route::match(['get', 'post'], 'register/{provider?}/process', 'Auth\RegisterController@store')->name('register.process');
 
-// Vues temporaires, uniquement de l'affichage de liens
-Route::get('/', 'HomeController@welcome')->name('welcome');
-Route::get('home', 'HomeController@index')->name('home');
+// React route
+Route::any('{whatever}', 'RenderReact')->where('whatever', '.*')->name('home');

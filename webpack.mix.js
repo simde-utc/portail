@@ -1,15 +1,32 @@
 let mix = require('laravel-mix');
+require('dotenv').config();
 
 /*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
- | file for the application as well as bundling up all the JS files.
- |
- */
+|--------------------------------------------------------------------------
+| Mix Asset Management
+|--------------------------------------------------------------------------
+|
+| Mix provides a clean, fluent API for defining some Webpack build steps
+| for your Laravel application. By default, we are compiling the Sass
+| file for the application as well as bundling up all the JS files.
+|
+*/
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+const sassOptions = {
+	outputStyle: 'compressed'
+};
+
+// Custom Bootstrap
+mix.sass('resources/assets/bootstrap/sass/bootstrap.scss', 'public/css', sassOptions)
+// Custom CSS
+mix.sass('resources/assets/sass/app.scss', 'public/css');
+
+// React
+mix.react('resources/assets/react/index.js', 'public/js');
+
+// Browser Sync Auto-Reload
+// Simply put the url where laravel run in .env APP_URL
+// Use npm run watch to lauch the dev server on port 3000 (by default)
+mix.browserSync(process.env.APP_URL);
+
+mix.disableSuccessNotifications();

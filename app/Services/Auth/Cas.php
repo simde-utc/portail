@@ -3,9 +3,11 @@
 namespace App\Services\Auth;
 
 use Ginger;
+use App\Models\User;
 use App\Models\AuthCas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Session;
 
 class Cas extends BaseAuth
 {
@@ -17,13 +19,20 @@ class Cas extends BaseAuth
 		$this->casURL = config('portail.cas.url');
 	}
 
+	public function showLoginForm(Request $request) {
+		if (Auth::guard('cas')->check())
+			return redirect()->route('cas.request');
+		else
+			return parent::showLoginForm($request);
+	}
+
 	public function login(Request $request) {
 		$ticket = $request->query('ticket');
 
 		if (!isset($ticket) || empty($ticket))
 			return $this->error($request, null, null, 'Ticket CAS invalide');
 
-		$data = file_get_contents($this->casURL.'serviceValidate?service='.route('login.process', ['provider' => $this->name, 'redirect' => $request->query('redirect')]).'&ticket='.$ticket);
+		$data = file_get_contents($this->casURL.'serviceValidate?service='.route('login.process', ['provider' => $this->name]).'&ticket='.$ticket);
 
 		if (empty($data))
 			return $this->error($request, null, null, 'Aucune information reçue du CAS');
@@ -39,25 +48,39 @@ class Cas extends BaseAuth
 
 		// Renvoie une erreur différente de la 200. On passe par le CAS.
 		if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
-			return $this->updateOrCreate($request, 'login', $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'], [
-				'firstname' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
-				'lastname' 	=> $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
-				'email' 	=> $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
-			], [
-				'login' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
-				'email' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
-			]);
+			list($login, $email, $firstname, $lastname) = [
+				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
+				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
+				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
+				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
+			];
+		}
+		else {
+			// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
+			list($login, $email, $firstname, $lastname) = [
+				$ginger->getLogin(),
+				$ginger->getEmail(),
+				$ginger->getFirstname(),
+				$ginger->getLastname(),
+			];
 		}
 
-		// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
-		return $this->updateOrCreate($request, 'login', $ginger->getLogin(), [
-			'firstname' => $ginger->getFirstname(),
-			'lastname' 	=> $ginger->getLastname(),
-			'email' 	=> $ginger->getEmail(),
-		], [
-			'login' => $ginger->getLogin(),
-			'email' => $ginger->getEmail(),
-		]);
+		if (($cas = AuthCas::findByEmail($email)))
+			$user = $cas->user;
+		else {
+			$user = $this->updateOrCreateUser(compact('email', 'firstname', 'lastname'));
+			$cas = $this->createAuth($user->id, compact('login', 'email'));
+		}
+
+		// On vérifie qu'on a bien lié son CAS à une connexion email/mot de passe
+		if ($user->password()->exists())
+			return $this->connect($request, $user, $cas);
+		else {
+			Auth::guard('cas')->login($user);
+			Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => $this->name]);
+
+			return redirect()->route('cas.request');
+		}
 	}
 
 	public function register(Request $request) {
@@ -72,24 +95,17 @@ class Cas extends BaseAuth
 			$userAuth->is_active = 1;
 			$userAuth->save();
 
-			return view('auth.cas.redirect')->withSuccess('Vous êtes maintenant considéré.e comme un.e étudiant.e');
+			$message = 'Vous êtes maintenant considéré.e comme un.e étudiant.e';
 		}
-		else
-			return view('auth.cas.redirect');
+
+		return parent::success($request, $user, $userAuth, $message);
 	}
 
 	/**
 	 * Se déconnecte du CAS de l'UTC
 	 */
 	public function logout(Request $request) {
-		// Si le personne est ou était étudiant, il faut vérifier qu'il est bien passé par le CAS
-		if (Auth::user()->cas->is_active) {
-			return view('auth.cas.logout', [
-				'redirect' => $request->query('redirect', url()->previous()),
-			]);
-		}
-		else
-			return parent::logout($request);
+		return redirect(config('portail.cas.url').'logout');
 	}
 }
 

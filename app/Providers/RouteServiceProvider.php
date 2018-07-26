@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
-use App\Facades\Scopes;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -37,6 +36,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapApiRoutes();
 
+        // A définir en dernier
         $this->mapWebRoutes();
     }
 
@@ -49,7 +49,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapPassportRoutes() {
 		Passport::routes();
-		Passport::tokensCan(Scopes::all());
+		Passport::tokensCan(\Scopes::all());
+
+        Passport::enableImplicitGrant();
 
 		Route::prefix('oauth')
 			->group(base_path('routes/oauth.php'));
@@ -64,9 +66,20 @@ class RouteServiceProvider extends ServiceProvider
      * @return void
      */
     protected function mapWebRoutes() {
+        $services = config('auth.services');
+
+		foreach ($services as $provider => $data) {
+            $file = base_path('routes/auth/'.$provider.'.php');
+
+            if (file_exists($file)) {
+                Route::middleware('web')
+                    ->namespace($this->namespace)->prefix('login/'.$provider)->group($file);
+            }
+        }
+
+        // A définir en dernier car la route '/' override tout
         Route::middleware('web')
-            ->namespace($this->namespace)
-            ->group(base_path('routes/web.php'));
+            ->namespace($this->namespace)->group(base_path('routes/web.php'));
     }
 
     /**

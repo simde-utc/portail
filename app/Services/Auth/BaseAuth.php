@@ -15,7 +15,6 @@ abstract class BaseAuth
 	 * !! Attributs à overrider
 	 */
 	protected $name, $config;
-	protected $type = 'login';
 
 	/**
 	 * Renvoie un lien vers le formulaire de login
@@ -125,12 +124,7 @@ abstract class BaseAuth
 			'email' => $info['email'],
 			'lastname' => $info['lastname'],
 			'firstname' => $info['firstname'],
-		]);
-
-		// Ajout dans les préférences
-		$userPreferences = UserPreference::create([
-			'user_id' => $user->id,
-			'email'   => $user->email,
+			'is_active' => true,
 		]);
 
 		return $user;
@@ -154,6 +148,27 @@ abstract class BaseAuth
 		return $user;
 	}
 
+	/**
+	 * Création ou mis à jour de l'utilisateur User
+	 */
+	protected function updateOrCreateUser(array $info) {
+		$user = User::findByEmail($info['email']);
+
+		if ($user)
+			return $this->updateUser($user->id, $info);
+		else
+			return $this->createUser($info);
+	}
+
+
+	/**
+	 * Crée la connexion auth
+	 */
+	public function addAuth($user_id, array $info) {
+		return resolve($this->config['model'])::create(array_merge($info, [
+			'user_id' => $user_id
+		]));
+	}
 
 	/**
 	 * Crée la connexion auth
@@ -185,7 +200,10 @@ abstract class BaseAuth
 	 */
 	protected function connect(Request $request, $user, $userAuth) {
 		// Si tout est bon, on le connecte
-		if ($user !== null && $userAuth !== null) {
+		if ($user && $userAuth) {
+			if (!$user->is_active)
+				return $this->error($request, $user, $userAuth, 'Ce compte a été désactivé');
+
 			$user->timestamps = false;
 			$user->last_login_at = new \DateTime();
 			$user->save();
@@ -194,7 +212,7 @@ abstract class BaseAuth
 			$userAuth->last_login_at = new \DateTime();
 			$userAuth->save();
 
-			Auth::login($user);
+			Auth::guard('web')->login($user);
 			Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => $this->name]);
 
 			return $this->success($request, $user, $userAuth);
@@ -208,9 +226,9 @@ abstract class BaseAuth
 	 */
 	protected function success(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect($request->query('redirect', url()->previous()));
+			return redirect(\Session::get('url.intended', '/'));
 		else
-			return redirect($request->query('redirect', url()->previous()))->withSuccess($message);
+			return redirect(\Session::get('url.intended', '/'))->withSuccess($message);
 	}
 
 	/*
@@ -218,8 +236,8 @@ abstract class BaseAuth
 	 */
 	protected function error(Request $request, $user = null, $userAuth = null, $message = null) {
 		if ($message === null)
-			return redirect()->route($this->type.'.show', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())])->withError('Il n\'a pas été possible de vous connecter');
+			return redirect()->route('login.show', ['provider' => $this->name])->withError('Il n\'a pas été possible de vous connecter')->withInput();
 		else
-			return redirect()->route($this->type.'.show', ['provider' => $this->name, 'redirect' => $request->query('redirect', url()->previous())])->withError($message);
+			return redirect()->route('login.show', ['provider' => $this->name])->withError($message)->withInput();
 	}
 }

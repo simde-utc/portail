@@ -12,6 +12,8 @@
     - [Services](backend/services.md)
     - [Routes](backend/routes.md)
     - [Comment commenter](backend/commenter.md)
+- [Documentation du frontend](frontend/)
+    - [Installation](frontend/installation.md)
 - [Documentation de la documentation](#métadocumentation)
 
 ## Liens utiles

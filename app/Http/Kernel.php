@@ -35,6 +35,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
         ],
 
         'api' => [
@@ -62,7 +63,9 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-		'admin' => \App\Http\Middleware\IsAdmin::class,
+        'user' => \App\Http\Middleware\UserIs::class,
+        'role' => \App\Http\Middleware\UserHasRole::class,
+        'permission' => \App\Http\Middleware\UserHasPermission::class,
 		'checkPassport' => \App\Http\Middleware\CheckPassport::class,
 		'linkTokenToSession' => \App\Http\Middleware\LinkTokenToSession::class,
 		'forceJson' => \App\Http\Middleware\ForceJson::class,

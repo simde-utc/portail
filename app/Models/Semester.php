@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Semester extends Model
+class Semester extends Model // TODO $must
 {
     protected $fillable = [
         'name', 'is_spring', 'year', 'begining_at', 'ending_at',

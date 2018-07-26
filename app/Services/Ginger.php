@@ -9,6 +9,7 @@ use Curl;
  */
 class Ginger {
 	protected const URL = 'https://assos.utc.fr/ginger/v1/';
+
 	protected $user;
 	protected $responseCode;
 	protected $key;
@@ -48,19 +49,38 @@ class Ginger {
 	}
 
 	/**
-	 * Permet de récupérer directement auprès de Ginger un login précis
+ 	 * Permet de récupérer directement auprès de Ginger via un email précis
+ 	 * @param  string $email
+	 * @return Ginger        Objet Ginger pour singleton
+	 */
+	public function userByEmail($email) {
+		$response = self::call(
+			'GET',
+			'mail/'.$email
+		);
+
+		$this->responseCode = $response === null ? null : $response->status;
+		$this->user = $this->responseCode === 200 ? $response->content : null;
+
+		return $this;
+	}
+
+	/**
+	 * Permet de récupérer directement auprès de Ginger via un login précis
 	 * @param  string $login Login UTC
 	 * @return array        Retourne l'ensemble des données de l'utilisateur
 	 */
 	public function getUser($login) {
-		$response = self::call(
-			'GET',
-			$login
-		);
+	 	return self::user($login)->get();
+	}
 
-		$this->responseCode = $response === null ? null : $response->status;
-
-	 	return $this->responseCode === 200 ? $response->content : null;
+	/**
+	 * Permet de récupérer directement auprès de Ginger via un email précis
+	 * @param  string $email
+	 * @return array        Retourne l'ensemble des données de l'utilisateur
+	 */
+	public function getUserByEmail($email) {
+	 	return self::userByEmail($email)->get();
 	}
 
 	/**
@@ -71,7 +91,7 @@ class Ginger {
 	public function userExists($login) {
 		$this->user($login);
 
-		return $this->user !== null;
+		return $this->get() !== null;
 	}
 
 	/**

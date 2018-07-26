@@ -22,7 +22,7 @@
 // Toutes les routes commencant par user-{verbe}-articles-
 return [
 	'description' => 'Articles',
-	'icon' => 'newspaper-o',
+	'icon' => 'newspaper',
 	'verbs' => [
 		'manage' => [
 			'description' => 'Gérer les articles des associations suivies et faites par l\'utilisateur',

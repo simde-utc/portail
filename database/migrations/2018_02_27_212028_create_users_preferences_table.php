@@ -14,10 +14,17 @@ class CreateUsersPreferencesTable extends Migration
 	public function up()
 	{
 		Schema::create('users_preferences', function (Blueprint $table) {
-			$table->integer('user_id')->unsigned()->primary();
-			$table->foreign('user_id')->references('id')->on('users');
-			$table->string('email', validation_max('email'))->unique();
+			$table->integer('user_id')->unsigned();
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;
+			$table->string('key');
+			$table->string('value')->nullable();
+			$table->enum('type', [
+				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
+			])->default('STRING');
+			$table->string('only_for')->default('global');
+
 			$table->timestamps();
+			$table->primary(['user_id', 'key', 'only_for']);
 		});
 	}
 

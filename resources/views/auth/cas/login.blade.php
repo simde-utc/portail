@@ -1,5 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-	<iframe onLoad="url = this.contentWindow.location.href; if (url !== '{{ config('portail.cas.url').'login?service='.route('login.process', ['provider' => $provider, 'redirect' => $redirect]) }}') { top.window.location.href = '{{ $redirect }}'; }" src="{{ config('portail.cas.url').'login?service='.route('login.process', ['provider' => $provider, 'redirect' => $redirect]) }}" style="position: absolute; height:100%; width:100%; margin-top:-20px" frameborder="0" height="100%" width="100%"></iframe>
+	<div class="row">
+		<div class="col-md-8 drop-shadow rounded-corners mx-auto bg-white p-4">
+			<span>Vous allez être redirigé(e) vers le CAS-UTC dans quelques secondes...</span>
+			<br />
+			<input type="button" class="btn btn-primary mt-3" id="connectCAS" value="Se connecter" onClick="window.location.href = '{{ config('portail.cas.url').'login?service='.route('login.process', ['provider' => $provider]) }}'"></input>
+		</div>
+	</div>
+@endsection
+
+@section('script')
+	<script>
+		$(document).ready(function() {
+			if (!window.history.state) {
+				window.history.replaceState(true, null, null);
+				$('#connectCAS').click();
+			}
+		});
+	</script>
 @endsection

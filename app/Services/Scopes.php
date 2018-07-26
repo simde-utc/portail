@@ -5,6 +5,8 @@ namespace App\Services;
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Parser;
 use Laravel\Passport\Token;
+use App\Models\Client;
+use App\Exceptions\PortailException;
 
 /**
  * Cette classe permet de récupérer des informations concernant un membre de l'UTC
@@ -30,6 +32,9 @@ class Scopes {
 	 */
 	protected $scopes;
 
+	// Correspond au header spécifiant le type de requête pour un token transient (correspond au token du portail front)
+	const HEADER_REQUEST_TYPE = 'X-Portail-Request-Type';
+
 	public function __construct() {
 		$this->scopes = config('scopes');
 	}
@@ -49,7 +54,11 @@ class Scopes {
 			if (isset($data['scopes']))
 				$scopes = array_merge($scopes, $this->generate($prefix, $data['scopes']));
 
-			$scopes[$prefix] = $data['description'];
+			try {
+				$scopes[$prefix] = $data['description'];
+			} catch (\Exception $e) {
+				throw new PortailException('Mauvaise définition (description) du scope '.$prefix);
+			}
 		}
 
 		return $scopes;
@@ -69,10 +78,14 @@ class Scopes {
 				foreach ($categorie['verbs'] as $verb => $data) {
 					$prefix = $type.'-'.$verb.'-'.$name;
 
-					if (isset($data['scopes']))
+					try {
+						if (isset($data['scopes']))
 						$scopes = array_merge($scopes, $this->generate($prefix, $data['scopes']));
 
-					$scopes[$prefix] = $data['description'];
+						$scopes[$prefix] = $data['description'];
+					} catch (PortailException $e) {
+						throw new PortailException('Le scope '.$prefix.' est mal défini !');
+					}
 				}
 			}
 		}
@@ -116,12 +129,12 @@ class Scopes {
 	private function nextVerbs(string $verb, $up = false) {
 		if ($up) {
 			switch ($verb) {
-				case 'get':
 				case 'set':
 				case 'remove':
 					return ['manage'];
 					break;
 
+				case 'get':
 				case 'create':
 				case 'edit':
 					return ['set'];
@@ -156,7 +169,7 @@ class Scopes {
 		$elements = explode('-', $scope);
 
 		if (count($elements) < 3)
-			throw new \Exception('Le scope '.$scope.' est incorrect et doit au moins posséder un système d\'authentification, un verbe et une catégorie');
+			throw new PortailException('Le scope '.$scope.' est incorrect et doit au moins posséder un système d\'authentification, un verbe et une catégorie');
 
 		if (!isset($this->scopes[$elements[0]][$elements[2]]['verbs'][$elements[1]]))
 			return [];
@@ -170,7 +183,7 @@ class Scopes {
 		}
 
 		if ($current === [] || !isset($current['description']))
-			throw new \Exception('Le scope '.$scope.' est mal défini dans le fichier de config');
+			throw new PortailException('Le scope '.$scope.' est mal défini dans le fichier de config');
 		else
 			return [
 				$scope => $current,
@@ -210,12 +223,12 @@ class Scopes {
 			if (!isset($middleware))
 				$middleware = $elements[0];
 			elseif ($middleware !== $elements[0])
-				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
+				throw new PortailException('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
 
 			$current = $this->get($scope);
 
 			if ($current === [])
-				throw new \Exception('Le scope '.$scope.' n\'existe pas !');
+				throw new PortailException('Le scope '.$scope.' n\'existe pas !');
 
 			if (!isset($categories[$elements[2]]) && !isset($categories[$elements[2]]['scopes'])) {
 				$categorie = $this->scopes[$middleware][$elements[2]];
@@ -282,6 +295,43 @@ class Scopes {
 	}
 
 	/**
+	 * Cette fonction permet de retrouver les plus petits scopes du scope donné
+	 * (très utile pour lister les scopes minimum dans les controlleurs)
+	 * @param  string/array $scope
+	 * @return array
+	 */
+	public function getDeepestChildren($scope) {
+		if (is_array($scope)) {
+			return array_merge(...array_map(function ($one) {
+				return $this->getDeepestChildren($one);
+			}, $scope));
+		}
+
+		$find = $this->find($scope);
+
+		if (!isset($find[$scope]))
+			throw new PortailException('Scope '.$scope.' non trouvé');
+
+		$current = $find[$scope];
+		$deepestChildren = [];
+
+		if ($current === [] || $current === null)
+			return [];
+
+		if (!isset($current['scopes']) || count($current['scopes']) === 0)
+			return [$scope];
+
+		foreach ($current['scopes'] as $child => $data) {
+			$deepestChildren = array_merge(
+				$deepestChildren,
+				$this->getDeepestChildren($scope.'-'.$child)
+			);
+		}
+
+		return $deepestChildren;
+	}
+
+	/**
 	 * Retourne la liste des scopes et des ses parents (prise en compte de l'héridité des verbes)
 	 *
 	 * @param array $scopes
@@ -289,25 +339,25 @@ class Scopes {
 	 */
 	public function getMatchingScopes(array $scopes = [], bool $checkMiddleware = true, string $middleware = null) {
 		if ($scopes === [] || $scopes === null)
-			throw new \Exception('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
+			throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
 
 		$matchingScopes = [];
 
 		foreach ($scopes as $scope) {
 			if ($scope === null)
-				throw new \Exception('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
+				throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
 
 			$elements = explode('-', $scope);
 
 			if (!isset($middleware))
 				$middleware = $elements[0];
 			elseif ($middleware !== $elements[0] && $checkMiddleware)
-				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
+				throw new PortailException('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
 
 			$current = $this->getRelatives($scope, true);
 
 			if ($current === [])
-				throw new \Exception('Le scope '.$scope.' n\'existe pas !');
+				throw new PortailException('Le scope '.$scope.' n\'existe pas !');
 
 			$matchingScopes = array_merge($matchingScopes, $current);
 		}
@@ -402,13 +452,12 @@ class Scopes {
 		$scopes2 = !is_array($scopes2) ? [$scopes2] : $scopes2;
 
 		if (count($scopes) == 0)
-			throw new \Exception('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
+			throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
 
 		if (explode('-', $scopes[0])[0] === 'user')
 			return $this->matchAny($scopes, $scopes2);
 		else
 			return $this->matchAny($scopes2, $scopes);
-
 
 		return $this->matchAny($scopes, $scopes2);
 
@@ -423,7 +472,7 @@ class Scopes {
 	 */
 	public function matchAll(array $scopes = [], array $scopes2 = []) {
 		if (count($scopes) == 0)
-			throw new \Exception('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
+			throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
 
 		if (explode('-', $scopes[0])[0] === 'user')
 			return $this->matchAny($scopes, $scopes2, false);
@@ -432,12 +481,15 @@ class Scopes {
 	}
 
 	/**
-	 * Retourne si le token est du type User
-	 * @param  Request $request
-	 * @return boolean
+	 * Crée le middleware pour vérifier qu'un scope possède au moins un des plus petits enfants des scopes donnés
+	 * @param  string/array $scope
+	 * @param  string/array $scopes2
 	 */
-	public function isUserToken(Request $request) {
-		return $request->user() !== null;
+	public function matchOneOfDeepestChildren($scope = null, $scope2 = null) {
+		return $this->matchOne(
+			$scope ? $this->getDeepestChildren($scope) : null,
+			$scope2 ? $this->getDeepestChildren($scope2) : null
+		);
 	}
 
 	/**
@@ -445,8 +497,28 @@ class Scopes {
 	 * @param  Request $request
 	 * @return boolean
 	 */
+	public function isUserToken(Request $request) {
+		return $request->user() !== null
+			|| ($this->getToken($request)->transient() && $request->header(self::HEADER_REQUEST_TYPE) == 'user');
+	}
+
+	/**
+	 * Retourne si le token est du type Client ou si le token est transient et de type client
+	 * @param  Request $request
+	 * @return boolean
+	 */
 	public function isClientToken(Request $request) {
-		return $request->user() === null;
+		return $request->user() === null
+			|| ($this->getToken($request)->transient() && $request->header(self::HEADER_REQUEST_TYPE) == 'client');
+	}
+
+	/**
+	 * Récupérer le type de token (sert pour connaitre le header des scopes)
+	 * @param  Request $request
+	 * @return string	'client' / 'user'
+	 */
+	public function getTokenType(Request $request) {
+		return $this->isClientToken($request) ? 'client' : 'user';
 	}
 
 	public function isUserOrClientToken(Request $request) {
@@ -462,7 +534,7 @@ class Scopes {
 		return true;
 	}
 
-	protected function getToken(Request $request) {
+	public function getToken(Request $request) {
 		if ($request->user() === null) {
 			$bearerToken = $request->bearerToken();
 			$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
@@ -471,6 +543,12 @@ class Scopes {
 		}
 		else
 			return $request->user()->token();
+	}
+
+	public function getClient(Request $request) {
+		$clientFromPassport = $this->getToken($request)->client;
+
+		return $clientFromPassport ? Client::find($clientFromPassport->id) : null;
 	}
 
 	/**
@@ -494,7 +572,12 @@ class Scopes {
 		else
 			$scopes = $this->getMatchingScopes([$scopes]);
 
-		foreach ($this->getToken($request)->scopes as $scope) {
+		$token = $this->getToken($request);
+
+		if ($token->transient())
+			return true;
+
+		foreach ($token->scopes as $scope) {
 			if (in_array($scope, $scopes))
 				return true;
 		}
@@ -514,9 +597,12 @@ class Scopes {
 		else
 			$scopes = $this->getMatchingScopes([$scopes]);
 
-		$token = $request->token() ?? $request->user()->token();
+		$token = $this->getToken($request);
 
-		foreach ($this->getToken($request)->scopes as $scope) {
+		if ($token->transient())
+			return true;
+
+		foreach ($token->scopes as $scope) {
 			if (!in_array($scope, $scopes))
 				return false;
 		}
@@ -539,10 +625,10 @@ class Scopes {
 			if (!isset($middleware))
 				$middleware = $elements[0];
 			elseif ($middleware !== $elements[0])
-				throw new \Exception('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
+				throw new PortailException('Les scopes ne sont pas définis avec les mêmes types d\'authentification !'); // Des scopes commençant par c- et u-
 		}
 
 		if ($middleware === 'client' && $grantType !== 'client_credentials' || $grantType === 'client_credentials' && $middleware !== 'client')
-			throw new \Exception('Les scopes ne sont pas définis pour le bon type d\'authentification !'); // Des scopes commençant par c- et u-
+			throw new PortailException('Les scopes ne sont pas définis pour le bon type d\'authentification !'); // Des scopes commençant par c- et u-
 	}
 }
