@@ -3,22 +3,16 @@
 namespace App\Http\Controllers\v1\Comment;
 
 use App\Http\Controllers\v1\Controller;
-use App\Facades\Scopes;
-use App\Models\Visibility;
+use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use App\Traits\HasVisibility;
 
 /**
  * @resource Comment
  *
  * Les commentaires écrits par les utilisateurs
  */
-class ArticleController extends Controller
+class CommentController extends Controller
 {
-    use HasVisibility;
-
     /**
      * Scopes Commentaire
      *
@@ -26,28 +20,19 @@ class ArticleController extends Controller
      */
     public function __construct() {
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-get-comments', 'client-get-comments'),
+            \Scopes::matchOneOfDeepestChildren('user-get-articles', 'client-get-articles'),
             ['only' => ['index', 'show']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-set-comments', 'client-set-comments'),
+            \Scopes::matchOneOfDeepestChildren('user-set-articles', 'client-set-articles'),
             ['only' => ['store', 'update']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-manage-comments', 'client-manage-comments'),
+            \Scopes::matchOneOfDeepestChildren('user-manage-articles', 'client-manage-articles'),
             ['only' => ['destroy']]
         );
     }
 
-    public function isPrivate($user_id, $model = null) {
-        if ($model === null)
-            return false;
-
-        if ($model->user_id && $model->user_id == $user_id)
-            return true;
-
-        return false;
-    }
 
     /**
      * List Comments
@@ -56,7 +41,7 @@ class ArticleController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse {
+    public function index(CommentRequest $request): JsonResponse {
         $comments = Comment::all();
 
         return response()->json($comments, 200);
