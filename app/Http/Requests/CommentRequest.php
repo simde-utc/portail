@@ -15,7 +15,9 @@ class CommentRequest extends FormRequest
      */
     public function authorize()
     {
-        dd($this->resource_type);
+        $this->resource = \ModelResolver::getModelFromCategory($this->resource_type);
+        
+        return (bool) $this->resource;
     }
 
     /**
@@ -25,27 +27,14 @@ class CommentRequest extends FormRequest
      */
     public function rules()
     {
-        // return [
-        //     'name' => Validation::make($this)
-        //                 ->type('string')
-        //                 ->length(validation_between('name'))
-        //                 ->post('required')
-        //                 ->get(),
-        //     'value' => Validation::make($this)
-        //                 ->type('string')
-        //                 ->nullable()
-        //                 ->post('required')
-        //                 ->get(),
-        //     'contact_type_id' => Validation::make($this)
-        //                 ->type('integer')
-        //                 ->exists('contacts_types', 'id')
-        //                 ->post('required')
-        //                 ->get(),
-        //     'visibility_id' => Validation::make($this)
-        //                 ->type('integer')
-        //                 ->exists('visibilities', 'id')
-        //                 ->post('required')
-        //                 ->get(),
-        // ];
+        return [
+            'body' => Validation::make($this)
+                        ->type('string'),
+            'visibility_id' => Validation::make($this)
+                        ->type('integer')
+                        ->exists('visibilities', 'id')
+                        ->post('required')
+                        ->get(),
+        ];
     }
 }
