@@ -8,7 +8,7 @@ class Comment extends Model
 {
     protected $table = 'comments';
 
-    public function contactable() {
+    public function commentable() {
         return $this->morphTo();
     }
 

@@ -72,6 +72,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
 		'calendars/{calendar_id}/events'			=> 'Calendar\EventController',
 		'partners'									=> 'Partner\PartnerController',
 		'articles'									=> 'Article\ArticleController',
+		'{resource_type}/{resource_id}/comments'	=> 'Comment\CommentController',
 		'visibilities'								=> 'Article\VisibilityController',
   ]);
 });

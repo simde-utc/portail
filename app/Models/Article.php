@@ -30,7 +30,7 @@ class Article extends Model // TODO transformer en Morph // TODO with / must
 	}
 
 	public function tags() {
-		return $this->morphToMany('App\Models\Tag', 'tags_used');
+		return $this->morphToMany('App\Models\Tag', 'used_by', 'tags_used');
 	}
 
 	public function visibility() {
