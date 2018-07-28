@@ -15,7 +15,9 @@ class CommentRequest extends FormRequest
      */
     public function authorize()
     {
-        $this->resource = \ModelResolver::getModelFromCategory($this->resource_type);
+        $class = \ModelResolver::getModelFromCategory($this->resource_type);
+
+        $this->resource = $class::find($this->resource_id);
         
         return (bool) $this->resource;
     }
@@ -28,11 +30,32 @@ class CommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'body' => Validation::make($this)
-                        ->type('string'),
+            'body' =>   Validation::make($this)
+                        ->type('string')
+                        ->length(validation_between('comment'))
+                        ->post('required')
+                        ->get(),
+            'parent_id' => Validation::make($this)
+                        ->type('integer')
+                        ->exists('comments', 'id')
+                        ->get(),
+            'user_id' => Validation::make($this)
+                        ->type('integer')
+                        ->exists('users', 'id')
+                        ->post('required')
+                        ->get(),
             'visibility_id' => Validation::make($this)
                         ->type('integer')
                         ->exists('visibilities', 'id')
+                        ->post('required')
+                        ->get(),
+            'commentable_id' => Validation::make($this)
+                        ->type('integer')
+                        ->post('required')
+                        ->get(),
+            'commentable_type' => Validation::make($this)
+                        ->type('string')
+                        ->length(validation_between('string'))
                         ->post('required')
                         ->get(),
         ];

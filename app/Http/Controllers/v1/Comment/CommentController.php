@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Comment;
 
 use App\Http\Controllers\v1\Controller;
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 
@@ -13,6 +14,13 @@ use App\Models\Comment;
  */
 class CommentController extends Controller
 {
+    /* TODO(Natan): - scopes
+                    - store
+                    - show
+                    - update
+                    - destroy
+    */
+
     /**
      * Scopes Commentaire
      *
@@ -42,9 +50,7 @@ class CommentController extends Controller
      * @return JsonResponse
      */
     public function index(CommentRequest $request): JsonResponse {
-        $comments = Comment::all();
-
-        dd($comments);
+        $comments = Comment::getTree($request->resource->comments->toArray());
 
         return response()->json($comments, 200);
     }
