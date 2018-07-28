@@ -10,6 +10,10 @@ class Comment extends Model
 
     protected $table = 'comments';
 
+    protected $fillable = [
+        'body', 'parent_id', 'user_id', 'visibility_id',
+    ];
+
     public function commentable() {
         return $this->morphTo();
     }
