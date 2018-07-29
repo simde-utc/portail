@@ -14,7 +14,7 @@ use App\Traits\Controller\v1\HasUsers;
  *
  * Affiche des informations sur l'utilisateur connecté
  */
-class UserAuthController extends Controller
+class AuthController extends Controller
 {
 	use HasUsers;
 
