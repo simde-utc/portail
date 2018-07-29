@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\Semester;
 use App\Exceptions\PortailException;
-use App\Traits\HasStages;
 
 /**
  * Gestion des groupes utilisateurs
@@ -18,8 +17,6 @@ use App\Traits\HasStages;
  */
 class RoleController extends Controller
 {
-	use HasStages;
-
 	/**
 	 * Scopes Role
 	 *

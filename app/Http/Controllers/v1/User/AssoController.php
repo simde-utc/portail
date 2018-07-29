@@ -10,7 +10,6 @@ use App\Models\Asso;
 use App\Models\Semester;
 use App\Models\Role;
 use App\Exceptions\PortailException;
-use App\Traits\Controller\v1\HasUsers;
 use App\Traits\Controller\v1\HasAssos;
 
 /**
@@ -20,7 +19,7 @@ use App\Traits\Controller\v1\HasAssos;
  */
 class AssoController extends Controller
 {
-	use HasUsers, HasAssos;
+	use HasAssos;
 
 	public function __construct() {
 		$this->middleware(

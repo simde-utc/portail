@@ -24,8 +24,6 @@ class EventController extends Controller
 	use HasEvents;
 
 	public function __construct() {
-		parent::__construct();
-
 		$this->middleware(
 			\Scopes::matchOneOfDeepestChildren('user-get-events', 'client-get-events'),
 			['only' => ['index', 'show']]

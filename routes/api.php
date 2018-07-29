@@ -72,6 +72,6 @@ Route::prefix('v1')->namespace('v1')->group(function () {
 		'calendars/{calendar_id}/events'			=> 'Calendar\EventController',
 		'partners'									=> 'Partner\PartnerController',
 		'articles'									=> 'Article\ArticleController',
-		'visibilities'								=> 'Article\VisibilityController',
+		'visibilities'								=> 'Visibility\VisibilityController',
   ]);
 });

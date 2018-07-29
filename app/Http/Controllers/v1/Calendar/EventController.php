@@ -25,8 +25,6 @@ class EventController extends Controller
 	use HasCalendars;
 
 	public function __construct() {
-		parent::__construct();
-
 		$this->middleware(
 			array_merge(
 				\Scopes::matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
@@ -129,7 +127,7 @@ class EventController extends Controller
 			abort(400, 'L\'évènement doit au moins appartenir à un calendrier du propriétaire de l\'évènement');
 
 		$calendar->events()->detach($event);
-		
+
 		abort(204);
 	}
 }
