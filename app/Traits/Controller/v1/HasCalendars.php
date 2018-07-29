@@ -6,12 +6,11 @@ use App\Exceptions\PortailException;
 use App\Models\User;
 use App\Models\Event;
 use App\Facades\Ginger;
-use App\Traits\HasVisibility;
 use Illuminate\Http\Request;
 
 trait HasCalendars
 {
-	use HasVisibility, HasEvents {
+	use HasEvents {
 		HasEvents::isPrivate as isEventPrivate;
 		HasEvents::tokenCanSee as tokenCanSeeEvent;
 	}

@@ -24,8 +24,6 @@ class CalendarController extends Controller
 	use HasCalendars;
 
 	public function __construct() {
-		parent::__construct();
-
 		$this->middleware(
 			\Scopes::matchOneOfDeepestChildren(['user-get-calendars-users-owned', 'user-get-calendars-users-followed'], ['client-get-calendars-users-owned', 'client-get-calendars-users-followed']),
 			['only' => ['index', 'show']]
