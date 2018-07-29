@@ -50,7 +50,11 @@ class CommentController extends Controller
      * @return JsonResponse
      */
     public function index(CommentRequest $request): JsonResponse {
-        $comments = Comment::getTree($request->resource->comments->toArray());
+        $comments = Comment::getTree($request->resource
+                                        ->comments()
+                                        ->withTrashed()
+                                        ->get()
+                                        ->toArray());
 
         return response()->json($comments, 200);
     }
@@ -81,11 +85,15 @@ class CommentController extends Controller
      *
      * Affiche le commentaire.
      * @param CommentRequest $request
-     * @param  int $id
      * @return JsonResponse
      */
-    public function show(Request $request, int $id): JsonResponse {
-        
+    public function show(CommentRequest $request): JsonResponse {  
+        $comment = $request->resource->comments()->find($request->comment);
+
+        if ($comment)
+            return response()->json($comment, 200);
+        else
+            return response()->json(['message' => 'Impossible de trouver le commentaire'], 404);
     }
 
     /**
@@ -93,22 +101,35 @@ class CommentController extends Controller
      *
      * Met à jour le commentaire.
      * @param CommentRequest $request
-     * @param  int $id
      * @return JsonResponse
      */
-    public function update(ArticleRequest $request, int $id): JsonResponse {
-        
+    public function update(CommentRequest $request): JsonResponse {
+        $comment = $request->resource->comments()->find($request->comment);
+
+        if (!$comment)
+            return response()->json(['message' => 'Impossible de trouver le commentaire'], 404);
+
+        $comment->update([
+            'body' => $request->input('body'),
+            'parent_id' => $request->input('parent_id'),
+            'user_id' => \Auth::user()->id,
+            'visibility_id' => $request->input('visibility_id'),
+        ]);
+
+        if ($comment)
+            return response()->json($comment, 201);
+        else
+            return response()->json(['message' => 'Impossible de modifier le commentaire'], 500);
     }
 
     /**
      * Delete Comment
      *
      * Supprime le commentaire.
-     * @param ArticleRequest $request
-     * @param  int $id
+     * @param CommentRequest $request
      * @return JsonResponse
      */
-    public function destroy(ArticleRequest $request, $id): JsonResponse {
+    public function destroy(CommentRequest $request): JsonResponse {
         // Attention aux children ...
     }
 }

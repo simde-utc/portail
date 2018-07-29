@@ -3,12 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
     // TODO(Natan): Include user ! using $with
 
+    use SoftDeletes;
+
     protected $table = 'comments';
+
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'body', 'parent_id', 'user_id', 'visibility_id',
