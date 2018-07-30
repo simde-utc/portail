@@ -12,18 +12,30 @@ class Article extends Model implements OwnableContract
 	protected $table = 'articles';
 
 	protected $fillable = [
-		'title', 'content', 'image', 'visibility_id', 'created_by_id', 'created_by_tye', 'owned_by_id', 'owned_by_type',
+		'title', 'content', 'image', 'visibility_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
 	];
 
 	protected $with = [
-		'created_by',
-		'owned_by',
-	//	'tags'
+		'created_by', 'owned_by', 'tags', 'visibility'
+	]; // On ne peut pas mettre collabortors !
+
+	protected $must = [
+		'title',
 	];
 
-	protected $appends = [
-		'collaborators',
+	protected $hidden = [
+		'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id'
 	];
+
+	public function hideSubData(bool $addSubModelName = false) {
+		parent::hideSubData($addSubModelName);
+
+		$this->collaborators = $this->collaborators->map(function ($collaborator) use ($addSubModelName) {
+			return $collaborator->hideData($addSubModelName)->makeHidden('pivot');
+		});
+
+		return $this;
+	}
 
 	public function created_by() {
 		return $this->morphTo();
@@ -31,10 +43,6 @@ class Article extends Model implements OwnableContract
 
 	public function owned_by() {
 		return $this->morphTo();
-	}
-
-	public function getCollaboratorsAttribute() {
-		return $this->collaborators()->get();
 	}
 
 	public function collaborators() {
@@ -54,7 +62,7 @@ class Article extends Model implements OwnableContract
 	}
 
 	public function tags() {
-		return $this->morphToMany('App\Models\Tag', 'tags_used');
+		return $this->morphToMany(Tag::class, 'used_by', 'tags_used');
 	}
 
 	public function visibility() {
