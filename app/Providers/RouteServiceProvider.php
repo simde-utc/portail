@@ -101,6 +101,11 @@ class RouteServiceProvider extends ServiceProvider
                     'forceJson'
                 ];
 
+                if ($i < $indexVersion)
+                    $middlewares[] = 'depreciatedVersion:'.$version;
+                else if ($i > $indexVersion || $indexVersion === false)
+                    $middlewares[] = 'betaVersion:'.$version;
+
                 Route::prefix('api/'.$version)
                     ->namespace($this->namespace.'\\'.$version)
                     ->middleware($middlewares)

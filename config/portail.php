@@ -6,7 +6,7 @@ return [
 		'v1'
 	],
 	// Version actuelle du serveur (en dessous: déprécié, au dessus: en beta)
-	'version' => 'v1',
+	'version' => 'v0',
 
 	// Les headers spécifiques au Portail (commençant par X-Portail)
 	'headers' => [
