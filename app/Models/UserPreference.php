@@ -2,16 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasKeyValue;
+use App\Traits\Model\HasKeyValue;
 
-class UserPreference extends Model
+class UserPreference extends Model // TODO $must ?
 {
 	use HasKeyValue;
 
 	public $incrementing = false; // L'id n'est pas autoincrementé
+
 	protected $table = 'users_preferences';
-	protected $primaryKey = ['user_id', 'key', 'only_for'];
+
+	protected $primaryKey = [
+		'user_id', 'key', 'only_for',
+	];
+
 	protected $fillable = [
 		'user_id', 'key', 'value', 'type', 'only_for',
 	];

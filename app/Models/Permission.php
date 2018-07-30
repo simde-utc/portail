@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use App\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\Model\HasRoles;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
-class Permission extends Model
+class Permission extends Model // TODO $must ? $fillable
 {
     use HasRoles;
 
@@ -56,9 +55,9 @@ class Permission extends Model
 
 	public static function getPermission($permissions, string $only_for = null) {
         if (is_string($permissions))
-            return static::findByType($permissions, $is_system);
+            return static::findByType($permissions, $only_for);
         else if (is_int($permissions))
-			return static::find($permissions, $is_system);
+			return static::find($permissions, $only_for);
 		else
 			return $permission;
 	}

@@ -153,7 +153,7 @@ DESC
 				'shortname' => $asso['shortname'],
 				'name' => $asso['name'],
 				'description' => $asso['description'],
-				'type_asso_id' => isset($asso['type_asso_id']) ? AssoType::where('name', $asso['type_asso_id'])->first()->id : null,
+				'type_asso_id' => isset($asso['type_asso_id']) ? AssoType::where('type', $asso['type_asso_id'])->first()->id : null,
 				'parent_id' => isset($asso['parent_login']) ? Asso::where('login', $asso['parent_login'])->first()->id : null,
 			]);
       	}

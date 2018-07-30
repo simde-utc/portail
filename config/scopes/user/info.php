@@ -36,6 +36,17 @@ return [
 						'names' => [
 							'description' => 'Gérer les nom et prénom de l\'utlisateur',
 						],
+						'auth' => [
+							'description' => 'Gérer les types de connexions de l\'utilisateur',
+							'scopes' => [
+								'cas' => [
+									'description' => 'Gérer les données CAS de l\'utilisateur',
+								],
+								'password' => [
+									'description' => 'Gérer les données liées à la création du compte mot de passe de l\'utilisateur',
+								],
+							]
+						],
 					]
 				],
 				'details' => [
@@ -73,6 +84,17 @@ return [
 						],
 						'names' => [
 							'description' => 'Modifier les nom et prénom de l\'utlisateur',
+						],
+						'auth' => [
+							'description' => 'Modifier et ajouter des types de connexions de l\'utilisateur',
+							'scopes' => [
+								'cas' => [
+									'description' => 'Modifier et ajouter des données CAS de l\'utilisateur',
+								],
+								'password' => [
+									'description' => 'Modifier et ajouter des données liées à la création du compte mot de passe de l\'utilisateur',
+								],
+							]
 						],
 					]
 				],
@@ -193,6 +215,17 @@ return [
 						'names' => [
 							'description' => 'Modifier les nom et prénom de l\'utlisateur',
 						],
+						'auth' => [
+							'description' => 'Modifier les types de connexions de l\'utilisateur',
+							'scopes' => [
+								'cas' => [
+									'description' => 'Modifier les données CAS de l\'utilisateur',
+								],
+								'password' => [
+									'description' => 'Modifier les données liées à la création du compte mot de passe de l\'utilisateur',
+								],
+							]
+						],
 					]
 				],
 				'details' => [
@@ -222,6 +255,22 @@ return [
 		'create' => [
 			'description' => "Ajouter des informations pour l'utilisateur",
 			'scopes' => [
+				'identity' => [
+					'description' => 'Ajouter des informations concernant l\'identité de l\'utilisateur',
+					'scopes' => [
+						'auth' => [
+							'description' => 'Ajouter des types de connexions de l\'utilisateur',
+							'scopes' => [
+								'cas' => [
+									'description' => 'Ajouter des données CAS de l\'utilisateur',
+								],
+								'password' => [
+									'description' => 'Ajouter des données liées à la création du compte mot de passe de l\'utilisateur',
+								],
+							]
+						],
+					]
+				],
 				'preferences' => [
 					'description' => 'Ajouter des préférences pour l\'utilisateur (globales, de l\'association, du client)',
 					'scopes' => [
@@ -235,7 +284,21 @@ return [
 							'description' => 'Ajouter deses préférences du client pour l\'utilisateur'
 						]
 					]
-				]
+				],
+				'details' => [
+					'description' => 'Modifier tous les détails de l\'utilisateur (date de naissance, âge, majorité)',
+					'scopes' => [
+						'birthdate' => [
+							'description' => 'Modifier la date de naisssance de l\'utilisateur'
+						],
+						'birthdate' => [
+							'description' => 'Modifier la date de naisssance de l\'utilisateur'
+						],
+						'age' => [
+							'description' => 'Modifier l\'âge de l\'utilisateur'
+						]
+					]
+				],
 			]
 		],
 

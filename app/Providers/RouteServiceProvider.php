@@ -51,8 +51,6 @@ class RouteServiceProvider extends ServiceProvider
 		Passport::routes();
 		Passport::tokensCan(\Scopes::all());
 
-        Passport::enableImplicitGrant();
-
 		Route::prefix('oauth')
 			->group(base_path('routes/oauth.php'));
     }
@@ -90,9 +88,56 @@ class RouteServiceProvider extends ServiceProvider
      * @return void
      */
     protected function mapApiRoutes() {
-        Route::prefix('api')
-            ->namespace($this->namespace)
-			->middleware('forceJson')
-            ->group(base_path('routes/api.php'));
+        $versions = config('portail.versions');
+        $actualVersion = config('portail.version');
+        $indexVersion = array_search($actualVersion, $versions);
+
+		for ($i = 0; $i < count($versions); $i++) {
+            $version = $versions[$i];
+            $file = base_path('routes/api/'.$version.'.php');
+
+            if (file_exists($file)) {
+                $middlewares = [
+                    'forceJson'
+                ];
+
+                if ($i < $indexVersion)
+                    $middlewares[] = 'deprecatedVersion:'.$version;
+                else if ($i > $indexVersion || $indexVersion === false)
+                    $middlewares[] = 'betaVersion:'.$version;
+
+                Route::prefix('api/'.$version)
+                    ->namespace($this->namespace.'\\'.$version)
+                    ->middleware($middlewares)
+                    ->group($file);
+
+                $routes = [];
+
+                foreach (Route::getRoutes() as $route) {
+                    if (($route->action['prefix'] ?? '') === 'api/'.$version) {
+                        $routes[str_replace('api/'.$version.'/', '', $route->uri)] = [
+                            'url' => url($route->uri),
+                            'method' => $route->methods[0],
+                        ];
+                    }
+                }
+
+                Route::prefix('api/'.$version)
+                    ->middleware('forceJson')
+                    ->get('/', function () use ($version, $i, $indexVersion, $routes) {
+                        $data = [
+                            'info' => 'Définition des routes api pour la '.$version,
+                            'routes' => $routes,
+                        ];
+
+                        if ($i < $indexVersion)
+                            $data['deprecated'] = true;
+                        else if ($i > $indexVersion || $indexVersion === false)
+                            $data['beta'] = true;
+
+                        return $data;
+                    });
+            }
+        }
     }
 }

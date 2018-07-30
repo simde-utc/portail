@@ -417,99 +417,101 @@ return [
 		],
 		'create' => [
 			'description' => 'Créer et faire suivre des calendriers',
-			'users' => [
-				'description' => 'Créer et faire suivre des calendriers pour chaque utilisateur',
-				'scopes' => [
-					'created' => [
-						'description' => 'Créer des calendriers au nom de chaque utilisateur',
-					],
-					'owned' => [
-						'description' => 'Créer des calendriers pour chaque utilisateur',
-						'scopes' => [
-							'client' => [
-								'description' => 'Créer des calendriers pour chaque utilisateur au nom de mon application'
-							],
-							'asso' => [
-								'description' => 'Créer les calendriers pour chaque utilisateur au nom de mon association'
-							],
-						]
-					],
-					'followed' => [
-						'description' => 'Faire suivre des calendriers à chaque utilisateur',
-						'scopes' => [
-							'users' => [
-								'description' => 'Faire suivre des calendriers utilisateurs à chaque utilisateur',
-							],
-							'assos' => [
-								'description' => 'Faire suivre des calendriers associatifs à chaque utilisateur',
-							],
-							'groups' => [
-								'description' => 'Faire suivre des calendriers de groupe à chaque utilisateur',
-							],
-							'clients' => [
-								'description' => 'Faire suivre des calendriers de client à chaque utilisateur',
-							],
-						]
-					],
-				]
-			],
-			'assos' => [
-				'description' => 'Créer des calendriers pour chaque association',
-				'scopes' => [
-					'created' => [
-						'description' => 'Créer des calendriers au nom d\'une association de chaque utilisateur',
-					],
-					'owned' => [
-						'description' => 'Créer des calendriers pour une association de chaque utilisateur',
-						'scopes' => [
-							'client' => [
-								'description' => 'Créer des calendriers pour des associations de chaque utilisateur au nom de mon application'
-							],
-							'asso' => [
-								'description' => 'Créer les calendriers pour des associations de chaque utilisateur au nom de mon association'
-							],
-						]
-					],
-				]
-			],
-			'groups' => [
-				'description' => 'Créer des calendriers pour chaque groupe',
-				'scopes' => [
-					'created' => [
-						'description' => 'Créer des calendriers au nom d\'un groupe de chaque utilisateur',
-					],
-					'owned' => [
-						'description' => 'Créer des calendriers pour un groupe de chaque utilisateur',
-						'scopes' => [
-							'client' => [
-								'description' => 'Créer des calendriers pour des groupes de chaque utilisateur au nom de mon application'
-							],
-							'asso' => [
-								'description' => 'Créer les calendriers pour des groupes de chaque utilisateur au nom de mon association'
-							],
-						]
-					],
-				]
-			],
-			'clients' => [
-				'description' => 'Créer des calendriers pour chaque client',
-				'scopes' => [
-					'created' => [
-						'description' => 'Créer des calendriers au nom d\'un client de chaque utilisateur',
-					],
-					'owned' => [
-						'description' => 'Créer des calendriers pour un client de chaque utilisateur',
-						'scopes' => [
-							'client' => [
-								'description' => 'Créer des calendriers pour des applications de chaque utilisateur au nom de mon application'
-							],
-							'asso' => [
-								'description' => 'Créer les calendriers pour des applications de chaque utilisateur au nom de mon association'
-							],
-						]
-					],
-				]
-			],
+			'scopes' => [
+				'users' => [
+					'description' => 'Créer et faire suivre des calendriers pour chaque utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer des calendriers au nom de chaque utilisateur',
+						],
+						'owned' => [
+							'description' => 'Créer des calendriers pour chaque utilisateur',
+							'scopes' => [
+								'client' => [
+									'description' => 'Créer des calendriers pour chaque utilisateur au nom de mon application'
+								],
+								'asso' => [
+									'description' => 'Créer les calendriers pour chaque utilisateur au nom de mon association'
+								],
+							]
+						],
+						'followed' => [
+							'description' => 'Faire suivre des calendriers à chaque utilisateur',
+							'scopes' => [
+								'users' => [
+									'description' => 'Faire suivre des calendriers utilisateurs à chaque utilisateur',
+								],
+								'assos' => [
+									'description' => 'Faire suivre des calendriers associatifs à chaque utilisateur',
+								],
+								'groups' => [
+									'description' => 'Faire suivre des calendriers de groupe à chaque utilisateur',
+								],
+								'clients' => [
+									'description' => 'Faire suivre des calendriers de client à chaque utilisateur',
+								],
+							]
+						],
+					]
+				],
+				'assos' => [
+					'description' => 'Créer des calendriers pour chaque association',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer des calendriers au nom d\'une association de chaque utilisateur',
+						],
+						'owned' => [
+							'description' => 'Créer des calendriers pour une association de chaque utilisateur',
+							'scopes' => [
+								'client' => [
+									'description' => 'Créer des calendriers pour des associations de chaque utilisateur au nom de mon application'
+								],
+								'asso' => [
+									'description' => 'Créer les calendriers pour des associations de chaque utilisateur au nom de mon association'
+								],
+							]
+						],
+					]
+				],
+				'groups' => [
+					'description' => 'Créer des calendriers pour chaque groupe',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer des calendriers au nom d\'un groupe de chaque utilisateur',
+						],
+						'owned' => [
+							'description' => 'Créer des calendriers pour un groupe de chaque utilisateur',
+							'scopes' => [
+								'client' => [
+									'description' => 'Créer des calendriers pour des groupes de chaque utilisateur au nom de mon application'
+								],
+								'asso' => [
+									'description' => 'Créer les calendriers pour des groupes de chaque utilisateur au nom de mon association'
+								],
+							]
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Créer des calendriers pour chaque client',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer des calendriers au nom d\'un client de chaque utilisateur',
+						],
+						'owned' => [
+							'description' => 'Créer des calendriers pour un client de chaque utilisateur',
+							'scopes' => [
+								'client' => [
+									'description' => 'Créer des calendriers pour des applications de chaque utilisateur au nom de mon application'
+								],
+								'asso' => [
+									'description' => 'Créer les calendriers pour des applications de chaque utilisateur au nom de mon association'
+								],
+							]
+						],
+					]
+				],
+			]
 		],
 	]
 ];

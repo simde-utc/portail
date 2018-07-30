@@ -2,14 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use App\Exceptions\PortailException;
 
-class Contact extends Model implements OwnableContract
+class Contact extends Model implements OwnableContract // TODO $must
 {
     use HasMorphOwner;
+
+    protected $fillable = [
+        'name', 'value', 'contact_type_id', 'visibility_id', 'owned_by_id', 'owned_by_type',
+    ];
+
+    protected $with = [
+        'type', 'visibility',
+    ];
+
+    protected $hidden = [
+        'contact_type_id', 'visibility_id', 'owned_by_id', 'owned_by_type',
+    ];
 
     public static function boot() {
         $verificator = function ($model) {
@@ -24,18 +35,6 @@ class Contact extends Model implements OwnableContract
         static::creating($verificator);
         static::updating($verificator);
     }
-
-    protected $fillable = [
-        'name', 'value', 'contact_type_id', 'visibility_id', 'owned_by_id', 'owned_by_type'
-    ];
-
-    protected $with = [
-        'type', 'visibility'
-    ];
-
-    protected $hidden = [
-        'contact_type_id', 'visibility_id', 'owned_by_id', 'owned_by_type',
-    ];
 
     public function owned_by() {
         return $this->morphTo();

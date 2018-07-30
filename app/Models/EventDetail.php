@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasKeyValue;
+use App\Traits\Model\HasKeyValue;
 use App\Models\Event;
 
-class EventDetail extends Model
+class EventDetail extends Model // TODO $must ?
 {
 	use HasKeyValue;
 
 	public $incrementing = false; // L'id n'est pas autoincrementé
+
 	protected $table = 'events_details';
-	protected $primaryKey = ['event_id', 'key'];
+
+	protected $primaryKey = [
+		'event_id', 'key'
+	];
+
 	protected $fillable = [
 		'event_id', 'key', 'value', 'type',
 	];
