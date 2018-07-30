@@ -134,6 +134,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		return $this->hasOne('App\Models\AuthPassword');
 	}
 
+	public function sessions() {
+		return $this->hasMany(Session::class);
+	}
+
 	public function details() {
 		return $this->hasMany(UserDetail::class);
 	}

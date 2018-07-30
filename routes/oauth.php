@@ -30,12 +30,10 @@ Route::delete('clients/{client_id}', '\App\Http\Controllers\Passport\ClientContr
 
 // Authorizations
 Route::get('authorize', '\Laravel\Passport\Http\Controllers\AuthorizationController@authorize')
-		->middleware(['web', 'auth', 'checkPassport', 'linkTokenToSession']);
-Route::post('authorize', '\Laravel\Passport\Http\Controllers\ApproveAuthorizationController@approve')
-		->middleware(['web', 'auth', 'linkTokenToSession']);
+		->middleware(['web', 'auth', 'checkPassport']);
 
 // Tokens
 Route::post('token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')
-		->middleware(['forceJson', 'throttle', 'checkPassport', 'linkTokenToSession']);
+		->middleware(['forceJson', 'throttle', 'checkPassport']);
 Route::post('personal-access-tokens', '\Laravel\Passport\Http\Controllers\PersonalAccessTokenController@store')
 		->middleware(['forceJson', 'web', 'auth', 'checkPassport']);
