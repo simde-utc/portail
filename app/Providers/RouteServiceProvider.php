@@ -88,9 +88,24 @@ class RouteServiceProvider extends ServiceProvider
      * @return void
      */
     protected function mapApiRoutes() {
-        Route::prefix('api')
-            ->namespace($this->namespace)
-			->middleware('forceJson')
-            ->group(base_path('routes/api.php'));
+        $versions = config('portail.versions');
+        $actualVersion = config('portail.version');
+        $indexVersion = array_search($actualVersion, $versions);
+
+		for ($i = 0; $i < count($versions); $i++) {
+            $version = $versions[$i];
+            $file = base_path('routes/api/'.$version.'.php');
+
+            if (file_exists($file)) {
+                $middlewares = [
+                    'forceJson'
+                ];
+
+                Route::prefix('api/'.$version)
+                    ->namespace($this->namespace.'\\'.$version)
+                    ->middleware($middlewares)
+                    ->group($file);
+            }
+        }
     }
 }
