@@ -55,9 +55,9 @@ class Permission extends Model // TODO $must ? $fillable
 
 	public static function getPermission($permissions, string $only_for = null) {
         if (is_string($permissions))
-            return static::findByType($permissions, $is_system);
+            return static::findByType($permissions, $only_for);
         else if (is_int($permissions))
-			return static::find($permissions, $is_system);
+			return static::find($permissions, $only_for);
 		else
 			return $permission;
 	}
