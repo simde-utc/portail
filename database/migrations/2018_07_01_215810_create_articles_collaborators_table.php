@@ -14,13 +14,11 @@ class CreateArticlesCollaboratorsTable extends Migration
     public function up()
     {
         Schema::create('articles_collaborators', function (Blueprint $table) {
-            $table->integer('asso_id')->unsigned();
-            $table->foreign('asso_id')->references('id')->on('assos')->onDelete('cascade'); //TODO a revoir
-
             $table->integer('article_id')->unsigned();
-            $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade'); //TODO a revoir
+            $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade');
+            $table->morphs('collaborator');
 
-            $table->primary(['asso_id', 'article_id']);
+            $table->primary(['article_id', 'collaborator_id', 'collaborator_type'], 'unique_a_c_c');
         });
     }
 

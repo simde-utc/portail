@@ -2,31 +2,55 @@
 
 namespace App\Models;
 
-class Article extends Model // TODO transformer en Morph // TODO with / must
+use Cog\Contracts\Ownership\Ownable as OwnableContract;
+use Cog\Laravel\Ownership\Traits\HasMorphOwner;
+
+class Article extends Model implements OwnableContract
 {
+	use HasMorphOwner;
+
 	protected $table = 'articles';
 
 	protected $fillable = [
-		'title', 'content', 'image', 'toBePublished', 'visibility_id', 'asso_id',
+		'title', 'content', 'image', 'visibility_id', 'created_by_id', 'created_by_tye', 'owned_by_id', 'owned_by_type',
 	];
 
 	protected $with = [
-		'collaborators:id,shortname',
-		'tags:name,description'
+		'created_by',
+		'owned_by',
+	//	'tags'
 	];
 
-	public static function boot() {
-		static::created(function ($model) {
-			$model->collaborators()->attach($model['asso_id']);
-		});
+	protected $appends = [
+		'collaborators',
+	];
+
+	public function created_by() {
+		return $this->morphTo();
+	}
+
+	public function owned_by() {
+		return $this->morphTo();
+	}
+
+	public function getCollaboratorsAttribute() {
+		return $this->collaborators()->get();
 	}
 
 	public function collaborators() {
-		return $this->belongsToMany(Asso::class, 'articles_collaborators');
+		return $this->{\ModelResolver::getName($this->owned_by_type).'_collaborators'}();
 	}
 
-	public function asso() {
-		return $this->belongsTo(Asso::class);
+	public function asso_collaborators() {
+		return $this->morphedByMany(Asso::class, 'collaborator', 'articles_collaborators');
+	}
+
+	public function group_collaborators() {
+		return $this->morphedByMany(Group::class, 'collaborator', 'articles_collaborators');
+	}
+
+	public function user_collaborators() {
+		return $this->morphedByMany(User::class, 'collaborator', 'articles_collaborators');
 	}
 
 	public function tags() {
