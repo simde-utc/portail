@@ -102,7 +102,7 @@ class RouteServiceProvider extends ServiceProvider
                 ];
 
                 if ($i < $indexVersion)
-                    $middlewares[] = 'depreciatedVersion:'.$version;
+                    $middlewares[] = 'deprecatedVersion:'.$version;
                 else if ($i > $indexVersion || $indexVersion === false)
                     $middlewares[] = 'betaVersion:'.$version;
 
@@ -110,6 +110,33 @@ class RouteServiceProvider extends ServiceProvider
                     ->namespace($this->namespace.'\\'.$version)
                     ->middleware($middlewares)
                     ->group($file);
+
+                $routes = [];
+
+                foreach (Route::getRoutes() as $route) {
+                    if (($route->action['prefix'] ?? '') === 'api/'.$version) {
+                        $routes[str_replace('api/'.$version.'/', '', $route->uri)] = [
+                            'url' => url($route->uri),
+                            'method' => $route->methods[0],
+                        ];
+                    }
+                }
+
+                Route::prefix('api/'.$version)
+                    ->middleware('forceJson')
+                    ->get('/', function () use ($version, $i, $indexVersion, $routes) {
+                        $data = [
+                            'info' => 'Définition des routes api pour la '.$version,
+                            'routes' => $routes,
+                        ];
+
+                        if ($i < $indexVersion)
+                            $data['deprecated'] = true;
+                        else if ($i > $indexVersion || $indexVersion === false)
+                            $data['beta'] = true;
+
+                        return $data;
+                    });
             }
         }
     }

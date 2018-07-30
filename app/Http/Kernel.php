@@ -68,7 +68,7 @@ class Kernel extends HttpKernel
         'permission' => \App\Http\Middleware\UserHasPermission::class,
 		'checkPassport' => \App\Http\Middleware\CheckPassport::class,
         'forceJson' => \App\Http\Middleware\ForceJson::class,
-        'depreciatedVersion' => \App\Http\Middleware\DepreciatedVersion::class,
+        'deprecatedVersion' => \App\Http\Middleware\DeprecatedVersion::class,
 		'betaVersion' => \App\Http\Middleware\BetaVersion::class,
     ];
 }
