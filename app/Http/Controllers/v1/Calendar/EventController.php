@@ -64,7 +64,7 @@ class EventController extends Controller
 	 * @return JsonResponse
 	 */
 	public function store(Request $request, int $calendar_id): JsonResponse {
-		$calendar = $this->getCalendar($request, $calendar_id, true);
+		$calendar = $this->getCalendar($request, $calendar_id);
 		$user = \Auth::user();
 
 		$events = [];

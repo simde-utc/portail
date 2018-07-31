@@ -54,7 +54,7 @@ class CalendarController extends Controller
 
 		if ($request->filled($type.'_by_type')) {
 			if ($request->filled($type.'_by_id')) {
-				$createrOrOwner = resolve($this->types[$request->input($type.'_by_type')])->find($request->input($type.'_by_id'));
+				$createrOrOwner = \ModelResolver::getModel($request->input($type.'_by_type'))->find($request->input($type.'_by_id'));
 
 				if (\Auth::id() && !$createrOrOwner->isCalendarManageableBy(\Auth::id()))
 					abort(403, 'L\'utilisateur n\'a pas les droits de création');
@@ -106,7 +106,7 @@ class CalendarController extends Controller
 			$creater = \Scopes::getClient($request);
 		else if ($request->input('created_by_type') === 'asso'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
-			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.\ModelResolver::getName($owner).'s-owned-client'))
+			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.\ModelResolver::getName($owner).'s-owned-asso'))
 			$creater = \Scopes::getClient($request)->asso;
 		else
 			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
@@ -121,7 +121,7 @@ class CalendarController extends Controller
 		if ($calendar) {
 			$calendar = $this->getCalendar($request, \Auth::user(), $calendar->id);
 
-			return response()->json($calendar->hideData(), 201);
+			return response()->json($calendar->hideSubData(), 201);
 		}
 		else
 			return response()->json(['message' => 'Impossible de créer le calendrier'], 500);
@@ -147,7 +147,7 @@ class CalendarController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, $id): JsonResponse {
-		$calendar = $this->getCalendar($request, \Auth::user(), $id, 'edit', true);
+		$calendar = $this->getCalendar($request, \Auth::user(), $id, 'edit');
 		$inputs = $request->all();
 
 		if ($request->filled('owned_by_type')) {
@@ -158,7 +158,7 @@ class CalendarController extends Controller
 		}
 
 		if ($calendar->update($inputs))
-			return response()->json($calendar->hideData(), 200);
+			return response()->json($calendar->hideSubData(), 200);
 		else
 			abort(500, 'Impossible de modifier le calendrier');
 	}
@@ -170,7 +170,7 @@ class CalendarController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(Request $request, int $id): JsonResponse {
-		$calendar = $this->getCalendar($request, \Auth::user(), $id, 'manage', true);
+		$calendar = $this->getCalendar($request, \Auth::user(), $id, 'manage');
 		$calendar->softDelete();
 
 		abort(204);
