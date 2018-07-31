@@ -5,11 +5,12 @@ namespace App\Models;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Model\HasMembers;
-use App\Interfaces\Controller\v1\CanHaveEvents;
-use App\Interfaces\Controller\v1\CanHaveCalendars;
-use App\Interfaces\Controller\v1\CanHaveContacts;
+use App\Interfaces\Model\CanHaveEvents;
+use App\Interfaces\Model\CanHaveCalendars;
+use App\Interfaces\Model\CanHaveContacts;
+use App\Interfaces\Model\CanHaveArticles;
 
-class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts
+class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles
 {
     use SoftDeletes, HasMembers;
 
@@ -97,6 +98,24 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 
 	public function isEventManageableBy(int $user_id): bool {
 		return $this->hasOnePermission('group_event', [
+			'user_id' => $user_id,
+		]);
+	}
+
+    public function articles() {
+    	return $this->morphMany(Article::class, 'owned_by');
+    }
+
+    public function collaboratedArticles() {
+    	return $this->morphToMany(Article::class, 'collaborator', 'articles_collaborators');
+    }
+
+	public function isArticleAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isArticleManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('group_article', [
 			'user_id' => $user_id,
 		]);
 	}

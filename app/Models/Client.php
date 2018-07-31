@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Laravel\Passport\Client as PassportClient;
-use App\Interfaces\Controller\v1\CanHaveCalendars;
-use App\Interfaces\Controller\v1\CanHaveEvents;
+use App\Interfaces\Model\CanHaveCalendars;
+use App\Interfaces\Model\CanHaveEvents;
 use App\Traits\Model\HasHiddenData;
 
 class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
