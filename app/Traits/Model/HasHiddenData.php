@@ -2,7 +2,7 @@
 
 namespace App\Traits\Model;
 
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 
 Trait HasHiddenData {
     /**
@@ -23,8 +23,11 @@ Trait HasHiddenData {
                 if ($this->$sub instanceof Model)
                     $this->$sub = $this->$sub->hideData($addSubModelName);
                 else {
-                    foreach ($this->$sub as $index => $subSub)
-                        $this->$sub[$index] = $subSub->hideData($addSubModelName);
+                    foreach ($this->$sub as $index => $subSub) {
+                        if ($subSub instanceof Model) {
+                            $this->$sub[$index] = $subSub->hideData($addSubModelName);
+                        }
+                    }
                 }
             }
         }
