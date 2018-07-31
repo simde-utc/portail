@@ -146,7 +146,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isContactManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('contact', [
+		return $this->hasOnePermission('asso_contact', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -160,7 +160,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isCalendarManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('calendar', [
+		return $this->hasOnePermission('asso_calendar', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -174,7 +174,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isEventManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('event', [
+		return $this->hasOnePermission('asso_event', [
 			'user_id' => $user_id,
 		]);
 	}

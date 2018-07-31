@@ -68,7 +68,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 	}
 
 	public function isContactManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('group contact', [
+		return $this->hasOnePermission('group_contact', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -82,7 +82,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 	}
 
 	public function isCalendarManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('group calendar', [
+		return $this->hasOnePermission('group_calendar', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -96,7 +96,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 	}
 
 	public function isEventManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('group event', [
+		return $this->hasOnePermission('group_event', [
 			'user_id' => $user_id,
 		]);
 	}
