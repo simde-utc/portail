@@ -243,11 +243,11 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 	}
 
 	public function isContactAccessibleBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 
 	public function isContactManageableBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 
     public function calendars() {
@@ -255,11 +255,11 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     }
 
 	public function isCalendarAccessibleBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 
 	public function isCalendarManageableBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 
     public function events() {
@@ -267,10 +267,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     }
 
 	public function isEventAccessibleBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 
 	public function isEventManageableBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 }
