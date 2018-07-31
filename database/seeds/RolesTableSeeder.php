@@ -47,12 +47,12 @@ class RolesTableSeeder extends Seeder
 				'limited_at' => 1,
 				'only_for' => 'assos',
 				'permissions' => [
-					'treasury',
-                    'ticketing',
-                    'calendar',
-                    'event',
-                    'contact',
-                    'article',
+					'asso_treasury',
+                    'asso_ticketing',
+                    'asso_calendar',
+                    'asso_event',
+                    'asso_contact',
+                    'asso_article',
                     'asso_data',
 				]
 			],
@@ -66,12 +66,12 @@ class RolesTableSeeder extends Seeder
 					config('portail.roles.admin.assos'),
 				],
 				'permissions' => [
-					'treasury',
-                    'ticketing',
-                    'calendar',
-                    'event',
-                    'contact',
-                    'article',
+					'asso_treasury',
+                    'asso_ticketing',
+                    'asso_calendar',
+                    'asso_event',
+                    'asso_contact',
+                    'asso_article',
                     'asso_data',
 				]
 			],
@@ -85,10 +85,10 @@ class RolesTableSeeder extends Seeder
                     'vice-president',
                 ],
                 'permissions' => [
-                    'calendar',
-                    'event',
-                    'contact',
-                    'article',
+                    'asso_calendar',
+                    'asso_event',
+                    'asso_contact',
+                    'asso_article',
                     'asso_data',
 				],
 			],
@@ -102,10 +102,10 @@ class RolesTableSeeder extends Seeder
                     'secretaire general',
                 ],
 				'permissions' => [
-                    'calendar',
-                    'event',
-                    'contact',
-                    'article',
+                    'asso_calendar',
+                    'asso_event',
+                    'asso_contact',
+                    'asso_article',
                     'asso_data',
 				],
 			],
@@ -119,8 +119,8 @@ class RolesTableSeeder extends Seeder
 					'vice-president',
 				],
 				'permissions' => [
-					'treasury',
-                    'event',
+					'asso_treasury',
+                    'asso_event',
 				]
 			],
 			[
@@ -133,8 +133,8 @@ class RolesTableSeeder extends Seeder
                     'treasury',
 				],
 				'permissions' => [
-					'treasury',
-                    'event',
+					'asso_treasury',
+                    'asso_event',
 				]
 			],
 			[
@@ -150,7 +150,7 @@ class RolesTableSeeder extends Seeder
 					'vice-treasury',
 				],
 				'permissions' => [
-                    'event',
+                    'asso_event',
 				]
 			],
 			[
@@ -163,9 +163,9 @@ class RolesTableSeeder extends Seeder
 					'bureau',
 				],
 				'permissions' => [
-                    'calendar',
-                    'event',
-                    'article'
+                    'asso_calendar',
+                    'asso_event',
+                    'asso_article'
 				],
 			],
 			[
@@ -187,8 +187,8 @@ class RolesTableSeeder extends Seeder
 					'bureau',
 				],
 				'permissions' => [
-                    'event',
-                    'article',
+                    'asso_event',
+                    'asso_article',
                     'asso_data',
 				],
 			],
@@ -211,7 +211,7 @@ class RolesTableSeeder extends Seeder
 					'bureau',
 				],
 				'permissions' => [
-                    'event',
+                    'asso_event',
 				],
 			],
 			[
@@ -233,7 +233,7 @@ class RolesTableSeeder extends Seeder
 					'bureau',
 				],
 				'permissions' => [
-                    'event',
+                    'asso_event',
 				],
 			],
 			[
@@ -255,7 +255,7 @@ class RolesTableSeeder extends Seeder
 					'bureau',
 				],
 				'permissions' => [
-                    'event',
+                    'asso_event',
 				],
 			],
 			[
@@ -276,7 +276,7 @@ class RolesTableSeeder extends Seeder
 					'bureau',
 				],
 				'permissions' => [
-                    'event',
+                    'asso_event',
 				],
 			],
 			[
@@ -295,10 +295,11 @@ class RolesTableSeeder extends Seeder
 				'limited_at' => 1,
 				'only_for' => 'groups',
 				'permissions' => [
-                    'group member',
-                    'group calendar',
-                    'group event',
-                    'group contact',
+                    'group_member',
+                    'group_calendar',
+                    'group_event',
+                    'group_contact',
+                    'group_article',
 				],
 			],
 			[
@@ -307,8 +308,17 @@ class RolesTableSeeder extends Seeder
 				'description' => 'Personne planifiant les évènements et les calendriers du groupe',
 				'only_for' => 'groups',
 				'permissions' => [
-                    'group calendar',
-                    'group event',
+                    'group_calendar',
+                    'group_event',
+				],
+			],
+			[
+				'type' => 'group writer',
+				'name' => 'Ecrivain',
+				'description' => 'Personne écrivant les articles du groupe',
+				'only_for' => 'groups',
+				'permissions' => [
+                    'group_article',
 				],
 			],
 		];

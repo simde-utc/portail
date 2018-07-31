@@ -54,7 +54,7 @@ class EventController extends Controller
 
 		if ($request->filled($type.'_by_type')) {
 			if ($request->filled($type.'_by_id')) {
-				$createrOrOwner = resolve($this->types[$request->input($type.'_by_type')])->find($request->input($type.'_by_id'));
+				$createrOrOwner = \ModelResolver::getModel($request->input($type.'_by_type'))->find($request->input($type.'_by_id'));
 
 				if (\Auth::id() && !$createrOrOwner->isEventManageableBy(\Auth::id()))
 					abort(403, 'L\'utilisateur n\'a pas les droits de création');
@@ -80,7 +80,7 @@ class EventController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse {
-		$events = Event::with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->get()->filter(function ($event) use ($request) {
+		$events = Event::get()->filter(function ($event) use ($request) {
 			return $this->tokenCanSee($request, $event, 'get', 'events');
 		})->values()->map(function ($event) use ($request) {
 			return $event->hideData();
@@ -126,7 +126,7 @@ class EventController extends Controller
 		if ($event) {
 			$event = $this->getEvent($request, \Auth::user(), $event->id);
 
-			return response()->json($event->hideData(), 201);
+			return response()->json($event->hideSubData(), 201);
 		}
 		else
 			return response()->json(['message' => 'Impossible de créer l\'évènenement'], 500);
@@ -141,7 +141,7 @@ class EventController extends Controller
 	public function show(Request $request, int $id): JsonResponse {
 		$event = $this->getEvent($request, \Auth::user(), $id);
 
-		return response()->json($event->hideData(), 200);
+		return response()->json($event->hideSubData(), 200);
 	}
 
 	/**
@@ -152,7 +152,7 @@ class EventController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, $id): JsonResponse {
-		$event = $this->getEvent($request, \Auth::user(), $id, 'set', true);
+		$event = $this->getEvent($request, \Auth::user(), $id, 'set');
 		$inputs = $request->all();
 
 		if ($request->filled('owned_by_type')) {
@@ -163,7 +163,7 @@ class EventController extends Controller
 		}
 
 		if ($event->update($inputs))
-			return response()->json($event->hideData(), 200);
+			return response()->json($event->hideSubData(), 200);
 		else
 			abort(500, 'Impossible de modifier le calendrier');
 	}
@@ -175,7 +175,7 @@ class EventController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(Request $request, int $id): JsonResponse {
-		$event = $this->getEvent($request, \Auth::user(), $id, true);
+		$event = $this->getEvent($request, \Auth::user(), $id);
 		$event->softDelete();
 
 		abort(204);

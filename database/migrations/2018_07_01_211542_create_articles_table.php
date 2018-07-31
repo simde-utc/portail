@@ -18,11 +18,13 @@ class CreateArticlesTable extends Migration
 			$table->string('title', validation_max('title'));
 			$table->longText('content', validation_max('article'));
 			$table->string('image', validation_max('url'))->nullable();
-			$table->boolean('toBePublished')->default(false);
-			$table->integer('asso_id')->unsigned();
-			$table->foreign('asso_id')->references('id')->on('assos');
 			$table->integer('visibility_id')->unsigned();
 			$table->foreign('visibility_id')->references('id')->on('visibilities');
+			$table->integer('event_id')->unsigned()->nullable();
+			$table->foreign('event_id')->references('id')->on('events');
+			$table->morphs('created_by');
+			$table->nullableMorphs('owned_by');
+
 			$table->timestamps();
 		});
 	}

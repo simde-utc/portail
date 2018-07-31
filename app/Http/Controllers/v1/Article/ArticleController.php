@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\Article;
 
 use App\Http\Controllers\v1\Controller;
 use App\Facades\Scopes;
+use App\Models\User;
 use App\Models\Asso;
 use App\Models\Visibility;
 use Illuminate\Http\JsonResponse;
@@ -11,6 +12,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
 use App\Traits\HasVisibility;
+use App\Interfaces\Model\CanHaveArticles;
+use App\Traits\Controller\v1\HasArticles;
 
 /**
  * @resource Article
@@ -19,44 +22,63 @@ use App\Traits\HasVisibility;
  */
 class ArticleController extends Controller
 {
-	use HasVisibility;
-
-	// TODO abort
+	use HasArticles;
 
 	/**
 	 * Scopes Article
 	 *
 	 * Les Scopes requis pour manipuler les Articles
 	 */
-	public function __construct() {
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-get-articles', 'client-get-articles'),
-			['only' => ['index', 'show']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-set-articles', 'client-set-articles'),
-			['only' => ['store', 'update']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-manage-articles', 'client-manage-articles'),
-			['only' => ['destroy']]
-		);
-	}
+ 	public function __construct() {
+ 		$this->middleware(
+ 			\Scopes::matchOneOfDeepestChildren('user-get-articles', 'client-get-articles'),
+ 			['only' => ['index', 'show']]
+ 		);
+ 		$this->middleware(
+ 			\Scopes::matchOneOfDeepestChildren('user-create-articles', 'client-create-articles'),
+ 			['only' => ['store']]
+ 		);
+ 		$this->middleware(
+ 			\Scopes::matchOneOfDeepestChildren('user-edit-articles', 'client-edit-articles'),
+ 			['only' => ['update']]
+ 		);
+ 		$this->middleware(
+ 			\Scopes::matchOneOfDeepestChildren('user-manage-articles', 'client-manage-articles'),
+ 			['only' => ['destroy']]
+ 		);
+ 	}
 
-	public function isPrivate($user_id, $model = null) {
-		if ($model === null)
-			return false;
+	public function getCreaterOrOwner(Request $request, string $verb = 'create', string $type = 'created') {
+		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
+		$scope = $scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type',\Scopes::isClientToken($request) ? 'client' : 'user').'s-'.$type;
 
-		if ($model->user_id && $model->user_id == $user_id)
-			return true;
+		if ($type === 'owned')
+			$scope = array_keys(\Scopes::getRelatives($scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type').'s-'.$type));
 
-		try {
-			return $model->currentAllMembers()->wherePivot('user_id', $user_id)->count() > 0;
+		if (!\Scopes::hasOne($request, $scope))
+			abort(403, 'Il ne vous est pas autorisé de créer d\'articles');
+
+		if ($request->filled($type.'_by_type')) {
+			if ($request->filled($type.'_by_id')) {
+				$createrOrOwner = \ModelResolver::getModel($request->input($type.'_by_type'))->find($request->input($type.'_by_id'));
+
+				if (\Auth::id() && !$createrOrOwner->isArticleManageableBy(\Auth::id()))
+					abort(403, 'L\'utilisateur n\'a pas les droits de création');
+			}
+			else if ($request->input($type.'_by_type', 'client') === 'client')
+				$createrOrOwner = \Scopes::getClient($request);
+			else if ($request->input($type.'_by_type', 'client') === 'asso')
+				$createrOrOwner = \Scopes::getClient($request)->asso;
 		}
-		catch (Exception $e) {}
 
-        return false;
-    }
+		if (!isset($createrOrOwner))
+			$createrOrOwner = \Scopes::isClientToken($request) ? \Scopes::getClient($request) : \Auth::user();
+
+		if (!($createrOrOwner instanceof CanHaveArticles))
+			abort(400, 'La personne créatrice/possédeur doit au moins pouvoir avoir un article');
+
+		return $createrOrOwner;
+	}
 
 	/**
 	 * List Articles
@@ -66,46 +88,55 @@ class ArticleController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse {
-		if ($request->user()) {
-			if (isset($request['all'])) {
-				$articles = Article::get();
-			}
-			else {
-				$articles = Article::whereHas('collaborators', function ($query) use ($request) {
-					$query->whereIn('asso_id', array_merge(
-						$request->user()->currentAssos()->pluck('assos.id')->toArray()
-					));
-				})->get();
-			}
-		}
-		else {
-			$articles = Scopes::has($request, 'client-get-articles') && isset($request['all']) ? Article::get() : Article::where('visibility_id', Visibility::where('type', 'public')->first()->id)->get();
-		}
-		return response()->json($request->user() ? $this->hide($articles, !isset($request['notRemoved'])) : $articles, 200);
+		$articles = Article::get()->filter(function ($article) use ($request) {
+			return $this->tokenCanSee($request, $article, 'get') && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
+		})->values()->map(function ($article) {
+			return $article->hideData();
+		});
+
+		return response()->json($articles, 200);
 	}
 
 	/**
 	 * Create Article
 	 *
-	 * Créer un article. ?add_collaborators[ids] pour ajouter des collaborateurs lors de la création
+	 * Créer un article
 	 * @param ArticleRequest $request
 	 * @return JsonResponse
 	 */
-	public function store(ArticleRequest $request): JsonResponse {
-		$article = Article::create($request->input());
+	public function store(Request $request): JsonResponse {
+		$inputs = $request->all();
 
-		if (isset($request['add_collaborators'])) {
-			$collaborators = is_array($request['add_collaborators']) ? $request['add_collaborators'] : [$request['add_collaborators']];
-			foreach ($collaborators as $key => $asso_id) {
-				if (Asso::find($asso_id))
-					$article->collaborators()->attach($asso_id);
-			}
-		}
+		$owner = $this->getCreaterOrOwner($request, 'create', 'owned');
 
-		if ($article)
-			return response()->json(Article::find($article->id), 201);
+		if ($request->input('created_by_type') === 'client'
+			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
+			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-articles-'.\ModelResolver::getName($owner).'s-owned-client'))
+				$creater = \Scopes::getClient($request);
+		else if ($request->input('created_by_type') === 'asso'
+			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
+			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-articles-'.\ModelResolver::getName($owner).'s-owned-asso'))
+			$creater = \Scopes::getClient($request)->asso;
 		else
-			return response()->json(['message' => 'Impossible de créer l\'article'], 500);
+			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
+
+		$inputs['created_by_id'] = $creater->id;
+		$inputs['created_by_type'] = get_class($creater);
+		$inputs['owned_by_id'] = $owner->id;
+		$inputs['owned_by_type'] = get_class($owner);
+
+		if ($request->filled('event_id')) // On fait vérifier que la personne à les droits sur l'event
+			$this->getEvent($request, \Auth::user(), $inputs['event_id']);
+
+		$article = Article::create($inputs);
+
+		if ($article) {
+			$article = $this->getArticle($request, \Auth::user(), $article->id);
+
+			return response()->json($article->hideSubData(), 201);
+		}
+		else
+			return response()->json(['message' => 'Impossible de créer le article'], 500);
 	}
 
 	/**
@@ -117,46 +148,37 @@ class ArticleController extends Controller
 	 * @return JsonResponse
 	 */
 	public function show(Request $request, int $id): JsonResponse {
-		$article = Article::find($id);
-		if (!isset($article))
-			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
-		else
-			return response()->json(Scopes::has($request, 'client-get-articles') ? $article : $this->hide($article, false), 200);
+		$article = $this->getArticle($request, \Auth::user(), $id);
+
+		return response()->json($article->hideSubData(), 200);
 	}
 
 	/**
 	 * Update Article
 	 *
-	 * Met à jour l'article s'il existe ?add_collaborators[ids] pour ajouter des collaborateurs ?remove_collaborators[ids] pour en enlever (sauf l'asso créatrice)
+	 * Met à jour l'article s'il existe
 	 * @param ArticleRequest $request
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function update(ArticleRequest $request, int $id): JsonResponse {
-		$article = Article::find($id);
-		if (!isset($article))
-			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
+	public function update(Request $request, int $id): JsonResponse {
+		$article = $this->getCalendar($request, \Auth::user(), $id, 'edit');
+		$inputs = $request->all();
 
-		if ($article->update($request->input())) {
+		if ($request->filled('owned_by_type')) {
+			$owner = $this->getCreaterOrOwner($request, 'edit', 'owned');
 
-			if (isset($request['add_collaborators'])) {
-				$collaborators = is_array($request['add_collaborators']) ? $request['add_collaborators'] : [$request['add_collaborators']];
-				foreach ($collaborators as $key => $asso_id) {
-					if (Asso::find($asso_id))
-						$article->collaborators()->attach($asso_id);
-				}
-			}
-			if (isset($request['remove_collaborators'])) {
-				$collaborators = is_array($request['remove_collaborators']) ? $request['remove_collaborators'] : [$request['remove_collaborators']];
-				foreach ($collaborators as $key => $asso_id) {
-					if (Asso::find($asso_id) && $asso_id != $article->asso_id)
-						$article->collaborators()->detach($asso_id);
-				}
-			}
-			return response()->json(Article::find($id), 201);
+			$inputs['owned_by_id'] = $owner->id;
+			$inputs['owned_by_type'] = get_class($owner);
 		}
+
+		if ($request->filled('event_id')) // On fait vérifier que la personne à les droits sur l'event
+			$this->getEvent($request, \Auth::user(), $inputs['event_id']);
+
+		if ($article->update($inputs))
+			return response()->json($article->hideData(), 200);
 		else
-			return response()->json(['message' => 'Impossible de modifier l\'article'], 500);
+			abort(500, 'Impossible de modifier l\'article');
 	}
 
 	/**
@@ -168,13 +190,11 @@ class ArticleController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(ArticleRequest $request, $id): JsonResponse {
-		$article = Article::find($id);
-		if (!isset($article))
-			return response()->json(['message' => 'Impossible de trouver l\'article demandé'], 404);
+		$article = $this->getArticle($request, \Auth::user(), $id, 'remove');
 
 		if ($article->delete())
-			return response()->json(['message' => 'L\'article a bien été supprimé'], 200);
+			abort(204);
 		else
-			return response()->json(['message' => 'L\'article n\'a pas pu être supprimé'], 500);
+			abort(500, 'L\'article n\'a pas pu être supprimé');
 	}
 }

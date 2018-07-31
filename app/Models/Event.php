@@ -21,6 +21,14 @@ class Event extends Model implements OwnableContract
         'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
     ];
 
+    protected $with = [
+        'created_by', 'owned_by', 'visibility', 'location',
+    ];
+
+	protected $withModelName = [
+		'created_by', 'owned_by',
+	];
+
     protected $must = [
         'begin_at', 'end_at', 'full_day',
     ];
