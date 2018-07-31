@@ -12,7 +12,7 @@ class Article extends Model implements OwnableContract
 	protected $table = 'articles';
 
 	protected $fillable = [
-		'title', 'content', 'image', 'visibility_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
+		'title', 'content', 'image', 'event_id', 'visibility_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
 	];
 
 	protected $with = [
@@ -35,7 +35,7 @@ class Article extends Model implements OwnableContract
 		parent::hideSubData($addSubModelName);
 
 		$this->collaborators = $this->collaborators->map(function ($collaborator) use ($addSubModelName) {
-			return $collaborator->hideData($addSubModelName || in_array('collaborators', $this->withModelName))->makeHidden('pivot');
+			return $collaborator->hideData($addSubModelName || in_array('collaborators', $this->withModelName ?? []))->makeHidden('pivot');
 		});
 
 		return $this;

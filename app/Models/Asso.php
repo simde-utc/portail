@@ -74,14 +74,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		return $this->hasMany(Reservation::class);
 	}
 
-	public function articles() {
-		return $this->hasMany(Article::class);
-	}
-
-	public function collaboratedArticles() {
-		return $this->belongsToMany(Article::class, 'articles_collaborators');
-	}
-
 	public function parent() {
 	    return $this->hasOne(Asso::class, 'id', 'parent_id');
     }
@@ -176,6 +168,24 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
 	public function isEventManageableBy(int $user_id): bool {
 		return $this->hasOnePermission('asso_event', [
+			'user_id' => $user_id,
+		]);
+	}
+
+    public function articles() {
+    	return $this->morphMany(Article::class, 'owned_by');
+    }
+
+    public function collaboratedArticles() {
+    	return $this->morphToMany(Article::class, 'collaborator', 'articles_collaborators');
+    }
+
+	public function isArticleAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isArticleManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('asso_article', [
 			'user_id' => $user_id,
 		]);
 	}
