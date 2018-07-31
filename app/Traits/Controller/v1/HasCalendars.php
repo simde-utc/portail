@@ -31,7 +31,7 @@ trait HasCalendars
 		return $model->owned_by->isCalendarAccessibleBy($user_id);
     }
 
-	protected function getCalendar(Request $request, User $user = null, int $id, string $verb = 'get', bool $needRights = false) {
+	protected function getCalendar(Request $request, User $user = null, int $id, string $verb = 'get') {
 		$calendar = Calendar::find($id);
 
 		if ($calendar) {
@@ -41,7 +41,7 @@ trait HasCalendars
 			 if ($user && !$this->isVisible($calendar, $user->id))
 				abort(403, 'Vous n\'avez pas les droits sur ce calendrier');
 
-			if ($needRights && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
+			if ($verb !== 'get' && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
 				abort(403, 'Vous n\'avez pas les droits suffisants');
 
 			return $calendar;
@@ -50,11 +50,11 @@ trait HasCalendars
 		abort(404, 'Impossible de trouver le calendrier');
 	}
 
-	protected function getEventFromCalendar(Request $request, User $user, Calendar $calendar, int $id) {
+	protected function getEventFromCalendar(Request $request, User $user, Calendar $calendar, int $id, string $verb = 'get') {
 		$event = $calendar->events()->find($id);
 
 		if ($event) {
-			if (!$this->tokenCanSee($request, $event, 'get', 'events'))
+			if (!$this->tokenCanSee($request, $event, $verb, 'events'))
 				abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
 
 			if ($user && !$this->isVisible($event, $user->id))
