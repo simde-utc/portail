@@ -80,8 +80,8 @@ class CalendarController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse {
-		$calendars = Calendar::with(['owned_by', 'created_by', 'visibility'])->get()->filter(function ($calendar) use ($request) {
-			return $this->tokenCanSee($request, $calendar, 'get');
+		$calendars = Calendar::get()->filter(function ($calendar) use ($request) {
+			return $this->tokenCanSee($request, $calendar, 'get') && (!\Auth::id() || $this->isVisible($calendar, \Auth::id()));
 		})->values()->map(function ($calendar) {
 			return $calendar->hideData();
 		});
@@ -102,11 +102,11 @@ class CalendarController extends Controller
 
 		if ($request->input('created_by_type') === 'client'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
-			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
+			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.\ModelResolver::getName($owner).'s-owned-client'))
 			$creater = \Scopes::getClient($request);
 		else if ($request->input('created_by_type') === 'asso'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
-			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
+			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.\ModelResolver::getName($owner).'s-owned-client'))
 			$creater = \Scopes::getClient($request)->asso;
 		else
 			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
@@ -136,7 +136,7 @@ class CalendarController extends Controller
 	public function show(Request $request, int $id): JsonResponse {
 		$calendar = $this->getCalendar($request, \Auth::user(), $id);
 
-		return response()->json($calendar->hideData(), 200);
+		return response()->json($calendar->hideSubData(), 200);
 	}
 
 	/**

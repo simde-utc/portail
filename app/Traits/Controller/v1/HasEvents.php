@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\Client;
 use App\Traits\HasVisibility;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 
 trait HasEvents
 {
@@ -54,16 +54,16 @@ trait HasEvents
 		abort(404, 'Impossible de trouver le évènenement');
 	}
 
-	protected function tokenCanSee(Request $request, Model $model, string $verb, string $type = 'event') {
+	protected function tokenCanSee(Request $request, Model $model, string $verb, string $type = 'events') {
 		$scopeHead = \Scopes::getTokenType($request);
 
-		if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned'))
+		if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.\ModelResolver::getName($model->owned_by_type).'s-owned'))
 			return true;
 
-		if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned-client'))
+		if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.\ModelResolver::getName($model->owned_by_type).'s-owned-client'))
 				&& $model->created_by_type === Client::class
 				&& $model->created_by_id === \Scopes::getClient($request)->id)
-			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-owned-asso'))
+			|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.\ModelResolver::getName($model->owned_by_type).'s-owned-asso'))
 				&& $model->created_by_type === Asso::class
 				&& $model->created_by_id === \Scopes::getClient($request)->asso->id)) {
 			if (\Scopes::isUserToken($request)) {
@@ -76,6 +76,6 @@ trait HasEvents
 				return true;
 		}
 
-		return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$this->classToType($model->owned_by_type).'s-created');
+		return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.\ModelResolver::getName($model->owned_by_type).'s-created');
 	}
 }

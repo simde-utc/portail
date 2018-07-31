@@ -4,9 +4,11 @@ namespace App\Traits\Controller\v1;
 
 use App\Exceptions\PortailException;
 use App\Models\User;
+use App\Models\Calendar;
 use App\Models\Event;
 use App\Facades\Ginger;
 use Illuminate\Http\Request;
+use App\Models\Model;
 
 trait HasCalendars
 {
@@ -30,7 +32,7 @@ trait HasCalendars
     }
 
 	protected function getCalendar(Request $request, User $user = null, int $id, string $verb = 'get', bool $needRights = false) {
-		$calendar = Calendar::with(['owned_by', 'created_by', 'visibility'])->find($id);
+		$calendar = Calendar::find($id);
 
 		if ($calendar) {
 			if (!$this->tokenCanSee($request, $calendar, $verb))
@@ -49,7 +51,7 @@ trait HasCalendars
 	}
 
 	protected function getEventFromCalendar(Request $request, User $user, Calendar $calendar, int $id) {
-		$event = $calendar->events()->with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->find($id);
+		$event = $calendar->events()->find($id);
 
 		if ($event) {
 			if (!$this->tokenCanSee($request, $event, 'get', 'events'))
@@ -64,7 +66,7 @@ trait HasCalendars
 		abort(404, 'L\'évènement n\'existe pas ou ne fait pas parti du calendrier');
 	}
 
-	protected function tokenCanSee(Request $request, Model $model, string $verb, string $type = 'calendar') {
+	protected function tokenCanSee(Request $request, Model $model, string $verb, string $type = 'calendars') {
 		return $this->tokenCanSeeEvent($request, $model, $verb, $type);
 	}
 }

@@ -14,11 +14,15 @@ class Calendar extends Model implements OwnableContract
     ];
 
     protected $hidden = [
-        'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
+        'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id',
     ];
 
     protected $with = [
         'created_by', 'owned_by',
+    ];
+
+    protected $must = [
+        'description', 'color',
     ];
 
     public function owned_by() {
