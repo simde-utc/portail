@@ -20,9 +20,6 @@ class ArticlesTableSeeder extends Seeder
 		        'content' => 'Le serveur des associations a été cassé par Samy ce jour. Paix à lui (le serveur pas Samy)',
                 'created_by' => Asso::findByLogin('simde'),
 		        'owner' => Asso::findByLogin('simde'),
-                'collaborators' => [
-                    Asso::findByLogin('bde'),
-                ],
 		        'visibility_id' => 'public',
 	        ],
 	        [
@@ -30,10 +27,6 @@ class ArticlesTableSeeder extends Seeder
 		        'content' => 'Début de l\'intégration le jeudi 30 août 2018',
                 'created_by' => Asso::findByLogin('integ'),
 		        'owner' => Asso::findByLogin('integ'),
-                'collaborators' => [
-                    Asso::findByLogin('bde'),
-                    Asso::findByLogin('pvdc'),
-                ],
 		        'visibility_id' => 'cas',
 	        ],
 	        [
@@ -46,20 +39,13 @@ class ArticlesTableSeeder extends Seeder
         ];
 
         foreach ($articles as $article) {
-        	$model = Article::create([
+        	Article::create([
         		'title'           => $article['title'],
 		        'content'         => $article['content'],
 		        'visibility_id'   => Visibility::where('type', $article['visibility_id'])->first()->id,
 				'created_by_id'   => isset($article['created_by']) ? $article['created_by']->id : null,
 				'created_by_type' => isset($article['created_by']) ? get_class($article['created_by']) : null,
-			])->changeOwnerTo($article['owner']);
-
-            $model->save();
-
-            if (isset($article['collaborators'])) {
-                foreach ($article['collaborators'] as $collaborator)
-                    $model->collaborators()->attach($collaborator);
-            }
+			])->changeOwnerTo($article['owner'])->save();
         }
 
     }
