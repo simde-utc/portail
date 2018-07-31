@@ -19,13 +19,15 @@ Trait HasHiddenData {
     */
     public function hideSubData(bool $addSubModelName = false) {
         foreach ($this->with ?? [] as $sub) {
+            $addModelName = $addSubModelName || in_array($sub, $this->withModelName ?? []);
+
             if ($this->$sub) {
                 if ($this->$sub instanceof Model)
-                    $this->$sub = $this->$sub->hideData($addSubModelName);
+                    $this->$sub = $this->$sub->hideData($addModelName);
                 else {
                     foreach ($this->$sub as $index => $subSub) {
                         if ($subSub instanceof Model) {
-                            $this->$sub[$index] = $subSub->hideData($addSubModelName);
+                            $this->$sub[$index] = $subSub->hideData($addModelName);
                         }
                     }
                 }
@@ -50,6 +52,6 @@ Trait HasHiddenData {
         if ($addModelName)
             $this->model = $this->model;
 
-        return $this->hideSubData() ?? $this;
+        return $this->hideSubData($addModelName) ?? $this;
     }
 }

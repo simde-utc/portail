@@ -16,22 +16,26 @@ class Article extends Model implements OwnableContract
 	];
 
 	protected $with = [
-		'created_by', 'owned_by', 'tags', 'visibility'
-	]; // On ne peut pas mettre collabortors !
+		'created_by', 'owned_by', 'tags', 'visibility', 'event',
+	]; // On ne peut pas mettre collaborators !
+
+	protected $withModelName = [
+		'created_by', 'owned_by', 'collaborators',
+	];
 
 	protected $must = [
-		'title',
+		'title', 'owned_by', 'created_at',
 	];
 
 	protected $hidden = [
-		'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id'
+		'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id', 'event_id',
 	];
 
 	public function hideSubData(bool $addSubModelName = false) {
 		parent::hideSubData($addSubModelName);
 
 		$this->collaborators = $this->collaborators->map(function ($collaborator) use ($addSubModelName) {
-			return $collaborator->hideData($addSubModelName)->makeHidden('pivot');
+			return $collaborator->hideData($addSubModelName || in_array('collaborators', $this->withModelName))->makeHidden('pivot');
 		});
 
 		return $this;
@@ -46,18 +50,18 @@ class Article extends Model implements OwnableContract
 	}
 
 	public function collaborators() {
-		return $this->{\ModelResolver::getName($this->owned_by_type).'_collaborators'}();
+		return $this->{\ModelResolver::getName($this->owned_by_type).'Collaborators'}();
 	}
 
-	public function asso_collaborators() {
+	public function assoCollaborators() {
 		return $this->morphedByMany(Asso::class, 'collaborator', 'articles_collaborators');
 	}
 
-	public function group_collaborators() {
+	public function groupCollaborators() {
 		return $this->morphedByMany(Group::class, 'collaborator', 'articles_collaborators');
 	}
 
-	public function user_collaborators() {
+	public function userCollaborators() {
 		return $this->morphedByMany(User::class, 'collaborator', 'articles_collaborators');
 	}
 
@@ -67,5 +71,9 @@ class Article extends Model implements OwnableContract
 
 	public function visibility() {
 		return $this->belongsTo(Visibility::class, 'visibility_id');
+	}
+
+	public function event() {
+		return $this->belongsTo(Event::class);
 	}
 }
