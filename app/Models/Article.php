@@ -17,10 +17,10 @@ class Article extends Model implements OwnableContract
 
 	protected $with = [
 		'created_by', 'owned_by', 'tags', 'visibility', 'event',
-	]; // On ne peut pas mettre collaborators !
+	];
 
 	protected $withModelName = [
-		'created_by', 'owned_by', 'collaborators',
+		'created_by', 'owned_by',
 	];
 
 	protected $must = [
@@ -31,38 +31,12 @@ class Article extends Model implements OwnableContract
 		'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id', 'event_id',
 	];
 
-	public function hideSubData(bool $addSubModelName = false) {
-		parent::hideSubData($addSubModelName);
-
-		$this->collaborators = $this->collaborators->map(function ($collaborator) use ($addSubModelName) {
-			return $collaborator->hideData($addSubModelName || in_array('collaborators', $this->withModelName ?? []))->makeHidden('pivot');
-		});
-
-		return $this;
-	}
-
 	public function created_by() {
 		return $this->morphTo();
 	}
 
 	public function owned_by() {
 		return $this->morphTo();
-	}
-
-	public function collaborators() {
-		return $this->{\ModelResolver::getName($this->owned_by_type).'Collaborators'}();
-	}
-
-	public function assoCollaborators() {
-		return $this->morphedByMany(Asso::class, 'collaborator', 'articles_collaborators');
-	}
-
-	public function groupCollaborators() {
-		return $this->morphedByMany(Group::class, 'collaborator', 'articles_collaborators');
-	}
-
-	public function userCollaborators() {
-		return $this->morphedByMany(User::class, 'collaborator', 'articles_collaborators');
 	}
 
 	public function tags() {

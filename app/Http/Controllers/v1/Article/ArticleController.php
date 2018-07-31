@@ -100,7 +100,7 @@ class ArticleController extends Controller
 	/**
 	 * Create Article
 	 *
-	 * Créer un article. ?add_collaborators[ids] pour ajouter des collaborateurs lors de la création
+	 * Créer un article
 	 * @param ArticleRequest $request
 	 * @return JsonResponse
 	 */
@@ -156,7 +156,7 @@ class ArticleController extends Controller
 	/**
 	 * Update Article
 	 *
-	 * Met à jour l'article s'il existe ?add_collaborators[ids] pour ajouter des collaborateurs ?remove_collaborators[ids] pour en enlever (sauf l'asso créatrice)
+	 * Met à jour l'article s'il existe
 	 * @param ArticleRequest $request
 	 * @param  int $id
 	 * @return JsonResponse

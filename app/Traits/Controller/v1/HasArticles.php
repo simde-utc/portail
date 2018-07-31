@@ -21,18 +21,8 @@ trait HasArticles
 		if ($model === null)
 			return false;
 
-		if ($model instanceof Article) {
-			if ($model->owned_by->isArticleAccessibleBy($user_id))
-			return true;
-
-			// Sinon on regarde pour un des contributeurs si on a les droits
-			foreach ($model->collaborators as $collaborator) {
-				if ($collaborator->isArticleAccessibleBy($user_id))
-				return true;
-			}
-
-			return false;
-		}
+		if ($model instanceof Article)
+			return $model->owned_by->isArticleAccessibleBy($user_id);
 		else
 			return $this->isEventPrivate($user_id, $model);
     }
