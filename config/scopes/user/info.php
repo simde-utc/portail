@@ -284,7 +284,21 @@ return [
 							'description' => 'Ajouter deses préférences du client pour l\'utilisateur'
 						]
 					]
-				]
+				],
+				'details' => [
+					'description' => 'Modifier tous les détails de l\'utilisateur (date de naissance, âge, majorité)',
+					'scopes' => [
+						'birthdate' => [
+							'description' => 'Modifier la date de naisssance de l\'utilisateur'
+						],
+						'birthdate' => [
+							'description' => 'Modifier la date de naisssance de l\'utilisateur'
+						],
+						'age' => [
+							'description' => 'Modifier l\'âge de l\'utilisateur'
+						]
+					]
+				],
 			]
 		],
 

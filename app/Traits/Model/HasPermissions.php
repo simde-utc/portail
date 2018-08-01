@@ -51,7 +51,7 @@ trait HasPermissions
 		if (isset($data['validated_by']) || \Auth::id())
 			$manageablePermissions = $this->getUserPermissions($data['validated_by'] ?? \Auth::id());
 
-		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
+		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable().'-'.$this->id) as $permission) {
 			if (!$force) {
 				if ($permission->limited_at !== null) {
 					$users = $permission->users()->wherePivotIn('semester_id', [0, $data['semester_id']])->wherePivot('validated_by', '!=', null);
@@ -93,7 +93,7 @@ trait HasPermissions
 		if (isset($updatedData['validated_by']) || \Auth::id())
 			$manageablePermissions = $this->getUserPermissions($updatedData['validated_by'] ?? \Auth::id());
 
-		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
+		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable().'-'.$this->id) as $permission) {
 			if (!$force && (isset($updatedData['validated_by']) || \Auth::id())) {
 				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
 					throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier cette permission: '.$permission->name);
@@ -132,7 +132,7 @@ trait HasPermissions
 		if ($removed_by !== null)
 			$manageablePermissions = $this->getUserPermissions($removed_by);
 
-		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users') as $permission) {
+		foreach (Permission::getPermissions(stringToArray($permissions), $this->getTable().'-'.$this->id) as $permission) {
 			if (!$force && $removed_by !== null) {
 				if (!$manageablePermissions->contains('id', $permission->id) && (!$manageablePermissions->contains('type', 'admin')))
 					throw new PortailException('La personne demandant la suppression n\'est pas habilitée à retirer cette permission: '.$permission->name);
@@ -164,7 +164,7 @@ trait HasPermissions
 	 */
     public function syncPermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
 		$currentPermissions = $this->getUserAssignedPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id, false)->pluck('id');
-		$permissions = Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id');
+		$permissions = Permission::getPermissions(stringToArray($permissions), $this->getTable().'-'.$this->id)->pluck('id');
 		$intersectedPermissions = $currentPermissions->intersect($permissions);
 
 		$oldData = [];
@@ -183,7 +183,7 @@ trait HasPermissions
 	 * @return boolean
 	 */
     public function hasOnePermission($permissions, array $data = []) {
-        return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->intersect($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
+        return Permission::getPermissions(stringToArray($permissions), $this->getTable().'-'.$this->id)->pluck('id')->intersect($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
     }
 
 	/** Regarde si toutes les permissions parmi la liste existe ou non
@@ -192,7 +192,7 @@ trait HasPermissions
 	 * @return boolean
 	 */
     public function hasAllPermissions($permissions, array $data = []) {
-        return Permission::getPermissions(stringToArray($permissions), $this->getTable() === 'users')->pluck('id')->diff($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isEmpty();
+        return Permission::getPermissions(stringToArray($permissions), $this->getTable().'-'.$this->id)->pluck('id')->diff($this->getUserPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isEmpty();
     }
 
 	/**

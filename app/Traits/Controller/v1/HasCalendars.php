@@ -4,14 +4,15 @@ namespace App\Traits\Controller\v1;
 
 use App\Exceptions\PortailException;
 use App\Models\User;
+use App\Models\Calendar;
 use App\Models\Event;
 use App\Facades\Ginger;
-use App\Traits\HasVisibility;
 use Illuminate\Http\Request;
+use App\Models\Model;
 
 trait HasCalendars
 {
-	use HasVisibility, HasEvents {
+	use HasEvents {
 		HasEvents::isPrivate as isEventPrivate;
 		HasEvents::tokenCanSee as tokenCanSeeEvent;
 	}
@@ -30,8 +31,8 @@ trait HasCalendars
 		return $model->owned_by->isCalendarAccessibleBy($user_id);
     }
 
-	protected function getCalendar(Request $request, User $user = null, int $id, string $verb = 'get', bool $needRights = false) {
-		$calendar = Calendar::with(['owned_by', 'created_by', 'visibility'])->find($id);
+	protected function getCalendar(Request $request, User $user = null, int $id, string $verb = 'get') {
+		$calendar = Calendar::find($id);
 
 		if ($calendar) {
 			if (!$this->tokenCanSee($request, $calendar, $verb))
@@ -40,7 +41,7 @@ trait HasCalendars
 			 if ($user && !$this->isVisible($calendar, $user->id))
 				abort(403, 'Vous n\'avez pas les droits sur ce calendrier');
 
-			if ($needRights && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
+			if ($verb !== 'get' && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
 				abort(403, 'Vous n\'avez pas les droits suffisants');
 
 			return $calendar;
@@ -49,11 +50,11 @@ trait HasCalendars
 		abort(404, 'Impossible de trouver le calendrier');
 	}
 
-	protected function getEventFromCalendar(Request $request, User $user, Calendar $calendar, int $id) {
-		$event = $calendar->events()->with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->find($id);
+	protected function getEventFromCalendar(Request $request, User $user, Calendar $calendar, int $id, string $verb = 'get') {
+		$event = $calendar->events()->find($id);
 
 		if ($event) {
-			if (!$this->tokenCanSee($request, $event, 'get', 'events'))
+			if (!$this->tokenCanSee($request, $event, $verb, 'events'))
 				abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
 
 			if ($user && !$this->isVisible($event, $user->id))
@@ -65,7 +66,7 @@ trait HasCalendars
 		abort(404, 'L\'évènement n\'existe pas ou ne fait pas parti du calendrier');
 	}
 
-	protected function tokenCanSee(Request $request, Model $model, string $verb, string $type = 'calendar') {
+	protected function tokenCanSee(Request $request, Model $model, string $verb, string $type = 'calendars') {
 		return $this->tokenCanSeeEvent($request, $model, $verb, $type);
 	}
 }

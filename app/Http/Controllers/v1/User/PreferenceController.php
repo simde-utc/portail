@@ -14,19 +14,19 @@ class PreferenceController extends Controller
     
     public function __construct() {
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-get-info-preferences', 'client-get-info-preferences'),
+            \Scopes::matchOneOfDeepestChildren('user-get-info-preferences'),
             ['only' => ['index', 'show']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-create-info-preferences', 'client-create-info-preferences'),
+            \Scopes::matchOneOfDeepestChildren('user-create-info-preferences'),
             ['only' => ['store']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-edit-info-preferences', 'client-edit-info-preferences'),
+            \Scopes::matchOneOfDeepestChildren('user-edit-info-preferences'),
             ['only' => ['update']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-manage-info-preferences', 'client-manage-info-preferences'),
+            \Scopes::matchOneOfDeepestChildren('user-manage-info-preferences'),
             ['only' => ['destroy']]
         );
     }
