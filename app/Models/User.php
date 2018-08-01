@@ -11,6 +11,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Model\HasRoles;
 use App\Traits\Model\HasHiddenData;
+use NastuzziSamy\Laravel\Traits\HasSelection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
 use App\Models\UserPreference;
@@ -20,7 +21,7 @@ use App\Exceptions\PortailException;
 
 class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
-	use HasHiddenData, HasApiTokens, Notifiable, HasRoles;
+	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles;
 
     public static function boot() {
         static::created(function ($model) {

@@ -6,10 +6,11 @@ use Laravel\Passport\Client as PassportClient;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Traits\Model\HasHiddenData;
+use NastuzziSamy\Laravel\Traits\HasSelection;
 
 class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
 {
-    use HasHiddenData;
+    use HasHiddenData, HasSelection;
 
     protected $fillable = [
         'user_id', 'name', 'secret', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'asso_id', 'scopes'
