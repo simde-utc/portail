@@ -30,7 +30,7 @@ class Calendar extends Model implements OwnableContract
     ];
 
     protected $selection = [
-        'pagination' => null,
+        'paginate' => null,
         'order' => null,
     ];
 

@@ -34,7 +34,7 @@ class Event extends Model implements OwnableContract
     ];
 
     protected $selection = [
-        'pagination' => null,
+        'paginate' => null,
         'order' => 'latest',
         'month' => null,
         'week' => null,
