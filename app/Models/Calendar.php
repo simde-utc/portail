@@ -29,6 +29,11 @@ class Calendar extends Model implements OwnableContract
         'description', 'color', 'owned_by',
     ];
 
+    protected $selection = [
+        'pagination' => null,
+        'order' => null,
+    ];
+
     public function owned_by() {
         return $this->morphTo();
     }

@@ -80,7 +80,7 @@ class CalendarController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse {
-		$calendars = Calendar::get()->filter(function ($calendar) use ($request) {
+		$calendars = Calendar::getSelection()->filter(function ($calendar) use ($request) {
 			return $this->tokenCanSee($request, $calendar, 'get') && (!\Auth::id() || $this->isVisible($calendar, \Auth::id()));
 		})->values()->map(function ($calendar) {
 			return $calendar->hideData();

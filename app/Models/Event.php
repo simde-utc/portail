@@ -22,7 +22,7 @@ class Event extends Model implements OwnableContract
     ];
 
     protected $with = [
-        'created_by', 'owned_by', 'visibility', 'location',
+        'created_by', 'owned_by', 'visibility', 'location', 'details'
     ];
 
 	protected $withModelName = [
@@ -32,6 +32,18 @@ class Event extends Model implements OwnableContract
     protected $must = [
         'begin_at', 'end_at', 'full_day',
     ];
+
+    protected $selection = [
+        'pagination' => null,
+        'order' => 'latest',
+        'month' => null,
+        'week' => null,
+        'day' => 'now',
+    ];
+
+    protected $order_by = 'begin_at';
+    protected $begin_at = 'begin_at';
+    protected $end_at = 'begin_at';
 
     public function created_by() {
         return $this->morphTo();
