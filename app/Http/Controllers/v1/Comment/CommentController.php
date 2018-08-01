@@ -15,7 +15,6 @@ use App\Models\Comment;
 class CommentController extends Controller
 {
     /* TODO(Natan): - scopes  config/ + middleware
-                    - store
                     - show
                     - update
                     - destroy
@@ -66,10 +65,15 @@ class CommentController extends Controller
      * @param CommentRequest $request
      * @return JsonResponse
      */
-    public function store(CommentRequest $request): JsonResponse {        
+    public function store(CommentRequest $request): JsonResponse {
+        $parent_id = $request->input('parent_id');
+
+        if ($request->resource->comments()->find($request->input('parent_id')) == null)
+            $parent_id = null;
+
         $comment = $request->resource->comments()->create([
             'body' => $request->input('body'),
-            'parent_id' => $request->input('parent_id'),
+            'parent_id' => $parent_id,
             'user_id' => \Auth::user()->id,
             'visibility_id' => $request->input('visibility_id'),
         ]);

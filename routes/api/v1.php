@@ -58,6 +58,7 @@ Route::apiResources([
 
 Route::apiResources([
 	'{resource_type}/{resource_id}/contacts'	=> 'Contact\ContactController',
+	'{resource_type}/{resource_id}/comments'	=> 'Comment\CommentController',
 	'groups/{group_id}/members'					=> 'Group\MemberController',
 	'groups'									=> 'Group\GroupController',
 	'assos'										=> 'Asso\AssoController',
