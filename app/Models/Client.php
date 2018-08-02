@@ -16,6 +16,10 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
         'user_id', 'name', 'secret', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'asso_id', 'scopes'
     ];
 
+    protected $selection = [
+        'paginate' => null,
+    ];
+
     public function asso() {
         return $this->belongsTo(Asso::class);
     }

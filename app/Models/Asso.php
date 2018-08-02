@@ -33,8 +33,17 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		'type', 'parent',
 	];
 
+	protected $optional = [
+		'children',
+	];
+
 	protected $must = [
 		'name', 'shortname',
+	]; // Children dans le cas où on affiche en mode étagé
+
+	protected $selection = [
+		'stage' => null,
+		'stages' => null,
 	];
 
 	protected $roleRelationTable = 'assos_members';
