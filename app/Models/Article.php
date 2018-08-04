@@ -33,10 +33,18 @@ class Article extends Model implements OwnableContract
 
 	protected $selection = [
 		'paginate' 	=> 10,
-		'order'		=> 'latest',
+		'order'		=> [
+			'default' 	=> 'latest',
+			'columns'	=> [
+				'name' 	=> 'title',
+			],
+		],
 		'month'		=> null,
 		'week'		=> null,
 		'day'		=> null,
+		'interval'	=> null,
+		'date'		=> null,
+		'dates'		=> null
 	];
 
 	public function created_by() {

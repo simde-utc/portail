@@ -62,6 +62,11 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		'admin', 'contributorBde', 'cas', 'password', 'active',
 	];
 
+	protected $selection = [
+		'order' => 'oldest',
+		'paginate' => null,
+	];
+
 	public function getNameAttribute() {
 		return $this->firstname.' '.strtoupper($this->lastname);
 	}

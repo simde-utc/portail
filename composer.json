@@ -17,7 +17,7 @@
         "mews/captcha": "^2.2",
         "mpociot/laravel-apidoc-generator": "^2.0",
         "nastuzzi-samy/laravel-model-stages": "^1.0",
-        "nastuzzi-samy/laravel-query-selection": "^1.0"
+        "nastuzzi-samy/laravel-query-selection": "^2.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
