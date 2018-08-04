@@ -15,7 +15,6 @@ use App\Models\Comment;
 class CommentController extends Controller
 {
     /* TODO(Natan): - scopes  config/ + middleware
-                    - update
                     - destroy
     */
 
@@ -26,15 +25,15 @@ class CommentController extends Controller
      */
     public function __construct() {
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-get-articles', 'client-get-articles'),
+            \Scopes::matchOneOfDeepestChildren('user-get-comments', 'client-get-comments'),
             ['only' => ['index', 'show']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-get-articles', 'client-set-articles'),
+            \Scopes::matchOneOfDeepestChildren('user-set-comments', 'client-set-comments'),
             ['only' => ['store', 'update']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-manage-articles', 'client-manage-articles'),
+            \Scopes::matchOneOfDeepestChildren('user-manage-comments', 'client-manage-comments'),
             ['only' => ['destroy']]
         );
     }
