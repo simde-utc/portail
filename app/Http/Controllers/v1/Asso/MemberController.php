@@ -112,9 +112,9 @@ class MemberController extends Controller
 		$asso = $this->getAsso($request, $asso_id);
 
 		$members = collect()->merge(
-			in_array('joined', $choices) ? $asso->members()->where('semester_id', $semester->id)->get() : collect(),
-			in_array('joining', $choices) ? $asso->joiners()->where('semester_id', $semester->id)->get() : collect(),
-			in_array('followed', $choices) ? $asso->followers()->where('semester_id', $semester->id)->get() : collect()
+			in_array('joined', $choices) ? $asso->members()->where('semester_id', $semester->id)->getSelection(true) : collect(),
+			in_array('joining', $choices) ? $asso->joiners()->where('semester_id', $semester->id)->getSelection(true) : collect(),
+			in_array('followed', $choices) ? $asso->followers()->where('semester_id', $semester->id)->getSelection(true) : collect()
 		)->map(function ($member) {
 			return $member->hideData();
 		});

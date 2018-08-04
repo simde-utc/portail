@@ -31,6 +31,22 @@ class Article extends Model implements OwnableContract
 		'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id', 'event_id',
 	];
 
+	protected $selection = [
+		'paginate' 	=> 10,
+		'order'		=> [
+			'default' 	=> 'latest',
+			'columns'	=> [
+				'name' 	=> 'title',
+			],
+		],
+		'month'		=> null,
+		'week'		=> null,
+		'day'		=> null,
+		'interval'	=> null,
+		'date'		=> null,
+		'dates'		=> null
+	];
+
 	public function created_by() {
 		return $this->morphTo();
 	}
