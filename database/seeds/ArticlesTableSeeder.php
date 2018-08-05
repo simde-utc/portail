@@ -18,13 +18,15 @@ class ArticlesTableSeeder extends Seeder
         	[
         		'title' => 'Samy a tout cassé !!!',
 		        'content' => 'Le serveur des associations a été cassé par Samy ce jour. Paix à lui (le serveur pas Samy)',
+                'description' => 'Samy est encore un expert en informatique, n\'hésitez pas à voir pourquoi en lisant l\'article',
                 'created_by' => Asso::findByLogin('simde'),
 		        'owner' => Asso::findByLogin('simde'),
 		        'visibility_id' => 'public',
 	        ],
 	        [
 	        	'title' => 'L\'intégration va commencer !',
-		        'content' => 'Début de l\'intégration le jeudi 30 août 2018',
+		        'description' => 'Début de l\'intégration le jeudi 30 août 2018',
+                'content' => 'Si tu veux predre ton pack integ blablablalbala',
                 'created_by' => Asso::findByLogin('integ'),
 		        'owner' => Asso::findByLogin('integ'),
 		        'visibility_id' => 'cas',

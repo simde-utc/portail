@@ -12,7 +12,7 @@ class Article extends Model implements OwnableContract
 	protected $table = 'articles';
 
 	protected $fillable = [
-		'title', 'content', 'image', 'event_id', 'visibility_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
+		'title', 'description', 'content', 'image', 'event_id', 'visibility_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
 	];
 
 	protected $with = [
@@ -24,7 +24,7 @@ class Article extends Model implements OwnableContract
 	];
 
 	protected $must = [
-		'title', 'owned_by', 'created_at',
+		'title', 'description', 'owned_by', 'created_at',
 	];
 
 	protected $hidden = [
@@ -46,6 +46,15 @@ class Article extends Model implements OwnableContract
 		'date'		=> null,
 		'dates'		=> null
 	];
+
+	public function getDescriptionAttribute() {
+		$description = $this->getOriginal('description');
+
+		if ($description)
+			return $description;
+		else
+			return trimText($this->getAttribute('content'), validation_max('string'));
+	}
 
 	public function created_by() {
 		return $this->morphTo();
