@@ -33,7 +33,7 @@ class MemberController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request, int $group_id): JsonResponse {
-		return response()->json($this->getGroup($request, $group_id)->currentAllMembers->map(function ($member) {
+		return response()->json($this->getGroup($request, $group_id)->currentAllMembers()->getSelection()->map(function ($member) {
 			return $member->hideData();
 		}));
 	}

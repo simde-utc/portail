@@ -88,7 +88,7 @@ class ArticleController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse {
-		$articles = Article::get()->filter(function ($article) use ($request) {
+		$articles = Article::getSelection()->filter(function ($article) use ($request) {
 			return $this->tokenCanSee($request, $article, 'get') && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
 		})->values()->map(function ($article) {
 			return $article->hideData();

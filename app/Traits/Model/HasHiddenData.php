@@ -18,10 +18,16 @@ Trait HasHiddenData {
      * @return Model/User
     */
     public function hideSubData(bool $addSubModelName = false) {
-        foreach ($this->with ?? [] as $sub) {
+        $visibles = array_keys($this->toArray());
+        $toHide = array_merge(
+            $this->with ?? [],
+            $this->optional ?? []
+        );
+
+        foreach ($toHide as $sub) {
             $addModelName = $addSubModelName || in_array($sub, $this->withModelName ?? []);
 
-            if ($this->$sub) {
+            if (in_array($sub, $visibles)) {
                 if ($this->$sub instanceof Model)
                     $this->$sub = $this->$sub->hideData($addModelName);
                 else {
@@ -44,6 +50,7 @@ Trait HasHiddenData {
     public function hideData(bool $addModelName = false) {
         $this->makeHidden(array_diff(
             array_keys($this->toArray()),
+            $this->optional ?? [],
             $this->must ?? [],
             ['id', 'name', 'model', 'pivot'] // On affiche au moins l'id, le nom et le modèle !
         ));

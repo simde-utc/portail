@@ -60,7 +60,9 @@ class ContactController extends Controller
 	 */
 	public function index(ContactRequest $request): JsonResponse {
 		$this->checkTokenRights($request);
-		$contacts = $this->hide($request->resource->contacts);
+		$contacts = $request->resource->contacts()->getSelection()->map(function ($contact) {
+			return $contact->hideData();
+		});
 
 		return response()->json($contacts, 200);
 	}
@@ -73,7 +75,6 @@ class ContactController extends Controller
 	 */
 	public function store(ContactRequest $request): JsonResponse {
 		$this->checkTokenRights($request, 'create');
-
 		$contact = Contact::create($request->input());
 
 		if ($contact) {

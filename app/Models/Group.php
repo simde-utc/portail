@@ -46,6 +46,15 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
         'icon_id'
     ];
 
+    protected $selection = [
+        'order' => 'latest',
+        'paginate' => 50,
+        'day' => null,
+        'week' => null,
+        'month' => null,
+        'year' => null,
+    ];
+
     public function owner() {
         return $this->belongsTo(User::class, 'user_id');
     }
