@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
+use App\Models\Tag;
 use App\Traits\HasVisibility;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Controller\v1\HasArticles;
@@ -131,6 +132,24 @@ class ArticleController extends Controller
 		$article = Article::create($inputs);
 
 		if ($article) {
+			
+			// Tags
+			if ($request->has('tags') && is_array($inputs['tags'])) {
+				$tags = Tag::all();
+
+				foreach ($inputs['tags'] as $tag_arr) {
+					if (!$tags->firstWhere('name', $tag_arr['name'])) {
+						$tag = new Tag;
+						$tag->name = $tag_arr['name'];
+						$tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
+						$article->tags()->save($tag);
+					} else {
+						$tag = Tag::where('name', $tag_arr['name'])->first();
+						$article->tags()->save($tag);
+					}
+				}
+			}
+
 			$article = $this->getArticle($request, \Auth::user(), $article->id);
 
 			return response()->json($article->hideSubData(), 201);

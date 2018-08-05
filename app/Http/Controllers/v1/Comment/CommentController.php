@@ -15,10 +15,6 @@ use Carbon\Carbon;
  */
 class CommentController extends Controller
 {
-    /* TODO(Natan): - ajout du truc de @Samy (stages) pour choper le tree
-                    - destroy
-    */
-
     /**
      * Scopes Commentaire
      *
