@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Comment extends Model
 {
     // TODO(Natan): Include user ! using $with
-
-    use SoftDeletes;
-
+    
     protected $table = 'comments';
 
     protected $dates = ['deleted_at'];
@@ -31,6 +29,7 @@ class Comment extends Model
      * List Comments
      *
      * Retourne la liste des commentaires.
+     * ATTENTION : Pour le moment pas supprimer, modif body si comment supprimé.
      * @param array $comments
      * @param int $parent_id
      * @return array
@@ -39,6 +38,9 @@ class Comment extends Model
         $branch = array();
 
         foreach ($comments as $comment) {
+            if ($comment['deleted_at'] != null)
+                $comment['body'] = "Ce commentaire a été supprimé.";
+            
             if ($comment['parent_id'] == $parent_id) {
                 $children = self::getTree($comments, $comment['id']);
 

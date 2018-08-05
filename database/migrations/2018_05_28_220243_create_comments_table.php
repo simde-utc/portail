@@ -24,7 +24,7 @@ class CreateCommentsTable extends Migration
             $table->foreign('visibility_id')->references('id')->on('visibilities');
             $table->integer('commentable_id')->unsigned();
             $table->string('commentable_type');
-            $table->softDeletes();
+            $table->timestamp('deleted_at');
             $table->timestamps();
         });
     }

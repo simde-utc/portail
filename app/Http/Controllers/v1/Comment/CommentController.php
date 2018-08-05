@@ -6,6 +6,7 @@ use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
+use Carbon\Carbon;
 
 /**
  * @resource Comment
@@ -14,7 +15,7 @@ use App\Models\Comment;
  */
 class CommentController extends Controller
 {
-    /* TODO(Natan): - scopes  config/ + middleware
+    /* TODO(Natan): - ajout du truc de @Samy (stages) pour choper le tree
                     - destroy
     */
 
@@ -49,7 +50,6 @@ class CommentController extends Controller
     public function index(CommentRequest $request): JsonResponse {
         $comments = Comment::getTree($request->resource
                                         ->comments()
-                                        ->withTrashed()
                                         ->get()
                                         ->toArray());
 
@@ -92,7 +92,7 @@ class CommentController extends Controller
     public function show(CommentRequest $request): JsonResponse {  
         $comment = $request->resource->comments()->find($request->comment);
 
-        if ($comment)
+        if ($comment && ($comment->deleted_at == null))
             return response()->json($comment, 200);
         else
             return response()->json(['message' => 'Impossible de trouver le commentaire'], 404);
@@ -108,7 +108,7 @@ class CommentController extends Controller
     public function update(CommentRequest $request): JsonResponse {
         $comment = $request->resource->comments()->find($request->comment);
 
-        if (!$comment)
+        if (!$comment || ($comment->deleted_at != null))
             return response()->json(['message' => 'Impossible de trouver le commentaire'], 404);
 
         $parent_id = $request->input('parent_id');
@@ -137,6 +137,15 @@ class CommentController extends Controller
      * @return JsonResponse
      */
     public function destroy(CommentRequest $request): JsonResponse {
-        // Attention aux children ...
+        $comment = $request->resource->comments()->find($request->comment);
+
+        if ($comment)  {
+            $comment->deleted_at = Carbon::now()->toDateTimeString();
+            $comment->save();
+
+            abort(204);
+        }
+        else
+            abort(404, 'Impossible de trouver le commentaire');
     }
 }
