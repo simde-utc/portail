@@ -66,6 +66,20 @@ trait HasKeyValue
 		return $data;
 	}
 
+	public function scopeGroupToArray($query) {
+		$data = $query->get();
+		$groups = [];
+
+		foreach ($data as $model) {
+			if (!isset($groups[strtolower($model->key)]))
+				$groups[strtolower($model->key)] = [];
+
+			$groups[strtolower($model->key)][] = $model->value;
+		}
+
+		return $groups;
+	}
+
 	public function getAttribute($key) {
 		$value = parent::getAttribute($key);
 
