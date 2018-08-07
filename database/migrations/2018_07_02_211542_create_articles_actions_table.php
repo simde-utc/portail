@@ -23,8 +23,6 @@ class CreateArticlesActionsTable extends Migration
 			$table->enum('type', [
 				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
 			])->default('STRING');
-			$table->integer('visibility_id')->unsigned();
-			$table->foreign('visibility_id')->references('id')->on('visibilities');
 
 			$table->timestamps();
 			$table->primary(['article_id', 'user_id', 'key']);

@@ -16,7 +16,7 @@ trait HasKeyValue
 		if ($query->count() > 0)
 			return $query;
 		else
-			throw new PortailException('Non trouvé');
+			throw new PortailException('Non trouvé', 404);
 	}
 
 	public function scopeKey($query, $key) {
@@ -25,7 +25,7 @@ trait HasKeyValue
 		if ($model)
 			return $model;
 		else
-			throw new PortailException('Non trouvé');
+			throw new PortailException('Non trouvé', 404);
 	}
 
 	public function scopeValueOf($query, $key) {
