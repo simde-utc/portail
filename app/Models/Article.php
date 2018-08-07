@@ -69,4 +69,8 @@ class Article extends Model implements OwnableContract
 	public function event() {
 		return $this->belongsTo(Event::class);
 	}
+
+	public function actions() {
+		return $this->hasMany(ArticleAction::class);
+	}
 }

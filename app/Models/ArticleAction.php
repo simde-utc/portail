@@ -8,26 +8,24 @@ class ArticleAction extends Model
 {
 	use HasKeyValue;
 
+	public $incrementing = false;
+
 	protected $table = 'articles_actions';
 
+	protected $primaryKey = [
+		'article_id', 'user_id', 'key'
+	];
+
 	protected $fillable = [
-		'article_id', 'user_id', 'key', 'value', 'type', 'visibility_id'
-	];
-
-	protected $with = [
-		'created_by', 'owned_by', 'visibility',
-	];
-
-	protected $withModelName = [
-		'created_by', 'owned_by',
+		'article_id', 'user_id', 'key', 'value', 'type'
 	];
 
 	protected $must = [
-		'title', 'description', 'owned_by', 'created_at',
+		'created_at',
 	];
 
 	protected $hidden = [
-		'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id',
+		'visibility_id',
 	];
 
 	public function article() {
@@ -36,9 +34,5 @@ class ArticleAction extends Model
 
 	public function user() {
 		return $this->belongsTo(User::class);
-	}
-
-	public function visibility() {
-		return $this->belongsTo(Visibility::class);
 	}
 }
