@@ -55,7 +55,7 @@ Route::apiResources([
 	'user/calendars'							=> 'User\CalendarController',
 	'user/contacts'								=> 'Contact\ContactController',
 	'user/assos'								=> 'User\AssoController',
-	'user/articles/{article_id}/actions'		=> 'User\ArticleActionController',
+	'user/articles/{article_id}/actions'		=> 'User\Article\ActionController',
 ]);
 
 Route::apiResources([

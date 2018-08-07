@@ -27,6 +27,14 @@ return [
 		'manage' => [
 			'description' => 'Gérer tout les articles',
 			'scopes' => [
+				'actions' => [
+					'description' => 'Gérer les actions des articles',
+					'scopes' => [
+						'user' => [
+							'description' => 'Gérer les actions de l\'utilisateur sur les articles',
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Gérer les articles des associations de l\'utilisateur',
 					'scopes' => [
@@ -70,6 +78,14 @@ return [
 		'get' => [
 			'description' => 'Récupérer tout les articles',
 			'scopes' => [
+				'actions' => [
+					'description' => 'Récupérer les actions des articles',
+					'scopes' => [
+						'user' => [
+							'description' => 'Récupérer les actions de l\'utilisateur sur les articles',
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Récupérer les articles de chaque association',
 					'scopes' => [
@@ -113,6 +129,14 @@ return [
 		'set' => [
 			'description' => 'Modifier et créer les articles',
 			'scopes' => [
+				'actions' => [
+					'description' => 'Modifier et créer les actions des articles',
+					'scopes' => [
+						'user' => [
+							'description' => 'Modifier et créer les actions de l\'utilisateur sur les articles',
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Modifier et créer les articles de chaque association',
 					'scopes' => [
@@ -156,6 +180,14 @@ return [
 		'edit' => [
 			'description' => 'Modifier les articles',
 			'scopes' => [
+				'actions' => [
+					'description' => 'Modifier les actions des articles',
+					'scopes' => [
+						'user' => [
+							'description' => 'Modifier les actions de l\'utilisateur sur les articles',
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Modifier les articles de chaque association',
 					'scopes' => [
@@ -199,6 +231,14 @@ return [
 		'create' => [
 			'description' => 'Créer et faire suivre des articles',
 			'scopes' => [
+				'actions' => [
+					'description' => 'Créer les actions des articles',
+					'scopes' => [
+						'user' => [
+							'description' => 'Créer les actions de l\'utilisateur sur les articles',
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Créer des articles pour chaque association',
 					'scopes' => [

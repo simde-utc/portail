@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v1\User;
+namespace App\Http\Controllers\v1\User\Article;
 
 use App\Http\Controllers\v1\Controller;
 use App\Models\User;
@@ -20,7 +20,7 @@ use App\Traits\Controller\v1\HasArticles;
  *
  * Les articles écrits et postés par les associations
  */
-class ArticleActionController extends Controller
+class ActionController extends Controller
 {
 	use HasArticles;
 
@@ -29,24 +29,32 @@ class ArticleActionController extends Controller
 	 *
 	 * Les Scopes requis pour manipuler les Articles
 	 */
- 	public function __construct() {
- 		$this->middleware(
- 			\Scopes::matchOneOfDeepestChildren('user-get-articles', 'client-get-articles'),
- 			['only' => ['index', 'show']]
- 		);
- 		$this->middleware(
- 			\Scopes::matchOneOfDeepestChildren('user-create-articles', 'client-create-articles'),
- 			['only' => ['store']]
- 		);
- 		$this->middleware(
- 			\Scopes::matchOneOfDeepestChildren('user-edit-articles', 'client-edit-articles'),
- 			['only' => ['update']]
- 		);
- 		$this->middleware(
- 			\Scopes::matchOneOfDeepestChildren('user-manage-articles', 'client-manage-articles'),
- 			['only' => ['destroy']]
- 		);
- 	}
+	public function __construct() {
+   		$this->middleware(array_merge(
+ 				\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
+   				\Scopes::matchOne('user-get-articles-actions-user', 'client-get-articles-actions-user')
+ 			),
+   			['only' => ['index', 'show']]
+   		);
+   		$this->middleware(array_merge(
+ 				\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
+   				\Scopes::matchOne('user-create-articles-actions-user', 'client-create-articles-actions-user')
+ 			),
+   			['only' => ['store']]
+   		);
+   		$this->middleware(array_merge(
+ 				\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
+   				\Scopes::matchOne('user-edit-articles-actions-user', 'client-edit-articles-actions-user')
+ 			),
+   			['only' => ['update']]
+   		);
+   		$this->middleware(array_merge(
+ 				\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
+   				\Scopes::matchOne('user-manage-articles-actions-user', 'client-manage-articles-actions-user')
+ 			),
+   			['only' => ['destroy']]
+   		);
+   	}
 
 	/**
 	 * List Articles
