@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
+use App\Traits\Model\HasCreatorSelection;
+use App\Traits\Model\HasOwnerSelection;
 
 class Article extends Model implements OwnableContract
 {
-	use HasMorphOwner;
-
-	protected $table = 'articles';
+	use HasMorphOwner, HasCreatorSelection, HasOwnerSelection;
 
 	protected $fillable = [
 		'title', 'description', 'content', 'image', 'event_id', 'visibility_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
@@ -44,7 +44,9 @@ class Article extends Model implements OwnableContract
 		'day'		=> null,
 		'interval'	=> null,
 		'date'		=> null,
-		'dates'		=> null
+		'dates'		=> null,
+		'creator' 	=> null,
+		'owner' 	=> null,
 	];
 
 	public function getDescriptionAttribute() {
@@ -54,14 +56,6 @@ class Article extends Model implements OwnableContract
 			return $description;
 		else
 			return trimText($this->getAttribute('content'), validation_max('string'));
-	}
-
-	public function created_by() {
-		return $this->morphTo();
-	}
-
-	public function owned_by() {
-		return $this->morphTo();
 	}
 
 	public function tags() {
