@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use App\Traits\Model\HasCreatorSelection;
 use App\Traits\Model\HasOwnerSelection;
+use App\Models\ArticleAction;
 
 class Article extends Model implements OwnableContract
 {
@@ -39,15 +41,31 @@ class Article extends Model implements OwnableContract
 				'name' 	=> 'title',
 			],
 		],
-		'month'		=> null,
-		'week'		=> null,
-		'day'		=> null,
-		'interval'	=> null,
-		'date'		=> null,
-		'dates'		=> null,
-		'creator' 	=> null,
-		'owner' 	=> null,
+		'month'		=> [],
+		'week'		=> [],
+		'day'		=> [],
+		'interval'	=> [],
+		'date'		=> [],
+		'dates'		=> [],
+		'creator' 	=> [],
+		'owner' 	=> [],
+		'user'		=> [],
 	];
+
+	public function scopeOrder(Builder $query, string $order) {
+		if ($order === 'like' || $order === 'unlike') {
+		 	$actionTable = (new ArticleAction)->getTable();
+
+			$query = $query->where('key', 'like')
+				->join($actionTable, $actionTable.'.article_id', '=', $this->getTable().'.id')
+				->groupBy($this->getTable().'.id')
+				->orderByRaw('SUM(IF(articles_actions.value=1, 10, -5)) '.($order === 'like' ? 'desc' : 'asc'));
+
+			return $query->selectRaw($this->getTable().'.*');
+		}
+		else
+			return parent::scopeOrder($query, $order);
+	}
 
 	public function getDescriptionAttribute() {
 		$description = $this->getOriginal('description');
