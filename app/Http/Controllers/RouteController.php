@@ -46,13 +46,14 @@ class RouteController extends Controller
 
                 $data = [
                     'info' => 'Définition des routes api pour la '.$version,
-                    'routes' => $routes,
                 ];
 
                 if ($i < $indexVersion)
                     $data['deprecated'] = true;
                 else if ($i > $indexVersion || $indexVersion === false)
                     $data['beta'] = true;
+
+				$data['routes'] = $routes;
 
                 return response()->json($data);
             }

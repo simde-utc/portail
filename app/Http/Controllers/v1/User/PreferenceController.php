@@ -11,7 +11,7 @@ use App\Traits\Controller\v1\HasUsers;
 class PreferenceController extends Controller
 {
     use HasUsers;
-    
+
     public function __construct() {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-info-preferences'),
@@ -72,13 +72,13 @@ class PreferenceController extends Controller
             $array[$only_for] = [];
 
             foreach ($preferences as $preference)
-                $array[$only_for] = array_merge($array[$only_for], $preference->allToArray());
+                $array[$only_for] = array_merge($array[$only_for], $preference->toArray());
         }
 
         if (count($array) === 1)
-            return response()->json(array_values($array)[0]);
-        else
-            return response()->json($array);
+            $array = array_values($array)[0];
+
+        return response()->json($array);
     }
 
     /**

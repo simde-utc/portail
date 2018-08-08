@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Article;
+use App\Models\ArticleAction;
 use App\Models\Visibility;
 use App\Models\Asso;
 
@@ -22,6 +23,28 @@ class ArticlesTableSeeder extends Seeder
                 'created_by' => Asso::findByLogin('simde'),
 		        'owner' => Asso::findByLogin('simde'),
 		        'visibility_id' => 'public',
+                'actions' => [
+                    [
+                        'user_id' => 1,
+                        'key' => 'like',
+                        'value' => false,
+                    ],
+                    [
+                        'user_id' => 1,
+                        'key' => 'seen',
+                        'value' => 3,
+                    ],
+                    [
+                        'user_id' => 1,
+                        'key' => 'shared',
+                        'value' => 1,
+                    ],
+                    [
+                        'user_id' => 2,
+                        'key' => 'like',
+                        'value' => true,
+                    ],
+                ],
 	        ],
 	        [
 	        	'title' => 'L\'intégration va commencer !',
@@ -30,6 +53,13 @@ class ArticlesTableSeeder extends Seeder
                 'created_by' => Asso::findByLogin('integ'),
 		        'owner' => Asso::findByLogin('integ'),
 		        'visibility_id' => 'cas',
+                'actions' => [
+                    [
+                        'user_id' => 4,
+                        'key' => 'like',
+                        'value' => true,
+                    ],
+                ],
 	        ],
 	        [
 	        	'title' => 'Grand spectacle du PAE',
@@ -37,17 +67,40 @@ class ArticlesTableSeeder extends Seeder
                 'created_by' => Asso::findByLogin('pae'),
 		        'owner' => Asso::findByLogin('pae'),
 		        'visibility_id' => 'contributorBde',
+                'actions' => [
+                    [
+                        'user_id' => 2,
+                        'key' => 'like',
+                        'value' => true,
+                    ],
+                    [
+                        'user_id' => 1,
+                        'key' => 'seen',
+                        'value' => 2,
+                    ]
+                ],
 	        ]
         ];
 
         foreach ($articles as $article) {
-        	Article::create([
+        	$model = Article::create([
         		'title'           => $article['title'],
 		        'content'         => $article['content'],
 		        'visibility_id'   => Visibility::where('type', $article['visibility_id'])->first()->id,
 				'created_by_id'   => isset($article['created_by']) ? $article['created_by']->id : null,
 				'created_by_type' => isset($article['created_by']) ? get_class($article['created_by']) : null,
-			])->changeOwnerTo($article['owner'])->save();
+			])->changeOwnerTo($article['owner']);
+
+            $model->save();
+
+            foreach ($article['actions'] as $action) {
+                ArticleAction::create([
+                    'article_id'    => $model->id,
+                    'user_id'       => $action['user_id'],
+                    'key'           => $action['key'],
+                    'value'         => $action['value'],
+                ]);
+            }
         }
 
     }
