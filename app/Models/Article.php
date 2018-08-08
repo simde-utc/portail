@@ -49,22 +49,57 @@ class Article extends Model implements OwnableContract
 		'dates'		=> [],
 		'creator' 	=> [],
 		'owner' 	=> [],
-		'user'		=> [],
+		'action'	=> [],
 	];
 
 	public function scopeOrder(Builder $query, string $order) {
 		if ($order === 'like' || $order === 'unlike') {
 		 	$actionTable = (new ArticleAction)->getTable();
 
-			$query = $query->where('key', 'like')
+			$query = $query->where($actionTable.'.key', 'LIKE')
 				->join($actionTable, $actionTable.'.article_id', '=', $this->getTable().'.id')
 				->groupBy($this->getTable().'.id')
-				->orderByRaw('SUM(IF(articles_actions.value=1, 10, -5)) '.($order === 'like' ? 'desc' : 'asc'));
+				->orderByRaw('SUM(IF('.$actionTable.'.value='.((string) true).', 10, -5)) '.($order === 'like' ? 'desc' : 'asc'));
 
 			return $query->selectRaw($this->getTable().'.*');
 		}
 		else
 			return parent::scopeOrder($query, $order);
+	}
+
+	public function scopeAction(Builder $query, string $action) {
+		$actionTable = (new ArticleAction)->getTable();
+
+		if (substr($action, 0, 1) === '!') {
+			$action = substr($action, 1);
+
+			return $query->whereNotExists(function ($query) use ($action, $actionTable) {
+				if (\Auth::id())
+					$query = $query->where($actionTable.'.user_id', \Auth::id());
+
+				return $query->selectRaw('NULL')
+					->from($actionTable)
+					->where($actionTable.'.key', strtoupper($action))
+					->whereRaw($actionTable.'.article_id = '.$this->getTable().'.id');
+			});
+		}
+		else if (substr($action, 0, 2) === 'un') {
+			$action = substr($action, 2);
+
+			$query = $query->where($actionTable.'.key', strtoupper($action))
+				->where($actionTable.'.value', '<', 1)
+				->join($actionTable, $actionTable.'.article_id', '=', $this->getTable().'.id');
+		}
+		else {
+			$query = $query->where($actionTable.'.key', strtoupper($action))
+				->where($actionTable.'.value', '>', 0)
+				->join($actionTable, $actionTable.'.article_id', '=', $this->getTable().'.id');
+		}
+
+		if (\Auth::id())
+			$query = $query->where($actionTable.'.user_id', \Auth::id());
+
+		return $query;
 	}
 
 	public function getDescriptionAttribute() {
