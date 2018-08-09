@@ -53,13 +53,13 @@ class Article extends Model implements OwnableContract
 	];
 
 	public function scopeOrder(Builder $query, string $order) {
-		if ($order === 'like' || $order === 'unlike') {
+		if ($order === 'liked' || $order === 'unliked') {
 		 	$actionTable = (new ArticleAction)->getTable();
 
-			$query = $query->where($actionTable.'.key', 'LIKE')
+			$query = $query->where($actionTable.'.key', 'LIKED')
 				->join($actionTable, $actionTable.'.article_id', '=', $this->getTable().'.id')
 				->groupBy($this->getTable().'.id')
-				->orderByRaw('SUM(IF('.$actionTable.'.value='.((string) true).', 10, -5)) '.($order === 'like' ? 'desc' : 'asc'));
+				->orderByRaw('SUM(IF('.$actionTable.'.value='.((string) true).', 10, -5)) '.($order === 'liked' ? 'desc' : 'asc'));
 
 			return $query->selectRaw($this->getTable().'.*');
 		}

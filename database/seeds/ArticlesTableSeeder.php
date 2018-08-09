@@ -26,7 +26,7 @@ class ArticlesTableSeeder extends Seeder
                 'actions' => [
                     [
                         'user_id' => 1,
-                        'key' => 'like',
+                        'key' => 'liked',
                         'value' => false,
                     ],
                     [
@@ -41,7 +41,7 @@ class ArticlesTableSeeder extends Seeder
                     ],
                     [
                         'user_id' => 2,
-                        'key' => 'like',
+                        'key' => 'liked',
                         'value' => true,
                     ],
                 ],
@@ -56,7 +56,7 @@ class ArticlesTableSeeder extends Seeder
                 'actions' => [
                     [
                         'user_id' => 4,
-                        'key' => 'like',
+                        'key' => 'liked',
                         'value' => true,
                     ],
                 ],
@@ -70,7 +70,7 @@ class ArticlesTableSeeder extends Seeder
                 'actions' => [
                     [
                         'user_id' => 2,
-                        'key' => 'like',
+                        'key' => 'liked',
                         'value' => true,
                     ],
                     [
