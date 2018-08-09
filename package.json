@@ -31,7 +31,7 @@
 		"redux-promise-middleware": "^5.1.1",
 		"redux-thunk": "^2.3.0",
 		"semantic-ui": "^2.3.3",
-		"semantic-ui-react": "^0.82.1"
+		"semantic-ui-react": "^0.82.2"
 	},
 	"dependencies": []
 }

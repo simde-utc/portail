@@ -32,19 +32,19 @@ class ArticleController extends Controller
 	 */
  	public function __construct() {
  		$this->middleware(
- 			\Scopes::matchOneOfDeepestChildren('user-get-articles', 'client-get-articles'),
+ 			\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
  			['only' => ['index', 'show']]
  		);
  		$this->middleware(
- 			\Scopes::matchOneOfDeepestChildren('user-create-articles', 'client-create-articles'),
+			\Scopes::matchOneOfDeepestChildren(['user-create-articles-assos', 'user-create-articles-groups'], ['client-create-articles-assos', 'client-create-articles-groups']),
  			['only' => ['store']]
  		);
  		$this->middleware(
- 			\Scopes::matchOneOfDeepestChildren('user-edit-articles', 'client-edit-articles'),
+			\Scopes::matchOneOfDeepestChildren(['user-edit-articles-assos', 'user-edit-articles-groups'], ['client-edit-articles-assos', 'client-edit-articles-groups']),
  			['only' => ['update']]
  		);
  		$this->middleware(
- 			\Scopes::matchOneOfDeepestChildren('user-manage-articles', 'client-manage-articles'),
+			\Scopes::matchOneOfDeepestChildren(['user-manage-articles-assos', 'user-manage-articles-groups'], ['client-manage-articles-assos', 'client-manage-articles-groups']),
  			['only' => ['destroy']]
  		);
  	}

@@ -16,6 +16,7 @@ class CreateArticlesTable extends Migration
 		Schema::create('articles', function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('title', validation_max('title'));
+			$table->string('description', validation_max('string'))->nullable();
 			$table->longText('content', validation_max('article'));
 			$table->string('image', validation_max('url'))->nullable();
 			$table->integer('visibility_id')->unsigned();

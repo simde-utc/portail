@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,8 @@ class AuthServiceProvider extends ServiceProvider
 		'App\Model' => 'App\Policies\ModelPolicy',
 	];
 
-	protected $defer = true;
+	// Important d'être non différé car sinon les scopes ne sont pas chargés
+	protected $defer = false;
 
 	/**
 	 * Register any authentication / authorization services.
@@ -30,6 +32,16 @@ class AuthServiceProvider extends ServiceProvider
 				return new $config['class']();
 			});
 		}
+
+		$this->passport();
+	}
+
+	public function passport() {
+		Passport::tokensCan(\Scopes::all());
+
+	    Passport::tokensExpireIn(now()->addDays(15));
+
+	    Passport::refreshTokensExpireIn(now()->addDays(30));
 	}
 
 	/**
