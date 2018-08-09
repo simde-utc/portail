@@ -230,7 +230,7 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 			if ($auth) {
 				if (method_exists($auth, 'isPasswordCorrect')) {
 					if ($auth->isPasswordCorrect($password))
-						return true;
+						return $this->isActive();
 				}
 			}
 		}
