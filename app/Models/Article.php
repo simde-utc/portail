@@ -53,7 +53,7 @@ class Article extends Model implements OwnableContract
 	];
 
 	public function scopeOrder(Builder $query, string $order) {
-		if ($order === 'liked' || $order === 'unliked') {
+		if ($order === 'liked' || $order === 'disliked') {
 		 	$actionTable = (new ArticleAction)->getTable();
 
 			$query = $query->where($actionTable.'.key', 'LIKED')
@@ -83,8 +83,8 @@ class Article extends Model implements OwnableContract
 					->whereRaw($actionTable.'.article_id = '.$this->getTable().'.id');
 			});
 		}
-		else if (substr($action, 0, 2) === 'un') {
-			$action = substr($action, 2);
+		else if (substr($action, 0, 2) === 'un' || substr($action, 0, 3) === 'dis') {
+			$action = substr($action, 0, 2) === 'un' ? substr($action, 2) : substr($action, 3);
 
 			$query = $query->where($actionTable.'.key', strtoupper($action))
 				->where($actionTable.'.value', '<', 1)
