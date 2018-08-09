@@ -30,7 +30,16 @@ class AuthCas extends Auth // TODO must
     }
 
 	public function isPasswordCorrect($password) {
-		// Intéraction avec le cas..
-		return false;
+		$curl = \Curl::to(config('portail.cas.url').'v1/tickets')
+			->withData([
+				'username' => $this->login,
+				'password' => $password
+			])
+			->returnResponseObject();
+
+		if (strpos($_SERVER['HTTP_HOST'], 'utc.fr'))
+			$curl = $curl->withProxy('proxyweb.utc.fr', 3128);
+
+		return $curl->post()->status === 201;
 	}
 }
