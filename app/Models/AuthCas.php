@@ -25,8 +25,27 @@ class AuthCas extends Auth // TODO must
 
 		if ($auth)
 			return $auth->user;
-		else
-			return null;
+		else {
+			$ginger = \Ginger::user($login);
+
+			if ($ginger->exists()) {
+				$user = User::create([
+					'email' => $ginger->getEmail(),
+					'firstname' => $ginger->getFirstname(),
+					'lastname' => $ginger->getLastname(),
+					'is_active' => false,
+				]);
+
+				self::create([
+					'user_id' => $user_id,
+					'email' => $ginger->getEmail(),
+				]);
+
+				return $user;
+			}
+		}
+
+		return null;
     }
 
 	public function isPasswordCorrect($password) {
@@ -40,6 +59,14 @@ class AuthCas extends Auth // TODO must
 		if (strpos($_SERVER['HTTP_HOST'], 'utc.fr'))
 			$curl = $curl->withProxy('proxyweb.utc.fr', 3128);
 
-		return $curl->post()->status === 201;
+		$connected = $curl->post()->status === 201;
+
+		if ($connected) {
+			$this->user()->update([
+				'is_active' => true
+			]);
+		}
+
+		return $connected;
 	}
 }
