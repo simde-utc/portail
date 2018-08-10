@@ -31,9 +31,11 @@ Trait HasHiddenData {
                 if ($this->$sub instanceof Model)
                     $this->$sub = $this->$sub->hideData($addModelName);
                 else {
-                    foreach ($this->$sub as $index => $subSub) {
-                        if ($subSub instanceof Model) {
-                            $this->$sub[$index] = $subSub->hideData($addModelName);
+                    if ((is_array($this->$sub) || $this->$sub instanceof Countable) && count($this->$sub) > 0) {
+                        foreach ($this->$sub as $index => $subSub) {
+                            if ($subSub instanceof Model) {
+                                $this->$sub[$index] = $subSub->hideData($addModelName);
+                            }
                         }
                     }
                 }
