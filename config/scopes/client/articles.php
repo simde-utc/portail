@@ -34,6 +34,33 @@ return [
 						],
 					]
 				],
+				'users' => [
+					'description' => 'Gérer les articles des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Gérer les articles que les utilisateurs ont créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Gérer les articles des applications des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Gérer les articles des applications que les utilisateurs ont créé',
+						],
+						'owned' => [
+							'description' => 'Gérer les articles des applications que les utlisateurs possèdent',
+							'scopes' => [
+								'client' => [
+										'description' => 'Gérer les articles des applications que les utlisateurs possèdent et que mon client crée'
+								],
+								'asso' => [
+										'description' => 'Gérer les articles des applications que les utlisateurs possèdent et que mon association crée'
+								],
+							]
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Gérer les articles de chaque association',
 					'scopes' => [
@@ -75,16 +102,43 @@ return [
 			]
 		],
 		'get' => [
-			'actions' => [
-				'description' => 'Récupérer les actions des articles',
-				'scopes' => [
-					'user' => [
-						'description' => 'Récupérer les actions des utilisateurs sur les articles',
-					],
-				]
-			],
 			'description' => 'Récupérer tout les articles',
 			'scopes' => [
+				'actions' => [
+					'description' => 'Récupérer les actions des articles',
+					'scopes' => [
+						'user' => [
+							'description' => 'Récupérer les actions des utilisateurs sur les articles',
+						],
+					]
+				],
+				'users' => [
+					'description' => 'Récupérer les articles des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Récupérer les articles que les utilisateurs ont créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Récupérer les articles des applications des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Récupérer les articles des applications que les utilisateurs ont créé',
+						],
+						'owned' => [
+							'description' => 'Récupérer les articles des applications que les utlisateurs possèdent',
+							'scopes' => [
+								'client' => [
+										'description' => 'Récupérer les articles des applications que les utlisateurs possèdent et que mon client crée'
+								],
+								'asso' => [
+										'description' => 'Récupérer les articles des applications que les utlisateurs possèdent et que mon association crée'
+								],
+							]
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Récupérer les articles de chaque association',
 					'scopes' => [
@@ -133,6 +187,33 @@ return [
 					'scopes' => [
 						'user' => [
 							'description' => 'Modifier et créer les actions des utilisateurs sur les articles',
+						],
+					]
+				],
+				'users' => [
+					'description' => 'Modifier et créer les articles des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier et créer les articles que les utilisateurs ont créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Modifier et créer les articles des applications des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier et créer les articles des applications que les utilisateurs ont créé',
+						],
+						'owned' => [
+							'description' => 'Modifier et créer les articles des applications que les utlisateurs possèdent',
+							'scopes' => [
+								'client' => [
+										'description' => 'Modifier et créer les articles des applications que les utlisateurs possèdent et que mon client crée'
+								],
+								'asso' => [
+										'description' => 'Modifier et créer les articles des applications que les utlisateurs possèdent et que mon association crée'
+								],
+							]
 						],
 					]
 				],
@@ -187,6 +268,33 @@ return [
 						],
 					]
 				],
+				'users' => [
+					'description' => 'Modifier les articles des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les articles que les utilisateurs ont créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Modifier les articles des applications des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les articles des applications que les utilisateurs ont créé',
+						],
+						'owned' => [
+							'description' => 'Modifier les articles des applications que les utlisateurs possèdent',
+							'scopes' => [
+								'client' => [
+										'description' => 'Modifier les articles des applications que les utlisateurs possèdent et que mon client crée'
+								],
+								'asso' => [
+										'description' => 'Modifier les articles des applications que les utlisateurs possèdent et que mon association crée'
+								],
+							]
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Modifier les articles de chaque association',
 					'scopes' => [
@@ -230,15 +338,42 @@ return [
 		'create' => [
 			'description' => 'Créer et faire suivre des articles',
 			'scopes' => [
+				'actions' => [
+					'description' => 'Créer les actions des articles',
+					'scopes' => [
+						'user' => [
+							'description' => 'Créer les actions des utilisateurs sur les articles',
+						],
+					]
+				],
+				'users' => [
+					'description' => 'Créer les articles des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer les articles que les utilisateurs ont créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Créer les articles des applications des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer les articles des applications que les utilisateurs ont créé',
+						],
+						'owned' => [
+							'description' => 'Créer les articles des applications que les utlisateurs possèdent',
+							'scopes' => [
+								'client' => [
+										'description' => 'Créer les articles des applications que les utlisateurs possèdent et que mon client crée'
+								],
+								'asso' => [
+										'description' => 'Créer les articles des applications que les utlisateurs possèdent et que mon association crée'
+								],
+							]
+						],
+					]
+				],
 				'assos' => [
-					'actions' => [
-						'description' => 'Créer les actions des articles',
-						'scopes' => [
-							'user' => [
-								'description' => 'Créer les actions des utilisateurs sur les articles',
-							],
-						]
-					],
 					'description' => 'Créer des articles pour chaque association',
 					'scopes' => [
 						'created' => [

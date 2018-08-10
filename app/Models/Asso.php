@@ -186,10 +186,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     	return $this->morphMany(Article::class, 'owned_by');
     }
 
-    public function collaboratedArticles() {
-    	return $this->morphToMany(Article::class, 'collaborator', 'articles_collaborators');
-    }
-
 	public function isArticleAccessibleBy(int $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
