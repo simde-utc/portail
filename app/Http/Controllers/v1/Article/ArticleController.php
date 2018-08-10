@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
+use App\Models\Tag;
 use App\Traits\HasVisibility;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Controller\v1\HasArticles;
@@ -138,7 +139,26 @@ class ArticleController extends Controller
 		$article = Article::create($inputs);
 
 		if ($article) {
-			$article = Article::find($article->id);
+			
+			// Tags
+			if ($request->has('tags') && is_array($inputs['tags'])) {
+				$tags = Tag::all();
+
+				foreach ($inputs['tags'] as $tag_arr) {
+					if (!$tags->firstWhere('name', $tag_arr['name'])) {
+						$tag = new Tag;
+						$tag->name = $tag_arr['name'];
+						$tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
+						$tag->save();
+						$article->tags()->save($tag);
+					} else {
+						$tag = Tag::where('name', $tag_arr['name'])->first();
+						$article->tags()->save($tag);
+					}
+				}
+			}
+
+			$article = $this->getArticle($request, \Auth::user(), $article->id);
 
 			return response()->json($article->hideSubData(), 201);
 		}
@@ -182,8 +202,29 @@ class ArticleController extends Controller
 		if ($request->filled('event_id')) // On fait vérifier que la personne à les droits sur l'event
 			$this->getEvent($request, \Auth::user(), $inputs['event_id']);
 
-		if ($article->update($inputs))
+		if ($article->update($inputs)) {
+			// Tags
+			if ($request->has('tags') && is_array($inputs['tags'])) {
+				$tags = Tag::all();
+
+				foreach ($inputs['tags'] as $tag_arr) {
+					if (!$tags->firstWhere('name', $tag_arr['name'])) {
+						$tag = new Tag;
+						$tag->name = $tag_arr['name'];
+						$tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
+						$tag->save();
+						$article->tags()->save($tag);
+					} else {
+						$tag = Tag::where('name', $tag_arr['name'])->first();
+						$article->tags()->save($tag);
+					}
+				}
+			}
+
+			$article = $this->getArticle($request, \Auth::user(), $article->id);
+
 			return response()->json($article->hideData(), 200);
+		}
 		else
 			abort(500, 'Impossible de modifier l\'article');
 	}
@@ -198,6 +239,7 @@ class ArticleController extends Controller
 	 */
 	public function destroy(ArticleRequest $request, $id): JsonResponse {
 		$article = $this->getArticle($request, \Auth::user(), $id, 'remove');
+		$article->tags()->delete();
 
 		if ($article->delete())
 			abort(204);

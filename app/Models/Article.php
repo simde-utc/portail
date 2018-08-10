@@ -119,6 +119,10 @@ class Article extends Model implements OwnableContract
 		return $this->belongsTo(Visibility::class, 'visibility_id');
 	}
 
+	public function comments() {
+		return $this->morphMany('App\Models\Comment', 'commentable');
+	}
+
 	public function event() {
 		return $this->belongsTo(Event::class);
 	}

@@ -200,6 +200,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     	return $this->belongsToMany(Calendar::class, 'calendars_followers')->withTimestamps();
     }
 
+    public function comments() {
+		return $this->hasMany('App\Models\Comment');
+	}
+
 	/**
 	 * Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification
 	 *
