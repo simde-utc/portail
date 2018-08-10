@@ -159,7 +159,6 @@ class ArticleController extends Controller
 			}
 
 			$article = $this->getArticle($request, \Auth::user(), $article->id);
-			$article = Article::find($article->id);
 
 			return response()->json($article->hideSubData(), 201);
 		}
@@ -221,6 +220,8 @@ class ArticleController extends Controller
 					}
 				}
 			}
+
+			$article = $this->getArticle($request, \Auth::user(), $article->id);
 
 			return response()->json($article->hideData(), 200);
 		}
