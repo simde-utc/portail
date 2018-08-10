@@ -4,30 +4,39 @@ namespace App\Models;
 
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
+use App\Traits\Model\HasCreatorSelection;
+use App\Traits\Model\HasOwnerSelection;
 
 class Calendar extends Model implements OwnableContract
 {
-    use HasMorphOwner;
+    use HasMorphOwner, HasCreatorSelection, HasOwnerSelection;
 
     protected $fillable = [
         'name', 'description', 'color', 'visibility_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
     ];
 
     protected $hidden = [
-        'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
+        'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id',
     ];
 
     protected $with = [
-        'created_by', 'owned_by',
+        'created_by', 'owned_by', 'visibility',
     ];
 
-    public function owned_by() {
-        return $this->morphTo();
-    }
+	protected $withModelName = [
+		'created_by', 'owned_by',
+	];
 
-    public function created_by() {
-        return $this->morphTo();
-    }
+    protected $must = [
+        'description', 'color', 'owned_by',
+    ];
+
+    protected $selection = [
+        'paginate' => null,
+        'order' => null,
+        'owner' => null,
+        'creator' => null,
+    ];
 
     public function events() {
         return $this->belongsToMany(Event::class, 'calendars_events')->withTimestamps();

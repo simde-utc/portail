@@ -145,6 +145,45 @@ DESC
 				'type_asso_id'  => 'commission',
 				'parent_login'  => 'pvdc',
 			],
+            [
+				'login'			=> 'comedmus',
+				'shortname'		=> 'La Com\'',
+				'name'			=> 'Comédie Musicale',
+				'description'	=> <<<DESC
+La Comédie Musicale de l'UTC
+
+Après un spectacle d'une qualité impressionnante (et encore, je pèse mes mots) en 2017, la nouvelle équipe vous prépare quelque chose de grand pour Décembre 2019...
+
+Réalisée par des étudiants du script jusqu'aux décors en passant par la musique, les costumes et les danses, la comédie musicale ne vous décevra pas!
+DESC
+,
+				'type_asso_id'  => '1901',
+				'parent_login'  => 'pae',
+			],
+            [
+				'login'			=> 'hackathon',
+				'shortname'		=> 'Hackathon',
+				'name'			=> 'Hackathon',
+				'description'	=> <<<DESC
+Pendant 24h, les étudiants vont unir leurs forces pour développer des projets utiles à tous (vie associative et vie étudiante).
+DESC
+,
+				'type_asso_id'  => 'commission',
+				'parent_login'  => 'pte',
+			],
+            [
+				'login'			=> 'picasoft',
+				'shortname'		=> 'Picasoft',
+				'name'			=> 'Picasoft',
+				'description'	=> <<<DESC
+T'as déjà entendu parler de "neutralité du net", "dégooglisons internet" ou "logiciels libres" ? Picasoft c'est une asso toute nouvelle qui à pour objectif de sensibiliser autour de ces thématiques et de proposer des solutions aux question qu'elles soulèvent !
+- Pôle technique: nous proposons déjà 2 services libres, éthiques et décentralisés (team.picasoft.net et pad.picasoft.net) et nous avons besoin de ton aide pour en déployer plus ! Tu n'as pas besoin d’expérience, et tu pourras acquérir des connaissances précieuses pour la suite de ton parcours, mais tu pourras surtout t'investir dans un projet concret et utile à tous.
+- Pôle sensibilisation/formation: une journée Picasoft par semestre (conférences, ateliers), de la veille en ligne et plein d'ateliers tout au long du semestre pour apprendre à utiliser Linux, à chiffrer ses mails... Initié ou non, t'apprendras énormément avec des gens passionnés et tu pourras même proposer tes propres ateliers !
+DESC
+,
+				'type_asso_id'  => '1901',
+				'parent_login'  => 'psec',
+			],
         ];
 
         foreach ($assos as $asso) {

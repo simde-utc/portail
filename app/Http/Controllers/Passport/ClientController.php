@@ -20,7 +20,7 @@ class ClientController extends Controller
 			$roles = Role::getRoleAndItsParents('resp info');
 			$assos = \Auth::user()->currentJoinedAssos()->wherePivotIn('role_id', $roles->pluck('id'));
 
-			return Client::where('asso_id', $assos->pluck('id'))->get();
+			return Client::where('asso_id', $assos->pluck('id'))->getPaginate();
 		}
     }
 

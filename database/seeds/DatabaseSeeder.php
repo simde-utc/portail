@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
 				EventsTableSeeder::class,
 				CalendarsTableSeeder::class,
 				ContactsTableSeeder::class,
+				ClientsTableSeeder::class,
+				CommentsTableSeeder::class,
 			]);
 		}
 	}

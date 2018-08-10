@@ -44,13 +44,14 @@ class GroupController extends Controller
 	 */
 	public function index(Request $request): JsonResponse {
 		// On inclue les relations et on les formattent.
-		$groups = Group::with(['owner', 'visibility'])->get();
+		$groups = Group::getSelection();
 
-		if (\Auth::id()) {
-			$groups = $this->hide($groups, true, function ($group) {
-				return $group->hideData();
-			});
-		}
+		if (\Auth::id())
+			$groups = $this->hide($groups, true);
+
+		$groups = $groups->map(function ($group) {
+			return $group->hideData();
+		});
 
 		return response()->json($groups, 200);
 	}

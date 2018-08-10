@@ -11,7 +11,7 @@ use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\Visible\Visible;
-use App\Interfaces\CanHaveEvents;
+use App\Interfaces\Model\CanHaveEvents;
 use App\Traits\HasVisibility;
 
 /**
@@ -54,7 +54,7 @@ class EventController extends Controller
 
 		if ($request->filled($type.'_by_type')) {
 			if ($request->filled($type.'_by_id')) {
-				$createrOrOwner = resolve($this->types[$request->input($type.'_by_type')])->find($request->input($type.'_by_id'));
+				$createrOrOwner = \ModelResolver::getModel($request->input($type.'_by_type'))->find($request->input($type.'_by_id'));
 
 				if (\Auth::id() && !$createrOrOwner->isEventManageableBy(\Auth::id()))
 					abort(403, 'L\'utilisateur n\'a pas les droits de création');
@@ -80,8 +80,8 @@ class EventController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse {
-		$events = Event::with(['owned_by', 'created_by', 'visibility', 'details', 'location'])->get()->filter(function ($event) use ($request) {
-			return $this->tokenCanSee($request, $event, 'get', 'events');
+		$events = Event::getSelection()->filter(function ($event) use ($request) {
+			return $this->tokenCanSee($request, $event, 'get', 'events') && (!\Auth::id() || $this->isVisible($event, \Auth::id()) || $this->isEventFollowed($request, $event, \Auth::id()));
 		})->values()->map(function ($event) use ($request) {
 			return $event->hideData();
 		});
@@ -100,13 +100,19 @@ class EventController extends Controller
 
 		$owner = $this->getCreaterOrOwner($request, 'create', 'owned');
 
-		if ($request->input('created_by_type') === 'client'
+		// Le créateur peut être multiple: le user, l'asso ou le client courant. Ou autre
+		if ($request->input('created_by_type', 'user') === 'user'
+			&& \Auth::id()
+			&& $request->input('created_by_id', \Auth::id()) === \Auth::id()
+			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-events-'.\ModelResolver::getName($owner).'s-owned-user'))
+			$creater = \Auth::user();
+		else if ($request->input('created_by_type', 'client') === 'client'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
-			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
-			$creater = \Scopes::getClient($request)->id;
+			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-events-'.\ModelResolver::getName($owner).'s-owned-client'))
+			$creater = \Scopes::getClient($request);
 		else if ($request->input('created_by_type') === 'asso'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
-			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
+			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-events-'.\ModelResolver::getName($owner).'s-owned-asso'))
 			$creater = \Scopes::getClient($request)->asso;
 		else
 			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
@@ -126,7 +132,7 @@ class EventController extends Controller
 		if ($event) {
 			$event = $this->getEvent($request, \Auth::user(), $event->id);
 
-			return response()->json($event->hideData(), 201);
+			return response()->json($event->hideSubData(), 201);
 		}
 		else
 			return response()->json(['message' => 'Impossible de créer l\'évènenement'], 500);
@@ -141,7 +147,7 @@ class EventController extends Controller
 	public function show(Request $request, int $id): JsonResponse {
 		$event = $this->getEvent($request, \Auth::user(), $id);
 
-		return response()->json($event->hideData(), 200);
+		return response()->json($event->hideSubData(), 200);
 	}
 
 	/**
@@ -152,7 +158,7 @@ class EventController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, $id): JsonResponse {
-		$event = $this->getEvent($request, \Auth::user(), $id, 'set', true);
+		$event = $this->getEvent($request, \Auth::user(), $id, 'set');
 		$inputs = $request->all();
 
 		if ($request->filled('owned_by_type')) {
@@ -163,7 +169,7 @@ class EventController extends Controller
 		}
 
 		if ($event->update($inputs))
-			return response()->json($event->hideData(), 200);
+			return response()->json($event->hideSubData(), 200);
 		else
 			abort(500, 'Impossible de modifier le calendrier');
 	}
@@ -175,7 +181,7 @@ class EventController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(Request $request, int $id): JsonResponse {
-		$event = $this->getEvent($request, \Auth::user(), $id, true);
+		$event = $this->getEvent($request, \Auth::user(), $id);
 		$event->softDelete();
 
 		abort(204);

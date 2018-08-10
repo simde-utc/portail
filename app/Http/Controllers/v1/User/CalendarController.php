@@ -42,13 +42,6 @@ class CalendarController extends Controller
 		);
 	}
 
-	protected function tokenCanSeeCalendar(Request $request, Calendar $calendar, string $verb) {
-		if (parent::tokenCanSeeCalendar($request, $calendar, $verb))
-			return true;
-		else
-			return (\Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-'.$verb.'-calendars-users-followed-'.$this->classToType($calendar->owned_by_type).'s'));
-	}
-
 	/**
 	 * List Calendars
 	 *
@@ -60,42 +53,23 @@ class CalendarController extends Controller
 		$calendars = collect();
 		$choices = [];
 
-		if (\Scopes::hasOne($request, [$scopeHead.'-get-calendars-users-owned-client', $scopeHead.'-get-calendars-users-owned-asso']))
+		if (\Scopes::hasOne($request, array_keys(\Scopes::getRelatives($scopeHead.'-get-calendars-users-owned'))))
 			$choices[] = 'owned';
 
-		foreach ($this->types as $type => $class) {
-			if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-followed-'.$type.'s'))
-				$choices[] = 'followed-'.$type.'s';
-		}
+		if (\Scopes::hasOne($request, array_keys(\Scopes::getRelatives($scopeHead.'-get-calendars-users-followed'))))
+			$choices[] = 'followed';
 
 		$choices = $this->getChoices($request, $choices);
 
-		if (in_array('owned', $choices)) {
-			if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-owned'))
-				$calendars = $user->calendars()->with(['owned_by', 'created_by', 'visibility'])->get();
-			else {
-				if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-owned-client'))
-					$calendars = $user->calendars()->with(['owned_by', 'created_by', 'visibility'])->where('created_by_type', Client::class)->where('created_by_id', \Scopes::getClient($request)->id)->get();
+		if (in_array('owned', $choices))
+			$calendars = $user->calendars()->getSelection();
 
-				if (\Scopes::hasOne($request, $scopeHead.'-get-calendars-users-owned-asso'))
-					$calendars = $calendar->merge($user->calendars()->with(['owned_by', 'created_by', 'visibility'])->where('created_by_type', Asso::class)->where('created_by_id', \Scopes::getClient($request)->asso->id)->get());
-			}
-		}
+		if (in_array('followed', $choices))
+			$calendars = $calendars->merge($user->followedCalendars()->getSelection());
 
-		$followed = [];
-
-		foreach ($this->types as $type => $class) {
-			if (in_array('followed-'.$type.'s', $choices))
-				$followed[] = $class;
-		}
-
-		if (count($followed) > 0) {
-			$calendars = $calendars->merge(
-				$user->followedCalendars()->with(['owned_by', 'created_by', 'visibility'])->whereIn('owned_by_type', $followed)->get()
-			);
-		}
-
-		$calendars = $calendars->map(function ($calendar) {
+		$calendars = $calendars->filter(function ($calendar) use ($request) {
+			return ($this->tokenCanSee($request, $calendar, 'get') && (!\Auth::id() || $this->isVisible($calendar, \Auth::id()))) || $this->isCalendarFollowed($request, $calendar, \Auth::id());
+		})->values()->map(function ($calendar) {
 			return $calendar->hideData();
 		});
 

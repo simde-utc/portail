@@ -72,6 +72,9 @@ class Cas extends BaseAuth
 			$cas = $this->createAuth($user->id, compact('login', 'email'));
 		}
 
+		if (!$user->isActive())
+			return $this->error($request, $user, $userAuth, 'Ce compte a été désactivé');
+
 		// On vérifie qu'on a bien lié son CAS à une connexion email/mot de passe
 		if ($user->password()->exists())
 			return $this->connect($request, $user, $cas);

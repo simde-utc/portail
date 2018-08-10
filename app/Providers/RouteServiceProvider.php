@@ -49,8 +49,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapPassportRoutes() {
 		Passport::routes();
-		Passport::tokensCan(\Scopes::all());
-
+        
 		Route::prefix('oauth')
 			->group(base_path('routes/oauth.php'));
     }
@@ -92,6 +91,10 @@ class RouteServiceProvider extends ServiceProvider
         $actualVersion = config('portail.version');
         $indexVersion = array_search($actualVersion, $versions);
 
+        Route::prefix('api')
+            ->middleware('forceJson')
+            ->get('/{version}/', $this->namespace.'\RouteController@index');
+
 		for ($i = 0; $i < count($versions); $i++) {
             $version = $versions[$i];
             $file = base_path('routes/api/'.$version.'.php');
@@ -110,33 +113,6 @@ class RouteServiceProvider extends ServiceProvider
                     ->namespace($this->namespace.'\\'.$version)
                     ->middleware($middlewares)
                     ->group($file);
-
-                $routes = [];
-
-                foreach (Route::getRoutes() as $route) {
-                    if (($route->action['prefix'] ?? '') === 'api/'.$version) {
-                        $routes[str_replace('api/'.$version.'/', '', $route->uri)] = [
-                            'url' => url($route->uri),
-                            'method' => $route->methods[0],
-                        ];
-                    }
-                }
-
-                Route::prefix('api/'.$version)
-                    ->middleware('forceJson')
-                    ->get('/', function () use ($version, $i, $indexVersion, $routes) {
-                        $data = [
-                            'info' => 'Définition des routes api pour la '.$version,
-                            'routes' => $routes,
-                        ];
-
-                        if ($i < $indexVersion)
-                            $data['deprecated'] = true;
-                        else if ($i > $indexVersion || $indexVersion === false)
-                            $data['beta'] = true;
-
-                        return $data;
-                    });
             }
         }
     }

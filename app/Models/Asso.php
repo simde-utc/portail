@@ -6,11 +6,12 @@ use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Model\HasMembers;
 use App\Traits\Model\HasStages;
-use App\Interfaces\Controller\v1\CanHaveContacts;
-use App\Interfaces\Controller\v1\CanHaveEvents;
-use App\Interfaces\Controller\v1\CanHaveCalendars;
+use App\Interfaces\Model\CanHaveContacts;
+use App\Interfaces\Model\CanHaveEvents;
+use App\Interfaces\Model\CanHaveCalendars;
+use App\Interfaces\Model\CanHaveArticles;
 
-class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
+class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles
 {
 	use HasStages, HasMembers, SoftDeletes {
 		HasMembers::members as membersAndFollowers;
@@ -32,8 +33,18 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		'type', 'parent',
 	];
 
+	protected $optional = [
+		'children',
+	];
+
 	protected $must = [
 		'name', 'shortname',
+	]; // Children dans le cas où on affiche en mode étagé
+
+	protected $selection = [
+		'order' => 'oldest',
+		'stage' => null,
+		'stages' => null,
 	];
 
 	protected $roleRelationTable = 'assos_members';
@@ -71,14 +82,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
 	public function reservations() {
 		return $this->hasMany(Reservation::class);
-	}
-
-	public function articles() {
-		return $this->hasMany(Article::class);
-	}
-
-	public function collaboratedArticles() {
-		return $this->belongsToMany(Article::class, 'articles_collaborators');
 	}
 
 	public function parent() {
@@ -146,7 +149,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isContactManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('contact', [
+		return $this->hasOnePermission('asso_contact', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -160,7 +163,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isCalendarManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('calendar', [
+		return $this->hasOnePermission('asso_calendar', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -174,7 +177,21 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isEventManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('event', [
+		return $this->hasOnePermission('asso_event', [
+			'user_id' => $user_id,
+		]);
+	}
+
+    public function articles() {
+    	return $this->morphMany(Article::class, 'owned_by');
+    }
+
+	public function isArticleAccessibleBy(int $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isArticleManageableBy(int $user_id): bool {
+		return $this->hasOnePermission('asso_article', [
 			'user_id' => $user_id,
 		]);
 	}

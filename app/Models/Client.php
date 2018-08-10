@@ -3,21 +3,23 @@
 namespace App\Models;
 
 use Laravel\Passport\Client as PassportClient;
-use App\Interfaces\Controller\v1\CanHaveCalendars;
-use App\Interfaces\Controller\v1\CanHaveEvents;
+use App\Interfaces\Model\CanHaveCalendars;
+use App\Interfaces\Model\CanHaveEvents;
+use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Model\HasHiddenData;
+use NastuzziSamy\Laravel\Traits\HasSelection;
 
-class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
+class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, CanHaveArticles
 {
-    use HasHiddenData;
+    use HasHiddenData, HasSelection;
 
     protected $fillable = [
         'user_id', 'name', 'secret', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'asso_id', 'scopes'
     ];
 
-    public function hideData(array $params = []): Model {
-        return $this->makeHidden(['user_id', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'asso_id', 'created_at', 'updated_at', 'scopes']);
-    }
+    protected $selection = [
+        'paginate' => null,
+    ];
 
     public function asso() {
         return $this->belongsTo(Asso::class);
@@ -29,6 +31,10 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
 
     public function events() {
     	return $this->morphMany(Event::class, 'owned_by');
+    }
+
+    public function articles() {
+    	return $this->morphMany(Article::class, 'owned_by');
     }
 
 	public function isCalendarAccessibleBy(int $user_id): bool {
@@ -44,6 +50,14 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
 	}
 
 	public function isEventManageableBy(int $user_id): bool {
+		return $this->asso()->hasOneRole('developer', ['user_id' => $user_id]);
+	}
+
+	public function isArticleAccessibleBy(int $user_id): bool {
+		return $this->asso()->currentMembers->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isArticleManageableBy(int $user_id): bool {
 		return $this->asso()->hasOneRole('developer', ['user_id' => $user_id]);
 	}
 }

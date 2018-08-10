@@ -12,7 +12,7 @@ use App\Exceptions\PortailException;
  * Cette classe permet de récupérer une classe à partir de son nom et inversement
  */
 class ModelResolver {
-	protected $namespace = '\App\Models';
+	protected $namespace = 'App\Models';
 
 	public function setNamespace($namespace) {
 		$this->namespace = $namespace;

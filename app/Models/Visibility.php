@@ -6,7 +6,7 @@ use App\Models\Visibility;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Traits\Model\HasStages;
 
-class Visibility extends Model // TODO $must?
+class Visibility extends Model
 {
     use HasStages;
 

@@ -45,6 +45,7 @@ Route::apiResources([
 	'users/{user_id}/preferences'				=> 'User\PreferenceController',
 	'users/{user_id}/calendars'					=> 'User\CalendarController',
 	'users/{user_id}/assos'						=> 'User\AssoController',
+	'users/{user_id}/articles/{article_id}/actions'	=> 'User\Article\ActionController',
 
 	// Routes `user` identiques à `users/{\Auth::id()}`
 	'user/auths'								=> 'User\AuthController',
@@ -54,10 +55,12 @@ Route::apiResources([
 	'user/calendars'							=> 'User\CalendarController',
 	'user/contacts'								=> 'Contact\ContactController',
 	'user/assos'								=> 'User\AssoController',
+	'user/articles/{article_id}/actions'		=> 'User\Article\ActionController',
 ]);
 
 Route::apiResources([
 	'{resource_type}/{resource_id}/contacts'	=> 'Contact\ContactController',
+	'{resource_type}/{resource_id}/comments'	=> 'Comment\CommentController',
 	'groups/{group_id}/members'					=> 'Group\MemberController',
 	'groups'									=> 'Group\GroupController',
 	'assos'										=> 'Asso\AssoController',
@@ -71,5 +74,6 @@ Route::apiResources([
 	'calendars/{calendar_id}/events'			=> 'Calendar\EventController',
 	'partners'									=> 'Partner\PartnerController',
 	'articles'									=> 'Article\ArticleController',
+	'articles/{article_id}/actions'				=> 'Article\ActionController',
 	'visibilities'								=> 'Visibility\VisibilityController',
 ]);

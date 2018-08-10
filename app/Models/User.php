@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Cog\Contracts\Ownership\CanBeOwner;
-use App\Interfaces\Controller\v1\CanHaveCalendars;
-use App\Interfaces\Controller\v1\CanHaveContacts;
-use App\Interfaces\Controller\v1\CanHaveEvents;
+use App\Interfaces\Model\CanHaveCalendars;
+use App\Interfaces\Model\CanHaveContacts;
+use App\Interfaces\Model\CanHaveEvents;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Model\HasRoles;
 use App\Traits\Model\HasHiddenData;
+use NastuzziSamy\Laravel\Traits\HasSelection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
 use App\Models\UserPreference;
@@ -20,7 +21,7 @@ use App\Exceptions\PortailException;
 
 class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
-	use HasHiddenData, HasApiTokens, Notifiable, HasRoles;
+	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles;
 
     public static function boot() {
         static::created(function ($model) {
@@ -59,6 +60,11 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 
 	public $types = [
 		'admin', 'contributorBde', 'cas', 'password', 'active',
+	];
+
+	protected $selection = [
+		'order' => 'oldest',
+		'paginate' => null,
 	];
 
 	public function getNameAttribute() {
@@ -194,6 +200,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     	return $this->belongsToMany(Calendar::class, 'calendars_followers')->withTimestamps();
     }
 
+    public function comments() {
+		return $this->hasMany('App\Models\Comment');
+	}
+
 	/**
 	 * Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification
 	 *
@@ -224,7 +234,7 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 			if ($auth) {
 				if (method_exists($auth, 'isPasswordCorrect')) {
 					if ($auth->isPasswordCorrect($password))
-						return true;
+						return $this->isActive();
 				}
 			}
 		}
@@ -243,11 +253,11 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 	}
 
 	public function isContactAccessibleBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 
 	public function isContactManageableBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 
     public function calendars() {
@@ -255,11 +265,11 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     }
 
 	public function isCalendarAccessibleBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 
 	public function isCalendarManageableBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 
     public function events() {
@@ -267,10 +277,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     }
 
 	public function isEventAccessibleBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 
 	public function isEventManageableBy(int $user_id): bool {
-		return $this->id == $user_id;
+		return $this->id === $user_id;
 	}
 }

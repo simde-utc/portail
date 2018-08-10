@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Interfaces\Controller\v1;
+namespace App\Interfaces\Model;
 
 Interface CanHaveCalendars {
     /**
