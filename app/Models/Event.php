@@ -18,7 +18,7 @@ class Event extends Model implements OwnableContract
     ];
 
     protected $hidden = [
-        'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
+        'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'location_id',
     ];
 
     protected $with = [

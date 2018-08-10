@@ -11,7 +11,7 @@ use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\Visible\Visible;
-use App\Interfaces\CanHaveEvents;
+use App\Interfaces\Model\CanHaveEvents;
 use App\Traits\HasVisibility;
 
 /**
@@ -81,7 +81,7 @@ class EventController extends Controller
 	 */
 	public function index(Request $request): JsonResponse {
 		$events = Event::getSelection()->filter(function ($event) use ($request) {
-			return $this->tokenCanSee($request, $event, 'get', 'events');
+			return $this->tokenCanSee($request, $event, 'get', 'events') && (!\Auth::id() || $this->isVisible($event, \Auth::id()) || $this->isEventFollowed($request, $event, \Auth::id()));
 		})->values()->map(function ($event) use ($request) {
 			return $event->hideData();
 		});
@@ -100,13 +100,19 @@ class EventController extends Controller
 
 		$owner = $this->getCreaterOrOwner($request, 'create', 'owned');
 
-		if ($request->input('created_by_type') === 'client'
+		// Le créateur peut être multiple: le user, l'asso ou le client courant. Ou autre
+		if ($request->input('created_by_type', 'user') === 'user'
+			&& \Auth::id()
+			&& $request->input('created_by_id', \Auth::id()) === \Auth::id()
+			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-events-'.\ModelResolver::getName($owner).'s-owned-user'))
+			$creater = \Auth::user();
+		else if ($request->input('created_by_type', 'client') === 'client'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
-			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
-			$creater = \Scopes::getClient($request)->id;
+			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-events-'.\ModelResolver::getName($owner).'s-owned-client'))
+			$creater = \Scopes::getClient($request);
 		else if ($request->input('created_by_type') === 'asso'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
-			&& \Scopes::hasOne($request, (\Scopes::isClientToken($request) ? 'client' : 'user').'-create-calendars-'.$this->classToType(get_class($owner)).'s-owned-client'))
+			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-events-'.\ModelResolver::getName($owner).'s-owned-asso'))
 			$creater = \Scopes::getClient($request)->asso;
 		else
 			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
