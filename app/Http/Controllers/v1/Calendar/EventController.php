@@ -49,7 +49,7 @@ class EventController extends Controller
 	public function index(Request $request, int $calendar_id): JsonResponse {
 		$calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
 		$events = $calendar->events()->getSelection()->filter(function ($event) use ($request) {
-			return $this->tokenCanSee($request, $event, 'get', 'events');
+			return ($this->tokenCanSee($request, $event, 'get') && (!\Auth::id() || $this->isVisible($event, \Auth::id()))) || $this->isEventFollowed($request, $event, \Auth::id());
 		})->values()->map(function ($event) use ($request) {
 			return $event->hideData();
 		});

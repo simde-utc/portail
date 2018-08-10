@@ -81,7 +81,7 @@ class EventController extends Controller
 	 */
 	public function index(Request $request): JsonResponse {
 		$events = Event::getSelection()->filter(function ($event) use ($request) {
-			return $this->tokenCanSee($request, $event, 'get', 'events');
+			return $this->tokenCanSee($request, $event, 'get', 'events') && (!\Auth::id() || $this->isVisible($event, \Auth::id()) || $this->isEventFollowed($request, $event, \Auth::id()));
 		})->values()->map(function ($event) use ($request) {
 			return $event->hideData();
 		});

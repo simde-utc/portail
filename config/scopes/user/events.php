@@ -50,16 +50,16 @@ return [
 						'followed' => [
 							'description' => 'Gérer les évènements que l\'utilisateur suit',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Gérer les évènements utilisateurs que l\'utilisateur suit',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Gérer les évènements associatifs que l\'utilisateur suit',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Gérer les évènements de groupe que l\'utilisateur suit',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Gérer les évènements clients que l\'utilisateur suit',
 								],
 							]
@@ -160,16 +160,16 @@ return [
 						'followed' => [
 							'description' => 'Récupérer les évènements que l\'utilisateur suit',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Récupérer les évènements utilisateurs que l\'utilisateur suit',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Récupérer les évènements associatifs que l\'utilisateur suit',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Récupérer les évènements de groupe que l\'utilisateur suit',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Récupérer les évènements clients que l\'utilisateur suit',
 								],
 							]
@@ -270,16 +270,16 @@ return [
 						'followed' => [
 							'description' => 'Modifier et créer les évènements que l\'utilisateur suit',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Modifier et créer les évènements utilisateurs que l\'utilisateur suit',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Modifier et créer les évènements associatifs que l\'utilisateur suit',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Modifier et créer les évènements de groupe que l\'utilisateur suit',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Modifier et créer les évènements clients que l\'utilisateur suit',
 								],
 							]
@@ -380,16 +380,16 @@ return [
 						'followed' => [
 							'description' => 'Faire suivre des évènements à l\'utilisateur',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Faire suivre des évènements utilisateurs à l\'utilisateur',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Faire suivre des évènements associatifs à l\'utilisateur',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Faire suivre des évènements de groupe à l\'utilisateur',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Faire suivre des évènements de client à l\'utilisateur',
 								],
 							]
