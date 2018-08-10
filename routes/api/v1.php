@@ -45,7 +45,7 @@ Route::apiResources([
 	'users/{user_id}/preferences'				=> 'User\PreferenceController',
 	'users/{user_id}/calendars'					=> 'User\CalendarController',
 	'users/{user_id}/assos'						=> 'User\AssoController',
-	'users/{user_id}/articles/{article_id}/actions'	=> 'User\ArticleActionController',
+	'users/{user_id}/articles/{article_id}/actions'	=> 'User\Article\ActionController',
 
 	// Routes `user` identiques à `users/{\Auth::id()}`
 	'user/auths'								=> 'User\AuthController',

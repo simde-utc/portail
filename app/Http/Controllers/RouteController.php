@@ -28,7 +28,7 @@ class RouteController extends Controller
                 $routes = [];
 
                 foreach (Route::getRoutes() as $route) {
-                    if (($route->action['prefix'] ?? '') === 'api/'.$version) {
+                    if (substr($route->uri, 0, strlen('api/'.$version)) === 'api/'.$version) {
 						$uri = str_replace('api/'.$version.'/', '', $route->uri);
 
 						if (isset($routes[$uri]))
