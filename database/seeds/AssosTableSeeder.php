@@ -161,20 +161,9 @@ DESC
 				'parent_login'  => 'pae',
 			],
             [
-				'login'			=> 'hackaton',
-				'shortname'		=> 'Hackaton',
-				'name'			=> 'Hackaton',
-				'description'	=> <<<DESC
-Pendant 24h, les étudiants vont unir leurs forces pour développer des projets utiles à tous (vie associative et vie étudiante).
-DESC
-,
-				'type_asso_id'  => 'commission',
-				'parent_login'  => 'pte',
-			],
-            [
-				'login'			=> 'hackaton',
-				'shortname'		=> 'Hackaton',
-				'name'			=> 'Hackaton',
+				'login'			=> 'hackathon',
+				'shortname'		=> 'Hackathon',
+				'name'			=> 'Hackathon',
 				'description'	=> <<<DESC
 Pendant 24h, les étudiants vont unir leurs forces pour développer des projets utiles à tous (vie associative et vie étudiante).
 DESC
