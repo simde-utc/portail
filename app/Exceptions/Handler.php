@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
 	        return response()->json($response, $this->isHttpException($exception) ? $exception->getStatusCode() : 400);
 	    }
         else if ($exception instanceof AuthorizationException)
-            return redirect('/home');
+            return redirect('/');
 
         return parent::render($request, $exception);
     }
