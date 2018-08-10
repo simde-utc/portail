@@ -35,6 +35,36 @@ return [
 						],
 					]
 				],
+				'users' => [
+					'description' => 'Gérer les articles de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Gérer les articles que l\'utilisateur a créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Gérer les articles des applications de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Gérer les articles des applications que l\'utilisateur a créé',
+						],
+						'owned' => [
+							'description' => 'Gérer les articles des applications de l\'utilisateur possède',
+							'scopes' => [
+								'user' => [
+									'description' => 'Gérer les articles des applications de l\'utilisateur possède et qu\'il crée'
+								],
+								'client' => [
+									'description' => 'Gérer les articles des applications de l\'utilisateur possède et que mon client crée'
+								],
+								'asso' => [
+									'description' => 'Gérer les articles des applications de l\'utilisateur possède et que mon association crée'
+								],
+							]
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Gérer les articles des associations de l\'utilisateur',
 					'scopes' => [
@@ -44,6 +74,9 @@ return [
 						'owned' => [
 							'description' => 'Gérer les articles que chaque association de l\'utilisateur possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Gérer les articles que chaque association de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Gérer les articles que chaque association de l\'utilisateur possède et que mon client crée'
 								],
@@ -63,6 +96,9 @@ return [
 						'owned' => [
 							'description' => 'Gérer les articles que chaque groupe possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Gérer les articles que chaque groupe de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Gérer les articles que chaque groupe possède et que mon client crée'
 								],
@@ -86,6 +122,36 @@ return [
 						],
 					]
 				],
+				'users' => [
+					'description' => 'Récupérer les articles de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Récupérer les articles que l\'utilisateur a créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Récupérer les articles des applications de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Récupérer les articles des applications que l\'utilisateur a créé',
+						],
+						'owned' => [
+							'description' => 'Récupérer les articles des applications de l\'utilisateur possède',
+							'scopes' => [
+								'user' => [
+									'description' => 'Récupérer les articles des applications de l\'utilisateur possède et qu\'il crée'
+								],
+								'client' => [
+									'description' => 'Récupérer les articles des applications de l\'utilisateur possède et que mon client crée'
+								],
+								'asso' => [
+									'description' => 'Récupérer les articles des applications de l\'utilisateur possède et que mon association crée'
+								],
+							]
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Récupérer les articles de chaque association',
 					'scopes' => [
@@ -95,6 +161,9 @@ return [
 						'owned' => [
 							'description' => 'Récupérer les articles que chaque association possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Récupérer les articles que chaque association de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Récupérer les articles que chaque association possède et que mon client crée'
 								],
@@ -114,6 +183,9 @@ return [
 						'owned' => [
 							'description' => 'Récupérer les articles que chaque groupe possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Récupérer les articles que chaque groupe de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Récupérer les articles que chaque groupe possède et que mon client crée'
 								],
@@ -137,6 +209,36 @@ return [
 						],
 					]
 				],
+				'users' => [
+					'description' => 'Modifier et créer les articles de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier et créer les articles que l\'utilisateur a créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Modifier et créer les articles des applications de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier et créer les articles des applications que l\'utilisateur a créé',
+						],
+						'owned' => [
+							'description' => 'Modifier et créer les articles des applications de l\'utilisateur possède',
+							'scopes' => [
+								'user' => [
+									'description' => 'Modifier et créer les articles des applications de l\'utilisateur possède et qu\'il crée'
+								],
+								'client' => [
+									'description' => 'Modifier et créer les articles des applications de l\'utilisateur possède et que mon client crée'
+								],
+								'asso' => [
+									'description' => 'Modifier et créer les articles des applications de l\'utilisateur possède et que mon association crée'
+								],
+							]
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Modifier et créer les articles de chaque association',
 					'scopes' => [
@@ -146,6 +248,9 @@ return [
 						'owned' => [
 							'description' => 'Modifier et créer les articles que chaque association possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Modifier et créer les articles que chaque association de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Modifier et créer les articles que chaque association possède et que mon client crée'
 								],
@@ -165,6 +270,9 @@ return [
 						'owned' => [
 							'description' => 'Modifier et créer les articles que chaque groupe possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Modifier et créer les articles que chaque groupe de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Modifier et créer les articles que chaque groupe possède et que mon client crée'
 								],
@@ -188,6 +296,36 @@ return [
 						],
 					]
 				],
+				'users' => [
+					'description' => 'Modifier les articles de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les articles que l\'utilisateur a créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Modifier les articles des applications de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les articles des applications que l\'utilisateur a créé',
+						],
+						'owned' => [
+							'description' => 'Modifier les articles des applications de l\'utilisateur possède',
+							'scopes' => [
+								'user' => [
+									'description' => 'Modifier les articles des applications de l\'utilisateur possède et qu\'il crée'
+								],
+								'client' => [
+									'description' => 'Modifier les articles des applications de l\'utilisateur possède et que mon client crée'
+								],
+								'asso' => [
+									'description' => 'Modifier les articles des applications de l\'utilisateur possède et que mon association crée'
+								],
+							]
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Modifier les articles de chaque association',
 					'scopes' => [
@@ -197,6 +335,9 @@ return [
 						'owned' => [
 							'description' => 'Modifier les articles que chaque association possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Modifier les articles que chaque association de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Modifier les articles que chaque association possède et que mon client crée'
 								],
@@ -216,6 +357,9 @@ return [
 						'owned' => [
 							'description' => 'Modifier les articles que chaque groupe possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Modifier les articles que chaque groupe de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Modifier les articles que chaque groupe possède et que mon client crée'
 								],
@@ -239,6 +383,36 @@ return [
 						],
 					]
 				],
+				'users' => [
+					'description' => 'Créer les articles de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer les articles que l\'utilisateur a créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Créer les articles des applications de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer les articles des applications que l\'utilisateur a créé',
+						],
+						'owned' => [
+							'description' => 'Créer les articles des applications de l\'utilisateur possède',
+							'scopes' => [
+								'user' => [
+									'description' => 'Créer les articles des applications de l\'utilisateur possède et qu\'il crée'
+								],
+								'client' => [
+									'description' => 'Créer les articles des applications de l\'utilisateur possède et que mon client crée'
+								],
+								'asso' => [
+									'description' => 'Créer les articles des applications de l\'utilisateur possède et que mon association crée'
+								],
+							]
+						],
+					]
+				],
 				'assos' => [
 					'description' => 'Créer des articles pour chaque association',
 					'scopes' => [
@@ -248,6 +422,9 @@ return [
 						'owned' => [
 							'description' => 'Créer des articles pour une association de l\'utilisateur',
 							'scopes' => [
+								'user' => [
+									'description' => 'Créer des articles que chaque association de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Créer des articles pour des associations de l\'utilisateur au nom de mon application'
 								],
@@ -267,6 +444,9 @@ return [
 						'owned' => [
 							'description' => 'Créer des articles pour un groupe de l\'utilisateur',
 							'scopes' => [
+								'user' => [
+									'description' => 'Créer des articles pour des groupes de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Créer des articles pour des groupes de l\'utilisateur au nom de mon application'
 								],

@@ -7,8 +7,8 @@ use App\Models\User;
 use App\Models\Calendar;
 use App\Models\Event;
 use App\Facades\Ginger;
-use Illuminate\Http\Request;
 use App\Models\Model;
+use Illuminate\Http\Request;
 
 trait HasCalendars
 {
@@ -24,22 +24,28 @@ trait HasCalendars
 		if ($model instanceof Event)
 			return $this->isEventPrivate($user_id, $model);
 
-		// Si c'est privée, uniquement les followers et ceux qui possèdent le droit peuvent le voir
-		if ($model->followers()->wherePivot('user_id', $user_id)->exists())
-			return true;
-
 		return $model->owned_by->isCalendarAccessibleBy($user_id);
     }
+
+	// Uniquement les followers et ceux qui possèdent le droit peuvent le voir
+	protected function isCalendarFollowed(Request $request, Calendar $calendar, int $user_id) {
+		return (
+			$calendar->followers()->wherePivot('user_id', $user_id)->exists()
+			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-calendars-users-followed-'.\ModelResolver::getName($calendar->owned_by_type))
+		);
+	}
 
 	protected function getCalendar(Request $request, User $user = null, int $id, string $verb = 'get') {
 		$calendar = Calendar::find($id);
 
 		if ($calendar) {
-			if (!$this->tokenCanSee($request, $calendar, $verb))
-				abort(403, 'L\'application n\'a pas les droits sur ce calendrier');
+			if (!$this->isCalendarFollowed($request, $calendar, $user->id)) {
+				if (!$this->tokenCanSee($request, $calendar, $verb))
+					abort(403, 'L\'application n\'a pas les droits sur ce calendrier');
 
-			 if ($user && !$this->isVisible($calendar, $user->id))
-				abort(403, 'Vous n\'avez pas les droits sur ce calendrier');
+				if ($user && !$this->isVisible($calendar, $user->id))
+					abort(403, 'Vous n\'avez pas les droits sur ce calendrier');
+			}
 
 			if ($verb !== 'get' && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
 				abort(403, 'Vous n\'avez pas les droits suffisants');

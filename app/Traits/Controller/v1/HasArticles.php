@@ -34,7 +34,11 @@ trait HasArticles
 			if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-articles-'.\ModelResolver::getName($model->owned_by_type).'s-owned'))
 				return true;
 
-			if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-articles-'.\ModelResolver::getName($model->owned_by_type).'s-owned-client'))
+			if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-articles-'.\ModelResolver::getName($model->owned_by_type).'s-owned-user'))
+					&& \Auth::id()
+					&& $model->created_by_type === User::class
+					&& $model->created_by_id === \Auth::id())
+				|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-articles-'.\ModelResolver::getName($model->owned_by_type).'s-owned-client'))
 					&& $model->created_by_type === Client::class
 					&& $model->created_by_id === \Scopes::getClient($request)->id)
 				|| ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-articles-'.\ModelResolver::getName($model->owned_by_type).'s-owned-asso'))

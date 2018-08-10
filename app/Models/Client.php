@@ -5,10 +5,11 @@ namespace App\Models;
 use Laravel\Passport\Client as PassportClient;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveEvents;
+use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Model\HasHiddenData;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 
-class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
+class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, CanHaveArticles
 {
     use HasHiddenData, HasSelection;
 
@@ -32,6 +33,10 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
     	return $this->morphMany(Event::class, 'owned_by');
     }
 
+    public function articles() {
+    	return $this->morphMany(Article::class, 'owned_by');
+    }
+
 	public function isCalendarAccessibleBy(int $user_id): bool {
 		return $this->asso()->currentMembers->wherePivot('user_id', $user_id)->exists();
 	}
@@ -45,6 +50,14 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
 	}
 
 	public function isEventManageableBy(int $user_id): bool {
+		return $this->asso()->hasOneRole('developer', ['user_id' => $user_id]);
+	}
+
+	public function isArticleAccessibleBy(int $user_id): bool {
+		return $this->asso()->currentMembers->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isArticleManageableBy(int $user_id): bool {
 		return $this->asso()->hasOneRole('developer', ['user_id' => $user_id]);
 	}
 }

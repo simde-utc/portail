@@ -10,12 +10,6 @@ Interface CanHaveArticles {
     public function articles();
 
     /**
-     * Renvoie la liste des articles où on a collaboré
-     * @return MorphMany
-     */
-    public function collaboratedArticles();
-
-    /**
      * Permet d'indiquer si la personne à le droit de voir les articles appartenant au modèle
      * @return boolean
      */
