@@ -41,9 +41,24 @@ class Event extends Model implements OwnableContract
                 'date' => 'begin_at'
             ],
         ],
-        'month' => null,
-        'week' => null,
-        'day' => 'now',
+        'month' => [
+            'columns' => [
+                'begin' => 'begin_at',
+                'end' => 'begin_at',
+            ]
+        ],
+        'week' => [
+            'columns' => [
+                'begin' => 'begin_at',
+                'end' => 'begin_at',
+            ]
+        ],
+        'day' => [
+            'columns' => [
+                'begin' => 'begin_at',
+                'end' => 'begin_at',
+            ]
+        ],
     ];
 
     public function created_by() {
