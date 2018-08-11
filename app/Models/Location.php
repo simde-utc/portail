@@ -23,7 +23,11 @@ class Location extends Model // TODO $mst
     ];
 
     protected $hidden = [
-        'place_id',
+        'place_id'
+    ];
+
+    protected $must = [
+        'place'
     ];
 
     public function place() {
