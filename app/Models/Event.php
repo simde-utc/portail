@@ -35,15 +35,16 @@ class Event extends Model implements OwnableContract
 
     protected $selection = [
         'paginate' => null,
-        'order' => 'latest',
+        'order' => [
+            'default' => 'latest',
+            'columns' => [
+                'date' => 'begin_at'
+            ],
+        ],
         'month' => null,
         'week' => null,
         'day' => 'now',
     ];
-
-    protected $order_by = 'begin_at';
-    protected $begin_at = 'begin_at';
-    protected $end_at = 'begin_at';
 
     public function created_by() {
         return $this->morphTo();
