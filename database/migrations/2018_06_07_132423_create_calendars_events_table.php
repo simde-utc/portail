@@ -14,7 +14,6 @@ class CreateCalendarsEventsTable extends Migration
     public function up()
     {
         Schema::create('calendars_events', function (Blueprint $table) {
-            $table->increments('id');
 			$table->integer('calendar_id')->unsigned();
 			$table->foreign('calendar_id')->references('id')->on('calendars');
 			$table->integer('event_id')->unsigned();
