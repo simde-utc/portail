@@ -22,7 +22,7 @@ class Event extends Model implements OwnableContract
     ];
 
     protected $with = [
-        'created_by', 'owned_by', 'visibility', 'location', 'details'
+        'created_by', 'owned_by', 'visibility', 'location'
     ];
 
 	protected $withModelName = [
@@ -108,4 +108,10 @@ class Event extends Model implements OwnableContract
 	public function group() {
 		return $this->morphTo(Group::class, 'owned_by');
 	}
+
+    public function hideSubData(bool $addSubModelName = false) {
+        $this->details = $this->details()->allToArray();
+
+        return parent::hideSubData($addSubModelName);
+    }
 }

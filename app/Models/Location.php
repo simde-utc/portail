@@ -27,7 +27,7 @@ class Location extends Model // TODO $mst
     ];
 
     protected $must = [
-        'place'
+        'place', 'location',
     ];
 
     public function place() {

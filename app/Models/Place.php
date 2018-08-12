@@ -16,6 +16,10 @@ class Place extends Model // TODO $must
         'position',
     ];
 
+    protected $must = [
+        'position',
+    ];
+
     public function locations() {
         return $this->hasMany(Location::class);
     }
