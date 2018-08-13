@@ -67,7 +67,7 @@ class VisibilityController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function update(VisibilityRequest $request, $id): JsonResponse {
+	public function update(VisibilityRequest $request, string $id): JsonResponse {
 		$visibility = Visibility::find($id);
 
 		if ($visibility) {
@@ -86,7 +86,7 @@ class VisibilityController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy($id): JsonResponse {
+	public function destroy(string $id): JsonResponse {
 		$visibility = Visibility::find($id);
 
 		if ($visibility) {

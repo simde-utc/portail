@@ -72,10 +72,10 @@ class LocationController extends Controller
 	/**
 	 * Show Location
 	 *
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
-	public function show(int $id): JsonResponse {
+	public function show(string $id): JsonResponse {
 		$location = Location::with('place')->find($id);
 
 		if ($location)
@@ -88,10 +88,10 @@ class LocationController extends Controller
 	 * Update Location
 	 *
 	 * @param  \Illuminate\Http\Request $request
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
-	public function update(Request $request, int $id): JsonResponse {
+	public function update(Request $request, string $id): JsonResponse {
 		$location = Location::with('place')->find($id);
 
 		if ($location) {
@@ -107,10 +107,10 @@ class LocationController extends Controller
 	/**
 	 * Delete Location
 	 *
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
-	public function destroy(int $id): JsonResponse {
+	public function destroy(string $id): JsonResponse {
 		$location = Location::find($id);
 
 		if ($location) {

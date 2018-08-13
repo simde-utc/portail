@@ -139,7 +139,7 @@ class ArticleController extends Controller
 		$article = Article::create($inputs);
 
 		if ($article) {
-			
+
 			// Tags
 			if ($request->has('tags') && is_array($inputs['tags'])) {
 				$tags = Tag::all();
@@ -174,7 +174,7 @@ class ArticleController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, int $id): JsonResponse {
+	public function show(Request $request, string $id): JsonResponse {
 		$article = $this->getArticle($request, \Auth::user(), $id);
 
 		return response()->json($article->hideSubData(), 200);
@@ -188,7 +188,7 @@ class ArticleController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function update(Request $request, int $id): JsonResponse {
+	public function update(Request $request, string $id): JsonResponse {
 		$article = $this->getCalendar($request, \Auth::user(), $id, 'edit');
 		$inputs = $request->all();
 
@@ -237,7 +237,7 @@ class ArticleController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy(ArticleRequest $request, $id): JsonResponse {
+	public function destroy(ArticleRequest $request, string $id): JsonResponse {
 		$article = $this->getArticle($request, \Auth::user(), $id, 'remove');
 		$article->tags()->delete();
 

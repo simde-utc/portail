@@ -78,7 +78,7 @@ class DetailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $user_id, $key = null) {
+    public function show(Request $request, string $user_id, string $key = null) {
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
@@ -100,7 +100,7 @@ class DetailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_id, $key = null) {
+    public function update(Request $request, string $user_id, string $key = null) {
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
@@ -129,7 +129,7 @@ class DetailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $user_id, $key = null) {
+    public function destroy(Request $request, string $user_id, string $key = null) {
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 

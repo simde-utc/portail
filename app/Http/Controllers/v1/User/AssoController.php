@@ -82,7 +82,7 @@ class AssoController extends Controller
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function show(Request $request, $user_id, $id = null): JsonResponse {
+	public function show(Request $request, string $user_id, string $id = null): JsonResponse {
 		if (is_null($id))
 			list($user_id, $id) = [$id, $user_id];
 
@@ -100,7 +100,7 @@ class AssoController extends Controller
 	 * @param  int/string $id
 	 * @return JsonResponse
 	 */
-	public function update(AssoRequest $request, $id): JsonResponse {
+	public function update(AssoRequest $request, string $user_id, string $id = null): JsonResponse {
 		abort(405);
 	}
 
@@ -110,7 +110,7 @@ class AssoController extends Controller
 	 * @param  int/string $id
 	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, $id): JsonResponse {
+	public function destroy(Request $request, string $user_id, string $id = null): JsonResponse {
 		abort(405);
 	}
 }
