@@ -28,7 +28,7 @@ trait HasCalendars
     }
 
 	// Uniquement les followers et ceux qui possèdent le droit peuvent le voir
-	protected function isCalendarFollowed(Request $request, Calendar $calendar, int $user_id) {
+	protected function isCalendarFollowed(Request $request, Calendar $calendar, string $user_id) {
 		return (
 			$calendar->followers()->wherePivot('user_id', $user_id)->exists()
 			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-calendars-users-followed-'.\ModelResolver::getName($calendar->owned_by_type))

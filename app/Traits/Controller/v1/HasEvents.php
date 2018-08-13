@@ -22,7 +22,7 @@ trait HasEvents
     }
 
 	// Uniquement les followers et ceux qui possèdent le droit peuvent le voir
-	protected function isEventFollowed(Request $request, Event $event, int $user_id) {
+	protected function isEventFollowed(Request $request, Event $event, string $user_id) {
 		$user = User::find($user_id);
 		$calendar_ids = $user->calendars()->get(['calendars.id'])->pluck('id')->merge($user->followedCalendars()->get(['calendars.id'])->pluck('id'));
 		$event_calendar_ids = $event->calendars()->get(['calendars.id'])->pluck('id');

@@ -72,7 +72,7 @@ trait HasAssos
 			abort(404, "Assocation non trouvée");
 	}
 
-	protected function getUserFromAsso(Request $request, Asso $asso, int $user_id, Semester $semester = null) {
+	protected function getUserFromAsso(Request $request, Asso $asso, string $user_id, Semester $semester = null) {
 		$user = $asso->allMembers()
 			->wherePivot('user_id', $this->getUser($request, $user_id, true)->id)
 			->wherePivot('semester_id', $semester ? $semester->id : Semester::getThisSemester())

@@ -25,7 +25,7 @@ class Permission extends Model // TODO $must ? $fillable
         return $this->belongsToMany(User::class, 'users_permissions');
     }
 
-	public static function find(int $id, string $only_for = null) {
+	public static function find($id, string $only_for = null) {
         $permissions = static::where('id', $id);
 
 		if ($only_for !== null) {

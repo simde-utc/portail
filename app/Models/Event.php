@@ -22,7 +22,7 @@ class Event extends Model implements OwnableContract
     ];
 
     protected $with = [
-        'created_by', 'owned_by', 'visibility', 'location', 'details'
+        'created_by', 'owned_by', 'visibility', 'location'
     ];
 
 	protected $withModelName = [
@@ -30,20 +30,36 @@ class Event extends Model implements OwnableContract
 	];
 
     protected $must = [
-        'begin_at', 'end_at', 'full_day',
+        'begin_at', 'end_at', 'full_day', 'location'
     ];
 
     protected $selection = [
         'paginate' => null,
-        'order' => 'latest',
-        'month' => null,
-        'week' => null,
-        'day' => 'now',
+        'order' => [
+            'default' => 'latest',
+            'columns' => [
+                'date' => 'begin_at'
+            ],
+        ],
+        'month' => [
+            'columns' => [
+                'begin' => 'begin_at',
+                'end' => 'begin_at',
+            ]
+        ],
+        'week' => [
+            'columns' => [
+                'begin' => 'begin_at',
+                'end' => 'begin_at',
+            ]
+        ],
+        'day' => [
+            'columns' => [
+                'begin' => 'begin_at',
+                'end' => 'begin_at',
+            ]
+        ],
     ];
-
-    protected $order_by = 'begin_at';
-    protected $begin_at = 'begin_at';
-    protected $end_at = 'begin_at';
 
     public function created_by() {
         return $this->morphTo();
@@ -92,4 +108,10 @@ class Event extends Model implements OwnableContract
 	public function group() {
 		return $this->morphTo(Group::class, 'owned_by');
 	}
+
+    public function hideSubData(bool $addSubModelName = false) {
+        $this->details = $this->details()->allToArray();
+
+        return parent::hideSubData($addSubModelName);
+    }
 }

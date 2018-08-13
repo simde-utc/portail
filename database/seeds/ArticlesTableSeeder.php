@@ -5,6 +5,7 @@ use App\Models\Article;
 use App\Models\ArticleAction;
 use App\Models\Visibility;
 use App\Models\Asso;
+use App\Models\User;
 
 class ArticlesTableSeeder extends Seeder
 {
@@ -25,25 +26,30 @@ class ArticlesTableSeeder extends Seeder
 		        'visibility_id' => 'public',
                 'actions' => [
                     [
-                        'user_id' => 1,
+                        'user_id' => User::where('firstname', 'Samy')->first()->id,
                         'key' => 'liked',
                         'value' => false,
                     ],
                     [
-                        'user_id' => 1,
+                        'user_id' => User::where('firstname', 'Samy')->first()->id,
                         'key' => 'seen',
                         'value' => 3,
                     ],
                     [
-                        'user_id' => 1,
+                        'user_id' => User::where('firstname', 'Samy')->first()->id,
                         'key' => 'shared',
                         'value' => 1,
                     ],
                     [
-                        'user_id' => 2,
+                        'user_id' => User::where('firstname', 'Rémy')->first()->id,
                         'key' => 'liked',
                         'value' => true,
                     ],
+                    [
+                        'user_id' => User::where('firstname', 'Natan')->first()->id,
+                        'key' => 'seen',
+                        'value' => 40, // Big fan
+                    ]
                 ],
 	        ],
 	        [
@@ -55,7 +61,7 @@ class ArticlesTableSeeder extends Seeder
 		        'visibility_id' => 'cas',
                 'actions' => [
                     [
-                        'user_id' => 4,
+                        'user_id' => User::where('firstname', 'Romain')->first()->id,
                         'key' => 'liked',
                         'value' => true,
                     ],
@@ -69,15 +75,15 @@ class ArticlesTableSeeder extends Seeder
 		        'visibility_id' => 'contributorBde',
                 'actions' => [
                     [
-                        'user_id' => 2,
+                        'user_id' => User::where('firstname', 'Rémy')->first()->id,
                         'key' => 'liked',
                         'value' => true,
                     ],
                     [
-                        'user_id' => 1,
+                        'user_id' => User::where('firstname', 'Samy')->first()->id,
                         'key' => 'seen',
                         'value' => 2,
-                    ]
+                    ],
                 ],
 	        ]
         ];

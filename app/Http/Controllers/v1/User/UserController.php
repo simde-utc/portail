@@ -78,7 +78,7 @@ class UserController extends Controller
 	 * @param  int $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show(Request $request, int $user_id = null) {
+	public function show(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id, true);
 		$rightsOnUser = is_null($user_id) || (\Auth::id() && $user->id === \Auth::id());
 
@@ -166,7 +166,7 @@ class UserController extends Controller
 	 * @param  int $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, int $user_id = null) {
+	public function update(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 
 		$user->email = $request->input('email', $user->email);

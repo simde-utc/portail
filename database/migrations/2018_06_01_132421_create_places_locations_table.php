@@ -14,16 +14,17 @@ class CreatePlacesLocationsTable extends Migration
     public function up()
     {
         Schema::create('places_locations', function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->string('name', 128);
-            $table->integer('place_id')->unsigned();
-            $table->foreign('place_id')->references('id')->on('places');
+            $table->uuid('place_id');
             $table->point('position')->nullable();
 
   			$table->timestamps();
-            $table->unique(['name', 'place_id']);
-
             $table->softDeletes();
+            
+            $table->foreign('place_id')->references('id')->on('places');
+
+            $table->unique(['name', 'place_id']);
   		});
     }
 

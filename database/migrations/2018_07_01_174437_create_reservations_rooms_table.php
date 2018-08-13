@@ -14,12 +14,14 @@ class CreateReservationsRoomsTable extends Migration
     public function up()
     {
         Schema::create('reservations_rooms', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('location_id')->unsigned();
-            $table->foreign('location_id')->references('id')->on('places_locations');
-            $table->integer('asso_id')->unsigned();
-            $table->foreign('asso_id')->references('id')->on('assos');
+            $table->uuid('id')->primary();
+            $table->uuid('location_id');
+            $table->uuid('asso_id');
+
             $table->timestamps();
+            
+            $table->foreign('location_id')->references('id')->on('places_locations');
+            $table->foreign('asso_id')->references('id')->on('assos');
         });
     }
 

@@ -14,8 +14,7 @@ class CreateUsersPreferencesTable extends Migration
 	public function up()
 	{
 		Schema::create('users_preferences', function (Blueprint $table) {
-			$table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+			$table->uuid('user_id');
 			$table->string('key');
 			$table->string('value')->nullable();
 			$table->enum('type', [
@@ -24,7 +23,10 @@ class CreateUsersPreferencesTable extends Migration
 			$table->string('only_for')->default('global');
 
 			$table->timestamps();
+
 			$table->primary(['user_id', 'key', 'only_for']);
+
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 	}
 

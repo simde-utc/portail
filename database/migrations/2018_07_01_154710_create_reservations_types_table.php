@@ -14,9 +14,9 @@ class CreateReservationsTypesTable extends Migration
 	public function up()
 	{
 		Schema::create('reservations_types', function (Blueprint $table) {
-			$table->increments('id');
+			$table->uuid('id')->primary();
 			$table->string('name', validation_max('name'))->unique();
-			
+
 			$table->timestamps();
 		});
 	}
