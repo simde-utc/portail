@@ -114,6 +114,12 @@ class RouteServiceProvider extends ServiceProvider
                     ->middleware($middlewares)
                     ->group($file);
             }
+
+            Route::any('api/'.$version.'/{whatever}', $this->namespace.'\RouteController@notFound')
+                ->where('whatever', '.*');
         }
+
+        Route::any('api/{whatever}', $this->namespace.'\RouteController@versionNotFound')
+            ->where('whatever', '.*');
     }
 }
