@@ -16,6 +16,7 @@ class CreateAuthPasswordsResetsTable extends Migration
 		Schema::create('auth_passwords_resets', function (Blueprint $table) {
 			$table->string('email', validation_max('email'))->index();
 			$table->string('token', 64);
+			
 			$table->timestamp('created_at')->nullable();
 		});
 	}

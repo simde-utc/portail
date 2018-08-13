@@ -66,11 +66,11 @@ class Calendar extends Model implements OwnableContract
 		return $this->morphTo(Group::class, 'owned_by');
 	}
 
-    public function isCalendarAccessibleBy(int $user_id): bool {
+    public function isCalendarAccessibleBy(string $user_id): bool {
         return $this->owned_by->isCalendarAccessibleBy($user_id);
     }
 
-    public function isCalendarManageableBy(int $user_id): bool {
+    public function isCalendarManageableBy(string $user_id): bool {
         return $this->owned_by->isCalendarManageableBy($user_id);
     }
 }

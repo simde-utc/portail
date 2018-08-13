@@ -44,7 +44,7 @@ class AuthController extends Controller
 	 * @param  Request $request
 	 * @return Json
 	 */
-	public function index(Request $request, int $user_id = null) {
+	public function index(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 		$providers = config('auth.services');
 		$result = [];
@@ -58,7 +58,7 @@ class AuthController extends Controller
 		return response()->json($result);
 	}
 
-	public function store(Request $request, int $user_id = null) {
+	public function store(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 		$name = $request->input('name');
 		$provider = config('auth.services.'.$name);

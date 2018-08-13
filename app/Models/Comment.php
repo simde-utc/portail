@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Comment extends Model
-{
-    // TODO(Natan): Include user ! using $with
-    
+class Comment extends Model {
     protected $table = 'comments';
 
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'body', 'parent_id', 'user_id', 'visibility_id',
+    ];
+
+    protected $with = [
+        'user',
     ];
 
     public function commentable() {
@@ -40,7 +40,7 @@ class Comment extends Model
         foreach ($comments as $comment) {
             if ($comment['deleted_at'] != null)
                 $comment['body'] = "Ce commentaire a été supprimé.";
-            
+
             if ($comment['parent_id'] == $parent_id) {
                 $children = self::getTree($comments, $comment['id']);
 

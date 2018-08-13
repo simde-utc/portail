@@ -14,10 +14,8 @@ class CreateArticlesActionsTable extends Migration
 	public function up()
 	{
 		Schema::create('articles_actions', function (Blueprint $table) {
-			$table->integer('article_id')->unsigned();
-			$table->foreign('article_id')->references('id')->on('articles');
-			$table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->uuid('article_id');
+			$table->uuid('user_id');
 			$table->string('key');
 			$table->string('value')->nullable();
 			$table->enum('type', [
@@ -25,6 +23,10 @@ class CreateArticlesActionsTable extends Migration
 			])->default('STRING');
 
 			$table->timestamps();
+
+			$table->foreign('article_id')->references('id')->on('articles');
+			$table->foreign('user_id')->references('id')->on('users');
+
 			$table->primary(['article_id', 'user_id', 'key']);
 		});
 	}

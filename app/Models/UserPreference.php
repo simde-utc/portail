@@ -8,8 +8,6 @@ class UserPreference extends Model // TODO $must ?
 {
 	use HasKeyValue;
 
-	public $incrementing = false; // L'id n'est pas autoincrementé
-
 	protected $table = 'users_preferences';
 
 	protected $primaryKey = [

@@ -14,7 +14,7 @@ class CreatePlacesTable extends Migration
     public function up()
     {
         Schema::create('places', function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->string('name', 128);
             $table->string('address', 128);
             $table->string('city', 64);
@@ -22,9 +22,9 @@ class CreatePlacesTable extends Migration
             $table->point('position');
 
             $table->timestamps();
-            $table->unique(['address', 'city', 'country']);
-
             $table->softDeletes();
+
+            $table->unique(['address', 'city', 'country']);
   		});
     }
 

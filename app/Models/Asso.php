@@ -50,6 +50,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	protected $roleRelationTable = 'assos_members';
 
 	public static function boot() {
+		parent::boot();
+
         static::created(function ($model) {
 			// On crée automatiquement des moyens de contacts !
 			Contact::create([
@@ -116,7 +118,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		return $this->currentMembersAndFollowers()->wherePivot('role_id', null);
 	}
 
-	public function getUserRoles(int $user_id = null, int $semester_id = null) {
+	public function getUserRoles(string $user_id = null, string $semester_id = null) {
 		$parent_id = $this->parent_id;
 		$roles = $this->getUsersRolesInThisAssociation($user_id, $semester_id);
 
@@ -144,11 +146,11 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		return $this->morphMany(Contact::class, 'owned_by');
 	}
 
-	public function isContactAccessibleBy(int $user_id): bool {
+	public function isContactAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
-	public function isContactManageableBy(int $user_id): bool {
+	public function isContactManageableBy(string $user_id): bool {
 		return $this->hasOnePermission('asso_contact', [
 			'user_id' => $user_id,
 		]);
@@ -158,11 +160,11 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     	return $this->morphMany(Calendar::class, 'owned_by');
     }
 
-	public function isCalendarAccessibleBy(int $user_id): bool {
+	public function isCalendarAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
-	public function isCalendarManageableBy(int $user_id): bool {
+	public function isCalendarManageableBy(string $user_id): bool {
 		return $this->hasOnePermission('asso_calendar', [
 			'user_id' => $user_id,
 		]);
@@ -172,11 +174,11 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     	return $this->morphMany(Events::class, 'owned_by');
     }
 
-	public function isEventAccessibleBy(int $user_id): bool {
+	public function isEventAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
-	public function isEventManageableBy(int $user_id): bool {
+	public function isEventManageableBy(string $user_id): bool {
 		return $this->hasOnePermission('asso_event', [
 			'user_id' => $user_id,
 		]);
@@ -186,11 +188,11 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     	return $this->morphMany(Article::class, 'owned_by');
     }
 
-	public function isArticleAccessibleBy(int $user_id): bool {
+	public function isArticleAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
-	public function isArticleManageableBy(int $user_id): bool {
+	public function isArticleManageableBy(string $user_id): bool {
 		return $this->hasOnePermission('asso_article', [
 			'user_id' => $user_id,
 		]);

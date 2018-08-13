@@ -14,9 +14,10 @@ class CreateAssosTypesTable extends Migration
 	public function up()
 	{
 		Schema::create('assos_types', function (Blueprint $table) {
-			$table->increments('id');
+			$table->uuid('id')->primary();
 			$table->string('type', validation_max('name'))->unique();
 			$table->string('name', validation_max('name'));
+			
 			$table->timestamps();
 		});
 	}

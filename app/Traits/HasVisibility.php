@@ -85,7 +85,7 @@ trait HasVisibility
      *
      * @return bool
      */
-    public function isVisible(Model $model, int $user_id = null) { // TODO Il faut faire passer un userid en option
+    public function isVisible(Model $model, string $user_id = null) { // TODO Il faut faire passer un userid en option
 		$user_id = $user_id ?? \Auth::id();
 
         // Si on est pas connecté, on regarde si la visibilité est publique ou non

@@ -43,7 +43,7 @@ class RoleController extends Controller
 	 * @param int|null $user_id
 	 * @return JsonResponse
 	 */
-	public function index(Request $request, int $user_id = null): JsonResponse {
+	public function index(Request $request, string $user_id = null): JsonResponse {
 		$user = $this->getUser($request, $user_id);
 
 		return response()->json($user->roles()->wherePivot('semester_id', Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id)->withPivot('semester_id', 'validated_by')->get(), 200);
@@ -57,7 +57,7 @@ class RoleController extends Controller
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function store(Request $request, int $user_id = null): JsonResponse {
+	public function store(Request $request, string $user_id = null): JsonResponse {
 		$user = $this->getUser($request, $user_id);
 
 		if (\Scopes::isUserToken($request)) {
@@ -80,11 +80,11 @@ class RoleController extends Controller
 	 * Display the specified resource.
 	 *
 	 * @param Request $request
-	 * @param int $user_id
+	 * @param string $user_id
 	 * @param int|null $role_id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, int $user_id, int $role_id = null): JsonResponse {
+	public function show(Request $request, string $user_id, int $role_id = null): JsonResponse {
 		if (is_null($role_id))
 			list($user_id, $role_id) = [$role_id, $user_id];
 
@@ -101,11 +101,11 @@ class RoleController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request $request
-	 * @param int $user_id
+	 * @param string $user_id
 	 * @param int|null $role_id
 	 * @return void
 	 */
-	public function update(Request $request, int $user_id, int $role_id = null) {
+	public function update(Request $request, string $user_id, int $role_id = null) {
 		abort(405, 'Impossible de modifier l\'assognation d\'un rôle');
 	}
 
@@ -113,12 +113,12 @@ class RoleController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param Request $request
-	 * @param int $user_id
+	 * @param string $user_id
 	 * @param int|null $role_id
 	 * @return void
 	 * @throws PortailException
 	 */
-	public function destroy(Request $request, int $user_id, int $role_id = null) {
+	public function destroy(Request $request, string $user_id, int $role_id = null) {
 		if (is_null($role_id))
 			list($user_id, $role_id) = [$role_id, $user_id];
 

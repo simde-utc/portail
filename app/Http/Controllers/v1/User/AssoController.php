@@ -48,7 +48,7 @@ class AssoController extends Controller
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function index(AssoRequest $request, int $user_id = null): JsonResponse {
+	public function index(AssoRequest $request, string $user_id = null): JsonResponse {
 		$user = $this->getUser($request, $user_id);
 		$choices = $this->getChoices($request);
 		$semester = $this->getSemester($request, $choices);
