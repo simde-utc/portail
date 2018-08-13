@@ -2,14 +2,25 @@
 
 namespace App\Models;
 
+use App\Traits\Model\HasHiddenData;
+use NastuzziSamy\Laravel\Traits\HasSelection;
+
 class AuthCas extends Auth // TODO must
 {
+    use HasHiddenData, HasSelection;
+
+    public $incrementing = false;
+
 	protected $fillable = [
 	 	'user_id', 'login', 'email', 'last_login_at', 'is_active',
 	];
 
 	protected $casts = [
 		'is_active' => 'boolean', // Si on se connecte via passsword, on désactive tout ce qui est relié au CAS car on suppose qu'il n'est plus étudiant
+	];
+
+	protected $must = [
+		'user_id', 'login', 'email', 'is_active',
 	];
 
 	public static function findByEmail($email) {
