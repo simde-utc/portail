@@ -15,6 +15,7 @@ class UsersTableSeeder extends Seeder
 	{
 		$users = [
 			[
+				'id'		=> '45617374-6572-2065-6767-7321202b5f2b',
 				'email'     => 'samy.nastuzzi@etu.utc.fr',
 				'firstname' => 'Samy',
 				'lastname'  => 'Nastuzzi',
@@ -72,6 +73,7 @@ class UsersTableSeeder extends Seeder
 
 		foreach ($users as $user) {
 			$model = User::create([
+				'id'		=> $user['id'] ?? null,
 				'email'     => $user['email'],
 				'firstname' => $user['firstname'],
 				'lastname'  => strtoupper($user['lastname']),
