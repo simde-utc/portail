@@ -30,7 +30,7 @@ class ArticleRequest extends FormRequest
 	        'image' => Validation::make($this)->type('image')->length(validation_between('url'))->get(),
 	        'toBePublished' => Validation::make($this)->type('boolean')->get(),
 	        'visibility_id' => Validation::make($this)->type('integer')->exists('visibilities','id')->post('required')->get(),
-	        'asso_id' => Validation::make($this)->type('integer')->exists('assos', 'id')->post('required')->get(),
+	        'asso_id' => Validation::make($this)->type('uuid')->exists('assos', 'id')->post('required')->get(),
 	        ];
     }
 }

@@ -47,16 +47,16 @@ class AssoRequest extends FormRequest
 						->post('required')
 						->get(),
 			'type_asso_id' => Validation::make($this)
-						->type('integer')
+						->type('uuid')
 						->exists('assos_types', 'id')
 						->post('required')
 						->get(),
 			'parent_id' => Validation::make($this)
-						->type('integer')
+						->type('uuid')
 						->exists('assos', 'id')
 						->get(),
 			'user_id' => Validation::make($this)
-						->type('integer')
+						->type('uuid')
 						->exists('users', 'id')
 						->post('required')
 						->get(),
