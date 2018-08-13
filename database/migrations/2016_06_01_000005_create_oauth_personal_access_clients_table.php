@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTagsUsedTable extends Migration
+class CreateOauthPersonalAccessClientsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateTagsUsedTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags_used', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('tag_id');
-            $table->uuid('used_by_id');
-            $table->string('used_by_type');
+        Schema::create('oauth_personal_access_clients', function (Blueprint $table) {
+            $table->increments('id');
+            $table->uuid('client_id')->index();
 
             $table->timestamps();
-
-            $table->foreign('tag_id')->references('id')->on('tags');
         });
     }
 
@@ -32,6 +28,6 @@ class CreateTagsUsedTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tags_used');
+        Schema::drop('oauth_personal_access_clients');
     }
 }

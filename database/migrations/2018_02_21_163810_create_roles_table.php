@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReservationsTypesTable extends Migration
+class CreateRolesTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,11 +13,17 @@ class CreateReservationsTypesTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('reservations_types', function (Blueprint $table) {
+		Schema::create('roles', function (Blueprint $table) {
 			$table->uuid('id')->primary();
-			$table->string('name', validation_max('name'))->unique();
+			$table->string('type', 64)->unique();
+			$table->string('name', 128);
+			$table->string('description');
+			$table->string('limited_at')->nullable();
+			$table->string('only_for', 64)->default('users');
 
 			$table->timestamps();
+
+			$table->unique(['type', 'only_for']);
 		});
 	}
 
@@ -28,6 +34,6 @@ class CreateReservationsTypesTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('reservations_types');
+		Schema::drop('roles');
 	}
 }

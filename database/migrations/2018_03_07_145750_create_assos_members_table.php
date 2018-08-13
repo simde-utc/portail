@@ -13,37 +13,44 @@ class CreateAssosMembersTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('assos_members', function (Blueprint 
-$table) {
-			$table->integer('asso_id')->unsigned();
-			$table->foreign('asso_id')->references('id')->on('assos');
-			$table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users');
-			$table->integer('role_id')->unsigned()->nullable();
-			$table->foreign('role_id')->references('id')->on('roles');
-			$table->integer('semester_id')->unsigned();
-			$table->foreign('semester_id')->references('id')->on('semesters');
-			$table->integer('validated_by')->unsigned()->nullable();
-			$table->foreign('validated_by')->references('id')->on('users');
+		Schema::create('assos_members', function (Blueprint $table) {
+			$table->uuid('asso_id');
+			$table->uuid('user_id');
+			$table->uuid('role_id')->nullable();
+			$table->uuid('semester_id');
+			$table->uuid('validated_by')->nullable();
 
 			$table->timestamps();
+
+			$table->foreign('asso_id')->references('id')->on('assos');
+			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('role_id')->references('id')->on('roles');
+			$table->foreign('semester_id')->references('id')->on('semesters');
+			$table->foreign('validated_by')->references('id')->on('users');
+
 			$table->primary(['asso_id', 'user_id', 'semester_id']);
 		});
 
 		Schema::create('assos_permissions', function (Blueprint $table) {
-			$table->integer('asso_id')->unsigned();
-			$table->foreign('asso_id')->references('id')->on('assos');
-			$table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users');
-			$table->integer('permission_id')->unsigned();
-			$table->foreign('permission_id')->references('id')->on('permissions');
-			$table->integer('semester_id')->unsigned();
-			$table->foreign('semester_id')->references('id')->on('semesters');
-			$table->integer('validated_by')->unsigned()->nullable();
-			$table->foreign('validated_by')->references('id')->on('users');
+			$table->uuid('asso_id');
+			$table->uuid('user_id');
+			$table->uuid('permission_id')->nullable();
+			$table->uuid('semester_id');
+			$table->uuid('validated_by')->nullable();
 
 			$table->timestamps();
+
 			$table->primary(['asso_id', 'user_id', 'permission_id', 'semester_id'], 'assos_permissions_user_semester');
+		});
+
+		// En fait Laravel fait dans l'ordre, du coup le primary plante..
+		// https://github.com/laravel/framework/issues/25190
+		Schema::table('assos_permissions', function (Blueprint $table) {
+			$table->foreign('asso_id')->references('id')->on('assos');
+			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('permission_id')->references('id')->on('permissions');
+			$table->foreign('semester_id')->references('id')->on('semesters');
+			$table->foreign('validated_by')->references('id')->on('users');
 		});
 	}
 

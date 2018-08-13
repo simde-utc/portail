@@ -14,12 +14,18 @@ class CreateVisibilitiesTable extends Migration
     public function up()
     {
         Schema::create('visibilities', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('type')->unique();
-            $table->string('name')->unique();
-			$table->integer('parent_id')->unsigned()->nullable();
-			$table->foreign('parent_id')->references('id')->on('visibilities');
+            $table->uuid('id')->primary();
+            $table->string('type', validation_max('type'))->unique();
+            $table->string('name', validation_max('name'))->unique();
+            $table->uuid('parent_id');
+
             $table->timestamps();
+        });
+
+        // Obligé d'ajouter la contrainte après création... #LaravelBug
+        // https://github.com/laravel/framework/issues/25190
+        Schema::table('visibilities', function (Blueprint $table) {
+            $table->foreign('parent_id')->references('id')->on('visibilities');
         });
     }
 

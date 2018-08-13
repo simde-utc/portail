@@ -14,18 +14,24 @@ class CreateCommentsTable extends Migration
     public function up()
     {
         Schema::create('comments', function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->text('body');
-            $table->integer('parent_id')->unsigned()->nullable();
-            $table->foreign('parent_id')->references('id')->on('comments');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('visibility_id')->unsigned();
-            $table->foreign('visibility_id')->references('id')->on('visibilities');
-            $table->integer('commentable_id')->unsigned();
+            $table->uuid('parent_id')->nullable();
+            $table->uuid('user_id');
+            $table->uuid('visibility_id');
+            $table->uuid('commentable_id');
             $table->string('commentable_type');
-            $table->timestamp('deleted_at');
+
             $table->timestamps();
+            $table->timestamp('deleted_at');
+        });
+
+        // Obligé d'ajouter la contrainte après création... #LaravelBug
+        // https://github.com/laravel/framework/issues/25190
+        Schema::table('comments', function (Blueprint $table) {
+            $table->foreign('parent_id')->references('id')->on('comments');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('visibility_id')->references('id')->on('visibilities');
         });
     }
 

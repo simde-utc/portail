@@ -14,11 +14,13 @@ class CreateAuthPasswordsTable extends Migration
 	public function up()
 	{
 		Schema::create('auth_passwords', function (Blueprint $table) {
-			$table->integer('user_id')->unsigned()->primary();
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->uuid('user_id')->primary();
 			$table->string('password', 512);
-			$table->timestamps();
+
 			$table->timestamp('last_login_at')->nullable();
+			$table->timestamps();
+
+			$table->foreign('user_id')->references('id')->on('users');
 		});
 	}
 

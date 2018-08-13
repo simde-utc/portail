@@ -14,10 +14,11 @@ class CreateSemestersTable extends Migration
 	public function up()
 	{
 		Schema::create('semesters', function (Blueprint $table) {
-			$table->increments('id');
-			$table->string('name', validation_max('name'))->unique();       // TODO Utile d'avoir 128 char pour Automne 2018 ??
+			$table->uuid('id')->primary();
+			$table->string('name', validation_max('name'))->unique();
 			$table->boolean('is_spring')->default(0);
 			$table->char('year', 2);
+
 			$table->timestamp('begining_at')->unique()->nullable(); // Le début du semestre
 			$table->timestamp('ending_at')->unique()->nullable(); //La fin du semestre
 			$table->timestamps();
