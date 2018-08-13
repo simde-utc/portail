@@ -104,10 +104,10 @@ class CalendarController extends Controller
 	/**
 	 * Show Calendar
 	 *
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, string $user_id, int $id = null): JsonResponse {
+	public function show(Request $request, string $user_id, string $id = null): JsonResponse {
         if (is_null($id))
             list($user_id, $id) = [$id, $user_id];
 
@@ -125,19 +125,19 @@ class CalendarController extends Controller
 	 * Update Calendar
 	 *
 	 * @param Request $request
-	 * @param  int $id
+	 * @param  string $id
 	 */
-	public function update(Request $request, string $user_id, int $id = null): JsonResponse {
+	public function update(Request $request, string $user_id, string $id = null): JsonResponse {
 		abort(405);
 	}
 
 	/**
 	 * Delete Calendar
 	 *
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, string $user_id, int $id = null): JsonResponse {
+	public function destroy(Request $request, string $user_id, string $id = null): JsonResponse {
 		if (is_null($id))
 			list($user_id, $id) = [$id, $user_id];
 

@@ -63,7 +63,7 @@ class ActionController extends Controller
 	 * @param \Illuminate\Http\Request $request
 	 * @return JsonResponse
 	 */
-	public function index(Request $request, string $user_id, int $article_id = null): JsonResponse {
+	public function index(Request $request, string $user_id, string $article_id = null): JsonResponse {
 		if (is_null($article_id))
 			list($user_id, $article_id) = [$article_id, $user_id];
 
@@ -81,7 +81,7 @@ class ActionController extends Controller
 	 * @param ArticleRequest $request
 	 * @return JsonResponse
 	 */
-	public function store(Request $request, string $user_id, int $article_id = null): JsonResponse {
+	public function store(Request $request, string $user_id, string $article_id = null): JsonResponse {
 		if (is_null($article_id))
 			list($user_id, $article_id) = [$article_id, $user_id];
 
@@ -104,7 +104,7 @@ class ActionController extends Controller
 	 *
 	 * Affiche l'article s'il existe et si l'utilisateur peut le voir.
 	 * @param Request $request
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
 	public function show(Request $request, string $user_id, $article_id, string $key = null): JsonResponse {
@@ -123,7 +123,7 @@ class ActionController extends Controller
 	 *
 	 * Met à jour l'article s'il existe
 	 * @param ArticleRequest $request
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, string $user_id, $article_id, string $key = null): JsonResponse {
@@ -152,7 +152,7 @@ class ActionController extends Controller
 	 *
 	 * Supprime l'article s'il existe
 	 * @param ArticleRequest $request
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
 	public function destroy(ArticleRequest $request, string $user_id, $article_id, string $key = null): JsonResponse {

@@ -18,7 +18,7 @@ class CommentRequest extends FormRequest
         $class = \ModelResolver::getModelFromCategory($this->resource_type);
 
         $this->resource = $class::find($this->resource_id);
-        
+
         return (bool) $this->resource;
     }
 
@@ -36,11 +36,11 @@ class CommentRequest extends FormRequest
                         ->post('required')
                         ->get(),
             'parent_id' => Validation::make($this)
-                        ->type('integer')
+                        ->type('uuid')
                         ->exists('comments', 'id')
                         ->get(),
             'visibility_id' => Validation::make($this)
-                        ->type('integer')
+                        ->type('uuid')
                         ->exists('visibilities', 'id')
                         ->post('required')
                         ->get(),

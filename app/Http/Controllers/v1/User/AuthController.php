@@ -87,7 +87,7 @@ class AuthController extends Controller
 	 * @param  string $name
 	 * @return Json
 	 */
-	public function show(Request $request, $user_id, $name = null) {
+	public function show(Request $request, string $user_id, string $name = null) {
         if (is_null($name))
             list($user_id, $name) = [$name, $user_id];
 
@@ -114,7 +114,7 @@ class AuthController extends Controller
 		}
 	}
 
-	public function destroy(Request $request, $user_id, $name = null) {
+	public function destroy(Request $request, string $user_id, string $name = null) {
         if (is_null($name))
             list($user_id, $name) = [$name, $user_id];
 

@@ -60,7 +60,7 @@ trait HasArticles
 			return $this->tokenCanSeeEvent($request, $model, $verb);
 	}
 
-	protected function getArticle(Request $request, User $user = null, int $id, string $verb = 'get') {
+	protected function getArticle(Request $request, User $user = null, string $id, string $verb = 'get') {
 		$article = Article::find($id);
 
 		if ($article) {
