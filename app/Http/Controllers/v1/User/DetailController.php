@@ -46,7 +46,7 @@ class DetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, int $user_id = null) {
+    public function index(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 
         // On affiche chaque détail sous forme clé => valeur
@@ -59,7 +59,7 @@ class DetailController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, int $user_id = null) {
+    public function store(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 
 		if (\Scopes::isUserToken($request)) {

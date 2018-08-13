@@ -12,11 +12,17 @@ class Role extends Model // TODO $must ?
 {
 	use HasStages, HasPermissions;
 
+	protected $fillable = [
+		'type', 'name', 'description', 'limited_at', 'only_for',
+	];
+
 	protected $casts = [
 		'limited_at' => 'integer',
 	];
 
     public static function boot() {
+		parent::boot();
+		
         static::deleting(function ($model) {
 			return resolve('\\App\\Models\\'.studly_case(str_singular(explode('-', $model->only_for)[0])))->beforeDeletingRole($model);
         });

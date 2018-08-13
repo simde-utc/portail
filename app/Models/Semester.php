@@ -80,9 +80,9 @@ class Semester extends Model // TODO $must
                         'year' => $currentYear,
                         'begining_at' => $currentYear.'-'.($config['begining_at'][$key]['month']).'-'.($config['begining_at'][$key]['day']).'-'.($config['begining_at'][$key]['time']),
                         'ending_at' => ($beginingMonth > $endingMonth ? ($currentYear + 1) : $currentYear).'-'.($config['ending_at'][$key]['month']).'-'.($config['ending_at'][$key]['day']).'-'.($config['ending_at'][$key]['time']),
-                    ])->id;
+                    ])->uuid;
                 else
-                    return $thisSemester->id;
+                    return $thisSemester->uuid;
             }
         }
     }

@@ -17,7 +17,7 @@ class CreateVisibilitiesTable extends Migration
             $table->uuid('id')->primary();
             $table->string('type', validation_max('type'))->unique();
             $table->string('name', validation_max('name'))->unique();
-            $table->uuid('parent_id');
+            $table->uuid('parent_id')->nullable();
 
             $table->timestamps();
         });

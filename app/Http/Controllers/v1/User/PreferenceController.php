@@ -63,7 +63,7 @@ class PreferenceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, int $user_id = null) {
+    public function index(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
         $groups = $this->getPreferences($request, $user, 'get')->get()->groupBy('only_for');
         $array = [];
@@ -87,7 +87,7 @@ class PreferenceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, int $user_id = null) {
+    public function store(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
         $inputs = $request->input();
 

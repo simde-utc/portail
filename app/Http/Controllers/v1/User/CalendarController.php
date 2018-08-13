@@ -47,7 +47,7 @@ class CalendarController extends Controller
 	 *
 	 * @return JsonResponse
 	 */
-	public function index(Request $request, int $user_id = null): JsonResponse {
+	public function index(Request $request, string $user_id = null): JsonResponse {
 		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
 		$user = $this->getUser($request, $user_id);
 		$calendars = collect();
@@ -82,7 +82,7 @@ class CalendarController extends Controller
 	 * @param Request $request
 	 * @return JsonResponse
 	 */
-	public function store(Request $request, int $user_id = null): JsonResponse {
+	public function store(Request $request, string $user_id = null): JsonResponse {
 		$user = $this->getUser($request, $user_id);
 		$calendars = [];
 		$calendar_ids = $request->input('calendar_ids', [$request->input('calendar_id')]);
@@ -107,7 +107,7 @@ class CalendarController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, int $user_id, int $id = null): JsonResponse {
+	public function show(Request $request, string $user_id, int $id = null): JsonResponse {
         if (is_null($id))
             list($user_id, $id) = [$id, $user_id];
 
@@ -127,7 +127,7 @@ class CalendarController extends Controller
 	 * @param Request $request
 	 * @param  int $id
 	 */
-	public function update(Request $request, int $user_id, int $id = null): JsonResponse {
+	public function update(Request $request, string $user_id, int $id = null): JsonResponse {
 		abort(405);
 	}
 
@@ -137,7 +137,7 @@ class CalendarController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, int $user_id, int $id = null): JsonResponse {
+	public function destroy(Request $request, string $user_id, int $id = null): JsonResponse {
 		if (is_null($id))
 			list($user_id, $id) = [$id, $user_id];
 

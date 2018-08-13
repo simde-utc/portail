@@ -201,10 +201,10 @@ trait HasMembers
 	 * Permet de supprimer un ou plusieurs membres en fonction des données fournis
 	 * @param  string/array/Collection  $members
 	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
-	 * @param  int 	   $removed_by   Personne demandant la suppression
+	 * @param   	   $removed_by   Personne demandant la suppression
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
-    public function removeMembers($members, array $data = [], int $removed_by = null, bool $force = false) {
+    public function removeMembers($members, array $data = [], $removed_by = null, bool $force = false) {
 		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$members = User::getUsers(stringToArray($members));
 		$removed_by = $removed_by ?? \Auth::id();
@@ -247,10 +247,10 @@ trait HasMembers
 	 * Permet de synchroniser (tout supprimer et assigner de nouveaux) un ou plusieurs membres en fonction des données fournis
 	 * @param  string/array/Collection  $members
 	 * @param  array   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
-	 * @param  int 	   $removed_by   Personne demandant la suppression
+	 * @param   	   $removed_by   Personne demandant la suppression
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
-    public function syncMembers($members, array $data = [], int $removed_by = null, bool $force = false) {
+    public function syncMembers($members, array $data = [], $removed_by = null, bool $force = false) {
 		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$currentMembers = $this->currentMembers>pluck('id');
 		$members = User::getUsers(stringToArray($members))->pluck('id');

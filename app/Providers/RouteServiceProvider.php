@@ -49,7 +49,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapPassportRoutes() {
 		Passport::routes();
-        
+
 		Route::prefix('oauth')
 			->group(base_path('routes/oauth.php'));
     }

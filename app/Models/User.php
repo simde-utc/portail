@@ -11,6 +11,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Model\HasRoles;
 use App\Traits\Model\HasHiddenData;
+use App\Traits\Model\HasBinaryUuid;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
@@ -21,9 +22,11 @@ use App\Exceptions\PortailException;
 
 class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
-	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles;
+	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasBinaryUuid;
 
     public static function boot() {
+		parent::boot();
+
         static::created(function ($model) {
 			// Ajout dans les préférences
 			UserPreference::create([
@@ -252,11 +255,11 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		return $this->morphMany(Contact::class, 'owned_by');
 	}
 
-	public function isContactAccessibleBy(int $user_id): bool {
+	public function isContactAccessibleBy(string $user_id): bool {
 		return $this->id === $user_id;
 	}
 
-	public function isContactManageableBy(int $user_id): bool {
+	public function isContactManageableBy(string $user_id): bool {
 		return $this->id === $user_id;
 	}
 
@@ -264,11 +267,11 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     	return $this->morphMany(Calendar::class, 'owned_by');
     }
 
-	public function isCalendarAccessibleBy(int $user_id): bool {
+	public function isCalendarAccessibleBy(string $user_id): bool {
 		return $this->id === $user_id;
 	}
 
-	public function isCalendarManageableBy(int $user_id): bool {
+	public function isCalendarManageableBy(string $user_id): bool {
 		return $this->id === $user_id;
 	}
 
@@ -276,11 +279,11 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     	return $this->morphMany(Event::class, 'owned_by');
     }
 
-	public function isEventAccessibleBy(int $user_id): bool {
+	public function isEventAccessibleBy(string $user_id): bool {
 		return $this->id === $user_id;
 	}
 
-	public function isEventManageableBy(int $user_id): bool {
+	public function isEventManageableBy(string $user_id): bool {
 		return $this->id === $user_id;
 	}
 }

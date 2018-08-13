@@ -16,25 +16,25 @@ class ClientsTableSeeder extends Seeder
     {
         $clients = [
             [
-                'user_id'       => User::find(1)->id,
+                'user_id'       => User::where('firstname', 'Samy')->first()->id,
                 'name'          => 'Client de Samy',
                 'secret'        => 'password',
                 'personal_access_client'    => '0',
                 'password_client'           => '0',
                 'revoked'       => 0,
                 'redirect'      => 'http://samy.utc.fr',
-                'asso_id'       => Asso::find(1)->id,
+                'asso_id'       => Asso::where('login', 'simde')->first()->id,
                 'scopes'        => '',
             ],
             [
-                'user_id'       => User::find(3)->id,
+                'user_id'       => User::where('firstname', 'Natan')->first()->id,
                 'name'          => 'Client de Natan',
                 'secret'        => 'password',
                 'personal_access_client'    => '0',
                 'password_client'           => '0',
                 'revoked'       => 0,
                 'redirect'      => 'http://danous.utc.fr',
-                'asso_id'       => Asso::find(2)->id,
+                'asso_id'       => Asso::where('login', 'simde')->first()->id,
                 'scopes'        => '',
             ],
         ];

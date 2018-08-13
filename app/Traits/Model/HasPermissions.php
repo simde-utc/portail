@@ -121,10 +121,10 @@ trait HasPermissions
 	 * Permet de supprimer une ou plusieures permissions attribués en fonction des données fournis
 	 * @param  string/array/Collection  $permissions
 	 * @param  array   $data    Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
-	 * @param  int 	   $removed_by   Personne demandant la suppression
+	 * @param   	   $removed_by   Personne demandant la suppression
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
-    public function removePermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
+    public function removePermissions($permissions, array $data = [], $removed_by = null, bool $force = false) {
 		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
 		$delPermissions = [];
         $removed_by = $removed_by ?? \Auth::id();
@@ -159,10 +159,10 @@ trait HasPermissions
 	 * Permet de synchroniser (tout supprimer et assigner de nouveaux) une ou plusieures permissions en fonction des données fournis
 	 * @param  string/array/Collection  $permissions
 	 * @param  array   $data    Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres
-	 * @param  int 	   $removed_by   Personne demandant la suppression
+	 * @param   	   $removed_by   Personne demandant la suppression
 	 * @param  boolean $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
-    public function syncPermissions($permissions, array $data = [], int $removed_by = null, bool $force = false) {
+    public function syncPermissions($permissions, array $data = [], $removed_by = null, bool $force = false) {
 		$currentPermissions = $this->getUserAssignedPermissions($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id, false)->pluck('id');
 		$permissions = Permission::getPermissions(stringToArray($permissions), $this->getTable().'-'.$this->id)->pluck('id');
 		$intersectedPermissions = $currentPermissions->intersect($permissions);
@@ -197,8 +197,8 @@ trait HasPermissions
 
 	/**
 	 * Récupérer les permissions assignées d'une personne
-	 * @param  int  $user_id
-	 * @param  int/false $semester_id
+	 * @param  $user_id
+	 * @param  $semester_id
 	 * @param  boolean $needToBeValidated
 	 */
 	public function getUserAssignedPermissions($user_id = null, $semester_id = null, $needToBeValidated = true) {
@@ -223,8 +223,8 @@ trait HasPermissions
 
 	/**
 	 * Récupérer les permissions de cette instance ou de celui sur les users assignés et hérités d'une personne
-	 * @param  int  $user_id     [description]
-	 * @param  int/false $semester_id
+	 * @param  $user_id    
+	 * @param  $semester_id
 	 */
 	public function getUserPermissions($user_id = null, $semester_id = null) {
 		return $this->getUserAssignedPermissions($user_id, $semester_id);
