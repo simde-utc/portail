@@ -11,7 +11,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Model\HasRoles;
 use App\Traits\Model\HasHiddenData;
-use App\Traits\Model\HasBinaryUuid;
+use App\Traits\Model\HasUuid;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
@@ -22,7 +22,7 @@ use App\Exceptions\PortailException;
 
 class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
-	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasBinaryUuid;
+	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid;
 
     public static function boot() {
 		parent::boot();
@@ -44,6 +44,8 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 			]);
         });
     }
+
+	public $incrementing = false;
 
 	protected $fillable = [
 		'firstname', 'lastname', 'email', 'is_active', 'last_login_at',

@@ -7,15 +7,17 @@ use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Model\HasHiddenData;
-use App\Traits\Model\HasBinaryUuid;
+use App\Traits\Model\HasUuid;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 
 class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, CanHaveArticles
 {
-    use HasHiddenData, HasSelection, HasBinaryUuid;
+    use HasHiddenData, HasSelection, HasUuid;
+
+    public $incrementing = false;
 
     protected $fillable = [
-        'user_id', 'name', 'secret', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'asso_id', 'scopes'
+        'user_id', 'asso_id', 'name', 'secret', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'scopes'
     ];
 
     protected $selection = [

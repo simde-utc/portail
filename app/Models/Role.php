@@ -22,13 +22,13 @@ class Role extends Model // TODO $must ?
 
     public static function boot() {
 		parent::boot();
-		
+
         static::deleting(function ($model) {
 			return resolve('\\App\\Models\\'.studly_case(str_singular(explode('-', $model->only_for)[0])))->beforeDeletingRole($model);
         });
     }
 
-	public static function find(int $id, string $only_for = null) {
+	public static function find($id, string $only_for = null) {
 		$roles = static::where('id', $id);
 
 		if ($only_for !== null) {

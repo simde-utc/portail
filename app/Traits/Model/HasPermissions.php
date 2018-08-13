@@ -206,7 +206,7 @@ trait HasPermissions
 		$permissions = $this->permissions();
 
 		if ($permissions === null)
-		return new Collection;
+            return new Collection;
 
 		if ($this->getTable() !== 'users' || $user_id !== null)
 			$permissions = $permissions->wherePivot('user_id', $user_id);
@@ -223,10 +223,10 @@ trait HasPermissions
 
 	/**
 	 * Récupérer les permissions de cette instance ou de celui sur les users assignés et hérités d'une personne
-	 * @param  $user_id    
+	 * @param  $user_id
 	 * @param  $semester_id
 	 */
-	public function getUserPermissions($user_id = null, $semester_id = null) {
-		return $this->getUserAssignedPermissions($user_id, $semester_id);
+	public function getUserPermissions($user_id = null, $semester_id = null, $needToBeValidated = true) {
+		return $this->getUserAssignedPermissions($user_id, $semester_id, $needToBeValidated);
 	}
 }
