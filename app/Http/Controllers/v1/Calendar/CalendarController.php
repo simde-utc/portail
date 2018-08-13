@@ -139,7 +139,7 @@ class CalendarController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, int $id): JsonResponse {
+	public function show(Request $request, string $id): JsonResponse {
 		$calendar = $this->getCalendar($request, \Auth::user(), $id);
 
 		return response()->json($calendar->hideSubData(), 200);
@@ -152,7 +152,7 @@ class CalendarController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function update(Request $request, $id): JsonResponse {
+	public function update(Request $request, string $id): JsonResponse {
 		$calendar = $this->getCalendar($request, \Auth::user(), $id, 'edit');
 		$inputs = $request->all();
 
@@ -175,7 +175,7 @@ class CalendarController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, int $id): JsonResponse {
+	public function destroy(Request $request, string $id): JsonResponse {
 		$calendar = $this->getCalendar($request, \Auth::user(), $id, 'manage');
 		$calendar->softDelete();
 

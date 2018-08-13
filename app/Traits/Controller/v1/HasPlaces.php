@@ -9,11 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 
 trait HasPlaces
 {
-	protected function getPlace(Request $request, int $id) {
-		if (\Scopes::has($request, 'client-get-locations'))
-			$place = Place::with('locations')->find($id);
-		else
-			$place = Place::find($id);
+	protected function getPlace(Request $request, string $id) {
+		$place = Place::find($id);
 
 		if ($place)
 			return $place;

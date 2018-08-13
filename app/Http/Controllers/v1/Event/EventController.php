@@ -144,7 +144,7 @@ class EventController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, int $id): JsonResponse {
+	public function show(Request $request, string $id): JsonResponse {
 		$event = $this->getEvent($request, \Auth::user(), $id);
 
 		return response()->json($event->hideSubData(), 200);
@@ -157,7 +157,7 @@ class EventController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function update(Request $request, $id): JsonResponse {
+	public function update(Request $request, string $id): JsonResponse {
 		$event = $this->getEvent($request, \Auth::user(), $id, 'set');
 		$inputs = $request->all();
 
@@ -180,7 +180,7 @@ class EventController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, int $id): JsonResponse {
+	public function destroy(Request $request, string $id): JsonResponse {
 		$event = $this->getEvent($request, \Auth::user(), $id);
 		$event->softDelete();
 

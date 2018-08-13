@@ -35,7 +35,7 @@ trait HasCalendars
 		);
 	}
 
-	protected function getCalendar(Request $request, User $user = null, int $id, string $verb = 'get') {
+	protected function getCalendar(Request $request, User $user = null, string $id, string $verb = 'get') {
 		$calendar = Calendar::find($id);
 
 		if ($calendar) {

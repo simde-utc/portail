@@ -40,7 +40,7 @@ class RoleController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @param Request $request
-	 * @param int|null $user_id
+	 * @param string|null $user_id
 	 * @return JsonResponse
 	 */
 	public function index(Request $request, string $user_id = null): JsonResponse {
@@ -53,7 +53,7 @@ class RoleController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request $request
-	 * @param int|null $user_id
+	 * @param string|null $user_id
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
@@ -81,10 +81,10 @@ class RoleController extends Controller
 	 *
 	 * @param Request $request
 	 * @param string $user_id
-	 * @param int|null $role_id
+	 * @param string|null $role_id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, string $user_id, int $role_id = null): JsonResponse {
+	public function show(Request $request, string $user_id, string $role_id = null): JsonResponse {
 		if (is_null($role_id))
 			list($user_id, $role_id) = [$role_id, $user_id];
 
@@ -102,10 +102,10 @@ class RoleController extends Controller
 	 *
 	 * @param  \Illuminate\Http\Request $request
 	 * @param string $user_id
-	 * @param int|null $role_id
+	 * @param string|null $role_id
 	 * @return void
 	 */
-	public function update(Request $request, string $user_id, int $role_id = null) {
+	public function update(Request $request, string $user_id, string $role_id = null) {
 		abort(405, 'Impossible de modifier l\'assognation d\'un rôle');
 	}
 
@@ -114,11 +114,11 @@ class RoleController extends Controller
 	 *
 	 * @param Request $request
 	 * @param string $user_id
-	 * @param int|null $role_id
+	 * @param string|null $role_id
 	 * @return void
 	 * @throws PortailException
 	 */
-	public function destroy(Request $request, string $user_id, int $role_id = null) {
+	public function destroy(Request $request, string $user_id, string $role_id = null) {
 		if (is_null($role_id))
 			list($user_id, $role_id) = [$role_id, $user_id];
 

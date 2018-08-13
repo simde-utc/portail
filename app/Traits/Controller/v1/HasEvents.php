@@ -33,7 +33,7 @@ trait HasEvents
 		);
 	}
 
-	protected function getEvent(Request $request, User $user = null, int $id, string $verb = 'get') {
+	protected function getEvent(Request $request, User $user = null, string $id, string $verb = 'get') {
 		$event = Event::find($id);
 
 		if ($event) {

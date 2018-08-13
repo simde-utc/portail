@@ -157,7 +157,7 @@ class RoleController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, $id): JsonResponse {
+	public function show(Request $request, string $id): JsonResponse {
 		$role = $request->has('withChildren') ? Role::with('children') : new Role;
 		$role = $request->has('withParents') ? $role->with('parents') : $role;
 
@@ -184,7 +184,7 @@ class RoleController extends Controller
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function update(Request $request, $id): JsonResponse {
+	public function update(Request $request, string $id): JsonResponse {
 		$role = $request->has('withChildren') ? Role::with('children') : new Role;
 		$role = $request->has('withParents') ? $role->with('parents') : $role;
 
@@ -228,7 +228,7 @@ class RoleController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, $id): JsonResponse {
+	public function destroy(Request $request, string $id): JsonResponse {
 		$role = new Role;
 
 		// On vérifie que la ressource possède des rôles

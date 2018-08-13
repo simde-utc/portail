@@ -33,12 +33,14 @@ trait HasGroups
 	 * @param int $group_id
 	 * @return Group
 	 */
-	protected function getGroup(Request $request, int $group_id): Group {
+	protected function getGroup(Request $request, string $group_id): Group {
 		$group = Group::find($group_id);
 
 		if ($group) {
 			if ($this->isVisible($group))
 				return $group;
+			else
+				abort(403, "Vous n\'avez pas le droit de voir le groupe");
 		}
 
 		abort(404, "Groupe non trouvé");

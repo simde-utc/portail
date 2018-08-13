@@ -62,7 +62,7 @@ class ActionController extends Controller
 	 * @param \Illuminate\Http\Request $request
 	 * @return JsonResponse
 	 */
-	public function index(Request $request, int $article_id): JsonResponse {
+	public function index(Request $request, string $article_id): JsonResponse {
 		$article = $this->getArticle($request, \Auth::user(), $article_id);
 		$actions = $article->actions()->groupToArray();
 
@@ -88,7 +88,7 @@ class ActionController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, int $article_id, string $key): JsonResponse {
+	public function show(Request $request, string $article_id, string $key): JsonResponse {
 		$article = $this->getArticle($request, \Auth::user(), $article_id);
 		$actions = $article->actions()->where('key', $key)->groupToArray();
 
@@ -103,7 +103,7 @@ class ActionController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function update(Request $request, int $id): JsonResponse {
+	public function update(Request $request, string $id): JsonResponse {
 		abort(419);
 	}
 
@@ -115,7 +115,7 @@ class ActionController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy(ArticleRequest $request, $id): JsonResponse {
+	public function destroy(ArticleRequest $request, string $id): JsonResponse {
 		abort(419);
 	}
 }

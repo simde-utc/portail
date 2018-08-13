@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Route;
 
 class RouteController extends Controller
 {
+	public function __construct() {
+		$this->middleware('forceJson');
+	}
+
 	public function index(Request $request, string $version) {
 		$versions = config('portail.versions');
         $actualVersion = config('portail.version');
@@ -60,5 +64,13 @@ class RouteController extends Controller
         }
 
 		return abort(404, 'Version non existante');
+	}
+
+	public function versionNotFound(Request $request, string $version) {
+		abort(404, 'Version non existante');
+	}
+
+	public function notFound() {
+		abort(404, 'Route api non trouvée');
 	}
 }

@@ -46,7 +46,7 @@ class EventController extends Controller
 	 *
 	 * @return JsonResponse
 	 */
-	public function index(Request $request, int $calendar_id): JsonResponse {
+	public function index(Request $request, string $calendar_id): JsonResponse {
 		$calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
 		$events = $calendar->events()->getSelection()->filter(function ($event) use ($request) {
 			return ($this->tokenCanSee($request, $event, 'get') && (!\Auth::id() || $this->isVisible($event, \Auth::id()))) || $this->isEventFollowed($request, $event, \Auth::id());
@@ -63,7 +63,7 @@ class EventController extends Controller
 	 * @param Request $request
 	 * @return JsonResponse
 	 */
-	public function store(Request $request, int $calendar_id): JsonResponse {
+	public function store(Request $request, string $calendar_id): JsonResponse {
 		$calendar = $this->getCalendar($request, $calendar_id);
 		$user = \Auth::user();
 
@@ -92,7 +92,7 @@ class EventController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, int $calendar_id, int $id): JsonResponse {
+	public function show(Request $request, string $calendar_id, string $id): JsonResponse {
 		$calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
 		$event = $this->getEventFromCalendar($request, \Auth::user(), $calendar, $id);
 
@@ -115,7 +115,7 @@ class EventController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, int $calendar_id, $id): JsonResponse {
+	public function destroy(Request $request, string $calendar_id, string $id): JsonResponse {
 		$calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
 		$event = $this->getEventFromCalendar($request, \Auth::user(), $calendar, $id);
 
