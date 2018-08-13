@@ -49,8 +49,8 @@ trait HasAssos
 	 * @param $asso_id
 	 * @return Asso
 	 */
-	protected function getAsso(Request $request, $asso_id, User $user = null, Semester $semester = null): Asso {
-		if (is_numeric($asso_id))
+	protected function getAsso(Request $request, string $asso_id, User $user = null, Semester $semester = null): Asso {
+		if (\Uuid::validate($asso_id))
 			$asso = Asso::find($asso_id);
 		else
 			$asso = Asso::findByLogin($asso_id);
