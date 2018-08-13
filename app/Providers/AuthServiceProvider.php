@@ -36,6 +36,10 @@ class AuthServiceProvider extends ServiceProvider
 		$this->passport();
 	}
 
+	public function register() {
+		Passport::ignoreMigrations();
+	}
+
 	public function passport() {
 		Passport::tokensCan(\Scopes::all());
 
