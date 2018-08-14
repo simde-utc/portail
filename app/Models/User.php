@@ -148,7 +148,7 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 	public function password() {
 		return $this->hasOne(AuthPassword::class);
 	}
-	public function apps() {
+	public function app() {
 		return $this->hasMany(AuthApp::class);
 	}
 
@@ -246,7 +246,7 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 			if ($auth) {
 				if (method_exists($auth, 'isPasswordCorrect')) {
 					if ($auth->isPasswordCorrect($password))
-						return $this->isActive();
+						return true;
 				}
 			}
 		}

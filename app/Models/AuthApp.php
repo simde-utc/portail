@@ -13,11 +13,11 @@ class AuthApp extends Auth // TODO must
     public $incrementing = false;
 
 	protected $fillable = [
-	 	'user_id', 'app_id', 'key',
+	 	'user_id', 'app_id', 'password', 'key',
 	];
 
 	protected $hidden = [
-		'key',
+		'password',
 	];
 
 	protected $must = [
@@ -29,10 +29,19 @@ class AuthApp extends Auth // TODO must
 	}
 
 	public function getUserByIdentifiant($app_id) {
-		return static::where('app_id', $app_id)->first();
+        $app = static::where('app_id', $app_id)->first();
+
+        if ($app) {
+            $user = $app->user;
+            $user->app = $app;
+
+            return $user;
+        }
+        else
+            return null;
     }
 
-	public function isPasswordCorrect($key) {
-		return $this->key = $key;
+	public function isPasswordCorrect($password) {
+        return Hash::check($password, $this->password);
 	}
 }

@@ -34,7 +34,7 @@ class LoginController extends Controller
 			$auth[$provider] = [
 				'name'         => $service['name'],
 				'description'  => $service['description'],
-				'url'          => route('login.show', ['provider' => $provider]),
+				'login_url'    => $service['loggable'] ? route('login.show', ['provider' => $provider]) : null,
 				'register_url' => $service['registrable'] ? route('register.show', ['provider' => $provider]) : null,
 			];
 

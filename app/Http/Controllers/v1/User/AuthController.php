@@ -101,14 +101,10 @@ class AuthController extends Controller
 			if (!\Scopes::has($request, \Scopes::getTokenType($request).'-get-info-identity-auth-'.$name))
 				return response()->json(['message' => 'Non autorisé'], 503);
 
-			$model = resolve($provider['model']);
+			$auth = $user->$name;
 
-			if ($model) {
-				$auth = $model->find($user->id);
-
-				if ($auth)
-					return response()->json($auth);
-			}
+			if ($auth)
+				return response()->json($auth);
 
 			return response()->json(['message' => 'Le service '.$name.' ne permet pas à l\'utlisateur de se connecter'], 404);
 		}
@@ -128,17 +124,13 @@ class AuthController extends Controller
 			if (!\Scopes::has($request, \Scopes::getTokenType($request).'-manage-info-identity-auth-'.$name))
 				return response()->json(['message' => 'Non autorisé'], 503);
 
-			$model = resolve($provider['model']);
+			$auth = $user->$name;
 
-			if ($model) {
-				$auth = $model->find($user->id);
-
-				if ($auth) {
-					if ($auth->delete())
-						return abort(204);
-					else
-						return abort(500, 'Erreur lors de la suppression');
-				}
+			if ($auth) {
+				if ($auth->delete())
+					return abort(204);
+				else
+					return abort(500, 'Erreur lors de la suppression');
 			}
 
 			return response()->json(['message' => 'Le service '.$name.' ne peut pas être supprimé car elle ne permet pas à l\'utlisateur de se connecter'], 404);

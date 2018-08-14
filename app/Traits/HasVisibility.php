@@ -123,7 +123,7 @@ trait HasVisibility
     }
 
     public function isLogged($user_id, $model = null) {
-        return User::find($user_id)->exists();
+        return User::where('is_active', true)->where('id', $user_id)->exists();
     }
 
     public function isCas($user_id, $model = null) {

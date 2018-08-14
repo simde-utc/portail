@@ -36,8 +36,13 @@ abstract class BaseAuth
 	/**
 	 * Callback pour récupérer les infos de l'API en GET et login de l'utilisateur
 	 */
-	abstract function login(Request $request);
-	abstract function register(Request $request);
+	function login(Request $request) {
+		return null;
+	}
+	
+	function register(Request $request) {
+		return null;
+	}
 
 	/**
 	 * Callback pour se logout

@@ -16,7 +16,8 @@ class CreateAuthAppsTable extends Migration
 		Schema::create('auth_apps', function (Blueprint $table) {
 			$table->uuid('user_id');
 			$table->uuid('app_id')->primary();
-			$table->char('key', 32);
+			$table->string('password', 512);
+			$table->char('key', 64);
 
 			$table->timestamp('last_login_at')->nullable();
 			$table->timestamps();
