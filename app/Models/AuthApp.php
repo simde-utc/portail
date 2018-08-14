@@ -6,15 +6,14 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\Model\HasHiddenData;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 
-
-class AuthPassword extends Auth // TODO must
+class AuthApp extends Auth // TODO must
 {
     use HasHiddenData, HasSelection;
 
     public $incrementing = false;
 
 	protected $fillable = [
-	 	'user_id', 'password', 'last_login_at',
+	 	'user_id', 'app_id', 'password', 'key',
 	];
 
 	protected $hidden = [
@@ -22,18 +21,27 @@ class AuthPassword extends Auth // TODO must
 	];
 
 	protected $must = [
-		'user_id',
+		'user_id', 'app_id',
 	];
 
 	public function user() {
 		return $this->belongsTo(User::class);
 	}
 
-	public function getUserByIdentifiant($email) {
-		return User::where('email', $email)->first();
+	public function getUserByIdentifiant($app_id) {
+        $app = static::where('app_id', $app_id)->first();
+
+        if ($app) {
+            $user = $app->user;
+            $user->app = $app;
+
+            return $user;
+        }
+        else
+            return null;
     }
 
 	public function isPasswordCorrect($password) {
-		return Hash::check($password, $this->password);
+        return Hash::check($password, $this->password);
 	}
 }

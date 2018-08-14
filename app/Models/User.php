@@ -126,6 +126,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		return $this->password()->exists();
     }
 
+    public function isApp() {
+		return $this->apps()->exists();
+    }
+
     public function isContributorBde() {
 		try {
 	        return $this->details()->valueOf('isContributorBde');
@@ -139,10 +143,13 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     }
 
 	public function cas() {
-		return $this->hasOne('App\Models\AuthCas');
+		return $this->hasOne(AuthCas::class);
 	}
 	public function password() {
-		return $this->hasOne('App\Models\AuthPassword');
+		return $this->hasOne(AuthPassword::class);
+	}
+	public function app() {
+		return $this->hasMany(AuthApp::class);
 	}
 
 	public function sessions() {
@@ -239,7 +246,7 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 			if ($auth) {
 				if (method_exists($auth, 'isPasswordCorrect')) {
 					if ($auth->isPasswordCorrect($password))
-						return $this->isActive();
+						return true;
 				}
 			}
 		}
