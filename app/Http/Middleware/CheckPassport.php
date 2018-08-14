@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use Laravel\Passport\Client;
+use App\Models\Client;
 
 class CheckPassport
 {
@@ -19,8 +19,8 @@ class CheckPassport
     {
 		$input = $request->all();
 		// On vérifie la requête uniquement s'il s'agit d'une authentification par client uniquement
-        if (isset($input['grant_type']) && $input['grant_type'] === 'client_credentials') {
-			if (isset($input['scope']))
+        if ($request->input('grant_type') === 'client_credentials') {
+			if ($request->filled('scope'))
 				throw new \Exception('Les scopes sont définis à l\'avance pour chaque clé, il ne faut pas les définir dans la requête');
 
 			$clientId = $input['client_id'] ?? $_SERVER['PHP_AUTH_USER'] ?? null;
@@ -31,7 +31,7 @@ class CheckPassport
 				throw OAuthServerException::accessDenied();
 
 			// On récupère la liste des scopes définis pour le client
-			$scopes = json_decode($client->first()->scopes, true);
+			$scopes = json_decode($client->scopes, true);
 
 			if ($scopes === null)
 				$input['scope'] = '';
