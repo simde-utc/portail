@@ -3,7 +3,7 @@
 /*
  * Liste des scopes en fonction des routes
  *   - Définition des scopes:
- *      portée + "-" + verbe + "-" + categorie + (pour chaque sous-catégorie: '-' + sous-catégorie)
+ *      portée + '-' + verbe + '-' + categorie + (pour chaque sous-catégorie: '-' + sous-catégorie)
  *      ex: user-get-user user-get-user-assos user-get-user-assos-followed
  *
  *   - Définition de la portée des scopes:
@@ -25,16 +25,16 @@ return [
 	'icon' => 'user-circle',
 	'verbs' => [
 		'manage' => [
-			'description' => 'Gérer totalement les informations sur l\'utilisateur',
+			'description' => 'Gérer totalement les informations de l\'utilisateur',
 			'scopes' => [
 				'identity' => [
 					'description' => 'Gérer l\'identité de l\'utilisateur',
 					'scopes' => [
 						'email' => [
-							'description' => 'Gérer l\'adresse email de l\'utlisateur',
+							'description' => 'Gérer l\'adresse email de l\'utilisateur',
 						],
 						'names' => [
-							'description' => 'Gérer les nom et prénom de l\'utlisateur',
+							'description' => 'Gérer les nom et prénom de l\'utilisateur',
 						],
 						'auth' => [
 							'description' => 'Gérer les types de connexions de l\'utilisateur',
@@ -44,6 +44,9 @@ return [
 								],
 								'password' => [
 									'description' => 'Gérer les données liées à la création du compte mot de passe de l\'utilisateur',
+								],
+								'app' => [
+									'description' => 'Gérer les données liées à la création des comptes applications de l\'utilisateur',
 								],
 							]
 						],
@@ -74,16 +77,16 @@ return [
 			]
 		],
 		'set' => [
-			'description' => "Modifier et ajouter des informations sur l'utilisateur",
+			'description' => 'Modifier et ajouter des informations de l\'utilisateur',
 			'scopes' => [
 				'identity' => [
 					'description' => 'Modifier et ajouter des informations concernant l\'identité de l\'utilisateur',
 					'scopes' => [
 						'email' => [
-							'description' => 'Modifier l\'adresse email de l\'utlisateur',
+							'description' => 'Modifier l\'adresse email de l\'utilisateur',
 						],
 						'names' => [
-							'description' => 'Modifier les nom et prénom de l\'utlisateur',
+							'description' => 'Modifier les nom et prénom de l\'utilisateur',
 						],
 						'auth' => [
 							'description' => 'Modifier et ajouter des types de connexions de l\'utilisateur',
@@ -93,6 +96,9 @@ return [
 								],
 								'password' => [
 									'description' => 'Modifier et ajouter des données liées à la création du compte mot de passe de l\'utilisateur',
+								],
+								'app' => [
+									'description' => 'Modifier et ajouter des données liées à la création des comptes applications de l\'utilisateur',
 								],
 							]
 						],
@@ -123,13 +129,13 @@ return [
 			]
 		],
 		'get' => [
-			'description' => 'Récupérer toutes les informations sur l\'utilisateur',
+			'description' => 'Récupérer toutes les informations de l\'utilisateur',
 			'scopes' => [
 				'identity' => [
 					'description' => 'Récupérer l\'identité de l\'utilisateur',
 					'scopes' => [
 						'email' => [
-							'description' => 'Récupérer l\'adresse email de l\'utlisateur',
+							'description' => 'Récupérer l\'adresse email de l\'utilisateur',
 						],
 						'timestamps' => [
 							'description' => 'Connaître les moments de connexion et de création de l\'utilisateur',
@@ -159,6 +165,9 @@ return [
 								],
 								'password' => [
 									'description' => 'Avoir les données liées à la création du compte mot de passe de l\'utilisateur',
+								],
+								'app' => [
+									'description' => 'Avoir les données liées à la création des comptes applications de l\'utilisateur',
 								],
 							]
 						],
@@ -204,16 +213,16 @@ return [
 			]
 		],
 		'edit' => [
-			'description' => "Modifier toutes les informations sur l'utilisateur",
+			'description' => 'Modifier toutes les informations de l\'utilisateur',
 			'scopes' => [
 				'identity' => [
 					'description' => 'Modifier l\'identité de l\'utilisateur',
 					'scopes' => [
 						'email' => [
-							'description' => 'Modifier l\'adresse email de l\'utlisateur',
+							'description' => 'Modifier l\'adresse email de l\'utilisateur',
 						],
 						'names' => [
-							'description' => 'Modifier les nom et prénom de l\'utlisateur',
+							'description' => 'Modifier les nom et prénom de l\'utilisateur',
 						],
 						'auth' => [
 							'description' => 'Modifier les types de connexions de l\'utilisateur',
@@ -223,6 +232,9 @@ return [
 								],
 								'password' => [
 									'description' => 'Modifier les données liées à la création du compte mot de passe de l\'utilisateur',
+								],
+								'app' => [
+									'description' => 'Modifier les données liées à la création des comptes applications de l\'utilisateur',
 								],
 							]
 						],
@@ -253,7 +265,7 @@ return [
 			]
 		],
 		'create' => [
-			'description' => "Ajouter des informations pour l'utilisateur",
+			'description' => 'Ajouter des informations pour l\'utilisateur',
 			'scopes' => [
 				'identity' => [
 					'description' => 'Ajouter des informations concernant l\'identité de l\'utilisateur',
@@ -266,6 +278,9 @@ return [
 								],
 								'password' => [
 									'description' => 'Ajouter des données liées à la création du compte mot de passe de l\'utilisateur',
+								],
+								'app' => [
+									'description' => 'Ajouter des données liées à la création des comptes applications de l\'utilisateur',
 								],
 							]
 						],
@@ -301,6 +316,5 @@ return [
 				],
 			]
 		],
-
 	]
 ];

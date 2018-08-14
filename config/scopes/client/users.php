@@ -25,18 +25,58 @@ return [
 	'verbs' => [
 		'manage' => [
 			'description' => 'Gérer totalement tous les utilisateurs',
+			'scopes' => [
+				'active' => [
+					'description' => 'Gérer les comptes utilisateurs actifs',
+				],
+				'inactive' => [
+					'description' => 'Gérer les comptes utilisateurs non actifs',
+				],
+			]
 		],
 		'get' => [
 			'description' => 'Récupérer la liste des utilisateurs',
+			'scopes' => [
+				'active' => [
+					'description' => 'Récupérer les comptes utilisateurs actifs',
+				],
+				'inactive' => [
+					'description' => 'Récupérer les comptes utilisateurs non actifs',
+				],
+			]
 		],
 		'set' => [
 			'description' => "Gérer la création et la modification d'utilisateurs",
+			'scopes' => [
+				'active' => [
+					'description' => 'Créer et modifier les comptes utilisateurs actifs',
+				],
+				'inactive' => [
+					'description' => 'Créer et modifier les comptes utilisateurs non actifs',
+				],
+			]
 		],
 		'create' => [
 			'description' => "Gérer la création d'utilisateurs",
+			'scopes' => [
+				'active' => [
+					'description' => 'Créer les comptes utilisateurs actifs',
+				],
+				'inactive' => [
+					'description' => 'Créer les comptes utilisateurs non actifs',
+				],
+			]
 		],
 		'edit' => [
 			'description' => "Gérer la modification d'utilisateurs",
+			'scopes' => [
+				'active' => [
+					'description' => 'Modifier les comptes utilisateurs actifs',
+				],
+				'inactive' => [
+					'description' => 'Modifier les comptes utilisateurs non actifs',
+				],
+			]
 		],
 	]
 ];
