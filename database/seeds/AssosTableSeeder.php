@@ -40,7 +40,7 @@ DESC
 			[
 				'login'			=> 'pae',
 				'shortname'		=> 'PAE',
-				'name' 			=> 'Pôle Artistique et Événementiel',
+				'name' 			=> 'Pôle Artistique et Évènementiel',
 				'description'	=> <<<DESC
 Tout savoir sur l'art, la culture et les assos événementielles à l'UTC, c'est ici que ca se passe !
 
