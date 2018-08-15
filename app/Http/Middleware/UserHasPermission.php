@@ -30,5 +30,7 @@ class UserHasPermission
 
 			throw new AuthorizationException('L\'utilisateur ne possède aucune permission: '.implode(', ', $args));
 		}
+
+		return $next($request);
  	}
 }

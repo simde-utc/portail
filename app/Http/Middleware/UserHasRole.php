@@ -30,5 +30,7 @@ class UserHasRole
 
 			throw new AuthorizationException('L\'utilisateur ne possède aucun rôle: '.implode(', ', $args));
 		}
+
+		return $next($request);
  	}
 }

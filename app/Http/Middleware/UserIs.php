@@ -35,5 +35,7 @@ class UserIs
 
 			throw new AuthorizationException('L\'utilisateur n\'est d\'aucun type: '.implode(', ', $args));
 		}
+
+		return $next($request);
  	}
 }
