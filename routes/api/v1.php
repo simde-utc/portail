@@ -37,10 +37,10 @@ Route::delete('client/{user_id}', 'Client\ClientController@destroy')->middleware
 	destroy : /{ressource}/{id} en DELETE
 */
 
-// Routes définies pour l'utlisateur
-Route::group(function () {
-	// Routes uniquement pour les clients/connectés
-	Route::middleware('user:active')->apiResources([
+// Routes uniquement pour les clients/connectés
+Route::group(['middleware' => 'user:active'], function () {
+	// Routes définies pour l'utlisateur
+	Route::apiResources([
 		'users'										=> 'User\UserController',
 		'users/{user_id}/auths'						=> 'User\AuthController',
 		'users/{user_id}/roles'						=> 'User\RoleController',
@@ -56,21 +56,8 @@ Route::group(function () {
 		'user/contacts'								=> 'Contact\ContactController',
 	]);
 
-	// Routes pour tous
+	// Routes définies pour toutes ressources
 	Route::apiResources([
-		// Routes `user` identiques à `users/{\Auth::id()}`
-		'user/auths'								=> 'User\AuthController',
-		'user/details'								=> 'User\DetailController',
-		'user/preferences'							=> 'User\PreferenceController',
-		'user/assos'								=> 'User\AssoController',
-		'user/articles/{article_id}/actions'		=> 'User\Article\ActionController',
-	]);
-});
-
-// Routes définies pour toute ressource
-Route::group(function () {
-	// Routes uniquement pour les clients/connectés
-	Route::middleware('user:active')->apiResources([
 		'{resource_type}/{resource_id}/contacts'	=> 'Contact\ContactController',
 		'{resource_type}/{resource_id}/comments'	=> 'Comment\CommentController',
 		'groups/{group_id}/members'					=> 'Group\MemberController',
@@ -80,8 +67,21 @@ Route::group(function () {
 		'rooms'										=> 'Location\RoomController',
 		'calendars/{calendar_id}/events'			=> 'Calendar\EventController',
 	]);
+});
 
-	// Routes pour tous
+// Routes pour tous
+Route::group([], function () {
+	// Routes définies pour l'utlisateur
+	Route::apiResources([
+		// Routes `user` identiques à `users/{\Auth::id()}`
+		'user/auths'								=> 'User\AuthController',
+		'user/details'								=> 'User\DetailController',
+		'user/preferences'							=> 'User\PreferenceController',
+		'user/assos'								=> 'User\AssoController',
+		'user/articles/{article_id}/actions'		=> 'User\Article\ActionController',
+	]);
+
+	// Routes définies pour toutes ressources
 	Route::apiResources([
 		'assos'										=> 'Asso\AssoController',
 		'places'									=> 'Location\PlaceController',
