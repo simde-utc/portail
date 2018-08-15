@@ -73,7 +73,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 	];
 
 	public function getNameAttribute() {
-		return $this->firstname.' '.strtoupper($this->lastname);
+		if ($this->is_active)
+			return $this->firstname.' '.strtoupper($this->lastname);
+		else
+			return 'Compte invité';
 	}
 
 	public static function findByEmail($email) {

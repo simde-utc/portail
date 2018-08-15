@@ -37,43 +37,60 @@ Route::delete('client/{user_id}', 'Client\ClientController@destroy')->middleware
 	destroy : /{ressource}/{id} en DELETE
 */
 
-Route::apiResources([
-	'users'										=> 'User\UserController',
-	'users/{user_id}/auths'						=> 'User\AuthController',
-	'users/{user_id}/roles'						=> 'User\RoleController',
-	'users/{user_id}/details'					=> 'User\DetailController',
-	'users/{user_id}/preferences'				=> 'User\PreferenceController',
-	'users/{user_id}/calendars'					=> 'User\CalendarController',
-	'users/{user_id}/assos'						=> 'User\AssoController',
-	'users/{user_id}/articles/{article_id}/actions'	=> 'User\Article\ActionController',
+// Routes définies pour l'utlisateur
+Route::group(function () {
+	// Routes uniquement pour les clients/connectés
+	Route::middleware('user:active')->apiResources([
+		'users'										=> 'User\UserController',
+		'users/{user_id}/auths'						=> 'User\AuthController',
+		'users/{user_id}/roles'						=> 'User\RoleController',
+		'users/{user_id}/details'					=> 'User\DetailController',
+		'users/{user_id}/preferences'				=> 'User\PreferenceController',
+		'users/{user_id}/calendars'					=> 'User\CalendarController',
+		'users/{user_id}/assos'						=> 'User\AssoController',
+		'users/{user_id}/articles/{article_id}/actions'	=> 'User\Article\ActionController',
 
-	// Routes `user` identiques à `users/{\Auth::id()}`
-	'user/auths'								=> 'User\AuthController',
-	'user/roles'								=> 'User\RoleController',
-	'user/details'								=> 'User\DetailController',
-	'user/preferences'							=> 'User\PreferenceController',
-	'user/calendars'							=> 'User\CalendarController',
-	'user/contacts'								=> 'Contact\ContactController',
-	'user/assos'								=> 'User\AssoController',
-	'user/articles/{article_id}/actions'		=> 'User\Article\ActionController',
-]);
+		// Routes `user` identiques à `users/{\Auth::id()}`
+		'user/roles'								=> 'User\RoleController',
+		'user/calendars'							=> 'User\CalendarController',
+		'user/contacts'								=> 'Contact\ContactController',
+	]);
 
-Route::apiResources([
-	'{resource_type}/{resource_id}/contacts'	=> 'Contact\ContactController',
-	'{resource_type}/{resource_id}/comments'	=> 'Comment\CommentController',
-	'groups/{group_id}/members'					=> 'Group\MemberController',
-	'groups'									=> 'Group\GroupController',
-	'assos'										=> 'Asso\AssoController',
-	'assos/{asso_id}/members'					=> 'Asso\MemberController',
-	'roles'										=> 'Role\RoleController',
-	'places'									=> 'Location\PlaceController',
-	'locations'									=> 'Location\LocationController',
-	'rooms'										=> 'Location\RoomController',
-	'events'									=> 'Event\EventController',
-	'calendars'									=> 'Calendar\CalendarController',
-	'calendars/{calendar_id}/events'			=> 'Calendar\EventController',
-	'partners'									=> 'Partner\PartnerController',
-	'articles'									=> 'Article\ArticleController',
-	'articles/{article_id}/actions'				=> 'Article\ActionController',
-	'visibilities'								=> 'Visibility\VisibilityController',
-]);
+	// Routes pour tous
+	Route::apiResources([
+		// Routes `user` identiques à `users/{\Auth::id()}`
+		'user/auths'								=> 'User\AuthController',
+		'user/details'								=> 'User\DetailController',
+		'user/preferences'							=> 'User\PreferenceController',
+		'user/assos'								=> 'User\AssoController',
+		'user/articles/{article_id}/actions'		=> 'User\Article\ActionController',
+	]);
+});
+
+// Routes définies pour toute ressource
+Route::group(function () {
+	// Routes uniquement pour les clients/connectés
+	Route::middleware('user:active')->apiResources([
+		'{resource_type}/{resource_id}/contacts'	=> 'Contact\ContactController',
+		'{resource_type}/{resource_id}/comments'	=> 'Comment\CommentController',
+		'groups/{group_id}/members'					=> 'Group\MemberController',
+		'groups'									=> 'Group\GroupController',
+		'assos/{asso_id}/members'					=> 'Asso\MemberController',
+		'roles'										=> 'Role\RoleController',
+		'rooms'										=> 'Location\RoomController',
+		'calendars/{calendar_id}/events'			=> 'Calendar\EventController',
+	]);
+
+	// Routes pour tous
+	Route::apiResources([
+		'assos'										=> 'Asso\AssoController',
+		'places'									=> 'Location\PlaceController',
+		'locations'									=> 'Location\LocationController',
+		'events'									=> 'Event\EventController',
+		'calendars'									=> 'Calendar\CalendarController',
+		'partners'									=> 'Partner\PartnerController',
+		'articles'									=> 'Article\ArticleController',
+		'articles/{article_id}/actions'				=> 'Article\ActionController',
+		'visibilities'								=> 'Visibility\VisibilityController',
+	]);
+});
