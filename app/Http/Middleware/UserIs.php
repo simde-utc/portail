@@ -32,8 +32,8 @@ class UserIs
 				if (\Auth::user()->$method() !== $wrongIfEqual)
 					return $next($request);
 			}
-		}
 
-		throw new AuthorizationException('L\'utilisateur n\'est d\'aucun type: '.implode(', ', $args));
+			throw new AuthorizationException('L\'utilisateur n\'est d\'aucun type: '.implode(', ', $args));
+		}
  	}
 }

@@ -27,8 +27,8 @@ class UserHasRole
 				if (\Auth::user()->hasOneRole($role) !== $wrongIfEqual)
 					return $next($request);
 			}
-		}
 
-		throw new AuthorizationException('L\'utilisateur ne possède aucun rôle: '.implode(', ', $args));
+			throw new AuthorizationException('L\'utilisateur ne possède aucun rôle: '.implode(', ', $args));
+		}
  	}
 }
