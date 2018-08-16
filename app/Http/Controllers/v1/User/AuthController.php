@@ -74,7 +74,7 @@ class AuthController extends Controller
 			$class = resolve($provider['class']);
 
 			if ($class) {
-				$auth = response()->json($class->addAuth($user->id, $request->input('data')));
+				$auth = $class->addAuth($user->id, $request->input('data'));
 
 				if ($auth instanceof Model)
 					return response()->json($auth);
