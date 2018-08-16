@@ -31,5 +31,7 @@
 		"redux-logger": "^3.0.6",
 		"redux-thunk": "^2.3.0"
 	},
-	"dependencies": []
+	"dependencies": {
+		"redux-promise-middleware": "^5.1.1"
+	}
 }
