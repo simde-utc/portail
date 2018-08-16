@@ -2,7 +2,7 @@
 	min-width: 250px;
 	overflow: auto; 
 	padding: map-get($spacers, 3) 0;
-	background: $bg-grey;
+	background: $light-gray;
 }
 
 .sidebar-inner {
@@ -31,7 +31,6 @@
 		color: $black;
 		background-color: $white;
 		text-decoration: none;
-		box-shadow: $box-shadow-center-sm;
 	}
 	&.active {
 		background-color: $white;
