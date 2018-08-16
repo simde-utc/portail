@@ -113,7 +113,9 @@ class Cas extends BaseAuth
 	}
 
 	public function addAuth($user_id, array $info) {
-		if (User::find($user_id)->cas()->exists())
+		$user = User::find($user_id);
+
+		if ($user->cas()->exists())
 			throw new PortailException('L\'utlisateur possède déjà une connexion CAS');
 
 		$curl = \Curl::to(config('portail.cas.url').'v1/tickets')
@@ -151,11 +153,17 @@ class Cas extends BaseAuth
 			$parsed = new xmlToArrayParser($response->content);
 
 			try {
-				return AuthCas::create([
+				$cas = AuthCas::create([
 					'user_id' => $user_id,
 					'email' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
 					'login' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
 				]);
+
+				$user->update([
+					'is_active' => true,
+				]);
+
+				return $cas;
 			} catch (\Exception $e) {
 				throw new PortailException('Ce compte CAS existe déjà et ne peut être ajouté une nouvelle fois', 409);
 			}
