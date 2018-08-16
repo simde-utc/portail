@@ -8,12 +8,13 @@ const updateUserPropActionCreator = (nodePath, uriPath) => ({
 
 const loggedUserActions = {
 	// Get User properties
-	getInfo: () => updateUserPropActionCreator('info', ''),
-	getAuths: () => updateUserPropActionCreator('auths', '/auths'),
-	getRoles: () => updateUserPropActionCreator('roles', '/roles'),
-	getDetails: () => updateUserPropActionCreator('details', '/details'),
+	getInfo: 		() => updateUserPropActionCreator('info', ''),
+	getAuths: 		() => updateUserPropActionCreator('auths', '/auths'),
+	getRoles: 		() => updateUserPropActionCreator('roles', '/roles'),
+	getDetails: 	() => updateUserPropActionCreator('details', '/details'),
 	getPreferences: () => updateUserPropActionCreator('preferences', '/preferences'),
-	getCalendars: () => updateUserPropActionCreator('calendars', '/calendars'),
+	getCalendars: 	() => updateUserPropActionCreator('calendars', '/calendars'),
+	getAssos: 		() => updateUserPropActionCreator('assos', '/assos'),
 
 	// Remove all data about the user
 	removeUser: () => ({

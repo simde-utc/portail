@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-import ArticlesList from './../components/Articles/List.js';
+import ArticleList from './../components/Article/List.js';
 
 class ScreensHome extends Component {
     render() {
         return (
             <div className="Home">
-                <ArticlesList />
+                <ArticleList />
             </div>
         );
     }
