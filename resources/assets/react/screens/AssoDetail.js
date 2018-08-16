@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { assosActions } from '../redux/actions';
 
-@connect((store, props) => {
-	return {
-		asso: store.assos.data.find(asso => asso.login == props.match.params.login),
-		fetching: store.assos.fetching,
-		fetched: store.assos.fetched,
-	}
-})
-class AssoDetailScreen extends Component { 
+@connect((store, props) => ({
+	asso: store.assos.data.find(asso => asso.login == props.match.params.login),
+	fetching: store.assos.fetching,
+	fetched: store.assos.fetched,
+}))
+class ScreensAssoDetail extends Component { 
 	componentWillMount() {
 		const login = this.props.match.params.login
 		this.props.dispatch(assosActions.getOne(login));
@@ -43,4 +41,4 @@ class AssoDetailScreen extends Component {
 	}
 };
 
-export default AssoDetailScreen;
+export default ScreensAssoDetail;

@@ -4,7 +4,7 @@ import AuthorizedClients from './../components/Passport/AuthorizedClients.js';
 import Clients from './../components/Passport/Clients.js';
 import PersonalAccessTokens from './../components/Passport/PersonalAccessTokens.js';
 
-class DashboardScreen extends Component {
+class ScreensDashboard extends Component {
 	render() {
 		return (
 			<div className="container">
@@ -17,4 +17,4 @@ class DashboardScreen extends Component {
 	}
 }
 
-export default DashboardScreen;
+export default ScreensDashboard;

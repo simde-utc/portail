@@ -4,14 +4,12 @@ import { assosActions } from '../redux/actions';
 
 import AssoChildrenList from '../components/AssoChildrenList';
 
-@connect(store => {
-	return {
-		assos: store.assos.data,
-		fetching: store.assos.fetching,
-		fetched: store.assos.fetched
-	}
-})
-class AssosListScreen extends Component {
+@connect(store => ({
+	assos: store.assos.data,
+	fetching: store.assos.fetching,
+	fetched: store.assos.fetched
+}))
+class ScreensAssosList extends Component {
 
 	componentWillMount() {
 		this.props.dispatch(assosActions.getAll('?all'))
@@ -22,7 +20,7 @@ class AssosListScreen extends Component {
 		let assosTree = [];
 		if (this.props.fetched)
 			this.props.assos.forEach(asso => {
-				if (asso.parent_id === null | asso.parent_id === 1) {
+				if (asso.parent_id == null || asso.parent_id == 1) {
 					// Ajout à la racine si BDE ou Poles
 					assosTree.push({ ...asso, children: [] });
 				} else {
@@ -30,7 +28,7 @@ class AssosListScreen extends Component {
 					// TODO : cas où parent n'existe pas ?
 					let nextParents = [];
 					assosTree.forEach(parent => nextParents.push(parent));
-					let parent;
+					let parent = null;
 					while(nextParents.length > 0) {
 						parent = nextParents.pop();
 						// On arrête si on a trouvé le parent
@@ -40,8 +38,9 @@ class AssosListScreen extends Component {
 						else
 							nextParents = nextParents.concat(parent.children);
 					}
-					// Ajout en tant que fils des parents
-					parent.children.push({ ...asso, children: [] });
+					// Ajout en tant que fils du parent
+					if (parent != null)
+						parent.children.push({ ...asso, children: [] });
 				}
 			})
 
@@ -60,4 +59,4 @@ class AssosListScreen extends Component {
 	}
 }
 
-export default AssosListScreen;
+export default ScreensAssosList;

@@ -170,7 +170,8 @@ $sizes: map-merge((
 
 $body-bg:                   $gray-light !default;
 $body-color:                $gray-dark !default;
-
+$body-selection-bg:         $yellow !default;
+$body-selection-color:      $gray-dark !default;
 
 /*
 |--------------------------------------------------------------------------
@@ -179,10 +180,10 @@ $body-color:                $gray-dark !default;
 | Style anchor elements.
 */
 
-$link-color:                theme-color("primary") !default;
+$link-color:                $body-color !default;
 $link-decoration:           none !default;
 $link-hover-color:          darken($link-color, 15%) !default;
-$link-hover-decoration:     underline !default;
+$link-hover-decoration:     none !default;
 
 
 /*
@@ -261,10 +262,11 @@ $border-radius:               .25rem !default;
 $border-radius-lg:            .3rem !default;
 $border-radius-sm:            .2rem !default;
 
+$box-shadow-center-sm:        0 0 .5rem rgba($black, .1) !default;
+$box-shadow-center-md:        0 0 1rem rgba($black, .1) !default;
 $box-shadow-sm:               0 .125rem .25rem rgba($black, .075) !default;
 $box-shadow:                  0 .5rem 1rem rgba($black, .15) !default;
 $box-shadow-lg:               0 1rem 3rem rgba($black, .175) !default;
-
 $component-active-color:      $white !default;
 $component-active-bg:         theme-color("primary") !default;
 
@@ -294,6 +296,7 @@ $font-size-sm:                ($font-size-base * .875) !default;
 
 $font-weight-light:           300 !default;
 $font-weight-normal:          400 !default;
+$font-weight-semibold:        600 !default;
 $font-weight-bold:            700 !default;
 
 $font-weight-base:            $font-weight-normal !default;

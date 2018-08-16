@@ -19,7 +19,7 @@ const sassOptions = {
 // Custom Bootstrap
 mix.sass('resources/assets/bootstrap/sass/bootstrap.scss', 'public/css', sassOptions)
 // Custom CSS
-mix.sass('resources/assets/sass/app.scss', 'public/css');
+mix.sass('resources/assets/sass/app.scss', 'public/css', sassOptions);
 
 // React
 mix.react('resources/assets/react/index.js', 'public/js');

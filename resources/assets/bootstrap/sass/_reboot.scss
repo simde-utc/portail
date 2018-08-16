@@ -24,6 +24,12 @@
   box-sizing: border-box; // 1
 }
 
+// Custom text selection
+::selection {
+  background-color: $body-selection-bg;
+  color: $body-selection-color;
+}
+
 html {
   font-family: sans-serif; // 2
   line-height: 1.15; // 3
@@ -64,6 +70,7 @@ body {
   text-align: left; // 3
   background-color: $body-bg; // 2
 }
+
 
 // Suppress the focus outline on elements that cannot be accessed via keyboard.
 // This prevents an unwanted focus outline from appearing around elements that
@@ -200,6 +207,7 @@ a {
   text-decoration: $link-decoration;
   background-color: transparent; // Remove the gray background on active links in IE 10.
   -webkit-text-decoration-skip: objects; // Remove gaps in links underline in iOS 8+ and Safari 8+.
+  cursor: pointer;
 
   @include hover {
     color: $link-hover-color;

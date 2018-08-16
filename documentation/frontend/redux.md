@@ -1,31 +1,43 @@
 # Redux
 
-Redux est utilisé pour gérer les données dans un store.
+Redux est utilisé pour gérer des données dans un unique store.
 Toute l'implémentation de Redux est faite dans le dossier `redux/`.
 
 Pour plus d'informations sur Redux, [regardez cette playlist](https://www.youtube.com/watch?v=1w-oQ-i1XB8&index=15&list=PLoYCgNOIyGABj2GQSlDRjgvXtqfDxKm5b).
 
 
+
+## Les 3 parties de Redux
+
+### Les types d'actions
+
+Tout d'abord, il faut définir des **types d'actions**. Ce sont des chaînes de charactères constantes permettant d'identifier actions à effectuer dans les différents reducers. Il est conseillé de les définir dans le fichier `types.js`. Pour définir des set d'actions CRUD plus facilement, utilisez [`createCrudTypes`](#créateur-de-types-dactions).
+
+### Les actions
+
+Les actions sont des objets qui sont dispatchés aux reducers. Elles contienent généralement un `type` et un `payload`. Elles sont définies dans le fichiers `actions.js`.
+
+
+### Les reducers
+
+Les reducers sont des fonctions de prototype : `function(prevState, action)`.
+
+A partir de l'état actuel du store `prevState` et de l'action dispatchée `action`, ils retournent un nouvel état (potentiellement `prevState` si le reducer ne doit pas faire de modifications).
+
+Il ne faut pas modifier `prevState` directement mais faire une copie. Ils sont définis dans le fichier `reducers.js`.
+
+
+
+
 ## Créateurs CRUD
 
-Comme l'API du portail suit principalement le design CRUD (Create Read Update Delete), la plupart des actions Redux suivent aussi. C'est pourquoi nous avons créé des créateurs de types d'action, d'actions et de reducers CRUD. C'est fonctions se trouvent dans `react/utils.js`.
+Comme l'API du portail suit principalement le design CRUD (Create Read Update Delete), la plupart des actions Redux suivent aussi. C'est pourquoi nous avons créé des créateurs de types d'action, d'actions et de reducers CRUD. Ces fonctions se trouvent dans `react/utils.js`.
 
-Les noms de ressources sont par convention mis au pluriel.
+Les noms de ressources sont par convention mis au singulier.
 
 ### Créateur de types d'actions
 
 `createCrudTypes(name)` permet de créer un set de types suivant le schéma suivant à partir d'un nom de resources `name` : 
-
-```js
-createCrudTypes("OBJET")
-{
-    getAll: "GET_ALL_OBJECT",
-    getOne: "GET_ONE_OBJECT",
-    create: "CREATE_OBJECT",
-    update: "UPDATE_OBJECT",
-    delete: "DELETE_OBJECT"
-}
-```
 
 Ce set de types est alors utilisé par les fonctions suivantes.
 
@@ -34,7 +46,7 @@ Ce set de types est alors utilisé par les fonctions suivantes.
 
 `createCrudActionSet(actionTypes, uri, overrides = {})` permet de créer un set d'actions CRUD à partir des paramètres suivants :
 - `actionTypes` : un set d'actions généré à partir de la fonction `createCrudTypes`
-- `uri` : le morceau d'url permettant d'accès au point de l'api concernant la ressource à partir de l'url de base. Par exemple `assos` permet d'accèder à _https://assos.utc.fr/api/v1/**assos**_
+- `uri` : le morceau d'url permettant d'accès au point de l'api concernant la ressource à partir de l'url de base. Par exemple `assos` permet d'accèder à `https://assos.utc.fr/api/v1/assos`
 - `overrides` : un objet permettant de remplacer et d'ajouter des actions au set d'actions
 
 
@@ -47,48 +59,121 @@ Ce set de types est alors utilisé par les fonctions suivantes.
 
 ```js
 export const initialCrudState = {
-    data: [],
-    error: null,
-    fetching: false,
-    fetched: false,
-    lastUpdate: null
+	data: [],
+	error: null,
+	fetching: false,
+	fetched: false,
+	lastUpdate: null
 }
 ```
 
 
-## Exemple d'utilisation
 
-Types dans `react/types.js`
+
+
+## Exemple d'utilisation des helpers CRUD
+
+**Types** dans `redux/types.js`
+
 ```js
-const userTypes = createCrudTypes("USER")
+const articleTypes = createCrudTypes("ARTICLE")
+```
+qui correspond à :
+```json
+{
+	getAll: 'GET_ALL_ARTICLE',
+	getOne: 'GET_ONE_ARTICLE',
+	create: 'CREATE_ARTICLE',
+	update: 'UPDATE_ARTICLE',
+	delete: 'DELETE_ARTICLE'
+}
 ```
 
 
-Reducers dans `react/reducers.js`
+
+**Reducers** dans `redux/reducers.js`
+
 ```js
+// État initial
 const customInitialState = {
-    ...initialCrudState,
-    firstCall: false
+	...initialCrudState,
+	firstCall: true
 }
+// Surcharge du reducer CRUD
 const overrides = {
-    CUSTOM_TYPE: function(state, action) { ... }
+	CUSTOM_TYPE: function(state, action) {
+		return { ...state, firstCall: false }
+	}
 }
-const usersReducer = createCrudReducer(userTypes, customInitialState, overrides)
+
+const articleReducer = createCrudReducer(articleTypes, customInitialState, overrides)
+```
+qui correspond (de manière simplifiée et schématique) à :
+```js
+function(state = customInitialState, action) {
+	switch (action.type) {
+		// Surcharge via overrides
+		'CUSTOM_TYPE':
+			return overrides['CUSTOM_TYPE'](state, action)
+			// return { ...state, firstCall: false }
+
+		'GET_ALL_ARTICLE_LOADING':
+			return { ...state, fetching: true, fetched: false }
+
+		'GET_ALL_ARTICLE_ERROR':
+			return { ...state, fetching: false, fetched: false, error: action.payload }
+
+		'GET_ALL_ARTICLE_SUCCESS':
+			if (action.meta.affectsAll) {
+				return { ...state, data: action.payload.data }
+			} else {
+				// Modifie, ajoute ou supprime l'élément désiré
+				// et renvoie la modification de l'état copié
+			}
+		// Si l'action n'est pas prise en charge par le reducer,
+		// retourne l'état actuel sans modifications
+		default:
+			return state
+	}
+}
 ```
 
 
-Actions dans `react/actions.js`
+
+**Actions** dans `redux/actions.js`
+
 ```js
 const overrides = {
-    create: function(data) { ... },
-    newAction: function(id, data, whatever) { ... 
+	create: (data) => ({ type: 'CUSTOM_TYPE', payload: null }),
+	newAction: (id, data, whatever) => ({ ... })
 }
-const userActions = createCrudActionSet(userTypes, 'users', overrides)
+const userActions = createCrudActionSet(articleTypes, 'articles', overrides)
+```
+qui correspond à :
+```js
+{
+	getAll: (queryParams = '') => ({
+		type: 'GET_ALL_ARTICLE',
+		meta: { affectsAll: true, arrayAction: 'updateAll', timestamp: Date.now() },
+		payload: axios.get(`/api/v1/articles${queryParams}`)
+	}),
+	getOne: (id, queryParams = '') => ({
+		type: 'GET_ONE_ARTICLE',
+		meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
+		payload: axios.get(`/api/v1/articles/${id}${queryParams}`)
+	}),
+	// Remplacé
+	create: (data) => ({ type: 'CUSTOM_TYPE', payload: null }),
+	update: (id, data) => ({ ... }),
+	delete: (id) => ({ ... }),
+	// Surcharges
+	newAction: (id, data, whatever) => ({ ... })
+}
 ```
 
 
-Utilisation dans un composant
+Utilisation dans un composant:
 ```js
-this.props.dispatch(usersAction.create({ ... }))
+this.props.dispatch(articleAction.create({ title: 'Article de test', description: '...', accent: "#ffffff" }))
 ```
 
