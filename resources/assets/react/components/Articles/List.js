@@ -17,13 +17,11 @@ class ArticlesList extends Component {
     }
 
     render() {
-        console.log(this.props.articles);
-
         return (
             <div>
                 { (this.props.fetched) ? (
                     this.props.articles.map(article => (
-                        <Article article={article} />
+                        <Article key={ article.id } article={article} />
                     ))
                 ) : (
                     <div></div>

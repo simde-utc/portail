@@ -38,7 +38,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	];
 
 	protected $must = [
-		'name', 'shortname',
+		'name', 'shortname', 'login'
 	]; // Children dans le cas où on affiche en mode étagé
 
 	protected $selection = [
