@@ -30,6 +30,8 @@ main {
 .list-row {
 	padding: 0;
 	margin-bottom: map-get($spacers, 1);
+	overflow-x: auto;
+	flex-wrap: nowrap;
 }
 
 .list-item,
@@ -51,6 +53,5 @@ main {
 	color: $body-color;
 	&:hover {
 		color: $primary;
-		text-decoration: none;
 	}
 }

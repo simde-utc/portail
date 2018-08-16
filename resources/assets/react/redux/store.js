@@ -1,7 +1,7 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
+import { applyMiddleware, createStore } from 'redux';
+import { ASYNC_SUFFIXES } from './utils';
 
-// Middlewares
+// Import Middlewares
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 
