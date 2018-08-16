@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,12 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot() {
 		Schema::defaultStringLength(191);       // Pour que 'email' puisse être une clé
+
+		$this->passport();
+	}
+
+	public function passport() {
+		Passport::withoutCookieSerialization();
 	}
 
 	/**
@@ -25,6 +32,6 @@ class AppServiceProvider extends ServiceProvider
 		// ServiceProviders de développement
 		if (!$this->app->environment('production')) {
 		}
-		
+
 	}
 }
