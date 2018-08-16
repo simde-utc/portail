@@ -1,4 +1,4 @@
-<?php
+""<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,35 +14,41 @@ class CreateGroupsMembersTable extends Migration
 	public function up()
 	{
 		Schema::create('groups_members', function (Blueprint $table) {
-			$table->integer('group_id')->unsigned();
-			$table->foreign('group_id')->references('id')->on('groups');
-			$table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users');
-			$table->integer('role_id')->unsigned()->nullable();
-			$table->foreign('role_id')->references('id')->on('roles');
-			$table->integer('semester_id')->unsigned();
-			//$table->foreign('semester_id')->references('id')->on('semesters'); On permet ici que le semestre soit égal à 0 pour ne convenir à aucun semestre
-			$table->integer('validated_by')->unsigned()->nullable();
-			$table->foreign('validated_by')->references('id')->on('users');
+			$table->uuid('group_id');
+			$table->uuid('user_id');
+			$table->uuid('role_id')->nullable();
+			$table->uuid('semester_id'); // On permet ici que le semestre soit égal à 0 pour ne convenir à aucun semestre
+			$table->uuid('validated_by')->nullable();
 
 			$table->timestamps();
+
+			$table->foreign('group_id')->references('id')->on('groups');
+			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('role_id')->references('id')->on('roles');
+			$table->foreign('validated_by')->references('id')->on('users');
+
 			$table->primary(['group_id', 'user_id', 'semester_id']);
 		});
 
 		Schema::create('groups_permissions', function (Blueprint $table) {
-			$table->integer('group_id')->unsigned();
-			$table->foreign('group_id')->references('id')->on('groups');
-			$table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users');
-			$table->integer('permission_id')->unsigned();
-			$table->foreign('permission_id')->references('id')->on('permissions');
-			$table->integer('semester_id')->unsigned();
-			$table->foreign('semester_id')->references('id')->on('semesters');
-			$table->integer('validated_by')->unsigned()->nullable();
-			$table->foreign('validated_by')->references('id')->on('users');
+			$table->uuid('group_id');
+			$table->uuid('user_id');
+			$table->uuid('permission_id')->nullable();
+			$table->uuid('semester_id'); // On permet ici que le semestre soit égal à 0 pour ne convenir à aucun semestre
+			$table->uuid('validated_by')->nullable();
 
 			$table->timestamps();
+
 			$table->primary(['group_id', 'user_id', 'permission_id', 'semester_id'], 'group_permissions_user_semester'); // Unique pour permettre semester_id d'être nulle
+		});
+
+		// En fait Laravel fait dans l'ordre, du coup le primary plante..
+		// https://github.com/laravel/framework/issues/25190
+		Schema::table('groups_permissions', function (Blueprint $table) {
+			$table->foreign('group_id')->references('id')->on('groups');
+			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('permission_id')->references('id')->on('permissions');
+			$table->foreign('validated_by')->references('id')->on('users');
 		});
 	}
 

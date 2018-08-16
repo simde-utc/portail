@@ -14,14 +14,15 @@ class CreateAuthCasTable extends Migration
 	public function up()
 	{
 		Schema::create('auth_cas', function (Blueprint $table) {
-			$table->integer('user_id')->unsigned()->primary();
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->uuid('user_id')->primary();
 			$table->string('login', validation_max('login'))->unique();
 			$table->string('email', validation_max('email'))->unique();
-
 			$table->boolean('is_active')->default(1);
-			$table->timestamps();
+
 			$table->timestamp('last_login_at')->nullable();
+			$table->timestamps();
+
+			$table->foreign('user_id')->references('id')->on('users');
 		});
 	}
 

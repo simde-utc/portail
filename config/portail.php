@@ -1,6 +1,20 @@
 <?php
 
 return [
+	// Gestion des versions du Portail
+	'versions' => [
+		'v1'
+	],
+	// Version actuelle du serveur (en dessous: déprécié, au dessus: en beta)
+	'version' => 'v0',
+
+	// Les headers spécifiques au Portail (commençant par X-Portail)
+	'headers' => [
+		'request_type' 	=> 'X-Portail-Request-Type',
+		'warn'			=> 'X-Portail-Warn',
+		'version'		=> 'X-Portail-Version',
+	],
+
 	// Payutc
 	'payutc' => [
 		'app_key' 	=> env('PAYUTC_KEY', ''),

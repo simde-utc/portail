@@ -15,6 +15,7 @@ class UsersTableSeeder extends Seeder
 	{
 		$users = [
 			[
+				'id'		=> '45617374-6572-2065-6767-7321202b5f2b',
 				'email'     => 'samy.nastuzzi@etu.utc.fr',
 				'firstname' => 'Samy',
 				'lastname'  => 'Nastuzzi',
@@ -50,15 +51,15 @@ class UsersTableSeeder extends Seeder
 					'simde' => 'developer',
 				],
 			],
-		    [
-			'email'     => 'maxime.escourrou@etu.utc.fr',
-			'firstname' => 'Maxime',
-					'lastname'  => 'Escourrou',
-					'role'		=> 'admin',
-					'assos'		=> [
-						'simde'	=> 'developer',
-					]
-		    ],
+			[
+				'email'     => 'romain.maliach-auguste@etu.utc.fr',
+				'firstname' => 'Romain',
+				'lastname'  => 'Maliach-Auguste',
+				'role'		=> 'admin',
+				'assos'		=> [
+					'simde'	=> 'developer',
+				]
+	    	],
 			[
 				'email'     => 'licorne@utc.fr',
 				'firstname' => 'Cesar',
@@ -67,32 +68,23 @@ class UsersTableSeeder extends Seeder
 				'assos'		=> [
 					'simde'	=> 'secretaire general',
 				]
-            	],
-			[
-			'email'     => 'romain.maliach-auguste@etu.utc.fr',
-			'firstname' => 'Romain',
-			'lastname'  => 'Maliach-Auguste',
-			'role'		=> 'admin',
-			'assos'		=> [
-						'simde'	=> 'developer',
-					]
-		    	]
-
+        	],
 		];
 
 		foreach ($users as $user) {
 			$model = User::create([
+				'id'		=> $user['id'] ?? null,
 				'email'     => $user['email'],
 				'firstname' => $user['firstname'],
 				'lastname'  => strtoupper($user['lastname']),
 			])->assignRoles($user['role'], [
-				'validated_by' => 1
+				'validated_by' => User::first()->id,
 			], true);
 
-			foreach ($user['assos'] as $name => $role) {
+			foreach ($user['assos'] ?? [] as $name => $role) {
 				Asso::where('login', $name)->first()->assignRoles($role, [
 					'user_id' => $model->id,
-					'validated_by' => 1,
+					'validated_by' => User::first()->id,
 				], true);
 			}
 		}

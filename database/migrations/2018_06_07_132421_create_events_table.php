@@ -14,22 +14,25 @@ class CreateEventsTable extends Migration
     public function up()
     {
         Schema::create('events', function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->string('name', 128);
-            $table->integer('location_id')->unsigned()->nullable();
-            $table->foreign('location_id')->references('id')->on('places_locations');
+            $table->uuid('location_id')->nullable();
             $table->timestamp('begin_at')->useCurrent();
             $table->timestamp('end_at')->useCurrent();
-            $table->boolean('full_day')->default(false); // Les horaires seront ignorés si vrai
-			$table->integer('visibility_id')->unsigned();
-			$table->foreign('visibility_id')->references('id')->on('visibilities');
-            $table->nullableMorphs('created_by');
-            $table->nullableMorphs('owned_by');
+            $table->uuid('full_day')->default(false); // Les horaires seront ignorés si vrai
+			$table->uuid('visibility_id');
+            $table->uuid('created_by_id')->nullable();
+            $table->string('created_by_type')->nullable();
+            $table->uuid('owned_by_id')->nullable();
+            $table->string('owned_by_type')->nullable();
 
   			$table->timestamps();
-            $table->unique(['name', 'location_id', 'begin_at', 'end_at', 'full_day', 'owned_by_id', 'owned_by_type'], 'events_n_l_b_e_f_c');
-
             $table->softDeletes();
+
+            $table->foreign('location_id')->references('id')->on('places_locations');
+            $table->foreign('visibility_id')->references('id')->on('visibilities');
+
+            $table->unique(['name', 'location_id', 'begin_at', 'end_at', 'full_day', 'owned_by_id', 'owned_by_type'], 'events_n_l_b_e_f_c');
   		});
     }
 

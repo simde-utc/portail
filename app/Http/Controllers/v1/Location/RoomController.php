@@ -47,7 +47,7 @@ class RoomController extends Controller
 	/**
 	 * Show Room
 	 *
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
 	public function show($id): JsonResponse {
@@ -63,7 +63,7 @@ class RoomController extends Controller
 	 * Update Room
 	 *
 	 * @param  \Illuminate\Http\Request $request
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, $id): JsonResponse {
@@ -81,7 +81,7 @@ class RoomController extends Controller
 	/**
 	 * Delete Room
 	 *
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
 	public function destroy($id): JsonResponse {

@@ -30,7 +30,7 @@ class EventRequest extends FormRequest
 	        'image' => Validation::make($this)->type('image')->nullable()->length(validation_between('url'))->get(),
 	        'from' => Validation::make($this)->type('date')->post('required')->get(),
 	        'to' => Validation::make($this)->type('date')->post('required')->get(),
-	        'visibility_id' => Validation::make($this)->type('integer')->exists('visibilities', 'id')->post('required')->get(),
+	        'visibility_id' => Validation::make($this)->type('uuid')->exists('visibilities', 'id')->post('required')->get(),
 	        'place' => Validation::make($this)->type('string')->nullable()->length(validation_between('string'))->get(),
         ];
     }

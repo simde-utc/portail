@@ -45,12 +45,12 @@ class ContactRequest extends FormRequest
                         ->post('required')
                         ->get(),
             'contact_type_id' => Validation::make($this)
-                        ->type('integer')
+                        ->type('uuid')
                         ->exists('contacts_types', 'id')
                         ->post('required')
                         ->get(),
             'visibility_id' => Validation::make($this)
-                        ->type('integer')
+                        ->type('uuid')
                         ->exists('visibilities', 'id')
                         ->post('required')
                         ->get(),

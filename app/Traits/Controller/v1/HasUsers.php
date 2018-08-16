@@ -16,7 +16,7 @@ trait HasUsers
 	 * @param bool $accessOtherUsers = false
 	 * @return User
 	 */
-	 protected function getUser(Request $request, int $user_id = null, bool $accessOtherUsers = false): User {
+	 protected function getUser(Request $request, string $user_id = null, bool $accessOtherUsers = false): User {
 		if ($accessOtherUsers)
 			$user = $user_id ? User::find($user_id) : \Auth::user();
 		else {

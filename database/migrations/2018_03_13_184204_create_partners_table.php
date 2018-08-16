@@ -14,10 +14,11 @@ class CreatePartnersTable extends Migration
 	public function up()
 	{
 		Schema::create('partners', function (Blueprint $table) {
-			$table->increments('id');
+			$table->uuid('id')->primary();
 			$table->string('name', validation_max('name'))->unique();
 			$table->string('description', validation_max('description'));
 			$table->string('image', validation_max('url'))->nullable();
+
 			$table->timestamps();
 		});
 	}

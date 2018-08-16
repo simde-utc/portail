@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use Curl;
-
 /**
  * Cette classe permet de récupérer des informations concernant un membre de l'UTC
  */
@@ -201,7 +199,7 @@ class Ginger {
 	 * @return object         Contient la réponse mais aussi le code HTTP et quelques headers
 	 */
 	protected function call($method, $route, $params = []) {
-		$curl = Curl::to(self::URL.$route.'?key='.$this->key)
+		$curl = \Curl::to(self::URL.$route.'?key='.$this->key)
 			->withData($params)
 			->asJson()
 			->returnResponseObject();

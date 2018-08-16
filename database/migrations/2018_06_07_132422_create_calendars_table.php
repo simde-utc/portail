@@ -14,19 +14,22 @@ class CreateCalendarsTable extends Migration
     public function up()
     {
         Schema::create('calendars', function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->string('name', 128);
             $table->string('description')->nullable();
             $table->string('color', 9)->nullable();
-			$table->integer('visibility_id')->unsigned();
-			$table->foreign('visibility_id')->references('id')->on('visibilities');
-            $table->morphs('created_by');
-            $table->nullableMorphs('owned_by');
+			$table->uuid('visibility_id');
+            $table->uuid('created_by_id')->nullable();
+            $table->string('created_by_type')->nullable();
+            $table->uuid('owned_by_id')->nullable();
+            $table->string('owned_by_type')->nullable();
 
   			$table->timestamps();
-            $table->unique(['name', 'owned_by_id', 'owned_by_type']);
-
             $table->softDeletes();
+
+            $table->foreign('visibility_id')->references('id')->on('visibilities');
+
+            $table->unique(['name', 'owned_by_id', 'owned_by_type']);
   		});
     }
 

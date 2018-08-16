@@ -14,8 +14,7 @@ class CreateEventsDetailsTable extends Migration
 	public function up()
 	{
 		Schema::create('events_details', function (Blueprint $table) {
-			$table->integer('event_id')->unsigned();
-			$table->foreign('event_id')->references('id')->on('events');
+			$table->uuid('event_id');
 			$table->string('key');
 			$table->string('value')->nullable();
 			$table->enum('type', [
@@ -23,6 +22,9 @@ class CreateEventsDetailsTable extends Migration
 			])->default('STRING');
 
 			$table->timestamps();
+			
+			$table->foreign('event_id')->references('id')->on('events');
+
 			$table->primary(['event_id', 'key']);
 		});
 	}

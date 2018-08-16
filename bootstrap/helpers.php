@@ -63,3 +63,25 @@ if (!function_exists('convertPipeToArray') && !function_exists('stringToArray'))
 		return $toArray;
     }
 }
+
+if (!function_exists('trimText')) {
+	/**
+	 * trims text to a space then adds ellipses if desired
+	 * @param string $input text to trim
+	 * @param int $length in characters to trim to
+	 * @param bool $ellipses if ellipses (...) are to be added
+	 * @return string
+	 */
+	function trimText($input, $length, $ellipses = '...') {
+	    if (strlen($input) <= $length)
+	        return $input;
+
+	    $last_space = strrpos(substr($input, 0, $length), ' ');
+	    $trimmed_text = substr($input, 0, $last_space);
+
+	    if ($ellipses)
+	        $trimmed_text .= $ellipses;
+
+	    return $trimmed_text;
+	}
+}

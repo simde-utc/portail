@@ -18,11 +18,24 @@ class UserController extends Controller
 
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchAnyClient(),
-			['only' => 'index', 'store']
+			\Scopes::matchOneOfDeepestChildren('client-get-users'),
+			['only' => 'index']
 		);
 		$this->middleware(
-			\Scopes::matchAnyUserOrClient()
+			\Scopes::matchOneOfDeepestChildren('client-create-users'),
+			['only' => 'store']
+		);
+		$this->middleware(
+			\Scopes::matchAnyUser(),
+			['only' => 'show']
+		);
+		$this->middleware(
+			\Scopes::matchOneOfDeepestChildren('user-set-info', 'client-edit-users'),
+			['only' => 'update']
+		);
+		$this->middleware(
+			\Scopes::matchOneOfDeepestChildren('client-manage-users'),
+			['only' => 'destroy']
 		);
 	}
 
@@ -32,7 +45,26 @@ class UserController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index(Request $request) {
-		return response()->json(User::all(), 200);
+		$choices = [];
+
+		if (\Scopes::hasOne($request, 'client-get-users-active'))
+			$choices[] = 'active';
+
+		if (\Scopes::hasOne($request, 'client-get-users-inactive'))
+			$choices[] = 'inactive';
+
+		$choices = $this->getChoices($request, $choices);
+
+		if (count($choices) === 2)
+			$users = new User;
+		else
+			$users = User::where('active', \Scopes::hasOne($request, 'client-get-users-active'));
+
+		$users = $users->getSelection()->map(function ($user) {
+			return $this->hideData();
+		});
+
+		return response()->json($users, 200);
 	}
 
 	/**
@@ -42,16 +74,28 @@ class UserController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request) {
+		$active = $request->input('is_active');
+
+		if ($active) {
+			if (!\Scopes::hasOne($request, 'client-get-users-'.($active ? 'active' : 'inactive')))
+				abort(403, 'Vous n\'avez pas le droit de créer ce type de compte');
+		}
+		else
+			$active = \Scopes::hasOne($request, 'client-get-users-active');
+
 		$user = User::create([
 			'email' => $request->input('email'),
 			'lastname' => strtoupper($request->input('lastname')),
 			'firstname' => $request->input('firstname'),
-			'is_active' => $request->input('is_active', true),
+			'is_active' => $active,
 		]);
 
 		// Envoyer un mail et vérifier en fonction de scopes
 
 		if ($request->filled('details')) {
+			if (!\Scopes::hasOne($request, 'client-create-info-details'))
+				abort(403, 'Vous ne pouvez pas créer de détails');
+
 			foreach ($request->input('details') as $key => $value) {
 				$user->details()->create([
 					'key' => $key,
@@ -61,6 +105,9 @@ class UserController extends Controller
 		}
 
 		if ($request->filled('preferences')) {
+			if (!\Scopes::hasOne($request, 'client-create-info-preferences'))
+				abort(403, 'Vous ne pouvez pas créer de préférences');
+
 			foreach ($request->input('preferences') as $key => $value) {
 				$user->preferences()->create([
 					'key' => $key,
@@ -75,10 +122,10 @@ class UserController extends Controller
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int $id
+	 * @param  string $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show(Request $request, int $user_id = null) {
+	public function show(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id, true);
 		$rightsOnUser = is_null($user_id) || (\Auth::id() && $user->id === \Auth::id());
 
@@ -163,10 +210,10 @@ class UserController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request $request
-	 * @param  int $id
+	 * @param  string $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, int $user_id = null) {
+	public function update(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 
 		$user->email = $request->input('email', $user->email);
@@ -181,10 +228,10 @@ class UserController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  int $id
+	 * @param  string $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($id) {
+	public function destroy(string $user_id) {
 		abort(403, "Wow l'ami, patience, c'est galère ça...");
 	}
 }

@@ -14,8 +14,7 @@ class CreateUsersDetailsTable extends Migration
 	public function up()
 	{
 		Schema::create('users_details', function (Blueprint $table) {
-			$table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+			$table->uuid('user_id');
 			$table->string('key');
 			$table->string('value')->nullable();
 			$table->enum('type', [
@@ -23,6 +22,9 @@ class CreateUsersDetailsTable extends Migration
 			])->default('STRING');
 
 			$table->timestamps();
+
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
 			$table->primary(['user_id', 'key']);
 		});
 	}

@@ -46,7 +46,7 @@ class GroupRequest extends FormRequest
                         ->nullable()
                         ->get(),
 	        'visibility_id' => Validation::make($this)
-                        ->type('integer')
+                        ->type('uuid')
                         ->exists('visibilities', 'id')
                         ->post('required')
                         ->get(),

@@ -5,15 +5,18 @@ namespace App\Models;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Model\HasMembers;
-use App\Interfaces\Controller\v1\CanHaveEvents;
-use App\Interfaces\Controller\v1\CanHaveCalendars;
-use App\Interfaces\Controller\v1\CanHaveContacts;
+use App\Interfaces\Model\CanHaveEvents;
+use App\Interfaces\Model\CanHaveCalendars;
+use App\Interfaces\Model\CanHaveContacts;
+use App\Interfaces\Model\CanHaveArticles;
 
-class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts
+class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles
 {
     use SoftDeletes, HasMembers;
 
     public static function boot() {
+        parent::boot();
+        
         static::created(function ($model) {
             $model->assignRoles('group admin', [
 				'user_id' => $model->user_id,
@@ -45,6 +48,15 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
         'icon_id'
     ];
 
+    protected $selection = [
+        'order' => 'latest',
+        'paginate' => 50,
+        'day' => null,
+        'week' => null,
+        'month' => null,
+        'year' => null,
+    ];
+
     public function owner() {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -63,12 +75,12 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     	return $this->morphMany(Contact::class, 'owned_by');
     }
 
-	public function isContactAccessibleBy(int $user_id): bool {
+	public function isContactAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
-	public function isContactManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('group contact', [
+	public function isContactManageableBy(string $user_id): bool {
+		return $this->hasOnePermission('group_contact', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -77,12 +89,12 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     	return $this->morphMany(Calendar::class, 'owned_by');
     }
 
-	public function isCalendarAccessibleBy(int $user_id): bool {
+	public function isCalendarAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
-	public function isCalendarManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('group calendar', [
+	public function isCalendarManageableBy(string $user_id): bool {
+		return $this->hasOnePermission('group_calendar', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -91,12 +103,26 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     	return $this->morphMany(Event::class, 'owned_by');
     }
 
-	public function isEventAccessibleBy(int $user_id): bool {
+	public function isEventAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
-	public function isEventManageableBy(int $user_id): bool {
-		return $this->hasOnePermission('group event', [
+	public function isEventManageableBy(string $user_id): bool {
+		return $this->hasOnePermission('group_event', [
+			'user_id' => $user_id,
+		]);
+	}
+
+    public function articles() {
+    	return $this->morphMany(Article::class, 'owned_by');
+    }
+
+	public function isArticleAccessibleBy(string $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isArticleManageableBy(string $user_id): bool {
+		return $this->hasOnePermission('group_article', [
 			'user_id' => $user_id,
 		]);
 	}

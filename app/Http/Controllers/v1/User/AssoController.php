@@ -10,7 +10,6 @@ use App\Models\Asso;
 use App\Models\Semester;
 use App\Models\Role;
 use App\Exceptions\PortailException;
-use App\Traits\Controller\v1\HasUsers;
 use App\Traits\Controller\v1\HasAssos;
 
 /**
@@ -20,7 +19,7 @@ use App\Traits\Controller\v1\HasAssos;
  */
 class AssoController extends Controller
 {
-	use HasUsers, HasAssos;
+	use HasAssos;
 
 	public function __construct() {
 		$this->middleware(
@@ -49,7 +48,7 @@ class AssoController extends Controller
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function index(AssoRequest $request, int $user_id = null): JsonResponse {
+	public function index(AssoRequest $request, string $user_id = null): JsonResponse {
 		$user = $this->getUser($request, $user_id);
 		$choices = $this->getChoices($request);
 		$semester = $this->getSemester($request, $choices);
@@ -83,7 +82,7 @@ class AssoController extends Controller
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function show(Request $request, $user_id, $id = null): JsonResponse {
+	public function show(Request $request, string $user_id, string $id = null): JsonResponse {
 		if (is_null($id))
 			list($user_id, $id) = [$id, $user_id];
 
@@ -101,7 +100,7 @@ class AssoController extends Controller
 	 * @param  int/string $id
 	 * @return JsonResponse
 	 */
-	public function update(AssoRequest $request, $id): JsonResponse {
+	public function update(AssoRequest $request, string $user_id, string $id = null): JsonResponse {
 		abort(405);
 	}
 
@@ -111,7 +110,7 @@ class AssoController extends Controller
 	 * @param  int/string $id
 	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, $id): JsonResponse {
+	public function destroy(Request $request, string $user_id, string $id = null): JsonResponse {
 		abort(405);
 	}
 }

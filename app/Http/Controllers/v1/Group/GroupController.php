@@ -44,13 +44,14 @@ class GroupController extends Controller
 	 */
 	public function index(Request $request): JsonResponse {
 		// On inclue les relations et on les formattent.
-		$groups = Group::with(['owner', 'visibility'])->get();
+		$groups = Group::getSelection();
 
-		if (\Auth::id()) {
-			$groups = $this->hide($groups, true, function ($group) {
-				return $group->hideData();
-			});
-		}
+		if (\Auth::id())
+			$groups = $this->hide($groups, true);
+
+		$groups = $groups->map(function ($group) {
+			return $group->hideData();
+		});
 
 		return response()->json($groups, 200);
 	}
@@ -95,9 +96,9 @@ class GroupController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, $id): JsonResponse {
+	public function show(Request $request, string $id): JsonResponse {
 		// On inclue les relations et on les formattent.
-		$group = Group::with(['owner', 'visibility'])->find($id);
+		$group = Group::find($id);
 
 		if (\Auth::id()) {
 			$group = $this->hide($group, false, function ($group) use ($request) {
@@ -118,7 +119,7 @@ class GroupController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function update(GroupRequest $request, $id): JsonResponse {
+	public function update(GroupRequest $request, string $id): JsonResponse {
 		$group = Group::find($id);
 
 		if (!$group)
@@ -162,7 +163,7 @@ class GroupController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy($id): JsonResponse {
+	public function destroy(string $id): JsonResponse {
 		$group = Group::find($id);
 
 		if (!$group || !$group->delete())

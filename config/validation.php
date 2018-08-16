@@ -5,7 +5,7 @@
 |	Taille des validations
 |--------------------------------------------------------------------------
 | Utile pour les Requests et les Migrations
-| 
+|
 | helper pour les requests :
 |		validation_between('login') 	=> donne between:1,15
 | helper pour les migrations :
@@ -17,6 +17,11 @@ return [
 	'login' => [
 		'min' => 1,
 		'max' => 15
+	],
+
+	'type' => [
+		'min' => 1,
+		'max' => 31,
 	],
 
 	'email' => [
@@ -66,7 +71,7 @@ return [
 		'max' => 4095
 	],
 
-	// 
+	//
 
 
 ];

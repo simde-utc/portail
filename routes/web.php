@@ -23,6 +23,4 @@ Route::get('register/{provider?}', 'Auth\RegisterController@show')->name('regist
 Route::match(['get', 'post'], 'register/{provider?}/process', 'Auth\RegisterController@store')->name('register.process');
 
 // React route
-Route::any('{whatever}', function () {
-    return view('react');
-})->where('whatever', '.*')->name('home');
+Route::any('{whatever}', 'RenderReact')->where('whatever', '.*')->name('home');

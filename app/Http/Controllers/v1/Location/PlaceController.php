@@ -64,10 +64,10 @@ class PlaceController extends Controller
 	/**
 	 * Show Place
 	 *
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, int $id): JsonResponse {
+	public function show(Request $request, string $id): JsonResponse {
         $place = $this->getPlace($request, $id);
 
 		return response()->json($place, 200);
@@ -77,10 +77,10 @@ class PlaceController extends Controller
 	 * Update Place
 	 *
 	 * @param  \Illuminate\Http\Request $request
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
-	public function update(Request $request, int $id): JsonResponse {
+	public function update(Request $request, string $id): JsonResponse {
         $place = $this->getPlace($request, $id);
 
 		if ($place->update($request->input()))
@@ -92,10 +92,10 @@ class PlaceController extends Controller
 	/**
 	 * Delete Place
 	 *
-	 * @param  int $id
+	 * @param  string $id
 	 * @return JsonResponse
 	 */
-	public function destroy(int $id): JsonResponse {
+	public function destroy(string $id): JsonResponse {
         $place = $this->getPlace($request, $id);
 
 		if ($place->softDelete())

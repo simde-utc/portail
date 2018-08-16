@@ -46,16 +46,16 @@ return [
 						'followed' => [
 							'description' => 'Gérer les évènements que chaque utilisateur suit',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Gérer les évènements utilisateurs que chaque utilisateur suit',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Gérer les évènements associatifs que chaque utilisateur suit',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Gérer les évènements de groupe que chaque utilisateur suit',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Gérer les évènements clients que chaque utilisateur suit',
 								],
 							]
@@ -144,16 +144,16 @@ return [
 						'followed' => [
 							'description' => 'Récupérer les évènements que chaque utilisateur suit',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Récupérer les évènements utilisateurs que chaque utilisateur suit',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Récupérer les évènements associatifs que chaque utilisateur suit',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Récupérer les évènements de groupe que chaque utilisateur suit',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Récupérer les évènements clients que chaque utilisateur suit',
 								],
 							]
@@ -242,16 +242,16 @@ return [
 						'followed' => [
 							'description' => 'Modifier et créer les évènements que chaque utilisateur suit',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Modifier et créer les évènements utilisateurs que chaque utilisateur suit',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Modifier et créer les évènements associatifs que chaque utilisateur suit',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Modifier et créer les évènements de groupe que chaque utilisateur suit',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Modifier et créer les évènements clients que chaque utilisateur suit',
 								],
 							]
@@ -339,16 +339,16 @@ return [
 					'followed' => [
 						'description' => 'Faire suivre des évènements à chaque utilisateur',
 						'scopes' => [
-							'users' => [
+							'user' => [
 								'description' => 'Faire suivre des évènements utilisateurs à chaque utilisateur',
 							],
-							'assos' => [
+							'asso' => [
 								'description' => 'Faire suivre des évènements associatifs à chaque utilisateur',
 							],
-							'groups' => [
+							'group' => [
 								'description' => 'Faire suivre des évènements de groupe à chaque utilisateur',
 							],
-							'clients' => [
+							'client' => [
 								'description' => 'Faire suivre des évènements de client à chaque utilisateur',
 							],
 						]
