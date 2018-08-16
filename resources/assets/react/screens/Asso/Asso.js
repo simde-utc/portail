@@ -55,16 +55,14 @@ class ScreensAsso extends Component {
                         <NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/trombinoscope`}>TROMBINOSCOPE</NavLink>
                     </li>
                 </ul>
-                <div className="container">
-                    <Switch>
-                        <Route path={`${this.props.match.url}`} exact render={ () => { 
-                                return <ScreensAssoHome asso={ this.props.asso } />
-                            }} />
-                        <Route path={`${this.props.match.url}/articles`} render={
-                            () => <div></div>
-                        } />
-                    </Switch>
-                </div>
+                <Switch>
+                    <Route path={`${this.props.match.url}`} exact render={ () => { 
+                            return <ScreensAssoHome asso={ this.props.asso } />
+                        }} />
+                    <Route path={`${this.props.match.url}/articles`} render={
+                        () => <div></div>
+                    } />
+                </Switch>
             </div>
         );
     }

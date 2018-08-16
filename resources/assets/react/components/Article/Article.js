@@ -37,7 +37,7 @@ class Article extends Component {
 
         return (
             <div className="Article row m-0 my-3 my-md-5">
-                <div className="col-md-3 mb-3 mb-md-0">
+                <div className="col-md-2 mb-3 mb-md-0">
                     <div className="ml-0 ml-md-4 ml-xl-5 media mt-1">
                         <img className="align-self-start img-fluid rounded-circle mr-2" src="http://via.placeholder.com/50x50" />
                         <div className="media-body">
@@ -46,7 +46,7 @@ class Article extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-7 body mx-auto">
+                <div className="col-md-8 body mx-auto">
                     <h3>{ this.props.article.title }</h3>
                     { articleBody }
                 </div>
