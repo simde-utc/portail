@@ -8,6 +8,7 @@ use App\Models\AuthCas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Session;
+use App\Exceptions\PortailException;
 
 class Cas extends BaseAuth
 {
@@ -109,6 +110,58 @@ class Cas extends BaseAuth
 	 */
 	public function logout(Request $request) {
 		return redirect(config('portail.cas.url').'logout');
+	}
+
+	public function addAuth($user_id, array $info) {
+		if (User::find($user_id)->cas()->exists())
+			throw new PortailException('L\'utlisateur possède déjà une connexion CAS');
+
+		$curl = \Curl::to(config('portail.cas.url').'v1/tickets')
+			->withData([
+				'username' => $info['login'],
+				'password' => $info['password']
+			])
+	        ->withResponseHeaders()
+			->returnResponseObject();
+
+		if (strpos($_SERVER['HTTP_HOST'], 'utc.fr'))
+			$curl = $curl->withProxy('proxyweb.utc.fr', 3128);
+
+		$response = $curl->post();
+
+		if ($response->status === 201) {
+			$curl = \Curl::to($response->headers['Location'])
+				->withData([
+					'service' => 'https://assos.utc.fr/',
+				])
+		        ->withResponseHeaders()
+				->returnResponseObject();
+
+			$response = $curl->post();
+
+			$curl = \Curl::to(config('portail.cas.url').'serviceValidate')
+				->withData([
+					'ticket' => $response->content,
+					'service' => 'https://assos.utc.fr/',
+				])
+		        ->withResponseHeaders()
+				->returnResponseObject();
+
+			$response = $curl->get();
+			$parsed = new xmlToArrayParser($response->content);
+
+			try {
+				return AuthCas::create([
+					'user_id' => $user_id,
+					'email' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
+					'login' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
+				]);
+			} catch (\Exception $e) {
+				throw new PortailException('Ce compte CAS existe déjà et ne peut être ajouté une nouvelle fois', 409);
+			}
+		}
+
+		return false;
 	}
 }
 
