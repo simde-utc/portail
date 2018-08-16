@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { assosActions } from '../redux/actions';
 import loggedUserActions from '../redux/custom/loggedUser/actions';
+import { NavLink, Route, Switch } from 'react-router-dom';
 
 /* TODO: Make it stateless & unconnected */
 @connect((store, props) => ({
@@ -20,9 +21,8 @@ class ScreensAssoDetail extends Component {
 	render() {
 		console.log(this.props.user);
 
-		var createArticleButton = <span></span>;
-		if (this.props.user.assos && this.props.user.assos.find( assos => assos.id === this.props.asso.id ))
-			createArticleButton = <Link to={`${match.url}/articles/write`}>Écrire un article</Link>;
+		// var createArticleButton = <span></span>;
+		// if (this.props.user.assos && this.props.user.assos.find( assos => assos.id === this.props.asso.id ))
 
 		if (this.props.fetching || !this.props.fetched)
 			return (<span className="loader huge active"></span>);
@@ -49,19 +49,19 @@ class ScreensAssoDetail extends Component {
 
 				<ul className="nav nav-tabs">
 					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" exact to={`${match.url}`}>Informations</NavLink>
+						<NavLink className="nav-link" activeClassName="active" exact to={`${this.props.match.url}`}>Informations</NavLink>
 					</li>
 					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/parcours_associatif`}>Parcours Associatif</NavLink>
+						<NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/parcours_associatif`}>Parcours Associatif</NavLink>
 					</li>
 				</ul>
 				<div className="container">
 					<Switch>
-						<Route path={`${match.url}`} exact render={
-							() => <UserInfo info={ user.info } details={ user.details } missing={this.load.bind(this)} />
+						<Route path={`${this.props.match.url}`} exact render={
+							() => <div></div>
 						} />
-						<Route path={`${match.url}/parcours_associatif`} render={
-							() => <AssociativeCarreer />
+						<Route path={`${this.props.match.url}/parcours_associatif`} render={
+							() => <div></div>
 						} />
 					</Switch>
 				</div>
