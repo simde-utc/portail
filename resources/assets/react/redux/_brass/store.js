@@ -18,6 +18,4 @@ const middlewares = applyMiddleware(
 	createLogger({ collapse: true })
 );
 
-
-
 export default createStore(reducers, middlewares);
