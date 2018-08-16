@@ -36,6 +36,9 @@ return [
 						'owned' => [
 							'description' => 'Gérer les évènements que l\'utilisateur possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Gérer les évènements que l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Gérer les évènements que l\'utilisateur possède et que mon client crée'
 								],
@@ -47,16 +50,16 @@ return [
 						'followed' => [
 							'description' => 'Gérer les évènements que l\'utilisateur suit',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Gérer les évènements utilisateurs que l\'utilisateur suit',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Gérer les évènements associatifs que l\'utilisateur suit',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Gérer les évènements de groupe que l\'utilisateur suit',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Gérer les évènements clients que l\'utilisateur suit',
 								],
 							]
@@ -72,6 +75,9 @@ return [
 						'owned' => [
 							'description' => 'Gérer les évènements que chaque association de l\'utilisateur possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Gérer les évènements que chaque association de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Gérer les évènements que chaque association de l\'utilisateur possède et que mon client crée'
 								],
@@ -91,11 +97,14 @@ return [
 						'owned' => [
 							'description' => 'Gérer les évènements que chaque groupe possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Gérer les évènements que chaque groupe de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Gérer les évènements que chaque groupe possède et que mon client crée'
 								],
 								'asso' => [
-									'description' => 'Gérer les évènements que chaque association de l\'utilisateur possède et que mon association crée'
+									'description' => 'Gérer les évènements que chaque groupe de l\'utilisateur possède et que mon association crée'
 								],
 							]
 						],
@@ -110,6 +119,9 @@ return [
 						'owned' => [
 							'description' => 'Gérer les évènements que chaque client possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Gérer les évènements que chaque client de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Gérer les évènements que chaque client possède et que mon client crée'
 								],
@@ -134,6 +146,9 @@ return [
 						'owned' => [
 							'description' => 'Récupérer les évènements que l\'utilisateur possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Récupérer les évènements que l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Récupérer les évènements que l\'utilisateur possède et que mon client crée'
 								],
@@ -145,16 +160,16 @@ return [
 						'followed' => [
 							'description' => 'Récupérer les évènements que l\'utilisateur suit',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Récupérer les évènements utilisateurs que l\'utilisateur suit',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Récupérer les évènements associatifs que l\'utilisateur suit',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Récupérer les évènements de groupe que l\'utilisateur suit',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Récupérer les évènements clients que l\'utilisateur suit',
 								],
 							]
@@ -170,6 +185,9 @@ return [
 						'owned' => [
 							'description' => 'Récupérer les évènements que chaque association possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Récupérer les évènements que chaque association de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Récupérer les évènements que chaque association possède et que mon client crée'
 								],
@@ -189,6 +207,9 @@ return [
 						'owned' => [
 							'description' => 'Récupérer les évènements que chaque groupe possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Récupérer les évènements que chaque groupe de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Récupérer les évènements que chaque groupe possède et que mon client crée'
 								],
@@ -208,6 +229,9 @@ return [
 						'owned' => [
 							'description' => 'Récupérer les évènements que chaque client possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Récupérer les évènements que chaque client de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Récupérer les évènements que chaque client possède et que mon client crée'
 								],
@@ -232,6 +256,9 @@ return [
 						'owned' => [
 							'description' => 'Modifier et créer les évènements que l\'utilisateur possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Modifier et créer les évènements que l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Modifier et créer les évènements que l\'utilisateur possède et que mon client crée'
 								],
@@ -243,16 +270,16 @@ return [
 						'followed' => [
 							'description' => 'Modifier et créer les évènements que l\'utilisateur suit',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Modifier et créer les évènements utilisateurs que l\'utilisateur suit',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Modifier et créer les évènements associatifs que l\'utilisateur suit',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Modifier et créer les évènements de groupe que l\'utilisateur suit',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Modifier et créer les évènements clients que l\'utilisateur suit',
 								],
 							]
@@ -268,6 +295,9 @@ return [
 						'owned' => [
 							'description' => 'Modifier et créer les évènements que chaque association possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Modifier et créer les évènements que chaque association de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Modifier et créer les évènements que chaque association possède et que mon client crée'
 								],
@@ -287,6 +317,9 @@ return [
 						'owned' => [
 							'description' => 'Modifier et créer les évènements que chaque groupe possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Modifier et créer les évènements que chaque groupe de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Modifier et créer les évènements que chaque groupe possède et que mon client crée'
 								],
@@ -306,6 +339,9 @@ return [
 						'owned' => [
 							'description' => 'Modifier et créer les évènements que chaque client possède',
 							'scopes' => [
+								'user' => [
+									'description' => 'Modifier et créer les évènements que chaque client de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Modifier et créer les évènements que chaque client possède et que mon client crée'
 								],
@@ -330,6 +366,9 @@ return [
 						'owned' => [
 							'description' => 'Créer des évènements pour l\'utilisateur',
 							'scopes' => [
+								'user' => [
+									'description' => 'Créer les évènements que l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Créer des évènements pour l\'utilisateur au nom de mon application'
 								],
@@ -341,16 +380,16 @@ return [
 						'followed' => [
 							'description' => 'Faire suivre des évènements à l\'utilisateur',
 							'scopes' => [
-								'users' => [
+								'user' => [
 									'description' => 'Faire suivre des évènements utilisateurs à l\'utilisateur',
 								],
-								'assos' => [
+								'asso' => [
 									'description' => 'Faire suivre des évènements associatifs à l\'utilisateur',
 								],
-								'groups' => [
+								'group' => [
 									'description' => 'Faire suivre des évènements de groupe à l\'utilisateur',
 								],
-								'clients' => [
+								'client' => [
 									'description' => 'Faire suivre des évènements de client à l\'utilisateur',
 								],
 							]
@@ -366,6 +405,9 @@ return [
 						'owned' => [
 							'description' => 'Créer des évènements pour une association de l\'utilisateur',
 							'scopes' => [
+								'user' => [
+									'description' => 'Créer les évènements que chaque association de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Créer des évènements pour des associations de l\'utilisateur au nom de mon application'
 								],
@@ -385,6 +427,9 @@ return [
 						'owned' => [
 							'description' => 'Créer des évènements pour un groupe de l\'utilisateur',
 							'scopes' => [
+								'user' => [
+									'description' => 'Créer les évènements que chaque groupe de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Créer des évènements pour des groupes de l\'utilisateur au nom de mon application'
 								],
@@ -404,6 +449,9 @@ return [
 						'owned' => [
 							'description' => 'Créer des évènements pour un client de l\'utilisateur',
 							'scopes' => [
+								'user' => [
+									'description' => 'Créer les évènements que chaque application de l\'utilisateur possède et qu\'il crée'
+								],
 								'client' => [
 									'description' => 'Créer des évènements pour des applications de l\'utilisateur au nom de mon application'
 								],

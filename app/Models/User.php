@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Cog\Contracts\Ownership\CanBeOwner;
-use App\Interfaces\Controller\v1\CanHaveCalendars;
-use App\Interfaces\Controller\v1\CanHaveContacts;
-use App\Interfaces\Controller\v1\CanHaveEvents;
+use App\Interfaces\Model\CanHaveCalendars;
+use App\Interfaces\Model\CanHaveContacts;
+use App\Interfaces\Model\CanHaveEvents;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Model\HasRoles;
 use App\Traits\Model\HasHiddenData;
+use App\Traits\Model\HasUuid;
+use NastuzziSamy\Laravel\Traits\HasSelection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
 use App\Models\UserPreference;
@@ -20,9 +22,11 @@ use App\Exceptions\PortailException;
 
 class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
-	use HasHiddenData, HasApiTokens, Notifiable, HasRoles;
+	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid;
 
     public static function boot() {
+		parent::boot();
+
         static::created(function ($model) {
 			// Ajout dans les préférences
 			UserPreference::create([
@@ -40,6 +44,8 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 			]);
         });
     }
+
+	public $incrementing = false;
 
 	protected $fillable = [
 		'firstname', 'lastname', 'email', 'is_active', 'last_login_at',
@@ -61,8 +67,16 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		'admin', 'contributorBde', 'cas', 'password', 'active',
 	];
 
+	protected $selection = [
+		'order' => 'oldest',
+		'paginate' => null,
+	];
+
 	public function getNameAttribute() {
-		return $this->firstname.' '.strtoupper($this->lastname);
+		if ($this->is_active)
+			return $this->firstname.' '.strtoupper($this->lastname);
+		else
+			return 'Compte invité';
 	}
 
 	public static function findByEmail($email) {
@@ -115,6 +129,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		return $this->password()->exists();
     }
 
+    public function isApp() {
+		return $this->apps()->exists();
+    }
+
     public function isContributorBde() {
 		try {
 	        return $this->details()->valueOf('isContributorBde');
@@ -128,10 +146,17 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     }
 
 	public function cas() {
-		return $this->hasOne('App\Models\AuthCas');
+		return $this->hasOne(AuthCas::class);
 	}
 	public function password() {
-		return $this->hasOne('App\Models\AuthPassword');
+		return $this->hasOne(AuthPassword::class);
+	}
+	public function app() {
+		return $this->hasMany(AuthApp::class);
+	}
+
+	public function sessions() {
+		return $this->hasMany(Session::class);
 	}
 
 	public function details() {
@@ -190,6 +215,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     	return $this->belongsToMany(Calendar::class, 'calendars_followers')->withTimestamps();
     }
 
+    public function comments() {
+		return $this->hasMany('App\Models\Comment');
+	}
+
 	/**
 	 * Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification
 	 *
@@ -238,35 +267,35 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		return $this->morphMany(Contact::class, 'owned_by');
 	}
 
-	public function isContactAccessibleBy(int $user_id): bool {
-		return $this->id == $user_id;
+	public function isContactAccessibleBy(string $user_id): bool {
+		return $this->id === $user_id;
 	}
 
-	public function isContactManageableBy(int $user_id): bool {
-		return $this->id == $user_id;
+	public function isContactManageableBy(string $user_id): bool {
+		return $this->id === $user_id;
 	}
 
     public function calendars() {
     	return $this->morphMany(Calendar::class, 'owned_by');
     }
 
-	public function isCalendarAccessibleBy(int $user_id): bool {
-		return $this->id == $user_id;
+	public function isCalendarAccessibleBy(string $user_id): bool {
+		return $this->id === $user_id;
 	}
 
-	public function isCalendarManageableBy(int $user_id): bool {
-		return $this->id == $user_id;
+	public function isCalendarManageableBy(string $user_id): bool {
+		return $this->id === $user_id;
 	}
 
     public function events() {
     	return $this->morphMany(Event::class, 'owned_by');
     }
 
-	public function isEventAccessibleBy(int $user_id): bool {
-		return $this->id == $user_id;
+	public function isEventAccessibleBy(string $user_id): bool {
+		return $this->id === $user_id;
 	}
 
-	public function isEventManageableBy(int $user_id): bool {
-		return $this->id == $user_id;
+	public function isEventManageableBy(string $user_id): bool {
+		return $this->id === $user_id;
 	}
 }

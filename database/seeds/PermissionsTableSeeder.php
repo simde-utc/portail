@@ -14,25 +14,25 @@ class PermissionsTableSeeder extends Seeder
     {
 		$permissions = [
 			[
-				'type' => 'treasury',
+				'type' => 'asso_treasury',
 				'name' => 'Trésorerie',
 				'description' => 'Gestion de la trésorerie de l\'association',
                 'only_for' => 'assos',
 			],
 			[
-				'type' => 'ticketing',
+				'type' => 'asso_ticketing',
 				'name' => 'Billetterie',
 				'description' => 'Gestion de la billetterie de l\'association',
                 'only_for' => 'assos',
 			],
 			[
-				'type' => 'calendar',
+				'type' => 'asso_calendar',
 				'name' => 'Calendrier',
 				'description' => 'Gestion des calendriers de l\'association',
                 'only_for' => 'assos',
 			],
 			[
-				'type' => 'event',
+				'type' => 'asso_event',
 				'name' => 'Evènement',
 				'description' => 'Gestion des évènements de l\'association',
                 'only_for' => 'assos',
@@ -44,37 +44,37 @@ class PermissionsTableSeeder extends Seeder
                 'only_for' => 'assos',
 			],
 			[
-				'type' => 'contact',
+				'type' => 'asso_contact',
 				'name' => 'Contact',
 				'description' => 'Gestion des moyens de contact de l\'association',
                 'only_for' => 'assos',
 			],
 			[
-				'type' => 'article',
+				'type' => 'asso_article',
 				'name' => 'Article',
 				'description' => 'Gestion des articles de l\'association',
                 'only_for' => 'assos',
 			],
 			[
-				'type' => 'group member',
+				'type' => 'group_member',
 				'name' => 'Membre',
 				'description' => 'Gestion des membres du groupe',
                 'only_for' => 'groups',
 			],
 			[
-				'type' => 'group calendar',
+				'type' => 'group_calendar',
 				'name' => 'Calendrier',
 				'description' => 'Gestion des calendriers du groupe',
                 'only_for' => 'groups',
 			],
 			[
-				'type' => 'group event',
+				'type' => 'group_event',
 				'name' => 'Evènement',
 				'description' => 'Gestion des évènements du groupe',
                 'only_for' => 'groups',
 			],
 			[
-				'type' => 'group contact',
+				'type' => 'group_contact',
 				'name' => 'Contact',
 				'description' => 'Gestion des contacts du groupe',
                 'only_for' => 'groups',

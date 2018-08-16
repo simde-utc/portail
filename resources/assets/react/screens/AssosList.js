@@ -9,7 +9,7 @@ import AssoChildrenList from '../components/AssoChildrenList';
 	fetching: store.assos.fetching,
 	fetched: store.assos.fetched
 }))
-class AssosListScreen extends Component {
+class ScreensAssosList extends Component {
 
 	componentWillMount() {
 		this.props.dispatch(assosActions.getAll('?all'))
@@ -59,4 +59,4 @@ class AssosListScreen extends Component {
 	}
 }
 
-export default AssosListScreen;
+export default ScreensAssosList;

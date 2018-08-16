@@ -24,8 +24,8 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier personnel',
 				'color'			=> '#00FF00',
 				'visibility'	=> 'private',
-				'created_by'	=> User::find(1),
-				'owner'			=> User::find(1),
+				'created_by'	=> User::where('firstname', 'Samy')->first(),
+				'owner'			=> User::where('firstname', 'Samy')->first(),
 				'events'		=> [
 					'Petit pic des familles',
 					'Petite chose perso'
@@ -36,8 +36,8 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'private',
-				'created_by'	=> User::find(1),
-				'owner'			=> User::find(1),
+				'created_by'	=> User::where('firstname', 'Samy')->first(),
+				'owner'			=> User::where('firstname', 'Samy')->first(),
 				'events'		=> [
 					'Première réunion - Portail',
 					'Seconde réunion - Portail',
@@ -48,8 +48,8 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'private',
-				'created_by'	=> User::find(2),
-				'owner'			=> User::find(2),
+				'created_by'	=> User::where('firstname', 'Rémy')->first(),
+				'owner'			=> User::where('firstname', 'Rémy')->first(),
 				'events'		=> [
 					'Seconde réunion - Portail',
 				],
@@ -59,8 +59,8 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'private',
-				'created_by'	=> User::find(3),
-				'owner'			=> User::find(3),
+				'created_by'	=> User::where('firstname', 'Natan')->first(),
+				'owner'			=> User::where('firstname', 'Natan')->first(),
 				'events'		=> [
 					'Première réunion - Portail',
 					'Seconde réunion - Portail',
@@ -71,8 +71,19 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier associatif',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'private',
-				'created_by'	=> User::find(4),
-				'owner'			=> User::find(4),
+				'created_by'	=> User::where('firstname', 'Alexandre')->first(),
+				'owner'			=> User::where('firstname', 'Alexandre')->first(),
+				'events'		=> [
+					'Seconde réunion - Portail',
+				],
+			],
+			[
+				'name'     		=> 'Assos',
+				'description'	=> 'Calendrier associatif',
+				'color'			=> '#0000FF',
+				'visibility'	=> 'private',
+				'created_by'	=> User::where('firstname', 'Romain')->first(),
+				'owner'			=> User::where('firstname', 'Romain')->first(),
 				'events'		=> [
 					'Seconde réunion - Portail',
 				],
@@ -82,8 +93,8 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier de tous mes cours',
 				'color'			=> '#FFC0CB',
 				'visibility'	=> 'cas',
-				'created_by'	=> Asso::find(6),
-				'owner'			=> User::find(1),
+				'created_by'	=> Asso::where('login', 'simde')->first(),
+				'owner'			=> User::where('firstname', 'Samy')->first(),
 				'events'		=> [
 					'LA13'
 				],
@@ -93,8 +104,8 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier de tous mes cours',
 				'color'			=> '#FFC0CB',
 				'visibility'	=> 'cas',
-				'created_by'	=> Asso::find(6),
-				'owner'			=> User::find(2),
+				'created_by'	=> Asso::where('login', 'simde')->first(),
+				'owner'			=> User::where('firstname', 'Rémy')->first(),
 				'events'		=> [
 					'MT90/91'
 				],
@@ -104,8 +115,8 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier de tous mes cours',
 				'color'			=> '#FFC0CB',
 				'visibility'	=> 'cas',
-				'created_by'	=> Asso::find(6),
-				'owner'			=> User::find(3),
+				'created_by'	=> Asso::where('login', 'simde')->first(),
+				'owner'			=> User::where('firstname', 'Natan')->first(),
 				'events'		=> [
 					'MT90/91'
 				],
@@ -115,14 +126,14 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier des évènements du BDE-UTC',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'public',
-				'created_by'	=> Asso::find(1),
-				'owner'			=> Asso::find(1),
+				'created_by'	=> Asso::where('login', 'bde')->first(),
+				'owner'			=> Asso::where('login', 'bde')->first(),
 				'events'		=> [
 					'JDA'
 				],
 				'followers'		=> [
-					User::find(1),
-					User::find(3),
+					User::where('firstname', 'Samy')->first(),
+					User::where('firstname', 'Natan')->first(),
 				],
 			],
 			[
@@ -130,10 +141,10 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier des réunions du BDE-UTC',
 				'color'			=> '#FF0000',
 				'visibility'	=> 'private', // Visible que par les membres
-				'created_by'	=> Asso::find(1),
-				'owner'			=> Asso::find(1),
+				'created_by'	=> Asso::where('login', 'bde')->first(),
+				'owner'			=> Asso::where('login', 'bde')->first(),
 				'followers'		=> [
-					User::find(1)
+					User::where('firstname', 'Samy')->first()
 				],
 			],
 			[
@@ -141,11 +152,11 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier des évènements du SiMDE',
 				'color'			=> '#0000FF',
 				'visibility'	=> 'public',
-				'created_by'	=> Asso::find(6),
-				'owner'			=> Asso::find(6),
+				'created_by'	=> Asso::where('login', 'simde')->first(),
+				'owner'			=> Asso::where('login', 'simde')->first(),
 				'followers'		=> [
-					User::find(1),
-					User::find(2),
+					User::where('firstname', 'Samy')->first(),
+					User::where('firstname', 'Rémy')->first(),
 				],
 			],
 			[
@@ -153,17 +164,17 @@ class CalendarsTableSeeder extends Seeder
 				'description'	=> 'Calendrier des réunions du SiMDE',
 				'color'			=> '#FF0000',
 				'visibility'	=> 'private', // Visible que par les membres
-				'created_by'	=> Asso::find(6),
-				'owner'			=> Asso::find(6),
+				'created_by'	=> Asso::where('login', 'simde')->first(),
+				'owner'			=> Asso::where('login', 'simde')->first(),
 				'events'		=> [
 					'Première réunion - Portail',
 					'Seconde réunion - Portail',
 				],
 				'followers'		=> [
-					User::find(1),
-					User::find(2),
-					User::find(3),
-					User::find(4),
+					User::where('firstname', 'Samy')->first(),
+					User::where('firstname', 'Rémy')->first(),
+					User::where('firstname', 'Natan')->first(),
+					User::where('firstname', 'Romain')->first(),
 				],
 			],
 		];

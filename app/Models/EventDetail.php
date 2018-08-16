@@ -9,8 +9,6 @@ class EventDetail extends Model // TODO $must ?
 {
 	use HasKeyValue;
 
-	public $incrementing = false; // L'id n'est pas autoincrementé
-
 	protected $table = 'events_details';
 
 	protected $primaryKey = [
@@ -20,6 +18,10 @@ class EventDetail extends Model // TODO $must ?
 	protected $fillable = [
 		'event_id', 'key', 'value', 'type',
 	];
+
+	public function getKeyName() {
+		return 'event_id';
+	}
 
 	public function event() {
 		$this->belongsTo(Event::class);

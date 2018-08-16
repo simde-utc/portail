@@ -27,8 +27,10 @@ class UserHasPermission
 				if (\Auth::user()->hasOnePermission($permission) !== $wrongIfEqual)
 					return $next($request);
 			}
+
+			throw new AuthorizationException('L\'utilisateur ne possède aucune permission: '.implode(', ', $args));
 		}
 
-		throw new AuthorizationException('L\'utilisateur ne possède aucune permission: '.implode(', ', $args));
+		return $next($request);
  	}
 }

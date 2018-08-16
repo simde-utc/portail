@@ -3,21 +3,26 @@
 namespace App\Models;
 
 use Laravel\Passport\Client as PassportClient;
-use App\Interfaces\Controller\v1\CanHaveCalendars;
-use App\Interfaces\Controller\v1\CanHaveEvents;
+use App\Interfaces\Model\CanHaveCalendars;
+use App\Interfaces\Model\CanHaveEvents;
+use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Model\HasHiddenData;
+use App\Traits\Model\HasUuid;
+use NastuzziSamy\Laravel\Traits\HasSelection;
 
-class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
+class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, CanHaveArticles
 {
-    use HasHiddenData;
+    use HasHiddenData, HasSelection, HasUuid;
+
+    public $incrementing = false;
 
     protected $fillable = [
-        'user_id', 'name', 'secret', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'asso_id', 'scopes'
+        'user_id', 'asso_id', 'name', 'secret', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'scopes'
     ];
 
-    public function hideData(array $params = []): Model {
-        return $this->makeHidden(['user_id', 'redirect', 'personal_access_client', 'password_client', 'revoked', 'asso_id', 'created_at', 'updated_at', 'scopes']);
-    }
+    protected $selection = [
+        'paginate' => null,
+    ];
 
     public function asso() {
         return $this->belongsTo(Asso::class);
@@ -31,19 +36,31 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents
     	return $this->morphMany(Event::class, 'owned_by');
     }
 
-	public function isCalendarAccessibleBy(int $user_id): bool {
+    public function articles() {
+    	return $this->morphMany(Article::class, 'owned_by');
+    }
+
+	public function isCalendarAccessibleBy(string $user_id): bool {
 		return $this->asso()->currentMembers->wherePivot('user_id', $user_id)->exists();
 	}
 
-	public function isCalendarManageableBy(int $user_id): bool {
+	public function isCalendarManageableBy(string $user_id): bool {
 		return $this->asso()->hasOneRole('developer', ['user_id' => $user_id]);
 	}
 
-	public function isEventAccessibleBy(int $user_id): bool {
+	public function isEventAccessibleBy(string $user_id): bool {
 		return $this->asso()->currentMembers->wherePivot('user_id', $user_id)->exists();
 	}
 
-	public function isEventManageableBy(int $user_id): bool {
+	public function isEventManageableBy(string $user_id): bool {
+		return $this->asso()->hasOneRole('developer', ['user_id' => $user_id]);
+	}
+
+	public function isArticleAccessibleBy(string $user_id): bool {
+		return $this->asso()->currentMembers->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isArticleManageableBy(string $user_id): bool {
 		return $this->asso()->hasOneRole('developer', ['user_id' => $user_id]);
 	}
 }

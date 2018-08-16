@@ -77,11 +77,11 @@ class ClientController extends Controller
 	 * @param int $userId
 	 * @return JsonResponse
 	 */
-	public function getUserClient(Request $request, int $userId): JsonResponse {
+	public function getUserClient(Request $request, string $user_id): JsonResponse {
 		$bearerToken = $request->bearerToken();
-		$tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
-		$clientId = Token::find($tokenId)->client_id;
-		$tokens = Token::where('client_id', $clientId)->where('user_id', $userId);
+		$token_id = (new Parser)->parse($bearerToken)->getHeader('jti');
+		$client_id = Token::find($tokenId)->client_id;
+		$tokens = Token::where('client_id', $client_id)->where('user_id', $user_id);
 
 		if ($request->input('revoked'))
 			$tokens->where('revoked', $request->input('revoked') == 1 ? 1 : 0);

@@ -55,20 +55,9 @@ class AssoController extends Controller
 	 * @throws PortailException
 	 */
 	public function index(AssoRequest $request): JsonResponse {
-		if ($request->filled('stage') || $request->filled('fromStage') || $request->filled('toStage') || $request->has('allStages')) {
-			$toHide = function ($assos) {
-				return $assos->map(function ($asso) {
-					return $asso->hideData()->makeVisible('children');
-				});
-			};
-
-			$assos = $request->filled('stage') ? Asso::getStage($request->stage, [], [], $toHide) : Asso::getStages($request->fromStage, $request->toStage, [], [], $toHide);
-		}
-		else {
-			$assos = Asso::get()->map(function ($asso) {
-				return $asso->hideData();
-			});
-		}
+		$assos = Asso::getSelection()->map(function ($asso) {
+			return $asso->hideData();
+		});
 
 		return response()->json($assos, 200);
 	}
@@ -109,7 +98,7 @@ class AssoController extends Controller
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function show(Request $request, $id): JsonResponse {
+	public function show(Request $request, string $id): JsonResponse {
 		$asso = $this->getAsso($request, $id);
 
 		return response()->json($asso->hideSubData(), 200);
@@ -123,7 +112,7 @@ class AssoController extends Controller
 	 * @param  int/string $id
 	 * @return JsonResponse
 	 */
-	public function update(AssoRequest $request, $id): JsonResponse {
+	public function update(AssoRequest $request, string $id): JsonResponse {
 		$asso = $this->getAsso($request, $id);
 
 		if (isset($request['validate'])) {
@@ -160,7 +149,7 @@ class AssoController extends Controller
 	 * @param  int/string $id
 	 * @return JsonResponse
 	 */
-	public function destroy(Request $request, $id): JsonResponse {
+	public function destroy(Request $request, string $id): JsonResponse {
 		$asso = $this->getAsso($request, $id);
 
 		if ($asso->children()->exists())

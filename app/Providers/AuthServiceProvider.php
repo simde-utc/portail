@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Passport\Passport;
+use App\Models\Client;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +17,8 @@ class AuthServiceProvider extends ServiceProvider
 		'App\Model' => 'App\Policies\ModelPolicy',
 	];
 
-	protected $defer = true;
+	// Important d'être non différé car sinon les scopes ne sont pas chargés
+	protected $defer = false;
 
 	/**
 	 * Register any authentication / authorization services.
@@ -24,12 +27,21 @@ class AuthServiceProvider extends ServiceProvider
 	{
 		$this->registerPolicies();
 
-		// Singletonne tous les services d'authentification perso répertoriés dans auth.services
-		foreach (config('auth.services') as $name => $config) {
-			$this->app->singleton($name, function ($app) {
-				return new $config['class']();
-			});
-		}
+		$this->passport();
+	}
+
+	public function register() {
+		Passport::ignoreMigrations();
+	}
+
+	public function passport() {
+        Passport::useClientModel(Client::class);
+
+		Passport::tokensCan(\Scopes::all());
+
+	    Passport::tokensExpireIn(now()->addDays(15));
+
+	    Passport::refreshTokensExpireIn(now()->addDays(30));
 	}
 
 	/**

@@ -27,8 +27,7 @@ class PartnerRequest extends FormRequest
         return [
 	        'name' => Validation::make($this)->type('string')->length(validation_between('name'))->post('required')->get(),
 	        'description' => Validation::make($this)->type('string')->length(validation_between('description'))->post('required')->get(),
-	        'imaeg' => Validation::make($this)->type('image')->length(validation_between('url'))->post('required')->get(),
+	        'image' => Validation::make($this)->type('image')->length(validation_between('url'))->post('required')->get(),
         ];
     }
 }
-

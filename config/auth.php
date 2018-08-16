@@ -1,13 +1,13 @@
 <?php
 
 return [
-
     'services' => [
         'cas' => [
 			'name' => 'CAS-UTC',
 			'description' => 'Tout membre de l\'UTC ou de l\'ESCOM',
             'class' => App\Services\Auth\Cas::class,
             'model' => App\Models\AuthCas::class,
+            'loggable' => true,
 			'registrable' => false,
         ],
 
@@ -16,7 +16,17 @@ return [
 			'description' => 'Tout autre membre',
             'class' => App\Services\Auth\Password::class,
             'model' => App\Models\AuthPassword::class,
+            'loggable' => true,
 			'registrable' => true,
+        ],
+
+        'app' => [
+			'name' => 'Application',
+			'description' => 'Connexion pour l\'application',
+            'class' => App\Services\Auth\App::class,
+            'model' => App\Models\AuthApp::class,
+            'loggable' => false,
+			'registrable' => false,
         ],
     ],
 

@@ -106,15 +106,15 @@ class MemberController extends Controller
 	 * @param $asso_id
 	 * @return JsonResponse
 	 */
-	public function index(Request $request, $asso_id): JsonResponse {
+	public function index(Request $request, string $asso_id): JsonResponse {
 		$choices = $this->getChoices($request);
 		$semester = $this->getSemester($request, $choices);
 		$asso = $this->getAsso($request, $asso_id);
 
 		$members = collect()->merge(
-			in_array('joined', $choices) ? $asso->members()->where('semester_id', $semester->id)->get() : collect(),
-			in_array('joining', $choices) ? $asso->joiners()->where('semester_id', $semester->id)->get() : collect(),
-			in_array('followed', $choices) ? $asso->followers()->where('semester_id', $semester->id)->get() : collect()
+			in_array('joined', $choices) ? $asso->members()->where('semester_id', $semester->id)->getSelection(true) : collect(),
+			in_array('joining', $choices) ? $asso->joiners()->where('semester_id', $semester->id)->getSelection(true) : collect(),
+			in_array('followed', $choices) ? $asso->followers()->where('semester_id', $semester->id)->getSelection(true) : collect()
 		)->map(function ($member) {
 			return $member->hideData();
 		});
@@ -129,7 +129,7 @@ class MemberController extends Controller
 	 * @param $asso_id
 	 * @return JsonResponse
 	 */
-	public function store(Request $request, $asso_id): JsonResponse {
+	public function store(Request $request, string $asso_id): JsonResponse {
 		$user = $this->getUser($request, \Auth::id() ?? $request->input('user_id'));
 		$semester = $this->getSemester($request, $choices, 'create');
 		$asso = $this->getAsso($request, $asso_id);
@@ -171,7 +171,7 @@ class MemberController extends Controller
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function show(Request $request, $asso_id, int $member_id): JsonResponse {
+	public function show(Request $request, string $asso_id, string $member_id): JsonResponse {
 		$choices = $this->getChoices($request);
 		$semester = $this->getSemester($request, $choices);
 		$asso = $this->getAsso($request, $asso_id);
@@ -189,7 +189,7 @@ class MemberController extends Controller
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function update(Request $request, $asso_id, int $member_id): JsonResponse {
+	public function update(Request $request, string $asso_id, string $member_id): JsonResponse {
 		$choices = $this->getChoices($request);
 		$semester = $this->getSemester($request, $choices);
 		$asso = $this->getAsso($request, $asso_id);
@@ -231,7 +231,7 @@ class MemberController extends Controller
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function destroy(Request $request, $asso_id, int $member_id): JsonResponse {
+	public function destroy(Request $request, string $asso_id, string $member_id): JsonResponse {
 		$choices = $this->getChoices($request);
 		$semester = $this->getSemester($request, $choices, 'remove');
 		$asso = $this->getAsso($request, $asso_id);

@@ -29,11 +29,11 @@ class MemberController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @param Request $request
-	 * @param int $group_id
+	 * @param string $group_id
 	 * @return JsonResponse
 	 */
-	public function index(Request $request, int $group_id): JsonResponse {
-		return response()->json($this->getGroup($request, $group_id)->currentAllMembers->map(function ($member) {
+	public function index(Request $request, string $group_id): JsonResponse {
+		return response()->json($this->getGroup($request, $group_id)->currentAllMembers()->getSelection()->map(function ($member) {
 			return $member->hideData();
 		}));
 	}
@@ -42,10 +42,10 @@ class MemberController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request $request
-	 * @param int $group_id
+	 * @param string $group_id
 	 * @return JsonResponse
 	 */
-	public function store(Request $request, int $group_id): JsonResponse {
+	public function store(Request $request, string $group_id): JsonResponse {
 		$group = $this->getGroup($request, $group_id);
 
 		$data = [
@@ -71,11 +71,11 @@ class MemberController extends Controller
 	 * Display the specified resource.
 	 *
 	 * @param Request $request
-	 * @param int $group_id
-	 * @param int $member_id
+	 * @param string $group_id
+	 * @param string $member_id
 	 * @return JsonResponse
 	 */
-	public function show(Request $request, int $group_id, int $member_id): JsonResponse {
+	public function show(Request $request, string $group_id, string $member_id): JsonResponse {
 		$group = $this->getGroup($request, $group_id);
 		$member = $group->currentAllMembers()->where('id', $member_id)->first();
 
@@ -89,11 +89,11 @@ class MemberController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request $request
-	 * @param int $group_id
-	 * @param int $member_id
+	 * @param string $group_id
+	 * @param string $member_id
 	 * @return JsonResponse
 	 */
-	public function update(Request $request, int $group_id, int $member_id): JsonResponse {
+	public function update(Request $request, string $group_id, string $member_id): JsonResponse {
 		$group = $this->getGroup($request, $group_id);
 		$member = $group->currentAllMembers->where('id', $member_id)->first();
 
@@ -130,12 +130,12 @@ class MemberController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param Request $request
-	 * @param int $group_id
-	 * @param int $member_id
+	 * @param string $group_id
+	 * @param string $member_id
 	 * @return JsonResponse
 	 * @throws PortailException
 	 */
-	public function destroy(Request $request, int $group_id, int $member_id): JsonResponse {
+	public function destroy(Request $request, string $group_id, string $member_id): JsonResponse {
 		$group = $this->getGroup($request, $group_id);
 		$member = $group->currentAllMembers->where('id', $member_id)->first();
 

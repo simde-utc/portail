@@ -85,7 +85,7 @@ trait HasVisibility
      *
      * @return bool
      */
-    public function isVisible(Model $model, int $user_id = null) { // TODO Il faut faire passer un userid en option
+    public function isVisible(Model $model, string $user_id = null) { // TODO Il faut faire passer un userid en option
 		$user_id = $user_id ?? \Auth::id();
 
         // Si on est pas connecté, on regarde si la visibilité est publique ou non
@@ -106,8 +106,14 @@ trait HasVisibility
 		if (!isset($this->is[$user_id]))
 			$this->is[$user_id] = [];
 
-		if (!isset($this->is[$user_id][$visibility->type]))
-			$this->is[$user_id][$visibility->type] = (method_exists(get_class(), $type) && $this->$type($user_id, $model));
+		if (!isset($this->is[$user_id][$visibility->type])) {
+			$isVisible = (method_exists(get_class(), $type) && $this->$type($user_id, $model));
+
+			if ($visibility->type === 'private') // Quand c'est privée ça dépend de la ressource
+				return $isVisible;
+			else
+				$this->is[$user_id][$visibility->type] = $isVisible;
+		}
 
 		return $this->is[$user_id][$visibility->type];
     }
@@ -117,7 +123,7 @@ trait HasVisibility
     }
 
     public function isLogged($user_id, $model = null) {
-        return User::find($user_id)->exists();
+        return User::where('is_active', true)->where('id', $user_id)->exists();
     }
 
     public function isCas($user_id, $model = null) {
@@ -127,8 +133,7 @@ trait HasVisibility
     }
 
     public function isContributorBDE($user_id, $model = null) {
-    	$this->isContributor ?? $this->isContributor = Ginger::user(AuthCas::find($user_id)->login)->isContributor();
-    	return $this->isContributor;
+    	return Ginger::user(AuthCas::find($user_id)->login)->isContributor();
     }
 
     abstract public function isPrivate($user_id, $model = null);

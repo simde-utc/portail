@@ -10,7 +10,7 @@ import AssociativeCarreer from '../components/Profile/AssociativeCarreer';
 @connect(store => ({
 	user: store.loggedUser.data,
 }))
-class ProfileScreen extends Component {
+class ScreensProfile extends Component {
 	componentWillMount() {
 		this.props.dispatch(loggedUserActions.getInfo())
 	}
@@ -55,4 +55,4 @@ class ProfileScreen extends Component {
 	}
 }
 
-export default ProfileScreen;
+export default ScreensProfile;

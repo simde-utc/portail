@@ -49,9 +49,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapPassportRoutes() {
 		Passport::routes();
-		Passport::tokensCan(\Scopes::all());
-
-        Passport::enableImplicitGrant();
 
 		Route::prefix('oauth')
 			->group(base_path('routes/oauth.php'));
@@ -90,9 +87,39 @@ class RouteServiceProvider extends ServiceProvider
      * @return void
      */
     protected function mapApiRoutes() {
+        $versions = config('portail.versions');
+        $actualVersion = config('portail.version');
+        $indexVersion = array_search($actualVersion, $versions);
+
         Route::prefix('api')
-            ->namespace($this->namespace)
-			->middleware('forceJson')
-            ->group(base_path('routes/api.php'));
+            ->middleware('forceJson')
+            ->get('/{version}/', $this->namespace.'\RouteController@index');
+
+		for ($i = 0; $i < count($versions); $i++) {
+            $version = $versions[$i];
+            $file = base_path('routes/api/'.$version.'.php');
+
+            if (file_exists($file)) {
+                $middlewares = [
+                    'forceJson'
+                ];
+
+                if ($i < $indexVersion)
+                    $middlewares[] = 'deprecatedVersion:'.$version;
+                else if ($i > $indexVersion || $indexVersion === false)
+                    $middlewares[] = 'betaVersion:'.$version;
+
+                Route::prefix('api/'.$version)
+                    ->namespace($this->namespace.'\\'.$version)
+                    ->middleware($middlewares)
+                    ->group($file);
+            }
+
+            Route::any('api/'.$version.'/{whatever}', $this->namespace.'\RouteController@notFound')
+                ->where('whatever', '.*');
+        }
+
+        Route::any('api/{whatever}', $this->namespace.'\RouteController@versionNotFound')
+            ->where('whatever', '.*');
     }
 }

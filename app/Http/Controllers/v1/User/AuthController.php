@@ -14,25 +14,25 @@ use App\Traits\Controller\v1\HasUsers;
  *
  * Affiche des informations sur l'utilisateur connecté
  */
-class UserAuthController extends Controller
+class AuthController extends Controller
 {
 	use HasUsers;
 
 	public function __construct() {
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-get-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-get-info-identity-auth', 'client-get-info-identity-auth'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-create-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-create-info-identity-auth', 'client-create-info-identity-auth'),
 			['only' => ['store']]
 		);
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-set-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-set-info-identity-auth', 'client-set-info-identity-auth'),
 			['only' => ['update']]
 		);
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-manage-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-manage-info-identity-auth', 'client-manage-info-identity-auth'),
 			['only' => ['destroy']]
 		);
 	}
@@ -44,13 +44,13 @@ class UserAuthController extends Controller
 	 * @param  Request $request
 	 * @return Json
 	 */
-	public function index(Request $request, int $user_id = null) {
+	public function index(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 		$providers = config('auth.services');
 		$result = [];
 
 		foreach ($providers as $name => $provider) {
-			if (\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+			if (\Scopes::has($request, \Scopes::getTokenType($request).'-get-info-identity-auth-'.$name))
 				$result[$name] = $user->$name;
 		}
 
@@ -58,7 +58,7 @@ class UserAuthController extends Controller
 		return response()->json($result);
 	}
 
-	public function store(Request $request, int $user_id = null) {
+	public function store(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 		$name = $request->input('name');
 		$provider = config('auth.services.'.$name);
@@ -67,7 +67,7 @@ class UserAuthController extends Controller
 		if ($provider === null)
 			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
 		else {
-			if (!\Scopes::has($request, 'user-create-info-identity-auth-'.$name))
+			if (!\Scopes::has($request, \Scopes::getTokenType($request).'-create-info-identity-auth-'.$name))
 				return response()->json(['message' => 'Non autorisé'], 503);
 
 			$class = resolve($provider['class']);
@@ -87,7 +87,7 @@ class UserAuthController extends Controller
 	 * @param  string $name
 	 * @return Json
 	 */
-	public function show(Request $request, $user_id, $name = null) {
+	public function show(Request $request, string $user_id, string $name = null) {
         if (is_null($name))
             list($user_id, $name) = [$name, $user_id];
 
@@ -98,23 +98,19 @@ class UserAuthController extends Controller
 		if ($provider === null)
 			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
 		else {
-			if (!\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+			if (!\Scopes::has($request, \Scopes::getTokenType($request).'-get-info-identity-auth-'.$name))
 				return response()->json(['message' => 'Non autorisé'], 503);
 
-			$model = resolve($provider['model']);
+			$auth = $user->$name;
 
-			if ($model) {
-				$auth = $model->find($user->id);
-
-				if ($auth)
-					return response()->json($auth);
-			}
+			if ($auth)
+				return response()->json($auth);
 
 			return response()->json(['message' => 'Le service '.$name.' ne permet pas à l\'utlisateur de se connecter'], 404);
 		}
 	}
 
-	public function destroy(Request $request, $user_id, $name = null) {
+	public function destroy(Request $request, string $user_id, string $name = null) {
         if (is_null($name))
             list($user_id, $name) = [$name, $user_id];
 
@@ -125,20 +121,16 @@ class UserAuthController extends Controller
 		if ($provider === null)
 			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
 		else {
-			if (!\Scopes::has($request, 'user-manage-info-identity-auth-'.$name))
+			if (!\Scopes::has($request, \Scopes::getTokenType($request).'-manage-info-identity-auth-'.$name))
 				return response()->json(['message' => 'Non autorisé'], 503);
 
-			$model = resolve($provider['model']);
+			$auth = $user->$name;
 
-			if ($model) {
-				$auth = $model->find($user->id);
-
-				if ($auth) {
-					if ($auth->delete())
-						return abort(204);
-					else
-						return abort(500, 'Erreur lors de la suppression');
-				}
+			if ($auth) {
+				if ($auth->delete())
+					return abort(204);
+				else
+					return abort(500, 'Erreur lors de la suppression');
 			}
 
 			return response()->json(['message' => 'Le service '.$name.' ne peut pas être supprimé car elle ne permet pas à l\'utlisateur de se connecter'], 404);

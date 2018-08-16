@@ -7,6 +7,10 @@ use App\Exceptions\PortailException;
 
 trait HasKeyValue
 {
+	public function getKeyName() {
+		return 'user_id';
+	}
+
 	public function scopeWhereKey($query, $key) {
 		if (method_exists($this, $key))
 			throw new PortailException('Impossible de récupérer ou de modifier la donnée');
@@ -16,7 +20,7 @@ trait HasKeyValue
 		if ($query->count() > 0)
 			return $query;
 		else
-			throw new PortailException('Non trouvé');
+			throw new PortailException('Non trouvé', 404);
 	}
 
 	public function scopeKey($query, $key) {
@@ -25,7 +29,7 @@ trait HasKeyValue
 		if ($model)
 			return $model;
 		else
-			throw new PortailException('Non trouvé');
+			throw new PortailException('Non trouvé', 404);
 	}
 
 	public function scopeValueOf($query, $key) {
@@ -64,6 +68,20 @@ trait HasKeyValue
 		}
 
 		return $data;
+	}
+
+	public function scopeGroupToArray($query) {
+		$data = $query->get();
+		$groups = [];
+
+		foreach ($data as $model) {
+			if (!isset($groups[strtolower($model->key)]))
+				$groups[strtolower($model->key)] = [];
+
+			$groups[strtolower($model->key)][] = $model->value;
+		}
+
+		return $groups;
 	}
 
 	public function getAttribute($key) {

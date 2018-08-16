@@ -14,14 +14,15 @@ class CreateCalendarsFollowersTable extends Migration
     public function up()
     {
         Schema::create('calendars_followers', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned();
+            $table->uuid('user_id');
+            $table->uuid('calendar_id');
+
+            $table->timestamps();
+
             $table->foreign('user_id')->references('id')->on('users');
-			$table->integer('calendar_id')->unsigned();
 			$table->foreign('calendar_id')->references('id')->on('calendars');
 
-  			$table->timestamps();
-            $table->unique(['user_id', 'calendar_id']);
+            $table->primary(['user_id', 'calendar_id']);
   		});
     }
 

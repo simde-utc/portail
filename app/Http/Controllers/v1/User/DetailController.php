@@ -15,19 +15,19 @@ class DetailController extends Controller
 
     public function __construct(Request $request) {
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-get-info-details', 'client-get-info-details'),
+            \Scopes::matchOneOfDeepestChildren('user-get-info-details'),
             ['only' => ['index', 'show']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-create-info-details', 'client-create-info-details'),
+            \Scopes::matchOneOfDeepestChildren('user-create-info-details'),
             ['only' => ['store']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-edit-info-details', 'client-edit-info-details'),
+            \Scopes::matchOneOfDeepestChildren('user-edit-info-details'),
             ['only' => ['update']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-manage-info-details', 'client-manage-info-details'),
+            \Scopes::matchOneOfDeepestChildren('user-manage-info-details'),
             ['only' => ['destroy']]
         );
     }
@@ -46,7 +46,7 @@ class DetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, int $user_id = null) {
+    public function index(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 
         // On affiche chaque détail sous forme clé => valeur
@@ -59,7 +59,7 @@ class DetailController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, int $user_id = null) {
+    public function store(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
 
 		if (\Scopes::isUserToken($request)) {
@@ -78,7 +78,7 @@ class DetailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $user_id, $key = null) {
+    public function show(Request $request, string $user_id, string $key = null) {
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
@@ -100,7 +100,7 @@ class DetailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_id, $key = null) {
+    public function update(Request $request, string $user_id, string $key = null) {
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
@@ -129,7 +129,7 @@ class DetailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $user_id, $key = null) {
+    public function destroy(Request $request, string $user_id, string $key = null) {
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 

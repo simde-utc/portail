@@ -25,8 +25,8 @@ class EventsTableSeeder extends Seeder
 				'begin_at'	=> '2018-04-01 16:30',
 				'end_at'	=> '2018-04-01 21:30',
 				'visibility'=> 'private',
-				'created_by'=> User::find(1),
-				'owner'		=> User::find(1),
+				'created_by'=> User::where('firstname', 'Samy')->first(),
+				'owner'		=> User::where('firstname', 'Samy')->first(),
 			],
 			[
 				'name'     	=> 'Petite chose perso',
@@ -34,8 +34,8 @@ class EventsTableSeeder extends Seeder
 				'begin_at'	=> '2018-03-05 16:30',
 				'end_at'	=> '2018-03-05 21:30',
 				'visibility'=> 'private',
-				'created_by'=> User::find(1),
-				'owner'		=> User::find(1),
+				'created_by'=> User::where('firstname', 'Samy')->first(),
+				'owner'		=> User::where('firstname', 'Samy')->first(),
 			],
 			[
 				'name'     	=> 'TD LA13',
@@ -43,7 +43,7 @@ class EventsTableSeeder extends Seeder
 				'begin_at'	=> '2018-04-01 10:15',
 				'end_at'	=> '2018-04-01 12:15',
 				'visibility'=> 'cas',
-				'owner'		=> Asso::find(6), // Théoriquement ici, ça devrait être le client emploidutemps
+				'owner'		=> Asso::where('login', 'simde')->first(), // Théoriquement ici, ça devrait être le client emploidutemps
 				'details'	=> [
 					'semester' => 'P18',
 				],
@@ -54,7 +54,7 @@ class EventsTableSeeder extends Seeder
 				'begin_at'	=> '2018-04-01 08:00',
 				'end_at'	=> '2018-04-01 10:00',
 				'visibility'=> 'cas',
-				'owner'		=> Asso::find(6), // Théoriquement ici, ça devrait être le client emploidutemps
+				'owner'		=> Asso::where('login', 'simde')->first(), // Théoriquement ici, ça devrait être le client emploidutemps
 				'details'	=> [
 					'semester' => 'P18',
 				],
@@ -65,8 +65,8 @@ class EventsTableSeeder extends Seeder
 				'begin_at'	=> '2018-04-03 16:30',
 				'end_at'	=> '2018-04-03 18:30',
 				'visibility'=> 'private',
-				'created_by'=> User::find(1),
-				'owner'		=> Asso::find(6),
+				'created_by'=> User::where('firstname', 'Samy')->first(),
+				'owner'		=> Asso::where('login', 'simde')->first(),
 				'details'	=> [
 					'description' 	=> 'Réunion de présentation et de recrutement',
 					'invited' 		=> [
@@ -80,8 +80,8 @@ class EventsTableSeeder extends Seeder
 				'begin_at'	=> '2018-04-10 16:30',
 				'end_at'	=> '2018-04-10 18:30',
 				'visibility'=> 'private',
-				'created_by'=> User::find(2),
-				'owner'		=> Asso::find(6),
+				'created_by'=> User::where('firstname', 'Rémy')->first(),
+				'owner'		=> Asso::where('login', 'simde')->first(),
 				'details'	=> [
 					'description' 	=> 'Réunion de préparation',
 					'invited' 		=> [
@@ -96,8 +96,8 @@ class EventsTableSeeder extends Seeder
 				'begin_at'	=> '2018-09-07',
 				'end_at'	=> '2018-09-07',
 				'full_day'	=> true,
-				'created_by'=> User::find(3),
-				'owner'		=> Asso::find(1),
+				'created_by'=> User::where('firstname', 'Rémy')->first(),
+				'owner'		=> Asso::where('login', 'bde')->first(),
 				'visibility'=> 'public',
 				'details'	=> [
 					'categories' 	=> [

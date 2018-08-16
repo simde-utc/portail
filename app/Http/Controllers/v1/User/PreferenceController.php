@@ -11,22 +11,22 @@ use App\Traits\Controller\v1\HasUsers;
 class PreferenceController extends Controller
 {
     use HasUsers;
-    
+
     public function __construct() {
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-get-info-preferences', 'client-get-info-preferences'),
+            \Scopes::matchOneOfDeepestChildren('user-get-info-preferences'),
             ['only' => ['index', 'show']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-create-info-preferences', 'client-create-info-preferences'),
+            \Scopes::matchOneOfDeepestChildren('user-create-info-preferences'),
             ['only' => ['store']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-edit-info-preferences', 'client-edit-info-preferences'),
+            \Scopes::matchOneOfDeepestChildren('user-edit-info-preferences'),
             ['only' => ['update']]
         );
         $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-manage-info-preferences', 'client-manage-info-preferences'),
+            \Scopes::matchOneOfDeepestChildren('user-manage-info-preferences'),
             ['only' => ['destroy']]
         );
     }
@@ -63,7 +63,7 @@ class PreferenceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, int $user_id = null) {
+    public function index(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
         $groups = $this->getPreferences($request, $user, 'get')->get()->groupBy('only_for');
         $array = [];
@@ -72,13 +72,13 @@ class PreferenceController extends Controller
             $array[$only_for] = [];
 
             foreach ($preferences as $preference)
-                $array[$only_for] = array_merge($array[$only_for], $preference->allToArray());
+                $array[$only_for] = array_merge($array[$only_for], $preference->toArray());
         }
 
         if (count($array) === 1)
-            return response()->json(array_values($array)[0]);
-        else
-            return response()->json($array);
+            $array = array_values($array)[0];
+
+        return response()->json($array);
     }
 
     /**
@@ -87,7 +87,7 @@ class PreferenceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, int $user_id = null) {
+    public function store(Request $request, string $user_id = null) {
 		$user = $this->getUser($request, $user_id);
         $inputs = $request->input();
 
@@ -129,7 +129,7 @@ class PreferenceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $user_id, $key = null) {
+    public function show(Request $request, string $user_id, string $key = null) {
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
@@ -149,7 +149,7 @@ class PreferenceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_id, $key = null) {
+    public function update(Request $request, string $user_id, string $key = null) {
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
@@ -177,7 +177,7 @@ class PreferenceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $user_id, $key = null) {
+    public function destroy(Request $request, string $user_id, string $key = null) {
         if (is_null($key))
             list($user_id, $key) = [$key, $user_id];
 
