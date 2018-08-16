@@ -11,7 +11,7 @@ import Article from './Article.js';
         fetched: store.articles.fetched
     }
 })
-class ArticlesList extends Component {
+class ArticleList extends Component {
     componentWillMount() {
         this.props.dispatch(articlesActions.getAll('?all'));
     }
@@ -31,4 +31,4 @@ class ArticlesList extends Component {
     }
 }
 
-export default ArticlesList;
+export default ArticleList;
