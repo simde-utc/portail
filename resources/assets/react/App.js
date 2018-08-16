@@ -6,11 +6,11 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 
 // Screens
-import HomeScreen from './screens/Home.js';
-import DashboardScreen from './screens/Dashboard';
-import AssosListScreen from './screens/AssosList';
-import AssoDetailScreen from './screens/AssoDetail';
-import ProfileScreen from './screens/Profile';
+import ScreensHome from './screens/Home.js';
+import ScreensDashboard from './screens/Dashboard';
+import ScreensAssosList from './screens/AssosList';
+import ScreensAssoDetail from './screens/AssoDetail';
+import ScreensProfile from './screens/Profile';
 
 class App extends Component {
 	render() {
@@ -24,12 +24,12 @@ class App extends Component {
 					<Sidebar />
 					<main className="col loader-container">
 						<Switch>
-							<Route path="/" exact component={ HomeScreen } />
+							<Route path="/" exact component={ ScreensHome } />
 							<Route path="/home" exact render={ () => (<Redirect to="/" />) } />
-							<Route path="/dashboard" component={ DashboardScreen } />
-							<Route path="/assos" exact component={ AssosListScreen } />
-							<Route path="/assos/:login" component={ AssoDetailScreen } />
-							<Route path="/profile" component={ ProfileScreen } />
+							<Route path="/dashboard" component={ ScreensDashboard } />
+							<Route path="/assos" exact component={ ScreensAssosList } />
+							<Route path="/assos/:login" component={ ScreensAssoDetail } />
+							<Route path="/profile" component={ ScreensProfile } />
 							<Route component={ RouteNotFound } />
 						</Switch>
 					</main>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import ArticlesList from './../components/Articles/List.js';
 
-class HomeScreen extends Component {
+class ScreensHome extends Component {
     render() {
         return (
             <div className="Home">
@@ -12,4 +12,4 @@ class HomeScreen extends Component {
     }
 }
 
-export default HomeScreen;
+export default ScreensHome;

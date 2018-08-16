@@ -7,7 +7,7 @@ import { assosActions } from '../redux/actions';
 	fetching: store.assos.fetching,
 	fetched: store.assos.fetched,
 }))
-class AssoDetailScreen extends Component { 
+class ScreensAssoDetail extends Component { 
 	componentWillMount() {
 		const login = this.props.match.params.login
 		this.props.dispatch(assosActions.getOne(login));
@@ -41,4 +41,4 @@ class AssoDetailScreen extends Component {
 	}
 };
 
-export default AssoDetailScreen;
+export default ScreensAssoDetail;
