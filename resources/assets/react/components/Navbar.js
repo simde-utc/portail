@@ -31,8 +31,10 @@ class Navbar extends React.Component {
 	render() {
 		const { collapse, loginDropdown } = this.state;
 		const { user } = this.props;
-		const loginMethods = Object.entries(this.state.loginMethods).map(([key, loginMethod]) => (
-			<a key={ key } className="dropdown-item" href={ loginMethod.url } title={ loginMethod.description }>
+		const loginMethods = Object.entries(this.state.loginMethods).filter(([key, loginMethod]) => {
+			return loginMethod.login_url
+		}).map(([key, loginMethod]) => (
+			<a key={ key } className="dropdown-item" href={ loginMethod.login_url } title={ loginMethod.description }>
 				{ loginMethod.name }
 			</a>
 		))
