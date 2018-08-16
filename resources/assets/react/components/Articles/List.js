@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-
-// Redux
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { articlesActions } from '../../redux/actions.js';
 
 import Article from './Article.js';
@@ -15,7 +12,6 @@ import Article from './Article.js';
     }
 })
 class ArticlesList extends Component {
-
     componentWillMount() {
         this.props.dispatch(articlesActions.getAll('?all'));
     }
