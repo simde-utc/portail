@@ -7,11 +7,6 @@ use Illuminate\Cookie\Middleware\EncryptCookies as Middleware;
 class EncryptCookies extends Middleware
 {
     /**
-     * Indicates if cookies should be serialized
-     */
-    protected static $serialize = true;
-
-    /**
      * The names of the cookies that should not be encrypted.
      *
      * @var array
