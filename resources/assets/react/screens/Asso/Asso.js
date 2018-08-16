@@ -24,7 +24,7 @@ class ScreensAsso extends Component {
         // var createArticleButton = <span></span>;
         // if (this.props.user.assos && this.props.user.assos.find( assos => assos.id === this.props.asso.id ))
 
-        if (this.props.fetching || !this.props.fetched)
+        if (this.props.fetching || !this.props.fetched || !this.props.asso)
             return (<span className="loader huge active"></span>);
 
         let actions = [];
@@ -37,22 +37,30 @@ class ScreensAsso extends Component {
         //             className="my-1 btn btn-success">S'abonner</button>)
         // }
 
+        const tabBarBg = this.props.asso.parent ? this.props.asso.parent.login : this.props.asso.login;
+
         return (
-            <div>
-                <ul className="nav nav-tabs">
+            <div style={{ width: "100%" }}>
+                <ul className={ "nav nav-tabs asso bg-" + tabBarBg }>
                     <li className="nav-item">
-                        <NavLink className="nav-link" activeClassName="active" exact to={`${this.props.match.url}`}>Informations</NavLink>
+                        <NavLink className="nav-link" activeClassName="active" exact to={`${this.props.match.url}`}>ACCUEIL</NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/parcours_associatif`}>Parcours Associatif</NavLink>
+                        <NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/articles`}>ARTICLES</NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/evenements`}>ÉVÈNEMENTS</NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/trombinoscope`}>TROMBINOSCOPE</NavLink>
                     </li>
                 </ul>
                 <div className="container">
                     <Switch>
                         <Route path={`${this.props.match.url}`} exact render={ () => { 
-                                return this.props.asso ? <ScreensAssoHome asso={ this.props.asso } /> : <div></div>
+                                return <ScreensAssoHome asso={ this.props.asso } />
                             }} />
-                        <Route path={`${this.props.match.url}/parcours_associatif`} render={
+                        <Route path={`${this.props.match.url}/articles`} render={
                             () => <div></div>
                         } />
                     </Switch>

@@ -1,6 +1,3 @@
-// Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
 // Bootstrap Variables for coherence
 @import "../bootstrap/sass/functions";
 @import "../bootstrap/sass/variables";
@@ -14,3 +11,6 @@
 @import "passport";
 @import "loaders";
 @import "design";
+@import "utilities";
+
+@import "asso";
