@@ -5,7 +5,7 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 import ScreensHome from './screens/Home.js';
 import ScreensDashboard from './screens/Dashboard';
 import ScreensAssosList from './screens/AssosList';
-import ScreensAssoDetail from './screens/AssoDetail';
+import ScreensAsso from './screens/Asso/Asso.js';
 import ScreensProfile from './screens/Profile';
 
 // Components
@@ -22,16 +22,14 @@ class App extends Component {
 				<Navbar />
 				<div className="d-flex w-100 h-100">
 					<Sidebar />
-					<main className="col loader-container">
-						<Switch>
-							<Route path="/" exact component={ ScreensHome } />
-							<Route path="/dashboard" component={ ScreensDashboard } />
-							<Route path="/assos" exact component={ ScreensAssosList } />
-							<Route path="/assos/:login" component={ ScreensAssoDetail } />
-							<Route path="/profile" component={ ScreensProfile } />
-							<Route component={ RouteNotFound } />
-						</Switch>
-					</main>
+					<Switch>
+						<Route path="/" exact component={ ScreensHome } />
+						<Route path="/dashboard" component={ ScreensDashboard } />
+						<Route path="/assos" exact component={ ScreensAssosList } />
+						<Route path="/assos/:login" component={ ScreensAsso } />
+						<Route path="/profile" component={ ScreensProfile } />
+						<Route component={ RouteNotFound } />
+					</Switch>
 				</div>
 			</div>
 		);
