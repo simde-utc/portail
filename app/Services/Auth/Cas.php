@@ -49,20 +49,22 @@ class Cas extends BaseAuth
 
 		// Renvoie une erreur différente de la 200. On passe par le CAS.
 		if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
-			list($login, $email, $firstname, $lastname) = [
+			list($login, $email, $firstname, $lastname, $active) = [
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
+				false
 			];
 		}
 		else {
 			// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
-			list($login, $email, $firstname, $lastname) = [
+			list($login, $email, $firstname, $lastname, $active) = [
 				$ginger->getLogin(),
 				$ginger->getEmail(),
 				$ginger->getFirstname(),
 				$ginger->getLastname(),
+				true,
 			];
 		}
 
@@ -70,7 +72,7 @@ class Cas extends BaseAuth
 			$user = $cas->user;
 		else {
 			$user = $this->updateOrCreateUser(compact('email', 'firstname', 'lastname'));
-			$cas = $this->createAuth($user->id, compact('login', 'email'));
+			$cas = $this->createAuth($user->id, compact('login', 'email', 'active'));
 		}
 
 		if (!$user->isActive())
@@ -153,13 +155,40 @@ class Cas extends BaseAuth
 			$parsed = new xmlToArrayParser($response->content);
 
 			try {
+				$ginger = Ginger::user($login);
+
+				// Renvoie une erreur différente de la 200. On passe par le CAS.
+				if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
+					list($login, $email, $firstname, $lastname, $active) = [
+						$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
+						$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
+						$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
+						$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
+						false
+					];
+				}
+				else {
+					// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
+					list($login, $email, $firstname, $lastname, $active) = [
+						$ginger->getLogin(),
+						$ginger->getEmail(),
+						$ginger->getFirstname(),
+						$ginger->getLastname(),
+						true,
+					];
+				}
+
 				$cas = AuthCas::create([
 					'user_id' => $user_id,
-					'email' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
-					'login' => $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
+					'email' => $email,
+					'login' => $login,
+					'is_active' => $active
 				]);
 
 				$user->update([
+					'email' => $email,
+					'firstname' => $firstname,
+					'lastname' => $lastname,
 					'is_active' => true,
 				]);
 

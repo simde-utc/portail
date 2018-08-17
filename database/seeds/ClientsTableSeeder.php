@@ -49,7 +49,7 @@ class ClientsTableSeeder extends Seeder
                 'personal_access_client'    => '0',
                 'password_client'           => '0',
                 'revoked'       => 0,
-                'redirect'      => 'http://localhost:8000/#!/login',
+                'redirect'      => 'http://localhost:8000/api/v1/login',
                 'asso_id'       => Asso::where('login', 'simde')->first()->id,
                 'scopes'        => '',
             ],
