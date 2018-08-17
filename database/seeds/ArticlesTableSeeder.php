@@ -67,6 +67,96 @@ class ArticlesTableSeeder extends Seeder
                     ],
                 ],
 	        ],
+		 [
+	        	'title' => 'J\'ai',
+		        'description' => 'Romain a besoin de seeds',
+                'content' => 'Mais il n\'a pas d\'inspiration',
+                'created_by' => Asso::findByLogin('simde'),
+		        'owner' => Asso::findByLogin('simde'),
+		        'visibility_id' => 'cas',
+                'actions' => [
+                    [
+                        'user_id' => User::where('firstname', 'Romain')->first()->id,
+                        'key' => 'liked',
+                        'value' => true,
+                    ],
+                ],
+	        ],
+		 [
+	        	'title' => 'Besoin',
+		        'description' => 'Romain teste un scrollview prétendument "infini"',
+                'content' => 'Mais il n\'a pas d\'inspiration',
+                'created_by' => Asso::findByLogin('simde'),
+		        'owner' => Asso::findByLogin('simde'),
+		        'visibility_id' => 'cas',
+                'actions' => [
+                    [
+                        'user_id' => User::where('firstname', 'Romain')->first()->id,
+                        'key' => 'liked',
+                        'value' => true,
+                    ],
+                ],
+	        ],
+		 [
+	        	'title' => 'de',
+		        'description' => 'Romain doit donc créer beaucoup d\'articles',
+                'content' => 'Mais il n\'a pas d\'inspiration',
+                'created_by' => Asso::findByLogin('simde'),
+		        'owner' => Asso::findByLogin('simde'),
+		        'visibility_id' => 'cas',
+                'actions' => [
+                    [
+                        'user_id' => User::where('firstname', 'Romain')->first()->id,
+                        'key' => 'liked',
+                        'value' => true,
+                    ],
+                ],
+	        ],
+		 [
+	        	'title' => 'seeds',
+		        'description' => 'Romain veut remplir tout l\'écran',
+                'content' => 'Mais il n\'a pas d\'inspiration',
+                'created_by' => Asso::findByLogin('simde'),
+		        'owner' => Asso::findByLogin('simde'),
+		        'visibility_id' => 'cas',
+                'actions' => [
+                    [
+                        'user_id' => User::where('firstname', 'Romain')->first()->id,
+                        'key' => 'liked',
+                        'value' => true,
+                    ],
+                ],
+	        ],
+		 [
+	        	'title' => 'seeds',
+		        'description' => 'Romain est parfois un kiwi',
+                'content' => 'Mais il n\'a pas d\'inspiration',
+                'created_by' => Asso::findByLogin('simde'),
+		        'owner' => Asso::findByLogin('simde'),
+		        'visibility_id' => 'cas',
+                'actions' => [
+                    [
+                        'user_id' => User::where('firstname', 'Romain')->first()->id,
+                        'key' => 'liked',
+                        'value' => true,
+                    ],
+                ],
+	        ],
+		 [
+	        	'title' => 'seeds',
+		        'description' => 'Romain est dans la lune',
+                'content' => 'Mais pourtant il n\'a pas d\'inspiration',
+                'created_by' => Asso::findByLogin('simde'),
+		        'owner' => Asso::findByLogin('simde'),
+		        'visibility_id' => 'cas',
+                'actions' => [
+                    [
+                        'user_id' => User::where('firstname', 'Romain')->first()->id,
+                        'key' => 'liked',
+                        'value' => true,
+                    ],
+                ],
+	        ],
 	        [
 	        	'title' => 'Grand spectacle du PAE',
 		        'content' => 'Ce jeudi, les associations du PAE ont eu l\'honneur de présenter devant plus de 500 UTCéens un grand spectacle...',
