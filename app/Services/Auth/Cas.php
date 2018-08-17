@@ -43,9 +43,7 @@ class Cas extends BaseAuth
 		if (!isset($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']))
 			return $this->error($request, null, null, 'Données du CAS reçues invalides');
 
-		$login = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'];
-
-		$ginger = Ginger::user($login);
+		$ginger = Ginger::user($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user']);
 
 		// Renvoie une erreur différente de la 200. On passe par le CAS.
 		if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
@@ -155,7 +153,7 @@ class Cas extends BaseAuth
 			$parsed = new xmlToArrayParser($response->content);
 
 			try {
-				$ginger = Ginger::user($login);
+				$ginger = Ginger::user($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user']);
 
 				// Renvoie une erreur différente de la 200. On passe par le CAS.
 				if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
