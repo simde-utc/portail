@@ -7,10 +7,6 @@ use App\Exceptions\PortailException;
 
 trait HasKeyValue
 {
-	public function getKeyName() {
-		return 'user_id';
-	}
-
 	public function scopeWhereKey($query, $key) {
 		if (method_exists($this, $key))
 			throw new PortailException('Impossible de récupérer ou de modifier la donnée');

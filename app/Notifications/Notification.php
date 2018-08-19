@@ -13,30 +13,20 @@ abstract class Notification extends BaseNotification
     use Queueable;
 
     protected $type;
-    protected $description;
 
     /**
      * Définition du type de notif et sa description
-     * @param string $type        [description]
-     * @param string $description [description]
+     * @param string $type
      */
-    public function __construct(string $type, string $description) {
+    public function __construct(string $type) {
         $this->type = $type;
-        $this->description = $description;
     }
 
     public function getType() {
         return $this->type;
     }
 
-    public function getDescription() {
-        return $this->description;
-    }
-
-    protected function getSubject(CanBeNotifiable $notifiable) {
-        return $this->description;
-    }
-
+    abstract protected function getSubject(CanBeNotifiable $notifiable);
     abstract protected function getContent(CanBeNotifiable $notifiable);
     abstract protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail);
 
@@ -46,8 +36,7 @@ abstract class Notification extends BaseNotification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via(CanBeNotifiable $notifiable)
-    {
+    public function via(CanBeNotifiable $notifiable) {
         return $notifiable->notificationChannels($this->type);
     }
 
@@ -57,15 +46,11 @@ abstract class Notification extends BaseNotification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail(CanBeNotifiable $notifiable)
-    {
+    public function toMail(CanBeNotifiable $notifiable) {
         return $this->getMailBody(
             $notifiable,
-            (new MailMessage)->line('Bonjour,')
-        )
-            ->line('')
-            ->line('Il y a une vie après les cours,')
-            ->line('L\'équipe du SiMDE');
+            (new MailMessage)->subject($this->getSubject($notifiable))
+        );
     }
 
     /**
@@ -74,8 +59,7 @@ abstract class Notification extends BaseNotification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
-    {
+    public function toArray($notifiable) {
         return [
             'type' => $this->type,
             'content' => $this->getContent($notifiable)

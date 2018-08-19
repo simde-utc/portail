@@ -6,18 +6,18 @@ use App\Notifications\Notification;
 use App\Interfaces\Model\CanBeNotifiable;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class UserCreation extends Notification
+class UserDeletion extends Notification
 {
     public function __construct() {
         parent::__construct('user');
     }
 
     protected function getSubject(CanBeNotifiable $notifiable) {
-        return 'Création de votre compte utilisateur';
+        return 'Suppression de votre compte utilisateur';
     }
 
     protected function getContent(CanBeNotifiable $notifiable) {
-        return 'Bienvenue sur le Portail des Assos !';
+        return 'Nous espérons vous revoir';
     }
 
     protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail) {
@@ -25,6 +25,7 @@ class UserCreation extends Notification
             ->success()
             ->line($notifiable->name)
             ->line('')
-            ->line('Votre compte a été créé avec succès !');
+            ->line('Votre compte a été supprimé avec succès !')
+            ->line('Nous espérons vous revoir');
     }
 }

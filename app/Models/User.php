@@ -21,6 +21,9 @@ use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 use App\Exceptions\PortailException;
 use App\Notifications\User\UserCreation;
+use App\Notifications\User\UserDesactivation;
+use App\Notifications\User\UserModification;
+use App\Notifications\User\UserDeletion;
 
 class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
@@ -59,12 +62,33 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 
         static::updated(function ($model) {
 			// Modfication des préférences
-			$model->preferences()->update([
-				'key' => 'NOTIFICATION_EMAIL',
-			], [
-				'value' => $model->is_active ? $model->email : null,
-			]);
+			if ($model->preferences()->valueOf('CONTACT_EMAIL') === $model->getOriginal('email')) {
+				$model->preferences()->key('CONTACT_EMAIL')->update([
+					'value' => $model->is_active ? $model->email : null,
+				]);
+			}
+
+			if ((bool) $model->getOriginal('is_active') !== (bool) $model->getAttribute('is_active')) {
+				$model->notify($model->is_active ? new UserCreation() : new UserDesactivation());
+			}
+
+			$edited = [];
+
+			if ($model->getOriginal('email') !== $model->getAttribute('email'))
+				$edited['Adresse email'] = $model->email;
+
+			if ($model->getOriginal('lastname') !== $model->getAttribute('lastname'))
+				$edited['Nom'] = $model->lastname;
+
+			if ($model->getOriginal('firstname') !== $model->getAttribute('firstname'))
+				$edited['Prénom'] = $model->firstname;
+			if (count($edited) > 0)
+				$model->notify(new UserModification($edited));
         });
+
+		static::deleting(function ($model) {
+			$model->notify(new UserDeletion());
+		});
     }
 
 	public $incrementing = false;

