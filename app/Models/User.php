@@ -20,6 +20,7 @@ use App\Models\UserPreference;
 use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 use App\Exceptions\PortailException;
+use App\Notifications\User\UserCreation;
 
 class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
@@ -39,7 +40,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 
 			$model->preferences()->create([
 				'key' => 'CONTACT_EMAIL',
-				'value' => $model->is_active ? $model->email : null,
+				'value' => $model->is_active !== false ? $model->email : null,
 			]);
 
 			$model->preferences()->create([
@@ -51,6 +52,9 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 				'key' => 'NOTIFICATION_PUSH_AVOID',
 				'value' => [],
 			]);
+
+			if ($model->is_active !== false)
+				$model->notify(new UserCreation());
         });
 
         static::updated(function ($model) {
@@ -110,7 +114,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 			return $users;
 	}
 
-	public function notificationChannels(string $notificationType) {
+	public function notificationChannels(string $notificationType): array {
 		$channels = $this->preferences()->valueOf('NOTIFICATION_CHANNELS');
 
 		if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_EMAIL_AVOID')) && ($key = array_search('mail', $channels)) !== false)
@@ -129,7 +133,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 	}
 
 	public function routeNotificationForMail($notification) {
-        return $this->preferences()->valueOf('CONTACT_EMAIL');
+        return $this->preferences()->keyExistsInDB('CONTACT_EMAIL') ? $this->preferences()->valueOf('CONTACT_EMAIL') : null;
     }
 
 	public function type() {
