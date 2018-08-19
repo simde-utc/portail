@@ -41,6 +41,18 @@ trait HasKeyValue
 		return $this->scopeKey($query, $key)->value;
 	}
 
+	public function scopeKeyIsFunction($query, $key) {
+		return method_exists($this, $key);
+	}
+
+	public function scopeKeyExistsInDB($query, $key) {
+		return $query->where('key', strtoupper($key))->exists();
+	}
+
+	public function scopeKeyExists($query, $key) {
+		return $this->scopeKeyIsFunction($query, $key) || $this->scopeKeyExistsInDB($query, $key);
+	}
+
 	public function scopeToArray($query, $key = null) {
 		if ($key)
 			return [
