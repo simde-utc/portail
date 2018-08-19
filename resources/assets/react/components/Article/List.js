@@ -13,7 +13,7 @@ import Article from './Article.js';
 })
 class ArticleList extends Component {
     componentWillMount() {
-        this.props.dispatch(articlesActions.getAll('?all'));
+        this.props.dispatch(articlesActions.getAll());
     }
 
     render() {

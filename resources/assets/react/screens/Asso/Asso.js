@@ -28,14 +28,12 @@ class ScreensAsso extends Component {
             return (<span className="loader huge active"></span>);
 
         let actions = [];
-        // if (this.props.asso.user) {
-        //     if (this.props.asso.user.is_follower)
-        //         actions.push(<button key="subscription" 
-        //             className="my-1 btn btn-outline-warning">Se désabonner</button>)
-        //     else
-        //         actions.push(<button key="subscription" 
-        //             className="my-1 btn btn-success">S'abonner</button>)
-        // }
+        if (this.props.asso.user) {
+            if (this.props.asso.user.is_follower)
+                actions.push(<button className="my-1 btn btn-outline-warning">Se désabonner</button>)
+            else
+                actions.push(<button className="my-1 btn btn-success">S'abonner</button>)
+        }
 
         const tabBarBg = this.props.asso.parent ? this.props.asso.parent.login : this.props.asso.login;
 

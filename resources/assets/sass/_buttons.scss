@@ -5,4 +5,8 @@
     color: black;
     font-weight: 600;
     box-shadow: none;
+
+    &:hover {
+        background: $dark-gray;
+    }
 }

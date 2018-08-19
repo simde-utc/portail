@@ -1,9 +1,33 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import loggedUserActions from '../redux/custom/loggedUser/actions';
 import { NavLink } from 'react-router-dom';
 
-
+@connect((store, props) => ({
+    user: store.loggedUser.data
+}))
 class Sidebar extends React.Component { 
+	componentWillMount() {
+        this.props.dispatch(loggedUserActions.getAssos());
+        // this.props.dispatch(loggedUserActions.getGroups());
+    }
+
 	render() {
+		console.log(this.props.user.assos);
+		
+		let assos = [];
+		if (this.props.user.assos) {
+			let data = this.props.user.assos;
+
+			for (let i = 0; i < data.length; i++) {
+				assos.push(
+					<NavLink className="sidebar-link" to={ "/assos/" + data[i].login }>
+						{ data[i].shortname }
+					</NavLink>
+				);
+			}
+		}
+
 		return (
 			<div className="sidebar col-md-3 col-xl-2 d-none d-md-flex flex-column justify-content-between">
 				<div className="sidebar-inner">
@@ -12,8 +36,6 @@ class Sidebar extends React.Component {
 							ACTUALITÉS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/news" />
 						</h6>
 						<NavLink exact className="sidebar-link" to="/"><i className="fas fa-newspaper"></i>Flux</NavLink>
-						<NavLink className="sidebar-link" to="/news/utc"><i className="fas fa-newspaper"></i>Actualités UTC</NavLink>
-						<NavLink className="sidebar-link" to="/news/assos"><i className="fas fa-newspaper"></i>Actualités Assos</NavLink>
 					</div>
 
 					<div className="sidebar-group">
@@ -35,8 +57,7 @@ class Sidebar extends React.Component {
 						<h6 className="sidebar-header d-hover-zone">
 							MES ASSOCIATIONS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/assos" />
 						</h6>
-						<NavLink className="sidebar-link" to="/assos/picasso"><i className="fas fa-beer"></i>Pic'Asso</NavLink>
-						<NavLink className="sidebar-link" to="/assos/simde"><i className="fas fa-code"></i>SiMDE</NavLink>
+						{ assos }
 					</div>
 
 					<div className="sidebar-group">
