@@ -24,7 +24,6 @@ class UserCreation extends Notification
         return $mail
             ->success()
             ->line($notifiable->name)
-            ->line('')
             ->line('Votre compte a été créé avec succès !');
     }
 }

@@ -20,11 +20,25 @@ class UserDeletion extends Notification
         return 'Nous espérons vous revoir';
     }
 
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function via(CanBeNotifiable $notifiable) {
+        $channels = parent::via($notifiable);
+
+        if (($key = array_search('database', $channels)) !== false)
+    		unset($channels[$key]);
+
+        return $channels;
+    }
+
     protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail) {
         return $mail
             ->success()
             ->line($notifiable->name)
-            ->line('')
             ->line('Votre compte a été supprimé avec succès !')
             ->line('Nous espérons vous revoir');
     }

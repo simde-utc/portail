@@ -26,7 +26,6 @@ class UserModification extends Notification
         $mail = $mail
             ->success()
             ->line($notifiable->name)
-            ->line('')
             ->line('Votre compte a été modifiée:');
 
         foreach ($this->modifications as $name => $value)

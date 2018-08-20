@@ -24,7 +24,6 @@ class UserDesactivation extends Notification
         return $mail
             ->error()
             ->line($notifiable->name)
-            ->line('')
             ->line('Votre compte a été désactivé !');
     }
 }

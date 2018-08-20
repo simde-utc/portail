@@ -43,7 +43,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 
 			$model->preferences()->create([
 				'key' => 'CONTACT_EMAIL',
-				'value' => $model->is_active !== false ? $model->email : null,
+				'value' => $model->isActive() ? $model->email : null,
 			]);
 
 			$model->preferences()->create([
@@ -56,7 +56,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 				'value' => [],
 			]);
 
-			if ($model->is_active !== false)
+			if ($model->isActive())
 				$model->notify(new UserCreation());
         });
 
@@ -69,7 +69,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 			}
 
 			if ((bool) $model->getOriginal('is_active') !== (bool) $model->getAttribute('is_active')) {
-				$model->notify($model->is_active ? new UserCreation() : new UserDesactivation());
+				$model->notify($model->isActive() ? new UserCreation() : new UserDesactivation());
 			}
 
 			$edited = [];
@@ -119,7 +119,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 	];
 
 	public function getNameAttribute() {
-		if ($this->is_active)
+		if ($this->isActive())
 			return $this->firstname.' '.strtoupper($this->lastname);
 		else
 			return 'Compte invité';
@@ -142,13 +142,13 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 		$channels = $this->preferences()->valueOf('NOTIFICATION_CHANNELS');
 
 		if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_EMAIL_AVOID')) && ($key = array_search('mail', $channels)) !== false)
-    		unset($channels[$key]);
+			unset($channels[$key]);
 
 		if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_PUSH_AVOID')) && ($key = array_search('push', $channels)) !== false)
     		unset($channels[$key]);
 
-		if (!$this->is_active && ($key = array_search('mail', $channels)) !== false)
-    		unset($channels[$key]);
+		if (!$this->isActive() && ($key = array_search('mail', $channels)) !== false)
+			unset($channels[$key]);
 
 		if (!$this->isApp() && ($key = array_search('push', $channels)) !== false)
     		unset($channels[$key]);
@@ -172,7 +172,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 	}
 
 	public function isActive() {
-        return $this->is_active;
+        return $this->is_active === null || ((bool) $this->is_active) === true;
     }
 
     public function isCas() {
