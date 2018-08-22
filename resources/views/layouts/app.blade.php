@@ -52,6 +52,9 @@
 							</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 								@foreach (config('auth.services') as $name => $provider)
+									@if (!$provider['loggable'])
+										@continue
+									@endif
 									<a class="dropdown-item" href="{{ route('login.show', ['provider' => $name, 'redirect' => $redirect ?? url()->previous()]) }}">
 										{{ $provider['name'] }}
 									</a>

@@ -4,7 +4,7 @@ return [
     'services' => [
         'cas' => [
 			'name' => 'CAS-UTC',
-			'description' => 'Tout membre de l\'UTC ou de l\'ESCOM',
+			'description' => 'Connexion (CAS) réservée aux membres UTC',
             'class' => App\Services\Auth\Cas::class,
             'model' => App\Models\AuthCas::class,
             'loggable' => true,
@@ -13,7 +13,7 @@ return [
 
         'password' => [
 			'name' => 'Mot de passe',
-			'description' => 'Tout autre membre',
+			'description' => 'Connexion par adresse email et mot de passe (possibilité de créer un compte)',
             'class' => App\Services\Auth\Password::class,
             'model' => App\Models\AuthPassword::class,
             'loggable' => true,

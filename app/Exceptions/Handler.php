@@ -5,7 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
@@ -56,15 +56,22 @@ class Handler extends ExceptionHandler
 	        ];
 
 	        // If the app is in debug mode
-	        if (config('app.debug') && !($exception instanceof HttpException)) {
+	        if (config('app.debug') && !$this->isHttpException($exception)) {
 	            // Add the exception class name, message and stack trace to response
 				$response['message'] = $exception->getMessage();
 				$response['exception'] = get_class($exception);
 	            $response['trace'] = $exception->getTrace();
 	        }
 
+            if ($this->isHttpException($exception))
+                $status = $exception->getStatusCode();
+            else if ($exception instanceof AuthenticationException)
+                $status = 401;
+            else
+                $status = 400;
+
 	        // Return a JSON response with the response array and status code
-	        return response()->json($response, $this->isHttpException($exception) ? $exception->getStatusCode() : 400);
+	        return response()->json($response, $status);
 	    }
         else if ($exception instanceof AuthorizationException)
             return redirect('/');
