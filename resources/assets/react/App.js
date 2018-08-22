@@ -6,12 +6,13 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import RouteNotFound from './components/RouteNotFound';
 import ErrorCatcher from './components/ErrorCatcher';
+import PrivateRoute from './components/PrivateRoute';
 
 // Screens
-import HomeScreen from './screens/Home.js';
+import HomeScreen from './screens/Home';
 import DashboardScreen from './screens/Dashboard';
 import AssosListScreen from './screens/AssosList';
-import AssoDetailScreen from './screens/Asso/Asso.js';
+import AssoDetailScreen from './screens/Asso/Asso';
 import ProfileScreen from './screens/Profile';
 
 class App extends React.Component {
@@ -27,7 +28,7 @@ class App extends React.Component {
 							<Route path="/dashboard" component={ DashboardScreen } />
 							<Route path="/assos" exact component={ AssosListScreen } />
 							<Route path="/assos/:login" component={ AssoDetailScreen } />
-							<Route path="/profile" component={ ProfileScreen } />
+							<PrivateRoute path="/profile" component={ ProfileScreen } />
 							<Route component={ RouteNotFound } />
 						</Switch>
 					</div>
