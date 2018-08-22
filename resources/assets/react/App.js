@@ -20,9 +20,9 @@ class App extends React.Component {
 		return (
 			<div className="h-100">
 				<Navbar />
-				<ErrorCatcher>
-					<div className="d-flex w-100 h-100">
-						<Sidebar />
+				<div className="d-flex w-100 h-100">
+					<Sidebar />
+					<ErrorCatcher>
 						<Switch>
 							<Route path="/" exact component={ HomeScreen } />
 							<Route path="/dashboard" component={ DashboardScreen } />
@@ -31,8 +31,8 @@ class App extends React.Component {
 							<PrivateRoute path="/profile" component={ ProfileScreen } />
 							<Route component={ RouteNotFound } />
 						</Switch>
-					</div>
-				</ErrorCatcher>
+					</ErrorCatcher>
+				</div>
 			</div>
 		);
 	}

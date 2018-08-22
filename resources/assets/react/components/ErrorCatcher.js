@@ -3,12 +3,12 @@ import React from 'react'
 class ErrorDebugger extends React.Component {
 	render() {
 		const { error, info } = this.props.details
-		return <div>
-			<h1>Oupss...</h1>
-			<p>
-				An error happened, check console logs to know more.
-			</p>
-		</div>
+		return (
+			<div className="container">
+				<h1 className="title">Oupss...</h1>
+				<p>An error happened, check console logs to know more.</p>
+			</div>
+		)
 	}
 }
 

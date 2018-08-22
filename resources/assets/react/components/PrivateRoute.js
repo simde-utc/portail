@@ -3,12 +3,20 @@ import { Route, Redirect } from 'react-router-dom'
 import store from '../redux/store'
 import loggedUserActions from '../redux/custom/loggedUser/actions';
 
-const PrivateRoute = (...params) => {
+
+const renderRouteOrReject = props => {
+	// TODO Fetch
 	const isAuthenticated = store.getState().loggedUser.isAuthenticated()
-	if (isAuthenticated)
-		return <Route {...params} />
-	else
-		return <Redirect to='/' />
+	return isAuthenticated ? (
+		<Component { ...props } />
+	) : (
+		<Redirect to={{
+			pathname: '/',
+			state: { from: props.location}
+		}} />
+	)
 }
+
+const PrivateRoute = ({ component: Component, ...params}) => (<Route { ...params } render={ renderRouteOrReject } />)
 
 export default PrivateRoute
