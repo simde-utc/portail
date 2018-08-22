@@ -21,7 +21,9 @@ class Navbar extends React.Component {
 		// Get User Info
 		this.props.dispatch(loggedUserActions.getInfo())
 		// Get Login Methods
-		axios.get('/api/v1/login').then(response => this.setState({ loginMethods: response.data}))
+		axios.get('/api/v1/login')
+			.then(response => this.setState({ loginMethods: response.data}))
+			.catch(err => console.warn("Error happened while fetching login methods :", err))
 	}
 
 	toggle(key) {
