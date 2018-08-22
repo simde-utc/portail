@@ -19,7 +19,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  */
 
 let token = document.head.querySelector('meta[name="csrf-token"]');
-
 if (token)
 	window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 else
@@ -33,8 +32,7 @@ window.axios.interceptors.response.use(
 	response => response,
 	error => {
 		// Deal with Unauthenticated requests
-		if ( error.response.status == 400) {
-			// TODO Change to 401
+		if (error.response.status == 401) {
 			store.dispatch(loggedUserActions.removeUser())
 		}
 		return Promise.reject(error);

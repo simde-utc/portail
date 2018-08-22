@@ -1,9 +1,18 @@
 import produce from 'immer';
 import { ASYNC_SUFFIXES, initialCrudState } from '../../utils';
 import loggedUserTypes from './types';
+import loggedUserActions from './actions';
 
+const loggedUserInitialState = {
+	...initialCrudState,
+	data: {},
+	lastUpdate: null,
+	isAuthenticated: function() {
+		return Object.keys(this.data).length > 0
+	}
+}
 
-const loggedUserReducer = (state = { ...initialCrudState, data: {} }, action) => {
+const loggedUserReducer = (state = loggedUserInitialState, action) => {
 	// Override de data en objet null
 	let reducerMap = {}
 
@@ -17,9 +26,8 @@ const loggedUserReducer = (state = { ...initialCrudState, data: {} }, action) =>
 			draft.lastUpdate = action.meta.timestamp
 
 			// Unauthenticated => Clear user
-			if (action.payload.response.status == 400 && action.payload.response.data.message.indexOf('Unauthenticated') != -1) {
+			if (action.payload.response.status == 401)
 				draft.data = {};
-			}
 			return draft;	
 		})
 	})
