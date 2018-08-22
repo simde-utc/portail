@@ -8,10 +8,19 @@ use Illuminate\Notifications\Messages\MailMessage;
 
 class UserModification extends Notification
 {
+    protected $modifications = [];
+
     public function __construct($modifications) {
         parent::__construct('user');
 
         $this->modifications = $modifications;
+    }
+
+    protected function getAction(CanBeNotifiable $notifiable) {
+        return [
+            'name' => 'Voir les modifications',
+            'url' => url('profile'),
+        ];
     }
 
     protected function getSubject(CanBeNotifiable $notifiable) {

@@ -26,6 +26,10 @@ abstract class Notification extends BaseNotification implements ShouldQueue
         return $this->type;
     }
 
+    protected function getAction(CanBeNotifiable $notifiable) {
+        return [];
+    }
+
     abstract protected function getSubject(CanBeNotifiable $notifiable);
     abstract protected function getContent(CanBeNotifiable $notifiable);
     abstract protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail);
@@ -47,10 +51,16 @@ abstract class Notification extends BaseNotification implements ShouldQueue
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail(CanBeNotifiable $notifiable) {
-        return $this->getMailBody(
+        $action = $this->getAction($notifiable);
+        $mail = $this->getMailBody(
             $notifiable,
             (new MailMessage)->subject($this->getSubject($notifiable))
         );
+
+        if ($action && isset($action['name']) && isset($action['url']))
+            $mail->action($action['name'], $action['url']);
+
+        return $mail;
     }
 
     /**
@@ -62,7 +72,8 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     public function toArray($notifiable) {
         return [
             'type' => $this->type,
-            'content' => $this->getContent($notifiable)
+            'content' => $this->getContent($notifiable),
+            'action' => $this->getAction($notifiable),
         ];
     }
 }

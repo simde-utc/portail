@@ -82,6 +82,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 
 			if ($model->getOriginal('firstname') !== $model->getAttribute('firstname'))
 				$edited['Prénom'] = $model->firstname;
+
 			if (count($edited) > 0)
 				$model->notify(new UserModification($edited));
         });

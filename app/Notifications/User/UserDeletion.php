@@ -26,7 +26,7 @@ class UserDeletion extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via(CanBeNotifiable $notifiable) {
+    public function via($notifiable) {
         $channels = parent::via($notifiable);
 
         if (($key = array_search('database', $channels)) !== false)

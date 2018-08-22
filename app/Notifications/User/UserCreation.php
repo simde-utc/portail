@@ -12,6 +12,13 @@ class UserCreation extends Notification
         parent::__construct('user');
     }
 
+    protected function getAction(CanBeNotifiable $notifiable) {
+        return [
+            'name' => 'Consulter mon profil',
+            'url' => url('profile'),
+        ];
+    }
+
     protected function getSubject(CanBeNotifiable $notifiable) {
         return 'Création de votre compte utilisateur';
     }
