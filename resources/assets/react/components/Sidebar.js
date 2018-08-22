@@ -13,8 +13,6 @@ class Sidebar extends React.Component {
     }
 
 	render() {
-		console.log(this.props.user.assos);
-		
 		let assos = [];
 		if (this.props.user.assos) {
 			let data = this.props.user.assos;

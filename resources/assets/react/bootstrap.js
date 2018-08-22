@@ -1,4 +1,5 @@
-
+import store from './redux/store.js';
+import loggedUserActions from './redux/custom/loggedUser/actions';
 window._ = require('lodash');
 
 /**
@@ -20,9 +21,26 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 let token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token)
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+	window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 else
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+	console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+
+/**
+ * Attach Axios Interceptors
+ */
+
+window.axios.interceptors.response.use(
+	response => response,
+	error => {
+		// Deal with Unauthenticated requests
+		if ( error.response.status == 400) {
+			// TODO Change to 401
+			store.dispatch(loggedUserActions.removeUser())
+		}
+		return Promise.reject(error);
+	}
+);
+
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

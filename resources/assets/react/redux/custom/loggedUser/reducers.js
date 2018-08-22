@@ -17,8 +17,9 @@ const loggedUserReducer = (state = { ...initialCrudState, data: {} }, action) =>
 			draft.lastUpdate = action.meta.timestamp
 
 			// Unauthenticated => Clear user
-			if (action.payload.response.status == 400 && action.payload.response.data.message.indexOf('Unauthenticated') != -1)
+			if (action.payload.response.status == 400 && action.payload.response.data.message.indexOf('Unauthenticated') != -1) {
 				draft.data = {};
+			}
 			return draft;	
 		})
 	})
