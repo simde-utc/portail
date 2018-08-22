@@ -5,6 +5,7 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import RouteNotFound from './components/RouteNotFound';
+import ErrorCatcher from './components/ErrorCatcher';
 
 // Screens
 import HomeScreen from './screens/Home.js';
@@ -18,17 +19,19 @@ class App extends React.Component {
 		return (
 			<div className="h-100">
 				<Navbar />
-				<div className="d-flex w-100 h-100">
-					<Sidebar />
-					<Switch>
-						<Route path="/" exact component={ HomeScreen } />
-						<Route path="/dashboard" component={ DashboardScreen } />
-						<Route path="/assos" exact component={ AssosListScreen } />
-						<Route path="/assos/:login" component={ AssoDetailScreen } />
-						<Route path="/profile" component={ ProfileScreen } />
-						<Route component={ RouteNotFound } />
-					</Switch>
-				</div>
+				<ErrorCatcher>
+					<div className="d-flex w-100 h-100">
+						<Sidebar />
+						<Switch>
+							<Route path="/" exact component={ HomeScreen } />
+							<Route path="/dashboard" component={ DashboardScreen } />
+							<Route path="/assos" exact component={ AssosListScreen } />
+							<Route path="/assos/:login" component={ AssoDetailScreen } />
+							<Route path="/profile" component={ ProfileScreen } />
+							<Route component={ RouteNotFound } />
+						</Switch>
+					</div>
+				</ErrorCatcher>
 			</div>
 		);
 	}
