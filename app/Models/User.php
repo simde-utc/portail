@@ -22,7 +22,9 @@ use App\Exceptions\PortailException;
 
 class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
-	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid;
+	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid {
+		HasHiddenData::hideData as protected hideDataFromTrait;
+	}
 
     public static function boot() {
 		parent::boot();
@@ -98,6 +100,12 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 			return collect($users);
 		else
 			return $users;
+	}
+
+	public function hideData(bool $addModelName = false) {
+		$this->me = $this->me;
+
+		return $this->hideDataFromTrait($addModelName);
 	}
 
 	public function ban() {
