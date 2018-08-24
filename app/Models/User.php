@@ -76,6 +76,7 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 	protected $selection = [
 		'order' => 'oldest',
 		'paginate' => null,
+		'filter' => [],
 	];
 
 	public function getMeAttribute() {

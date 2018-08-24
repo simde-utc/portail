@@ -45,6 +45,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		'order' => 'oldest',
 		'stage' => null,
 		'stages' => null,
+		'filter' => [],
 	];
 
 	protected $roleRelationTable = 'assos_members';

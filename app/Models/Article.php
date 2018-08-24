@@ -50,6 +50,7 @@ class Article extends Model implements OwnableContract
 		'creator' 	=> [],
 		'owner' 	=> [],
 		'action'	=> [],
+		'filter'	=> [],
 	];
 
 	public function scopeOrder(Builder $query, string $order) {

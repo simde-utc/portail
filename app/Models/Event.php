@@ -59,6 +59,7 @@ class Event extends Model implements OwnableContract
                 'end' => 'begin_at',
             ]
         ],
+		'filter' => [],
     ];
 
     public function created_by() {

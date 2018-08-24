@@ -22,6 +22,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
 
     protected $selection = [
         'paginate' => null,
+		'filter' => [],
     ];
 
     public function asso() {

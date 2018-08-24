@@ -25,6 +25,7 @@ class Contact extends Model implements OwnableContract // TODO $must
     protected $selection = [
         'paginate' => null,
         'order' => null,
+		'filter' => [],
     ];
 
     public static function boot() {
