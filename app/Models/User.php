@@ -63,6 +63,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		'remember_token',
 	];
 
+	protected $must = [
+		'me'
+	];
+
 	public $types = [
 		'admin', 'contributorBde', 'cas', 'password', 'active',
 	];
@@ -71,6 +75,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		'order' => 'oldest',
 		'paginate' => null,
 	];
+
+	public function getMeAttribute() {
+		return \Auth::id() === $this->id;
+	}
 
 	public function getNameAttribute() {
 		if ($this->is_active)
