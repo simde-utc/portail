@@ -1,0 +1,27 @@
+.nav.nav-tabs.asso {
+    border: none;
+
+    .nav-item {
+        border: none;
+        margin-bottom: 0;
+
+        .nav-link {
+            border: none;
+            border-radius: 0;
+            color: white;
+            font-size: .85rem;
+            font-weight: bold;
+            padding: 12px 40px;
+            transition: background-color .1s;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, .2);
+            }
+
+            &.active {
+                color: black;
+                background-color: white;
+            }
+        }
+    }
+}

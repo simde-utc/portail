@@ -15,6 +15,7 @@ const loggedUserActions = {
 	getPreferences: () => updateUserPropActionCreator('preferences', '/preferences'),
 	getCalendars: 	() => updateUserPropActionCreator('calendars', '/calendars'),
 	getAssos: 		() => updateUserPropActionCreator('assos', '/assos'),
+	getGroups: 		() => updateUserPropActionCreator('groups', '/groups'),
 
 	// Remove all data about the user
 	removeUser: () => ({

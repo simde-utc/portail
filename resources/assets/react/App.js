@@ -1,37 +1,37 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
-
-// Screens
-import ScreensHome from './screens/Home.js';
-import ScreensDashboard from './screens/Dashboard';
-import ScreensAssosList from './screens/AssosList';
-import ScreensAssoDetail from './screens/AssoDetail';
-import ScreensProfile from './screens/Profile';
 
 // Components
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
+import RouteNotFound from './components/RouteNotFound';
+import ErrorCatcher from './components/ErrorCatcher';
+import PrivateRoute from './components/PrivateRoute';
 
-class App extends Component {
+// Screens
+import HomeScreen from './screens/Home';
+import DashboardScreen from './screens/Dashboard';
+import AssosListScreen from './screens/AssosList';
+import AssoDetailScreen from './screens/Asso/Asso';
+import ProfileScreen from './screens/Profile';
+
+class App extends React.Component {
 	render() {
-		// Fake Components
-		const RouteNotFound = () => (<div><h1>404</h1></div>)
-
 		return (
 			<div className="h-100">
 				<Navbar />
 				<div className="d-flex w-100 h-100">
 					<Sidebar />
-					<main className="col loader-container">
+					<ErrorCatcher>
 						<Switch>
-							<Route path="/" exact component={ ScreensHome } />
-							<Route path="/dashboard" component={ ScreensDashboard } />
-							<Route path="/assos" exact component={ ScreensAssosList } />
-							<Route path="/assos/:login" component={ ScreensAssoDetail } />
-							<Route path="/profile" component={ ScreensProfile } />
+							<Route path="/" exact component={ HomeScreen } />
+							<Route path="/dashboard" component={ DashboardScreen } />
+							<Route path="/assos" exact component={ AssosListScreen } />
+							<Route path="/assos/:login" component={ AssoDetailScreen } />
+							<PrivateRoute path="/profile" component={ ProfileScreen } />
 							<Route component={ RouteNotFound } />
 						</Switch>
-					</main>
+					</ErrorCatcher>
 				</div>
 			</div>
 		);

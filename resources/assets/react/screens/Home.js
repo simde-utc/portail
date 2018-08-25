@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import ArticleList from './../components/Article/List.js';
 
-class ScreensHome extends Component {
+class ScreensHome extends React.Component {
     render() {
         return (
             <div className="Home">

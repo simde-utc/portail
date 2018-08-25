@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\User;
 
 use App\Http\Controllers\v1\Controller;
 use App\Models\User;
+use App\Models\Model;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use App\Exceptions\PortailException;
@@ -72,8 +73,14 @@ class AuthController extends Controller
 
 			$class = resolve($provider['class']);
 
-			if ($class)
-				return response()->json($class->addAuth($user->id, $request->input('data')));
+			if ($class) {
+				$auth = $class->addAuth($user->id, $request->input('data'));
+
+				if ($auth instanceof Model)
+					return response()->json($auth);
+				else
+					abort(400, 'Il n\'a pas été possible de créer le système d\'authentication '.$name);
+			}
 			else
 				return response()->json(['message' => 'Le service '.$name.' ne permet pas à l\'utlisateur de se connecter'], 404);
 		}

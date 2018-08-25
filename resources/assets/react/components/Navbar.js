@@ -21,7 +21,9 @@ class Navbar extends React.Component {
 		// Get User Info
 		this.props.dispatch(loggedUserActions.getInfo())
 		// Get Login Methods
-		axios.get('/api/v1/login').then(response => this.setState({ loginMethods: response.data}))
+		axios.get('/api/v1/login')
+			.then(response => this.setState({ loginMethods: response.data}))
+			.catch(err => console.warn("Error happened while fetching login methods :", err))
 	}
 
 	toggle(key) {
@@ -31,8 +33,10 @@ class Navbar extends React.Component {
 	render() {
 		const { collapse, loginDropdown } = this.state;
 		const { user } = this.props;
-		const loginMethods = Object.entries(this.state.loginMethods).map(([key, loginMethod]) => (
-			<a key={ key } className="dropdown-item" href={ loginMethod.url } title={ loginMethod.description }>
+		const loginMethods = Object.entries(this.state.loginMethods).filter(([key, loginMethod]) => {
+			return loginMethod.login_url
+		}).map(([key, loginMethod]) => (
+			<a key={ key } className="dropdown-item" href={ loginMethod.login_url } title={ loginMethod.description }>
 				{ loginMethod.name }
 			</a>
 		))
