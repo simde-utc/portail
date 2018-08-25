@@ -224,6 +224,10 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 		return $this->hasMany(UserPreference::class);
 	}
 
+	public function notifications() {
+		return $this->morphMany(Notification::class, 'notifiable');
+	}
+
 	public function assos() {
 		return $this->belongsToMany('App\Models\Asso', 'assos_members')->withPivot('semester_id', 'role_id', 'validated_by');
 	}

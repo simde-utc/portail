@@ -48,12 +48,14 @@ Route::group(['middleware' => 'user:active'], function () {
 		'users/{user_id}/preferences'				=> 'User\PreferenceController',
 		'users/{user_id}/calendars'					=> 'User\CalendarController',
 		'users/{user_id}/assos'						=> 'User\AssoController',
+		'users/{user_id}/notifications'				=> 'User\NotificationController',
 		'users/{user_id}/articles/{article_id}/actions'	=> 'User\Article\ActionController',
 
 		// Routes `user` identiques à `users/{\Auth::id()}`
 		'user/roles'								=> 'User\RoleController',
 		'user/calendars'							=> 'User\CalendarController',
 		'user/contacts'								=> 'Contact\ContactController',
+		'user/notifications'						=> 'User\NotificationController',
 	]);
 
 	// Routes définies pour toutes ressources

@@ -8,8 +8,9 @@ class Notification extends Model
 		'type', 'notifiable_id', 'notifiable_type', 'data', 'created_at', 'updated_at', 'read_at',
 	];
 
-    protected $spatialFields = [
-        'position',
+    protected $casts = [
+        'data' => 'array',
+        'read_at' => 'datetime',
     ];
 
 	protected $with = [
@@ -21,12 +22,17 @@ class Notification extends Model
 	];
 
     protected $hidden = [
-        'notifiable_id', 'notifiable_type',
+        'type', 'notifiable_id', 'notifiable_type',
     ];
 
-    public function getTypeAttribute() {
-        return resolve($this->type);
-    }
+    protected $must = [
+        'notifiable', 'data', 'created_at', 'read_at',
+    ];
+
+    protected $selection = [
+        'paginate' => 10,
+        'filter' => [],
+    ];
 
     public function notifiable() {
         return $this->morphTo();
