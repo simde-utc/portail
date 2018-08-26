@@ -13,6 +13,16 @@ class Semester extends Model // TODO $must
         'year' => 'char',
     ];
 
+    protected $must = [
+        'is_spring', 'year', 'begining_at', 'ending_at',
+    ];
+
+    protected $selection = [
+        'paginate' => [],
+        'order' => [],
+        'filter' => [],
+    ];
+
 	public static function getSemester($semester) {
 		return static::where('id', $semester)->orWhere('name', $semester)->first();
 	}
