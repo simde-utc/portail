@@ -32,8 +32,26 @@ class Scopes {
 	 */
 	protected $scopes;
 
+	protected $allowPublicAjax = false;
+
 	public function __construct() {
 		$this->scopes = config('scopes');
+	}
+
+	/**
+	 * Cette méthode permet de définir si les routes sont accessibles
+	 */
+	public function allowPublic($allow = true) {
+		$this->allowPublicAjax = $allow;
+
+		return $this;
+	}
+
+	/**
+	 * Cette méthode définie le middleware à appeler
+	 */
+	protected function getAuthMiddleware() {
+		return $this->allowPublicAjax ? 'authAjax' : 'auth';
 	}
 
 	/**
@@ -369,20 +387,22 @@ class Scopes {
 	 * @return array
 	 */
 	private function matchAny(array $userScopes = [], array $clientScopes = [], bool $matchOne = true) {
+		$indicator = $matchOne ? '1' : '0';
+
 		if (count($userScopes) > 0) {
 			if (count($clientScopes) > 0)
-				$middleware = 'auth.any:'.implode(',', [($matchOne ? '1' : '0'), implode('|', $userScopes), implode('|', $clientScopes)]);
+				$middleware = $this->getAuthMiddleware().'.any:'.implode(',', [$indicator, implode('|', $userScopes), implode('|', $clientScopes)]);
 			else
-				$middleware = 'auth.user:'.implode(',', [($matchOne ? '1' : '0'), implode('|', $userScopes)]);
+				$middleware = $this->getAuthMiddleware().'.user:'.implode(',', [$indicator, implode('|', $userScopes)]);
 		}
 		else if (count($clientScopes) > 0)
-			$middleware = 'auth.client:'.implode(',', [($matchOne ? '1' : '0'), implode('|', $clientScopes)]);
+			$middleware = $this->getAuthMiddleware().'.client:'.implode(',', [$indicator, implode('|', $clientScopes)]);
 		else
 			return [];
 
 		return [
 			$middleware,
-			'auth.check',
+			$this->getAuthMiddleware().'.check',
 		];
 	}
 
@@ -393,8 +413,8 @@ class Scopes {
 	 */
 	public function matchAnyUser() {
 		return [
-			'auth.user',
-			'auth.check'
+			$this->getAuthMiddleware().'.user',
+			$this->getAuthMiddleware().'.check'
 		];
 	}
 
@@ -405,8 +425,8 @@ class Scopes {
 	 */
 	public function matchAnyClient() {
 		return [
-			'auth.client',
-			'auth.check'
+			$this->getAuthMiddleware().'.client',
+			$this->getAuthMiddleware().'.check'
 		];
 	}
 
@@ -417,8 +437,8 @@ class Scopes {
 	 */
 	public function matchAnyUserOrClient() {
 		return [
-			'auth.any',
-			'auth.check'
+			$this->getAuthMiddleware().'.any',
+			$this->getAuthMiddleware().'.check'
 		];
 	}
 
@@ -532,14 +552,18 @@ class Scopes {
 	}
 
 	public function getToken(Request $request) {
-		if ($request->user() === null) {
-			$bearerToken = $request->bearerToken();
-			$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
-
-			return Token::find($tokenId);
-		}
-		else
+		if ($request->user())
 			return $request->user()->token();
+		else {
+			try {
+				$bearerToken = $request->bearerToken();
+				$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+
+				return Token::find($tokenId);
+			} catch (\Exception $e) {
+				return null;
+			}
+		}
 	}
 
 	public function getClient(Request $request) {
@@ -571,6 +595,9 @@ class Scopes {
 
 		$token = $this->getToken($request);
 
+		if ($token === null)
+			return false;
+
 		if ($token->transient())
 			return true;
 
@@ -595,6 +622,9 @@ class Scopes {
 			$scopes = $this->getMatchingScopes([$scopes]);
 
 		$token = $this->getToken($request);
+
+		if ($token === null)
+			return false;
 
 		if ($token->transient())
 			return true;

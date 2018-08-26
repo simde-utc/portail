@@ -22,8 +22,9 @@ class AssoController extends Controller
 	use HasAssos;
 
 	public function __construct() {
+		// La récupération des assos est publique
 		$this->middleware(
-			\Scopes::matchOne('user-get-assos', 'client-get-assos'),
+			\Scopes::allowPublic()->matchOne('user-get-assos', 'client-get-assos'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(

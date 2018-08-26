@@ -32,7 +32,7 @@ class ArticleController extends Controller
 	 */
  	public function __construct() {
  		$this->middleware(
- 			\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
+ 			\Scopes::allowPublic()->matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
  			['only' => ['index', 'show']]
  		);
  		$this->middleware(
