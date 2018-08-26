@@ -89,13 +89,20 @@ class ArticleController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse {
-		$articles = Article::getSelection()->filter(function ($article) use ($request) {
-			return $this->tokenCanSee($request, $article, 'get') && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
-		})->values()->map(function ($article) {
-			return $article->hideData();
-		});
+		if (\Scopes::getToken($request)) {
+			$articles = Article::getSelection()->filter(function ($article) use ($request) {
+				return $this->tokenCanSee($request, $article, 'get') && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
+			});
+		}
+		else {
+			$articles = Article::getSelection()->filter(function ($article) use ($request) {
+				return $this->isVisible($article);
+			});
+		}
 
-		return response()->json($articles, 200);
+		return response()->json($articles->values()->map(function ($article) {
+			return $article->hideData();
+		}), 200);
 	}
 
 	/**

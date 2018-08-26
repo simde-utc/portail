@@ -535,7 +535,7 @@ class Scopes {
 	 * @return string	'client' / 'user'
 	 */
 	public function getTokenType(Request $request) {
-		return $this->isClientToken($request) ? 'client' : 'user';
+		return $this->getToken($request) ? ($this->isClientToken($request) ? 'client' : 'user') : null;
 	}
 
 	public function isUserOrClientToken(Request $request) {
