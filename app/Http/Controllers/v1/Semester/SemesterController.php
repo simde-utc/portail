@@ -15,11 +15,16 @@ use App\Models\Semester;
  */
 class SemesterController extends Controller
 {
+	public function __construct() {
+		$this->middleware(
+			\Scopes::allowPublic()->matchAnyUserOrClient()
+		);
+	}
+
 	/**
-	 * List Visibilities
+	 * List Semesters
 	 * @return JsonResponse
 	 */
-
 	public function index(): JsonResponse {
 		$semesters = Semester::getSelection()->map(function ($semester) {
 			return $semester->hideData();

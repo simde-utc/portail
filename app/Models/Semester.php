@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Semester extends Model // TODO $must
+class Semester extends Model
 {
     protected $fillable = [
         'name', 'is_spring', 'year', 'begining_at', 'ending_at',
