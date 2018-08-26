@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Notification;
 use App\Notifications\ExternalNotification;
-use App\Interfaces\Model\CanNotifiate;
+use App\Interfaces\Model\Can;
 
 /**
  * @resource Notification
@@ -81,7 +81,7 @@ class NotificationController extends Controller
         $user = $this->getUser($request, $user_id);
 
         $user->notify(new ExternalNotification(
-            \ModelResolver::getModel($request->input('notifier', 'client'), CanNotifiate::class),
+            \ModelResolver::getModel($request->input('notifier', 'client'), Can::class),
             $request->input('content'),
             $request->input('action', [])
         ));

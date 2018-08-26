@@ -21,7 +21,7 @@ class ExternalNotification extends Notification implements ShouldQueue
      * Définition du type de notif et sa description
      * @param string $type
      */
-    public function __construct(CanNotifiate $model, string $content, array $action = []) {
+    public function __construct(Can $model, string $content, array $action = []) {
         parent::__construct('external_'.\ModelResolver::getName($model));
 
         $this->subject = $model->name;
