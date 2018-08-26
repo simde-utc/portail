@@ -94,5 +94,6 @@ Route::group([], function () {
 		'articles'									=> 'Article\ArticleController',
 		'articles/{article_id}/actions'				=> 'Article\ActionController',
 		'visibilities'								=> 'Visibility\VisibilityController',
+		'semesters'									=> 'Semester\SemesterController',
 	]);
 });

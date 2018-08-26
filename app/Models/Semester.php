@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Semester extends Model // TODO $must
+class Semester extends Model
 {
     protected $fillable = [
         'name', 'is_spring', 'year', 'begining_at', 'ending_at',
@@ -11,6 +11,16 @@ class Semester extends Model // TODO $must
     protected $cast = [
         'is_spring' => 'boolean',
         'year' => 'char',
+    ];
+
+    protected $must = [
+        'is_spring', 'year', 'begining_at', 'ending_at',
+    ];
+
+    protected $selection = [
+        'paginate' => [],
+        'order' => [],
+        'filter' => [],
     ];
 
 	public static function getSemester($semester) {
