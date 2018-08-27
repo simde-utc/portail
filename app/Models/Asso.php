@@ -22,8 +22,12 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		HasMembers::getUserRoles as getUsersRolesInThisAssociation;
 	}
 
+	protected $casts = [
+		'deleted_at' => 'datetime',
+	];
+
 	protected $fillable = [
-		'name', 'shortname', 'login', 'description', 'type_asso_id', 'parent_id',
+		'name', 'shortname', 'login', 'image', 'description', 'type_asso_id', 'parent_id',
 	];
 
 	protected $hidden = [
