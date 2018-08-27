@@ -72,10 +72,12 @@ class AssoController extends Controller
 	 * @return JsonResponse
 	 */
 	public function store(AssoRequest $request): JsonResponse {
-		$this->prepareImage('assos/'.$request->input('login'));
 		$asso = Asso::create($request->input());
 
 		if ($asso) {
+			// On affecte l'image si tout s'est bien passé
+			$this->setImage($request, $asso, 'assos/'.$asso->id);
+
 			// Après la création, on ajoute son président (non confirmé évidemment)
 			$asso->assignRoles(config('portail.roles.admin.assos'), [
 				'user_id' => $request->input('user_id'),
@@ -136,10 +138,12 @@ class AssoController extends Controller
 			$asso->restore();
 		}
 
-		$this->prepareImage('assos/'.$asso->login);
+		if ($asso->update($request->input())) {
+			// On affecte l'image si tout s'est bien passé
+			$this->setImage($request, $asso, 'assos/'.$asso->id);
 
-		if ($asso->update($request->input()))
 			return response()->json($asso, 200);
+		}
 		else
 			abort(500, 'L\'association n\'a pas pu être modifiée');
 	}

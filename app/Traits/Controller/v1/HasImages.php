@@ -6,16 +6,19 @@ use Illuminate\Http\Request;
 
 trait HasImages
 {
-	protected function prepareImage($path, $input = 'image', $name = null) {
+	protected function setImage($request, $model, $path, $name = null, $input = 'image') {
 		if ($request->hasFile($input)) {
 			$image = $request->file($input);
 			$path = '/images/'.$path.'/';
 			$name = ($name ?: time()).'.'.$image->getClientOriginalExtension();
 
 	        $image->move(public_path($path), $name);
-			$request->merge([
+			
+			return $model->update([
 				$input => url($path.$name),
 			]);
 		}
+
+		return $model;
 	}
 }
