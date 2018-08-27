@@ -11,6 +11,7 @@ use App\Models\Semester;
 use App\Models\Role;
 use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasAssos;
+use App\Traits\Controller\v1\HasImages;
 
 /**
  * @resource Association
@@ -19,7 +20,7 @@ use App\Traits\Controller\v1\HasAssos;
  */
 class AssoController extends Controller
 {
-	use HasAssos;
+	use HasAssos, HasImages;
 
 	public function __construct() {
 		// La récupération des assos est publique
@@ -71,18 +72,17 @@ class AssoController extends Controller
 	 * @return JsonResponse
 	 */
 	public function store(AssoRequest $request): JsonResponse {
+		$this->prepareImage('assos/'.$request->input('login'));
 		$asso = Asso::create($request->input());
 
 		if ($asso) {
 			// Après la création, on ajoute son président (non confirmé évidemment)
 			$asso->assignRoles(config('portail.roles.admin.assos'), [
 				'user_id' => $request->input('user_id'),
-			]);
+			], true);
 
 			// On met l'asso en état inactif
-			$asso->softDelete();
-
-			// TODO: Envoyer un mail de confirmation et de demande de confirmation par les assos parents
+			$asso->delete();
 
 			return response()->json($asso, 201);
 		}
@@ -135,6 +135,8 @@ class AssoController extends Controller
 
 			$asso->restore();
 		}
+
+		$this->prepareImage('assos/'.$asso->login);
 
 		if ($asso->update($request->input()))
 			return response()->json($asso, 200);
