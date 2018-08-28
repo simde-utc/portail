@@ -19,7 +19,7 @@ class Sidebar extends React.Component {
 
 			for (let i = 0; i < data.length; i++) {
 				assos.push(
-					<NavLink className="sidebar-link" to={ "/assos/" + data[i].login }>
+					<NavLink key={ data[i].id } className="sidebar-link" to={ "/assos/" + data[i].login }>
 						{ data[i].shortname }
 					</NavLink>
 				);

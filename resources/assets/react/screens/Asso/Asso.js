@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { assosActions } from '../../redux/actions';
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
-import { NavLink, Route, Switch } from 'react-router-dom';
+import { NavLink, Link, Route, Switch } from 'react-router-dom';
 
 import Dropdown from './../../components/Dropdown.js';
 
@@ -57,8 +57,8 @@ class ScreensAsso extends Component {
                     </li>
                     <li className="nav-item dropdown">
                         <Dropdown title="CRÉER">
-                            <a className="dropdown-item" href="#">Action</a>
-                            <a className="dropdown-item" href="#">Another action</a>
+                            <Link className="dropdown-item" to={`${this.props.match.url}/creer/article`}>Article</Link>
+                            <Link className="dropdown-item" to={`${this.props.match.url}/creer/evenement`}>Évènement</Link>
                         </Dropdown>
                     </li>
                 </ul>
@@ -68,6 +68,9 @@ class ScreensAsso extends Component {
                         )} />
                     <Route path={`${this.props.match.url}/articles`} render={ () => ( 
                             <ScreensAssoArticles />
+                        )} />
+                    <Route path={`${this.props.match.url}/creer/article`} render={ () => ( 
+                            <ArticleForm />
                         )} />
                 </Switch>
             </div>
