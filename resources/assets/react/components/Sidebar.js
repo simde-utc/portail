@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import loggedUserActions from '../redux/custom/loggedUser/actions';
-import { NavLink } from 'react-router-dom';
+import { withRouter, NavLink } from 'react-router-dom';
 
 @connect((store, props) => ({
     user: store.loggedUser.data
@@ -62,8 +62,6 @@ class Sidebar extends React.Component {
 						<h6 className="sidebar-header d-hover-zone">
 							MES GROUPES <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/groups" />
 						</h6>
-						<NavLink className="sidebar-link" to="/groupes/samymauch"><i className="fas fa-sad-tear"></i>Samyest Mauch</NavLink>
-						<NavLink className="sidebar-link" to="/groupes/wwbb"><i className="fas fa-skull"></i>Woolly Woolly Bang Bang</NavLink>
 					</div>
 				</div>
 				<p className="sidebar-footer">&lt;&#47;&gt; avec le sang par le SiMDE</p>
@@ -72,4 +70,4 @@ class Sidebar extends React.Component {
 	}
 }
 
-export default Sidebar;
+export default withRouter(Sidebar);
