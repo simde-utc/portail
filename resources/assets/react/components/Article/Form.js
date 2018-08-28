@@ -1,59 +1,94 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import SimpleMDE from 'react-simplemde-editor';
+import "simplemde/dist/simplemde.min.css";
+
 import { getTime } from '../../utils.js';
 
 class ArticleForm extends React.Component {
-	constructor() {
-		super();
-		this.state = {
-			form: {
-				
-			}
-		}
-	}
-
-	componentDidMount() {
-		this.setState({ text: this.props.article.content });
-	}
-
-	toggleExpand(e) {
-		this.setState({ expanded: !this.state.expanded });
-	}
-
 	render() {
-		const content = this.props.article.content;
-		var articleBody = <p>{ content }</p>
-
-		if (content.length > 200 && !this.state.expanded) {
-			articleBody = (
-				<p>
-					{ content.substring(0, 200) }... &nbsp;
-					<button className="btn btn-link m-0 p-0 mb-1" onClick={ (e) => this.toggleExpand(e) }>
-						Lire la suite
-					</button>
-				</p>
-			);
-		}
-
 		return (
-			<div className="Article row m-0 my-3 my-md-5">
-				<div className="col-md-3 mb-3 mb-md-0">
-					<div className="ml-0 ml-md-4 ml-xl-5 media mt-1">
-						<img className="align-self-start img-fluid rounded-circle mr-2" src="http://via.placeholder.com/50x50" />
-						<div className="media-body">
-							<Link to={ "/assos/" + this.props.article.owned_by.login }>{ this.props.article.owned_by.shortname }</Link>
-							<span className="d-block text-muted small">{ getTime(this.props.article.created_at) }</span>
-						</div>
-					</div>
-				</div>
-				<div className="col-md-7 body mx-auto">
-					<h3>{ this.props.article.title }</h3>
-					{ articleBody }
-				</div>
-				<div className="col-md-2 right">
-				</div>
-			</div>
+			<SimpleMDE
+				onChange={this.handleChange}
+				options={{
+					spellChecker: false,
+					toolbar: [
+		                {
+		                    name: "bold",
+		                    action: self.toggleBold,
+		                    className: "fas fa-fw fa-bold",
+		                    title: "Gras",
+		                },
+		                {
+		                    name: "italic",
+		                    action: self.toggleItalic,
+		                    className: "fas fa-fw fa-italic",
+		                    title: "Italique",
+		                },
+		                {
+		                    name: "heading",
+		                    action: self.toggleHeadingSmaller,
+		                    className: "fas fa-fw fa-heading",
+		                    title: "Titre",
+		                },
+		                {
+		                    name: "quote",
+		                    action: self.toggleBlockquote,
+		                    className: "fas fa-fw fa-quote-left",
+		                    title: "Citation",
+		                },
+		                {
+		                    name: "unordered-list",
+		                    action: self.toggleUnorderedList,
+		                    className: "fas fa-fw fa-list-ul",
+		                    title: "Liste non-ordonnée",
+		                },
+		                {
+		                    name: "ordered-list",
+		                    action: self.toggleOrderedList,
+		                    className: "fas fa-fw fa-list-ol",
+		                    title: "Liste ordonnée",
+		                },
+		                {
+		                    name: "link",
+		                    action: self.drawLink,
+		                    className: "fas fa-fw fa-link",
+		                    title: "Insérer un lien",
+		                },
+		                {
+		                    name: "image",
+		                    action: self.drawImage,
+		                    className: "far fa-fw fa-image",
+		                    title: "Insérer une image",
+		                },
+		                {
+		                    name: "table",
+		                    action: self.drawTable,
+		                    className: "fas fa-fw fa-table",
+		                    title: "Insérer un tableau",
+		                },
+		                {
+		                    name: "preview",
+		                    action: self.togglePreview,
+		                    className: "fas fa-fw fa-eye no-disable",
+		                    title: "Aperçu",
+		                },
+		                {
+		                    name: "side-by-side",
+		                    action: self.toggleSideBySide,
+		                    className: "fas fa-fw fa-columns no-disable no-mobile",
+		                    title: "Cote à cote",
+		                },
+		                {
+		                    name: "fullscreen",
+		                    action: self.toggleFullScreen,
+		                    className: "fas fa-fw fa-arrows-alt no-disable no-mobile",
+		                    title: "Plein écran",
+		                }
+		            ]
+				}}
+			/>
 		);
 	}
 }

@@ -6,7 +6,7 @@ class ErrorDebugger extends React.Component {
 		return (
 			<div className="container">
 				<h1 className="title">Oupss...</h1>
-				<p>An error happened, check console logs to know more.</p>
+				<p>Une erreur est survenue.</p>
 			</div>
 		)
 	}

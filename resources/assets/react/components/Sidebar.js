@@ -26,6 +26,13 @@ class Sidebar extends React.Component {
 			}
 		}
 
+		// TODO: Groups to do (fetch and display like assos).
+		// <div className="sidebar-group">
+		// 	<h6 className="sidebar-header d-hover-zone">
+		// 		MES GROUPES <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/groups" />
+		// 	</h6>
+		// </div>
+
 		return (
 			<div className="sidebar col-md-3 col-xl-2 d-none d-md-flex flex-column justify-content-between">
 				<div className="sidebar-inner">
@@ -57,14 +64,8 @@ class Sidebar extends React.Component {
 						</h6>
 						{ assos }
 					</div>
-
-					<div className="sidebar-group">
-						<h6 className="sidebar-header d-hover-zone">
-							MES GROUPES <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/groups" />
-						</h6>
-					</div>
 				</div>
-				<p className="sidebar-footer">&lt;&#47;&gt; avec le sang par le SiMDE</p>
+				<p className="sidebar-footer small">&lt;&#47;&gt; avec le sang par le SiMDE</p>
 			</div>
 		);
 	}
