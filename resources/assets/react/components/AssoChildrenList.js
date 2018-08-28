@@ -23,6 +23,6 @@ class AssoChildrenList extends Component {
 
 		);
 	}
-};
+}
 
 export default AssoChildrenList;

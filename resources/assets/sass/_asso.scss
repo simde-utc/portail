@@ -18,6 +18,10 @@
                 background-color: rgba(0, 0, 0, .2);
             }
 
+            &.admin {
+                background-color: $red;
+            }
+
             &.active {
                 color: black;
                 background-color: white;

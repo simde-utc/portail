@@ -4,7 +4,10 @@ import { assosActions } from '../../redux/actions';
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
 import { NavLink, Route, Switch } from 'react-router-dom';
 
+import Dropdown from './../../components/Dropdown.js';
+
 import ScreensAssoHome from './Home.js';
+import ScreensAssoArticles from './Articles.js';
 
 /* TODO: Make it stateless & unconnected */
 @connect((store, props) => ({
@@ -52,14 +55,20 @@ class ScreensAsso extends Component {
                     <li className="nav-item">
                         <NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/trombinoscope`}>TROMBINOSCOPE</NavLink>
                     </li>
+                    <li className="nav-item dropdown">
+                        <Dropdown title="CRÉER">
+                            <a className="dropdown-item" href="#">Action</a>
+                            <a className="dropdown-item" href="#">Another action</a>
+                        </Dropdown>
+                    </li>
                 </ul>
                 <Switch>
-                    <Route path={`${this.props.match.url}`} exact render={ () => { 
-                            return <ScreensAssoHome asso={ this.props.asso } />
-                        }} />
-                    <Route path={`${this.props.match.url}/articles`} render={
-                        () => <div></div>
-                    } />
+                    <Route path={`${this.props.match.url}`} exact render={ () => ( 
+                            <ScreensAssoHome asso={ this.props.asso } />
+                        )} />
+                    <Route path={`${this.props.match.url}/articles`} render={ () => ( 
+                            <ScreensAssoArticles />
+                        )} />
                 </Switch>
             </div>
         );
