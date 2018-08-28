@@ -8,6 +8,8 @@ import { getTime } from '../../utils.js';
 
 class ArticleForm extends React.Component {
 	render() {
+		const smdeInstance = require("simplemde");
+
 		return (
 			<SimpleMDE
 				onChange={this.handleChange}
@@ -16,73 +18,73 @@ class ArticleForm extends React.Component {
 					toolbar: [
 		                {
 		                    name: "bold",
-		                    action: self.toggleBold,
+		                    action: smdeInstance.toggleBold,
 		                    className: "fas fa-fw fa-bold",
 		                    title: "Gras",
 		                },
 		                {
 		                    name: "italic",
-		                    action: self.toggleItalic,
+		                    action: smdeInstance.toggleItalic,
 		                    className: "fas fa-fw fa-italic",
 		                    title: "Italique",
 		                },
 		                {
 		                    name: "heading",
-		                    action: self.toggleHeadingSmaller,
+		                    action: smdeInstance.toggleHeadingSmaller,
 		                    className: "fas fa-fw fa-heading",
 		                    title: "Titre",
 		                },
 		                {
 		                    name: "quote",
-		                    action: self.toggleBlockquote,
+		                    action: smdeInstance.toggleBlockquote,
 		                    className: "fas fa-fw fa-quote-left",
 		                    title: "Citation",
 		                },
 		                {
 		                    name: "unordered-list",
-		                    action: self.toggleUnorderedList,
+		                    action: smdeInstance.toggleUnorderedList,
 		                    className: "fas fa-fw fa-list-ul",
 		                    title: "Liste non-ordonnée",
 		                },
 		                {
 		                    name: "ordered-list",
-		                    action: self.toggleOrderedList,
+		                    action: smdeInstance.toggleOrderedList,
 		                    className: "fas fa-fw fa-list-ol",
 		                    title: "Liste ordonnée",
 		                },
 		                {
 		                    name: "link",
-		                    action: self.drawLink,
+		                    action: smdeInstance.drawLink,
 		                    className: "fas fa-fw fa-link",
 		                    title: "Insérer un lien",
 		                },
 		                {
 		                    name: "image",
-		                    action: self.drawImage,
+		                    action: smdeInstance.drawImage,
 		                    className: "far fa-fw fa-image",
 		                    title: "Insérer une image",
 		                },
 		                {
 		                    name: "table",
-		                    action: self.drawTable,
+		                    action: smdeInstance.drawTable,
 		                    className: "fas fa-fw fa-table",
 		                    title: "Insérer un tableau",
 		                },
 		                {
 		                    name: "preview",
-		                    action: self.togglePreview,
+		                    action: smdeInstance.togglePreview,
 		                    className: "fas fa-fw fa-eye no-disable",
 		                    title: "Aperçu",
 		                },
 		                {
 		                    name: "side-by-side",
-		                    action: self.toggleSideBySide,
+		                    action: smdeInstance.toggleSideBySide,
 		                    className: "fas fa-fw fa-columns no-disable no-mobile",
 		                    title: "Cote à cote",
 		                },
 		                {
 		                    name: "fullscreen",
-		                    action: self.toggleFullScreen,
+		                    action: smdeInstance.toggleFullScreen,
 		                    className: "fas fa-fw fa-arrows-alt no-disable no-mobile",
 		                    title: "Plein écran",
 		                }
