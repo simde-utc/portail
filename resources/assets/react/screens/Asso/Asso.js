@@ -42,7 +42,7 @@ class ScreensAsso extends Component {
         const tabBarBg = this.props.asso.parent ? this.props.asso.parent.login : this.props.asso.login;
 
         return (
-            <div style={{ width: "100%" }}>
+            <div className="asso" style={{ width: "100%" }}>
                 <ul className={ "nav nav-tabs asso bg-" + tabBarBg }>
                     <li className="nav-item">
                         <NavLink className="nav-link" activeClassName="active" exact to={`${this.props.match.url}`}>ACCUEIL</NavLink>

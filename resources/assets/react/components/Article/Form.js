@@ -21,25 +21,90 @@ class ArticleForm extends React.Component {
 		this.setState({ content: value });
 	}
 
+	handleChange(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        
+        this.props.loginFetching();
+        this.props.login(this.state);
+    }
+
 	render() {
 		return (
 			<div>
 				<div className="container pt-3">
-					<div className="row">
+					<form className="form row" onSubmit={ (e) => this.handleSubmit(e) }>
 						<div className="col-md-6">
+							<h3>Nouvel article pour ...</h3>
 							<div className="form-group">
-							    <label>Titre</label>
+							    <label>Titre *</label>
 							    <input 
 							    	type="text" 
 							    	className="form-control" 
-							    	name="titre" 
+							    	name="title" 
+							    	value={ this.state.title }
+							    	onChange={ (e) => this.handleChange(e) }
 							    	placeholder="Entrez le titre de votre article"
+							    	required
 							    />
+							</div>
+							<div className="form-group">
+							    <label>Titre *</label>
+							    <input 
+							    	type="text" 
+							    	className="form-control" 
+							    	name="title" 
+							    	value={ this.state.title }
+							    	onChange={ (e) => this.handleChange(e) }
+							    	placeholder="Entrez le titre de votre article"
+							    	required
+							    />
+							</div>
+							<div className="form-group">
+							    <label>Titre *</label>
+							    <input 
+							    	type="text" 
+							    	className="form-control" 
+							    	name="title" 
+							    	value={ this.state.title }
+							    	onChange={ (e) => this.handleChange(e) }
+							    	placeholder="Entrez le titre de votre article"
+							    	required
+							    />
+							</div>
+							<div className="form-group">
+							    <label>Titre *</label>
+							    <input 
+							    	type="text" 
+							    	className="form-control" 
+							    	name="title" 
+							    	value={ this.state.title }
+							    	onChange={ (e) => this.handleChange(e) }
+							    	placeholder="Entrez le titre de votre article"
+							    	required
+							    />
+							</div>
+							<div className="form-group">
+							    <label>Description</label>
+							    <textarea 
+							    	className="form-control" 
+							    	name="description" 
+							    	rows="3"
+							    	onChange={ (e) => this.handleChange(e) }
+							    	placeholder="Entrez une courte description de votre article"
+							    >
+							    	{ this.state.description }
+							    </textarea>
 							</div>
 						</div>
 						<div className="col-md-12">
 							<div className="form-group">
-							    <label>Corps</label>
+							    <label>Corps *</label>
 								<Editor
 									onChange={ (e) => this.handleEditorChange(e) }
 									options={{
@@ -122,7 +187,7 @@ class ArticleForm extends React.Component {
 								/>
 							</div>
 						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 		);
