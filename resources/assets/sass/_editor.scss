@@ -1,8 +1,7 @@
 .editor-toolbar {
-    background-color: #323232 !important;
+    background-color: $dark-gray;
     opacity: 1 !important;
     border: none !important;
-    border-radius: 0 !important;
 
     &.fullscreen {
         top: 57px !important;
@@ -36,14 +35,12 @@
         border: none !important;
 
         &:hover {
-            color: white !important;
-            background-color: hsla(0, 0%, 100%, .1) !important;
+            background-color: hsla(0, 0, 0, .1) !important;
             border: none !important;
         }
 
         &.active {
-            color: white !important;
-            background-color: hsla(0, 0%, 100%, .1) !important;
+            background-color: hsla(0, 0, 0, .1) !important;
         }     
     }
 
@@ -58,6 +55,7 @@
 .editor-preview-side {
     border: none !important;
     border-top: 1px solid #ddd !important;
+    top: 106px !important;
 }
 
 .CodeMirror-fullscreen {
@@ -66,19 +64,14 @@
 }
 
 .editor-statusbar {
-    background: #2993FC;
-    color: white !important;
-    border-radius: 0 !important;
+    background: $dark-gray;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
     height: 20px !important;
     padding: 0 10px !important;
 
     span {
         font-size: 12px !important;
-        font-weight: bold !important;
-
-        &::before {
-            font-weight: normal !important;
-        }
     }
 }
 
