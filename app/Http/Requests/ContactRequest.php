@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Asso;
 use App\Models\User;
 use App\Exceptions\PortailException;
-use App\Interfaces\CanHaveContacts;
+use App\Interfaces\Model\CanHaveContacts;
 
 class ContactRequest extends FormRequest
 {
