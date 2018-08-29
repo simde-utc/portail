@@ -1,0 +1,9 @@
+form {
+    .form-control {
+        box-shadow: none;
+
+        &:focus {
+            background-color: $lighter-gray;
+        }
+    }
+}

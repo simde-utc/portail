@@ -40,43 +40,7 @@ class ArticleForm extends React.Component {
 				<div className="container pt-3">
 					<form className="form row" onSubmit={ (e) => this.handleSubmit(e) }>
 						<div className="col-md-6">
-							<h3>Nouvel article pour ...</h3>
-							<div className="form-group">
-							    <label>Titre *</label>
-							    <input 
-							    	type="text" 
-							    	className="form-control" 
-							    	name="title" 
-							    	value={ this.state.title }
-							    	onChange={ (e) => this.handleChange(e) }
-							    	placeholder="Entrez le titre de votre article"
-							    	required
-							    />
-							</div>
-							<div className="form-group">
-							    <label>Titre *</label>
-							    <input 
-							    	type="text" 
-							    	className="form-control" 
-							    	name="title" 
-							    	value={ this.state.title }
-							    	onChange={ (e) => this.handleChange(e) }
-							    	placeholder="Entrez le titre de votre article"
-							    	required
-							    />
-							</div>
-							<div className="form-group">
-							    <label>Titre *</label>
-							    <input 
-							    	type="text" 
-							    	className="form-control" 
-							    	name="title" 
-							    	value={ this.state.title }
-							    	onChange={ (e) => this.handleChange(e) }
-							    	placeholder="Entrez le titre de votre article"
-							    	required
-							    />
-							</div>
+							<h2 className="mb-3">Créer un article</h2>
 							<div className="form-group">
 							    <label>Titre *</label>
 							    <input 
