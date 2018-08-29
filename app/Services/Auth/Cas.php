@@ -21,10 +21,7 @@ class Cas extends BaseAuth
 	}
 
 	public function showLoginForm(Request $request) {
-		if (Auth::guard('cas')->check())
-			return redirect()->route('cas.request');
-		else
-			return parent::showLoginForm($request);
+		return parent::showLoginForm($request);
 	}
 
 	public function login(Request $request) {

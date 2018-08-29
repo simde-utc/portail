@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Model\HasHiddenData;
+use App\Notifications\Auth\RememberToLinkCAS;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 
 class AuthCas extends Auth // TODO must
@@ -22,6 +23,18 @@ class AuthCas extends Auth // TODO must
 	protected $must = [
 		'user_id', 'login', 'email', 'is_active',
 	];
+
+    public static function boot() {
+        parent::boot();
+
+        static::created(function ($model) {
+            // On crée une notif de rappel de linkage
+            $user = $model->user;
+
+            if (!$user->isPassword())
+                $user->notify(new RememberToLinkCAS());
+        });
+    }
 
 	public static function findByEmail($email) {
 		return (new static)->where('email', $email)->first();
