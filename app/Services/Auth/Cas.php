@@ -66,7 +66,7 @@ class Cas extends BaseAuth
 			];
 		}
 
-		if (($cas = AuthCas::findByEmail($email)))
+		if ($cas = AuthCas::findByEmail($email))
 			$user = $cas->user;
 		else {
 			$user = $this->updateOrCreateUser(compact('email', 'firstname', 'lastname'));
@@ -76,15 +76,7 @@ class Cas extends BaseAuth
 		if (!$user->isActive())
 			return $this->error($request, $user, $userAuth, 'Ce compte a été désactivé');
 
-		// On vérifie qu'on a bien lié son CAS à une connexion email/mot de passe
-		if ($user->password()->exists())
-			return $this->connect($request, $user, $cas);
-		else {
-			Auth::guard('cas')->login($user);
-			Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => $this->name]);
-
-			return redirect()->route('cas.request');
-		}
+		return $this->connect($request, $user, $cas);
 	}
 
 	public function register(Request $request) {
