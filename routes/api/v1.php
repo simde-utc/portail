@@ -86,6 +86,7 @@ Route::group([], function () {
 	// Routes définies pour toutes ressources
 	Route::apiResources([
 		'assos'										=> 'Asso\AssoController',
+		'services'									=> 'Service\ServiceController',
 		'places'									=> 'Location\PlaceController',
 		'locations'									=> 'Location\LocationController',
 		'events'									=> 'Event\EventController',

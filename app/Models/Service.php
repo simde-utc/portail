@@ -21,11 +21,15 @@ class Service extends Model
 	];
 
 	protected $must = [
-		'name', 'shortname', 'login', 'image', 'url'
+		'name', 'shortname', 'login', 'image', 'description', 'url'
 	];
 
 	protected $selection = [
 		'order' => 'oldest',
 		'filter' => [],
 	];
+
+	public function visibility() {
+		return $this->belongsTo(Visibility::class);
+	}
 }
