@@ -23,7 +23,7 @@ class CreateCommentsTable extends Migration
             $table->string('commentable_type');
 
             $table->timestamps();
-            $table->timestamp('deleted_at');
+            $table->softDeletes();
         });
 
         // Obligé d'ajouter la contrainte après création... #LaravelBug
