@@ -287,6 +287,10 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     	return $this->belongsToMany(Calendar::class, 'calendars_followers')->withTimestamps();
     }
 
+	public function followedServices() {
+		return $this->belongsToMany(Service::class, 'services_followers')->withTimestamps();
+	}
+
     public function comments() {
 		return $this->hasMany('App\Models\Comment');
 	}

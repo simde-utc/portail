@@ -6,7 +6,7 @@ use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Service;
-
+use App\Traits\Controller\v1\HasServices;
 
 /**
  * @resource Service
@@ -15,29 +15,31 @@ use App\Models\Service;
  */
 class ServiceController extends Controller
 {
+	use HasServices;
+
 	public function __construct() {
 		// La récupération des services est publique
 		$this->middleware(
-			\Scopes::allowPublic()->matchOne('user-get-services', 'client-get-services'),
+			\Scopes::allowPublic()->matchOne('user-get-services-created', 'client-get-services-created'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne('user-create-services', 'client-create-services'),
+				\Scopes::matchOne('user-create-services-created', 'client-create-services-created'),
 				['permission:asso']
 			),
 			['only' => ['store']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne('user-edit-services', 'client-edit-services'),
+				\Scopes::matchOne('user-edit-services-created', 'client-edit-services-created'),
 				['permission:service']
 			),
 			['only' => ['update']]
 		);
 		$this->middleware(
 			array_merge(
-				\Scopes::matchOne('user-remove-services', 'client-remove-services'),
+				\Scopes::matchOne('user-remove-services-created', 'client-remove-services-created'),
 				['permission:service']
 			),
 			['only' => ['destroy']]
@@ -50,7 +52,9 @@ class ServiceController extends Controller
 	 */
 
 	public function index(): JsonResponse {
-		$services = Service::getSelection()->map(function ($service) {
+		$services = Service::getSelection()->filter(function ($service) {
+			return !\Auth::id() || $this->isVisibile($service, \Auth::id());
+		})->map(function ($service) {
 			return $service->hideData();
 		});
 
@@ -79,12 +83,9 @@ class ServiceController extends Controller
 	 * @return JsonResponse
 	 */
 	public function show($id): JsonResponse {
-		$service = Service::find($id);
+		$service = $this->getService($user, $id);
 
-		if ($service)
-			return response()->json($service->hideSubData(), 200);
-		else
-			abort(404, 'Service non trouvée');
+		return response()->json($service->hideSubData(), 200);
 	}
 
 	/**
@@ -95,16 +96,12 @@ class ServiceController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(Request $request, string $id): JsonResponse {
-		$service = Service::find($id);
+		$service = $this->getService($user, $id);
 
-		if ($service) {
-			if ($service->update($request->input()))
-				return response()->json($service->hideSubData(), 201);
-			else
-				abort(500, 'Impossible de modifier la service');
-		}
+		if ($service->update($request->input()))
+			return response()->json($service->hideSubData(), 201);
 		else
-			abort(404, 'Service non trouvée');
+			abort(500, 'Impossible de modifier la service');
 	}
 
 	/**
@@ -114,15 +111,11 @@ class ServiceController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(string $id): JsonResponse {
-		$service = Service::find($id);
+		$service = $this->getService($user, $id);
 
-		if ($service) {
-			if ($service->softDelete())
-				abort(204);
-			else
-				abort(500, 'Impossible de supprimer la service');
-		}
+		if ($service->softDelete())
+			abort(204);
 		else
-			abort(404, 'Service non trouvée');
+			abort(500, 'Impossible de supprimer la service');
 	}
 }

@@ -32,4 +32,8 @@ class Service extends Model
 	public function visibility() {
 		return $this->belongsTo(Visibility::class);
 	}
+
+	public function followers() {
+		return $this->hasMany(User::class, 'services_followers');
+	}
 }

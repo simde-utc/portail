@@ -24,19 +24,59 @@ return [
     'description' => 'Services',
     'verbs' => [
         'manage' => [
-            'description' => 'Gérer tous les services',
+            'description' => 'Gérer tous les services créés et suivis par les utilisateurs',
+            'scopes' => [
+                'created' => [
+                    'description' => 'Gérer tous les services créés'
+                ],
+                'followed' => [
+                    'description' => 'Gérer tous les services suivis par les utilisateurs'
+                ],
+            ]
         ],
         'get' => [
             'description' => 'Récupérer tous les services',
+            'scopes' => [
+                'created' => [
+                    'description' => 'Récupérer tous les services créés'
+                ],
+                'followed' => [
+                    'description' => 'Récupérer tous les services suivis par les utilisateurs'
+                ],
+            ]
         ],
         'set' => [
             'description' => 'Modifier et créer des services',
+            'scopes' => [
+                'created' => [
+                    'description' => 'Modifier et créer tous les services créés'
+                ],
+                'followed' => [
+                    'description' => 'Modifier et créer tous les services suivis par les utilisateurs'
+                ],
+            ]
         ],
         'edit' => [
             'description' => 'Modifier les services',
+            'scopes' => [
+                'created' => [
+                    'description' => 'Modifier tous les services créés'
+                ],
+                'followed' => [
+                    'description' => 'Modifier tous les services suivis par les utilisateurs'
+                ],
+            ]
         ],
         'create' => [
             'description' => 'Créer des services',
+            'scopes' => [
+                'created' => [
+                    'description' => 'Créer tous les services créés'
+                ],
+                'followed' => [
+                    'description' => 'Créer tous les services suivis par les utilisateurs'
+                ],
+            ]
         ],
     ]
 ];
