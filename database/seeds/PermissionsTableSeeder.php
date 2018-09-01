@@ -90,6 +90,11 @@ class PermissionsTableSeeder extends Seeder
 				'description' => 'Gestion des associations',
 			],
 			[
+				'type' => 'service',
+				'name' => 'Service',
+				'description' => 'Gestion des services',
+			],
+			[
 				'type' => 'group',
 				'name' => 'Groupe',
 				'description' => 'Gestion des groupes',

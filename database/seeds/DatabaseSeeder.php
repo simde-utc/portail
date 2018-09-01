@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
 			RolesTableSeeder::class,
 			ContactsTypesTableSeeder::class,
 			AssosTableSeeder::class,
+			ServicesTableSeeder::class,
 			PlacesAndLocationsTableSeeder::class,
 			RoomsTableSeeder::class,
 		]);

@@ -24,6 +24,7 @@ class RolesTableSeeder extends Seeder
 					'asso',
 					'group',
                     'client',
+                    'service',
 				]
 			],
 			[
@@ -38,6 +39,7 @@ class RolesTableSeeder extends Seeder
 					'asso',
 					'group',
                     'client',
+                    'service',
 				]
 			],
 			[
