@@ -21,9 +21,12 @@ class CreateServicesTable extends Migration
 			$table->string('image', validation_max('url'))->nullable();
 			$table->string('url', validation_max('url'))->nullable();
 			$table->text('description', validation_max('description'));
+			$table->uuid('visibility_id');
 
 			$table->timestamps();
 			$table->softDeletes();
+
+			$table->foreign('visibility_id')->references('id')->on('visibilities');
 		});
 	}
 

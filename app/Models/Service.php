@@ -13,11 +13,15 @@ class Service extends Model
 	];
 
 	protected $fillable = [
-		'name', 'shortname', 'login', 'image', 'description', 'url',
+		'name', 'shortname', 'login', 'image', 'description', 'url', 'visibility_id'
+	];
+
+	protected $with = [
+		'visibility',
 	];
 
 	protected $must = [
-		'name', 'shortname', 'login', 'image', 'description', 'url'
+		'name', 'shortname', 'login', 'image', 'url'
 	];
 
 	protected $selection = [
