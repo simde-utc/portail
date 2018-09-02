@@ -26,6 +26,9 @@ class CreateReservationsTable extends Migration
             $table->uuid('confirmed_by_id')->nullable();
             $table->string('confirmed_by_type')->nullable();
 
+  			$table->timestamps();
+            $table->softDeletes();
+
             $table->foreign('room_id')->references('id')->on('reservations_rooms');
             $table->foreign('reservation_type_id')->references('id')->on('reservations_types');
             $table->foreign('event_id')->references('id')->on('events');

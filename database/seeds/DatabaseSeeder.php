@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
 				ContactsTableSeeder::class,
 				ClientsTableSeeder::class,
 				CommentsTableSeeder::class,
+				ReservationsTableSeeder::class,
 			]);
 		}
 	}
