@@ -16,12 +16,17 @@ class CreateReservationsRoomsTable extends Migration
         Schema::create('reservations_rooms', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('location_id');
-            $table->uuid('asso_id');
+            $table->uuid('calendar_id');
+            $table->uuid('created_by_id')->nullable();
+            $table->string('created_by_type')->nullable();
+            $table->uuid('owned_by_id')->nullable();
+            $table->string('owned_by_type')->nullable();
 
             $table->timestamps();
-            
+            $table->softDeletes();
+
             $table->foreign('location_id')->references('id')->on('places_locations');
-            $table->foreign('asso_id')->references('id')->on('assos');
+            $table->foreign('calendar_id')->references('id')->on('calendars');
         });
     }
 

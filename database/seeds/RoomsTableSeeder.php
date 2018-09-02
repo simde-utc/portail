@@ -17,15 +17,14 @@ class RoomsTableSeeder extends Seeder
         $rooms = [
             [
                 'location'  => 'BDE-UTC (1er étage)',
-                'asso'      => 'bde',
+                'owner'      => Asso::where('login', 'bde')->first(),
             ],
         ];
 
         foreach ($rooms as $room) {
             Room::create([
                 'location_id'   => Location::where('name', $room['location'])->first()->id,
-                'asso_id'       => Asso::where('login', $room['asso'])->first()->id,
-            ]);
+            ])->changeOwnerTo($room['owner'])->save();
         }
     }
 }
