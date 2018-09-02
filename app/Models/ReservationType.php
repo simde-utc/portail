@@ -7,7 +7,7 @@ class ReservationType extends Model
     protected $table = 'reservations_types';
 
     protected $fillable = [
-        'name', 'type',
+        'name', 'type', 'need_validation',
     ];
 
     protected $must = [

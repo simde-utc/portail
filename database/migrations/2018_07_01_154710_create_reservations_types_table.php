@@ -17,6 +17,7 @@ class CreateReservationsTypesTable extends Migration
 			$table->uuid('id')->primary();
 			$table->string('type', validation_max('name'))->unique();
 			$table->string('name', validation_max('name'))->unique();
+			$table->boolean('need_validation')->default(true); // Permet d'indiquer si le type doit être valider par le owner
 
 			$table->timestamps();
 		});

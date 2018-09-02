@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
 			ServicesTableSeeder::class,
 			PlacesAndLocationsTableSeeder::class,
 			RoomsTableSeeder::class,
+			ReservationsTypesTableSeeder::class,
 		]);
 
 		if (config('app.debug', false)) {

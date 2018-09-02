@@ -17,6 +17,7 @@ class CreateReservationsRoomsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('location_id');
             $table->uuid('calendar_id');
+            $table->integer('capacity');
             $table->uuid('created_by_id')->nullable();
             $table->string('created_by_type')->nullable();
             $table->uuid('owned_by_id')->nullable();

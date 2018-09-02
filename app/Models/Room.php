@@ -14,7 +14,7 @@ class Room extends Model implements OwnableContract
 	protected $table = 'reservations_rooms';
 
 	protected $fillable = [
-		'location_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'calendar_id'
+		'location_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'calendar_id', 'capacity',
 	];
 
 	protected static function boot() {

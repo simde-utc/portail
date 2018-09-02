@@ -3,9 +3,9 @@
 use Illuminate\Database\Seeder;
 use App\Models\Location;
 use App\Models\Asso;
-use App\Models\Room;
+use App\Models\Reservation;
 
-class RoomsTableSeeder extends Seeder
+class ReservationTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,19 +14,17 @@ class RoomsTableSeeder extends Seeder
      */
     public function run()
     {
-        $rooms = [
+        $reservations = [
             [
                 'location' => 'BDE-UTC (1er étage)',
-                'capacity' => 49,
                 'owner' => Asso::where('login', 'bde')->first(),
             ],
         ];
 
-        foreach ($rooms as $room) {
-            Room::create([
-                'location_id' => Location::where('name', $room['location'])->first()->id,
-                'capacity' => $room['capacity'],
-            ])->changeOwnerTo($room['owner'])->save();
+        foreach ($reservations as $reservation) {
+            Reservation::create([
+                'location_id' => Location::where('name', $reservation['location'])->first()->id,
+            ])->changeOwnerTo($reservation['owner'])->save();
         }
     }
 }
