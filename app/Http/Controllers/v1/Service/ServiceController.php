@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Traits\Controller\v1\HasServices;
+use App\Traits\Controller\v1\HasImages;
 
 /**
  * @resource Service
@@ -15,7 +16,7 @@ use App\Traits\Controller\v1\HasServices;
  */
 class ServiceController extends Controller
 {
-	use HasServices;
+	use HasServices, HasImages;
 
 	public function __construct() {
 		// La récupération des services est publique
@@ -70,8 +71,12 @@ class ServiceController extends Controller
 	public function store(Request $request): JsonResponse {
 		$service = Service::create($request->all());
 
-		if ($service)
+		if ($service) {
+			// On affecte l'image si tout s'est bien passé
+			$this->setImage($request, $service, 'services/'.$service->id);
+
 			return response()->json($service->hideSubData(), 200);
+		}
 		else
 			abort(500, 'Impossible de créer la service');
 	}
@@ -98,7 +103,10 @@ class ServiceController extends Controller
 	public function update(Request $request, string $id): JsonResponse {
 		$service = $this->getService($user, $id);
 
-		if ($service->update($request->input()))
+		if ($service->update($request->input())) {
+			// On affecte l'image si tout s'est bien passé
+			$this->setImage($request, $service, 'services/'.$service->id);
+		}
 			return response()->json($service->hideSubData(), 201);
 		else
 			abort(500, 'Impossible de modifier la service');
@@ -113,8 +121,11 @@ class ServiceController extends Controller
 	public function destroy(string $id): JsonResponse {
 		$service = $this->getService($user, $id);
 
-		if ($service->softDelete())
+		if ($service->softDelete()) {
+			$this->deleteImage('services/'.$service->id);
+
 			abort(204);
+		}
 		else
 			abort(500, 'Impossible de supprimer la service');
 	}

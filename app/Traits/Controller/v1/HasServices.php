@@ -7,10 +7,11 @@ use App\Models\User;
 use App\Models\Service;
 use App\Models\Model;
 use Illuminate\Http\Request;
+use App\Traits\HasVisibility;
 
 trait HasServices
 {
-	use HasUsers;
+	use HasUsers, HasVisibility;
 
 	protected function getService(User $user = null, string $id) {
 		$service = Service::find($id);

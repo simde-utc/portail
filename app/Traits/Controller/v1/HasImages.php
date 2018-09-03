@@ -13,12 +13,16 @@ trait HasImages
 			$name = ($name ?: time()).'.'.$image->getClientOriginalExtension();
 
 	        $image->move(public_path($path), $name);
-			
+
 			return $model->update([
 				$input => url($path.$name),
 			]);
 		}
 
 		return $model;
+	}
+
+	protected function deleteImage($path) {
+		return unlink(public_path($path));
 	}
 }

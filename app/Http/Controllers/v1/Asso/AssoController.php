@@ -162,8 +162,11 @@ class AssoController extends Controller
 		if ($asso->children()->exists())
 			abort(400, 'Il n\'est pas possible de supprimer une association parente');
 
-		if ($asso->softDelete())
+		if ($asso->softDelete()) {
+			$this->deleteImage('assos/'.$asso->id);
+
 			abort(204);
+		}
 		else
 			abort(500, 'L\'association n\'a pas pu être supprimée');
 	}
