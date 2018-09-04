@@ -14,7 +14,7 @@ class Room extends Model implements OwnableContract
 	protected $table = 'reservations_rooms';
 
 	protected $fillable = [
-		'location_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'calendar_id', 'capacity',
+		'location_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id', 'calendar_id', 'capacity',
 	];
 
 	protected static function boot() {
@@ -25,7 +25,7 @@ class Room extends Model implements OwnableContract
 				$model->calendar_id = Calendar::create([
 					'name' => 'Réservation',
 					'description' => 'Planning de réservation',
-					'visibility_id' => Visibility::where('type', 'contributorBde')->first()->id,
+					'visibility_id' => $model->visibility_id,
 					'created_by_id' => $model->created_by_id,
 					'created_by_type' => $model->created_by_type,
 					'owned_by_id' => $model->owned_by_id,
@@ -36,10 +36,27 @@ class Room extends Model implements OwnableContract
 
 		self::updated(function ($model) {
 			$model->calendar->update([
+				'visibility_id' => $model->visibility_id,
 				'owned_by_id' => $model->owned_by_id,
 				'owned_by_type' => $model->owned_by_type,
 			]);
 		});
+	}
+
+	protected $hidden = [
+		'location_id', 'calendar_id', 'created_by_id', 'created_by_type', 'owned_by_type', 'owned_by_type', 'visibility_id',
+	];
+
+	protected $with = [
+		'location', 'calendar', 'created_by', 'owned_by', 'visibility',
+	];
+
+	protected $must = [
+		'location', 'owned_by', 'calendar', 'capacity',
+	];
+
+	public function visibility() {
+		return $this->belongsTo(visibility::class);
 	}
 
 	public function location() {

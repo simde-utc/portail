@@ -11,7 +11,7 @@ class ReservationType extends Model
     ];
 
     protected $must = [
-        'type'
+        'name', 'type', 'need_validation', 
     ];
 
     protected function reservations() {

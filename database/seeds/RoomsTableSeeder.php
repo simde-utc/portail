@@ -18,6 +18,7 @@ class RoomsTableSeeder extends Seeder
             [
                 'location' => 'BDE-UTC (1er étage)',
                 'capacity' => 49,
+				'visibility' => 'contributorBde',
                 'owner' => Asso::where('login', 'bde')->first(),
             ],
         ];
@@ -26,6 +27,7 @@ class RoomsTableSeeder extends Seeder
             Room::create([
                 'location_id' => Location::where('name', $room['location'])->first()->id,
                 'capacity' => $room['capacity'],
+				'visibility_id' => visibility::where('type', $room['visibility'])->first()->id,
             ])->changeOwnerTo($room['owner'])->save();
         }
     }

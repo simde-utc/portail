@@ -16,15 +16,15 @@ class Reservation extends Model implements OwnableContract
     ];
 
     protected $hidden = [
-        'owned_by_id', 'owned_by_type',
+        'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'confirmed_by_id', 'confirmed_by_type',
     ];
 
     protected $with = [
-        'owned_by'
+        'created_by', 'owned_by', 'confirmed_by',
     ];
 
     protected $must = [
-        'room_id', 'reservation_type_id', 'event_id', 'description', 'owned_by'
+        'room_id', 'reservation_type_id', 'event_id', 'description', 'owned_by', 'confirmed_by',
     ];
 
     public function created_by() {
