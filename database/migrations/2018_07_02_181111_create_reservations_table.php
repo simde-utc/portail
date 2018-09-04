@@ -29,7 +29,7 @@ class CreateReservationsTable extends Migration
   			$table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('room_id')->references('id')->on('reservations_rooms');
+            $table->foreign('room_id')->references('id')->on('rooms');
             $table->foreign('reservation_type_id')->references('id')->on('reservations_types');
             $table->foreign('event_id')->references('id')->on('events');
 

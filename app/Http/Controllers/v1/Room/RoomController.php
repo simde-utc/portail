@@ -27,7 +27,7 @@ class RoomController extends Controller
 		$this->middleware(
 			array_merge(
 				\Scopes::matchOne('user-create-rooms', 'client-create-rooms'),
-				['permission:asso']
+				['permission:room']
 			),
 			['only' => ['store']]
 		);

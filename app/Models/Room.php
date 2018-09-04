@@ -9,9 +9,7 @@ use App\Traits\Model\HasOwnerSelection;
 
 class Room extends Model implements OwnableContract
 {
-    use HasMorphOwner, HasCreatorSelection, HasOwnerSelection;
-
-	protected $table = 'reservations_rooms';
+  use HasMorphOwner, HasCreatorSelection, HasOwnerSelection;
 
 	protected $fillable = [
 		'location_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id', 'calendar_id', 'capacity',
@@ -67,11 +65,11 @@ class Room extends Model implements OwnableContract
 		return $this->belongsTo(Calendar::class);
 	}
 
-    public function created_by() {
-        return $this->morphTo('created_by');
-    }
+  public function created_by() {
+    return $this->morphTo('created_by');
+  }
 
-    public function owned_by() {
-        return $this->morphTo('owned_by');
-    }
+  public function owned_by() {
+    return $this->morphTo('owned_by');
+  }
 }
