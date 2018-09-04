@@ -59,7 +59,7 @@ Route::group(['middleware' => 'user:active'], function () {
 		'groups'									=> 'Group\GroupController',
 		'assos/{asso_id}/members'					=> 'Asso\MemberController',
 		'roles'										=> 'Role\RoleController',
-		'rooms'										=> 'Location\RoomController',
+		'rooms'										=> 'Room\RoomController',
 		'calendars/{calendar_id}/events'			=> 'Calendar\EventController',
 	]);
 });

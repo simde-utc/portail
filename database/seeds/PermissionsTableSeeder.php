@@ -104,10 +104,14 @@ class PermissionsTableSeeder extends Seeder
 				'name' => 'Client',
 				'description' => 'Gestion des clients',
 			],
+			[
+				'type' => 'room',
+				'name' => 'Salle de réservation',
+				'description' => 'Gestion des salles de réservations',
+			],
 		];
 
-		foreach ($permissions as $permission) {
+		foreach ($permissions as $permission)
 			Permission::create($permission);
-		}
     }
 }
