@@ -11,6 +11,7 @@ use App\Interfaces\Model\CanHaveEvents;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Interfaces\Model\CanNotify;
+use App\Exception\PortailException;
 
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify
 {
@@ -82,10 +83,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
 	public function type() {
 		return $this->belongsTo(AssoType::class, 'type_asso_id');
-	}
-
-	public function rooms() {
-		return $this->hasMany(Room::class);
 	}
 
 	public function reservations() {
@@ -162,9 +159,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		]);
 	}
 
-    public function calendars() {
-    	return $this->morphMany(Calendar::class, 'owned_by');
-    }
+  public function calendars() {
+  	return $this->morphMany(Calendar::class, 'owned_by');
+  }
 
 	public function isCalendarAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
@@ -176,9 +173,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		]);
 	}
 
-    public function events() {
-    	return $this->morphMany(Events::class, 'owned_by');
-    }
+  public function events() {
+  	return $this->morphMany(Events::class, 'owned_by');
+  }
 
 	public function isEventAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
@@ -190,9 +187,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		]);
 	}
 
-    public function articles() {
-    	return $this->morphMany(Article::class, 'owned_by');
-    }
+  public function articles() {
+  	return $this->morphMany(Article::class, 'owned_by');
+  }
 
 	public function isArticleAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
@@ -202,5 +199,44 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		return $this->hasOnePermission('asso_article', [
 			'user_id' => $user_id,
 		]);
+	}
+
+  public function rooms() {
+  	return $this->morphMany(Room::class, 'owned_by');
+  }
+
+	public function isRoomAccessibleBy(string $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isRoomManageableBy(string $user_id): bool {
+		return $this->hasOnePermission('asso_room', [
+			'user_id' => $user_id,
+		]);
+	}
+
+	public function isRoomReservableBy(Model $model): bool {
+		if (!($model instanceof Asso))
+			throw new PortailException('Seul les utilisateurs peuvent réserver une salle appartenant à une association', 503);
+
+		// On regarde si l'asso possédant la salle est un enfant de celle qui fait la demande (ex: BDE à le droit sur PAE)
+		$toMatch = $this->id;
+		while ($toMatch) {
+			if ($toMatch->id === $model->id)
+				return true;
+
+			$toMatch = $toMatch->parent;
+		}
+
+		// On regarde si l'asso est un enfant de celle possédant la salle (ex: Picsart peut réserver du PAE)
+		$toMatch = $model;
+		while ($toMatch) {
+			if ($toMatch->id === $this->id)
+				return true;
+
+			$toMatch = $toMatch->parent;
+		}
+
+		return false;
 	}
 }

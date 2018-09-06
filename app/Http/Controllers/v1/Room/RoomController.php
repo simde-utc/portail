@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\Room;
 
 use App\Http\Controllers\v1\Controller;
 use App\Traits\Controller\v1\HasRooms;
+use App\Traits\Controller\v1\HasCreatorsAndOwners;
 use App\Http\Requests\RoomRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ use App\Models\Room;
  */
 class RoomController extends Controller
 {
-	use HasRooms;
+	use HasRooms, HasCreatorsAndOwners;
 
 	public function __construct() {
 		$this->middleware(
@@ -53,8 +54,8 @@ class RoomController extends Controller
 	 */
 
 	public function index(): JsonResponse {
-		$rooms = Room::getSelection()->filter(function ($room) {
-			return !\Auth::id() || $this->isVisibile($room, \Auth::id());
+		$rooms = Room::getSelection()->filter(function ($room) use ($request) {
+			return $this->tokenCanSee($request, $room, 'get') && (!\Auth::id() || $this->isVisibile($room, \Auth::id()));
 		})->values()->map(function ($room) {
 			return $room->hideData();
 		});
@@ -69,9 +70,25 @@ class RoomController extends Controller
 	 * @return JsonResponse
 	 */
 	public function store(RoomRequest $request): JsonResponse {
-		$room = Room::create($request->all());
+		$inputs = $request->all();
 
-		return response()->json($room->hideSubData(), 200);
+		$owner = $this->getOwner($request, 'room', 'salle', 'create');
+		$creator = $this->getCreatorFromOwner($request, $owner, 'room', 'salle', 'create');
+
+		$inputs['created_by_id'] = $creator->id;
+		$inputs['created_by_type'] = get_class($creator);
+		$inputs['owned_by_id'] = $owner->id;
+		$inputs['owned_by_type'] = get_class($owner);
+
+		$room = Room::create($inputs);
+
+		if ($room) {
+			$room = $this->getRoom($request, \Auth::user(), $room->id);
+
+			return response()->json($room->hideSubData(), 201);
+		}
+		else
+			abort(500, 'Impossible de créer la salle');
 	}
 
 	/**
@@ -81,7 +98,7 @@ class RoomController extends Controller
 	 * @return JsonResponse
 	 */
 	public function show($id): JsonResponse {
-		$room = $this->getRoom($id);
+		$room = $this->getRoom($request, \Auth::user(), $id);
 
 		return response()->json($room->hideSubData(), 200);
 	}
@@ -94,7 +111,15 @@ class RoomController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(RoomRequest $request, string $id): JsonResponse {
-		$room = $this->getRoom($id);
+		$room = $this->getRoom($request, \Auth::user(), $id, 'edit');
+		$inputs = $request->all();
+
+		if ($request->filled('owned_by_type')) {
+			$owner = $this->getOwner($request, 'room', 'salle', 'edit');
+
+			$inputs['owned_by_id'] = $owner->id;
+			$inputs['owned_by_type'] = get_class($owner);
+		}
 
 		if ($room->update($request->input()))
 			return response()->json($room->hideSubData(), 201);
@@ -109,7 +134,7 @@ class RoomController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(string $id): JsonResponse {
-		$room = $this->getRoom($id);
+		$room = $this->getRoom($request, \Auth::user(), 'manage');
 
 		if ($room->delete())
 			abort(204);
