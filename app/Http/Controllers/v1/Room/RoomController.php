@@ -55,7 +55,7 @@ class RoomController extends Controller
 
 	public function index(): JsonResponse {
 		$rooms = Room::getSelection()->filter(function ($room) use ($request) {
-			return $this->tokenCanSee($request, $room, 'get') && (!\Auth::id() || $this->isVisibile($room, \Auth::id()));
+			return $this->tokenCanSee($request, $room, 'get') && (!\Auth::id() || $this->isVisible($room, \Auth::id()));
 		})->values()->map(function ($room) {
 			return $room->hideData();
 		});

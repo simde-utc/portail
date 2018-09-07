@@ -14,20 +14,22 @@ trait HasCreatorsAndOwners
 		if ($request->input('created_by_type', 'user') === 'user'
 			&& \Auth::id()
 			&& $request->input('created_by_id', \Auth::id()) === \Auth::id()
-			&& \Scopes::hasOne($request, [\Scopes::getTokenType($request).'-create-'.$modelName.'s-'.\ModelResolver::getName($owner).'s-owned-user'), \Scopes::getTokenType($request).'-create-'.$modelName.'s-users-created')])
+			&& \Scopes::hasOne($request, [\Scopes::getTokenType($request).'-'.$verb.'-'.$modelName.'s-'.\ModelResolver::getName($owner).'s-owned-user'), \Scopes::getTokenType($request).'-'.$verb.'-'.$modelName.'s-users-created')])
 			$creater = \Auth::user();
 
 		else if ($request->input('created_by_type', 'client') === 'client'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
-			&& \Scopes::hasOne($request, [\Scopes::getTokenType($request).'-create-'.$modelName.'s-'.\ModelResolver::getName($owner).'s-owned-client'), \Scopes::getTokenType($request).'-create-'.$modelName.'s-clients-created')])
+			&& \Scopes::hasOne($request, [\Scopes::getTokenType($request).'-'.$verb.'-'.$modelName.'s-'.\ModelResolver::getName($owner).'s-owned-client'), \Scopes::getTokenType($request).'-'.$verb.'-'.$modelName.'s-clients-created')])
 			$creater = \Scopes::getClient($request);
 
 		else if ($request->input('created_by_type') === 'asso'
 			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
-			&& \Scopes::hasOne($request, [\Scopes::getTokenType($request).'-create-'.$modelName.'s-'.\ModelResolver::getName($owner).'s-owned-asso'), \Scopes::getTokenType($request).'-create-'.$modelName.'s-assos-created')])
+			&& \Scopes::hasOne($request, [\Scopes::getTokenType($request).'-'.$verb.'-'.$modelName.'s-'.\ModelResolver::getName($owner).'s-owned-asso'), \Scopes::getTokenType($request).'-'.$verb.'-'.$modelName.'s-assos-created')])
 			$creater = \Scopes::getClient($request)->asso;
 
 		else
 			$creater = $this->getMorph($request, $modelName, $modelText, $verb, 'created');
+
+		return $creater;
 	}
 }
