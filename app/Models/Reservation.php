@@ -16,26 +16,30 @@ class Reservation extends Model implements OwnableContract
     ];
 
     protected $hidden = [
-      'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'validated_by_id', 'validated_by_type',
+      'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'validated_by_id', 'validated_by_type', 'reservation_type_id', 'event_id',
     ];
 
     protected $with = [
-      'created_by', 'owned_by', 'validated_by',
+      'created_by', 'owned_by', 'validated_by', 'type', 'event'
     ];
 
     protected $must = [
-      'room_id', 'reservation_type_id', 'event_id', 'description', 'owned_by', 'validated_by',
+      'room_id', 'reservation_type_id', 'event_id', 'description', 'owned_by', 'validated_by', 'type', 'event',
     ];
 
     protected static function boot() {
   		parent::boot();
 
-  		self::updated(function ($model) {
+  		self::updating(function ($model) {
   			$model->event->update([
   				'owned_by_id' => $model->owned_by_id,
   				'owned_by_type' => $model->owned_by_type,
   			]);
   		});
+
+      self::deleting(function ($model) {
+        $model->event->softDelete();
+      })
   	}
 
     public static function create(array $attributes = []) {
@@ -57,6 +61,10 @@ class Reservation extends Model implements OwnableContract
 
       return static::query()->create($attributes);
     }
+
+  	public function type() {
+  		return $this->belongsTo(ReservationType::class, 'reservations_type_id');
+  	}
 
     public function event() {
       return $this->belongsTo(Event::class);

@@ -22,7 +22,7 @@
 // Toutes les routes commencant par user-{verbe}-rooms-
 return [
   'description' => 'Salles',
-  'icon' => 'door',
+  'icon' => 'door-open',
   'verbs' => [
     'manage' => [
       'description' => 'Gérer les salles',

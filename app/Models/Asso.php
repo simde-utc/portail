@@ -210,23 +210,12 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isRoomManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_room', [
-			'user_id' => $user_id,
-		]);
+		return User::find($user_id)->hasOnePermission('room');
 	}
 
 	public function isRoomReservableBy(Model $model): bool {
 		if (!($model instanceof Asso))
-			throw new PortailException('Seul les utilisateurs peuvent réserver une salle appartenant à une association', 503);
-
-		// On regarde si l'asso possédant la salle est un enfant de celle qui fait la demande (ex: BDE à le droit sur PAE)
-		$toMatch = $this->id;
-		while ($toMatch) {
-			if ($toMatch->id === $model->id)
-				return true;
-
-			$toMatch = $toMatch->parent;
-		}
+			throw new PortailException('Seules les associations peuvent réserver une salle appartenant à une association', 503);
 
 		// On regarde si l'asso est un enfant de celle possédant la salle (ex: Picsart peut réserver du PAE)
 		$toMatch = $model;
@@ -237,6 +226,31 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 			$toMatch = $toMatch->parent;
 		}
 
-		return false;
+		return $this->isReservationValidableBy($model); // Correspond aux assos parents
+	}
+
+	public function isReservationValidableBy(Model $model): bool {
+		if ($model instanceof Asso) {
+			// On regarde si l'asso possédant la salle est un enfant de celle qui fait la demande (ex: BDE à le droit sur PAE)
+			$toMatch = $this->id;
+			while ($toMatch) {
+				if ($toMatch->id === $model->id)
+					return true;
+
+				$toMatch = $toMatch->parent;
+			}
+
+			return false;
+		}
+		else if ($model instanceof User) {
+			return $this->hasOnePermission('asso_reservation', [
+				'user_id' => $user_id,
+			]);
+		}
+		else if ($model instanceof Client) {
+			return $model->asso->id === $this->id;
+		}
+		else
+			throw new PortailException('Seules les utilisateurs, associations et clients peuvent valider une salle appartenant à une association', 503);
 	}
 }

@@ -4,10 +4,14 @@ namespace App\Http\Controllers\v1\Reservation;
 
 use App\Http\Controllers\v1\Controller;
 use App\Traits\Controller\v1\HasReservations;
+use App\Traits\Controller\v1\HasCreatorsAndOwnersAndValidators;
+use App\Traits\Controller\v1\HasValidators;
 use App\Http\Requests\ReservationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Models\Room;
 use App\Models\Reservation;
+use App\Models\ReservationType;
 
 
 /**
@@ -17,7 +21,7 @@ use App\Models\Reservation;
  */
 class ReservationController extends Controller
 {
-	use HasReservations;
+	use HasReservations, HasCreatorsAndOwnersAndValidators;
 
 	public function __construct() {
 		$this->middleware(
@@ -45,7 +49,7 @@ class ReservationController extends Controller
 
 	public function index(): JsonResponse {
 		$reservations = Reservation::getSelection()->filter(function ($reservation) {
-			return !\Auth::id() || $this->isVisibile($reservation, \Auth::id());
+			return !\Auth::id() || $this->isVisible($reservation, \Auth::id());
 		})->values()->map(function ($reservation) {
 			return $reservation->hideData();
 		});
@@ -60,9 +64,41 @@ class ReservationController extends Controller
 	 * @return JsonResponse
 	 */
 	public function store(ReservationRequest $request): JsonResponse {
-		$reservation = Reservation::create($request->all());
+		$inputs = $request->all();
 
-		return response()->json($reservation->hideSubData(), 200);
+		$owner = $this->getOwner($request, 'reservation', 'réservation', 'create');
+		$creator = $this->getCreatorFromOwner($request, $owner, 'reservation', 'réservation', 'create');
+
+		// On vérifie que celui qui veut faire la réservation à le droit dans cette salle
+		if (!Room::find($inputs['room_id'])->owned_by->isRoomReservableBy($owner))
+			abort(403, 'Vous n\'être pas autorisé à réserver cette salle');
+
+		$inputs['created_by_id'] = $creator->id;
+		$inputs['created_by_type'] = get_class($creator);
+		$inputs['owned_by_id'] = $owner->id;
+		$inputs['owned_by_type'] = get_class($owner);
+
+		// On va maintenant voir si le type de réservation est auto-validée qu'on a pas de valideur
+		if (isset($inputs['validated_by_type']) {
+			$validator = $this->getValidatorFromOwner($request, $owner, 'reservation', 'réservation', 'create');
+
+			$inputs['validated_by_id'] = $validator->id;
+			$inputs['validated_by_type'] = get_class($validator);
+		}
+		else if (!ReservationType::find($inputs['reservations_type'])->need_validation) {
+			$inputs['validated_by_id'] = $inputs['owned_by_id'];
+			$inputs['validated_by_type'] = $inputs['owned_by_type'];
+		}
+
+		Reservation::create($inputs);
+
+		if ($reservation) {
+			$reservation = $this->getReservation($request, \Auth::user(), $reservation->id);
+
+			return response()->json($reservation->hideSubData(), 201);
+		}
+		else
+			abort(500, 'Impossible de créer la réservation');
 	}
 
 	/**
@@ -72,7 +108,7 @@ class ReservationController extends Controller
 	 * @return JsonResponse
 	 */
 	public function show($id): JsonResponse {
-		$reservation = $this->getReservation($id);
+		$reservation = $this->getReservation($request, \Auth::user(), $id);
 
 		return response()->json($reservation->hideSubData(), 200);
 	}
@@ -85,12 +121,20 @@ class ReservationController extends Controller
 	 * @return JsonResponse
 	 */
 	public function update(ReservationRequest $request, string $id): JsonResponse {
-		$reservation = $this->getReservation($id);
+		$reservation = $this->getReservation($request, \Auth::user(), $id, 'edit');
+		$inputs = $request->all();
 
-		if ($reservation->update($request->input()))
-			return response()->json($reservation->hideSubData(), 201);
+		if (isset($inputs['validated_by_type']) {
+			$validator = $this->getValidatorFromOwner($request, $reservation->owned_by, 'reservation', 'réservation', 'edit');
+
+			$inputs['validated_by_id'] = $validator->id;
+			$inputs['validated_by_type'] = get_class($validator);
+		}
+
+		if ($room->update($request->input()))
+			return response()->json($room->hideSubData(), 201);
 		else
-			abort(500, 'Impossible de modifier la salle');
+			abort(500, 'Impossible de modifier la réservation');
 	}
 
 	/**
@@ -100,11 +144,11 @@ class ReservationController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(string $id): JsonResponse {
-		$reservation = $this->getReservation($id);
+		$reservation = $this->getReservation($request, \Auth::user(), $id, 'manage');
 
 		if ($reservation->delete())
 			abort(204);
 		else
-			abort(500, 'Impossible de supprimer la salle');
+			abort(500, 'Impossible de supprimer la réservation');
 	}
 }
