@@ -23,8 +23,8 @@ class CreateReservationsTable extends Migration
             $table->string('created_by_type')->nullable();
             $table->uuid('owned_by_id')->nullable();
             $table->string('owned_by_type')->nullable();
-            $table->uuid('confirmed_by_id')->nullable();
-            $table->string('confirmed_by_type')->nullable();
+            $table->uuid('validated_by_id')->nullable();
+            $table->string('validated_by_type')->nullable();
 
   			$table->timestamps();
             $table->softDeletes();
