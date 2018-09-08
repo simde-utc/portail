@@ -21,7 +21,7 @@ class Room extends Model implements OwnableContract
     self::creating(function ($model) {
 			if (!$model->calendar_id) {
 				$model->calendar_id = Calendar::create([
-					'name' => 'Réservation',
+					'name' => 'Réservation - '.(Location::find($model->location_id)->name),
 					'description' => 'Planning de réservation',
 					'visibility_id' => $model->visibility_id,
 					'created_by_id' => $model->created_by_id,

@@ -48,7 +48,23 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Gérer les salles de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Gérer les salles que l\'utilisateur a créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Gérer les salles des clients de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Gérer les salles des clients que l\'utilisateur ont créé',
+						],
+					]
+				],
       ]
     ],
     'set' => [
@@ -75,7 +91,23 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Créer et modifier les salles de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer et modifier les salles que l\'utilisateur a créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Créer et modifier les salles des clients de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer et modifier les salles des clients que l\'utilisateur ont créé',
+						],
+					]
+				],
       ]
     ],
     'get' => [
@@ -102,7 +134,23 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Récupérer les salles de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Récupérer les salles que l\'utilisateur a créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Récupérer les salles des clients de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Récupérer les salles des clients que l\'utilisateur ont créé',
+						],
+					]
+				],
       ]
     ],
     'create' => [
@@ -129,7 +177,23 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Créer les salles de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer les salles que l\'utilisateur a créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Créer les salles des clients de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer les salles des clients que l\'utilisateur ont créé',
+						],
+					]
+				],
       ]
     ],
     'edit' => [
@@ -156,7 +220,23 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Modifier les salles de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les salles que l\'utilisateur a créé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Modifier les salles des clients de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les salles des clients que l\'utilisateur ont créé',
+						],
+					]
+				],
       ]
     ],
   ]

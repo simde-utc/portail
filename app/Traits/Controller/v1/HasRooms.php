@@ -5,6 +5,7 @@ namespace App\Traits\Controller\v1;
 use App\Traits\HasVisibility;
 use App\Models\Room;
 use App\Models\Model;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 trait HasRooms

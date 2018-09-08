@@ -10,6 +10,7 @@ use App\Interfaces\Model\CanHaveContacts;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveArticles;
+use App\Interfaces\Model\CanHaveRooms;
 use App\Interfaces\Model\CanNotify;
 use App\Exception\PortailException;
 
@@ -213,7 +214,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		return User::find($user_id)->hasOnePermission('room');
 	}
 
-	public function isRoomReservableBy(Model $model): bool {
+	public function isRoomReservableBy(\Illuminate\Database\Eloquent\Model $model): bool {
 		if (!($model instanceof Asso))
 			throw new PortailException('Seules les associations peuvent réserver une salle appartenant à une association', 503);
 

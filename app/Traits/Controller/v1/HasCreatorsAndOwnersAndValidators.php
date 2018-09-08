@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 trait HasCreatorsAndOwnersAndValidators
 {
-	use HasCreatorsAndOwners, HasValidators;
+	use HasCreatorsAndOwners;
 
 	protected function getValidatorFromOwner(Request $request, Model $owner, string $modelName, string $modelText, string $verb = 'create') {
 		if ($request->input('validated_by_type') === 'user'
@@ -18,12 +18,12 @@ trait HasCreatorsAndOwnersAndValidators
 
 		else if ($request->input('validated_by_type') === 'client'
 			&& $request->input('validated_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
-			&& \Scopes::hasOne($request, [\Scopes::getTokenType($request).'-'.$verb.'-'.$modelName.'s-'.\ModelResolver::getName($owner).'s-validated-client'))
+			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-'.$verb.'-'.$modelName.'s-'.\ModelResolver::getName($owner).'s-validated-client'))
 			$validator = \Scopes::getClient($request);
 
 		else if ($request->input('validated_by_type') === 'asso'
 			&& $request->input('validated_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
-			&& \Scopes::hasOne($request, [\Scopes::getTokenType($request).'-'.$verb.'-'.$modelName.'s-'.\ModelResolver::getName($owner).'s-validated-asso'))
+			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-'.$verb.'-'.$modelName.'s-'.\ModelResolver::getName($owner).'s-validated-asso'))
 			$validator = \Scopes::getClient($request)->asso;
 
 		else

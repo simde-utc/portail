@@ -5,7 +5,6 @@ namespace App\Http\Controllers\v1\Room;
 use App\Http\Controllers\v1\Controller;
 use App\Traits\Controller\v1\HasRooms;
 use App\Traits\Controller\v1\HasCreatorsAndOwners;
-use App\Http\Requests\RoomRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Room;
@@ -53,7 +52,7 @@ class RoomController extends Controller
 	 * @return JsonResponse
 	 */
 
-	public function index(): JsonResponse {
+	public function index(Request $request): JsonResponse {
 		$rooms = Room::getSelection()->filter(function ($room) use ($request) {
 			return $this->tokenCanSee($request, $room, 'get') && (!\Auth::id() || $this->isVisible($room, \Auth::id()));
 		})->values()->map(function ($room) {
@@ -66,10 +65,10 @@ class RoomController extends Controller
 	/**
 	 * Create Room
 	 *
-	 * @param RoomRequest $request
+	 * @param Request $request
 	 * @return JsonResponse
 	 */
-	public function store(RoomRequest $request): JsonResponse {
+	public function store(Request $request): JsonResponse {
 		$inputs = $request->all();
 
 		$owner = $this->getOwner($request, 'room', 'salle', 'create');
@@ -97,7 +96,7 @@ class RoomController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function show($id): JsonResponse {
+	public function show(Request $request, $id): JsonResponse {
 		$room = $this->getRoom($request, \Auth::user(), $id);
 
 		return response()->json($room->hideSubData(), 200);
@@ -106,11 +105,11 @@ class RoomController extends Controller
 	/**
 	 * Update Room
 	 *
-	 * @param RoomRequest $request
+	 * @param Request $request
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function update(RoomRequest $request, string $id): JsonResponse {
+	public function update(Request $request, string $id): JsonResponse {
 		$room = $this->getRoom($request, \Auth::user(), $id, 'edit');
 		$inputs = $request->all();
 
@@ -133,7 +132,7 @@ class RoomController extends Controller
 	 * @param  int $id
 	 * @return JsonResponse
 	 */
-	public function destroy(string $id): JsonResponse {
+	public function destroy(Request $request, string $id): JsonResponse {
 		$room = $this->getRoom($request, \Auth::user(), 'manage');
 
 		if ($room->delete())
