@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { assosActions } from '../../redux/actions';
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
@@ -17,7 +17,7 @@ import ScreensAssoArticles from './Articles.js';
     fetched: store.assos.fetched,
     user: store.loggedUser.data,
 }))
-class ScreensAsso extends Component { 
+class ScreensAsso extends React.Component { 
     componentWillMount() {
         const login = this.props.match.params.login
         this.props.dispatch(assosActions.getOne(login));
@@ -42,10 +42,11 @@ class ScreensAsso extends Component {
         const tabBarBg = this.props.asso.parent ? this.props.asso.parent.login : this.props.asso.login;
 
         return (
-            <div className="asso" style={{ width: "100%" }}>
+            <div className="asso w-100">
+
                 <ul className={ "nav nav-tabs asso bg-" + tabBarBg }>
                     <li className="nav-item">
-                        <NavLink className="nav-link" activeClassName="active" exact to={`${this.props.match.url}`}>ACCUEIL</NavLink>
+                        <NavLink className="nav-link" activeClassName="active" exact to={`${this.props.match.url}`}>DESCRIPTION</NavLink>
                     </li>
                     <li className="nav-item">
                         <NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/articles`}>ARTICLES</NavLink>
@@ -63,6 +64,7 @@ class ScreensAsso extends Component {
                         </Dropdown>
                     </li>
                 </ul>
+
                 <Switch>
                     <Route path={`${this.props.match.url}`} exact render={ () => ( 
                             <ScreensAssoHome asso={ this.props.asso } />

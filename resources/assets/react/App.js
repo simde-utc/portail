@@ -4,15 +4,15 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 // Components
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import RouteNotFound from './components/RouteNotFound';
 import ErrorCatcher from './components/ErrorCatcher';
+import RouteNotFound from './components/RouteNotFound';
 import PrivateRoute from './components/PrivateRoute';
 
 // Screens
 import HomeScreen from './screens/Home';
 import DashboardScreen from './screens/Dashboard';
 import AssosListScreen from './screens/AssosList';
-import AssoDetailScreen from './screens/Asso/Asso';
+import AssoDetailScreen from './screens/Asso';
 import ProfileScreen from './screens/Profile';
 
 class App extends React.Component {
