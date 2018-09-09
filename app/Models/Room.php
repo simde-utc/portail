@@ -54,7 +54,7 @@ class Room extends Model implements OwnableContract
 	];
 
 	public function visibility() {
-		return $this->belongsTo(visibility::class);
+		return $this->belongsTo(Visibility::class);
 	}
 
 	public function location() {
@@ -72,4 +72,8 @@ class Room extends Model implements OwnableContract
   public function owned_by() {
     return $this->morphTo('owned_by');
   }
+
+	public function reservations() {
+		return $this->hasMany(Reservation::class);
+	}
 }

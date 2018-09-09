@@ -62,7 +62,29 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Gérer les réservations de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Gérer les réservations que l\'utilisateur a créé',
+						],
+						'validated' => [
+							'description' => 'Gérer les réservations que l\'utilisateur a validé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Gérer les réservations des clients de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Gérer les réservations des clients que l\'utilisateur ont créé',
+						],
+						'validated' => [
+							'description' => 'Gérer les réservations des clients que l\'utilisateur ont validé',
+						],
+					]
+				],
       ]
     ],
     'set' => [
@@ -103,7 +125,29 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Créer et modifier les réservations de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer et modifier les réservations que l\'utilisateur a créé',
+						],
+						'validated' => [
+							'description' => 'Créer et modifier les réservations que l\'utilisateur a validé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Créer et modifier les réservations des clients de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer et modifier les réservations des clients que l\'utilisateur ont créé',
+						],
+						'validated' => [
+							'description' => 'Créer et modifier les réservations des clients que l\'utilisateur ont validé',
+						],
+					]
+				],
       ]
     ],
     'get' => [
@@ -144,7 +188,29 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Récupérer les réservations de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Récupérer les réservations que l\'utilisateur a créé',
+						],
+						'validated' => [
+							'description' => 'Récupérer les réservations que l\'utilisateur a validé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Récupérer les réservations des clients de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Récupérer les réservations des clients que l\'utilisateur ont créé',
+						],
+						'validated' => [
+							'description' => 'Récupérer les réservations des clients que l\'utilisateur ont validé',
+						],
+					]
+				],
       ]
     ],
     'create' => [
@@ -185,7 +251,29 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Créer les réservations de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer les réservations que l\'utilisateur a créé',
+						],
+						'validated' => [
+							'description' => 'Créer les réservations que l\'utilisateur a validé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Créer les réservations des clients de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer les réservations des clients que l\'utilisateur ont créé',
+						],
+						'validated' => [
+							'description' => 'Créer les réservations des clients que l\'utilisateur ont validé',
+						],
+					]
+				],
       ]
     ],
     'edit' => [
@@ -226,7 +314,29 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Modifier les réservations de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les réservations que l\'utilisateur a créé',
+						],
+						'validated' => [
+							'description' => 'Modifier les réservations que l\'utilisateur a validé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Modifier les réservations des clients de l\'utilisateur',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les réservations des clients que l\'utilisateur ont créé',
+						],
+						'validated' => [
+							'description' => 'Modifier les réservations des clients que l\'utilisateur ont validé',
+						],
+					]
+				],
       ]
     ],
   ]

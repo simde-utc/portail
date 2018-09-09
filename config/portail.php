@@ -44,6 +44,10 @@ return [
 		]
 	],
 
+	'reservations' => [
+		'max_duration' => 2,
+	],
+
 	'cas' => [
 		'url'		=> 'https://cas.utc.fr/cas/'
 	],

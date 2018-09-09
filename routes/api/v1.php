@@ -60,7 +60,7 @@ Route::group(['middleware' => 'user:active'], function () {
 		'assos/{asso_id}/members'									=> 'Asso\MemberController',
 		'roles'																		=> 'Role\RoleController',
 		'rooms'																		=> 'Room\RoomController',
-		'reservations'														=> 'Reservation\ReservationController',
+		'rooms/{room_id}/reservations'						=> 'Room\ReservationController',
 		'calendars/{calendar_id}/events'					=> 'Calendar\EventController',
 	]);
 });

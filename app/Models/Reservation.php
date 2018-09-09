@@ -11,16 +11,18 @@ class Reservation extends Model implements OwnableContract
 {
     use HasMorphOwner, HasCreatorSelection, HasOwnerSelection;
 
+    protected $table = 'rooms_reservations';
+
     protected $fillable = [
       'room_id', 'reservation_type_id', 'event_id', 'description', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'validated_by_id', 'validated_by_type',
     ];
 
     protected $hidden = [
-      'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'validated_by_id', 'validated_by_type', 'reservation_type_id', 'event_id',
+      'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'validated_by_id', 'validated_by_type', 'reservation_type_id', 'event_id', 'room_id',
     ];
 
     protected $with = [
-      'created_by', 'owned_by', 'validated_by', 'type', 'event'
+      'created_by', 'owned_by', 'validated_by', 'type', 'event', 'room',
     ];
 
     protected $must = [
@@ -39,32 +41,16 @@ class Reservation extends Model implements OwnableContract
 
       self::deleting(function ($model) {
         $model->event->softDelete();
-      })
+      });
   	}
-
-    public static function create(array $attributes = []) {
-      if (isset($attributes['event'])) {
-        $eventAttributes = $attributes['event'];
-        $room = Room::find($attributes['room_id']);
-
-        $eventAttributes['location_id'] = $room->location->id;
-        $eventAttributes['created_by_id'] = $attributes['created_by_id'] ?? null;
-        $eventAttributes['created_by_type'] = $attributes['created_by_type'] ?? null;
-        $eventAttributes['owned_by_id'] = $attributes['owned_by_id'] ?? null;
-        $eventAttributes['owned_by_type'] = $attributes['owned_by_type'] ?? null;
-
-        $event = Event::create($eventAttributes);
-
-        $attributes['event_id'] = $event->id;
-        unset($attributes['event']);
-      }
-
-      return static::query()->create($attributes);
-    }
 
   	public function type() {
-  		return $this->belongsTo(ReservationType::class, 'reservations_type_id');
+  		return $this->belongsTo(ReservationType::class, 'reservation_type_id');
   	}
+
+    public function room() {
+      return $this->belongsTo(Room::class);
+    }
 
     public function event() {
       return $this->belongsTo(Event::class);

@@ -18,7 +18,7 @@ trait HasMorphs
 					abort(400, 'L\'instance n\'a pas le droit de posséder de '.$modelName.'s');
 
 				if (\Auth::id() && !$morph->{'is'.ucfirst($modelName).$action}(\Auth::id()))
-					abort(403, 'L\'utilisateur n\'a pas les droits');
+					abort(403, 'L\'utilisateur n\'a pas les droits suffisants');
 			}
 			else {
 				if ($request->input($type.'_by_type', 'client') === 'client')

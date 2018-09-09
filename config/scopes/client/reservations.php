@@ -30,7 +30,7 @@ return [
 					'description' => 'Gérer les réservations des associations des utilisateurs',
 					'scopes' => [
 						'created' => [
-							'description' => 'Gérer les réservations que chaque association des utilisateurs a créé',
+							'description' => 'Gérer les réservations que chaque association des utilisateurs ont créé',
 						],
 						'owned' => [
 							'description' => 'Gérer les réservations que chaque association des utilisateurs possède',
@@ -61,7 +61,29 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Gérer les réservations des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Gérer les réservations que les utilisateurs ont créé',
+						],
+						'validated' => [
+							'description' => 'Gérer les réservations que les utilisateurs ont validé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Gérer les réservations des clients des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Gérer les réservations des clients que les utilisateurs ont créé',
+						],
+						'validated' => [
+							'description' => 'Gérer les réservations des clients que les utilisateurs ont validé',
+						],
+					]
+				],
       ]
     ],
     'set' => [
@@ -71,7 +93,7 @@ return [
 					'description' => 'Créer et modifier les réservations des associations des utilisateurs',
 					'scopes' => [
 						'created' => [
-							'description' => 'Créer et modifier les réservations que chaque association des utilisateurs a créé',
+							'description' => 'Créer et modifier les réservations que chaque association des utilisateurs ont créé',
 						],
 						'owned' => [
 							'description' => 'Créer et modifier les réservations que chaque association des utilisateurs possède',
@@ -102,7 +124,29 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Créer et modifier les réservations des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer et modifier les réservations que les utilisateurs ont créé',
+						],
+						'validated' => [
+							'description' => 'Créer et modifier les réservations que les utilisateurs ont validé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Créer et modifier les réservations des clients des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer et modifier les réservations des clients que les utilisateurs ont créé',
+						],
+						'validated' => [
+							'description' => 'Créer et modifier les réservations des clients que les utilisateurs ont validé',
+						],
+					]
+				],
       ]
     ],
     'get' => [
@@ -112,7 +156,7 @@ return [
 					'description' => 'Récupérer les réservations des associations des utilisateurs',
 					'scopes' => [
 						'created' => [
-							'description' => 'Récupérer les réservations que chaque association des utilisateurs a créé',
+							'description' => 'Récupérer les réservations que chaque association des utilisateurs ont créé',
 						],
 						'owned' => [
 							'description' => 'Récupérer les réservations que chaque association des utilisateurs possède',
@@ -143,7 +187,29 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Récupérer les réservations des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Récupérer les réservations que les utilisateurs ont créé',
+						],
+						'validated' => [
+							'description' => 'Récupérer les réservations que les utilisateurs ont validé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Récupérer les réservations des clients des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Récupérer les réservations des clients que les utilisateurs ont créé',
+						],
+						'validated' => [
+							'description' => 'Récupérer les réservations des clients que les utilisateurs ont validé',
+						],
+					]
+				],
       ]
     ],
     'create' => [
@@ -153,7 +219,7 @@ return [
 					'description' => 'Créer les réservations des associations des utilisateurs',
 					'scopes' => [
 						'created' => [
-							'description' => 'Créer les réservations que chaque association des utilisateurs a créé',
+							'description' => 'Créer les réservations que chaque association des utilisateurs ont créé',
 						],
 						'owned' => [
 							'description' => 'Créer les réservations que chaque association des utilisateurs possède',
@@ -184,7 +250,29 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Créer les réservations des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer les réservations que les utilisateurs ont créé',
+						],
+						'validated' => [
+							'description' => 'Créer les réservations que les utilisateurs ont validé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Créer les réservations des clients des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Créer les réservations des clients que les utilisateurs ont créé',
+						],
+						'validated' => [
+							'description' => 'Créer les réservations des clients que les utilisateurs ont validé',
+						],
+					]
+				],
       ]
     ],
     'edit' => [
@@ -194,7 +282,7 @@ return [
 					'description' => 'Modifier les réservations des associations des utilisateurs',
 					'scopes' => [
 						'created' => [
-							'description' => 'Modifier les réservations que chaque association des utilisateurs a créé',
+							'description' => 'Modifier les réservations que chaque association des utilisateurs ont créé',
 						],
 						'owned' => [
 							'description' => 'Modifier les réservations que chaque association des utilisateurs possède',
@@ -225,7 +313,29 @@ return [
 							]
 						],
 					]
-				]
+				],
+				'users' => [
+					'description' => 'Modifier les réservations des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les réservations que les utilisateurs ont créé',
+						],
+						'validated' => [
+							'description' => 'Modifier les réservations que les utilisateurs ont validé',
+						],
+					]
+				],
+				'clients' => [
+					'description' => 'Modifier les réservations des clients des utilisateurs',
+					'scopes' => [
+						'created' => [
+							'description' => 'Modifier les réservations des clients que les utilisateurs ont créé',
+						],
+						'validated' => [
+							'description' => 'Modifier les réservations des clients que les utilisateurs ont validé',
+						],
+					]
+				],
       ]
     ],
   ]

@@ -2,24 +2,36 @@
 
 namespace App\Traits\Controller\v1;
 
-use App\Traits\HasVisibility;
 use App\Models\Reservation;
 use App\Models\Model;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Room;
+use Carbon\Carbon;
 
 trait HasReservations
 {
-	use HasVisibility;
+	use HasRooms {
+		HasRooms::tokenCanSee as private tokenCanSeeRoom;
+	}
 
-	public function isPrivate($user_id, $reservation = null) {
-		if ($reservation === null)
-			return false;
+	// On va vérifier qu'il n'y a pas de réservation au même moment
+	protected function checkReservationPeriod($room_id, $begin_at, $end_at) {
+		$eventsQuery = Room::find($room_id)->calendar->events()
+			->where('end_at', '>', $begin_at)
+			->where('begin_at', '<', $end_at);
 
-		return $reservation->owned_by->isReservationAccessibleBy($user_id);
-  }
+		if ($eventsQuery->exists())
+			abort(409, 'Il existe une réservation qui se déroule pendant la même période');
 
-	protected function getReservation(Request $request, User $user, string $id, string $verb = 'get') {
-		$reservation = Reservation::find($id);
+		$begin = Carbon::parse($begin_at);
+		$end = Carbon::parse($end_at);
+
+		return $end->diffInSeconds($begin) <= config('portail.reservations.max_duration') * 60 * 60;
+	}
+
+	protected function getReservationFromRoom(Request $request, Room $room, User $user, string $id, string $verb = 'get') {
+		$reservation = $room->reservations()->find($id);
 
 		if ($reservation) {
 			if (!$this->tokenCanSee($request, $reservation, $verb))
@@ -37,25 +49,29 @@ trait HasReservations
 		abort(404, 'Impossible de trouver la réservation');
 	}
 
-	protected function tokenCanSee(Request $request, Reservation $reservation, string $verb) {
+	protected function tokenCanSee(Request $request, Model $model, string $verb) {
+		if ($model instanceof Room)
+			return $this->tokenCanSeeRoom($request, $model, $verb);
+
+
 		$scopeHead = \Scopes::getTokenType($request);
 
-		if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-reservations-'.\ModelResolver::getName($reservation->owned_by_type).'s-owned'))
+		if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-reservations-'.\ModelResolver::getName($model->owned_by_type).'s-owned'))
 			return true;
 
-		if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-reservations-'.\ModelResolver::getName($reservation->owned_by_type).'s-owned-asso'))
-				&& $reservation->created_by_type === Asso::class
-				&& $reservation->created_by_id === \Scopes::getClient($request)->asso->id)) {
+		if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-reservations-'.\ModelResolver::getName($model->owned_by_type).'s-owned-asso'))
+				&& $model->created_by_type === Asso::class
+				&& $model->created_by_id === \Scopes::getClient($request)->asso->id)) {
 			if (\Scopes::isUserToken($request)) {
 				$functionToCall = 'isReservation'.($verb === 'get' ? 'Accessible' : 'Manageable').'By';
 
-				if ($reservation->owned_by->$functionToCall(\Auth::id()))
+				if ($model->owned_by->$functionToCall(\Auth::id()))
 					return true;
 			}
 			else
 				return true;
 		}
 
-		return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-reservations-'.\ModelResolver::getName($reservation->owned_by_type).'s-created');
+		return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-reservations-'.\ModelResolver::getName($model->owned_by_type).'s-created');
 	}
 }

@@ -11,10 +11,11 @@ use App\Interfaces\Model\CanHaveEvents;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Interfaces\Model\CanHaveRooms;
+use App\Interfaces\Model\CanHaveReservations;
 use App\Interfaces\Model\CanNotify;
 use App\Exception\PortailException;
 
-class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify
+class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify, CanHaveRooms, CanHaveReservations
 {
 	use HasStages, HasMembers, SoftDeletes {
 		HasMembers::members as membersAndFollowers;
@@ -84,10 +85,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
 	public function type() {
 		return $this->belongsTo(AssoType::class, 'type_asso_id');
-	}
-
-	public function reservations() {
-		return $this->hasMany(Reservation::class);
 	}
 
 	public function parent() {
@@ -230,10 +227,24 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		return $this->isReservationValidableBy($model); // Correspond aux assos parents
 	}
 
-	public function isReservationValidableBy(Model $model): bool {
+  public function reservations() {
+  	return $this->morphMany(Reservation::class, 'owned_by');
+  }
+
+	public function isReservationAccessibleBy(string $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isReservationManageableBy(string $user_id): bool {
+		return $this->hasOnePermission('asso_reservation', [
+			'user_id' => $user_id,
+		]);
+	}
+
+	public function isReservationValidableBy(\Illuminate\Database\Eloquent\Model $model): bool {
 		if ($model instanceof Asso) {
 			// On regarde si l'asso possédant la salle est un enfant de celle qui fait la demande (ex: BDE à le droit sur PAE)
-			$toMatch = $this->id;
+			$toMatch = $this;
 			while ($toMatch) {
 				if ($toMatch->id === $model->id)
 					return true;
