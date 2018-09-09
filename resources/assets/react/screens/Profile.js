@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import loggedUserActions from '../redux/custom/loggedUser/actions';
@@ -10,7 +10,7 @@ import AssociativeCarreer from '../components/Profile/AssociativeCarreer';
 @connect(store => ({
 	user: store.loggedUser.data,
 }))
-class ScreensProfile extends Component {
+class ScreensProfile extends React.Component {
 	componentWillMount() {
 		this.props.dispatch(loggedUserActions.getInfo())
 	}

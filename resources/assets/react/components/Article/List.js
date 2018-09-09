@@ -19,11 +19,8 @@ class ArticleList extends React.Component {
 			<div className="container ArticleList">
 				{ (this.props.fetched) ? (
 					(this.props.articles.length > 0) ? (
-						this.props.articles.map(article => (<div>
+						this.props.articles.map(article => (
 							<Article key={ article.id } article={article} />
-							<Article key={ article.id +"1" } article={article} />
-							<Article key={ article.id +"2"} article={article} />
-						</div>
 						))
 					) : (
 						<div>Aucun article n'est disponible pour le moment, revenez plus tard !.</div>

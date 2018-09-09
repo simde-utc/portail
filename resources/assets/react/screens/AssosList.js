@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { assosActions } from '../redux/actions';
 
@@ -9,40 +9,43 @@ import AssoChildrenList from '../components/AssoChildrenList';
 	fetching: store.assos.fetching,
 	fetched: store.assos.fetched
 }))
-class ScreensAssosList extends Component {
+class ScreensAssosList extends React.Component {
 
 	componentWillMount() {
 		this.props.dispatch(assosActions.getAll('?all'))
 	}
 
 	render() {
-		// Construction de l'arbre des assos
+		// Construction de l'arbre des assos, supporte une profondeur quelconque
 		let assosTree = [];
-		if (this.props.fetched)
+		if (this.props.fetched) {
+			// Récupére les ids des assos de plus au niveau (BDE...), pour pouvoir
+			let topLevelAssos = this.props.assos.filter(asso => (asso.parent_id == null)).map(asso => asso.id)
 			this.props.assos.forEach(asso => {
-				if (asso.parent_id == null || asso.parent_id == 1) {
+				if (asso.parent_id == null || topLevelAssos.includes(asso.parent_id)) {
 					// Ajout à la racine si BDE ou Poles
 					assosTree.push({ ...asso, children: [] });
 				} else {
 					// Recherche du parent par recherche en largeur de l'arbre
 					// TODO : cas où parent n'existe pas ?
-					let nextParents = [];
-					assosTree.forEach(parent => nextParents.push(parent));
+					let potentialParents = [];
+					assosTree.forEach(parent => potentialParents.push(parent));
 					let parent = null;
-					while(nextParents.length > 0) {
-						parent = nextParents.pop();
+					while(potentialParents.length > 0) {
+						parent = potentialParents.pop();
 						// On arrête si on a trouvé le parent
 						if (parent.id === asso.parent_id)
 							break;
 						// Sinon on ajoute ses enfants à la liste de recherche 
 						else
-							nextParents = nextParents.concat(parent.children);
+							potentialParents = potentialParents.concat(parent.children);
 					}
 					// Ajout en tant que fils du parent
 					if (parent != null)
 						parent.children.push({ ...asso, children: [] });
 				}
 			})
+		}
 
 		return (
 			<div className="container">
