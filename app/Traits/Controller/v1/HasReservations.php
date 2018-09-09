@@ -18,6 +18,7 @@ trait HasReservations
 	// On va vérifier qu'il n'y a pas de réservation au même moment
 	protected function checkReservationPeriod($room_id, $begin_at, $end_at) {
 		$eventsQuery = Room::find($room_id)->calendar->events()
+			->whereNotNull('validated_by_type')
 			->where('end_at', '>', $begin_at)
 			->where('begin_at', '<', $end_at);
 

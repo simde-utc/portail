@@ -179,14 +179,8 @@ class ReservationController extends Controller
 		$reservation = $this->getReservationFromRoom($request, $room, \Auth::user(), $id, 'edit');
 		$inputs = $request->all();
 
-		if (isset($inputs['validated_by_type'])) {
-			// Ici on vérifie si la valideur peu valider la demande de résa du demandeur
-			$validator = $this->getValidatorFromOwner($request, $reservation->owned_by, 'reservation', 'réservation', 'create');
-
-			// Maintenant on vérifie qu'on a le droit de valider pour une résa dans une salle appartenant à qq'un
-			if (!$room->owned_by->isReservationValidableBy($validator))
-				abort(403, 'Vous n\'avez pas le droit de valider cette réservation');
-		}
+		$inputs['begin_at'] = $inputs['begin_at'] ?? $reservation->begin_at;
+		$inputs['end_at'] = $inputs['end_at'] ?? $reservation->end_at;
 
 		$inputs = $this->checkValidations($request, $room_id, $reservation->owned_by, $inputs);
 
