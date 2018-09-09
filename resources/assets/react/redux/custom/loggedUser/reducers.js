@@ -1,7 +1,6 @@
 import produce from 'immer';
 import { ASYNC_SUFFIXES, initialCrudState } from '../../utils';
 import loggedUserTypes from './types';
-import loggedUserActions from './actions';
 
 const loggedUserInitialState = {
 	...initialCrudState,

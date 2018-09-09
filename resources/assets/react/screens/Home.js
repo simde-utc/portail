@@ -5,7 +5,7 @@ import ArticleList from './../components/Article/List.js';
 class ScreensHome extends React.Component {
     render() {
         return (
-            <div className="Home">
+            <div className="container Home">
                 <ArticleList />
             </div>
         );
