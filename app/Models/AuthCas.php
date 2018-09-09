@@ -22,7 +22,7 @@ class AuthCas extends Auth // TODO must
 	];
 
 	protected $must = [
-		'user_id', 'login', 'email', 'is_active', 'is_confirmed'
+		'user_id', 'login', 'email', 'is_active', 'is_confirmed',
 	];
 
     public static function boot() {

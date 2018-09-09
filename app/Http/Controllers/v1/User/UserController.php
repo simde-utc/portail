@@ -140,7 +140,7 @@ class UserController extends Controller
 				if (!\Scopes::has($request, 'user-get-info-identity-type'))
 					abort(403, 'Vous n\'avez pas le droit d\'avoir accès aux types de l\'utilisateur');
 
-				foreach ($user->types as $type) {
+				foreach ($user->getTypes() as $type) {
 					$method = 'is'.ucfirst($type);
 					$type = 'is_'.$type;
 
