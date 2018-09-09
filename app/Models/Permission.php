@@ -38,7 +38,10 @@ class Permission extends Model implements OwnableContract
 			return $this->morphTo('owned_by');
 		}
 
-		public static function find($id, CanHavePermissions $owner) {
+		public static function find($id, CanHavePermissions $owner = null) {
+			if ($owner === null)
+				$owner = new User;
+
     	$permissions = static::where('id', $id)
 				->where('owned_by_type', get_class($owner))
 				->where(function ($query) use ($owner) {
@@ -49,7 +52,10 @@ class Permission extends Model implements OwnableContract
 			return $permissions->first();
 		}
 
-  public static function findByType(string $type, CanHavePermissions $owner) {
+  public static function findByType(string $type, CanHavePermissions $owner = null) {
+		if ($owner === null)
+			$owner = new User;
+
     $permissions = static::where('type', $type)
 			->where('owned_by_type', get_class($owner))
 			->where(function ($query) use ($owner) {
@@ -60,7 +66,10 @@ class Permission extends Model implements OwnableContract
 		return $permissions->first();
   }
 
-	public static function getPermission($permission, CanHavePermissions $owner) {
+	public static function getPermission($permission, CanHavePermissions $owner = null) {
+		if ($owner === null)
+			$owner = new User;
+
     if (is_string($permission))
       return static::findByType($permission, $owner);
     else if (is_int($permission))
@@ -69,7 +78,10 @@ class Permission extends Model implements OwnableContract
 			return $permission;
 	}
 
-	public static function getPermissions($permissions, CanHavePermissions $owner) {
+	public static function getPermissions($permissions, CanHavePermissions $owner = null) {
+		if ($owner === null)
+			$owner = new User;
+			
 		if (is_array($permissions)) {
       $permissions = static::where(function ($query) use ($permissions) {
 				$query->whereIn('id', $permissions)->orWhereIn('type', $permissions);

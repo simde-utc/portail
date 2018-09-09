@@ -111,7 +111,7 @@ trait HasRoles
 			$manageableRoles = $this->getUserRoles($updatedData['validated_by'] ?? \Auth::id());
 
 		$nbr = @count($roles) ?? 1;
-		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
+		$roles = Role::getRoles(stringToArray($roles), $this);
 
 		if (count($roles) !== $nbr)
   			throw new PortailException('Certains rôles donnés n\'ont pas pu être trouvé');
@@ -157,7 +157,7 @@ trait HasRoles
 			$manageableRoles = $this->getUserRoles($removed_by);
 
 		$nbr = @count($roles) ?? 1;
-		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
+		$roles = Role::getRoles(stringToArray($roles), $this);
 
 		if (count($roles) !== $nbr)
   			throw new PortailException('Certains rôles donnés n\'ont pas pu être trouvé');
@@ -195,7 +195,7 @@ trait HasRoles
 	 */
     public function syncRoles($roles, array $data = [], $removed_by = null, bool $force = false) {
 		$currentRoles = $this->getUserAssignedRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? 0, false)->pluck('id');
-		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id)->pluck('id');
+		$roles = Role::getRoles(stringToArray($roles), $this)->pluck('id');
 		$intersectedRoles = $currentRoles->intersect($roles);
 		$oldData = [];
 
@@ -215,7 +215,7 @@ trait HasRoles
 	 * @return bool
 	 */
     public function hasOneRole($roles, array $data = []) {
-        return Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id)->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
+        return Role::getRoles(stringToArray($roles), $this)->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
     }
 
 	/**
@@ -226,7 +226,7 @@ trait HasRoles
 	 * @return bool
 	 */
     public function hasAllRoles($roles, array $data = []) {
-        return Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id)->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isEmpty();
+        return Role::getRoles(stringToArray($roles), $this)->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isEmpty();
     }
 
 	/**

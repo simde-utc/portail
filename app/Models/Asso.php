@@ -154,7 +154,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isContactManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_contact', [
+		return $this->hasOnePermission('contact', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -168,7 +168,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isCalendarManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_calendar', [
+		return $this->hasOnePermission('calendar', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -182,7 +182,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isEventManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_event', [
+		return $this->hasOnePermission('event', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -196,7 +196,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isArticleManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_article', [
+		return $this->hasOnePermission('article', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -238,7 +238,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isReservationManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_reservation', [
+		return $this->hasOnePermission('reservation', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -257,7 +257,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 			return false;
 		}
 		else if ($model instanceof User) {
-			return $this->hasOnePermission('asso_reservation', [
+			return $this->hasOnePermission('reservation', [
 				'user_id' => $user_id,
 			]);
 		}

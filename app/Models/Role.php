@@ -40,7 +40,10 @@ class Role extends Model implements OwnableContract
     });
   }
 
-	public static function find($id, CanHaveRoles $owner) {
+	public static function find($id, CanHaveRoles $owner = null) {
+		if ($owner === null)
+			$owner = new User;
+
 		$roles = static::where('id', $id)
 			->where('owned_by_type', get_class($owner))
 			->where(function ($query) use ($owner) {
@@ -51,7 +54,10 @@ class Role extends Model implements OwnableContract
 		return $roles->first();
 	}
 
-	public static function findByType(string $type, CanHaveRoles $owner) {
+	public static function findByType(string $type, CanHaveRoles $owner = null) {
+		if ($owner === null)
+			$owner = new User;
+
     $roles = static::where('type', $type)
 			->where('owned_by_type', get_class($owner))
 			->where(function ($query) use ($owner) {
@@ -62,7 +68,10 @@ class Role extends Model implements OwnableContract
 		return $roles->first();
 	}
 
-	public static function getRole($role, CanHaveRoles $owner) {
+	public static function getRole($role, CanHaveRoles $owner = null) {
+		if ($owner === null)
+			$owner = new User;
+
     if (is_string($role))
       return static::findByType($role, $owner);
     else if (is_int($role))
@@ -71,7 +80,10 @@ class Role extends Model implements OwnableContract
 			return $role;
 	}
 
-	public static function getRoles($roles, CanHaveRoles $owner) {
+	public static function getRoles($roles, CanHaveRoles $owner = null) {
+		if ($owner === null)
+			$owner = new User;
+
 		if (is_array($roles)) {
       $roles = static::where(function ($query) use ($roles) {
 				$query->whereIn('id', $roles)->orWhereIn('type', $roles);
@@ -89,7 +101,10 @@ class Role extends Model implements OwnableContract
 			return $roles;
 	}
 
-	public static function getRoleAndItsParents($role, CanHaveRoles $owner) {
+	public static function getRoleAndItsParents($role, CanHaveRoles $owner = null) {
+		if ($owner === null)
+			$owner = new User;
+			
 		$role = static::getRole($role, $owner);
 
 		if ($role === null)
