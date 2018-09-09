@@ -18,6 +18,7 @@ class CreateAuthCasTable extends Migration
 			$table->string('login', validation_max('login'))->unique();
 			$table->string('email', validation_max('email'))->unique();
 			$table->boolean('is_active')->default(1);
+			$table->boolean('is_confirmed')->default(0);
 
 			$table->timestamp('last_login_at')->nullable();
 			$table->timestamps();
