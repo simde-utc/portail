@@ -20,13 +20,13 @@ class CreateEventsTable extends Migration
             $table->timestamp('begin_at')->useCurrent();
             $table->timestamp('end_at')->useCurrent();
             $table->uuid('full_day')->default(false); // Les horaires seront ignorés si vrai
-			$table->uuid('visibility_id');
+			      $table->uuid('visibility_id');
             $table->uuid('created_by_id')->nullable();
             $table->string('created_by_type')->nullable();
             $table->uuid('owned_by_id')->nullable();
             $table->string('owned_by_type')->nullable();
 
-  			$table->timestamps();
+  			    $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('location_id')->references('id')->on('places_locations');

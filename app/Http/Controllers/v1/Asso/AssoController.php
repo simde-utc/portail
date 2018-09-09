@@ -11,6 +11,7 @@ use App\Models\Semester;
 use App\Models\Role;
 use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasAssos;
+use App\Traits\Controller\v1\HasImages;
 
 /**
  * @resource Association
@@ -19,11 +20,12 @@ use App\Traits\Controller\v1\HasAssos;
  */
 class AssoController extends Controller
 {
-	use HasAssos;
+	use HasAssos, HasImages;
 
 	public function __construct() {
+		// La récupération des assos est publique
 		$this->middleware(
-			\Scopes::matchOne('user-get-assos', 'client-get-assos'),
+			\Scopes::allowPublic()->matchOne('user-get-assos', 'client-get-assos'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
@@ -73,15 +75,16 @@ class AssoController extends Controller
 		$asso = Asso::create($request->input());
 
 		if ($asso) {
+			// On affecte l'image si tout s'est bien passé
+			$this->setImage($request, $asso, 'assos/'.$asso->id);
+
 			// Après la création, on ajoute son président (non confirmé évidemment)
 			$asso->assignRoles(config('portail.roles.admin.assos'), [
 				'user_id' => $request->input('user_id'),
-			]);
+			], true);
 
 			// On met l'asso en état inactif
-			$asso->softDelete();
-
-			// TODO: Envoyer un mail de confirmation et de demande de confirmation par les assos parents
+			$asso->delete();
 
 			return response()->json($asso, 201);
 		}
@@ -135,8 +138,12 @@ class AssoController extends Controller
 			$asso->restore();
 		}
 
-		if ($asso->update($request->input()))
+		if ($asso->update($request->input())) {
+			// On affecte l'image si tout s'est bien passé
+			$this->setImage($request, $asso, 'assos/'.$asso->id);
+
 			return response()->json($asso, 200);
+		}
 		else
 			abort(500, 'L\'association n\'a pas pu être modifiée');
 	}
@@ -155,8 +162,11 @@ class AssoController extends Controller
 		if ($asso->children()->exists())
 			abort(400, 'Il n\'est pas possible de supprimer une association parente');
 
-		if ($asso->softDelete())
+		if ($asso->softDelete()) {
+			$this->deleteImage('assos/'.$asso->id);
+
 			abort(204);
+		}
 		else
 			abort(500, 'L\'association n\'a pas pu être supprimée');
 	}

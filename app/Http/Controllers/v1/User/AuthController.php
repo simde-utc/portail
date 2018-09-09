@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\User;
 
 use App\Http\Controllers\v1\Controller;
 use App\Models\User;
+use App\Models\Model;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use App\Exceptions\PortailException;
@@ -20,19 +21,19 @@ class AuthController extends Controller
 
 	public function __construct() {
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-get-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-get-info-identity-auth', 'client-get-info-identity-auth'),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-create-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-create-info-identity-auth', 'client-create-info-identity-auth'),
 			['only' => ['store']]
 		);
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-set-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-set-info-identity-auth', 'client-set-info-identity-auth'),
 			['only' => ['update']]
 		);
 		$this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-manage-info-identity-auth'),
+            \Scopes::matchOneOfDeepestChildren('user-manage-info-identity-auth', 'client-manage-info-identity-auth'),
 			['only' => ['destroy']]
 		);
 	}
@@ -50,7 +51,7 @@ class AuthController extends Controller
 		$result = [];
 
 		foreach ($providers as $name => $provider) {
-			if (\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+			if (\Scopes::has($request, \Scopes::getTokenType($request).'-get-info-identity-auth-'.$name))
 				$result[$name] = $user->$name;
 		}
 
@@ -67,13 +68,19 @@ class AuthController extends Controller
 		if ($provider === null)
 			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
 		else {
-			if (!\Scopes::has($request, 'user-create-info-identity-auth-'.$name))
+			if (!\Scopes::has($request, \Scopes::getTokenType($request).'-create-info-identity-auth-'.$name))
 				return response()->json(['message' => 'Non autorisé'], 503);
 
 			$class = resolve($provider['class']);
 
-			if ($class)
-				return response()->json($class->addAuth($user->id, $request->input('data')));
+			if ($class) {
+				$auth = $class->addAuth($user->id, $request->input('data'));
+
+				if ($auth instanceof Model)
+					return response()->json($auth);
+				else
+					abort(400, 'Il n\'a pas été possible de créer le système d\'authentication '.$name);
+			}
 			else
 				return response()->json(['message' => 'Le service '.$name.' ne permet pas à l\'utlisateur de se connecter'], 404);
 		}
@@ -98,17 +105,13 @@ class AuthController extends Controller
 		if ($provider === null)
 			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
 		else {
-			if (!\Scopes::has($request, 'user-get-info-identity-auth-'.$name))
+			if (!\Scopes::has($request, \Scopes::getTokenType($request).'-get-info-identity-auth-'.$name))
 				return response()->json(['message' => 'Non autorisé'], 503);
 
-			$model = resolve($provider['model']);
+			$auth = $user->$name;
 
-			if ($model) {
-				$auth = $model->find($user->id);
-
-				if ($auth)
-					return response()->json($auth);
-			}
+			if ($auth)
+				return response()->json($auth);
 
 			return response()->json(['message' => 'Le service '.$name.' ne permet pas à l\'utlisateur de se connecter'], 404);
 		}
@@ -125,20 +128,16 @@ class AuthController extends Controller
 		if ($provider === null)
 			return response()->json(['message' => 'Mauvais nom de service founi'], 400);
 		else {
-			if (!\Scopes::has($request, 'user-manage-info-identity-auth-'.$name))
+			if (!\Scopes::has($request, \Scopes::getTokenType($request).'-manage-info-identity-auth-'.$name))
 				return response()->json(['message' => 'Non autorisé'], 503);
 
-			$model = resolve($provider['model']);
+			$auth = $user->$name;
 
-			if ($model) {
-				$auth = $model->find($user->id);
-
-				if ($auth) {
-					if ($auth->delete())
-						return abort(204);
-					else
-						return abort(500, 'Erreur lors de la suppression');
-				}
+			if ($auth) {
+				if ($auth->delete())
+					return abort(204);
+				else
+					return abort(500, 'Erreur lors de la suppression');
 			}
 
 			return response()->json(['message' => 'Le service '.$name.' ne peut pas être supprimé car elle ne permet pas à l\'utlisateur de se connecter'], 404);

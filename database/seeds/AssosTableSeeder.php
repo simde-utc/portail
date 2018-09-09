@@ -40,9 +40,9 @@ DESC
 			[
 				'login'			=> 'pae',
 				'shortname'		=> 'PAE',
-				'name' 			=> 'Pôle Artistique et Événementiel',
+				'name' 			=> 'Pôle Artistique et Évènementiel',
 				'description'	=> <<<DESC
-Tout savoir sur l'art, la culture et les assos événementielles à l'UTC, c'est ici que ca se passe !
+Tout savoir sur l'*art*, la *culture* et les assos *événementielles* à l'UTC, c'est ici que ca se passe !
 
 Le PAE est fier d'être impliqué dans l'UTCéenne, l'IF, les Estus, les concerts de Strava, Larsen, Ocata... Ils sont trop pour un simple paragraphe !
 
@@ -57,9 +57,9 @@ DESC
 				'shortname'		=> 'PSEC',
 				'name'			=> 'Pôle Solidarité Et Citoyenneté',
 				'description'	=> <<<DESC
-Le Pôle Solidarité et Citoyenneté est là pour soutenir, accompagner et coordonner les associations à caractère solidaire ou citoyenne de l'UTC.
+Le Pôle Solidarité et Citoyenneté est là pour soutenir, accompagner et coordonner les associations à caractère *solidaire ou citoyenne* de l'UTC.
 
-Le pôle est la personne à contacter si tu as envie de t'investir dans la solidarité internationale, le développement durable, la défense des droits de l'homme, le combat contre les discriminations de toutes sortes, mais que tu ne sais pas quelle asso rejoindre. De même, si tu apportes ton propre projet associatif, n'hésite pas à nous contacter pour le lancer dans de bonnes conditions.
+Le pôle est la personne à contacter si tu as envie de t'investir dans la *solidarité internationale*, le *développement durable*, la défense des *droits de l'homme*, le combat contre les *discriminations* de toutes sortes, mais que tu ne sais pas quelle asso rejoindre. De même, si tu apportes ton propre projet associatif, n'hésite pas à nous contacter pour le lancer dans de bonnes conditions.
 DESC
 ,
 				'type_asso_id'	=> '1901',
@@ -79,7 +79,7 @@ Le but des pôles est de rassembler les associations par thématique, afin de pr
 Ainsi, les pôles sont la charnière entre les associations et le Bureau Des Etudiants (BDE).
 
 
-Le PTE regroupe les assos en rapport avec le thème des technologies et de l'entreprenariat.
+Le PTE regroupe les assos en rapport avec le thème des *technologies* et de *l'entreprenariat*.
 
 Nous avons la charge de la répartition des subventations accodées par le BDE, l'écoute des attentes des assos, la communication de leurs activités, le support logistique... Cela passe par exemple, par l'organisation d'une semaine des pôles, la proposition d'un local atelier pour les associations technologiques, ou la représentation des associations lors de grands évenement utcéens.
 
@@ -96,7 +96,7 @@ DESC
 				'shortname'		=> 'PVDC',
 				'name'			=> 'Pôle Vie de Campus',
 				'description'	=> <<<DESC
-Le PVDC c'est de la diversité, c'est des assos de service en folie, et un bureau uni pour que tout ça fonctionne bien !!
+Le PVDC c'est de la diversité, c'est des assos de service en *folie*, et un bureau uni pour que tout ça fonctionne bien !!
 
 Chaque membre du bureau est référent de plusieurs assos pour les aider, les soutenir et communiquer tout ce qu'il faut.
 
@@ -117,7 +117,7 @@ DESC
 				'description'	=> <<<DESC
 Le SiMDE est chargé de la mise en place :
 	- des ressource informatiques au sein de la MDE
-	- du serveur des associations Phoenix, hébergeant mails, sites web, fichiers...
+	- du serveur des associations *Phoenix*, hébergeant mails, sites web, fichiers...
 	- de la gestion du site assos.utc.fr
 DESC
 ,
@@ -129,7 +129,7 @@ DESC
 				'shortname'          => 'Integ\'UTC',
 				'name'          => 'Integration UTC',
 				'description'   => <<<DESC
-L'integ, c'est l'association qui s'occupe de l'accueil et de l'intégration des nouveaux étudiants de l'UTC.
+L'integ, c'est l'association qui s'occupe de l'accueil et de l'intégration des *nouveaux étudiants* de l'UTC.
 
 Chaque année, c'est reparti pour une dizaine de jours de festivités inoubliables. Pendant la première partie, quatre familles représentées par les quatre énormes clans qui s'entretuent pour la plus prestigieuse des distinctions, le fameux, l'ultime, l'inoubliable : le BIDET d'OR.
 La conclusion : un weekend magique qui allie l'ambiance d'un festival musical (sonorité reggae, pop, rock folk, électro) aux animations d'un parc d'attractions (kayak, jeux gonflables, kermesse, animation à sensations)
@@ -152,7 +152,7 @@ DESC
 				'description'	=> <<<DESC
 La Comédie Musicale de l'UTC
 
-Après un spectacle d'une qualité impressionnante (et encore, je pèse mes mots) en 2017, la nouvelle équipe vous prépare quelque chose de grand pour Décembre 2019...
+Après un *spectacle* d'une qualité impressionnante (et encore, je pèse mes mots) en 2017, la nouvelle équipe vous prépare quelque chose de grand pour Décembre 2019...
 
 Réalisée par des étudiants du script jusqu'aux décors en passant par la musique, les costumes et les danses, la comédie musicale ne vous décevra pas!
 DESC
@@ -165,7 +165,7 @@ DESC
 				'shortname'		=> 'Hackathon',
 				'name'			=> 'Hackathon',
 				'description'	=> <<<DESC
-Pendant 24h, les étudiants vont unir leurs forces pour développer des projets utiles à tous (vie associative et vie étudiante).
+Pendant 24h, les étudiants vont unir leurs forces pour développer des *projets utiles à tous* (vie associative et vie étudiante).
 DESC
 ,
 				'type_asso_id'  => 'commission',
@@ -176,7 +176,7 @@ DESC
 				'shortname'		=> 'Picasoft',
 				'name'			=> 'Picasoft',
 				'description'	=> <<<DESC
-T'as déjà entendu parler de "neutralité du net", "dégooglisons internet" ou "logiciels libres" ? Picasoft c'est une asso toute nouvelle qui à pour objectif de sensibiliser autour de ces thématiques et de proposer des solutions aux question qu'elles soulèvent !
+T'as déjà entendu parler de *"neutralité du net", "dégooglisons internet" ou "logiciels libres"* ? Picasoft c'est une asso toute nouvelle qui à pour objectif de sensibiliser autour de ces thématiques et de proposer des solutions aux question qu'elles soulèvent !
 - Pôle technique: nous proposons déjà 2 services libres, éthiques et décentralisés (team.picasoft.net et pad.picasoft.net) et nous avons besoin de ton aide pour en déployer plus ! Tu n'as pas besoin d’expérience, et tu pourras acquérir des connaissances précieuses pour la suite de ton parcours, mais tu pourras surtout t'investir dans un projet concret et utile à tous.
 - Pôle sensibilisation/formation: une journée Picasoft par semestre (conférences, ateliers), de la veille en ligne et plein d'ateliers tout au long du semestre pour apprendre à utiliser Linux, à chiffrer ses mails... Initié ou non, t'apprendras énormément avec des gens passionnés et tu pourras même proposer tes propres ateliers !
 DESC

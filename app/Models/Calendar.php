@@ -36,6 +36,7 @@ class Calendar extends Model implements OwnableContract
         'order' => null,
         'owner' => null,
         'creator' => null,
+        'filter' => [],
     ];
 
     public function events() {

@@ -6,11 +6,12 @@ use Laravel\Passport\Client as PassportClient;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Interfaces\Model\CanHaveArticles;
+use App\Interfaces\Model\CanNotify;
 use App\Traits\Model\HasHiddenData;
 use App\Traits\Model\HasUuid;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 
-class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, CanHaveArticles
+class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify
 {
     use HasHiddenData, HasSelection, HasUuid;
 
@@ -22,6 +23,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
 
     protected $selection = [
         'paginate' => null,
+		'filter' => [],
     ];
 
     public function asso() {

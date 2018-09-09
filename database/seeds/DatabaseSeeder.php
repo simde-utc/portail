@@ -20,8 +20,10 @@ class DatabaseSeeder extends Seeder
 			RolesTableSeeder::class,
 			ContactsTypesTableSeeder::class,
 			AssosTableSeeder::class,
+			ServicesTableSeeder::class,
 			PlacesAndLocationsTableSeeder::class,
 			RoomsTableSeeder::class,
+			ReservationsTypesTableSeeder::class,
 		]);
 
 		if (config('app.debug', false)) {
@@ -35,6 +37,7 @@ class DatabaseSeeder extends Seeder
 				ContactsTableSeeder::class,
 				ClientsTableSeeder::class,
 				CommentsTableSeeder::class,
+				ReservationsTableSeeder::class,
 			]);
 		}
 	}

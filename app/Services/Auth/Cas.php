@@ -8,6 +8,7 @@ use App\Models\AuthCas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Session;
+use App\Exceptions\PortailException;
 
 class Cas extends BaseAuth
 {
@@ -20,10 +21,7 @@ class Cas extends BaseAuth
 	}
 
 	public function showLoginForm(Request $request) {
-		if (Auth::guard('cas')->check())
-			return redirect()->route('cas.request');
-		else
-			return parent::showLoginForm($request);
+		return parent::showLoginForm($request);
 	}
 
 	public function login(Request $request) {
@@ -42,48 +40,40 @@ class Cas extends BaseAuth
 		if (!isset($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']))
 			return $this->error($request, null, null, 'Données du CAS reçues invalides');
 
-		$login = $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'];
-
-		$ginger = Ginger::user($login);
+		$ginger = Ginger::user($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user']);
 
 		// Renvoie une erreur différente de la 200. On passe par le CAS.
 		if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
-			list($login, $email, $firstname, $lastname) = [
+			list($login, $email, $firstname, $lastname, $active) = [
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
+				false
 			];
 		}
 		else {
 			// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
-			list($login, $email, $firstname, $lastname) = [
+			list($login, $email, $firstname, $lastname, $active) = [
 				$ginger->getLogin(),
 				$ginger->getEmail(),
 				$ginger->getFirstname(),
 				$ginger->getLastname(),
+				true,
 			];
 		}
 
-		if (($cas = AuthCas::findByEmail($email)))
+		if ($cas = AuthCas::findByEmail($email))
 			$user = $cas->user;
 		else {
 			$user = $this->updateOrCreateUser(compact('email', 'firstname', 'lastname'));
-			$cas = $this->createAuth($user->id, compact('login', 'email'));
+			$cas = $this->createAuth($user->id, compact('login', 'email', 'active'));
 		}
 
 		if (!$user->isActive())
 			return $this->error($request, $user, $userAuth, 'Ce compte a été désactivé');
 
-		// On vérifie qu'on a bien lié son CAS à une connexion email/mot de passe
-		if ($user->password()->exists())
-			return $this->connect($request, $user, $cas);
-		else {
-			Auth::guard('cas')->login($user);
-			Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => $this->name]);
-
-			return redirect()->route('cas.request');
-		}
+		return $this->connect($request, $user, $cas);
 	}
 
 	public function register(Request $request) {
@@ -109,6 +99,93 @@ class Cas extends BaseAuth
 	 */
 	public function logout(Request $request) {
 		return redirect(config('portail.cas.url').'logout');
+	}
+
+	public function addAuth($user_id, array $info) {
+		$user = User::find($user_id);
+
+		if ($user->cas()->exists())
+			throw new PortailException('L\'utlisateur possède déjà une connexion CAS');
+
+		$curl = \Curl::to(config('portail.cas.url').'v1/tickets')
+			->withData([
+				'username' => $info['login'],
+				'password' => $info['password']
+			])
+	        ->withResponseHeaders()
+			->returnResponseObject();
+
+		if (strpos($_SERVER['HTTP_HOST'], 'utc.fr'))
+			$curl = $curl->withProxy('proxyweb.utc.fr', 3128);
+
+		$response = $curl->post();
+
+		if ($response->status === 201) {
+			$curl = \Curl::to($response->headers['Location'])
+				->withData([
+					'service' => 'https://assos.utc.fr/',
+				])
+		        ->withResponseHeaders()
+				->returnResponseObject();
+
+			$response = $curl->post();
+
+			$curl = \Curl::to(config('portail.cas.url').'serviceValidate')
+				->withData([
+					'ticket' => $response->content,
+					'service' => 'https://assos.utc.fr/',
+				])
+		        ->withResponseHeaders()
+				->returnResponseObject();
+
+			$response = $curl->get();
+			$parsed = new xmlToArrayParser($response->content);
+
+			try {
+				$ginger = Ginger::user($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user']);
+
+				// Renvoie une erreur différente de la 200. On passe par le CAS.
+				if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
+					list($login, $email, $firstname, $lastname, $active) = [
+						$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
+						$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
+						$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
+						$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:sn'],
+						false
+					];
+				}
+				else {
+					// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
+					list($login, $email, $firstname, $lastname, $active) = [
+						$ginger->getLogin(),
+						$ginger->getEmail(),
+						$ginger->getFirstname(),
+						$ginger->getLastname(),
+						true,
+					];
+				}
+
+				$cas = AuthCas::create([
+					'user_id' => $user_id,
+					'email' => $email,
+					'login' => $login,
+					'is_active' => $active
+				]);
+
+				$user->update([
+					'email' => $email,
+					'firstname' => $firstname,
+					'lastname' => $lastname,
+					'is_active' => true,
+				]);
+
+				return $cas;
+			} catch (\Exception $e) {
+				throw new PortailException('Ce compte CAS existe déjà et ne peut être ajouté une nouvelle fois', 409);
+			}
+		}
+
+		return false;
 	}
 }
 

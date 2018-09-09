@@ -32,8 +32,26 @@ class Scopes {
 	 */
 	protected $scopes;
 
+	protected $allowPublicAjax = false;
+
 	public function __construct() {
 		$this->scopes = config('scopes');
+	}
+
+	/**
+	 * Cette méthode permet de définir si les routes sont accessibles
+	 */
+	public function allowPublic($allow = true) {
+		$this->allowPublicAjax = $allow;
+
+		return $this;
+	}
+
+	/**
+	 * Cette méthode définie le middleware à appeler
+	 */
+	protected function getAuthMiddleware() {
+		return $this->allowPublicAjax ? 'authAjax' : 'auth';
 	}
 
 	/**
@@ -369,20 +387,22 @@ class Scopes {
 	 * @return array
 	 */
 	private function matchAny(array $userScopes = [], array $clientScopes = [], bool $matchOne = true) {
+		$indicator = $matchOne ? '1' : '0';
+
 		if (count($userScopes) > 0) {
 			if (count($clientScopes) > 0)
-				$middleware = 'auth.any:'.implode(',', [($matchOne ? '1' : '0'), implode('|', $userScopes), implode('|', $clientScopes)]);
+				$middleware = $this->getAuthMiddleware().'.any:'.implode(',', [$indicator, implode('|', $userScopes), implode('|', $clientScopes)]);
 			else
-				$middleware = 'auth.user:'.implode(',', [($matchOne ? '1' : '0'), implode('|', $userScopes)]);
+				$middleware = $this->getAuthMiddleware().'.user:'.implode(',', [$indicator, implode('|', $userScopes)]);
 		}
 		else if (count($clientScopes) > 0)
-			$middleware = 'auth.client:'.implode(',', [($matchOne ? '1' : '0'), implode('|', $clientScopes)]);
+			$middleware = $this->getAuthMiddleware().'.client:'.implode(',', [$indicator, implode('|', $clientScopes)]);
 		else
 			return [];
 
 		return [
 			$middleware,
-			'auth.check',
+			$this->getAuthMiddleware().'.check',
 		];
 	}
 
@@ -393,8 +413,8 @@ class Scopes {
 	 */
 	public function matchAnyUser() {
 		return [
-			'auth.user',
-			'auth.check'
+			$this->getAuthMiddleware().'.user',
+			$this->getAuthMiddleware().'.check'
 		];
 	}
 
@@ -405,8 +425,8 @@ class Scopes {
 	 */
 	public function matchAnyClient() {
 		return [
-			'auth.client',
-			'auth.check'
+			$this->getAuthMiddleware().'.client',
+			$this->getAuthMiddleware().'.check'
 		];
 	}
 
@@ -417,8 +437,8 @@ class Scopes {
 	 */
 	public function matchAnyUserOrClient() {
 		return [
-			'auth.any',
-			'auth.check'
+			$this->getAuthMiddleware().'.any',
+			$this->getAuthMiddleware().'.check'
 		];
 	}
 
@@ -495,8 +515,7 @@ class Scopes {
 	 * @return boolean
 	 */
 	public function isUserToken(Request $request) {
-		return $request->user() !== null
-			|| ($this->getToken($request)->transient() && $request->header(config('portail.headers.request_type')) == 'user');
+		return $request->user() !== null || $this->getToken($request)->transient();
 	}
 
 	/**
@@ -505,8 +524,7 @@ class Scopes {
 	 * @return boolean
 	 */
 	public function isClientToken(Request $request) {
-		return $request->user() === null
-			|| ($this->getToken($request)->transient() && $request->header(config('portail.headers.request_type')) == 'client');
+		return $request->user() === null;
 	}
 
 	/**
@@ -515,7 +533,7 @@ class Scopes {
 	 * @return string	'client' / 'user'
 	 */
 	public function getTokenType(Request $request) {
-		return $this->isClientToken($request) ? 'client' : 'user';
+		return $this->getToken($request) ? ($this->isClientToken($request) ? 'client' : 'user') : null;
 	}
 
 	public function isUserOrClientToken(Request $request) {
@@ -532,14 +550,18 @@ class Scopes {
 	}
 
 	public function getToken(Request $request) {
-		if ($request->user() === null) {
-			$bearerToken = $request->bearerToken();
-			$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
-
-			return Token::find($tokenId);
-		}
-		else
+		if ($request->user())
 			return $request->user()->token();
+		else {
+			try {
+				$bearerToken = $request->bearerToken();
+				$tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
+
+				return Token::find($tokenId);
+			} catch (\Exception $e) {
+				return null;
+			}
+		}
 	}
 
 	public function getClient(Request $request) {
@@ -571,8 +593,15 @@ class Scopes {
 
 		$token = $this->getToken($request);
 
-		if ($token->transient())
-			return true;
+		if ($token === null)
+			return false;
+
+		if ($token->transient()) {
+			foreach ($scopes as $scope) {
+				if (strpos($scope, 'user') === 0)
+					return true;
+			}
+		}
 
 		foreach ($token->scopes as $scope) {
 			if (in_array($scope, $scopes))
@@ -596,8 +625,15 @@ class Scopes {
 
 		$token = $this->getToken($request);
 
-		if ($token->transient())
-			return true;
+		if ($token === null)
+			return false;
+
+		if ($token->transient()) {
+			foreach ($scopes as $scope) {
+				if (strpos($scope, 'user') !== 0)
+					return false;
+			}
+		}
 
 		foreach ($token->scopes as $scope) {
 			if (!in_array($scope, $scopes))

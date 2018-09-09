@@ -27,13 +27,6 @@ class AuthServiceProvider extends ServiceProvider
 	{
 		$this->registerPolicies();
 
-		// Singletonne tous les services d'authentification perso répertoriés dans auth.services
-		foreach (config('auth.services') as $name => $config) {
-			$this->app->singleton($name, function ($app) {
-				return new $config['class']();
-			});
-		}
-
 		$this->passport();
 	}
 

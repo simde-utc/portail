@@ -11,6 +11,7 @@ use App\Models\Visibility;
 use App\Traits\HasVisibility;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\Controller\v1\HasContacts;
+use Illuminate\Http\JsonResponse;
 
 class ContactController extends Controller
 {

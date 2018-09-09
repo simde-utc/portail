@@ -10,7 +10,6 @@ return [
 
 	// Les headers spécifiques au Portail (commençant par X-Portail)
 	'headers' => [
-		'request_type' 	=> 'X-Portail-Request-Type',
 		'warn'			=> 'X-Portail-Warn',
 		'version'		=> 'X-Portail-Version',
 	],
@@ -43,6 +42,10 @@ return [
 		'bde' => [
 			'president' => 'admin'
 		]
+	],
+
+	'reservations' => [
+		'max_duration' => 2,
 	],
 
 	'cas' => [

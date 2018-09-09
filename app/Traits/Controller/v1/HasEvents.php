@@ -19,7 +19,7 @@ trait HasEvents
 			return false;
 
 		return $model->owned_by->isEventAccessibleBy($user_id);
-    }
+	}
 
 	// Uniquement les followers et ceux qui possèdent le droit peuvent le voir
 	protected function isEventFollowed(Request $request, Event $event, string $user_id) {

@@ -14,11 +14,9 @@ html, body, main, #root {
 
 main {
 	background-color: $white;
+	overflow: auto;
 }
 
-.navbar {
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +27,8 @@ main {
 .list-row {
 	padding: 0;
 	margin-bottom: map-get($spacers, 1);
+	overflow-x: auto;
+	flex-wrap: nowrap;
 }
 
 .list-item,
@@ -50,6 +50,5 @@ main {
 	color: $body-color;
 	&:hover {
 		color: $primary;
-		text-decoration: none;
 	}
 }

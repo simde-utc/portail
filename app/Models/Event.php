@@ -25,9 +25,9 @@ class Event extends Model implements OwnableContract
         'created_by', 'owned_by', 'visibility', 'location'
     ];
 
-	protected $withModelName = [
-		'created_by', 'owned_by',
-	];
+  	protected $withModelName = [
+  		'created_by', 'owned_by',
+  	];
 
     protected $must = [
         'begin_at', 'end_at', 'full_day', 'location'
@@ -59,6 +59,7 @@ class Event extends Model implements OwnableContract
                 'end' => 'begin_at',
             ]
         ],
+		'filter' => [],
     ];
 
     public function created_by() {

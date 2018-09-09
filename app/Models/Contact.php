@@ -22,9 +22,14 @@ class Contact extends Model implements OwnableContract // TODO $must
         'contact_type_id', 'visibility_id', 'owned_by_id', 'owned_by_type',
     ];
 
+    protected $must = [
+        'value', 'type'
+    ];
+
     protected $selection = [
         'paginate' => null,
         'order' => null,
+		'filter' => [],
     ];
 
     public static function boot() {

@@ -4,6 +4,10 @@
 <div class="row center-container">
 
 	@foreach (config('auth.services') as $name => $provider)
+		@if (!$provider['loggable'])
+			@continue
+		@endif
+		
 		<div class="col-md-6 mb-4 mb-md-0">
 			<div class="auth-services card-fused-buttons drop-shadow card mx-auto">
 				<div class="card-body">

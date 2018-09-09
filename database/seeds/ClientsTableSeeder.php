@@ -37,6 +37,20 @@ class ClientsTableSeeder extends Seeder
                 'revoked'       => 0,
                 'redirect'      => 'http://localhost/',
                 'asso_id'       => Asso::where('login', 'simde')->first()->id,
+                'scopes'        => json_encode([
+                    'client-create-users-inactive', 'client-create-info-identity-auth-app',
+                ]),
+            ],
+            [
+                'id'            => '4a6f7373-656c-696e-203d-20426f626279',
+                'user_id'       => User::where('firstname', 'Samy')->first()->id,
+                'name'          => 'Bobby dev',
+                'secret'        => 'password',
+                'personal_access_client'    => '0',
+                'password_client'           => '0',
+                'revoked'       => 0,
+                'redirect'      => 'http://localhost:8000/api/v1/login',
+                'asso_id'       => Asso::where('login', 'simde')->first()->id,
                 'scopes'        => '',
             ],
         ];

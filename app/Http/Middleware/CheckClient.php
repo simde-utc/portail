@@ -38,15 +38,16 @@ class CheckClient
 				$scopes = [\Scopes::getMatchingScopes(explode('|', $args[1]), 'client')];
 
 			return app(CheckClientCredentials::class)->handle($request, function ($request) use ($next, $scopes, $token) {
-				if (!$token->transient()) {
-					$tokenScopes = $token->scopes;
+				if ($token->transient())
+					throw new AuthenticationException;
 
-					// On vérifie pour chaque ensemble de scopes
-					foreach ($scopes as $scopeList) {
-						// Qu'on en possède au moins un parmi la liste
-						if (empty(array_intersect($tokenScopes, $scopeList)))
-							throw new MissingScopeException($scopes);
-					}
+				$tokenScopes = $token->scopes;
+
+				// On vérifie pour chaque ensemble de scopes
+				foreach ($scopes as $scopeList) {
+					// Qu'on en possède au moins un parmi la liste
+					if (empty(array_intersect($tokenScopes, $scopeList)))
+						throw new MissingScopeException($scopes);
 				}
 
 				return $next($request);

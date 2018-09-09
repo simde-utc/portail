@@ -58,11 +58,11 @@ class RegisterController extends Controller
         ]);
     }
 
-	public function show(Request $request, string $provider) {
+	public function show(Request $request, string $provider = null) {
 		$config = config("auth.services.$provider");
 
 		if ($config === null || !$config['registrable'])
-			return redirect()->route('register.show', ['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))])->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+			return redirect()->route('login.show')->cookie('auth_provider', '', config('portail.cookie_lifetime'));
 		else
 			return resolve($config['class'])->showRegisterForm($request);
 	}
@@ -74,7 +74,7 @@ class RegisterController extends Controller
 		$config = config("auth.services.$provider");
 
 		if ($config === null || !$config['registrable'])
-			return redirect()->route('register.show', ['redirect' => \Session::get('url.intended', $request->query('redirect', url()->previous()))])->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
+			return redirect()->route('register.show')->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 		else {
 			setcookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 

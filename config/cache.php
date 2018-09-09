@@ -29,7 +29,6 @@ return [
     */
 
     'stores' => [
-
         'apc' => [
             'driver' => 'apc',
         ],
@@ -72,7 +71,6 @@ return [
             'driver' => 'redis',
             'connection' => 'default',
         ],
-
     ],
 
     /*

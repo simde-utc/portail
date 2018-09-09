@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Redirect, Switch } from 'react-router-dom';
+
+// Screens
+import ScreensHome from './screens/Home.js';
+import ScreensDashboard from './screens/Dashboard';
+import ScreensAssosList from './screens/AssosList';
+import ScreensAssoDetail from './screens/AssoDetail';
+import ScreensProfile from './screens/Profile';
 
 // Components
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 
-// Screens
-import DashboardScreen from './screens/Dashboard';
-import AssosListScreen from './screens/AssosList';
-import AssoDetailScreen from './screens/AssoDetail';
-
 class App extends Component {
 	render() {
 		// Fake Components
 		const RouteNotFound = () => (<div><h1>404</h1></div>)
-		const Home = () => (<div><h1>Home</h1></div>)
 
 		return (
 			<div className="h-100">
@@ -23,10 +24,11 @@ class App extends Component {
 					<Sidebar />
 					<main className="col loader-container">
 						<Switch>
-							<Route path="/" exact component={ Home } />
-							<Route path="/dashboard" component={ DashboardScreen } />
-							<Route path="/assos" exact component={ AssosListScreen } />
-							<Route path="/assos/:login" component={ AssoDetailScreen } />
+							<Route path="/" exact component={ ScreensHome } />
+							<Route path="/dashboard" component={ ScreensDashboard } />
+							<Route path="/assos" exact component={ ScreensAssosList } />
+							<Route path="/assos/:login" component={ ScreensAssoDetail } />
+							<Route path="/profile" component={ ScreensProfile } />
 							<Route component={ RouteNotFound } />
 						</Switch>
 					</main>

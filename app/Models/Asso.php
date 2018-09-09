@@ -10,8 +10,12 @@ use App\Interfaces\Model\CanHaveContacts;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveArticles;
+use App\Interfaces\Model\CanHaveRooms;
+use App\Interfaces\Model\CanHaveReservations;
+use App\Interfaces\Model\CanNotify;
+use App\Exception\PortailException;
 
-class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles
+class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify, CanHaveRooms, CanHaveReservations
 {
 	use HasStages, HasMembers, SoftDeletes {
 		HasMembers::members as membersAndFollowers;
@@ -21,8 +25,12 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		HasMembers::getUserRoles as getUsersRolesInThisAssociation;
 	}
 
+	protected $casts = [
+		'deleted_at' => 'datetime',
+	];
+
 	protected $fillable = [
-		'name', 'shortname', 'login', 'description', 'type_asso_id', 'parent_id',
+		'name', 'shortname', 'login', 'image', 'description', 'type_asso_id', 'parent_id',
 	];
 
 	protected $hidden = [
@@ -38,13 +46,14 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	];
 
 	protected $must = [
-		'name', 'shortname',
+		'name', 'shortname', 'login', 'image',
 	]; // Children dans le cas où on affiche en mode étagé
 
 	protected $selection = [
 		'order' => 'oldest',
 		'stage' => null,
 		'stages' => null,
+		'filter' => [],
 	];
 
 	protected $roleRelationTable = 'assos_members';
@@ -54,19 +63,19 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
         static::created(function ($model) {
 			// On crée automatiquement des moyens de contacts !
-			Contact::create([
+			$model->contacts()->create([
 				'name' => 'Adresse email',
 				'value' => $model->login.'@assos.utc.fr',
 				'contact_type_id' => ContactType::where('name', 'Adresse email')->first()->id,
 				'visibility_id' => Visibility::findByType('public')->id,
-			])->changeOwnerTo($model)->save();
+			]);
 
-			Contact::create([
+			$model->contacts()->create([
 				'name' => 'Site Web',
 				'value' => 'https://assos.utc.fr/'.$model->login.'/',
 				'contact_type_id' => ContactType::where('name', 'Url')->first()->id,
 				'visibility_id' => Visibility::findByType('public')->id,
-			])->changeOwnerTo($model)->save();
+			]);
         });
     }
 
@@ -76,14 +85,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
 	public function type() {
 		return $this->belongsTo(AssoType::class, 'type_asso_id');
-	}
-
-	public function rooms() {
-		return $this->hasMany(Room::class);
-	}
-
-	public function reservations() {
-		return $this->hasMany(Reservation::class);
 	}
 
 	public function parent() {
@@ -156,9 +157,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		]);
 	}
 
-    public function calendars() {
-    	return $this->morphMany(Calendar::class, 'owned_by');
-    }
+  public function calendars() {
+  	return $this->morphMany(Calendar::class, 'owned_by');
+  }
 
 	public function isCalendarAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
@@ -170,9 +171,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		]);
 	}
 
-    public function events() {
-    	return $this->morphMany(Events::class, 'owned_by');
-    }
+  public function events() {
+  	return $this->morphMany(Events::class, 'owned_by');
+  }
 
 	public function isEventAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
@@ -184,9 +185,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		]);
 	}
 
-    public function articles() {
-    	return $this->morphMany(Article::class, 'owned_by');
-    }
+  public function articles() {
+  	return $this->morphMany(Article::class, 'owned_by');
+  }
 
 	public function isArticleAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
@@ -196,5 +197,72 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		return $this->hasOnePermission('asso_article', [
 			'user_id' => $user_id,
 		]);
+	}
+
+  public function rooms() {
+  	return $this->morphMany(Room::class, 'owned_by');
+  }
+
+	public function isRoomAccessibleBy(string $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isRoomManageableBy(string $user_id): bool {
+		return User::find($user_id)->hasOnePermission('room');
+	}
+
+	public function isRoomReservableBy(\Illuminate\Database\Eloquent\Model $model): bool {
+		if (!($model instanceof Asso))
+			throw new PortailException('Seules les associations peuvent réserver une salle appartenant à une association', 503);
+
+		// On regarde si l'asso est un enfant de celle possédant la salle (ex: Picsart peut réserver du PAE)
+		$toMatch = $model;
+		while ($toMatch) {
+			if ($toMatch->id === $this->id)
+				return true;
+
+			$toMatch = $toMatch->parent;
+		}
+
+		return $this->isReservationValidableBy($model); // Correspond aux assos parents
+	}
+
+  public function reservations() {
+  	return $this->morphMany(Reservation::class, 'owned_by');
+  }
+
+	public function isReservationAccessibleBy(string $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isReservationManageableBy(string $user_id): bool {
+		return $this->hasOnePermission('asso_reservation', [
+			'user_id' => $user_id,
+		]);
+	}
+
+	public function isReservationValidableBy(\Illuminate\Database\Eloquent\Model $model): bool {
+		if ($model instanceof Asso) {
+			// On regarde si l'asso possédant la salle est un enfant de celle qui fait la demande (ex: BDE à le droit sur PAE)
+			$toMatch = $this;
+			while ($toMatch) {
+				if ($toMatch->id === $model->id)
+					return true;
+
+				$toMatch = $toMatch->parent;
+			}
+
+			return false;
+		}
+		else if ($model instanceof User) {
+			return $this->hasOnePermission('asso_reservation', [
+				'user_id' => $user_id,
+			]);
+		}
+		else if ($model instanceof Client) {
+			return $model->asso->id === $this->id;
+		}
+		else
+			throw new PortailException('Seules les utilisateurs, associations et clients peuvent valider une salle appartenant à une association', 503);
 	}
 }

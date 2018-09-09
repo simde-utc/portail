@@ -15,6 +15,7 @@ use App\Models\Tag;
 use App\Traits\HasVisibility;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Controller\v1\HasArticles;
+use App\Traits\Controller\v1\HasImages;
 
 /**
  * @resource Article
@@ -23,7 +24,7 @@ use App\Traits\Controller\v1\HasArticles;
  */
 class ArticleController extends Controller
 {
-	use HasArticles;
+	use HasArticles, HasImages;
 
 	/**
 	 * Scopes Article
@@ -32,7 +33,7 @@ class ArticleController extends Controller
 	 */
  	public function __construct() {
  		$this->middleware(
- 			\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
+ 			\Scopes::allowPublic()->matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
  			['only' => ['index', 'show']]
  		);
  		$this->middleware(
@@ -89,13 +90,20 @@ class ArticleController extends Controller
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse {
-		$articles = Article::getSelection()->filter(function ($article) use ($request) {
-			return $this->tokenCanSee($request, $article, 'get') && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
-		})->values()->map(function ($article) {
-			return $article->hideData();
-		});
+		if (\Scopes::getToken($request)) {
+			$articles = Article::getSelection()->filter(function ($article) use ($request) {
+				return $this->tokenCanSee($request, $article, 'get') && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
+			});
+		}
+		else {
+			$articles = Article::getSelection()->filter(function ($article) use ($request) {
+				return $this->isVisible($article);
+			});
+		}
 
-		return response()->json($articles, 200);
+		return response()->json($articles->values()->map(function ($article) {
+			return $article->hideData();
+		}), 200);
 	}
 
 	/**
@@ -139,6 +147,8 @@ class ArticleController extends Controller
 		$article = Article::create($inputs);
 
 		if ($article) {
+			// On affecte l'image si tout s'est bien passé
+			$this->setImage($request, $article, 'articles', $article->id);
 
 			// Tags
 			if ($request->has('tags') && is_array($inputs['tags'])) {
@@ -203,6 +213,9 @@ class ArticleController extends Controller
 			$this->getEvent($request, \Auth::user(), $inputs['event_id']);
 
 		if ($article->update($inputs)) {
+			// On affecte l'image si tout s'est bien passé
+			$this->setImage($request, $article, 'articles', $article->id);
+
 			// Tags
 			if ($request->has('tags') && is_array($inputs['tags'])) {
 				$tags = Tag::all();
@@ -241,8 +254,11 @@ class ArticleController extends Controller
 		$article = $this->getArticle($request, \Auth::user(), $id, 'remove');
 		$article->tags()->delete();
 
-		if ($article->delete())
+		if ($article->delete()) {
+			$this->deleteImage('articles/'.$article->id);
+
 			abort(204);
+		}
 		else
 			abort(500, 'L\'article n\'a pas pu être supprimé');
 	}

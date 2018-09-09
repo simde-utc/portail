@@ -20,6 +20,16 @@ class Visibility extends Model
 		'created_at', 'updated_at'
 	];
 
+    protected $must = [
+        'type',
+    ];
+
+    protected $selection = [
+        'paginate' => [],
+        'order' => [],
+        'filter' => [],
+    ];
+
 	public static function findByType($type) {
 		return static::where('type', $type)->first();
 	}
@@ -38,19 +48,5 @@ class Visibility extends Model
 
     public function events() {
         return $this->hasMany('App\Models\Event');
-    }
-
-    public static function getTopStage(array $data = [], $with = []) {
-        $tableName = (new static)->getTable();
-        $model = static::whereNull('parent_id')->with($with);
-
-        foreach ($data as $key => $value) {
-            if (!\Schema::hasColumn($tableName, $key))
-                throw new PortailException('L\'attribut '.$key.' n\'existe pas');
-
-            $model = $model->where($key, $value);
-        }
-
-        return collect()->push($model->first());
     }
 }

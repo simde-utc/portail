@@ -1,22 +1,32 @@
 <?php
 
 return [
-
     'services' => [
         'cas' => [
 			'name' => 'CAS-UTC',
-			'description' => 'Tout membre de l\'UTC ou de l\'ESCOM',
+			'description' => 'Connexion (CAS) réservée aux membres UTC',
             'class' => App\Services\Auth\Cas::class,
             'model' => App\Models\AuthCas::class,
+            'loggable' => true,
 			'registrable' => false,
         ],
 
         'password' => [
 			'name' => 'Mot de passe',
-			'description' => 'Tout autre membre',
+			'description' => 'Connexion par adresse email et mot de passe (possibilité de créer un compte)',
             'class' => App\Services\Auth\Password::class,
             'model' => App\Models\AuthPassword::class,
+            'loggable' => true,
 			'registrable' => true,
+        ],
+
+        'app' => [
+			'name' => 'Application',
+			'description' => 'Connexion pour l\'application',
+            'class' => App\Services\Auth\App::class,
+            'model' => App\Models\AuthApp::class,
+            'loggable' => false,
+			'registrable' => false,
         ],
     ],
 
@@ -55,11 +65,6 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-
-        'cas' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
