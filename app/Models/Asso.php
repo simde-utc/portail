@@ -13,9 +13,11 @@ use App\Interfaces\Model\CanHaveArticles;
 use App\Interfaces\Model\CanHaveRooms;
 use App\Interfaces\Model\CanHaveReservations;
 use App\Interfaces\Model\CanNotify;
+use App\Interfaces\Model\CanHaveRoles;
+use App\Interfaces\Model\CanHavePermissions;
 use App\Exception\PortailException;
 
-class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify, CanHaveRooms, CanHaveReservations
+class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify, CanHaveRooms, CanHaveReservations, CanHaveRoles, CanHavePermissions
 {
 	use HasStages, HasMembers, SoftDeletes {
 		HasMembers::members as membersAndFollowers;

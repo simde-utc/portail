@@ -8,6 +8,7 @@ use App\Traits\Model\HasRoles;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Traits\Model\HasOwnerSelection;
 use Illuminate\Support\Collection;
+use App\Interfaces\Model\CanHavePermissions;
 
 class Permission extends Model implements OwnableContract
 {
@@ -37,60 +38,50 @@ class Permission extends Model implements OwnableContract
 			return $this->morphTo('owned_by');
 		}
 
-	public static function find($id, string $only_for = null) {
-        $permissions = static::where('id', $id);
+		public static function find($id, CanHavePermissions $owner) {
+    	$permissions = static::where('id', $id)
+				->where('owned_by_type', get_class($owner))
+				->where(function ($query) use ($owner) {
+					$query->whereNull('owned_by_id')
+						->orWhere('owned_by_id', $owner->id);
+				});
 
-		if ($only_for !== null) {
-			$group = explode('-', $only_for)[0] ?? $only_for;
-
-			$permissions->where(function ($query) use ($group, $only_for) {
-				$query->where('only_for', $group)->orWhere('only_for', $only_for);
-			});
+			return $permissions->first();
 		}
 
-		return $permissions->first();
-	}
-
-    public static function findByType(string $type, string $only_for = null) {
-        $permissions = static::where('type', $type);
-
-		if ($only_for !== null) {
-			$group = explode('-', $only_for)[0] ?? $only_for;
-
-			$permissions->where(function ($query) use ($group, $only_for) {
-				$query->where('only_for', $group)->orWhere('only_for', $only_for);
+  public static function findByType(string $type, CanHavePermissions $owner) {
+    $permissions = static::where('type', $type)
+			->where('owned_by_type', get_class($owner))
+			->where(function ($query) use ($owner) {
+				$query->whereNull('owned_by_id')
+					->orWhere('owned_by_id', $owner->id);
 			});
-		}
 
 		return $permissions->first();
-    }
+  }
 
-	public static function getPermission($permissions, string $only_for = null) {
-        if (is_string($permissions))
-            return static::findByType($permissions, $only_for);
-        else if (is_int($permissions))
-			return static::find($permissions, $only_for);
+	public static function getPermission($permission, CanHavePermissions $owner) {
+    if (is_string($permission))
+      return static::findByType($permission, $owner);
+    else if (is_int($permission))
+			return static::find($permission, $owner);
 		else
 			return $permission;
 	}
 
-	public static function getPermissions($permissions, string $only_for = null) {
-        $group = explode('-', $only_for)[0] ?? $only_for;
-
-        if (is_array($permissions)) {
-			$query = static::where(function ($query) use ($permissions) {
+	public static function getPermissions($permissions, CanHavePermissions $owner) {
+		if (is_array($permissions)) {
+      $permissions = static::where(function ($query) use ($permissions) {
 				$query->whereIn('id', $permissions)->orWhereIn('type', $permissions);
-			});
-
-			if ($only_for) {
-				$query = $query->where(function ($query) use ($group, $only_for) {
-					$query->where('only_for', $group)->orWhere('only_for', $only_for);
+			})->where('owned_by_type', get_class($owner))
+				->where(function ($query) use ($owner) {
+					$query->whereNull('owned_by_id')
+						->orWhere('owned_by_id', $owner->id);
 				});
-			}
 
-			return $query->get();
-        }
-		else if ($permissions instanceof \Illuminate\Database\Eloquent\Model)
+			return $permissions->get();
+    }
+		else if ($permissions instanceof Model)
 			return collect($permissions);
 		else
 			return $permissions;

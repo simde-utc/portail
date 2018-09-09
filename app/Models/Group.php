@@ -9,8 +9,10 @@ use App\Interfaces\Model\CanHaveEvents;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveContacts;
 use App\Interfaces\Model\CanHaveArticles;
+use App\Interfaces\Model\CanHaveRoles;
+use App\Interfaces\Model\CanHavePermissions;
 
-class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles
+class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles, CanHaveRoles, CanHavePermissions
 {
     use SoftDeletes, HasMembers;
 

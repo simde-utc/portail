@@ -8,6 +8,8 @@ use Cog\Contracts\Ownership\CanBeOwner;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveContacts;
 use App\Interfaces\Model\CanHaveEvents;
+use App\Interfaces\Model\CanHaveRoles;
+use App\Interfaces\Model\CanHavePermissions;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Model\HasRoles;
@@ -25,7 +27,7 @@ use App\Notifications\User\UserDesactivation;
 use App\Notifications\User\UserModification;
 use App\Notifications\User\UserDeletion;
 
-class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
+class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveRoles, CanHavePermissions
 {
 	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid {
 		HasHiddenData::hideData as protected hideDataFromTrait;

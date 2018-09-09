@@ -54,7 +54,7 @@ trait HasRoles
 	 * @param array $data 		Possibilité d'affecter role_id, semester_id, validated_by, user_id
 	 * @param bool $force 		Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
-	public function assignRoles($roles, array $data = [], bool $force = false) {	
+	public function assignRoles($roles, array $data = [], bool $force = false) {
 		$data['semester_id'] = array_key_exists('semester_id', $data) ? $data['semester_id'] : Semester::getThisSemester()->id;
 		$addRoles = [];
 
@@ -62,7 +62,7 @@ trait HasRoles
 			$manageableRoles = $this->getUserRoles($data['validated_by'] ?? \Auth::id());
 
 		$nbr = @count($roles) ?? 1;
-		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
+		$roles = Role::getRoles(stringToArray($roles), $this);
 
 		if (count($roles) !== $nbr)
 			throw new PortailException('Certains rôles donnés n\'ont pas pu être trouvé');
@@ -302,9 +302,7 @@ trait HasRoles
 
 	// Par défaut, un role n'est pas supprimable s'il a déjà été assigné
 	public function isRoleDeletable($role) {
-		$class = explode('-', $role->only_for)[0];
-
-		return $role->$class()->count() === 0;
+		return $role->{\ModelResolver::getCategory($role->owned_by_type)}()->count() === 0;
 	}
 
 	public function isRoleForIdDeletable($role, $id) {
@@ -312,8 +310,6 @@ trait HasRoles
 	}
 
 	public function beforeDeletingRole($role) {
-		$class = explode('-', $role->only_for)[0];
-
-		return $role->$class()->detach();
+		return $role->{\ModelResolver::getCategory($role->owned_by_type)}()->detach();
 	}
 }

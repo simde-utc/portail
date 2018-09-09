@@ -10,6 +10,7 @@ use App\Models\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Traits\Model\HasOwnerSelection;
 use App\Exceptions\PortailException;
+use App\Interfaces\Model\CanHaveRoles;
 
 class Role extends Model implements OwnableContract
 {
@@ -31,75 +32,65 @@ class Role extends Model implements OwnableContract
 		'limited_at' => 'integer',
 	];
 
-    public static function boot() {
+  public static function boot() {
 		parent::boot();
 
-        static::deleting(function ($model) {
-			return resolve('\\App\\Models\\'.studly_case(str_singular(explode('-', $model->only_for)[0])))->beforeDeletingRole($model);
-        });
-    }
+    static::deleting(function ($model) {
+			return $model->owned_by->beforeDeletingRole($model);
+    });
+  }
 
-	public static function find($id, string $only_for = null) {
-		$roles = static::where('id', $id);
-
-		if ($only_for !== null) {
-			$group = explode('-', $only_for)[0] ?? $only_for;
-
-			$roles->where(function ($query) use ($group, $only_for) {
-				$query->where('only_for', $group)->orWhere('only_for', $only_for);
+	public static function find($id, CanHaveRoles $owner) {
+		$roles = static::where('id', $id)
+			->where('owned_by_type', get_class($owner))
+			->where(function ($query) use ($owner) {
+				$query->whereNull('owned_by_id')
+					->orWhere('owned_by_id', $owner->id);
 			});
-		}
 
 		return $roles->first();
 	}
 
-	public static function findByType(string $type, string $only_for = null) {
-		$roles = static::where('type', $type);
-
-		if ($only_for !== null) {
-			$group = explode('-', $only_for)[0] ?? $only_for;
-
-			$roles->where(function ($query) use ($group, $only_for) {
-				$query->where('only_for', $group)->orWhere('only_for', $only_for);
+	public static function findByType(string $type, CanHaveRoles $owner) {
+    $roles = static::where('type', $type)
+			->where('owned_by_type', get_class($owner))
+			->where(function ($query) use ($owner) {
+				$query->whereNull('owned_by_id')
+					->orWhere('owned_by_id', $owner->id);
 			});
-		}
 
 		return $roles->first();
 	}
 
-	public static function getRole($role, string $only_for = null) {
-    	if (is_string($role))
-    		return static::findByType($role, $only_for);
-    	else if (is_int($role))
-			return static::find($role, $only_for);
+	public static function getRole($role, CanHaveRoles $owner) {
+    if (is_string($role))
+      return static::findByType($role, $owner);
+    else if (is_int($role))
+			return static::find($role, $owner);
 		else
 			return $role;
 	}
 
-	public static function getRoles($roles, string $only_for = null) {
-		$group = explode('-', $only_for)[0] ?? $only_for;
-
+	public static function getRoles($roles, CanHaveRoles $owner) {
 		if (is_array($roles)) {
-			$query = static::where(function ($query) use ($roles) {
+      $roles = static::where(function ($query) use ($roles) {
 				$query->whereIn('id', $roles)->orWhereIn('type', $roles);
-			});
-
-			if ($only_for) {
-				$query = $query->where(function ($query) use ($group, $only_for) {
-					$query->where('only_for', $group)->orWhere('only_for', $only_for);
+			})->where('owned_by_type', get_class($owner))
+				->where(function ($query) use ($owner) {
+					$query->whereNull('owned_by_id')
+						->orWhere('owned_by_id', $owner->id);
 				});
-			}
 
-			return $query->get();
-		}
-		else if ($roles instanceof \Illuminate\Database\Eloquent\Model)
+			return $roles->get();
+    }
+		else if ($roles instanceof Model)
 			return collect($roles);
 		else
 			return $roles;
 	}
 
-	public static function getRoleAndItsParents($role, string $only_for = null) {
-		$role = static::getRole($role, $only_for);
+	public static function getRoleAndItsParents($role, CanHaveRoles $owner) {
+		$role = static::getRole($role, $owner);
 
 		if ($role === null)
 			return null;
@@ -120,6 +111,10 @@ class Role extends Model implements OwnableContract
 
 	public function parents(): BelongsToMany {
 		return $this->belongsToMany(Role::class, 'roles_parents', 'role_id', 'parent_id');
+	}
+
+	public function getOwnedByAttribute() {
+		return $this->owned_by()->first() ?? resolve($this->owned_by_type);
 	}
 
 	public function owned_by() {
@@ -162,20 +157,20 @@ class Role extends Model implements OwnableContract
 	}
 
 	public function givePermissionTo($permissions) {
-		$this->permissions()->withTimestamps()->attach(Permission::getPermissions(stringToArray($permissions), $this->only_for));
+		$this->permissions()->withTimestamps()->attach(Permission::getPermissions(stringToArray($permissions), $this->owned_by));
 
 		return $this;
 	}
 
 	public function removePermissionTo($permissions) {
-		$this->permissions()->withTimestamps()->detach(Permission::getPermissions(stringToArray($permissions), $this->only_for));
+		$this->permissions()->withTimestamps()->detach(Permission::getPermissions(stringToArray($permissions), $this->owned_by));
 
 		return $this;
 	}
 
 	public function assignParentRole($roles) {
 		$roles = stringToArray($roles);
-		$toAdd = static::getRoles($roles, $this->only_for);
+		$toAdd = static::getRoles($roles, $this->owned_by);
 
 		if (count($toAdd) !== count($roles))
 			throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
@@ -193,7 +188,7 @@ class Role extends Model implements OwnableContract
 
 	public function removeParentRole($roles) {
 		$roles = stringToArray($roles);
-		$toAdd = static::getRoles($roles, $this->only_for);
+		$toAdd = static::getRoles($roles, $this->owned_by);
 
 		if (count($toAdd) !== count($roles))
 			throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
@@ -205,7 +200,7 @@ class Role extends Model implements OwnableContract
 
 	public function syncParentRole($roles) {
 		$roles = stringToArray($roles);
-		$toAdd = static::getRoles($roles, $this->only_for);
+		$toAdd = static::getRoles($roles, $this->owned_by);
 
 		if (count($toAdd) !== count($roles))
 			throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
@@ -240,19 +235,15 @@ class Role extends Model implements OwnableContract
 		if ($this->children()->count() > 0)
 			return false;
 
-		@list($tableName, $id) = explode('-', $this->only_for);
-
 		if ($id)
-			return resolve('\\App\\Models\\'.studly_case(str_singular($tableName)))->isRoleForIdDeletable($this, $id);
+			return resolve($this->owned_by_type)->isRoleForIdDeletable($this, $id);
 		else
-			return resolve('\\App\\Models\\'.studly_case(str_singular($tableName)))->isRoleDeletable($this);
+			return resolve($this->owned_by_type)->isRoleDeletable($this);
 	}
 
 	function __call($method, $arguments) {
-		$class = '\\App\\Models\\'.studly_case(str_singular(explode('-', $method)[0]));
-
-		if (class_exists($class) && method_exists($class, 'getRoleRelationTable'))
-			return $this->belongsToMany($class, resolve($class)->getRoleRelationTable());
+		if (class_exists($this->owned_by_type) && method_exists($this->owned_by, 'getRoleRelationTable'))
+			return $this->belongsToMany($this->owned_by_type, $this->owned_by->getRoleRelationTable());
 
 		return parent::__call($method, $arguments);
     }
