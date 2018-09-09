@@ -116,8 +116,8 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 		'me'
 	];
 
-	public $types = [
-		'admin', 'contributorBde', 'cas', 'password', 'active',
+	protected $types = [
+		'admin', 'contributorBde', 'casConfirmed', 'cas', 'password', 'active',
 	];
 
 	protected $selection = [
@@ -172,6 +172,10 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         return $this->preferences()->keyExistsInDB('CONTACT_EMAIL') ? $this->preferences()->valueOf('CONTACT_EMAIL') : null;
     }
 
+		public function getTypes() {
+			return $this->types;
+		}
+
 	public function type() {
 		foreach ($this->types as $type) {
 			$method = 'is'.ucfirst($type);
@@ -188,9 +192,15 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     public function isCas() {
-		$cas = $this->cas;
+		$cas = $this->cas()->first();
 
-        return $cas && $cas->where('is_active', true)->exists();
+        return $cas && $cas->is_active;
+    }
+
+    public function isCasConfirmed() {
+		$cas = $this->cas()->first();
+
+        return $cas && $cas->is_confirmed;
     }
 
     public function isPassword() {

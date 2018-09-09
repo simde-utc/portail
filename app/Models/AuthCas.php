@@ -13,15 +13,16 @@ class AuthCas extends Auth // TODO must
     public $incrementing = false;
 
 	protected $fillable = [
-	 	'user_id', 'login', 'email', 'last_login_at', 'is_active',
+	 	'user_id', 'login', 'email', 'last_login_at', 'is_active', 'is_confirmed',
 	];
 
 	protected $casts = [
 		'is_active' => 'boolean', // Si on se connecte via passsword, on désactive tout ce qui est relié au CAS car on suppose qu'il n'est plus étudiant
+		'is_confirmed' => 'boolean'
 	];
 
 	protected $must = [
-		'user_id', 'login', 'email', 'is_active',
+		'user_id', 'login', 'email', 'is_active', 'is_confirmed',
 	];
 
     public static function boot() {
