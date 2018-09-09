@@ -17,8 +17,14 @@ use App\Models\Visibility;
 class VisibilityController extends Controller
 {
 	public function __construct() {
+		// La récupération des assos est publique
 		$this->middleware(
-			\Scopes::allowPublic()->matchAnyUserOrClient()
+			\Scopes::allowPublic()->matchAnyUserOrClient(),
+			['only' => ['index', 'show']]
+		);
+		$this->middleware(
+			\Scopes::matchOne('user-manage-portail-visibility', 'client-manage-portail-visibility'),
+			['only' => ['store', 'update', 'destroy']]
 		);
 	}
 
