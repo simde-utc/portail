@@ -145,6 +145,19 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
 	}
 
+	public function isRoleAccessibleBy(string $user_id): bool {
+		return true;
+	}
+
+	public function isRoleManageableBy(string $user_id): bool {
+		if ($this->id)
+			return $this->hasOnePermission('role', [
+				'user_id' => $user_id,
+			]);
+		else
+			return User::find($user_id)->hasOnePermission('role');
+	}
+
 	public function contacts() {
 		return $this->morphMany(Contact::class, 'owned_by');
 	}

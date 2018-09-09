@@ -24,7 +24,7 @@ class CreateRolesTable extends Migration
 
 			$table->timestamps();
 
-			$table->unique(['type', 'owned_by_id', 'owned_by_type']);
+			$table->unique(['type', 'owned_by_type']);
 		});
 	}
 

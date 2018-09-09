@@ -74,6 +74,22 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 		return true;
 	}
 
+	public function isRoleAccessibleBy(string $user_id): bool {
+		if ($this->id)
+			return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+		else
+			return true;
+	}
+
+	public function isRoleManageableBy(string $user_id): bool {
+		if ($this->id)
+			return $this->hasOnePermission('role', [
+				'user_id' => $user_id,
+			]);
+		else
+			return User::find($user_id)->hasOnePermission('role');
+	}
+
     public function contacts() {
     	return $this->morphMany(Contact::class, 'owned_by');
     }

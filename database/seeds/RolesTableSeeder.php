@@ -30,6 +30,7 @@ class RolesTableSeeder extends Seeder
           'client',
           'service',
 					'room',
+          'role',
 				]
 			],
 			[
@@ -46,7 +47,8 @@ class RolesTableSeeder extends Seeder
 					'group',
           'client',
           'service',
-					'room'
+					'room',
+          'role',
 				]
 			],
 			[
@@ -64,6 +66,7 @@ class RolesTableSeeder extends Seeder
           'article',
           'data',
           'reservation',
+          'role',
 				]
 			],
 			[
@@ -84,6 +87,7 @@ class RolesTableSeeder extends Seeder
           'article',
           'data',
           'reservation',
+          'role',
 				]
 			],
 			[
@@ -93,15 +97,16 @@ class RolesTableSeeder extends Seeder
 				'limited_at' => 1,
 				'owned_by' => new Asso,
         'parents' => [
-            'vice-president',
+          'vice-president',
         ],
         'permissions' => [
-            'calendar',
-            'event',
-            'contact',
-            'article',
-            'data',
-            'reservation',
+          'calendar',
+          'event',
+          'contact',
+          'article',
+          'data',
+          'reservation',
+          'role',
 				],
 			],
 			[
@@ -111,15 +116,15 @@ class RolesTableSeeder extends Seeder
 				'limited_at' => 4,
 				'owned_by' => new Asso,
         'parents' => [
-            'secretaire general',
+          'secretaire general',
         ],
 				'permissions' => [
-            'calendar',
-            'event',
-            'contact',
-            'article',
-            'data',
-            'reservation',
+          'calendar',
+          'event',
+          'contact',
+          'article',
+          'data',
+          'reservation',
 				],
 			],
 			[
@@ -314,6 +319,7 @@ class RolesTableSeeder extends Seeder
           'event',
           'contact',
           'article',
+          'role',
 				],
 			],
 			[

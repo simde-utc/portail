@@ -22,174 +22,234 @@
 // Toutes les routes commencant par client-{verbe}-roles-
 return [
     'description' => 'Roles',
-    'verbs' => [
-        'manage' => [
-            'description' => 'Gérer tous les types de rôles et les rôles des utilisateurs (rôles systèmes, rôles associations, rôles groupes)',
-			'scopes' => [
-                'types' => [
-                    'description' => 'Gérer toutes les types de rôles (rôles systèmes, rôles associations, rôles groupes)',
-                    'scopes' => [
-                        'users' => [
-        					'description' => 'Gérer toutes les types de rôles au sein du système',
-                        ],
-        				'assos' => [
-        					'description' => 'Gérer toutes les types de rôles au sein des associations',
-        				],
-        				'groups' => [
-        					'description' => 'Gérer toutes les types de rôles au sein des groupes',
-        				],
-                    ]
-                ],
-				'users' => [
-					'description' => 'Gérer les rôles des utilisateurs au sein du système',
-                ],
-				'assos' => [
-					'description' => 'Gérer les rôles des utilisateurs au sein des associations',
-				],
-				'groups' => [
-					'description' => 'Gérer les rôles des utilisateurs au sein des groupes',
-				],
-			]
-        ],
+	  'verbs' => [
+	    'manage' => [
+	      'description' => 'Gérer les rôles et les assigner (rôles systèmes, rôles associations, rôles groupes)',
+				'scopes' => [
+	        'users' => [
+						'description' => 'Gérer les rôles et les assigner aux utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Gérer les rôles des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Gérer les rôles assignés aux utilisateurs',
+							],
+						]
+	        ],
+	        'assos' => [
+						'description' => 'Gérer les rôles et les assigner aux associations des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Gérer les rôles des associations des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Gérer les rôles assignés aux associations des utilisateurs',
+							],
+						]
+	        ],
+	        'groups' => [
+						'description' => 'Gérer les rôles et les assigner aux groupes des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Gérer les rôles des groupes des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Gérer les rôles assignés aux groupes des utilisateurs',
+							],
+						]
+	        ],
+				]
+	    ],
 	    'get' => [
-            'description' => 'Récupérer tous les types de rôles et les rôles des utilisateurs (rôles systèmes, rôles associations, rôles groupes)',
-			'scopes' => [
-                'types' => [
-                    'description' => 'Récupérer toutes les types de rôles (rôles systèmes, rôles associations, rôles groupes)',
-                    'scopes' => [
-                        'users' => [
-        					'description' => 'Récupérer toutes les types de rôles au sein du système',
-                        ],
-        				'assos' => [
-        					'description' => 'Récupérer toutes les types de rôles au sein des associations',
-        				],
-        				'groups' => [
-        					'description' => 'Récupérer toutes les types de rôles au sein des groupes',
-        				],
-                    ]
-                ],
-				'users' => [
-					'description' => 'Récupérer les rôles des utilisateurs au sein du système',
-                ],
-				'assos' => [
-					'description' => 'Récupérer les rôles des utilisateurs au sein des associations',
-				],
-				'groups' => [
-					'description' => 'Récupérer les rôles des utilisateurs au sein des groupes',
-				],
-			]
+	      'description' => 'Récupérer les rôles et les assigner (rôles systèmes, rôles associations, rôles groupes)',
+				'scopes' => [
+	        'users' => [
+						'description' => 'Récupérer les rôles et les assigner aux utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Récupérer les rôles des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Récupérer les rôles assignés aux utilisateurs',
+							],
+						]
+	        ],
+	        'assos' => [
+						'description' => 'Récupérer les rôles et les assigner aux associations des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Récupérer les rôles des associations des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Récupérer les rôles assignés aux associations des utilisateurs',
+							],
+						]
+	        ],
+	        'groups' => [
+						'description' => 'Récupérer les rôles et les assigner aux groupes des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Récupérer les rôles des groupes des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Récupérer les rôles assignés aux groupes des utilisateurs',
+							],
+						]
+	        ],
+				]
 	    ],
 	    'set' => [
-            'description' => 'Modifier et ajouter des types de rôles et les rôles des utilisateurs (rôles systèmes, rôles associations, rôles groupes)',
-			'scopes' => [
-                'types' => [
-                    'description' => 'Modifier et ajouter des types de rôles (rôles systèmes, rôles associations, rôles groupes)',
-                    'scopes' => [
-                        'users' => [
-        					'description' => 'Modifier et ajouter des types de rôles au sein du système',
-                        ],
-        				'assos' => [
-        					'description' => 'Modifier et ajouter des types de rôles au sein des associations',
-        				],
-        				'groups' => [
-        					'description' => 'Modifier et ajouter des types de rôles au sein des groupes',
-        				],
-                    ]
-                ],
-				'users' => [
-					'description' => 'Modifier et assigner des rôles des utilisateurs au sein du système',
-                ],
-				'assos' => [
-					'description' => 'Modifier et assigner des rôles des utilisateurs au sein des associations',
-				],
-				'groups' => [
-					'description' => 'Modifier et assigner des rôles des utilisateurs au sein des groupes',
-				],
-			]
+	      'description' => 'Créer et modifier les rôles et les assigner (rôles systèmes, rôles associations, rôles groupes)',
+				'scopes' => [
+	        'users' => [
+						'description' => 'Créer et modifier les rôles et les assigner aux utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Créer et modifier les rôles des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Créer et modifier les rôles assignés aux utilisateurs',
+							],
+						]
+	        ],
+	        'assos' => [
+						'description' => 'Créer et modifier les rôles et les assigner aux associations des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Créer et modifier les rôles des associations des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Créer et modifier les rôles assignés aux associations des utilisateurs',
+							],
+						]
+	        ],
+	        'groups' => [
+						'description' => 'Créer et modifier les rôles et les assigner aux groupes des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Créer et modifier les rôles des groupes des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Créer et modifier les rôles assignés aux groupes des utilisateurs',
+							],
+						]
+	        ],
+				]
 	    ],
 	    'edit' => [
-            'description' => 'Modifier les types de rôles et les rôles des utilisateurs (rôles systèmes, rôles associations, rôles groupes)',
-			'scopes' => [
-                'types' => [
-                    'description' => 'Modifier les types de rôles (rôles systèmes, rôles associations, rôles groupes)',
-                    'scopes' => [
-                        'users' => [
-        					'description' => 'Modifier les types de rôles au sein du système',
-                        ],
-        				'assos' => [
-        					'description' => 'Modifier les types de rôles au sein des associations',
-        				],
-        				'groups' => [
-        					'description' => 'Modifier les types de rôles au sein des groupes',
-        				],
-                    ]
-                ],
-				'users' => [
-					'description' => 'Modifier les rôles des utilisateurs au sein du système',
-                ],
-				'assos' => [
-					'description' => 'Modifier les rôles des utilisateurs au sein des associations',
-				],
-				'groups' => [
-					'description' => 'Modifier les rôles des utilisateurs au sein des groupes',
-				],
-			]
+	      'description' => 'Modifier les rôles et les assigner (rôles systèmes, rôles associations, rôles groupes)',
+				'scopes' => [
+	        'users' => [
+						'description' => 'Modifier les rôles et les assigner aux utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Modifier les rôles des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Modifier les rôles assignés aux utilisateurs',
+							],
+						]
+	        ],
+	        'assos' => [
+						'description' => 'Modifier les rôles et les assigner aux associations des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Modifier les rôles des associations des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Modifier les rôles assignés aux associations des utilisateurs',
+							],
+						]
+	        ],
+	        'groups' => [
+						'description' => 'Modifier les rôles et les assigner aux groupes des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Modifier les rôles des groupes des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Modifier les rôles assignés aux groupes des utilisateurs',
+							],
+						]
+	        ],
+				]
 	    ],
 	    'create' => [
-            'description' => 'Ajouter des types de rôles et les rôles des utilisateurs (rôles systèmes, rôles associations, rôles groupes)',
-			'scopes' => [
-                'types' => [
-                    'description' => 'Ajouter des types de rôles (rôles systèmes, rôles associations, rôles groupes)',
-                    'scopes' => [
-                        'users' => [
-        					'description' => 'Ajouter des types de rôles au sein du système',
-                        ],
-        				'assos' => [
-        					'description' => 'Ajouter des types de rôles au sein des associations',
-        				],
-        				'groups' => [
-        					'description' => 'Ajouter des types de rôles au sein des groupes',
-        				],
-                    ]
-                ],
-				'users' => [
-					'description' => 'Assigner des rôles des utilisateurs au sein du système',
-                ],
-				'assos' => [
-					'description' => 'Assigner des rôles des utilisateurs au sein des associations',
-				],
-				'groups' => [
-					'description' => 'Assigner des rôles des utilisateurs au sein des groupes',
-				],
-			]
+	      'description' => 'Créer les rôles et les assigner (rôles systèmes, rôles associations, rôles groupes)',
+				'scopes' => [
+	        'users' => [
+						'description' => 'Créer les rôles et les assigner aux utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Créer les rôles des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Créer les rôles assignés aux utilisateurs',
+							],
+						]
+	        ],
+	        'assos' => [
+						'description' => 'Créer les rôles et les assigner aux associations des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Créer les rôles des associations des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Créer les rôles assignés aux associations des utilisateurs',
+							],
+						]
+	        ],
+	        'groups' => [
+						'description' => 'Créer les rôles et les assigner aux groupes des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Créer les rôles des groupes des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Créer les rôles assignés aux groupes des utilisateurs',
+							],
+						]
+	        ],
+				]
 	    ],
 	    'remove' => [
-            'description' => 'Supprimer des types de rôles et les rôles des utilisateurs (rôles systèmes, rôles associations, rôles groupes)',
-			'scopes' => [
-                'types' => [
-                    'description' => 'Supprimer des types de rôles (rôles systèmes, rôles associations, rôles groupes)',
-                    'scopes' => [
-                        'users' => [
-        					'description' => 'Supprimer des types de rôles au sein du système',
-                        ],
-        				'assos' => [
-        					'description' => 'Supprimer des types de rôles au sein des associations',
-        				],
-        				'groups' => [
-        					'description' => 'Supprimer des types de rôles au sein des groupes',
-        				],
-                    ]
-                ],
-				'users' => [
-					'description' => 'Retirer des rôles des utilisateurs au sein du système',
-                ],
-				'assos' => [
-					'description' => 'Retirer des rôles des utilisateurs au sein des associations',
-				],
-				'groups' => [
-					'description' => 'Retirer des rôles des utilisateurs au sein des groupes',
-				],
-			]
+	      'description' => 'Supprimer les rôles et les assigner (rôles systèmes, rôles associations, rôles groupes)',
+				'scopes' => [
+	        'users' => [
+						'description' => 'Supprimer les rôles et les assigner aux utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Supprimer les rôles des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Supprimer les rôles assignés aux utilisateurs',
+							],
+						]
+	        ],
+	        'assos' => [
+						'description' => 'Supprimer les rôles et les assigner aux associations des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Supprimer les rôles des associations des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Supprimer les rôles assignés aux associations des utilisateurs',
+							],
+						]
+	        ],
+	        'groups' => [
+						'description' => 'Supprimer les rôles et les assigner aux groupes des utilisateurs',
+						'scopes' => [
+							'owned' => [
+								'description' => 'Supprimer les rôles des groupes des utilisateurs',
+							],
+							'assigned' => [
+								'description' => 'Supprimer les rôles assignés aux groupes des utilisateurs',
+							],
+						]
+	        ],
+				]
 	    ],
-    ]
-];
+		]
+	];

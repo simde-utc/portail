@@ -34,6 +34,23 @@ class Permission extends Model implements OwnableContract
         return $this->belongsToMany(User::class, 'users_permissions');
     }
 
+		public function toArray() {
+			$array = parent::toArray();
+
+			if (($array['owned_by'] ?? null) === null)
+				$array['owned_by'] = [
+					'model' => \ModelResolver::getName($this->owned_by),
+				];
+			else
+				$array['owned_by'] = $this->owned_by->hideData(true);
+
+			return $array;
+		}
+
+		public function getOwnedByAttribute() {
+			return $this->owned_by()->first() ?? resolve($this->owned_by_type);
+		}
+
 		public function owned_by() {
 			return $this->morphTo('owned_by');
 		}
@@ -81,7 +98,7 @@ class Permission extends Model implements OwnableContract
 	public static function getPermissions($permissions, CanHavePermissions $owner = null) {
 		if ($owner === null)
 			$owner = new User;
-			
+
 		if (is_array($permissions)) {
       $permissions = static::where(function ($query) use ($permissions) {
 				$query->whereIn('id', $permissions)->orWhereIn('type', $permissions);

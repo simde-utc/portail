@@ -351,6 +351,20 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 		return true;
 	}
 
+	public function isRoleAccessibleBy(string $user_id): bool {
+		if ($this->id)
+			return $this->id === $user_id;
+		else
+			return true;
+	}
+
+	public function isRoleManageableBy(string $user_id): bool {
+		if ($this->id)
+			return $this->id === $user_id;
+		else
+			return $this->hasOnePermission('role');
+	}
+
 	public function contacts() {
 		return $this->morphMany(Contact::class, 'owned_by');
 	}

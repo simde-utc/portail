@@ -28,8 +28,16 @@ class Role extends Model implements OwnableContract
 		'owned_by',
 	];
 
+	protected $withModelName = [
+		'owned_by',
+	];
+
 	protected $casts = [
 		'limited_at' => 'integer',
+	];
+
+	protected $must = [
+		'type', 'name', 'description', 'owned_by',
 	];
 
   public static function boot() {
@@ -104,7 +112,7 @@ class Role extends Model implements OwnableContract
 	public static function getRoleAndItsParents($role, CanHaveRoles $owner = null) {
 		if ($owner === null)
 			$owner = new User;
-			
+
 		$role = static::getRole($role, $owner);
 
 		if ($role === null)
@@ -114,6 +122,19 @@ class Role extends Model implements OwnableContract
 		$roles->push($role);
 
 		return $roles;
+	}
+
+	public function toArray() {
+		$array = parent::toArray();
+
+		if (($array['owned_by'] ?? null) === null)
+			$array['owned_by'] = [
+				'model' => \ModelResolver::getName($this->owned_by),
+			];
+		else
+			$array['owned_by'] = $this->owned_by->hideData(true);
+
+		return $array;
 	}
 
 	public function permissions(): BelongsToMany {
@@ -230,28 +251,14 @@ class Role extends Model implements OwnableContract
 
 		return $this;
 	}
-
-	public static function getTopStage(array $data = [], $with = []) {
-        $tableName = (new static)->getTable();
-        $model = static::doesntHave('parents')->with($with);
-
-		foreach ($data as $key => $value) {
-            if (!\Schema::hasColumn($tableName, $key))
-                throw new PortailException('L\'attribut '.$key.' n\'existe pas');
-
-            $model = $model->where($key, $value);
-        }
-
-		return $model->get();
-    }
-
+	
 	public function isDeletable() {
 		// On ne permet la suppression de rôles parents
 		if ($this->children()->count() > 0)
 			return false;
 
-		if ($id)
-			return resolve($this->owned_by_type)->isRoleForIdDeletable($this, $id);
+		if ($this->owned_by_id)
+			return resolve($this->owned_by_type)->isRoleForIdDeletable($this, $this->owned_by_id);
 		else
 			return resolve($this->owned_by_type)->isRoleDeletable($this);
 	}
