@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReservationsRoomsTable extends Migration
+class CreateNotificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateReservationsRoomsTable extends Migration
      */
     public function up()
     {
-        Schema::create('reservations_rooms', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('location_id');
-            $table->uuid('asso_id');
+            $table->string('type');
+            $table->uuid('notifiable_id');
+            $table->string('notifiable_type');
+            $table->text('data');
 
             $table->timestamps();
-            
-            $table->foreign('location_id')->references('id')->on('places_locations');
-            $table->foreign('asso_id')->references('id')->on('assos');
+            $table->timestamp('read_at')->nullable();
         });
     }
 
@@ -32,6 +32,6 @@ class CreateReservationsRoomsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reservations_rooms');
+        Schema::dropIfExists('notifications');
     }
 }

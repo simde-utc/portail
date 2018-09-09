@@ -54,8 +54,8 @@ trait HasRoles
 	 * @param array $data 		Possibilité d'affecter role_id, semester_id, validated_by, user_id
 	 * @param bool $force 		Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
-	public function assignRoles($roles, array $data = [], bool $force = false) {
-		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
+	public function assignRoles($roles, array $data = [], bool $force = false) {	
+		$data['semester_id'] = array_key_exists('semester_id', $data) ? $data['semester_id'] : Semester::getThisSemester()->id;
 		$addRoles = [];
 
 		if (isset($data['validated_by']) || \Auth::id())

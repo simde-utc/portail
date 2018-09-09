@@ -17,48 +17,6 @@
         <div class="col-md-6">
             <div class="card drop-shadow">
                 <div class="card-body">
-                	<h5 class="mb-4"><b>Connexion</b></h5>
-
-                    <form method="POST">
-                        @csrf
-
-                        @if (Session::has('error'))
-                            <div class="alert alert-danger">
-                                {{ Session::get('error')}}
-                            </div>
-                        @endif
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-6 col-form-label">Adresse email :</label>
-
-                            <div class="col-md-6">
-                                <input type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-6 col-form-label">Mot de passe :</label>
-
-                            <div class="col-md-6">
-                                <input type="password" class="form-control" name="password" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-6">
-                                <button type="submit" class="btn btn-primary">
-                                    Lier mon ancien compte
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card drop-shadow">
-                <div class="card-body">
                 	<h5 class="mb-4"><b>Ajouter une connexion email/mot de passe</b></h5>
 
                     <form method="POST">

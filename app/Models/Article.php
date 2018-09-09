@@ -26,7 +26,7 @@ class Article extends Model implements OwnableContract
 	];
 
 	protected $must = [
-		'title', 'description', 'content', 'owned_by', 'created_at',
+		'title', 'description', 'content', 'image', 'owned_by', 'created_at',
 	];
 
 	protected $hidden = [
@@ -50,6 +50,7 @@ class Article extends Model implements OwnableContract
 		'creator' 	=> [],
 		'owner' 	=> [],
 		'action'	=> [],
+		'filter'	=> [],
 	];
 
 	public function scopeOrder(Builder $query, string $order) {

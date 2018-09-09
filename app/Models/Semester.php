@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Semester extends Model // TODO $must
+class Semester extends Model
 {
     protected $fillable = [
         'name', 'is_spring', 'year', 'begining_at', 'ending_at',
@@ -11,6 +11,16 @@ class Semester extends Model // TODO $must
     protected $cast = [
         'is_spring' => 'boolean',
         'year' => 'char',
+    ];
+
+    protected $must = [
+        'is_spring', 'year', 'begining_at', 'ending_at',
+    ];
+
+    protected $selection = [
+        'paginate' => [],
+        'order' => [],
+        'filter' => [],
     ];
 
 	public static function getSemester($semester) {
@@ -29,7 +39,7 @@ class Semester extends Model // TODO $must
 
         $semester = self::whereDate('begining_at', '<=', $currentDate)
           ->whereDate('ending_at', '>=', $currentDate)
-          ->get()->first();
+          ->first();
 
         if ($semester === null) {
             $id = self::createASemester($currentYear, $currentMonth);
@@ -80,9 +90,9 @@ class Semester extends Model // TODO $must
                         'year' => $currentYear,
                         'begining_at' => $currentYear.'-'.($config['begining_at'][$key]['month']).'-'.($config['begining_at'][$key]['day']).'-'.($config['begining_at'][$key]['time']),
                         'ending_at' => ($beginingMonth > $endingMonth ? ($currentYear + 1) : $currentYear).'-'.($config['ending_at'][$key]['month']).'-'.($config['ending_at'][$key]['day']).'-'.($config['ending_at'][$key]['time']),
-                    ])->uuid;
+                    ])->id;
                 else
-                    return $thisSemester->uuid;
+                    return $thisSemester->id;
             }
         }
     }

@@ -16,7 +16,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
 
     public static function boot() {
         parent::boot();
-        
+
         static::created(function ($model) {
             $model->assignRoles('group admin', [
 				'user_id' => $model->user_id,
@@ -55,6 +55,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
         'week' => null,
         'month' => null,
         'year' => null,
+		'filter' => [],
     ];
 
     public function owner() {

@@ -16,7 +16,17 @@ use App\Models\Visibility;
  */
 class VisibilityController extends Controller
 {
-	// TODO
+	public function __construct() {
+		// La récupération des assos est publique
+		$this->middleware(
+			\Scopes::allowPublic()->matchAnyUserOrClient(),
+			['only' => ['index', 'show']]
+		);
+		$this->middleware(
+			\Scopes::matchOne('user-manage-portail-visibility', 'client-manage-portail-visibility'),
+			['only' => ['store', 'update', 'destroy']]
+		);
+	}
 
 	/**
 	 * List Visibilities
@@ -24,7 +34,9 @@ class VisibilityController extends Controller
 	 */
 
 	public function index(): JsonResponse {
-		$visibilities = Visibility::get();
+		$visibilities = Visibility::getSelection()->map(function ($visibility) {
+			return $visibility->hideData();
+		});
 
 		return response()->json($visibilities, 200);
 	}
@@ -39,10 +51,9 @@ class VisibilityController extends Controller
 		$visibility = Visibility::create($request->all());
 
 		if ($visibility)
-			return response()->json($visibility, 200);
+			return response()->json($visibility->hideSubData(), 200);
 		else
-			return response()->json(['message' => 'Impossible de créer la visibilité'], 500);
-
+			abort(500, 'Impossible de créer la visibilité');
 	}
 
 	/**
@@ -55,9 +66,9 @@ class VisibilityController extends Controller
 		$visibility = Visibility::find($id);
 
 		if ($visibility)
-			return response()->json($visibility, 200);
+			return response()->json($visibility->hideSubData(), 200);
 		else
-			return response()->json(['message' => 'Impossible de trouver la visibilité'], 500);
+			abort(404, 'Visibilité non trouvée');
 	}
 
 	/**
@@ -72,12 +83,12 @@ class VisibilityController extends Controller
 
 		if ($visibility) {
 			if ($visibility->update($request->input()))
-				return response()->json($visibility, 201);
+				return response()->json($visibility->hideSubData(), 201);
 			else
-				return response()->json(['message' => 'Impossible de mettre à jour la visibilité'], 500);
+				abort(500, 'Impossible de modifier la visibilité');
 		}
 		else
-			return response()->json(['message' => 'Impossible de trouver la  visibilité'], 500);
+			abort(404, 'Visibilité non trouvée');
 	}
 
 	/**
@@ -91,11 +102,11 @@ class VisibilityController extends Controller
 
 		if ($visibility) {
 			if ($visibility->delete())
-				return response()->json(['message' => 'La visibilité a bien été supprimée'], 200);
+				abort(204);
 			else
-				return response()->json(['message' => 'Erreur lors de la suppression de la visibilité'], 500);
+				abort(500, 'Impossible de supprimer la visibilité');
 		}
 		else
-			return response()->json(['message' => 'Impossible de trouver la visibilité'], 500);
+			abort(404, 'Visibilité non trouvée');
 	}
 }

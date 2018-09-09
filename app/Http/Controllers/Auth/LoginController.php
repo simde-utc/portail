@@ -36,7 +36,7 @@ class LoginController extends Controller
 
 	public function __construct()	{
 		$this->middleware('guest', ['except' => 'destroy']);
-		$this->middleware('auth:web,cas', ['only' => 'destroy']);
+		$this->middleware('auth:web', ['only' => 'destroy']);
 	}
 
 	/**

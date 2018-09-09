@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\Calendar;
 
 use App\Http\Controllers\v1\Controller;
 use App\Traits\Controller\v1\HasCalendars;
+use App\Traits\Controller\v1\HasCreatorsAndOwners;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Calendar;
@@ -21,7 +22,7 @@ use App\Traits\HasVisibility;
  */
 class CalendarController extends Controller
 {
-	use HasCalendars;
+	use HasCalendars, HasCreatorsAndOwners;
 
 	public function __construct() {
 		$this->middleware(
@@ -40,38 +41,6 @@ class CalendarController extends Controller
 			\Scopes::matchOneOfDeepestChildren('user-manage-calendars', 'client-manage-calendars'),
 			['only' => ['destroy']]
 		);
-	}
-
-	public function getCreaterOrOwner(Request $request, string $verb = 'create', string $type = 'created') {
-		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
-		$scope = $scopeHead.'-'.$verb.'-calendars-'.$request->input($type.'_by_type',\Scopes::isClientToken($request) ? 'client' : 'user').'s-'.$type;
-
-		if ($type === 'owned')
-			$scope = array_keys(\Scopes::getRelatives($scopeHead.'-'.$verb.'-calendars-'.$request->input($type.'_by_type').'s-'.$type));
-
-		if (!\Scopes::hasOne($request, $scope))
-			abort(403, 'Il ne vous est pas autorisé de créer de calendriers');
-
-		if ($request->filled($type.'_by_type')) {
-			if ($request->filled($type.'_by_id')) {
-				$createrOrOwner = \ModelResolver::getModel($request->input($type.'_by_type'))->find($request->input($type.'_by_id'));
-
-				if (\Auth::id() && !$createrOrOwner->isCalendarManageableBy(\Auth::id()))
-					abort(403, 'L\'utilisateur n\'a pas les droits de création');
-			}
-			else if ($request->input($type.'_by_type', 'client') === 'client')
-				$createrOrOwner = \Scopes::getClient($request);
-			else if ($request->input($type.'_by_type', 'client') === 'asso')
-				$createrOrOwner = \Scopes::getClient($request)->asso;
-		}
-
-		if (!isset($createrOrOwner))
-			$createrOrOwner = \Scopes::isClientToken($request) ? \Scopes::getClient($request) : \Auth::user();
-
-		if (!($createrOrOwner instanceof CanHaveCalendars))
-			abort(400, 'La personne créatrice/possédeur doit au moins pouvoir avoir un calendrier');
-
-		return $createrOrOwner;
 	}
 
 	/**
@@ -98,27 +67,11 @@ class CalendarController extends Controller
 	public function store(Request $request): JsonResponse {
 		$inputs = $request->all();
 
-		$owner = $this->getCreaterOrOwner($request, 'create', 'owned');
+		$owner = $this->getOwner($request, 'calendar', 'calendrier', 'create');
+		$creator = $this->getCreatorFromOwner($request, $owner, 'calendar', 'calendrier', 'create');
 
-		// Le créateur peut être multiple: le user, l'asso ou le client courant. Ou autre
-		if ($request->input('created_by_type', 'user') === 'user'
-			&& \Auth::id()
-			&& $request->input('created_by_id', \Auth::id()) === \Auth::id()
-			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-calendars-'.\ModelResolver::getName($owner).'s-owned-user'))
-			$creater = \Auth::user();
-		else if ($request->input('created_by_type', 'client') === 'client'
-			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
-			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-calendars-'.\ModelResolver::getName($owner).'s-owned-client'))
-			$creater = \Scopes::getClient($request);
-		else if ($request->input('created_by_type') === 'asso'
-			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
-			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-calendars-'.\ModelResolver::getName($owner).'s-owned-asso'))
-			$creater = \Scopes::getClient($request)->asso;
-		else
-			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
-
-		$inputs['created_by_id'] = $creater->id;
-		$inputs['created_by_type'] = get_class($creater);
+		$inputs['created_by_id'] = $creator->id;
+		$inputs['created_by_type'] = get_class($creator);
 		$inputs['owned_by_id'] = $owner->id;
 		$inputs['owned_by_type'] = get_class($owner);
 
@@ -157,7 +110,7 @@ class CalendarController extends Controller
 		$inputs = $request->all();
 
 		if ($request->filled('owned_by_type')) {
-			$owner = $this->getCreaterOrOwner($request, 'edit', 'owned');
+			$owner = $this->getOwner($request, 'calendar', 'calendrier', 'edit');
 
 			$inputs['owned_by_id'] = $owner->id;
 			$inputs['owned_by_type'] = get_class($owner);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Interfaces\Model\CanBeNotifiable;
 use Cog\Contracts\Ownership\CanBeOwner;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveContacts;
@@ -19,30 +20,78 @@ use App\Models\UserPreference;
 use App\Models\UserDetail;
 use App\Http\Requests\ContactRequest;
 use App\Exceptions\PortailException;
+use App\Notifications\User\UserCreation;
+use App\Notifications\User\UserDesactivation;
+use App\Notifications\User\UserModification;
+use App\Notifications\User\UserDeletion;
 
-class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
+class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
 {
-	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid;
+	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid {
+		HasHiddenData::hideData as protected hideDataFromTrait;
+	}
 
     public static function boot() {
 		parent::boot();
 
         static::created(function ($model) {
 			// Ajout dans les préférences
-			UserPreference::create([
-				'user_id' => $model->id,
-				'key' => 'CONTACT_TO_USE',
-				'value'   => [
-					'EMAIL'
+			$model->preferences()->create([
+				'key' => 'NOTIFICATION_CHANNELS',
+				'value' => [
+					'mail', 'database', 'push'
 				],
 			]);
 
-			UserPreference::create([
-				'user_id' => $model->id,
+			$model->preferences()->create([
 				'key' => 'CONTACT_EMAIL',
-				'value'   => $model->email,
+				'value' => $model->isActive() ? $model->email : null,
 			]);
+
+			$model->preferences()->create([
+				'key' => 'NOTIFICATION_EMAIL_AVOID',
+				'value' => [],
+			]);
+
+			$model->preferences()->create([
+				'key' => 'NOTIFICATION_PUSH_AVOID',
+				'value' => [],
+			]);
+
+			if ($model->isActive())
+				$model->notify(new UserCreation());
         });
+
+        static::updated(function ($model) {
+			// Modfication des préférences
+			if ($model->preferences()->valueOf('CONTACT_EMAIL') === $model->getOriginal('email')) {
+				$model->preferences()->key('CONTACT_EMAIL')->update([
+					'value' => $model->is_active ? $model->email : null,
+				]);
+			}
+
+			if ((bool) $model->getOriginal('is_active') !== (bool) $model->getAttribute('is_active')) {
+				$model->notify($model->isActive() ? new UserCreation() : new UserDesactivation());
+			}
+
+			$edited = [];
+
+			if ($model->getOriginal('email') !== $model->getAttribute('email'))
+				$edited['Adresse email'] = $model->email;
+
+			if ($model->getOriginal('lastname') !== $model->getAttribute('lastname'))
+				$edited['Nom'] = $model->lastname;
+
+			if ($model->getOriginal('firstname') !== $model->getAttribute('firstname'))
+				$edited['Prénom'] = $model->firstname;
+
+			if (count($edited) > 0)
+				$model->notify(new UserModification($edited));
+        });
+
+		static::deleting(function ($model) {
+			$model->notify(new UserDeletion());
+		});
     }
 
 	public $incrementing = false;
@@ -63,17 +112,26 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 		'remember_token',
 	];
 
-	public $types = [
-		'admin', 'contributorBde', 'cas', 'password', 'active',
+	protected $must = [
+		'me'
+	];
+
+	protected $types = [
+		'admin', 'contributorBde', 'casConfirmed', 'cas', 'password', 'active',
 	];
 
 	protected $selection = [
 		'order' => 'oldest',
 		'paginate' => null,
+		'filter' => [],
 	];
 
+	public function getMeAttribute() {
+		return \Auth::id() === $this->id;
+	}
+
 	public function getNameAttribute() {
-		if ($this->is_active)
+		if ($this->isActive())
 			return $this->firstname.' '.strtoupper($this->lastname);
 		else
 			return 'Compte invité';
@@ -92,17 +150,31 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 			return $users;
 	}
 
-	public function ban() {
-		return $this->update([
-			'is_active' => false
-		]);
+	public function notificationChannels(string $notificationType): array {
+		$channels = $this->preferences()->valueOf('NOTIFICATION_CHANNELS');
+
+		if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_EMAIL_AVOID')) && ($key = array_search('mail', $channels)) !== false)
+			unset($channels[$key]);
+
+		if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_PUSH_AVOID')) && ($key = array_search('push', $channels)) !== false)
+    		unset($channels[$key]);
+
+		if (!$this->isActive() && ($key = array_search('mail', $channels)) !== false)
+			unset($channels[$key]);
+
+		if (!$this->isApp() && ($key = array_search('push', $channels)) !== false)
+    		unset($channels[$key]);
+
+		return $channels;
 	}
 
-	public function unban() {
-		return $this->update([
-			'is_active' => true
-		]);
-	}
+	public function routeNotificationForMail($notification) {
+        return $this->preferences()->keyExistsInDB('CONTACT_EMAIL') ? $this->preferences()->valueOf('CONTACT_EMAIL') : null;
+    }
+
+		public function getTypes() {
+			return $this->types;
+		}
 
 	public function type() {
 		foreach ($this->types as $type) {
@@ -116,13 +188,19 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 	}
 
 	public function isActive() {
-        return $this->is_active;
+        return $this->is_active === null || ((bool) $this->is_active) === true;
     }
 
     public function isCas() {
-		$cas = $this->cas;
+		$cas = $this->cas()->first();
 
-        return $cas && $cas->where('is_active', true)->exists();
+        return $cas && $cas->is_active;
+    }
+
+    public function isCasConfirmed() {
+		$cas = $this->cas()->first();
+
+        return $cas && $cas->is_confirmed;
     }
 
     public function isPassword() {
@@ -130,7 +208,7 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     }
 
     public function isApp() {
-		return $this->apps()->exists();
+		return $this->app()->exists();
     }
 
     public function isContributorBde() {
@@ -165,6 +243,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
 
 	public function preferences() {
 		return $this->hasMany(UserPreference::class);
+	}
+
+	public function notifications() {
+		return $this->morphMany(Notification::class, 'notifiable');
 	}
 
 	public function assos() {
@@ -214,6 +296,10 @@ class User extends Authenticatable implements CanBeOwner, CanHaveContacts, CanHa
     public function followedCalendars() {
     	return $this->belongsToMany(Calendar::class, 'calendars_followers')->withTimestamps();
     }
+
+	public function followedServices() {
+		return $this->belongsToMany(Service::class, 'services_followers')->withTimestamps();
+	}
 
     public function comments() {
 		return $this->hasMany('App\Models\Comment');
