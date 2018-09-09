@@ -54,7 +54,7 @@ class ServiceController extends Controller
 
 	public function index(): JsonResponse {
 		$services = Service::getSelection()->filter(function ($service) {
-			return !\Auth::id() || $this->isVisibile($service, \Auth::id());
+			return !\Auth::id() || $this->isVisible($service, \Auth::id());
 		})->map(function ($service) {
 			return $service->hideData();
 		});

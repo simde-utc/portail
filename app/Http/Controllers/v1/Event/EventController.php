@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\Event;
 
 use App\Http\Controllers\v1\Controller;
 use App\Traits\Controller\v1\HasEvents;
+use App\Traits\Controller\v1\HasCreatorsAndOwners;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Event;
@@ -21,7 +22,7 @@ use App\Traits\HasVisibility;
  */
 class EventController extends Controller
 {
-	use HasEvents;
+	use HasEvents, HasCreatorsAndOwners;
 
 	public function __construct() {
 		$this->middleware(
@@ -40,38 +41,6 @@ class EventController extends Controller
 			\Scopes::matchOneOfDeepestChildren('user-manage-events', 'client-manage-events'),
 			['only' => ['destroy']]
 		);
-	}
-
-	public function getCreaterOrOwner(Request $request, string $verb = 'create', string $type = 'created') {
-		$scopeHead = \Scopes::getTokenType($request);
-		$scope = $scopeHead.'-'.$verb.'-events-'.$request->input($type.'_by_type', $scopeHead.'s-'.$type);
-
-		if ($type === 'owned')
-			$scope = array_keys(\Scopes::getRelatives($scopeHead.'-'.$verb.'-events-'.$request->input($type.'_by_type').'s-'.$type));
-
-		if (!\Scopes::hasOne($request, $scope))
-			abort(403, 'Il ne vous est pas autorisé de créer de évènements');
-
-		if ($request->filled($type.'_by_type')) {
-			if ($request->filled($type.'_by_id')) {
-				$createrOrOwner = \ModelResolver::getModel($request->input($type.'_by_type'))->find($request->input($type.'_by_id'));
-
-				if (\Auth::id() && !$createrOrOwner->isEventManageableBy(\Auth::id()))
-					abort(403, 'L\'utilisateur n\'a pas les droits de création');
-			}
-			else if ($request->input($type.'_by_type', 'client') === 'client')
-				$createrOrOwner = \Scopes::getClient($request);
-			else if ($request->input($type.'_by_type', 'client') === 'asso')
-				$createrOrOwner = \Scopes::getClient($request)->asso;
-		}
-
-		if (!isset($createrOrOwner))
-			$createrOrOwner = \Scopes::isClientToken($request) ? \Scopes::getClient($request) : \Auth::user();
-
-		if (!($createrOrOwner instanceof CanHaveEvents))
-			abort(400, 'La personne créatrice/possédeur doit au moins pouvoir avoir un calendrier');
-
-		return $createrOrOwner;
 	}
 
 	/**
@@ -98,34 +67,18 @@ class EventController extends Controller
 	public function store(Request $request): JsonResponse {
 		$inputs = $request->all();
 
-		$owner = $this->getCreaterOrOwner($request, 'create', 'owned');
-
-		// Le créateur peut être multiple: le user, l'asso ou le client courant. Ou autre
-		if ($request->input('created_by_type', 'user') === 'user'
-			&& \Auth::id()
-			&& $request->input('created_by_id', \Auth::id()) === \Auth::id()
-			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-events-'.\ModelResolver::getName($owner).'s-owned-user'))
-			$creater = \Auth::user();
-		else if ($request->input('created_by_type', 'client') === 'client'
-			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
-			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-events-'.\ModelResolver::getName($owner).'s-owned-client'))
-			$creater = \Scopes::getClient($request);
-		else if ($request->input('created_by_type') === 'asso'
-			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
-			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-events-'.\ModelResolver::getName($owner).'s-owned-asso'))
-			$creater = \Scopes::getClient($request)->asso;
-		else
-			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
-
-		$inputs['created_by_id'] = $creater->id;
-		$inputs['created_by_type'] = get_class($creater);
-		$inputs['owned_by_id'] = $owner->id;
-		$inputs['owned_by_type'] = get_class($owner);
-
 		$calendar = $this->getCalendar($request, \Auth::user(), Calendar::find($inputs['calendar_id']), 'edit');
 
-		if (!$calendar->owned_by->isEventManageableBy(\Auth::id()))
+		if (!$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
 			abort(403, 'Vous n\'avez pas les droits suffisants pour ajouter cet évènenement à ce calendrier');
+
+		$owner = $this->getOwner($request, 'event', 'évènement', 'create');
+		$creator = $this->getCreatorFromOwner($request, $owner, 'event', 'évènement', 'create');
+
+		$inputs['created_by_id'] = $creator->id;
+		$inputs['created_by_type'] = get_class($creator);
+		$inputs['owned_by_id'] = $owner->id;
+		$inputs['owned_by_type'] = get_class($owner);
 
 		$event = Event::create($inputs);
 
@@ -162,7 +115,7 @@ class EventController extends Controller
 		$inputs = $request->all();
 
 		if ($request->filled('owned_by_type')) {
-			$owner = $this->getCreaterOrOwner($request, 'set', 'owned');
+			$owner = $this->getOwner($request, 'event', 'évènement', 'edit');
 
 			$inputs['owned_by_id'] = $owner->id;
 			$inputs['owned_by_type'] = get_class($owner);

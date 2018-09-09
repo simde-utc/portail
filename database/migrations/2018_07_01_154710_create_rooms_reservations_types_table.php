@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReservationsTypesTable extends Migration
+class CreateRoomsReservationsTypesTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,9 +13,11 @@ class CreateReservationsTypesTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('reservations_types', function (Blueprint $table) {
+		Schema::create('rooms_reservations_types', function (Blueprint $table) {
 			$table->uuid('id')->primary();
+			$table->string('type', validation_max('name'))->unique();
 			$table->string('name', validation_max('name'))->unique();
+			$table->boolean('need_validation')->default(true); // Permet d'indiquer si le type doit être valider par le owner
 
 			$table->timestamps();
 		});
@@ -28,6 +30,6 @@ class CreateReservationsTypesTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('reservations_types');
+		Schema::dropIfExists('rooms_reservations_types');
 	}
 }
