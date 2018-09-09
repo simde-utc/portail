@@ -2,18 +2,29 @@
 
 namespace App\Models;
 
+use Cog\Contracts\Ownership\Ownable as OwnableContract;
+use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use App\Traits\Model\HasStages;
 use App\Traits\Model\HasPermissions;
 use App\Models\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Traits\Model\HasOwnerSelection;
 use App\Exceptions\PortailException;
 
-class Role extends Model // TODO $must ?
+class Role extends Model implements OwnableContract
 {
-	use HasStages, HasPermissions;
+	use HasMorphOwner, HasOwnerSelection;
 
 	protected $fillable = [
-		'type', 'name', 'description', 'limited_at', 'only_for',
+		'type', 'name', 'description', 'limited_at', 'owned_by_id', 'owned_by_type',
+	];
+
+	protected $hidden = [
+		'owned_by_id', 'owned_by_type',
+	];
+
+	protected $with = [
+		'owned_by',
 	];
 
 	protected $casts = [
@@ -109,6 +120,10 @@ class Role extends Model // TODO $must ?
 
 	public function parents(): BelongsToMany {
 		return $this->belongsToMany(Role::class, 'roles_parents', 'role_id', 'parent_id');
+	}
+
+	public function owned_by() {
+		return $this->morphTo('owned_by');
 	}
 
 	public function allChildren() {

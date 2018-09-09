@@ -2,20 +2,28 @@
 
 namespace App\Models;
 
+use Cog\Contracts\Ownership\Ownable as OwnableContract;
+use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use App\Traits\Model\HasRoles;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Traits\Model\HasOwnerSelection;
 use Illuminate\Support\Collection;
 
-class Permission extends Model // TODO $must ? $fillable
+class Permission extends Model implements OwnableContract
 {
-    use HasRoles;
+		use HasMorphOwner, HasRoles;
 
-    public static function create(array $attributes = []) {
-        if (static::where('type', $attributes['type'] ?? null)->first())
-			throw new \Exception('Cette permission existe déjà');
+		protected $fillable = [
+			'type', 'name', 'description', 'owned_by_id', 'owned_by_type',
+		];
 
-        return static::query()->create($attributes);
-    }
+		protected $hidden = [
+			'owned_by_id', 'owned_by_type',
+		];
+
+		protected $with = [
+			'owned_by',
+		];
 
     public function roles(): BelongsToMany {
         return $this->belongsToMany(Role::class, 'roles_permissions');
@@ -24,6 +32,10 @@ class Permission extends Model // TODO $must ? $fillable
     public function users(): BelongsToMany {
         return $this->belongsToMany(User::class, 'users_permissions');
     }
+
+		public function owned_by() {
+			return $this->morphTo('owned_by');
+		}
 
 	public static function find($id, string $only_for = null) {
         $permissions = static::where('id', $id);
