@@ -13,9 +13,9 @@ class ArticleForm extends React.Component {
 
 		this.state = {
 			form: {
-				title: "Hey",
-				description: "Hello",
-				content: "Hi"
+				title: "",
+				description: "",
+				content: ""
 			}
 		};
 	}

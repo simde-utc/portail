@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { assosActions, articlesActions } from '../../redux/actions';
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
-import { NavLink, Link, Route, Switch } from 'react-router-dom';
+import { NavLink, Redirect, Link, Route, Switch } from 'react-router-dom';
 
 import Dropdown from './../../components/Dropdown.js';
 import ArticleForm from './../../components/Article/Form.js';
@@ -11,13 +11,23 @@ import ScreensAssoHome from './Home.js';
 import ScreensAssoArticles from './Articles.js';
 
 /* TODO: Make it stateless & unconnected */
+/* TODO: Add notifications for article create, copy Erode project */
 @connect((store, props) => ({
     asso: store.assos.data.find( asso => asso.login == props.match.params.login ),
     fetching: store.assos.fetching,
     fetched: store.assos.fetched,
     user: store.loggedUser.data,
+    articles: store.articles
 }))
 class ScreensAsso extends React.Component { 
+    constructor() {
+        super();
+
+        this.state = {
+            redirect: false
+        };
+    }
+
     componentWillMount() {
         const login = this.props.match.params.login
         this.props.dispatch(assosActions.getOne(login));
@@ -27,11 +37,16 @@ class ScreensAsso extends React.Component {
     postArticle(data) {
         data.owned_by_type = "user";
         data.owned_by_id = this.props.asso.id;
-        console.log(data);
         this.props.dispatch(articlesActions.create(data));
+        console.log(this.props.articles.error.response.data);
+        this.setState({redirect: true});
     }
 
     render() {
+        if (this.state.redirect) {
+            return <Redirect to="/" />;
+        }
+
         // var createArticleButton = <span></span>;
         // if (this.props.user.assos && this.props.user.assos.find( assos => assos.id === this.props.asso.id ))
 
