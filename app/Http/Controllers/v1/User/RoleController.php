@@ -20,19 +20,31 @@ class RoleController extends Controller
 
 	public function __construct() {
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-get-roles-users-assigned', 'client-get-roles-users-assigned'),
+			array_merge(
+				\Scopes::matchOneOfDeepestChildren('user-get-roles-users-assigned', 'client-get-roles-users-assigned'),
+				\Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
+			),
 			['only' => ['index', 'show']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-create-roles-users-assigned', 'client-create-roles-users-assigned'),
+			array_merge(
+				\Scopes::matchOneOfDeepestChildren('user-create-roles-users-assigned', 'client-create-roles-users-assigned'),
+				\Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
+			),
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-edit-roles-users-assigned', 'client-edit-roles-users-assigned'),
+			array_merge(
+				\Scopes::matchOneOfDeepestChildren('user-edit-roles-users-assigned', 'client-edit-roles-users-assigned'),
+				\Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
+			),
 			['only' => ['update']]
 		);
 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-remove-roles-users-assigned', 'client-remove-roles-users-assigned'),
+			array_merge(
+				\Scopes::matchOneOfDeepestChildren('user-remove-roles-users-assigned', 'client-remove-roles-users-assigned'),
+				\Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
+			),
 			['only' => ['destroy']]
 		);
 	}
@@ -124,7 +136,7 @@ class RoleController extends Controller
 		$role = $this->getRoleFromUser($request, $user, $role_id);
 
 		$user->removeRoles($role_id, [
-			'semester_id' => Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id,
+			'semester_id' => $role->pivot->semester_id,
 		], \Auth::id(), \Scopes::isClientToken());
 	}
 }

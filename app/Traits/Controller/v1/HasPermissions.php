@@ -3,10 +3,10 @@
 namespace App\Traits\Controller\v1;
 
 use App\Models\Permission;
-use App\Models\Model;
 use App\Models\User;
 use App\Models\Semester;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 
 trait HasPermissions
 {
@@ -15,10 +15,10 @@ trait HasPermissions
 
 		if ($permission) {
 			if (!$this->tokenCanSee($request, $permission, $verb))
-				abort(403, 'L\'application n\'a pas les droits sur ce permission');
+				abort(403, 'L\'application n\'a pas les droits sur cette permission');
 
-			if ($verb !== 'get' && !$permission->owned_by->isPermissionManageableBy(\Auth::id()))
-				abort(403, 'Vous n\'avez pas les droits suffisants');
+			if ($verb !== 'get' && \Auth::id() && !$permission->owned_by->isPermissionManageableBy(\Auth::id()))
+				abort(403, 'Vous n\'avez pas les droits suffisants pour gérer cette permission');
 
 			return $permission;
 		}
@@ -26,21 +26,32 @@ trait HasPermissions
 		abort(404, 'Impossible de trouver la permission');
 	}
 
-	protected function getPermissionFromUser(Request $request, User $user, string $permission_id) {
+	protected function getPermissionsFromModel(Request $request, Model $model) {
 		$semester_id = Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id;
 
-		$permission = $user->permissions()->wherePivot('permission_id', $permission_id)
-			->wherePivot('semester_id', $semester_id)
-			->withPivot(['semester_id', 'validated_by'])->first();
+		return $model->permissions()->wherePivot('semester_id', $semester_id)
+			->withPivot(['semester_id', 'validated_by']);
+	}
+
+	protected function getPermissionFromModel(Request $request, Model $model, string $permission_id, string $verb = 'get') {
+		$permission = $this->getPermissionsFromModel($request, $model)->find($permission);
 
 		if ($permission) {
-			$permission->semester_id = $permission->pivot->semester_id;
-			$permission->validated_by = $permission->pivot->validated_by;
+			if (!$this->tokenCanSee($request, $permission, $verb))
+				abort(403, 'L\'application n\'a pas les droits sur cette permission');
 
-			return $permission->makeHidden('pivot');
+			if ($verb !== 'get' && \Auth::id() && !$permission->owned_by->isPermissionManageableBy(\Auth::id()))
+				abort(403, 'Vous n\'avez pas les droits suffisants pour gérer cette permission');
+
+			return $permission;
 		}
 		else
-			abort(404, 'Cette personne ne possède pas ce permission');
+			abort(404, 'Cette instance ne possède pas cette permission');
+	}
+
+	protected function checkTokenRights(Request $request, string $verb = 'get') {
+		if (!\Scopes::hasOne($request, \Scopes::getTokenType($request).'-'.$verb.'-permissions-'.\ModelResolver::getCategory($request->resource)))
+			abort(503, 'L\'application n\'a pas le droit de voir les permissions de cette ressource');
 	}
 
 	protected function tokenCanSee(Request $request, Permission $permission, string $verb = 'get') {
