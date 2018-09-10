@@ -31,6 +31,7 @@ class RolesTableSeeder extends Seeder
           'service',
 					'room',
           'role',
+          'permission',
 				]
 			],
 			[
@@ -49,6 +50,7 @@ class RolesTableSeeder extends Seeder
           'service',
 					'room',
           'role',
+          'permission',
 				]
 			],
 			[
@@ -67,6 +69,7 @@ class RolesTableSeeder extends Seeder
           'data',
           'reservation',
           'role',
+          'permission',
 				]
 			],
 			[
@@ -88,6 +91,7 @@ class RolesTableSeeder extends Seeder
           'data',
           'reservation',
           'role',
+          'permission',
 				]
 			],
 			[
@@ -107,6 +111,7 @@ class RolesTableSeeder extends Seeder
           'data',
           'reservation',
           'role',
+          'permission',
 				],
 			],
 			[

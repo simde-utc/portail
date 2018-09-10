@@ -71,6 +71,12 @@ class PermissionsTableSeeder extends Seeder
         'owned_by' => new Asso,
 			],
 			[
+				'type' => 'permission',
+				'name' => 'Permission',
+				'description' => 'Gestion des permissions',
+        'owned_by' => new Asso,
+			],
+			[
 				'type' => 'member',
 				'name' => 'Membre',
 				'description' => 'Gestion des membres du groupe',
@@ -98,6 +104,12 @@ class PermissionsTableSeeder extends Seeder
 				'type' => 'role',
 				'name' => 'Rôle',
 				'description' => 'Gestion des rôles',
+        'owned_by' => new Group,
+			],
+			[
+				'type' => 'permission',
+				'name' => 'Permission',
+				'description' => 'Gestion des permissions',
         'owned_by' => new Group,
 			],
 			[
@@ -140,6 +152,12 @@ class PermissionsTableSeeder extends Seeder
 				'type' => 'role',
 				'name' => 'Rôle',
 				'description' => 'Gestion des rôles',
+        'owned_by' => new User,
+			],
+			[
+				'type' => 'permission',
+				'name' => 'Permission',
+				'description' => 'Gestion des permissions',
         'owned_by' => new User,
 			],
 		];
