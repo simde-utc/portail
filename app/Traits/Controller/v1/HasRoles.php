@@ -5,6 +5,7 @@ namespace App\Traits\Controller\v1;
 use App\Models\Role;
 use App\Models\Model;
 use App\Models\User;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 
 trait HasRoles
@@ -23,6 +24,23 @@ trait HasRoles
 		}
 
 		abort(404, 'Impossible de trouver la rôle');
+	}
+
+	protected function getRoleFromUser(Request $request, User $user, string $role_id) {
+		$semester_id = Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id;
+
+		$role = $user->roles()->wherePivot('role_id', $role_id)
+			->wherePivot('semester_id', $semester_id)
+			->withPivot(['semester_id', 'validated_by'])->first();
+
+		if ($role) {
+			$role->semester_id = $role->pivot->semester_id;
+			$role->validated_by = $role->pivot->validated_by;
+
+			return $role->makeHidden('pivot');
+		}
+		else
+			abort(404, 'Cette personne ne possède pas ce rôle');
 	}
 
 	protected function tokenCanSee(Request $request, Role $role, string $verb = 'get') {
