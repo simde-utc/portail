@@ -13,7 +13,6 @@ class Article extends React.Component {
 	}
 
 	toggleExpand(e) {
-		console.log("zdazd")
 		this.setState(prev => ({ ...prev, expanded: !this.state.expanded }));
 	}
 

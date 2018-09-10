@@ -12,32 +12,36 @@ class ArticleForm extends React.Component {
 		super();
 
 		this.state = {
-			title: "",
-			content: ""
+			form: {
+				title: "",
+				description: "",
+				content: ""
+			}
 		};
 	}
 
 	handleEditorChange(value) {
-		this.setState({ content: value });
+		var form = this.state.form;
+		form.content = value;
+		this.setState({ form: form });
 	}
 
 	handleChange(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
+		var form = this.state.form;
+		form[e.target.name] = e.target.value;
+        this.setState({ form: form });
     }
 
     handleSubmit(e) {
         e.preventDefault();
         
-        this.props.loginFetching();
-        this.props.login(this.state);
+        this.props.postArticle(this.state.form);
     }
 
 	render() {
 		return (
 			<div>
-				<div className="container pt-3">
+				<div className="container p-3">
 					<form className="form row" onSubmit={ (e) => this.handleSubmit(e) }>
 						<div className="col-md-6">
 							<h2 className="mb-3">Créer un article</h2>
@@ -150,6 +154,10 @@ class ArticleForm extends React.Component {
 									}}
 								/>
 							</div>
+
+							<button type="submit" className="btn btn-primary">
+								Publier
+							</button>
 						</div>
 					</form>
 				</div>

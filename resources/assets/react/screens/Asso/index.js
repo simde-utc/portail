@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { assosActions } from '../../redux/actions';
+import { assosActions, articlesActions } from '../../redux/actions';
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
 import { NavLink, Link, Route, Switch } from 'react-router-dom';
 
@@ -73,7 +73,7 @@ class ScreensAsso extends React.Component {
                             <ScreensAssoArticles />
                         )} />
                     <Route path={`${this.props.match.url}/creer/article`} render={ () => ( 
-                            <ArticleForm />
+                            <ArticleForm post={this.props.dispatch(articlesActions.create())} />
                         )} />
                 </Switch>
             </div>
