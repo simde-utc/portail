@@ -13,9 +13,9 @@ class ArticleForm extends React.Component {
 
 		this.state = {
 			form: {
-				title: "",
-				description: "",
-				content: ""
+				title: "Hey",
+				description: "Hello",
+				content: "Hi"
 			}
 		};
 	}
@@ -34,8 +34,8 @@ class ArticleForm extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        
-        this.props.postArticle(this.state.form);
+
+        this.props.post(this.state.form);
     }
 
 	render() {
@@ -51,7 +51,7 @@ class ArticleForm extends React.Component {
 							    	type="text" 
 							    	className="form-control" 
 							    	name="title" 
-							    	value={ this.state.title }
+							    	value={ this.state.form.title }
 							    	onChange={ (e) => this.handleChange(e) }
 							    	placeholder="Entrez le titre de votre article"
 							    	required
@@ -63,10 +63,10 @@ class ArticleForm extends React.Component {
 							    	className="form-control" 
 							    	name="description" 
 							    	rows="3"
+							    	value={ this.state.form.description }
 							    	onChange={ (e) => this.handleChange(e) }
 							    	placeholder="Entrez une courte description de votre article"
 							    >
-							    	{ this.state.description }
 							    </textarea>
 							</div>
 						</div>

@@ -24,6 +24,13 @@ class ScreensAsso extends React.Component {
         this.props.dispatch(loggedUserActions.getAssos());
     }
 
+    postArticle(data) {
+        data.owned_by_type = "user";
+        data.owned_by_id = this.props.asso.id;
+        console.log(data);
+        this.props.dispatch(articlesActions.create(data));
+    }
+
     render() {
         // var createArticleButton = <span></span>;
         // if (this.props.user.assos && this.props.user.assos.find( assos => assos.id === this.props.asso.id ))
@@ -73,7 +80,7 @@ class ScreensAsso extends React.Component {
                             <ScreensAssoArticles />
                         )} />
                     <Route path={`${this.props.match.url}/creer/article`} render={ () => ( 
-                            <ArticleForm post={this.props.dispatch(articlesActions.create())} />
+                            <ArticleForm post={this.postArticle.bind(this)} />
                         )} />
                 </Switch>
             </div>
