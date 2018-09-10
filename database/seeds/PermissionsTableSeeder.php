@@ -2,122 +2,173 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Permission;
+use App\Models\User;
+use App\Models\Asso;
+use App\Models\Group;
 
 class PermissionsTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
+  /**
+   * Run the database seeds.
+   *
+   * @return void
+   */
+  public function run()
+  {
 		$permissions = [
 			[
-				'type' => 'asso_treasury',
+				'type' => 'treasury',
 				'name' => 'Trésorerie',
 				'description' => 'Gestion de la trésorerie de l\'association',
-        'only_for' => 'assos',
+        'owned_by' => new Asso,
 			],
 			[
-				'type' => 'asso_ticketing',
+				'type' => 'ticketing',
 				'name' => 'Billetterie',
 				'description' => 'Gestion de la billetterie de l\'association',
-        'only_for' => 'assos',
+        'owned_by' => new Asso,
 			],
 			[
-				'type' => 'asso_calendar',
+				'type' => 'calendar',
 				'name' => 'Calendrier',
 				'description' => 'Gestion des calendriers de l\'association',
-        'only_for' => 'assos',
+        'owned_by' => new Asso,
 			],
 			[
-				'type' => 'asso_event',
+				'type' => 'event',
 				'name' => 'Evènement',
 				'description' => 'Gestion des évènements de l\'association',
-        'only_for' => 'assos',
+        'owned_by' => new Asso,
 			],
 			[
-				'type' => 'asso_data',
+				'type' => 'data',
 				'name' => 'Informations',
 				'description' => 'Gestion des informations concernant l\'association',
-        'only_for' => 'assos',
+        'owned_by' => new Asso,
 			],
 			[
-				'type' => 'asso_contact',
+				'type' => 'contact',
 				'name' => 'Contact',
 				'description' => 'Gestion des moyens de contact de l\'association',
-        'only_for' => 'assos',
+        'owned_by' => new Asso,
 			],
 			[
-				'type' => 'asso_article',
+				'type' => 'article',
 				'name' => 'Article',
 				'description' => 'Gestion des articles de l\'association',
-        'only_for' => 'assos',
+        'owned_by' => new Asso,
 			],
 			[
-				'type' => 'asso_reservation',
+				'type' => 'reservation',
 				'name' => 'Réservation',
 				'description' => 'Gestion des réservations',
-        'only_for' => 'assos',
+        'owned_by' => new Asso,
 			],
 			[
-				'type' => 'group_member',
+				'type' => 'role',
+				'name' => 'Rôle',
+				'description' => 'Gestion des rôles',
+        'owned_by' => new Asso,
+			],
+			[
+				'type' => 'permission',
+				'name' => 'Permission',
+				'description' => 'Gestion des permissions',
+        'owned_by' => new Asso,
+			],
+			[
+				'type' => 'member',
 				'name' => 'Membre',
 				'description' => 'Gestion des membres du groupe',
-        'only_for' => 'groups',
+        'owned_by' => new Group,
 			],
 			[
-				'type' => 'group_calendar',
+				'type' => 'calendar',
 				'name' => 'Calendrier',
 				'description' => 'Gestion des calendriers du groupe',
-        'only_for' => 'groups',
+        'owned_by' => new Group,
 			],
 			[
-				'type' => 'group_event',
+				'type' => 'event',
 				'name' => 'Evènement',
 				'description' => 'Gestion des évènements du groupe',
-        'only_for' => 'groups',
+        'owned_by' => new Group,
 			],
 			[
-				'type' => 'group_contact',
+				'type' => 'contact',
 				'name' => 'Contact',
 				'description' => 'Gestion des contacts du groupe',
-        'only_for' => 'groups',
+        'owned_by' => new Group,
+			],
+			[
+				'type' => 'role',
+				'name' => 'Rôle',
+				'description' => 'Gestion des rôles',
+        'owned_by' => new Group,
+			],
+			[
+				'type' => 'permission',
+				'name' => 'Permission',
+				'description' => 'Gestion des permissions',
+        'owned_by' => new Group,
 			],
 			[
 				'type' => 'user',
 				'name' => 'Utilisateur',
 				'description' => 'Gestion des utilisateurs',
+        'owned_by' => new User,
 			],
 			[
 				'type' => 'asso',
 				'name' => 'Association',
 				'description' => 'Gestion des associations',
+        'owned_by' => new User,
 			],
 			[
 				'type' => 'service',
 				'name' => 'Service',
 				'description' => 'Gestion des services',
+        'owned_by' => new User,
 			],
 			[
 				'type' => 'group',
 				'name' => 'Groupe',
 				'description' => 'Gestion des groupes',
+        'owned_by' => new User,
 			],
 			[
 				'type' => 'client',
 				'name' => 'Client',
 				'description' => 'Gestion des clients',
+        'owned_by' => new User,
 			],
 			[
 				'type' => 'room',
 				'name' => 'Salle de réservation',
 				'description' => 'Gestion des salles de réservations',
+        'owned_by' => new User,
+			],
+			[
+				'type' => 'role',
+				'name' => 'Rôle',
+				'description' => 'Gestion des rôles',
+        'owned_by' => new User,
+			],
+			[
+				'type' => 'permission',
+				'name' => 'Permission',
+				'description' => 'Gestion des permissions',
+        'owned_by' => new User,
 			],
 		];
 
 		foreach ($permissions as $permission)
-			Permission::create($permission);
-    }
+			$model = Permission::create([
+				'type' => $permission['type'],
+				'name' => $permission['name'],
+        'description' => $permission['description'],
+        'owned_by_id' => $permission['owned_by']->id,
+        'owned_by_type' => get_class($permission['owned_by']),
+			]);
+  }
 }
