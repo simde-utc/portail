@@ -37,27 +37,27 @@ export const createCrudActions = (actionTypes, uri, overrides = {}) => ({
     getAll: (queryParams = '') => ({
         type: actionTypes.getAll,
         meta: { affectsAll: true, arrayAction: 'updateAll', timestamp: Date.now() },
-        payload: axios.get(`/api/v1/${uri}${queryParams}`)
+        payload: window.axios.get(`/api/v1/${uri}${queryParams}`)
     }),
     getOne: (id, queryParams = '') => ({
         type: actionTypes.getOne,
         meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
-        payload: axios.get(`/api/v1/${uri}/${id}${queryParams}`)
+        payload: window.axios.get(`/api/v1/${uri}/${id}${queryParams}`)
     }),
     create: (data) => ({
         type: actionTypes.create,
         meta: { affectsAll: false, arrayAction: 'insert', timestamp: Date.now() },
-        payload: axios.post(`/api/v1/${uri}`)
+        payload: window.axios.post(`/api/v1/${uri}`, data)
     }),
     update: (id, data) => ({
         type: actionTypes.update,
         meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
-        payload: axios.put(`/api/v1/${uri}/${id}`)
+        payload: window.axios.put(`/api/v1/${uri}/${id}`, data)
     }),
     delete: (id) => ({
         type: actionTypes.delete,
         meta: { affectsAll: false, arrayAction: 'delete', timestamp: Date.now() },
-        payload: axios.delete(`/api/v1/${uri}/${id}`)
+        payload: window.axios.delete(`/api/v1/${uri}/${id}`)
     }),
     ...overrides
 })

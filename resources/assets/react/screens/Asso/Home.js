@@ -7,9 +7,9 @@ class AssoHomeScreen extends React.Component {
 			<div className="container">
 				{ (asso) ? (
 					<div className="row">
-						<div className="col-md-2 mt-5">
-							<button className="btn btn-sm btn-secondary mr-2">Suivre</button>
-							<button className="btn btn-sm btn-secondary">Rejoindre</button>
+						<div className="col-md-2 mt-5 px-1 d-flex flex-md-column">
+							<button className="m-1 btn btn-sm btn-secondary">Suivre</button>
+							<button className="m-1 btn btn-sm btn-secondary">Rejoindre</button>
 						</div>
 						<div className="col-md-8">
 							<h1 className="title mb-2">{ asso.shortname }</h1>

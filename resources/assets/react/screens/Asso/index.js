@@ -39,14 +39,12 @@ class AssoScreen extends React.Component {
 		data.owned_by_id = this.props.asso.id;
 		this.props.dispatch(articlesActions.create(data));
 		console.log(this.props.articles.error.response.data);
-		this.props.navigate('/')
-		// this.setState({redirect: true});
+		this.setState(prev => ({ ...prev, redirect: true }));
 	}
 
 	render() {
-		// if (this.state.redirect) {
-		//     return <Redirect to="/" />;
-		// }
+		if (this.state.redirect)
+			return <Redirect to="/" />;
 
 		// var createArticleButton = <span></span>;
 		// if (this.props.user.assos && this.props.user.assos.find( assos => assos.id === this.props.asso.id ))
