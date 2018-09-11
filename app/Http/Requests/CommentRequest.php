@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Exceptions\PortailException;
+use App\Interfaces\Model\CanHaveComments;
 
 class CommentRequest extends FormRequest
 {
@@ -15,7 +16,7 @@ class CommentRequest extends FormRequest
      */
     public function authorize()
     {
-        $class = \ModelResolver::getModelFromCategory($this->resource_type);
+        $class = \ModelResolver::getModelFromCategory($this->resource_type, CanHaveComments::class);
 
         $this->resource = $class::find($this->resource_id);
 

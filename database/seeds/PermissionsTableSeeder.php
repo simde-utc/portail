@@ -59,6 +59,12 @@ class PermissionsTableSeeder extends Seeder
         'owned_by' => new Asso,
 			],
 			[
+				'type' => 'comment',
+				'name' => 'Commentaire',
+				'description' => 'Rédiger des commentaires de l\'association',
+        'owned_by' => new Asso,
+			],
+			[
 				'type' => 'reservation',
 				'name' => 'Réservation',
 				'description' => 'Gestion des réservations',

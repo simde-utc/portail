@@ -15,9 +15,10 @@ use App\Interfaces\Model\CanHaveReservations;
 use App\Interfaces\Model\CanNotify;
 use App\Interfaces\Model\CanHaveRoles;
 use App\Interfaces\Model\CanHavePermissions;
+use App\Interfaces\Model\CanComment;
 use App\Exception\PortailException;
 
-class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify, CanHaveRooms, CanHaveReservations, CanHaveRoles, CanHavePermissions
+class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify, CanHaveRooms, CanHaveReservations, CanHaveRoles, CanHavePermissions, CanComment
 {
 	use HasStages, HasMembers, SoftDeletes {
 		HasMembers::members as membersAndFollowers;
@@ -292,5 +293,20 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		}
 		else
 			throw new PortailException('Seules les utilisateurs, associations et clients peuvent valider une salle appartenant à une association', 503);
+	}
+
+	// Les commentaires écrits par une asso se font uniquement par les gens pouvant en rédiger
+	public function isCommentWritableBy(string $user_id): bool {
+		return $this->hasOnePermission('comment', [
+			'user_id' => $user_id,
+		]);
+	}
+
+	public function isCommentEditableBy(string $user_id): bool {
+		return $this->isCommentWritableBy($user_id);
+	}
+
+	public function isCommentDeletableBy(string $user_id): bool {
+		return $this->isCommentEditableBy($user_id);
 	}
 }

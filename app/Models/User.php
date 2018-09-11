@@ -10,6 +10,7 @@ use App\Interfaces\Model\CanHaveContacts;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Interfaces\Model\CanHaveRoles;
 use App\Interfaces\Model\CanHavePermissions;
+use App\Interfaces\Model\CanComment;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Model\HasRoles;
@@ -27,7 +28,7 @@ use App\Notifications\User\UserDesactivation;
 use App\Notifications\User\UserModification;
 use App\Notifications\User\UserDeletion;
 
-class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveRoles, CanHavePermissions
+class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveRoles, CanHavePermissions, CanComment
 {
 	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid {
 		HasHiddenData::hideData as protected hideDataFromTrait;
@@ -413,5 +414,18 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 
 	public function isEventManageableBy(string $user_id): bool {
 		return $this->id === $user_id;
+	}
+
+	// On ne peut bien sûr pas écrire au nom de quelqu'un d'autre
+	public function isCommentWritableBy(string $user_id): bool {
+		return $user_id === $this->id;
+	}
+
+	public function isCommentEditableBy(string $user_id): bool {
+		return $this->isCommentWritableBy($user_id);
+	}
+
+	public function isCommentDeletableBy(string $user_id): bool {
+		return $this->isCommentEditableBy($user_id);
 	}
 }
