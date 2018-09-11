@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use Carbon\Carbon;
+use App\Traits\Controller\v1\HasComments;
 
 /**
  * @resource Comment
@@ -15,133 +16,121 @@ use Carbon\Carbon;
  */
 class CommentController extends Controller
 {
-    /**
-     * Scopes Commentaire
-     *
-     * Les Scopes requis pour manipuler les Commentaires
-     */
-    public function __construct() {
-        $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-get-comments', 'client-get-comments'),
-            ['only' => ['index', 'show']]
-        );
-        $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-set-comments', 'client-set-comments'),
-            ['only' => ['store', 'update']]
-        );
-        $this->middleware(
-            \Scopes::matchOneOfDeepestChildren('user-manage-comments', 'client-manage-comments'),
-            ['only' => ['destroy']]
-        );
-    }
+  use HasComments;
+
+  /**
+   * Scopes Commentaire
+   *
+   * Les Scopes requis pour manipuler les Commentaires
+   */
+  public function __construct() {
+    $this->middleware(
+      \Scopes::matchOneOfDeepestChildren('user-get-comments', 'client-get-comments'),
+      ['only' => ['index', 'show']]
+    );
+    $this->middleware(
+      \Scopes::matchOneOfDeepestChildren('user-create-comments', 'client-create-comments'),
+      ['only' => ['store']]
+    );
+    $this->middleware(
+      \Scopes::matchOneOfDeepestChildren('user-edit-comments', 'client-edit-comments'),
+      ['only' => ['update']]
+    );
+    $this->middleware(
+      \Scopes::matchOneOfDeepestChildren('user-remove-comments', 'client-remove-comments'),
+      ['only' => ['destroy']]
+    );
+  }
 
 
-    /**
-     * List Comments
-     *
-     * Retourne la liste des commentaires.
-     * @param \Illuminate\Http\Request $request
-     * @return JsonResponse
-     */
-    public function index(CommentRequest $request): JsonResponse {
-        $comments = Comment::getTree($request->resource
-                                        ->comments()
-                                        ->get()
-                                        ->toArray());
+  /**
+   * List Comments
+   *
+   * Retourne la liste des commentaires.
+   * @param \Illuminate\Http\Request $request
+   * @return JsonResponse
+   */
+  public function index(CommentRequest $request): JsonResponse {
+		$this->checkTokenRights($request);
 
-        return response()->json($comments, 200);
-    }
+    if (!$request->resource->isCommentAccessibleBy($user_id))
+      abort(503, 'Vous n\'avez pas le droit de voir ces commentaires');
 
-    /**
-     * Create Comment
-     *
-     * Créer un commentaire.
-     * @param CommentRequest $request
-     * @return JsonResponse
-     */
-    public function store(CommentRequest $request): JsonResponse {
-        $parent_id = $request->input('parent_id');
+		$comments = $request->resource->comments()->getSelection()->map(function ($comment) {
+			return $comment->hideData();
+		});
 
-        if ($request->resource->comments()->find($request->input('parent_id')) == null)
-            $parent_id = null;
+		return response()->json($comments, 200);
+  }
 
-        $comment = $request->resource->comments()->create([
-            'body' => $request->input('body'),
-            'parent_id' => $parent_id,
-            'user_id' => \Auth::user()->id,
-            'visibility_id' => $request->input('visibility_id'),
-        ]);
+  /**
+   * Create Comment
+   *
+   * Créer un commentaire.
+   * @param CommentRequest $request
+   * @return JsonResponse
+   */
+  public function store(CommentRequest $request): JsonResponse {
+    $creater = \ModelResolver::getModel($request->input($type.'_by_type'))->find($request->input($type.'_by_id'));
 
-        if ($comment)
-            return response()->json($comment, 201);
-        else
-            return response()->json(['message' => 'Impossible d\'enregistrer le commentaire'], 500); 
-    }
+    if (!$request->ressource->isCommentManageableBy($creater) || (\Auth::id() && !$request->ressource->isCommentWritableBy($creater)))
+      abort(403, 'Il ne vous est pas autorisé de créer un commentaire pour cette instance');
 
-    /**
-     * Show Comment
-     *
-     * Affiche le commentaire.
-     * @param CommentRequest $request
-     * @return JsonResponse
-     */
-    public function show(CommentRequest $request): JsonResponse {  
-        $comment = $request->resource->comments()->find($request->comment);
+    $comment = $request->resource->comments()->create([
+      'body' => $request->input('body'),
+      'created_by_type' => $request->input('created_by_type'),
+      'created_by_id' => $request->input('created_by_id'),
+    ]);
 
-        if ($comment && ($comment->deleted_at == null))
-            return response()->json($comment, 200);
-        else
-            return response()->json(['message' => 'Impossible de trouver le commentaire'], 404);
-    }
+    $comment->changeOwnerTo($request->ressource)->save();
 
-    /**
-     * Update Comment
-     *
-     * Met à jour le commentaire.
-     * @param CommentRequest $request
-     * @return JsonResponse
-     */
-    public function update(CommentRequest $request): JsonResponse {
-        $comment = $request->resource->comments()->find($request->comment);
+    return response()->json($comment->hideSubData(), 201);
+  }
 
-        if (!$comment || ($comment->deleted_at != null))
-            return response()->json(['message' => 'Impossible de trouver le commentaire'], 404);
+  /**
+   * Show Comment
+   *
+   * Affiche le commentaire.
+   * @param CommentRequest $request
+   * @return JsonResponse
+   */
+  public function show(CommentRequest $request): JsonResponse {
+    $comment = $this->getComment($request);
 
-        $parent_id = $request->input('parent_id');
+    return response()->json($comment->hideSubData(), 200);
+  }
 
-        if ($request->resource->comments()->find($request->input('parent_id')) == null)
-            $parent_id = null;
+  /**
+   * Update Comment
+   *
+   * Met à jour le commentaire.
+   * @param CommentRequest $request
+   * @return JsonResponse
+   */
+  public function update(CommentRequest $request): JsonResponse {
+    $comment = $this->getComment($request, 'edit');
 
-        $comment->update([
-            'body' => $request->input('body'),
-            'parent_id' => $parent_id,
-            'user_id' => \Auth::user()->id,
-            'visibility_id' => $request->input('visibility_id'),
-        ]);
+    $comment->update([
+      'body' => $request->input('body'),
+    ]);
 
-        if ($comment)
-            return response()->json($comment, 201);
-        else
-            return response()->json(['message' => 'Impossible de modifier le commentaire'], 500);
-    }
+    if ($comment)
+      return response()->json($comment->hideSubData(), 201);
+    else
+      return response()->json(['message' => 'Impossible de modifier le commentaire'], 500);
+  }
 
-    /**
-     * Delete Comment
-     *
-     * Supprime le commentaire.
-     * @param CommentRequest $request
-     * @return JsonResponse
-     */
-    public function destroy(CommentRequest $request): JsonResponse {
-        $comment = $request->resource->comments()->find($request->comment);
+  /**
+   * Delete Comment
+   *
+   * Supprime le commentaire.
+   * @param CommentRequest $request
+   * @return JsonResponse
+   */
+  public function destroy(CommentRequest $request): JsonResponse {
+    $comment = $this->getComment($request, 'remove');
 
-        if ($comment)  {
-            $comment->deleted_at = Carbon::now()->toDateTimeString();
-            $comment->save();
-
-            abort(204);
-        }
-        else
-            abort(404, 'Impossible de trouver le commentaire');
-    }
+    $comment->softDelete();
+    abort(204);
+  }
 }

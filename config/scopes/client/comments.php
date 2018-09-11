@@ -64,5 +64,13 @@ return [
                 ],
             ]
         ],
+        'remove' => [
+            'description' => 'Supprimer les commentaires',
+            'scopes' => [
+                'articles' => [
+                    'description' => 'Supprimer les commentaires sur des articles',
+                ],
+            ]
+        ],
     ]
 ];
