@@ -1,12 +1,12 @@
 import React from 'react';
 
-class ScreensAssoArticles extends React.Component {
-    render() {
-        return (
-            <div className="container">
-            </div>
-        );
-    }
+class AssoArticlesScreen extends React.Component {
+	render() {
+		return (
+			<div className="container">
+			</div>
+		);
+	}
 }
 
-export default ScreensAssoArticles;
+export default AssoArticlesScreen;
