@@ -5,10 +5,12 @@ export const usersActionTypes = createCrudTypes('USERS');
 export const assosActionTypes = createCrudTypes('ASSOS');
 export const assoMembersActionTypes = createCrudTypes('ASSO_MEMBERS');
 export const articlesActionTypes = createCrudTypes('ARTICLES');
+export const visibilitiesActionTypes = createCrudTypes('VISIBILITIES');
 
 export default {
 	users: usersActionTypes,
 	assos: assosActionTypes,
 	assoMembers: assoMembersActionTypes,
-  articles: articlesActionTypes
+  articles: articlesActionTypes,
+	visibilities: visibilitiesActionTypes,
 }

@@ -4,7 +4,9 @@ import crudActionTypes from './types';
 
 const usersReducer = createCrudReducer(crudActionTypes.users)
 const assosReducer = createCrudReducer(crudActionTypes.assos)
+const assoMembersReducer = createCrudReducer(crudActionTypes.assoMembers)
 const articlesReducer = createCrudReducer(crudActionTypes.articles)
+const visibilitiesReducer = createCrudReducer(crudActionTypes.visibilities)
 
 // Custom Reducers
 import loggedUserReducer from './custom/loggedUser/reducers';
@@ -15,6 +17,8 @@ export default combineReducers({
 	// CRUD
 	users: usersReducer,
 	assos: assosReducer,
+	assoMembers: assoMembersReducer,
 	articles: articlesReducer,
-	loggedUser: loggedUserReducer
+	loggedUser: loggedUserReducer,
+	visibilities: visibilitiesReducer,
 });
