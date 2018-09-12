@@ -15,6 +15,6 @@ export default combineReducers({
 	// CRUD
 	users: usersReducer,
 	assos: assosReducer,
-    articles: articlesReducer,
-    loggedUser: loggedUserReducer
+	articles: articlesReducer,
+	loggedUser: loggedUserReducer
 });

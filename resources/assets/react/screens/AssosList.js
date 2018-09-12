@@ -12,7 +12,7 @@ import AssoChildrenList from '../components/AssoChildrenList';
 class ScreensAssosList extends React.Component {
 
 	componentWillMount() {
-		this.props.dispatch(assosActions.getAll('?all'))
+		this.props.dispatch(assosActions.getAll())
 	}
 
 	render() {
@@ -36,7 +36,7 @@ class ScreensAssosList extends React.Component {
 						// On arrête si on a trouvé le parent
 						if (parent.id === asso.parent_id)
 							break;
-						// Sinon on ajoute ses enfants à la liste de recherche 
+						// Sinon on ajoute ses enfants à la liste de recherche
 						else
 							potentialParents = potentialParents.concat(parent.children);
 					}

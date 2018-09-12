@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { assosActions, articlesActions } from '../../redux/actions';
+import { assosActions, articlesActions, assoMembersActions } from '../../redux/actions';
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
 import { NavLink, Redirect, Link, Route, Switch } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ import ScreensAssoArticles from './Articles.js';
 	user: store.loggedUser.data,
 	articles: store.articles
 }))
-class AssoScreen extends React.Component { 
+class AssoScreen extends React.Component {
 	constructor() {
 		super();
 
@@ -31,11 +31,12 @@ class AssoScreen extends React.Component {
 	componentWillMount() {
 		const login = this.props.match.params.login
 		this.props.dispatch(assosActions.getOne(login));
+		this.props.dispatch(assoMembersActions.setUriParams({ asso_id: login }).getAll());
 		this.props.dispatch(loggedUserActions.getAssos());
 	}
 
 	postArticle(data) {
-		data.owned_by_type = "user";
+		data.owned_by_type = "asso";
 		data.owned_by_id = this.props.asso.id;
 		this.props.dispatch(articlesActions.create(data));
 		console.log(this.props.articles.error.response.data);
@@ -87,13 +88,13 @@ class AssoScreen extends React.Component {
 				</ul>
 
 				<Switch>
-					<Route path={`${this.props.match.url}`} exact render={ () => ( 
+					<Route path={`${this.props.match.url}`} exact render={ () => (
 							<ScreensAssoHome asso={ this.props.asso } />
 						)} />
-					<Route path={`${this.props.match.url}/articles`} render={ () => ( 
+					<Route path={`${this.props.match.url}/articles`} render={ () => (
 							<ScreensAssoArticles />
 						)} />
-					<Route path={`${this.props.match.url}/creer/article`} render={ () => ( 
+					<Route path={`${this.props.match.url}/creer/article`} render={ () => (
 							<ArticleForm post={this.postArticle.bind(this)} />
 						)} />
 				</Switch>

@@ -12,7 +12,7 @@ export const ASYNC_SUFFIXES = {
 /**
  * ActionTypes Creator
  * Fonction qui permet de créer les types d'actions CRUD
- * @param      {string}   name    Le nom de la ressource au singulier en capital 
+ * @param      {string}   name    Le nom de la ressource au singulier en capital
  * @return     {Object}           Un set de types d'action CRUD pour la ressource name
  */
 export const createCrudTypes = (name) => ({
@@ -28,39 +28,98 @@ export const createCrudTypes = (name) => ({
 /**
  * ActionCreator Creator
  * Fonction qui permet de générer un set d'actions CRUD
- * @param      {Object}   actionTypes    Les types d'actions possibles 
+ * @param      {Object}   actionTypes    Les types d'actions possibles
  * @param      {string}   uri            L'uri CRUD de la ressource
- * @param      {Object}   overrides      Surcharge du set d'actions
+ * @param      {string}   overrides      Surcharge du set d'actions
  * @return     {Object}                  Un set de d'action CRUD pour les types actionTypes
  */
-export const createCrudActions = (actionTypes, uri, overrides = {}) => ({
-    getAll: (queryParams = '') => ({
-        type: actionTypes.getAll,
-        meta: { affectsAll: true, arrayAction: 'updateAll', timestamp: Date.now() },
-        payload: window.axios.get(`/api/v1/${uri}${queryParams}`)
-    }),
-    getOne: (id, queryParams = '') => ({
-        type: actionTypes.getOne,
-        meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
-        payload: window.axios.get(`/api/v1/${uri}/${id}${queryParams}`)
-    }),
-    create: (data) => ({
-        type: actionTypes.create,
-        meta: { affectsAll: false, arrayAction: 'insert', timestamp: Date.now() },
-        payload: window.axios.post(`/api/v1/${uri}`, data)
-    }),
-    update: (id, data) => ({
-        type: actionTypes.update,
-        meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
-        payload: window.axios.put(`/api/v1/${uri}/${id}`, data)
-    }),
-    delete: (id) => ({
-        type: actionTypes.delete,
-        meta: { affectsAll: false, arrayAction: 'delete', timestamp: Date.now() },
-        payload: window.axios.delete(`/api/v1/${uri}/${id}`)
-    }),
-    ...overrides
-})
+export class crudActions {
+    constructor(actionTypes, uri, overrides) {
+        this.rootUri = '/api/v1/'
+        this.uriRegex = /{([^{]+)}/g
+        this.uriParams = {}
+        this.actionTypes = actionTypes
+        this.uri = uri
+
+        for (key in overrides) {
+            if (overrides.hasOwnProperty(key))
+                this[key] = overrides[key]
+        }
+    }
+
+    setUriParams(uriParams) {
+        this.uriParams = uriParams
+
+        return this
+    }
+
+    compileQuery(queryParams, prefix) {
+        var queries = []
+
+        for (key in queryParams) {
+            if (queryParams.hasOwnProperty(key)) {
+                if (Array.isArray(queryParams[key]) || Object.isObject(queryParams[key]))
+                    queries.push(compileQuery(queryParams[key], true))
+                else
+                    query.push(encodeURIComponent(prefix ? ('[' + key + ']') : key) + '=' + encodeURIComponent(queryParams[key]))
+            }
+        }
+
+        return queries.join('&')
+    }
+
+    compileUri(uri, uriParams) {
+        return uri.replace(this.uriRegex, (ignore, key) => {
+            return (key = uriParams[key]) == null ? '' : key
+        });
+    }
+
+    getFullUri(uri, uriParams, queryParams) {
+        var queries = this.compileQuery(queryParams)
+
+        return this.compileUri(uri, uriParams) + (queries.length === 0 ? '' : ('?' + queries))
+    }
+
+    getAll(queryParams = {}) {
+        return {
+            type: this.actionTypes.getAll,
+            meta: { affectsAll: true, arrayAction: 'updateAll', timestamp: Date.now() },
+            payload: window.axios.get(this.getFullUri(this.rootUri + this.uri, this.uriParams, this.queryParams))
+        }
+    }
+
+    getOne(id, queryParams = {}) {
+        return {
+            type: this.actionTypes.getOne,
+            meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
+            payload: window.axios.get(this.getFullUri(this.rootUri + this.uri + '/' + id, this.uriParams, this.queryParams))
+        }
+    }
+
+    create(data, queryParams = {}) {
+        return {
+          type: this.actionTypes.create,
+          meta: { affectsAll: false, arrayAction: 'insert', timestamp: Date.now() },
+          payload: window.axios.post(this.getFullUri(this.rootUri + this.uri, this.uriParams, this.queryParams), data)
+        }
+    }
+
+    update(id, data, queryParams = {}) {
+        return {
+            type: this.actionTypes.update,
+            meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
+            payload: window.axios.put(this.getFullUri(this.rootUri + this.uri + '/' + id, this.uriParams, this.queryParams), data)
+        }
+    }
+
+    remove(id, queryParams = {}) {
+        return {
+            type: this.actionTypes.delete,
+            meta: { affectsAll: false, arrayAction: 'delete', timestamp: Date.now() },
+            payload: window.axios.delete(this.getFullUri(this.rootUri + this.uri + '/' + id, this.uriParams, this.queryParams))
+        }
+    }
+}
 
 // L'état initial pour les ressources CRUD
 export const initialCrudState = {
@@ -123,7 +182,7 @@ export const createCrudReducer = (actionTypes, initialState = initialCrudState, 
             }
             return draft;
         })
-        
+
         // Request failed
         reducerMap[`${type}_${ASYNC_SUFFIXES.error}`]   = (state, action) => ({ ...state, fetching: false, fetched: false, error: action.payload })
     })
