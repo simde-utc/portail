@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { assosActions, articlesActions, assoMembersActions, calendarsActions, calendarEventsActions } from '../../redux/actions';
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
 import { NavLink, Redirect, Link, Route, Switch } from 'react-router-dom';
+import { findIndex } from 'lodash';
 
 import Dropdown from './../../components/Dropdown.js';
 import ArticleForm from './../../components/Article/Form.js';
@@ -97,12 +98,22 @@ class AssoScreen extends React.Component {
 		if (this.props.fetching || !this.props.fetched || !this.props.asso)
 			return (<span className="loader huge active"></span>);
 
-		let actions = [];
-		if (this.props.asso.user) {
-			if (this.props.asso.user.is_follower)
-				actions.push(<button className="my-1 btn btn-outline-warning">Se désabonner</button>)
-			else
-				actions.push(<button className="my-1 btn btn-success">S'abonner</button>)
+		let index = findIndex(this.props.user.assos, ['id', this.props.asso.id])
+		if (index >= 0) {
+			let pivot = this.props.user.assos[index].pivot;
+
+			this.user = {
+				isFollowing: true,
+				isMember: pivot.role_id !== undefined,
+				isWaiting: pivot.validated_by === undefined,
+			};
+		}
+		else {
+			this.user = {
+				isFollowing: false,
+				isMember: false,
+				isWaiting: false,
+			};
 		}
 
 		const tabBarBg = this.props.asso.parent ? this.props.asso.parent.login : this.props.asso.login;
@@ -133,7 +144,7 @@ class AssoScreen extends React.Component {
 
 				<Switch>
 					<Route path={`${this.props.match.url}`} exact render={ () => (
-							<ScreensAssoHome asso={ this.props.asso } />
+							<ScreensAssoHome asso={ this.props.asso } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting } />
 						)} />
 					<Route path={`${this.props.match.url}/articles`} render={ () => (
 							<ArticleList articles={ this.state.articles } fetched={ this.state.articlesFetched } />
