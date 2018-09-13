@@ -53,7 +53,7 @@ class CommentController extends Controller
   public function index(CommentRequest $request): JsonResponse {
 		$this->checkTokenRights($request);
 
-    if (!$request->resource->isCommentAccessibleBy($user_id))
+if (\Auth::id() && !$request->resource->isCommentAccessibleBy(\Auth ::id()))		
       abort(503, 'Vous n\'avez pas le droit de voir ces commentaires');
 
 		$comments = $request->resource->comments()->getSelection()->map(function ($comment) {
