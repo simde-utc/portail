@@ -19,21 +19,36 @@ class ArticleForm extends React.Component {
 		super();
 
 		this.state = {
-			title: "",
-			description: "",
-			content: "",
+			title: '',
+			description: '',
+			content: '',
+			event_filter: '',
 		};
 	}
 
-	getVisibilities(visibilities) {
-		return map(visibilities, (visibility => ({
-			value: visibility.id,
-			label: visibility.name
+	mapSelectionOptions(options) {
+		return map(options, (option => ({
+			value: option.id,
+			label: option.name
 		})));
 	}
 
 	handleVisibilityChange(value) {
-		this.setState(prevState => ({ ...prevState, visibility_id: value }));
+		this.setState(prevState => ({ ...prevState, visibility_id: value.value }));
+	}
+
+	getEvents(events) {
+		return this.mapSelectionOptions(events.filter(eventToFilter => {
+			return eventToFilter.name.indexOf(this.state.event_filter) >= 0;
+		}));
+	}
+
+	handleSearchEvent(value) {
+		this.setState(prevState => ({ ...prevState, event_filter: value }));
+	}
+
+	handleEventChange(value) {
+		this.setState(prevState => ({ ...prevState, event_id: value.value }));
 	}
 
 	componentWillMount() {
@@ -58,6 +73,7 @@ class ArticleForm extends React.Component {
 			description: this.state.description,
 			content: this.state.content,
 			visibility_id: this.state.visibility_id,
+			event_id: this.state.event_id,
 		});
   }
 
@@ -182,9 +198,10 @@ class ArticleForm extends React.Component {
 								onChange={ this.handleVisibilityChange.bind(this) }
 								name="visibility_id"
 								placeholder="Visibilité de l'article"
-								defaultValue={ this.props.visibilities[0] && this.props.visibilities[0].id }
-								options={ this.getVisibilities(this.props.visibilities) }
+								options={ this.mapSelectionOptions(this.props.visibilities) }
 							/>
+
+							<br />
 
 							<Select
 								onChange={ this.handleEventChange.bind(this) }
@@ -192,7 +209,10 @@ class ArticleForm extends React.Component {
 								placeholder="Evènement attaché"
 								isSearchable={ true }
 								onInputChange={ this.handleSearchEvent.bind(this) }
+								options={ this.getEvents(this.props.events) }
 							/>
+
+							<br />
 
 							<button type="submit" className="btn btn-primary">
 								Publier

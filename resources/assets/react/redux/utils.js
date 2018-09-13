@@ -56,12 +56,12 @@ export class crudActions {
     compileQuery(queryParams, prefix) {
         var queries = []
 
-        for (key in queryParams) {
+        for (var key in queryParams) {
             if (queryParams.hasOwnProperty(key)) {
-                if (Array.isArray(queryParams[key]) || Object.isObject(queryParams[key]))
-                    queries.push(compileQuery(queryParams[key], true))
+                if (typeof queryParams[key] === 'string')
+                    queries.push(encodeURIComponent(prefix ? ('[' + key + ']') : key) + '=' + encodeURIComponent(queryParams[key]))
                 else
-                    query.push(encodeURIComponent(prefix ? ('[' + key + ']') : key) + '=' + encodeURIComponent(queryParams[key]))
+                    queries.push(this.compileQuery(queryParams[key], true))
             }
         }
 
@@ -84,7 +84,7 @@ export class crudActions {
         return {
             type: this.actionTypes.getAll,
             meta: { affectsAll: true, arrayAction: 'updateAll', timestamp: Date.now() },
-            payload: window.axios.get(this.getFullUri(this.rootUri + this.uri, this.uriParams, this.queryParams))
+            payload: window.axios.get(this.getFullUri(this.rootUri + this.uri, this.uriParams, queryParams))
         }
     }
 
@@ -92,7 +92,7 @@ export class crudActions {
         return {
             type: this.actionTypes.getOne,
             meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
-            payload: window.axios.get(this.getFullUri(this.rootUri + this.uri + '/' + id, this.uriParams, this.queryParams))
+            payload: window.axios.get(this.getFullUri(this.rootUri + this.uri + '/' + id, this.uriParams, queryParams))
         }
     }
 
@@ -100,7 +100,7 @@ export class crudActions {
         return {
           type: this.actionTypes.create,
           meta: { affectsAll: false, arrayAction: 'insert', timestamp: Date.now() },
-          payload: window.axios.post(this.getFullUri(this.rootUri + this.uri, this.uriParams, this.queryParams), data)
+          payload: window.axios.post(this.getFullUri(this.rootUri + this.uri, this.uriParams, queryParams), data)
         }
     }
 
@@ -108,7 +108,7 @@ export class crudActions {
         return {
             type: this.actionTypes.update,
             meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
-            payload: window.axios.put(this.getFullUri(this.rootUri + this.uri + '/' + id, this.uriParams, this.queryParams), data)
+            payload: window.axios.put(this.getFullUri(this.rootUri + this.uri + '/' + id, this.uriParams, queryParams), data)
         }
     }
 
@@ -116,7 +116,7 @@ export class crudActions {
         return {
             type: this.actionTypes.delete,
             meta: { affectsAll: false, arrayAction: 'delete', timestamp: Date.now() },
-            payload: window.axios.delete(this.getFullUri(this.rootUri + this.uri + '/' + id, this.uriParams, this.queryParams))
+            payload: window.axios.delete(this.getFullUri(this.rootUri + this.uri + '/' + id, this.uriParams, queryParams))
         }
     }
 }

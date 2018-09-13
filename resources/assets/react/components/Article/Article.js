@@ -43,6 +43,7 @@ class Article extends React.Component {
 					<h3>{ article.title }</h3>
 					{ articleBody }
 				</div>
+				{ article.event ? 'Il y a un event associé !' : '' }
 			</div>
 		);
 	}

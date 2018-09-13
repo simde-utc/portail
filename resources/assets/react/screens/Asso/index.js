@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { assosActions, articlesActions, assoMembersActions } from '../../redux/actions';
+import { assosActions, articlesActions, assoMembersActions, calendarsActions, calendarEventsActions } from '../../redux/actions';
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
 import { NavLink, Redirect, Link, Route, Switch } from 'react-router-dom';
 
@@ -20,12 +20,32 @@ import ScreensAssoArticles from './Articles.js';
 	articles: store.articles
 }))
 class AssoScreen extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.state = {
-			redirect: false
+			redirect: false,
+			fetchingCalendars: false,
+			calendars: [],
+			events: {},
 		};
+	}
+
+	componentWillReceiveProps(props) {
+		if (props.asso && !this.state.fetchingCalendars && this.state.calendars.length === 0) {
+			this.setState(prevState => ({ ...prevState, fetchingCalendars: true }));
+
+			calendarsActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
+				var calendars = res.data
+				this.setState(prevState => ({ ...prevState, fetchingCalendars: false, calendars: calendars }));
+
+				calendars.forEach(calendar => {
+					calendarEventsActions.setUriParams({ calendar_id: calendar.id }).getAll().payload.then(res => {
+						this.setState(prevState => { prevState.events[calendar.id] = res.data; return prevState; });
+					});
+				})
+			});
+		}
 	}
 
 	componentWillMount() {
@@ -35,11 +55,20 @@ class AssoScreen extends React.Component {
 		this.props.dispatch(loggedUserActions.getAssos());
 	}
 
+	getAllEvents(events) {
+		var allEvents = [];
+
+		for (var calendar_id in events)
+			for (var id in events[calendar_id])
+				allEvents.push(events[calendar_id][id]);
+
+		return allEvents;
+	}
+
 	postArticle(data) {
 		data.owned_by_type = "asso";
 		data.owned_by_id = this.props.asso.id;
 		this.props.dispatch(articlesActions.create(data));
-		console.log(this.props.articles.error.response.data);
 		this.setState(prev => ({ ...prev, redirect: true }));
 	}
 
@@ -95,7 +124,7 @@ class AssoScreen extends React.Component {
 							<ScreensAssoArticles />
 						)} />
 					<Route path={`${this.props.match.url}/creer/article`} render={ () => (
-							<ArticleForm post={this.postArticle.bind(this)} />
+							<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
 						)} />
 				</Switch>
 			</div>

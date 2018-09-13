@@ -7,6 +7,8 @@ const assosReducer = createCrudReducer(crudActionTypes.assos)
 const assoMembersReducer = createCrudReducer(crudActionTypes.assoMembers)
 const articlesReducer = createCrudReducer(crudActionTypes.articles)
 const visibilitiesReducer = createCrudReducer(crudActionTypes.visibilities)
+const calendarsReducer = createCrudReducer(crudActionTypes.calendars)
+const calendarEventsReducer = createCrudReducer(crudActionTypes.calendarEvents)
 
 // Custom Reducers
 import loggedUserReducer from './custom/loggedUser/reducers';
@@ -21,4 +23,6 @@ export default combineReducers({
 	articles: articlesReducer,
 	loggedUser: loggedUserReducer,
 	visibilities: visibilitiesReducer,
+	calendars: calendarsReducer,
+	calendarEvents: calendarEventsReducer,
 });

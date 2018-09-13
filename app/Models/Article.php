@@ -26,7 +26,7 @@ class Article extends Model implements OwnableContract
 	];
 
 	protected $must = [
-		'title', 'description', 'content', 'image', 'owned_by', 'created_at',
+		'title', 'description', 'content', 'image', 'owned_by', 'created_at', 'event',
 	];
 
 	protected $hidden = [
