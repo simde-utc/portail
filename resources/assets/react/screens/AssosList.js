@@ -10,7 +10,6 @@ import AssoChildrenList from '../components/AssoChildrenList';
 	fetched: store.assos.fetched
 }))
 class ScreensAssosList extends React.Component {
-
 	componentWillMount() {
 		this.props.dispatch(assosActions.getAll())
 	}

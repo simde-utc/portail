@@ -1,42 +1,65 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { visibilitiesActions } from '../../redux/actions';
 
 import SimpleMDE from 'simplemde';
 import Editor from 'react-simplemde-editor';
+import Select from 'react-select';
+import { map } from 'lodash';
 import "simplemde/dist/simplemde.min.css";
 
 import { getTime } from '../../utils.js';
 
+@connect(store => ({
+	visibilities: store.visibilities.data,
+}))
 class ArticleForm extends React.Component {
 	constructor() {
 		super();
 
 		this.state = {
-			form: {
-				title: "",
-				description: "",
-				content: ""
-			}
+			title: "",
+			description: "",
+			content: "",
 		};
 	}
 
+	getVisibilities(visibilities) {
+		return map(visibilities, (visibility => ({
+			value: visibility.id,
+			label: visibility.name
+		})));
+	}
+
+	handleVisibilityChange(value) {
+		this.setState(prevState => ({ ...prevState, visibility_id: value }));
+	}
+
+	componentWillMount() {
+		this.props.dispatch(visibilitiesActions.getAll());
+	}
+
 	handleEditorChange(value) {
-		var form = this.state.form;
-		form.content = value;
-		this.setState({ form: form });
+		this.setState(prevState => ({ ...prevState, content: value }));
 	}
 
 	handleChange(e) {
-		var form = this.state.form;
-		form[e.target.name] = e.target.value;
-        this.setState({ form: form });
-    }
+		e.persist();
 
-    handleSubmit(e) {
-        e.preventDefault();
+		this.setState(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
+  }
 
-        this.props.post(this.state.form);
-    }
+  handleSubmit(e) {
+    e.preventDefault();
+
+    this.props.post({
+			title: this.state.title,
+			description: this.state.description,
+			content: this.state.content,
+			visibility_id: this.state.visibility_id,
+		});
+  }
 
 	render() {
 		return (
@@ -47,11 +70,11 @@ class ArticleForm extends React.Component {
 							<h2 className="mb-3">Créer un article</h2>
 							<div className="form-group">
 							    <label>Titre *</label>
-							    <input 
-							    	type="text" 
-							    	className="form-control" 
-							    	name="title" 
-							    	value={ this.state.form.title }
+							    <input
+							    	type="text"
+							    	className="form-control"
+							    	name="title"
+							    	value={ this.state.title }
 							    	onChange={ (e) => this.handleChange(e) }
 							    	placeholder="Entrez le titre de votre article"
 							    	required
@@ -59,11 +82,11 @@ class ArticleForm extends React.Component {
 							</div>
 							<div className="form-group">
 							    <label>Description</label>
-							    <textarea 
-							    	className="form-control" 
-							    	name="description" 
+							    <textarea
+							    	className="form-control"
+							    	name="description"
 							    	rows="3"
-							    	value={ this.state.form.description }
+							    	value={ this.state.description }
 							    	onChange={ (e) => this.handleChange(e) }
 							    	placeholder="Entrez une courte description de votre article"
 							    >
@@ -154,6 +177,22 @@ class ArticleForm extends React.Component {
 									}}
 								/>
 							</div>
+
+							<Select
+								onChange={ this.handleVisibilityChange.bind(this) }
+								name="visibility_id"
+								placeholder="Visibilité de l'article"
+								defaultValue={ this.props.visibilities[0] && this.props.visibilities[0].id }
+								options={ this.getVisibilities(this.props.visibilities) }
+							/>
+
+							<Select
+								onChange={ this.handleEventChange.bind(this) }
+								name="event_id"
+								placeholder="Evènement attaché"
+								isSearchable={ true }
+								onInputChange={ this.handleSearchEvent.bind(this) }
+							/>
 
 							<button type="submit" className="btn btn-primary">
 								Publier

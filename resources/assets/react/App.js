@@ -1,7 +1,5 @@
 import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { visibilitiesActions } from './redux/actions';
 
 // Components
 import Navbar from './components/Navbar';
@@ -17,14 +15,7 @@ import AssosListScreen from './screens/AssosList';
 import AssoDetailScreen from './screens/Asso';
 import ProfileScreen from './screens/Profile';
 
-@connect(store => ({
-	assos: store.visibilities.data,
-}))
 class App extends React.Component {
-	componentWillMount() {
-		this.props.dispatch(visibilitiesActions.getAll())
-	}
-
 	render() {
 		return (
 			<div className="h-100">
