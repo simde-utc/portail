@@ -8,7 +8,7 @@ import Dropdown from './../../components/Dropdown.js';
 import ArticleForm from './../../components/Article/Form.js';
 
 import ScreensAssoHome from './Home.js';
-import ScreensAssoArticles from './Articles.js';
+import ArticleList from '../../components/Article/List.js';
 
 /* TODO: Make it stateless & unconnected */
 /* TODO: Add notifications for article create, copy Erode project */
@@ -25,23 +25,38 @@ class AssoScreen extends React.Component {
 
 		this.state = {
 			redirect: false,
-			fetchingCalendars: false,
+			dataRequested: false,
+			articles: [],
+			articlesFetched: false,
 			calendars: [],
+			calendarsFetched: false,
 			events: {},
+			eventsFetched: false,
 		};
 	}
 
 	componentWillReceiveProps(props) {
-		if (props.asso && !this.state.fetchingCalendars && this.state.calendars.length === 0) {
-			this.setState(prevState => ({ ...prevState, fetchingCalendars: true }));
+		if (props.asso && !this.state.dataRequested) {
+			this.setState(prevState => ({ ...prevState, dataRequested: true }));
+
+			articlesActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
+				this.setState(prevState => ({ ...prevState, articlesFetched: true, articles: res.data }));
+			});
 
 			calendarsActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
 				var calendars = res.data
-				this.setState(prevState => ({ ...prevState, fetchingCalendars: false, calendars: calendars }));
+				this.setState(prevState => ({ ...prevState, calendarsFetched: true, calendars: calendars }));
 
 				calendars.forEach(calendar => {
 					calendarEventsActions.setUriParams({ calendar_id: calendar.id }).getAll().payload.then(res => {
-						this.setState(prevState => { prevState.events[calendar.id] = res.data; return prevState; });
+						this.setState(prevState => {
+							prevState.events[calendar.id] = res.data;
+
+							if (Object.keys(prevState.events).length === prevState.calendars.length)
+								prevState.eventsFetched = true;
+
+							return prevState;
+						});
 					});
 				})
 			});
@@ -121,7 +136,7 @@ class AssoScreen extends React.Component {
 							<ScreensAssoHome asso={ this.props.asso } />
 						)} />
 					<Route path={`${this.props.match.url}/articles`} render={ () => (
-							<ScreensAssoArticles />
+							<ArticleList articles={ this.state.articles } fetched={ this.state.articlesFetched } />
 						)} />
 					<Route path={`${this.props.match.url}/creer/article`} render={ () => (
 							<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
