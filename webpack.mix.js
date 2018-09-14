@@ -27,6 +27,6 @@ mix.react('resources/assets/react/index.js', 'public/js');
 // Browser Sync Auto-Reload
 // Simply put the url where laravel run in .env APP_URL
 // Use npm run watch to lauch the dev server on port 3000 (by default)
-mix.browserSync(process.env.APP_URL);
+mix.browserSync(process.env.APP_URL + ':8000');
 
 mix.disableSuccessNotifications();

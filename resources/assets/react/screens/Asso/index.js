@@ -11,6 +11,8 @@ import ArticleForm from './../../components/Article/Form.js';
 import ScreensAssoHome from './Home.js';
 import ArticleList from '../../components/Article/List.js';
 
+import Calendar from '../../components/Calendar/index.js';
+
 /* TODO: Make it stateless & unconnected */
 /* TODO: Add notifications for article create, copy Erode project */
 @connect((store, props) => ({
@@ -142,12 +144,12 @@ class AssoScreen extends React.Component {
 						<NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/evenements`}>ÉVÈNEMENTS</NavLink>
 					</li>
 					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/trombinoscope`}>TROMBINOSCOPE</NavLink>
+						<NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/members`}>TROMBINOSCOPE</NavLink>
 					</li>
 					<li className="nav-item dropdown">
 						<Dropdown title="CRÉER">
-							<Link className="dropdown-item" to={`${this.props.match.url}/creer/article`}>Article</Link>
-							<Link className="dropdown-item" to={`${this.props.match.url}/creer/evenement`}>Évènement</Link>
+							<Link className="dropdown-item" to={`${this.props.match.url}/article`}>Article</Link>
+							<Link className="dropdown-item" to={`${this.props.match.url}/evenement`}>Évènement</Link>
 						</Dropdown>
 					</li>
 				</ul>
@@ -156,10 +158,13 @@ class AssoScreen extends React.Component {
 					<Route path={`${this.props.match.url}`} exact render={ () => (
 							<ScreensAssoHome asso={ this.props.asso } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting } />
 						)} />
+					<Route path={`${this.props.match.url}/evenements`} render={ () => (
+							<Calendar events={ this.getAllEvents(this.state.events) } fetched={ this.state.articlesFetched } />
+						)} />
 					<Route path={`${this.props.match.url}/articles`} render={ () => (
 							<ArticleList articles={ this.state.articles } fetched={ this.state.articlesFetched } />
 						)} />
-					<Route path={`${this.props.match.url}/creer/article`} render={ () => (
+					<Route path={`${this.props.match.url}/article`} render={ () => (
 							<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
 						)} />
 				</Switch>
