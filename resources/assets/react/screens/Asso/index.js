@@ -14,7 +14,8 @@ import ArticleList from '../../components/Article/List.js';
 /* TODO: Make it stateless & unconnected */
 /* TODO: Add notifications for article create, copy Erode project */
 @connect((store, props) => ({
-	asso: store.assos.data.find( asso => asso.login == props.match.params.login ),
+	asso: store.assos.data.find(asso => asso.login == props.match.params.login),
+	assoMembers: store.assoMembers.data,
 	fetching: store.assos.fetching,
 	fetched: store.assos.fetched,
 	user: store.loggedUser.data,
@@ -58,8 +59,17 @@ class AssoScreen extends React.Component {
 
 							return prevState;
 						});
+					}).catch(res => {
+						prevState.events[calendar.id] = [];
+
+						if (Object.keys(prevState.events).length === prevState.calendars.length)
+							prevState.eventsFetched = true;
+
+						return prevState;
 					});
 				})
+			}).catch(res => {
+				this.setState(prevState => ({ ...prevState, calendarsFetched: true }));
 			});
 		}
 	}

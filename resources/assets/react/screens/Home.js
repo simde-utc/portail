@@ -17,7 +17,7 @@ class ScreensHome extends React.Component {
   render() {
     return (
       <div className="container Home">
-        <ArticleList articles={ this.props.articles } />
+        <ArticleList articles={ this.props.articles } fetched={ this.props.fetched } fetching={ this.props.fetching } />
       </div>
     );
   }
