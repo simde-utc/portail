@@ -112,8 +112,8 @@ class MemberController extends Controller
 		$asso = $this->getAsso($request, $asso_id);
 
 		$members = collect()->merge(
-			in_array('joined', $choices) ? $asso->members()->where('semester_id', $semester->id)->getSelection(true) : collect(),
-			in_array('joining', $choices) ? $asso->joiners()->where('semester_id', $semester->id)->getSelection(true) : collect(),
+			in_array('joined', $choices) ? $asso->members()->where('semester_id', $semester->id)->getSelection(true) : collect())->merge(
+			in_array('joining', $choices) ? $asso->joiners()->where('semester_id', $semester->id)->getSelection(true) : collect())->merge(
 			in_array('followed', $choices) ? $asso->followers()->where('semester_id', $semester->id)->getSelection(true) : collect()
 		)->map(function ($member) {
 			return $member->hideData();
@@ -131,6 +131,7 @@ class MemberController extends Controller
 	 */
 	public function store(Request $request, string $asso_id): JsonResponse {
 		$user = $this->getUser($request, \Auth::id() ?? $request->input('user_id'));
+		$choices = $this->getChoices($request);
 		$semester = $this->getSemester($request, $choices, 'create');
 		$asso = $this->getAsso($request, $asso_id);
 		$scopeHead = \Scopes::getTokenType($request);
@@ -156,10 +157,7 @@ class MemberController extends Controller
 
 		$member = $asso->allMembers()->wherePivot('user_id', \Auth::id())->first();
 
-		if ($new = $this->addUserRoles($asso, $member->pivot))
-			$member->new_user_role = $new;
-
-		return response()->json($member->hideData());
+		return response()->json($member->hideSubData(), 201);
 	}
 
 	/**
@@ -177,7 +175,7 @@ class MemberController extends Controller
 		$asso = $this->getAsso($request, $asso_id);
 		$user = $this->getUserFromAsso($request, $asso, $member_id, $semester);
 
-		return response()->json($user->hideData(), 200);
+		return response()->json($user->hideSubData(), 200);
 	}
 
 	/**
@@ -219,7 +217,7 @@ class MemberController extends Controller
 	        ]);
 		}
 
-		return response()->json($this->getUserFromAsso($request, $asso, $member_id, $semester)->hideData());
+		return response()->json($this->getUserFromAsso($request, $asso, $member_id, $semester)->hideSubData());
 	}
 
 	/**

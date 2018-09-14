@@ -54,8 +54,8 @@ class AssoController extends Controller
 		$semester = $this->getSemester($request, $choices);
 
 		$assos = collect()->merge(
-			in_array('joined', $choices) ? $user->joinedAssos()->where('semester_id', $semester->id)->get() : collect(),
-			in_array('joining', $choices) ? $user->joiningAssos()->where('semester_id', $semester->id)->get() : collect(),
+			in_array('joined', $choices) ? $user->joinedAssos()->where('semester_id', $semester->id)->get() : collect())->merge(
+			in_array('joining', $choices) ? $user->joiningAssos()->where('semester_id', $semester->id)->get() : collect())->merge(
 			in_array('followed', $choices) ? $user->followedAssos()->where('semester_id', $semester->id)->get() : collect()
 		)->map(function ($asso) {
 			return $asso->hideData();

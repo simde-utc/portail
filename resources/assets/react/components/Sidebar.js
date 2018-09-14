@@ -6,7 +6,7 @@ import { withRouter, NavLink } from 'react-router-dom';
 @connect((store, props) => ({
     user: store.loggedUser.data
 }))
-class Sidebar extends React.Component { 
+class Sidebar extends React.Component {
 	componentWillMount() {
         this.props.dispatch(loggedUserActions.getAssos());
         // this.props.dispatch(loggedUserActions.getGroups());

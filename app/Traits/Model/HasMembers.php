@@ -126,7 +126,7 @@ trait HasMembers
 		try {
 			$this->allMembers()->withTimestamps()->attach($addMembers);
 		} catch (\Exception $e) {
-			throw new PortailException('Une des personnes est déjà membre');
+			throw new PortailException('Déjà membre', 409);
 		}
 
 		return $this;

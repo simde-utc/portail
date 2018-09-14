@@ -40,39 +40,45 @@ class AssoScreen extends React.Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if (props.asso && !this.state.dataRequested) {
-			this.setState(prevState => ({ ...prevState, dataRequested: true }));
+		if (props.asso) {
+			if (!this.state.dataRequested) {
+				this.setState(prevState => ({ ...prevState, dataRequested: true }));
 
-			articlesActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
-				this.setState(prevState => ({ ...prevState, articlesFetched: true, articles: res.data }));
-			});
+				articlesActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
+					this.setState(prevState => ({ ...prevState, articlesFetched: true, articles: res.data }));
+				});
 
-			calendarsActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
-				var calendars = res.data
-				this.setState(prevState => ({ ...prevState, calendarsFetched: true, calendars: calendars }));
+				calendarsActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
+					var calendars = res.data
+					this.setState(prevState => ({ ...prevState, calendarsFetched: true, calendars: calendars }));
 
-				calendars.forEach(calendar => {
-					calendarEventsActions.setUriParams({ calendar_id: calendar.id }).getAll().payload.then(res => {
-						this.setState(prevState => {
-							prevState.events[calendar.id] = res.data;
+					calendars.forEach(calendar => {
+						calendarEventsActions.setUriParams({ calendar_id: calendar.id }).getAll().payload.then(res => {
+							this.setState(prevState => {
+								prevState.events[calendar.id] = res.data;
+
+								if (Object.keys(prevState.events).length === prevState.calendars.length)
+								prevState.eventsFetched = true;
+
+								return prevState;
+							});
+						}).catch(res => {
+							prevState.events[calendar.id] = [];
 
 							if (Object.keys(prevState.events).length === prevState.calendars.length)
-								prevState.eventsFetched = true;
+							prevState.eventsFetched = true;
 
 							return prevState;
 						});
-					}).catch(res => {
-						prevState.events[calendar.id] = [];
-
-						if (Object.keys(prevState.events).length === prevState.calendars.length)
-							prevState.eventsFetched = true;
-
-						return prevState;
-					});
-				})
-			}).catch(res => {
-				this.setState(prevState => ({ ...prevState, calendarsFetched: true }));
-			});
+					})
+				}).catch(res => {
+					this.setState(prevState => ({ ...prevState, calendarsFetched: true }));
+				});
+			}
+		}
+		else {
+			this.props.dispatch(assosActions.getOne(this.props.match.params.login))
+			this.setState(prevState => ({ ...prevState, dataRequested: false }));
 		}
 	}
 
@@ -91,6 +97,30 @@ class AssoScreen extends React.Component {
 				allEvents.push(events[calendar_id][id]);
 
 		return allEvents;
+	}
+
+	followAsso() {
+		assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).create({
+			user_id: this.props.user.info.id,
+		}).payload.then(() => {
+			this.props.dispatch(loggedUserActions.getAssos())
+		});
+	}
+
+	unfollowAsso() {
+		assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).remove(
+			this.props.user.info.id
+		).payload.then(() => {
+			this.props.dispatch(loggedUserActions.getAssos())
+		});
+	}
+
+	joinAsso(role_id) {
+		console.log('join')
+	}
+
+	leaveAsso() {
+		console.log('leave')
 	}
 
 	postArticle(data) {
@@ -116,8 +146,8 @@ class AssoScreen extends React.Component {
 
 			this.user = {
 				isFollowing: true,
-				isMember: pivot.role_id !== undefined,
-				isWaiting: pivot.validated_by === undefined,
+				isMember: pivot.role_id !== null,
+				isWaiting: pivot.validated_by === null,
 			};
 		}
 		else {
@@ -128,12 +158,15 @@ class AssoScreen extends React.Component {
 			};
 		}
 
-		const tabBarBg = this.props.asso.parent ? this.props.asso.parent.login : this.props.asso.login;
+		var bg = 'bg-' + this.props.asso.login;
+
+		if (this.props.asso.parent)
+			bg += ' bg-' + this.props.asso.parent.login;
 
 		return (
 			<div className="asso w-100">
 
-				<ul className={ "nav nav-tabs asso bg-" + tabBarBg }>
+				<ul className={ "nav nav-tabs asso " + bg }>
 					<li className="nav-item">
 						<NavLink className="nav-link" activeClassName="active" exact to={`${this.props.match.url}`}>DESCRIPTION</NavLink>
 					</li>
@@ -156,7 +189,8 @@ class AssoScreen extends React.Component {
 
 				<Switch>
 					<Route path={`${this.props.match.url}`} exact render={ () => (
-							<ScreensAssoHome asso={ this.props.asso } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting } />
+							<ScreensAssoHome asso={ this.props.asso } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting }
+								follow={ this.followAsso.bind(this) } unfollow={ this.unfollowAsso.bind(this) } join={ this.joinAsso.bind(this) } leave={ this.leaveAsso.bind(this) } />
 						)} />
 					<Route path={`${this.props.match.url}/evenements`} render={ () => (
 							<Calendar events={ this.getAllEvents(this.state.events) } fetched={ this.state.articlesFetched } />

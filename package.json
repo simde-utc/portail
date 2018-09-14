@@ -32,6 +32,7 @@
 		"redux-thunk": "^2.3.0"
 	},
 	"dependencies": {
+		"react-aspect-ratio": "^1.0.31",
 		"react-big-calendar": "^0.19.2",
 		"react-select": "^2.0.0",
 		"react-simplemde-editor": "^3.6.16",
