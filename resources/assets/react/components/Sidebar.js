@@ -10,22 +10,24 @@ class Sidebar extends React.Component {
 	componentWillMount() {
         this.props.dispatch(loggedUserActions.getAssos());
         // this.props.dispatch(loggedUserActions.getGroups());
-    }
+  }
+
+  getAssos(assos) {
+    return (assos || []).map(asso => {
+      let color = 'color-' + asso.login;
+
+      if (asso.parent)
+        color += ' color-' + asso.parent.login;
+
+      return (
+        <NavLink key={ asso.id } className="sidebar-link" to={ "/assos/" + asso.login }>
+          <i className={ asso.pivot.role_id ? 'fas fa-hands-helping' : 'fas fa-thumbs-up' }></i>
+          <span className={ color }>{ asso.shortname }</span>
+        </NavLink>
+    )});
+  }
 
 	render() {
-		let assos = [];
-		if (this.props.user.assos) {
-			let data = this.props.user.assos;
-
-			for (let i = 0; i < data.length; i++) {
-				assos.push(
-					<NavLink key={ data[i].id } className="sidebar-link" to={ "/assos/" + data[i].login }>
-						{ data[i].shortname }
-					</NavLink>
-				);
-			}
-		}
-
 		// TODO: Groups to do (fetch and display like assos).
 		// <div className="sidebar-group">
 		// 	<h6 className="sidebar-header d-hover-zone">
@@ -62,7 +64,7 @@ class Sidebar extends React.Component {
 						<h6 className="sidebar-header d-hover-zone">
 							MES ASSOCIATIONS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/assos" />
 						</h6>
-						{ assos }
+						{ this.getAssos(this.props.user.assos) }
 					</div>
 				</div>
 				<p className="sidebar-footer small">&lt;&#47;&gt; avec le sang par le SiMDE</p>
