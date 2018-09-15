@@ -4,6 +4,7 @@ import { assosActions, articlesActions, assoMembersActions, calendarsActions, ca
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
 import { NavLink, Redirect, Link, Route, Switch } from 'react-router-dom';
 import { findIndex } from 'lodash';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 import Dropdown from './../../components/Dropdown.js';
 import ArticleForm from './../../components/Article/Form.js';
@@ -104,6 +105,7 @@ class AssoScreen extends React.Component {
 			user_id: this.props.user.info.id,
 		}).payload.then(() => {
 			this.props.dispatch(loggedUserActions.getAssos())
+			NotificationManager.success('Vous suivez maintenant l\'association: ' + this.props.asso.name, 'Suivre une association')
 		});
 	}
 
@@ -112,6 +114,7 @@ class AssoScreen extends React.Component {
 			this.props.user.info.id
 		).payload.then(() => {
 			this.props.dispatch(loggedUserActions.getAssos())
+			NotificationManager.warning('Vous suivez plus l\'association: ' + this.props.asso.name, 'Suivre une association')
 		});
 	}
 
@@ -202,6 +205,8 @@ class AssoScreen extends React.Component {
 							<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
 						)} />
 				</Switch>
+
+				<NotificationContainer />
 			</div>
 		);
 	}

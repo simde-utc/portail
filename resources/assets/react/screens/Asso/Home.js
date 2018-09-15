@@ -81,6 +81,12 @@ class AssoHomeScreen extends React.Component {
 
 	render() {
 		const asso = this.props.asso;
+
+		let color = 'color-' + asso.login;
+
+		if (asso.parent)
+			color += ' color-' + asso.parent.login;
+
 		return (
 			<div className="container">
 				{ (asso) ? (
@@ -93,7 +99,7 @@ class AssoHomeScreen extends React.Component {
 							{ this.getMemberButton(this.props.userIsMember, this.props.userIsFollowing, this.props.userIsWaiting) }
 						</div>
 						<div className="col-md-8">
-							<h1 className="title mb-1">{ asso.shortname }</h1>
+							<h1 className={ "title mb-1 " + color }>{ asso.shortname }</h1>
 							<span className="d-block text-muted mb-4">{ asso.name }</span>
 							<span>{ asso.type && asso.type.description }</span>
 							<p className="my-3">{ asso.description }</p>
