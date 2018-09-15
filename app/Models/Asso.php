@@ -34,7 +34,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	];
 
 	protected $hidden = [
-		'type_asso_id',
+		'type_asso_id', 'parent_id',
 	];
 
 	protected $with = [
@@ -46,7 +46,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	];
 
 	protected $must = [
-		'name', 'shortname', 'login', 'image', 'parent_id',
+		'name', 'shortname', 'login', 'image', 'parent',
 	]; // Children dans le cas où on affiche en mode étagé
 
 	protected $selection = [
