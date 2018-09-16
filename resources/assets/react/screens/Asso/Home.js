@@ -3,26 +3,10 @@ import AspectRatio from 'react-aspect-ratio';
 import { Button } from 'reactstrap';
 
 class AssoHomeScreen extends React.Component {
-	follow() {
-		this.props.follow()
-	}
-
-	unfollow() {
-		this.props.unfollow()
-	}
-
-	join(role_id) {
-		this.props.join(role_id)
-	}
-
-	leave() {
-		this.props.leave()
-	}
-
 	getFollowButton(isFollowing, isMember) {
 		if (isFollowing && !isMember) {
 			return (
-				<Button className="m-1 btn btn-sm" color="danger" outline onClick={ this.unfollow.bind(this) }>
+				<Button className="m-1 btn btn-sm" color="danger" outline onClick={ this.props.unfollow }>
 					Ne plus suivre
 				</Button>
 			)
@@ -37,7 +21,7 @@ class AssoHomeScreen extends React.Component {
 			}
 			else  {
 				return (
-					<Button className="m-1 btn btn-sm" color="primary" outline onClick={ this.follow.bind(this) }>
+					<Button className="m-1 btn btn-sm" color="primary" outline onClick={ this.props.follow }>
 						Suivre
 					</Button>
 				)
@@ -49,15 +33,15 @@ class AssoHomeScreen extends React.Component {
 		if (isMember) {
 			if (isWaiting) {
 				return (
-					<Button className="m-1 btn btn-sm" color="warning" outline onClick={ this.leave.bind(this) } disabled>
+					<Button className="m-1 btn btn-sm" color="warning" outline onClick={() => { this.props.leave && this.props.leave(true) }}>
 						En attente...
 					</Button>
 				)
 			}
 			else  {
 				return (
-					<Button className="m-1 btn btn-sm" color="danger" outline onClick={ this.leave.bind(this) }>
-						Quitter l'association
+					<Button className="m-1 btn btn-sm" color="danger" outline onClick={() => { this.props.leave && this.props.leave(false) }}>
+						Quitter
 					</Button>
 				)
 			}
@@ -72,7 +56,7 @@ class AssoHomeScreen extends React.Component {
 			}
 			else  {
 				return (
-					<Button className="m-1 btn btn-sm btn" color="primary" outline onClick={ this.join.bind(this) }>
+					<Button className="m-1 btn btn-sm btn" color="primary" outline onClick={ this.props.join }>
 						Rejoindre
 					</Button>
 				)

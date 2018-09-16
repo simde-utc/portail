@@ -8,13 +8,13 @@ use App\Traits\Model\HasStages;
 use App\Traits\Model\HasPermissions;
 use App\Models\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Traits\Model\HasOwnerSelection;
 use App\Exceptions\PortailException;
 use App\Interfaces\Model\CanHaveRoles;
+use Illuminate\Database\Eloquent\Builder;
 
 class Role extends Model implements OwnableContract
 {
-	use HasMorphOwner, HasOwnerSelection;
+	use HasMorphOwner;
 
 	protected $fillable = [
 		'type', 'name', 'description', 'limited_at', 'owned_by_id', 'owned_by_type',
@@ -40,6 +40,10 @@ class Role extends Model implements OwnableContract
 		'type', 'name', 'description', 'owned_by',
 	];
 
+	protected $selection = [
+		'owner' => []
+	];
+
   public static function boot() {
 		parent::boot();
 
@@ -47,6 +51,19 @@ class Role extends Model implements OwnableContract
 			return $model->owned_by->beforeDeletingRole($model);
     });
   }
+
+	public function scopeOwner(Builder $query, string $owner_type, string $owner_id = null) {
+		$query = $query->where('owned_by_type', \ModelResolver::getModelName($owner_type));
+
+		if ($owner_id)
+			$query->where(function ($query) use ($owner_id) {
+				return $query->whereNull('owned_by_id')
+					->orWhere('owned_by_id', $owner_id);
+			});
+
+
+		return $query;
+	}
 
 	public static function find($id, CanHaveRoles $owner = null) {
 		if ($owner === null)
@@ -251,7 +268,7 @@ class Role extends Model implements OwnableContract
 
 		return $this;
 	}
-	
+
 	public function isDeletable() {
 		// On ne permet la suppression de rôles parents
 		if ($this->children()->count() > 0)

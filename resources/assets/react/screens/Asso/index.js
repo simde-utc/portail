@@ -198,14 +198,15 @@ class AssoScreen extends React.Component {
 					</div>
 				),
 				button: {
-					type: 'danger',
-					text: 'Quitter l\'association',
+					type: 'success',
+					text: 'Rejoindre l\'association',
 					onClick: () => {
-						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).remove(
-							this.props.user.info.id
-						).payload.then(() => {
+						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).create({
+							user_id: this.props.user.info.id,
+							role_id: this.state.role_id
+						}).payload.then(() => {
 							this.props.dispatch(loggedUserActions.getAssos())
-							NotificationManager.warning('Vous ne faites plus partie de l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
+							NotificationManager.success('Vous avez demandé à rejoindre l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
 						});
@@ -215,7 +216,7 @@ class AssoScreen extends React.Component {
 		}));
 	}
 
-	leaveAsso() {
+	leaveAsso(isWaiting) {
 		this.setState(prevState => ({
 			...prevState,
 			modal: {
@@ -224,7 +225,7 @@ class AssoScreen extends React.Component {
 				body: (
 					<div>
 						<p>Souhaitez-vous vraiment quitter l'association <span className="font-italic">{ this.props.asso.name }</span> ?</p>
-						<p>En faisant ça, vous perdrez votre rôle dans cette association et un email sera envoyé pour notifier l'association de ce changement</p>
+						<p>{ isWaiting ? 'Votre demande est encore en attente de validation.' : 'En faisant ça, vous perdrez votre rôle dans cette association et un email sera envoyé pour notifier l\'association de ce changement' }</p>
 					</div>
 				),
 				button: {
