@@ -2,6 +2,7 @@ import { createCrudTypes } from './utils';
 
 // CRUD Action Types
 export const usersActionTypes = createCrudTypes('USERS');
+export const userAssosActionTypes = createCrudTypes('USERS_ASSOS');
 export const assosActionTypes = createCrudTypes('ASSOS');
 export const assoMembersActionTypes = createCrudTypes('ASSO_MEMBERS');
 export const articlesActionTypes = createCrudTypes('ARTICLES');
@@ -14,6 +15,7 @@ export const permissionsActionTypes = createCrudTypes('PERMISSIONS');
 
 export default {
 	users: usersActionTypes,
+	userAssos: userAssosActionTypes,
 	assos: assosActionTypes,
 	assoMembers: assoMembersActionTypes,
   articles: articlesActionTypes,

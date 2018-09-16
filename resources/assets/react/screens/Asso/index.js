@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { assosActions, rolesActions, contactsActions, articlesActions, assoMembersActions, calendarsActions, calendarEventsActions } from '../../redux/actions';
+import { assosActions, userAssosActions, rolesActions, contactsActions, articlesActions, assoMembersActions, calendarsActions, calendarEventsActions } from '../../redux/actions';
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
 import { NavLink, Redirect, Link, Route, Switch } from 'react-router-dom';
 import { findIndex } from 'lodash';
@@ -137,8 +137,8 @@ class AssoScreen extends React.Component {
 					type: 'success',
 					text: 'Suivre',
 					onClick: () => {
-						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).create({
-							user_id: this.props.user.info.id,
+						userAssosActions.create({
+							asso_id: this.props.asso.id,
 						}).payload.then(() => {
 							this.props.dispatch(loggedUserActions.getAssos())
 							NotificationManager.success('Vous suivez maintenant l\'association: ' + this.props.asso.name, 'Suivre une association')
@@ -162,8 +162,8 @@ class AssoScreen extends React.Component {
 					type: 'danger',
 					text: 'Ne plus suivre',
 					onClick: () => {
-						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).remove(
-							this.props.user.info.id
+						userAssosActions.remove(
+							this.props.asso.id
 						).payload.then(() => {
 							this.props.dispatch(loggedUserActions.getAssos())
 							NotificationManager.warning('Vous ne suivez plus l\'association: ' + this.props.asso.name, 'Suivre une association')
@@ -176,9 +176,10 @@ class AssoScreen extends React.Component {
 		}));
 	}
 
-	joinAsso(role_id) {
+	joinAsso() {
 		this.setState(prevState => ({
 			...prevState,
+			role_id: undefined,
 			modal: {
 				show: true,
 				title: 'Rejoindre une association',
@@ -201,6 +202,9 @@ class AssoScreen extends React.Component {
 					type: 'success',
 					text: 'Rejoindre l\'association',
 					onClick: () => {
+						if (!this.state.role_id)
+							return;
+
 						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).create({
 							user_id: this.props.user.info.id,
 							role_id: this.state.role_id

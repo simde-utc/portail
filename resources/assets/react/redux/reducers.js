@@ -3,6 +3,7 @@ import { createCrudReducer } from './utils';
 import crudActionTypes from './types';
 
 const usersReducer = createCrudReducer(crudActionTypes.users)
+const userAssosReducer = createCrudReducer(crudActionTypes.userAssos)
 const assosReducer = createCrudReducer(crudActionTypes.assos)
 const assoMembersReducer = createCrudReducer(crudActionTypes.assoMembers)
 const articlesReducer = createCrudReducer(crudActionTypes.articles)
@@ -21,6 +22,7 @@ import loggedUserReducer from './custom/loggedUser/reducers';
 export default combineReducers({
 	// CRUD
 	users: usersReducer,
+	userAssos: userAssosReducer,
 	assos: assosReducer,
 	assoMembers: assoMembersReducer,
 	articles: articlesReducer,

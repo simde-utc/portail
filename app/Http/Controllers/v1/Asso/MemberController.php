@@ -22,10 +22,7 @@ class MemberController extends Controller
 			array_merge(
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-get-assos-members', 'client-get-assos-members'), // Pouvoir voir les assos membres
-				\Scopes::matchOneOfDeepestChildren(
-					['user-get-assos-members-followed', 'user-get-roles-assos-assigned'],
-					['client-get-assos-members-followed', 'client-get-roles-assos-assigned']
-				), // Pouvoir voir les assos que l'ont suit (donc pas de role) ou pouvoir voir les roles assos de l'utlisateur
+				\Scopes::matchOneOfDeepestChildren('user-get-roles-assos-assigned', 'client-get-assos-members-followed'),
 				['user:cas,contributerBde']
 			),
 			['only' => ['index', 'show']]
@@ -34,10 +31,7 @@ class MemberController extends Controller
 			array_merge(
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-create-assos-members', 'client-create-assos-members'), // Pouvoir créé des assos membres
-				\Scopes::matchOneOfDeepestChildren(
-					['user-create-assos-members-followed', 'user-create-roles-assos-assigned'],
-					['client-create-assos-members-followed', 'client-create-roles-assos-assigned']
-				), // Pouvoir créer des assos que l'ont suit (donc pas de role) ou pouvoir créer des roles assos pour l'utlisateur
+				\Scopes::matchOneOfDeepestChildren('user-create-roles-assos-assigned', 'client-create-assos-members-followed'),
 				['user:cas,contributerBde']
 			),
 			['only' => ['store']]
@@ -46,10 +40,7 @@ class MemberController extends Controller
 			array_merge(
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-edit-assos-members', 'client-edit-assos-members'), // Pouvoir modifier les assos membres
-				\Scopes::matchOneOfDeepestChildren(
-					['user-edit-assos-members-followed', 'user-edit-roles-assos-assigned'],
-					['client-edit-assos-members-followed', 'client-edit-roles-assos-assigned']
-				), // Pouvoir modifier les assos que l'ont suit (donc pas de role) ou pouvoir créer des roles assos pour l'utlisateur
+				\Scopes::matchOneOfDeepestChildren('user-edit-roles-assos-assigned', 'client-edit-assos-members-followed'),
 				['user:cas,contributerBde']
 			),
 			['only' => ['update']]
@@ -58,45 +49,11 @@ class MemberController extends Controller
 			array_merge(
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-remove-assos-members', 'client-remove-assos-members'), // Pouvoir retirer les assos membres
-				\Scopes::matchOneOfDeepestChildren(
-					['user-remove-assos-members-followed', 'user-remove-roles-assos-assigned'],
-					['client-remove-assos-members-followed', 'client-remove-roles-assos-assigned']
-				), // Pouvoir retirer les assos que l'ont suit (donc pas de role) ou pouvoir retirer les roles assos de l'utlisateur
+				\Scopes::matchOneOfDeepestChildren('user-remove-roles-assos-assigned', 'client-remove-assos-members-followed'),
 				['user:cas,contributerBde']
 			),
 			['only' => ['destroy']]
 		);
-	}
-
-	/**
-	 * On ajoute les droits admin en fonction du rôle qu'on a dans les assos
-	 * @param Asso $asso
-	 * @param Model $pivot
-	 * @return null|string renvoie le type du role ajouté
-	 */
-	protected function addUserRoles($asso, $pivot): ?string {
-		if (!is_null($pivot->validated_by)) {
-			$adminAssos = config('portail.assos', []);
-
-			if (isset($adminAssos[$asso->login])) {
-				$adminRoles = $adminAssos[$asso->login];
-				$role = Role::getRole($pivot->role_id);
-
-				if (isset($adminRoles[$role->type])) {
-					try {
-						\Auth::user()->assignRoles($adminRoles[$role->type], [
-							'validated_by' => \Auth::id(),
-						], true);
-
-						return $adminRoles[$role->type];
-					} catch (\Exception $e) {
-						// Dans le cas où on possède déjà ce rôle
-					}
-				}
-			}
-		}
-
-		return null;
 	}
 
 	/**
@@ -111,7 +68,7 @@ class MemberController extends Controller
 		$semester = $this->getSemester($request, $choices);
 		$asso = $this->getAsso($request, $asso_id);
 
-		$members = $asso->members()->where('semester_id', $semester->id)->getSelection(true)->map(function ($member) {
+		$members = $asso->members()->where('semester_id', $semester->id)->whereNotNull('role_id')->getSelection(true)->map(function ($member) {
 			$member->pivot = [
 				'role_id' => $member->role_id,
 				'validated_by' => $member->validated_by,
@@ -138,26 +95,12 @@ class MemberController extends Controller
 		$asso = $this->getAsso($request, $asso_id);
 		$scopeHead = \Scopes::getTokenType($request);
 
-		if ($request->input('role_id')) {
-			if (!\Scopes::hasOne($request, $scopeHead.'-create-assos-members-joining-now'))
-				abort(403, 'Vous n\'être pas autorisé à assigner un rôle');
+		$asso->assignMembers(\Auth::id(), [
+			'role_id' => $request->input('role_id'),
+			'semester_id' => $semester->id
+		]);
 
-			$asso->assignMembers(\Auth::id(), [
-				'role_id' => $request->input('role_id'),
-				'semester_id' => $semester->id
-			]);
-		}
-		else {
-			if (!\Scopes::hasOne($request, 'user-set-assos-members-followed-now'))
-				abort(403, 'Vous n\'être pas autorisé à faire suivre une association');
-
-			$asso->assignMembers(\Auth::id(), [
-				'validated_by' => \Auth::id(),
-				'semester_id' => $semester->id
-			]);
-		}
-
-		$member = $asso->allMembers()->wherePivot('user_id', \Auth::id())->first();
+		$member = $this->getUserFromAsso($request, $asso, $user->id, $semester);
 
 		return response()->json($member->hideData(), 201);
 	}
@@ -196,28 +139,16 @@ class MemberController extends Controller
 		$user = $this->getUserFromAsso($request, $asso, $member_id, $semester);
 		$scopeHead = \Scopes::getTokenType($request);
 
-		if ($request->has('validate')) {
-			if (!\Scopes::hasAll($request, [$scopeHead.'-create-assos-members-joining-now', $scopeHead.'-create-assos-members-joined-now']))
-				abort(403, 'Vous n\'être pas autorisé à confirmer un rôle');
+		if (!\Scopes::hasAll($request, [$scopeHead.'-create-assos-members-joining-now', $scopeHead.'-create-assos-members-joined-now']))
+			abort(403, 'Vous n\'être pas autorisé à confirmer un rôle');
 
-			$asso->updateMembers($member_id, [
-				'semester_id' => $user->pivot->semester_id,
-			], [
-	            'validated_by' => \Auth::id(),
-	        ], Role::getRole(config('portail.roles.admin.assos'))->id === $user->pivot->role_id
-				&& $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id());
-			// Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité
-		}
-		else {
-			if (!\Scopes::hasOne($request, $scopeHead.'-create-assos-members-'.($user->pivot->validated_by ? 'joined': 'joining').'-now'))
-				abort(403, 'Vous n\'être pas autorisé à assigner un rôle');
-
-			$asso->updateMembers($member_id, [
-				'semester_id' => $user->pivot->semester_id,
-			], [
-	            'role_id' => $request->input('role_id', $user->pivot->role_id),
-	        ]);
-		}
+		$asso->updateMembers($member_id, [
+			'semester_id' => $user->pivot->semester_id,
+		], [
+      'validated_by' => \Auth::id(),
+    ], Role::getRole(config('portail.roles.admin.assos'))->id === $user->pivot->role_id
+			&& $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id());
+		// Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité
 
 		return response()->json($this->getUserFromAsso($request, $asso, $member_id, $semester)->hideSubData());
 	}

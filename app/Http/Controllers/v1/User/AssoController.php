@@ -50,7 +50,7 @@ class AssoController extends Controller
 	 */
 	public function index(AssoRequest $request, string $user_id = null): JsonResponse {
 		$user = $this->getUser($request, $user_id);
-		$choices = $this->getChoices($request);
+		$choices = $this->getChoices($request, ['joined', 'joining', 'followed']);
 		$semester = $this->getSemester($request, $choices);
 
 		$assos = collect()->merge(
@@ -69,8 +69,19 @@ class AssoController extends Controller
 	 * @param AssoRequest $request
 	 * @return JsonResponse
 	 */
-	public function store(AssoRequest $request): JsonResponse {
-		abort(405);
+	public function store(Request $request, string $user_id = null): JsonResponse {
+		$user = $this->getUser($request, $user_id);
+		$semester = $this->getSemester($request, ['followed'], 'create');
+		$asso = $this->getAsso($request, $request->input('asso_id'));
+		$scopeHead = \Scopes::getTokenType($request);
+
+		$asso->assignMembers(\Auth::id(), [
+			'semester_id' => $semester->id
+		]);
+
+		$asso = $this->getAsso($request, $asso->id, $user, $semester);
+
+		return response()->json($asso->hideSubData(), 201);
 	}
 
 	/**
@@ -87,8 +98,7 @@ class AssoController extends Controller
 			list($user_id, $id) = [$id, $user_id];
 
 		$user = $this->getUser($request, $user_id);
-		$choices = $this->getChoices($request);
-		$semester = $this->getSemester($request, $choices);
+		$semester = $this->getSemester($request, ['followed']);
 		$asso = $this->getAsso($request, $id, $user, $semester);
 
 		return response()->json($asso->hideSubData(), 200);
@@ -100,7 +110,7 @@ class AssoController extends Controller
 	 * @param  int/string $id
 	 * @return JsonResponse
 	 */
-	public function update(AssoRequest $request, string $user_id, string $id = null): JsonResponse {
+	public function update(Request $request, string $user_id, string $id = null): JsonResponse {
 		abort(405);
 	}
 
@@ -111,6 +121,18 @@ class AssoController extends Controller
 	 * @return JsonResponse
 	 */
 	public function destroy(Request $request, string $user_id, string $id = null): JsonResponse {
-		abort(405);
+		if (is_null($id))
+			list($user_id, $id) = [$id, $user_id];
+
+		$user = $this->getUser($request, $user_id);
+		$semester = $this->getSemester($request, ['followed']);
+		$asso = $this->getAsso($request, $id, $user, $semester);
+
+		if ($asso->removeMembers($user, [
+			'semester_id' => $asso->pivot->semester_id,
+		], \Auth::id(), \Scopes::isClientToken($request)))
+			abort(204);
+		else
+			abort(500, 'Impossible de retirer la personne de l\'association');
 	}
 }
