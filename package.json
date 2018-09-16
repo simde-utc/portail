@@ -37,6 +37,7 @@
 		"react-notifications": "^1.4.3",
 		"react-select": "^2.0.0",
 		"react-simplemde-editor": "^3.6.16",
+		"reactstrap": "^6.4.0",
 		"redux-promise-middleware": "^5.1.1"
 	}
 }

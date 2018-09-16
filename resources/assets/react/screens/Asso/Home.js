@@ -1,5 +1,6 @@
 import React from 'react';
 import AspectRatio from 'react-aspect-ratio';
+import { Button } from 'reactstrap';
 
 class AssoHomeScreen extends React.Component {
 	follow() {
@@ -21,24 +22,24 @@ class AssoHomeScreen extends React.Component {
 	getFollowButton(isFollowing, isMember) {
 		if (isFollowing && !isMember) {
 			return (
-				<button className="m-1 btn btn-sm btn-danger" onClick={ this.unfollow.bind(this) }>
+				<Button className="m-1 btn btn-sm" color="danger" outline onClick={ this.unfollow.bind(this) }>
 					Ne plus suivre
-				</button>
+				</Button>
 			)
 		}
 		else {
 			if (isMember) {
 				return (
-					<button className="m-1 btn btn-sm btn-secondary" disabled>
+					<Button className="m-1 btn btn-sm" outline disabled>
 						Suivre
-					</button>
+					</Button>
 				)
 			}
 			else  {
 				return (
-					<button className="m-1 btn btn-sm btn-primary" onClick={ this.follow.bind(this) }>
+					<Button className="m-1 btn btn-sm" color="primary" outline onClick={ this.follow.bind(this) }>
 						Suivre
-					</button>
+					</Button>
 				)
 			}
 		}
@@ -48,32 +49,32 @@ class AssoHomeScreen extends React.Component {
 		if (isMember) {
 			if (isWaiting) {
 				return (
-					<button className="m-1 btn btn-sm btn-warning" onClick={ this.leave.bind(this) } disabled>
+					<Button className="m-1 btn btn-sm" color="warning" outline onClick={ this.leave.bind(this) } disabled>
 						En attente...
-					</button>
+					</Button>
 				)
 			}
 			else  {
 				return (
-					<button className="m-1 btn btn-sm btn-danger" onClick={ this.leave.bind(this) }>
-						Se retirer
-					</button>
+					<Button className="m-1 btn btn-sm" color="danger" outline onClick={ this.leave.bind(this) }>
+						Quitter l'association
+					</Button>
 				)
 			}
 		}
 		else  {
 			if (isFollowing) {
 				return (
-					<button className="m-1 btn btn-sm btn-secondary" disabled>
+					<Button className="m-1 btn btn-sm" outline disabled>
 						Rejoindre
-					</button>
+					</Button>
 				)
 			}
 			else  {
 				return (
-					<button className="m-1 btn btn-sm btn-primary" onClick={ this.join.bind(this) }>
+					<Button className="m-1 btn btn-sm btn" color="primary" outline onClick={ this.join.bind(this) }>
 						Rejoindre
-					</button>
+					</Button>
 				)
 			}
 		}

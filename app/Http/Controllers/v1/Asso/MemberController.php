@@ -111,11 +111,13 @@ class MemberController extends Controller
 		$semester = $this->getSemester($request, $choices);
 		$asso = $this->getAsso($request, $asso_id);
 
-		$members = collect()->merge(
-			in_array('joined', $choices) ? $asso->members()->where('semester_id', $semester->id)->getSelection(true) : collect())->merge(
-			in_array('joining', $choices) ? $asso->joiners()->where('semester_id', $semester->id)->getSelection(true) : collect())->merge(
-			in_array('followed', $choices) ? $asso->followers()->where('semester_id', $semester->id)->getSelection(true) : collect()
-		)->map(function ($member) {
+		$members = $asso->members()->where('semester_id', $semester->id)->getSelection(true)->map(function ($member) {
+			$member->pivot = [
+				'role_id' => $member->role_id,
+				'validated_by' => $member->validated_by,
+				'semester_id' => $member->semester_id,
+			];
+
 			return $member->hideData();
 		});
 
@@ -157,7 +159,7 @@ class MemberController extends Controller
 
 		$member = $asso->allMembers()->wherePivot('user_id', \Auth::id())->first();
 
-		return response()->json($member->hideSubData(), 201);
+		return response()->json($member->hideData(), 201);
 	}
 
 	/**
@@ -175,7 +177,7 @@ class MemberController extends Controller
 		$asso = $this->getAsso($request, $asso_id);
 		$user = $this->getUserFromAsso($request, $asso, $member_id, $semester);
 
-		return response()->json($user->hideSubData(), 200);
+		return response()->json($user->hideData(), 200);
 	}
 
 	/**

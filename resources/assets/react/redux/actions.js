@@ -8,3 +8,6 @@ export const articlesActions = new crudActions(actionTypes.articles, 'articles')
 export const visibilitiesActions = new crudActions(actionTypes.visibilities, 'visibilities');
 export const calendarsActions = new crudActions(actionTypes.calendars, 'calendars');
 export const calendarEventsActions = new crudActions(actionTypes.calendarEvents, 'calendars/{calendar_id}/events');
+export const contactsActions = new crudActions(actionTypes.contacts, '{resource}/{resource_id}/contacts');
+export const rolesActions = new crudActions(actionTypes.roles, 'roles');
+export const permissionsActions = new crudActions(actionTypes.permissions, 'permissions');

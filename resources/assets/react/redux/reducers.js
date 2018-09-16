@@ -9,6 +9,9 @@ const articlesReducer = createCrudReducer(crudActionTypes.articles)
 const visibilitiesReducer = createCrudReducer(crudActionTypes.visibilities)
 const calendarsReducer = createCrudReducer(crudActionTypes.calendars)
 const calendarEventsReducer = createCrudReducer(crudActionTypes.calendarEvents)
+const contactsReducer = createCrudReducer(crudActionTypes.contacts)
+const rolesReducer = createCrudReducer(crudActionTypes.roles)
+const permissionsReducer = createCrudReducer(crudActionTypes.permissions)
 
 // Custom Reducers
 import loggedUserReducer from './custom/loggedUser/reducers';
@@ -25,4 +28,7 @@ export default combineReducers({
 	visibilities: visibilitiesReducer,
 	calendars: calendarsReducer,
 	calendarEvents: calendarEventsReducer,
+	contacts: contactsReducer,
+	roles: rolesReducer,
+	permissions: permissionsReducer,
 });

@@ -8,6 +8,9 @@ export const articlesActionTypes = createCrudTypes('ARTICLES');
 export const visibilitiesActionTypes = createCrudTypes('VISIBILITIES');
 export const calendarsActionTypes = createCrudTypes('CALENDARS');
 export const calendarEventsActionTypes = createCrudTypes('CALENDAR_EVENTS');
+export const contactsActionTypes = createCrudTypes('CONTACTS');
+export const rolesActionTypes = createCrudTypes('ROLES');
+export const permissionsActionTypes = createCrudTypes('PERMISSIONS');
 
 export default {
 	users: usersActionTypes,
@@ -17,4 +20,7 @@ export default {
 	visibilities: visibilitiesActionTypes,
 	calendars: calendarsActionTypes,
 	calendarEvents: calendarEventsActionTypes,
+	contacts: contactsActionTypes,
+	roles: rolesActionTypes,
+	permissions: permissionsActionTypes,
 }
