@@ -18,7 +18,7 @@ trait HasContacts
     }
 
 	protected function checkTokenRights(Request $request, string $verb = 'get') {
-		if (!\Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-contacts-'.\ModelResolver::getCategory($request->resource)))
+		if (!\Scopes::hasOne($request, \Scopes::getTokenType($request).'-'.$verb.'-contacts-'.\ModelResolver::getCategory($request->resource)))
 			abort(503, 'L\'application n\'a pas le droit de voir les contacts de cette ressource');
 	}
 

@@ -15,15 +15,16 @@ class CreateRolesTable extends Migration
 	{
 		Schema::create('roles', function (Blueprint $table) {
 			$table->uuid('id')->primary();
-			$table->string('type', 64)->unique();
+			$table->string('type', 64);
 			$table->string('name', 128);
 			$table->string('description');
 			$table->string('limited_at')->nullable();
-			$table->string('only_for', 64)->default('users');
+			$table->uuid('owned_by_id')->nullable();
+			$table->string('owned_by_type')->nullable();
 
 			$table->timestamps();
 
-			$table->unique(['type', 'only_for']);
+			$table->unique(['type', 'owned_by_type']);
 		});
 	}
 

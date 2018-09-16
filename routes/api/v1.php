@@ -49,19 +49,23 @@ Route::group(['middleware' => 'user:active'], function () {
 		'user/roles'								=> 'User\RoleController',
 		'user/calendars'						=> 'User\CalendarController',
 		'user/contacts'							=> 'Contact\ContactController',
+		'user/permissions'					=> 'Permissions\AssignmentController',
 	]);
 
 	// Routes définies pour toutes ressources
 	Route::apiResources([
-		'{resource_type}/{resource_id}/contacts'	=> 'Contact\ContactController',
-		'{resource_type}/{resource_id}/comments'	=> 'Comment\CommentController',
-		'groups/{group_id}/members'								=> 'Group\MemberController',
-		'groups'																	=> 'Group\GroupController',
-		'assos/{asso_id}/members'									=> 'Asso\MemberController',
-		'roles'																		=> 'Role\RoleController',
-		'rooms'																		=> 'Room\RoomController',
-		'rooms/{room_id}/reservations'						=> 'Room\ReservationController',
-		'calendars/{calendar_id}/events'					=> 'Calendar\EventController',
+		'{resource_type}/{resource_id}/contacts'		=> 'Contact\ContactController',
+		'{resource_type}/{resource_id}/comments'		=> 'Comment\CommentController',
+		'{resource_type}/{resource_id}/permissions'	=> 'Permission\AssignmentController',
+		'groups/{group_id}/members'									=> 'Group\MemberController',
+		'groups'																		=> 'Group\GroupController',
+		'assos/{asso_id}/members'										=> 'Asso\MemberController',
+		'roles'																			=> 'Role\RoleController',
+		'roles/{role_id}/permissions'								=> 'Role\PermissionController',
+		'permissions'																=> 'Permission\PermissionController',
+		'rooms'																			=> 'Room\RoomController',
+		'rooms/{room_id}/reservations'							=> 'Room\ReservationController',
+		'calendars/{calendar_id}/events'						=> 'Calendar\EventController',
 	]);
 });
 

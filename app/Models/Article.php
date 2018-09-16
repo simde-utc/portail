@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
+use Cog\Contracts\Ownership\CanBeOwner;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use App\Traits\Model\HasCreatorSelection;
 use App\Traits\Model\HasOwnerSelection;
 use App\Models\ArticleAction;
+use App\Interfaces\Model\CanHaveComments;
+use App\Interfaces\Model\CanComment;
 
-class Article extends Model implements OwnableContract
+class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComments
 {
 	use HasMorphOwner, HasCreatorSelection, HasOwnerSelection;
 
@@ -120,10 +123,6 @@ class Article extends Model implements OwnableContract
 		return $this->belongsTo(Visibility::class, 'visibility_id');
 	}
 
-	public function comments() {
-		return $this->morphMany('App\Models\Comment', 'commentable');
-	}
-
 	public function event() {
 		return $this->belongsTo(Event::class);
 	}
@@ -131,4 +130,21 @@ class Article extends Model implements OwnableContract
 	public function actions() {
 		return $this->hasMany(ArticleAction::class);
 	}
+
+  public function comments() {
+    return $this->morphMany(Comment::class, 'owned_by');
+  }
+
+	// Un commentaire quand il est publié il correspond à sa visibilité, aucun droit spécifique
+  public function isCommentAccessibleBy(string $user_id): bool {
+		return User::find($user_id)->is{ucfirst($this->visibility->type)}();
+  }
+
+	// Un commentaire est uniquement rédigeable par la même instance possédant l'article ou un user
+  public function isCommentManageableBy(CanComment $model): bool {
+		if ($model instanceof User)
+			return true;
+		else
+			return get_class($model) === $this->owned_by_type && $model->id === $this->owned_by_id;
+  }
 }

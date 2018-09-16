@@ -13,9 +13,12 @@ use App\Interfaces\Model\CanHaveArticles;
 use App\Interfaces\Model\CanHaveRooms;
 use App\Interfaces\Model\CanHaveReservations;
 use App\Interfaces\Model\CanNotify;
+use App\Interfaces\Model\CanHaveRoles;
+use App\Interfaces\Model\CanHavePermissions;
+use App\Interfaces\Model\CanComment;
 use App\Exception\PortailException;
 
-class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify, CanHaveRooms, CanHaveReservations
+class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify, CanHaveRooms, CanHaveReservations, CanHaveRoles, CanHavePermissions, CanComment
 {
 	use HasStages, HasMembers, SoftDeletes {
 		HasMembers::members as membersAndFollowers;
@@ -143,6 +146,32 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
 	}
 
+	public function isRoleAccessibleBy(string $user_id): bool {
+		return true;
+	}
+
+	public function isRoleManageableBy(string $user_id): bool {
+		if ($this->id)
+			return $this->hasOnePermission('role', [
+				'user_id' => $user_id,
+			]);
+		else
+			return User::find($user_id)->hasOnePermission('role');
+	}
+
+	public function isPermissionAccessibleBy(string $user_id): bool {
+		return true;
+	}
+
+	public function isPermissionManageableBy(string $user_id): bool {
+		if ($this->id)
+			return $this->hasOnePermission('permission', [
+				'user_id' => $user_id,
+			]);
+		else
+			return User::find($user_id)->hasOnePermission('permission');
+	}
+
 	public function contacts() {
 		return $this->morphMany(Contact::class, 'owned_by');
 	}
@@ -152,7 +181,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isContactManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_contact', [
+		return $this->hasOnePermission('contact', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -166,7 +195,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isCalendarManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_calendar', [
+		return $this->hasOnePermission('calendar', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -180,7 +209,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isEventManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_event', [
+		return $this->hasOnePermission('event', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -194,7 +223,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isArticleManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_article', [
+		return $this->hasOnePermission('article', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -236,7 +265,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isReservationManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_reservation', [
+		return $this->hasOnePermission('reservation', [
 			'user_id' => $user_id,
 		]);
 	}
@@ -255,7 +284,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 			return false;
 		}
 		else if ($model instanceof User) {
-			return $this->hasOnePermission('asso_reservation', [
+			return $this->hasOnePermission('reservation', [
 				'user_id' => $user_id,
 			]);
 		}
@@ -264,5 +293,20 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		}
 		else
 			throw new PortailException('Seules les utilisateurs, associations et clients peuvent valider une salle appartenant à une association', 503);
+	}
+
+	// Les commentaires écrits par une asso se font uniquement par les gens pouvant en rédiger
+	public function isCommentWritableBy(string $user_id): bool {
+		return $this->hasOnePermission('comment', [
+			'user_id' => $user_id,
+		]);
+	}
+
+	public function isCommentEditableBy(string $user_id): bool {
+		return $this->isCommentWritableBy($user_id);
+	}
+
+	public function isCommentDeletableBy(string $user_id): bool {
+		return $this->isCommentEditableBy($user_id);
 	}
 }

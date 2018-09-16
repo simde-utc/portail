@@ -23,8 +23,8 @@ class MemberController extends Controller
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-get-assos-members', 'client-get-assos-members'), // Pouvoir voir les assos membres
 				\Scopes::matchOneOfDeepestChildren(
-					['user-get-assos-members-followed', 'user-get-roles-assos'],
-					['client-get-assos-members-followed', 'client-get-roles-assos']
+					['user-get-assos-members-followed', 'user-get-roles-assos-assigned'],
+					['client-get-assos-members-followed', 'client-get-roles-assos-assigned']
 				), // Pouvoir voir les assos que l'ont suit (donc pas de role) ou pouvoir voir les roles assos de l'utlisateur
 				['user:cas,contributerBde']
 			),
@@ -35,8 +35,8 @@ class MemberController extends Controller
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-create-assos-members', 'client-create-assos-members'), // Pouvoir créé des assos membres
 				\Scopes::matchOneOfDeepestChildren(
-					['user-create-assos-members-followed', 'user-create-roles-assos'],
-					['client-create-assos-members-followed', 'client-create-roles-assos']
+					['user-create-assos-members-followed', 'user-create-roles-assos-assigned'],
+					['client-create-assos-members-followed', 'client-create-roles-assos-assigned']
 				), // Pouvoir créer des assos que l'ont suit (donc pas de role) ou pouvoir créer des roles assos pour l'utlisateur
 				['user:cas,contributerBde']
 			),
@@ -47,8 +47,8 @@ class MemberController extends Controller
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-edit-assos-members', 'client-edit-assos-members'), // Pouvoir modifier les assos membres
 				\Scopes::matchOneOfDeepestChildren(
-					['user-edit-assos-members-followed', 'user-edit-roles-assos'],
-					['client-edit-assos-members-followed', 'client-edit-roles-assos']
+					['user-edit-assos-members-followed', 'user-edit-roles-assos-assigned'],
+					['client-edit-assos-members-followed', 'client-edit-roles-assos-assigned']
 				), // Pouvoir modifier les assos que l'ont suit (donc pas de role) ou pouvoir créer des roles assos pour l'utlisateur
 				['user:cas,contributerBde']
 			),
@@ -59,8 +59,8 @@ class MemberController extends Controller
 				\Scopes::matchOne('user-get-assos', 'client-get-assos'), // Pouvoir voir les assos
 				\Scopes::matchOneOfDeepestChildren('user-remove-assos-members', 'client-remove-assos-members'), // Pouvoir retirer les assos membres
 				\Scopes::matchOneOfDeepestChildren(
-					['user-remove-assos-members-followed', 'user-remove-roles-assos'],
-					['client-remove-assos-members-followed', 'client-remove-roles-assos']
+					['user-remove-assos-members-followed', 'user-remove-roles-assos-assigned'],
+					['client-remove-assos-members-followed', 'client-remove-roles-assos-assigned']
 				), // Pouvoir retirer les assos que l'ont suit (donc pas de role) ou pouvoir retirer les roles assos de l'utlisateur
 				['user:cas,contributerBde']
 			),

@@ -36,7 +36,10 @@ class AssoController extends Controller
 			['only' => ['store']]
 		);
 		$this->middleware(
-			\Scopes::matchOne('user-edit-assos', 'client-edit-assos'),
+			array_merge(
+				\Scopes::matchOne('user-edit-assos', 'client-edit-assos'),
+				['permission:asso']
+			),
 			['only' => ['update']]
 		);
 		$this->middleware(
