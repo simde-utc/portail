@@ -215,6 +215,7 @@ class AssoScreen extends React.Component {
 							role_id: this.state.role_id
 						}).payload.then(() => {
 							this.props.dispatch(loggedUserActions.getAssos())
+							this.props.dispatch(assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).getAll());
 							NotificationManager.success('Vous avez demandé à rejoindre l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -244,8 +245,69 @@ class AssoScreen extends React.Component {
 						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).remove(
 							this.props.user.info.id
 						).payload.then(() => {
+							this.props.dispatch(assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).getAll());
 							this.props.dispatch(loggedUserActions.getAssos())
 							NotificationManager.warning('Vous ne faites plus partie de l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
+						}).finally(() => {
+							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
+						});
+					}
+				}
+			}
+		}));
+	}
+
+	validateMember(member_id) {
+		this.setState(prevState => ({
+			...prevState,
+			modal: {
+				show: true,
+				title: 'Valider un membre de l\'association',
+				body: (
+					<div>
+						<p>Souhaitez-vous valider le poste de ce membre dans l'association <span className="font-italic">{ this.props.asso.name }</span> ?</p>
+					</div>
+				),
+				button: {
+					type: 'success',
+					text: 'Valider le membre',
+					onClick: () => {
+						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).update(
+							member_id
+						).payload.then(() => {
+							this.props.dispatch(assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).getAll());
+							this.props.dispatch(loggedUserActions.getAssos())
+							NotificationManager.warning('Vous avez validé avec succès le membre de cette association: ' + this.props.asso.name, 'Valider un membre d\'une association')
+						}).finally(() => {
+							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
+						});
+					}
+				}
+			}
+		}));
+	}
+
+	leaveMember(member_id) {
+		this.setState(prevState => ({
+			...prevState,
+			modal: {
+				show: true,
+				title: 'Retirer le membre de l\'association',
+				body: (
+					<div>
+						<p>Souhaitez-vous vraiment retirer ce membre de l'association <span className="font-italic">{ this.props.asso.name }</span> ?</p>
+					</div>
+				),
+				button: {
+					type: 'danger',
+					text: 'Retirer le membre',
+					onClick: () => {
+						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).remove(
+							member_id
+						).payload.then(() => {
+							this.props.dispatch(assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).getAll());
+							this.props.dispatch(loggedUserActions.getAssos())
+							NotificationManager.warning('Vous avez retiré avec succès le membre de cette association: ' + this.props.asso.name, 'Retirer un membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
 						});
@@ -341,7 +403,8 @@ class AssoScreen extends React.Component {
 							<ArticleList articles={ this.state.articles } fetched={ this.state.articlesFetched } />
 						)} />
 					<Route path={`${this.props.match.url}/members`} render={ () => (
-							<MemberList members={ this.props.members } roles={ this.state.roles } isMember={ this.state.isMember } fetched={ this.state.membersFetched && this.state.rolesFetched } />
+							<MemberList members={ this.props.members } roles={ this.state.roles } isMember={ this.state.isMember } fetched={ this.state.membersFetched && this.state.rolesFetched }
+								leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>
 						)} />
 					<Route path={`${this.props.match.url}/article`} render={ () => (
 							<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />

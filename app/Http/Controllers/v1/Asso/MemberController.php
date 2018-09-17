@@ -146,8 +146,8 @@ class MemberController extends Controller
 			'semester_id' => $user->pivot->semester_id,
 		], [
       'validated_by' => \Auth::id(),
-    ], Role::getRole(config('portail.roles.admin.assos'))->id === $user->pivot->role_id
-			&& $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id());
+    ], Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id
+			|| (($lastUser = $asso->getLastUserWithRole(config('portail.roles.admin.assos'))) && $lastUser->id === \Auth::id()));
 		// Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité
 
 		return response()->json($this->getUserFromAsso($request, $asso, $member_id, $semester)->hideSubData());

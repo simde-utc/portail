@@ -143,7 +143,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function getLastUserWithRole($role) {
-		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
+		return $this->members()->wherePivot('role_id', Role::getRole($role, $this)->id)->orderBy('semester_id', 'DESC')->first();
 	}
 
 	public function isRoleAccessibleBy(string $user_id): bool {

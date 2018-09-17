@@ -7,15 +7,13 @@ class DoubleList extends React.Component {
 		return (
 			<div className="container DoubleList">
 				<List title="Liste des membres"
+					{ ...this.props }
 					members={ this.props.members.filter(member => member.pivot && !!member.pivot.validated_by) }
-					roles={ this.props.roles }
-					isMember={ this.props.isMember }
-					fetched={ this.props.fetched } />
+				/>
 				<List title="Liste des membres en attente de validation"
+					{ ...this.props }
 					members={ this.props.members.filter(member => member.pivot && !member.pivot.validated_by) }
-					roles={ this.props.roles }
-					isMember={ this.props.isMember }
-					fetched={ this.props.fetched } />
+				/>
 			</div>
 		);
 	}
