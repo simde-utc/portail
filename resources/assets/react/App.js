@@ -9,6 +9,7 @@ import Sidebar from './components/Sidebar';
 import ErrorCatcher from './components/ErrorCatcher';
 import RouteNotFound from './components/RouteNotFound';
 import PrivateRoute from './components/PrivateRoute';
+import { NotificationContainer } from 'react-notifications';
 
 // Screens
 import HomeScreen from './screens/Home';
@@ -22,6 +23,7 @@ class App extends React.Component {
 		return (
 			<div className="h-100">
 				<Navbar />
+
 				<div className="d-flex w-100 h-100">
 					<Sidebar />
 					<ErrorCatcher>
@@ -35,6 +37,8 @@ class App extends React.Component {
 						</Switch>
 					</ErrorCatcher>
 				</div>
+
+				<NotificationContainer />
 			</div>
 		);
 	}

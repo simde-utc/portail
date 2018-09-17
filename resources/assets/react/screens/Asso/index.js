@@ -4,7 +4,7 @@ import { assosActions, userAssosActions, rolesActions, contactsActions, articles
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
 import { NavLink, Redirect, Link, Route, Switch } from 'react-router-dom';
 import { findIndex } from 'lodash';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationManager } from 'react-notifications';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import Select from 'react-select';
 
@@ -13,6 +13,7 @@ import ArticleForm from './../../components/Article/Form.js';
 
 import ScreensAssoHome from './Home.js';
 import ArticleList from '../../components/Article/List.js';
+import MemberList from '../../components/Member/DoubleList.js';
 
 import Calendar from '../../components/Calendar/index.js';
 
@@ -100,6 +101,14 @@ class AssoScreen extends React.Component {
 				});
 			}
 		}
+		else if (props.members && this.state.isMember === undefined) {
+			const isMember = findIndex(props.members, member => {
+				return member.id === props.user.id
+					&& member.validated_by
+			})
+
+			this.setState(prevState => ({ ...prevState, isMember: isMember }));
+		}
 		else {
 			this.setState(prevState => ({ ...prevState, dataRequested: false }));
 			this.componentWillMount();
@@ -120,10 +129,6 @@ class AssoScreen extends React.Component {
 				allEvents.push(events[calendar_id][id]);
 
 		return allEvents;
-	}
-
-	getAllMembers(members) {
-		return members.filter(member => member.pivot.validated_by)
 	}
 
 	followAsso() {
@@ -336,14 +341,12 @@ class AssoScreen extends React.Component {
 							<ArticleList articles={ this.state.articles } fetched={ this.state.articlesFetched } />
 						)} />
 					<Route path={`${this.props.match.url}/members`} render={ () => (
-							<MemberList members={ this.getAllMembers(this.props.members) } roles={ this.state.roles } fetched={ this.state.membersFetched && this.state.rolesFetched } />
+							<MemberList members={ this.props.members } roles={ this.state.roles } isMember={ this.state.isMember } fetched={ this.state.membersFetched && this.state.rolesFetched } />
 						)} />
 					<Route path={`${this.props.match.url}/article`} render={ () => (
 							<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
 						)} />
 				</Switch>
-
-				<NotificationContainer />
 			</div>
 		);
 	}

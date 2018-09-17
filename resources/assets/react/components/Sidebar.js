@@ -60,13 +60,15 @@ class Sidebar extends React.Component {
 						<NavLink className="sidebar-link" to="/groupes"><i className="fas fa-users"></i>Groupes</NavLink>
 					</div>
 
-					<div className="sidebar-group">
-						<h6 className="sidebar-header d-hover-zone">
-							MES ASSOCIATIONS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/assos" />
-						</h6>
-						{ this.getAssos(this.props.user.assos) }
-					</div>
-				</div>
+          { this.props.user && (
+            <div>
+              <h6 className="sidebar-header d-hover-zone">
+                MES ASSOCIATIONS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/assos" />
+              </h6>
+              { this.getAssos(this.props.user.assos) }
+            </div>
+          )}
+        </div>
 				<p className="sidebar-footer small">&lt;&#47;&gt; avec le sang par le SiMDE</p>
 			</div>
 		);
