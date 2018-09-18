@@ -60,7 +60,7 @@ class Sidebar extends React.Component {
 						<NavLink className="sidebar-link" to="/groupes"><i className="fas fa-users"></i>Groupes</NavLink>
 					</div>
 
-          { this.props.user && (
+          { this.props.user && this.props.user.info && this.props.user.info.id && (
             <div>
               <h6 className="sidebar-header d-hover-zone">
                 MES ASSOCIATIONS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/assos" />

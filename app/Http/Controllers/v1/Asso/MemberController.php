@@ -143,10 +143,11 @@ class MemberController extends Controller
 			abort(403, 'Vous n\'être pas autorisé à confirmer un rôle');
 
 		$asso->updateMembers($member_id, [
+			'role_id' => $user->pivot->role_id,
 			'semester_id' => $user->pivot->semester_id,
 		], [
       'validated_by' => \Auth::id(),
-    ], Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id
+    ], (Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id && $user->pivot->validated_by)
 			|| (($lastUser = $asso->getLastUserWithRole(config('portail.roles.admin.assos'))) && $lastUser->id === \Auth::id()));
 		// Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité
 
