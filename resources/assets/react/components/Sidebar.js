@@ -1,19 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import loggedUserActions from '../redux/custom/loggedUser/actions';
 import { withRouter, NavLink } from 'react-router-dom';
+import actions from '../redux/api.js';
 
 @connect((store, props) => ({
-    user: store.loggedUser.data
+  user: store.getData('user', false), // Si user === false, alors on est pas co
+  assos: store.getData('user/assos'),
 }))
 class Sidebar extends React.Component {
 	componentWillMount() {
-        this.props.dispatch(loggedUserActions.getAssos());
-        // this.props.dispatch(loggedUserActions.getGroups());
+    this.props.dispatch(actions().user().assos().all());
   }
 
   getAssos(assos) {
-    return (assos || []).map(asso => {
+    return assos.map(asso => {
       let color = 'color-' + asso.login;
 
       if (asso.parent)
@@ -60,12 +60,12 @@ class Sidebar extends React.Component {
 						<NavLink className="sidebar-link" to="/groupes"><i className="fas fa-users"></i>Groupes</NavLink>
 					</div>
 
-          { this.props.user && this.props.user.info && this.props.user.info.id && (
+          { this.props.user && (
             <div>
               <h6 className="sidebar-header d-hover-zone">
                 MES ASSOCIATIONS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/assos" />
               </h6>
-              { this.getAssos(this.props.user.assos) }
+              { this.getAssos(this.props.assos) }
             </div>
           )}
         </div>

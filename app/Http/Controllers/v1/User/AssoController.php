@@ -58,7 +58,7 @@ class AssoController extends Controller
 			in_array('joining', $choices) ? $user->joiningAssos()->where('semester_id', $semester->id)->get() : collect())->merge(
 			in_array('followed', $choices) ? $user->followedAssos()->where('semester_id', $semester->id)->get() : collect()
 		)->map(function ($asso) {
-			return $asso->hideSubData();
+			return $asso->hideData();
 		});
 
 		return response()->json($assos, 200);

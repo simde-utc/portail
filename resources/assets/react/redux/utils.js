@@ -23,8 +23,6 @@ export const createCrudTypes = (name) => ({
     update: 'UPDATE_' + name,
     delete: 'DELETE_' + name
 });
-
-
 /**
  * ActionCreator Creator
  * Fonction qui permet de générer un set d'actions CRUD
