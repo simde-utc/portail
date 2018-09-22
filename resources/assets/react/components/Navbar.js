@@ -11,7 +11,6 @@ class Navbar extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			loginMethods: {},
 			collapse: false,
 			loginDropdown: false
 		};
@@ -39,7 +38,6 @@ class Navbar extends React.Component {
 				{ loginMethod.name }
 			</a>
 		))
-		const isAuthenticated = Boolean(user);
 		return (
 			<nav className="navbar navbar-expand-md navbar-dark fixed-top">
 				<div className="container-fluid">
@@ -52,7 +50,7 @@ class Navbar extends React.Component {
 						<ul className="navbar-nav">
 						</ul>
 						<ul className="navbar-nav ml-auto">
-							{ isAuthenticated ? (
+							{ this.props.user ? (
 								<li className="nav-item dropdown">
 									<a className="nav-link dropdown-toggle" onClick={() => this.toggle('loginDropdown')}>
 										{ user.name } <span className="caret"></span>

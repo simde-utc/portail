@@ -21,6 +21,7 @@ const middlewares = applyMiddleware(
 );
 
 export const initialState = {
+  // Converti tout simple une route uri (string) en array | ex: 'assos/calendars' => ['assos', 'calendars']
   propsToArray: function (props) {
     if (typeof props === 'string') {
       props = props.split('/');
@@ -32,7 +33,9 @@ export const initialState = {
 
     return props;
   },
-  get: function (props, replacement = {}) {
+
+  // Permet de retouver facilement un élément du store (remplacement est par quoi on replace si on trouve pas, et on force si array vide par ex)
+  get: function (props, replacement = {}, forceReplacement = false) {
     var data = this;
     props = this.propsToArray(props)
 
@@ -48,25 +51,30 @@ export const initialState = {
       }
     }
 
+    if (forceReplacement && (data instanceof Object) && Object.keys(data).length === 0)
+      return replacement;
+
     return data;
   },
-  getData: function (props, replacement = []) {
-    return this.get(this.propsToArray(props).concat(['data']), replacement);
+
+  // Retrouver un élément précis
+  getData: function (props, replacement = [], forceReplacement = true) {
+    return this.get(this.propsToArray(props).concat(['data']), replacement, forceReplacement);
   },
-  getError: function (props, replacement = null) {
-    return this.get(this.propsToArray(props).concat(['error']), replacement);
+  getError: function (props, replacement = null, forceReplacement = true) {
+    return this.get(this.propsToArray(props).concat(['error']), replacement, forceReplacement);
   },
-  getStatus: function (props, replacement = null) {
-    return this.get(this.propsToArray(props).concat(['status']), replacement);
+  getStatus: function (props, replacement = null, forceReplacement = true) {
+    return this.get(this.propsToArray(props).concat(['status']), replacement, forceReplacement);
   },
-  getLastUpdate: function (props, replacement = null) {
-    return this.get(this.propsToArray(props).concat(['lastUpdate']), replacement);
+  getLastUpdate: function (props, replacement = null, forceReplacement = true) {
+    return this.get(this.propsToArray(props).concat(['lastUpdate']), replacement, forceReplacement);
   },
-  isFetching: function (props, replacement = false) {
-    return this.get(this.propsToArray(props).concat(['fetching']), replacement);
+  isFetching: function (props, replacement = false, forceReplacement = true) {
+    return this.get(this.propsToArray(props).concat(['fetching']), replacement, forceReplacement);
   },
-  isFetched: function (props, replacement = false) {
-    return this.get(this.propsToArray(props).concat(['fetched']), replacement);
+  isFetched: function (props, replacement = false, forceReplacement = true) {
+    return this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement);
   },
 };
 
@@ -148,7 +156,7 @@ export default createStore((state = initialState, action) => {
 
         else if (action.type.endsWith('_' + ASYNC_SUFFIXES.success)) {
           var place = buildStorePath(draft, action.meta.path);
-console.log(place, action.payload.data);
+
           place.fetching = false;
           place.fetched = true;
           place.error = null;
