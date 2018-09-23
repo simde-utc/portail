@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { assosActions, userAssosActions, rolesActions, contactsActions, articlesActions, assoMembersActions, calendarsActions, calendarEventsActions } from '../../redux/actions';
+import actions from '../../redux/actions';
 import loggedUserActions from '../../redux/custom/loggedUser/actions';
 import { NavLink, Redirect, Link, Route, Switch } from 'react-router-dom';
 import { findIndex } from 'lodash';

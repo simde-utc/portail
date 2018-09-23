@@ -1,6 +1,14 @@
+/**
+ * Création et gestion automatique et dynmaique du store géré par redux (store refait sur la base du travail d'Alexandre)
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Alexandre Brasseur <alexandre.brasseur@etu.utc.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license AGPL-3.0
+**/
+
 import produce from 'immer';
 import { applyMiddleware, createStore } from 'redux';
-import { ASYNC_SUFFIXES } from './utils';
 
 // Import Middlewares
 import findIndex from 'lodash';
@@ -8,11 +16,30 @@ import promise from 'redux-promise-middleware';
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 
-// Import Reducers
-import reducers from './reducers';
+// Suffixes des actions asynchrones
+export const ASYNC_SUFFIXES = {
+    loading: 'LOADING',
+    success: 'SUCCESS',
+    error: 'ERROR'
+}
+
+/**
+ * ActionTypes Creator
+ * Fonction qui permet de créer les types d'actions CRUD
+ * @param      {string}   name    Le nom de la ressource au singulier en capital
+ * @return     {Object}           Un set de types d'action CRUD pour la ressource name
+ */
+export const createCrudTypes = (name) => ({
+    // _resource_name: name,
+    getAll: 'GET_ALL_' + name,
+    getOne: 'GET_ONE_' + name,
+    create: 'CREATE_' + name,
+    update: 'UPDATE_' + name,
+    delete: 'DELETE_' + name
+});
 
 // Configure Middlewares
-const middlewares = applyMiddleware(
+export const middlewares = applyMiddleware(
     thunk,
     promise({
         promiseTypeSuffixes: Object.values(ASYNC_SUFFIXES)
@@ -20,6 +47,7 @@ const middlewares = applyMiddleware(
     // createLogger({ collapse: true })
 );
 
+// La racine du store
 export const initialState = {
   // Converti tout simple une route uri (string) en array | ex: 'assos/calendars' => ['assos', 'calendars']
   propsToArray: function (props) {
@@ -61,6 +89,18 @@ export const initialState = {
   getData: function (props, replacement = [], forceReplacement = true) {
     return this.get(this.propsToArray(props).concat(['data']), replacement, forceReplacement);
   },
+  findData: function (props, value, key = 'id', replacement = {}, forceReplacement = true) {
+    var data = this.getData(props, []);
+
+    for (let k in data) {
+      if (data[k][key] === value) {
+        if (!forceReplacement || !(data[k] instanceof Object) || Object.keys(data[k]).length > 0)
+          return data[k];
+      }
+    }
+
+    return remplacement;
+  },
   getError: function (props, replacement = null, forceReplacement = true) {
     return this.get(this.propsToArray(props).concat(['error']), replacement, forceReplacement);
   },
@@ -78,6 +118,7 @@ export const initialState = {
   },
 };
 
+// Racine de chaque catégorie CRUD
 export const initialCrudState = {
   data: [],
   error: null,
@@ -86,11 +127,9 @@ export const initialCrudState = {
   fetched: false,
   lastUpdate: null,
   resources: {},
-  find: (value, key = 'id') => {
-
-  }
 };
 
+// Comme le JS ne fait pas deep copy avec Object.assign, on est obligé de le faire nous-même..
 export const initCrudState = (state, initialState = initialCrudState) => {
   for (let key in initialState) {
     if (initialState.hasOwnProperty(key)) {
@@ -107,6 +146,7 @@ export const initCrudState = (state, initialState = initialCrudState) => {
   return state;
 }
 
+// Ici, toute la magie opère, on génère dynmaiquement et automatiquement la route api et l'emplacement dans le store
 export const buildStorePath = (store, path) => {
   var place = store;
   var part, isId = false;
@@ -141,9 +181,8 @@ export const buildStorePath = (store, path) => {
   return place;
 }
 
+// Ici on crée le store et on modifie ses données via immer en fonction de la récup des données
 export default createStore((state = initialState, action) => {
-  console.log(action.type);
-
   if (action.meta && action.meta.path && action.meta.path.length > 0) {
     return produce(state, draft => {
         if (action.type.endsWith('_' + ASYNC_SUFFIXES.loading)) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { visibilitiesActions } from '../../redux/actions';
+import actions from '../../redux/actions';
 
 import SimpleMDE from 'simplemde';
 import Editor from 'react-simplemde-editor';

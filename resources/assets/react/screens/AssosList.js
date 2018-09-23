@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { assosActions } from '../redux/actions';
+import actions from '../redux/actions';
 
 import Block from '../components/Block';
 

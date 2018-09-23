@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
-import actions from '../redux/api.js';
+import actions from '../redux/actions.js';
 
 @connect((store, props) => ({
   user: store.getData('user', false), // Si user === false, alors on est pas co
@@ -9,7 +9,7 @@ import actions from '../redux/api.js';
 }))
 class Sidebar extends React.Component {
 	componentWillMount() {
-    this.props.dispatch(actions().user().assos().all());
+    this.props.dispatch(actions.user.assos.all());
   }
 
   getAssos(assos) {

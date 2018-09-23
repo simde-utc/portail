@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import actions from '../redux/api.js';
+import actions from '../redux/actions.js';
 
 @connect(store => ({
 	user: store.getData('user', false),
@@ -19,9 +19,9 @@ class Navbar extends React.Component {
 
 	componentWillMount() {
 		// Get User Info
-		this.props.dispatch(actions().user().get())
+		this.props.dispatch(actions.user.get())
 		// Get Login Methods
-		this.props.dispatch(actions().login().get())
+		this.props.dispatch(actions.login.get())
 	}
 
 	toggle(key) {
