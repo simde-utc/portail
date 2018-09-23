@@ -1,18 +1,15 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import store from '../redux/store'
-import loggedUserActions from '../redux/custom/loggedUser/actions';
-
+import actions from '../redux/actions';
 
 const renderRouteOrReject = props => {
-	// TODO Fetch
-	const isAuthenticated = store.getState().loggedUser.isAuthenticated()
-	return isAuthenticated ? (
+	return store.getData('user', false) ? (
 		<Component { ...props } />
 	) : (
 		<Redirect to={{
 			pathname: '/',
-			state: { from: props.location}
+			state: { from: props.location }
 		}} />
 	)
 }

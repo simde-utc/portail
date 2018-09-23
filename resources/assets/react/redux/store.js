@@ -11,7 +11,6 @@ import produce from 'immer';
 import { applyMiddleware, createStore } from 'redux';
 
 // Import Middlewares
-import findIndex from 'lodash';
 import promise from 'redux-promise-middleware';
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
@@ -99,7 +98,7 @@ export const initialState = {
       }
     }
 
-    return remplacement;
+    return replacement;
   },
   getError: function (props, replacement = null, forceReplacement = true) {
     return this.get(this.propsToArray(props).concat(['error']), replacement, forceReplacement);
@@ -116,6 +115,7 @@ export const initialState = {
   isFetched: function (props, replacement = false, forceReplacement = true) {
     return this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement);
   },
+  resources: {},
 };
 
 // Racine de chaque catégorie CRUD
@@ -148,7 +148,7 @@ export const initCrudState = (state, initialState = initialCrudState) => {
 
 // Ici, toute la magie opère, on génère dynmaiquement et automatiquement la route api et l'emplacement dans le store
 export const buildStorePath = (store, path) => {
-  var place = store;
+  var place = store.resources;
   var part, isId = false;
 
   for (let key in path) {
@@ -183,29 +183,68 @@ export const buildStorePath = (store, path) => {
 
 // Ici on crée le store et on modifie ses données via immer en fonction de la récup des données
 export default createStore((state = initialState, action) => {
+  console.log(action.type);
   if (action.meta && action.meta.path && action.meta.path.length > 0) {
     return produce(state, draft => {
+        var path = action.meta.path;
+
+        // Si on ne modifie qu'une donnée précise, il faut qu'on change le statut pour la ressource
+        if (action.meta.action !== 'updateAll') {
+          path = path.slice(0, -1);
+        }
+
         if (action.type.endsWith('_' + ASYNC_SUFFIXES.loading)) {
-          var place = buildStorePath(draft, action.meta.path);
+          var place = buildStorePath(draft, path);
           initCrudState(place);
 
           place.fetching = true;
+          place.fetched = false;
           place.status = null;
         }
 
         else if (action.type.endsWith('_' + ASYNC_SUFFIXES.success)) {
-          var place = buildStorePath(draft, action.meta.path);
+          var place = buildStorePath(draft, path);
 
           place.fetching = false;
           place.fetched = true;
           place.error = null;
           place.lastUpdate = action.meta.timestamp;
-          place.data = action.payload.data;
           place.status = action.payload.status;
+
+          switch (action.meta.action) {
+            case 'create':
+              place.data.push(action.payload.data);
+              break;
+
+            case 'updateAll':
+              place.data = action.payload.data;
+              break;
+
+            case 'update':
+              var index = place.data.findIndex(data => data.id == action.payload.data.id);
+
+              if (index === -1) {
+                place.data.push(action.payload.data);
+              }
+              else {
+                place.data[index] = action.payload.data;
+              }
+
+              break;
+
+            case 'delete':
+              var index = place.data.findIndex(data => data.id == action.payload.data.id);
+
+              if (index > -1) {
+                place.data.splice(index, 1);
+              }
+
+              break;
+          }
         }
 
         else if (action.type.endsWith('_' + ASYNC_SUFFIXES.error)) {
-          var place = buildStorePath(draft, action.meta.path);
+          var place = buildStorePath(draft, path);
 
           place.fetching = false;
           place.fetched = false;

@@ -5,13 +5,13 @@ import actions from '../redux/actions';
 import Block from '../components/Block';
 
 @connect(store => ({
-	assos: store.assos.data,
-	fetching: store.assos.fetching,
-	fetched: store.assos.fetched
+	assos: store.getData('assos'),
+	fetching: store.isFetching('assos'),
+	fetched: store.isFetched('assos')
 }))
 class ScreensAssosList extends React.Component {
 	componentWillMount() {
-		this.props.dispatch(assosActions.getAll())
+		this.props.dispatch(actions.assos.all())
 	}
 
 	getStage(assos) {

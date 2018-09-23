@@ -9,34 +9,39 @@
 // Liste de toutes les actions REST api possibles
 export const actionsData = {
   all: {
-    type: 'GET_ALL_',
+    type: 'ALL_',
     method: 'get',
     action: 'updateAll',
-    affectsAll: true,
   },
-  get: {
-    type: 'GET_ONE_',
+  find: {
+    type: 'FIND_',
     method: 'get',
     action: 'update',
-    affectsAll: false,
+  },
+  one: {
+    type: 'FIND_',
+    method: 'get',
+    action: 'update',
+  },
+  get: {
+    type: 'FIND_',
+    method: 'get',
+    action: 'update',
   },
   create: {
     type: 'CREATE_',
     method: 'post',
     action: 'insert',
-    affectsAll: false,
   },
   update: {
     type: 'UPDATE_',
     method: 'put',
     action: 'update',
-    affectsAll: false,
   },
   delete: {
     type: 'DELETE_',
     method: 'delete',
     action: 'delete',
-    affectsAll: false,
   },
 };
 
@@ -48,6 +53,7 @@ export const actionHandler = {
       var id, queryParams, jsonData;
       // On match si c'est une méthode HTTP connue et on wipe tout
       switch (prop) {
+        case 'find':
         case 'one':
         case 'get':
           if (args.length > 0 || target.idIsGiven || prop === 'one') {
@@ -169,7 +175,7 @@ export class Actions {
 
     return {
       type: this.generateType(action),
-      meta: { affectsAll: actionData.affectsAll, arrayAction: actionData.action, path: this.path, timestamp: Date.now() },
+      meta: { action: actionData.action, path: this.path, timestamp: Date.now() },
       payload: window.axios[actionData.method](this.generateUri(this.rootUri + this.uri, queryParams), jsonData)
     };
   }

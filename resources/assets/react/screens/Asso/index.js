@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import actions from '../../redux/actions';
-import loggedUserActions from '../../redux/custom/loggedUser/actions';
 import { NavLink, Redirect, Link, Route, Switch } from 'react-router-dom';
 import { findIndex } from 'lodash';
 import { NotificationManager } from 'react-notifications';
@@ -19,13 +18,19 @@ import Calendar from '../../components/Calendar/index.js';
 
 /* TODO: Make it stateless & unconnected */
 /* TODO: Add notifications for article create, copy Erode project */
-@connect((store, props) => ({
-	asso: store.assos.data.find(asso => asso.login == props.match.params.login),
-	members: store.assoMembers.data,
-	fetching: store.assos.fetching,
-	fetched: store.assos.fetched,
-	user: store.loggedUser.data
-}))
+@connect((store, props) => {
+	var asso = store.findData('assos', props.match.params.login, 'login');
+
+	return {
+		user: store.getData('user', false),
+		asso: asso,
+		member: store.findData(['user', 'assos'], props.match.params.login, 'login', false),
+		contacts: store.getData(['assos', asso.id, 'contacts']),
+		members: store.getData(['assos', asso.id, 'members']),
+		fetching: store.isFetching('assos'),
+		fetched: store.isFetched('assos'),
+	};
+})
 class AssoScreen extends React.Component {
 	constructor(props) {
 		super(props);
@@ -57,68 +62,82 @@ class AssoScreen extends React.Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if (props.asso) {
-			if (!this.state.dataRequested) {
-				this.setState(prevState => ({ ...prevState, dataRequested: true }));
-
-				rolesActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
-					this.setState(prevState => ({ ...prevState, rolesFetched: true, roles: res.data }));
-				});
-
-				contactsActions.setUriParams({ resource: 'assos', resource_id: props.asso.id }).getAll().payload.then(res => {
-					this.setState(prevState => ({ ...prevState, contactsFetched: true, contacts: res.data }));
-				});
-
-				articlesActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
-					this.setState(prevState => ({ ...prevState, articlesFetched: true, articles: res.data }));
-				});
-
-				calendarsActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
-					var calendars = res.data
-					this.setState(prevState => ({ ...prevState, calendarsFetched: true, calendars: calendars }));
-
-					calendars.forEach(calendar => {
-						calendarEventsActions.setUriParams({ calendar_id: calendar.id }).getAll().payload.then(res => {
-							this.setState(prevState => {
-								prevState.events[calendar.id] = res.data;
-
-								if (Object.keys(prevState.events).length === prevState.calendars.length)
-								prevState.eventsFetched = true;
-
-								return prevState;
-							});
-						}).catch(res => {
-							prevState.events[calendar.id] = [];
-
-							if (Object.keys(prevState.events).length === prevState.calendars.length)
-							prevState.eventsFetched = true;
-
-							return prevState;
-						});
-					})
-				}).catch(res => {
-					this.setState(prevState => ({ ...prevState, calendarsFetched: true }));
-				});
-			}
+		if (this.props.match.params.login !== props.match.params.login) {
+			this.loadAssosData(props.match.params.login);
 		}
-		else if (props.members && this.state.isMember === undefined) {
-			const isMember = findIndex(props.members, member => {
-				return member.id === props.user.id
-					&& member.validated_by
-			})
 
-			this.setState(prevState => ({ ...prevState, isMember: isMember }));
-		}
-		else {
-			this.setState(prevState => ({ ...prevState, dataRequested: false }));
-			this.componentWillMount();
-		}
+		// if (props.asso) {
+		// 	if (!this.state.dataRequested) {
+		// 		this.setState(prevState => ({ ...prevState, dataRequested: true }));
+		//
+		// 		actions.roles.all({ owner: 'asso,' + props.asso.id }).payload.then(res => {
+		// 			this.setState(prevState => ({ ...prevState, rolesFetched: true, roles: res.data }));
+		// 		});
+		//
+		// 		contactsActions.setUriParams({ resource: 'assos', resource_id: props.asso.id }).getAll().payload.then(res => {
+		// 			this.setState(prevState => ({ ...prevState, contactsFetched: true, contacts: res.data }));
+		// 		});
+		//
+		// 		articlesActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
+		// 			this.setState(prevState => ({ ...prevState, articlesFetched: true, articles: res.data }));
+		// 		});
+		//
+		// 		calendarsActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
+		// 			var calendars = res.data
+		// 			this.setState(prevState => ({ ...prevState, calendarsFetched: true, calendars: calendars }));
+		//
+		// 			calendars.forEach(calendar => {
+		// 				calendarEventsActions.setUriParams({ calendar_id: calendar.id }).getAll().payload.then(res => {
+		// 					this.setState(prevState => {
+		// 						prevState.events[calendar.id] = res.data;
+		//
+		// 						if (Object.keys(prevState.events).length === prevState.calendars.length)
+		// 						prevState.eventsFetched = true;
+		//
+		// 						return prevState;
+		// 					});
+		// 				}).catch(res => {
+		// 					prevState.events[calendar.id] = [];
+		//
+		// 					if (Object.keys(prevState.events).length === prevState.calendars.length)
+		// 					prevState.eventsFetched = true;
+		//
+		// 					return prevState;
+		// 				});
+		// 			})
+		// 		}).catch(res => {
+		// 			this.setState(prevState => ({ ...prevState, calendarsFetched: true }));
+		// 		});
+		// 	}
+		// }
+		// else if (props.members && this.state.isMember === undefined) {
+		// 	const isMember = findIndex(props.members, member => {
+		// 		return member.id === props.user.id
+		// 			&& member.validated_by
+		// 	})
+		//
+		// 	this.setState(prevState => ({ ...prevState, isMember: isMember }));
+		// }
+		// else {
+		// 	this.setState(prevState => ({ ...prevState, dataRequested: false }));
+		// 	this.componentWillMount();
+		// }
 	}
 
 	componentWillMount() {
-		const login = this.props.match.params.login
-		this.props.dispatch(assosActions.getOne(login));
-		this.props.dispatch(assoMembersActions.setUriParams({ asso_id: login }).getAll());
+		this.loadAssosData(this.props.match.params.login);
+	}
+
+	loadAssosData(login) {
+		// On doit d'abord récupérer l'asso id:
+		var action = actions.assos.find(login);
+
+		this.props.dispatch(action);
+
+		action.payload.then(() => {
+			this.props.dispatch(actions.assos(this.props.asso.id).members.all());
+			this.props.dispatch(actions.assos(this.props.asso.id).contacts.all());
+		});
 	}
 
 	getAllEvents(events) {
@@ -145,7 +164,7 @@ class AssoScreen extends React.Component {
 						userAssosActions.create({
 							asso_id: this.props.asso.id,
 						}).payload.then(() => {
-							this.props.dispatch(loggedUserActions.getAssos())
+							this.props.dispatch(actions.user.assos.all())
 							NotificationManager.success('Vous suivez maintenant l\'association: ' + this.props.asso.name, 'Suivre une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false } }));
@@ -170,7 +189,7 @@ class AssoScreen extends React.Component {
 						userAssosActions.remove(
 							this.props.asso.id
 						).payload.then(() => {
-							this.props.dispatch(loggedUserActions.getAssos())
+							this.props.dispatch(actions.user.assos.all())
 							NotificationManager.warning('Vous ne suivez plus l\'association: ' + this.props.asso.name, 'Suivre une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -214,8 +233,8 @@ class AssoScreen extends React.Component {
 							user_id: this.props.user.info.id,
 							role_id: this.state.role_id
 						}).payload.then(() => {
-							this.props.dispatch(loggedUserActions.getAssos())
-							this.props.dispatch(assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).getAll());
+							this.props.dispatch(actions.user.assos.all())
+							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.success('Vous avez demandé à rejoindre l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -245,8 +264,8 @@ class AssoScreen extends React.Component {
 						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).remove(
 							this.props.user.info.id
 						).payload.then(() => {
-							this.props.dispatch(assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).getAll());
-							this.props.dispatch(loggedUserActions.getAssos())
+							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
+							this.props.dispatch(actions.user.assos.all())
 							NotificationManager.warning('Vous ne faites plus partie de l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -275,8 +294,8 @@ class AssoScreen extends React.Component {
 						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).update(
 							member_id
 						).payload.then(() => {
-							this.props.dispatch(assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).getAll());
-							this.props.dispatch(loggedUserActions.getAssos())
+							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
+							this.props.dispatch(actions.user.assos.all())
 							NotificationManager.warning('Vous avez validé avec succès le membre de cette association: ' + this.props.asso.name, 'Valider un membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -305,8 +324,8 @@ class AssoScreen extends React.Component {
 						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).remove(
 							member_id
 						).payload.then(() => {
-							this.props.dispatch(assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).getAll());
-							this.props.dispatch(loggedUserActions.getAssos())
+							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
+							this.props.dispatch(actions.user.assos.all())
 							NotificationManager.warning('Vous avez retiré avec succès le membre de cette association: ' + this.props.asso.name, 'Retirer un membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -334,9 +353,8 @@ class AssoScreen extends React.Component {
 		if (this.props.fetching || !this.props.fetched || !this.props.asso)
 			return (<span className="loader huge active"></span>);
 
-		let index = findIndex(this.props.user.assos, ['id', this.props.asso.id])
-		if (index >= 0) {
-			let pivot = this.props.user.assos[index].pivot;
+		if (this.props.member) {
+			let pivot = this.props.member.pivot;
 
 			this.user = {
 				isFollowing: true,

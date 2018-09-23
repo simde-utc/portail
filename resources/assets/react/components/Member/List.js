@@ -8,7 +8,7 @@ import { findIndex } from 'lodash';
 import Member from './Member';
 
 @connect((store, props) => ({
-	user: store.loggedUser.data
+	user: store.getData('user', false)
 }))
 class MemberList extends React.Component {
 	getMemberBlocks(members, roles) {
