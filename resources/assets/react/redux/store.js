@@ -195,10 +195,8 @@ export default createStore((state = initialState, action) => {
 
         if (action.type.endsWith('_' + ASYNC_SUFFIXES.loading)) {
           var place = buildStorePath(draft, path);
-          initCrudState(place);
 
           place.fetching = true;
-          place.fetched = false;
           place.status = null;
         }
 

@@ -38,6 +38,11 @@ export const actionsData = {
     method: 'put',
     action: 'update',
   },
+  remove: {
+    type: 'DELETE_',
+    method: 'delete',
+    action: 'delete',
+  },
   delete: {
     type: 'DELETE_',
     method: 'delete',
@@ -75,10 +80,12 @@ export const actionHandler = {
           return target.generateAction('all', queryParams, jsonData);
           break;
 
+        case 'remove':
+          prop = 'delete';
         case 'create':
         case 'update':
-        case 'remove':
-          if (target.idIsGiven)
+        case 'delete':
+          if (target.idIsGiven || prop === 'create')
             [ queryParams, jsonData ] = args;
           else {
             [ id, queryParams, jsonData ] = args;
@@ -110,6 +117,15 @@ export const actionHandler = {
     else if (target[prop] !== undefined) {
       return target[prop];
     }
+    // Si on appelle une méthode qui agit directment sur la sauvegarde dans le store
+    else if (prop === 'definePath') {
+      return (path) => {
+        target.path = path.slice();
+        target.pathLocked = true;
+
+        return new Proxy(target, actionHandler);
+      }
+    }
     // On ajoute la catégorie et on gère dynmaiquement si c'est un appel propriété/méthode (expliquer sur un article de mon blog)
     else {
       target.addUri(prop);
@@ -136,34 +152,20 @@ export class Actions {
   }
 
   addUri(uri) {
-    if (this.pathLocked)
-      throw 'Can not set defined path'
-    else {
-      this.uri += '/' + uri
-      this.path.push(uri)
+    this.uri += '/' + uri;
+
+    if (!this.pathLocked) {
+      this.path.push(uri);
     }
   }
 
   addId(id) {
-    if (this.pathLocked)
-      throw 'Can not set defined path'
-    else {
-      this.uri += '/' + id
-      this.path.push('id:' + id)
+    this.uri += '/' + id;
+
+    if (!this.pathLocked) {
+      this.path.push('id:' + id);
       this.idIsGiven = true;
     }
-  }
-
-  setPath(path) {
-    if (this.pathLocked)
-      throw 'Can not set defined path'
-    else
-      this.path = path;
-  }
-
-  definePath(path) {
-    this.path = path;
-    this.pathLocked = true;
   }
 
   generateType(action) {

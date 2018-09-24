@@ -63,7 +63,7 @@ trait HasAssos
 					->first();
 
 				if (!$asso)
-					abort(403, 'L\'utilisateur ne fait pas parti de l\'association');
+					abort(404, 'L\'utilisateur ne fait pas parti de l\'association');
 			}
 
 			return $asso;
@@ -81,6 +81,6 @@ trait HasAssos
 		if ($user)
 			return $user;
 		else
-			abort(403, 'L\'utilisateur ne fait pas parti de l\'association');
+			abort(404, 'L\'utilisateur ne fait pas parti de l\'association');
 	}
 }

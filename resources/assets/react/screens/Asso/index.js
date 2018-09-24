@@ -23,10 +23,11 @@ import Calendar from '../../components/Calendar/index.js';
 
 	return {
 		user: store.getData('user', false),
+		store: store.resources,
 		asso: asso,
 		member: store.findData(['user', 'assos'], props.match.params.login, 'login', false),
 		contacts: store.getData(['assos', asso.id, 'contacts']),
-		members: store.getData(['assos', asso.id, 'members']),
+		roles: store.getData(['assos', asso.id, 'roles']),
 		fetching: store.isFetching('assos'),
 		fetched: store.isFetched('assos'),
 	};
@@ -37,17 +38,6 @@ class AssoScreen extends React.Component {
 
 		this.state = {
 			redirect: false,
-			dataRequested: false,
-			roles: [],
-			rolesFetched: false,
-			contacts: [],
-			contactsFetched: false,
-			articles: [],
-			articlesFetched: false,
-			calendars: [],
-			calendarsFetched: false,
-			events: {},
-			eventsFetched: false,
 			modal: {
 				show: false,
 				title: '',
@@ -135,7 +125,7 @@ class AssoScreen extends React.Component {
 		this.props.dispatch(action);
 
 		action.payload.then(() => {
-			this.props.dispatch(actions.assos(this.props.asso.id).members.all());
+			this.props.dispatch(actions.definePath(['assos', this.props.asso.id, 'roles']).roles.all({ owner: 'asso,' + this.props.asso.id }));
 			this.props.dispatch(actions.assos(this.props.asso.id).contacts.all());
 		});
 	}
@@ -161,7 +151,7 @@ class AssoScreen extends React.Component {
 					type: 'success',
 					text: 'Suivre',
 					onClick: () => {
-						userAssosActions.create({
+						actions.user.assos.create({}, {
 							asso_id: this.props.asso.id,
 						}).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
@@ -186,7 +176,7 @@ class AssoScreen extends React.Component {
 					type: 'danger',
 					text: 'Ne plus suivre',
 					onClick: () => {
-						userAssosActions.remove(
+						actions.user.assos.remove(
 							this.props.asso.id
 						).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
@@ -215,7 +205,7 @@ class AssoScreen extends React.Component {
 							onChange={(role) => { this.setState(prevState => ({ ...prevState, role_id: role.value })); }}
 							name="role_id"
 							placeholder="Rôle dans cette association"
-							options={ this.state.roles.map(role => ({
+							options={ this.props.roles.map(role => ({
 								value: role.id,
 								label: role.name + ' - ' + role.description,
 							})) }
@@ -229,12 +219,11 @@ class AssoScreen extends React.Component {
 						if (!this.state.role_id)
 							return;
 
-						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).create({
-							user_id: this.props.user.info.id,
+						actions.assos(this.props.asso.id).members.create({}, {
+							user_id: this.props.user.id,
 							role_id: this.state.role_id
 						}).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
-							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.success('Vous avez demandé à rejoindre l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -261,10 +250,9 @@ class AssoScreen extends React.Component {
 					type: 'danger',
 					text: 'Quitter l\'association',
 					onClick: () => {
-						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).remove(
-							this.props.user.info.id
+						actions.assos(this.props.asso.id).members.remove(
+							this.props.user.id
 						).payload.then(() => {
-							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							this.props.dispatch(actions.user.assos.all())
 							NotificationManager.warning('Vous ne faites plus partie de l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
 						}).finally(() => {
@@ -291,10 +279,9 @@ class AssoScreen extends React.Component {
 					type: 'success',
 					text: 'Valider le membre',
 					onClick: () => {
-						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).update(
+						actions.assos(this.props.asso.id).members.update(
 							member_id
 						).payload.then(() => {
-							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							this.props.dispatch(actions.user.assos.all())
 							NotificationManager.warning('Vous avez validé avec succès le membre de cette association: ' + this.props.asso.name, 'Valider un membre d\'une association')
 						}).finally(() => {
@@ -321,10 +308,9 @@ class AssoScreen extends React.Component {
 					type: 'danger',
 					text: 'Retirer le membre',
 					onClick: () => {
-						assoMembersActions.setUriParams({ asso_id: this.props.asso.id }).remove(
+						actions.assos(this.props.asso.id).members.remove(
 							member_id
 						).payload.then(() => {
-							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							this.props.dispatch(actions.user.assos.all())
 							NotificationManager.warning('Vous avez retiré avec succès le membre de cette association: ' + this.props.asso.name, 'Retirer un membre d\'une association')
 						}).finally(() => {

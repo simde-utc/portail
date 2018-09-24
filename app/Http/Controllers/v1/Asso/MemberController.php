@@ -98,7 +98,7 @@ class MemberController extends Controller
 		$asso->assignMembers(\Auth::id(), [
 			'role_id' => $request->input('role_id'),
 			'semester_id' => $semester->id
-		]);
+		], true);
 
 		$member = $this->getUserFromAsso($request, $asso, $user->id, $semester);
 
