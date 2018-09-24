@@ -5,14 +5,13 @@ import { connect } from 'react-redux';
 
 import actions from '../../redux/actions';
 
-import MemberList from '../../components/Member/DoubleList';
+import ArticleList from '../../components/Article/List';
 
 @connect((store, props) => ({
 	user: store.getData('user', false),
-	members: store.getData(['assos', props.asso.id, 'members']),
-	fetched: store.isFetched(['assos', props.asso.id, 'members']),
-	fetching: store.isFetching(['assos', props.asso.id, 'members']),
-	roles: store.getData(['assos', props.asso.id, 'roles']),
+	articles: store.getData(['assos', props.asso.id, 'articles']),
+	fetched: store.isFetched(['assos', props.asso.id, 'articles']),
+	fetching: store.isFetching(['assos', props.asso.id, 'articles']),
 }))
 class AssoMemberListScreen extends React.Component {
   componentWillMount() {
@@ -28,12 +27,12 @@ class AssoMemberListScreen extends React.Component {
   }
 
   loadAssosData(id) {
-		this.props.dispatch(actions.assos(this.props.asso.id).members.all());
+		this.props.dispatch(actions.definePath(['assos', this.props.asso.id, 'articles']).addValidStatus(416).articles().all({ owner: 'asso,' + this.props.asso.id }));
 	}
 
 	render() {
 		return (
-			<MemberList members={ this.props.members } roles={ this.props.roles }  fetched={ this.props.fetched } fetching={ this.props.fetching } { ...this.props } />
+			<ArticleList articles={ this.props.articles } fetched={ this.props.fetched } fetching={ this.props.fetching } { ...this.props } />
 		);
 	}
 }

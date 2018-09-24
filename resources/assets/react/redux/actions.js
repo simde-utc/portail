@@ -117,11 +117,27 @@ export const actionHandler = {
     else if (target[prop] !== undefined) {
       return target[prop];
     }
-    // Si on appelle une méthode qui agit directment sur la sauvegarde dans le store
+    // Si on appelle une méthode qui agit directement sur la sauvegarde dans le store
     else if (prop === 'definePath') {
       return (path) => {
         target.path = path.slice();
         target.pathLocked = true;
+
+        return new Proxy(target, actionHandler);
+      }
+    }
+    // Si on appelle une méthode qui agit directement sur la sauvegarde dans le store
+    else if (prop === 'addValidStatus') {
+      return (validStatus) => {
+        target.validStatus.push(validStatus);
+
+        return new Proxy(target, actionHandler);
+      }
+    }
+    // Si on appelle une méthode qui agit directement sur la sauvegarde dans le store
+    else if (prop === 'defineValidStatus') {
+      return (validStatus) => {
+        target.validStatus = validStatus;
 
         return new Proxy(target, actionHandler);
       }
@@ -147,6 +163,7 @@ export class Actions {
     this.path = [];
     this.pathLocked = false;
     this.actions = actionsData;
+    this.validStatus = [ 200, 201, 202, 203, 204 ];
 
     return new Proxy(this, actionHandler);
   }
@@ -177,7 +194,7 @@ export class Actions {
 
     return {
       type: this.generateType(action),
-      meta: { action: actionData.action, path: this.path, timestamp: Date.now() },
+      meta: { action: actionData.action, validStatus: this.validStatus, path: this.path, timestamp: Date.now() },
       payload: window.axios[actionData.method](this.generateUri(this.rootUri + this.uri, queryParams), jsonData)
     };
   }

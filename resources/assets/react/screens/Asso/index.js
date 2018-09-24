@@ -11,8 +11,8 @@ import Dropdown from './../../components/Dropdown.js';
 import ArticleForm from './../../components/Article/Form.js';
 
 import AssoHomeScreen from './Home.js';
-import ArticleList from '../../components/Article/List.js';
-import AssoMemberListScreen from './/MemberList.js';
+import ArticleList from './ArticleList.js';
+import AssoMemberListScreen from './MemberList.js';
 
 import Calendar from '../../components/Calendar/index.js';
 
@@ -156,6 +156,8 @@ class AssoScreen extends React.Component {
 							this.props.dispatch(actions.user.assos.all())
 							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.success('Vous suivez maintenant l\'association: ' + this.props.asso.name, 'Suivre une association')
+						}).catch(() => {
+							NotificationManager.error('Vous n\'avez pas le droit de suivre cette association: ' + this.props.asso.name, 'Suivre une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false } }));
 						});
@@ -227,6 +229,8 @@ class AssoScreen extends React.Component {
 							this.props.dispatch(actions.user.assos.all())
 							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.success('Vous avez demandé à rejoindre l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
+						}).catch(() => {
+							NotificationManager.error('Vous ne pouvez pas devenir membre de cette association: ' + this.props.asso.name, 'Devenir membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
 						});
@@ -257,7 +261,9 @@ class AssoScreen extends React.Component {
 						).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
 							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
-							NotificationManager.warning('Vous ne faites plus partie de l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
+							NotificationManager.warning('Vous ne faites plus partie de l\'association: ' + this.props.asso.name, 'Quitter une association')
+						}).catch(() => {
+							NotificationManager.error('Une erreur a été rencontrée lorsque vous avez voulu quitter cette association: ' + this.props.asso.name, 'Quitter une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
 						});
@@ -288,6 +294,8 @@ class AssoScreen extends React.Component {
 							this.props.dispatch(actions.user.assos.all())
 							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.warning('Vous avez validé avec succès le membre de cette association: ' + this.props.asso.name, 'Valider un membre d\'une association')
+						}).catch(() => {
+							NotificationManager.error('Vous n\'avez pas le droit de valider le membre de cette association: ' + this.props.asso.name, 'Valider un membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
 						});
@@ -318,6 +326,8 @@ class AssoScreen extends React.Component {
 							this.props.dispatch(actions.user.assos.all())
 							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.warning('Vous avez retiré avec succès le membre de cette association: ' + this.props.asso.name, 'Retirer un membre d\'une association')
+						}).catch(() => {
+							NotificationManager.error('Vous n\'avez pas le droit de retirer le membre de cette association: ' + this.props.asso.name, 'Retirer un membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
 						});
@@ -409,7 +419,7 @@ class AssoScreen extends React.Component {
 							<Calendar events={ this.getAllEvents(this.state.events) } fetched={ this.state.articlesFetched } />
 						)} />
 					<Route path={`${this.props.match.url}/articles`} render={ () => (
-							<ArticleList articles={ this.state.articles } fetched={ this.state.articlesFetched } />
+							<ArticleList asso={ this.props.asso } />
 						)} />
 					<Route path={`${this.props.match.url}/members`} render={ () => (
 							<AssoMemberListScreen asso={ this.props.asso } isMember={ this.user.isMember } leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>

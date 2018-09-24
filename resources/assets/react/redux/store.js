@@ -199,8 +199,8 @@ export default createStore((state = initialState, action) => {
           place.fetching = true;
           place.status = null;
         }
-
-        else if (action.type.endsWith('_' + ASYNC_SUFFIXES.success)) {
+        // Si on a défini que la réponse HTTP était valide:
+        else if (action.meta.validStatus.includes(action.payload.status || action.payload.response.status)) {
           var place = buildStorePath(draft, path);
 
           place.fetching = false;
@@ -209,44 +209,57 @@ export default createStore((state = initialState, action) => {
           place.lastUpdate = action.meta.timestamp;
           place.status = action.payload.status;
 
-          switch (action.meta.action) {
-            case 'create':
-              place.data.push(action.payload.data);
-              break;
-
-            case 'updateAll':
-              place.data = action.payload.data;
-              break;
-
-            case 'update':
-              var index = place.data.findIndex(data => data.id == action.payload.data.id);
-
-              if (index === -1) {
+          if (action.type.endsWith('_' + ASYNC_SUFFIXES.success)) {
+            switch (action.meta.action) {
+              case 'create':
                 place.data.push(action.payload.data);
-              }
-              else {
-                place.data[index] = action.payload.data;
-              }
+                break;
 
-              break;
+              case 'updateAll':
+                place.data = action.payload.data;
+                break;
 
-            case 'delete':
-              var index = place.data.findIndex(data => data.id == action.payload.data.id);
+              case 'update':
+                var index = place.data.findIndex(data => data.id == action.payload.data.id);
 
-              if (index > -1) {
-                place.data.splice(index, 1);
-              }
+                if (index === -1) {
+                  place.data.push(action.payload.data);
+                }
+                else {
+                  place.data[index] = action.payload.data;
+                }
 
-              break;
+                break;
+
+              case 'delete':
+                var index = place.data.findIndex(data => data.id == action.payload.data.id);
+
+                if (index > -1) {
+                  place.data.splice(index, 1);
+                }
+
+                break;
+            }
           }
         }
 
         else if (action.type.endsWith('_' + ASYNC_SUFFIXES.error)) {
           var place = buildStorePath(draft, path);
 
+          place.data = [];
           place.fetching = false;
           place.fetched = false;
           place.error = action.payload;
+          place.status = action.payload.status;
+        }
+        // On a un success du côté de Redux mais on refuse de notre côté le code HTTP
+        else {
+          var place = buildStorePath(draft, path);
+
+          place.data = [];
+          place.fetching = false;
+          place.fetched = false;
+          place.error = 'NOT ACCEPTED';
           place.status = action.payload.status;
         }
 
