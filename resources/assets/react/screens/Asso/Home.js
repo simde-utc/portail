@@ -1,6 +1,7 @@
 import React from 'react';
 import AspectRatio from 'react-aspect-ratio';
 import { Button } from 'reactstrap';
+import ReactMarkdown from 'react-markdown';
 
 class AssoHomeScreen extends React.Component {
 	getFollowButton(isFollowing, isMember) {
@@ -87,7 +88,7 @@ class AssoHomeScreen extends React.Component {
 							<h1 className={ "title mb-1 " + color }>{ asso.shortname }</h1>
 							<span className="d-block text-muted mb-4">{ asso.name }</span>
 							<span>{ asso.type && asso.type.description }</span>
-							<p className="my-3">{ asso.description }</p>
+							<ReactMarkdown className="my-3" source={ asso.description } />
 						</div>
 						<div className="col-md-2"></div>
 					</div>

@@ -10,9 +10,9 @@ import Select from 'react-select';
 import Dropdown from './../../components/Dropdown.js';
 import ArticleForm from './../../components/Article/Form.js';
 
-import ScreensAssoHome from './Home.js';
+import AssoHomeScreen from './Home.js';
 import ArticleList from '../../components/Article/List.js';
-import MemberList from '../../components/Member/DoubleList.js';
+import AssoMemberListScreen from './/MemberList.js';
 
 import Calendar from '../../components/Calendar/index.js';
 
@@ -23,7 +23,6 @@ import Calendar from '../../components/Calendar/index.js';
 
 	return {
 		user: store.getData('user', false),
-		store: store.resources,
 		asso: asso,
 		member: store.findData(['user', 'assos'], props.match.params.login, 'login', false),
 		contacts: store.getData(['assos', asso.id, 'contacts']),
@@ -155,6 +154,7 @@ class AssoScreen extends React.Component {
 							asso_id: this.props.asso.id,
 						}).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
+							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.success('Vous suivez maintenant l\'association: ' + this.props.asso.name, 'Suivre une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false } }));
@@ -180,6 +180,7 @@ class AssoScreen extends React.Component {
 							this.props.asso.id
 						).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
+							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.warning('Vous ne suivez plus l\'association: ' + this.props.asso.name, 'Suivre une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -224,6 +225,7 @@ class AssoScreen extends React.Component {
 							role_id: this.state.role_id
 						}).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
+							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.success('Vous avez demandé à rejoindre l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -254,6 +256,7 @@ class AssoScreen extends React.Component {
 							this.props.user.id
 						).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
+							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.warning('Vous ne faites plus partie de l\'association: ' + this.props.asso.name, 'Devenir membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -283,6 +286,7 @@ class AssoScreen extends React.Component {
 							member_id
 						).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
+							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.warning('Vous avez validé avec succès le membre de cette association: ' + this.props.asso.name, 'Valider un membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -312,6 +316,7 @@ class AssoScreen extends React.Component {
 							member_id
 						).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
+							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
 							NotificationManager.warning('Vous avez retiré avec succès le membre de cette association: ' + this.props.asso.name, 'Retirer un membre d\'une association')
 						}).finally(() => {
 							this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }}));
@@ -397,7 +402,7 @@ class AssoScreen extends React.Component {
 
 				<Switch>
 					<Route path={`${this.props.match.url}`} exact render={ () => (
-							<ScreensAssoHome asso={ this.props.asso } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting }
+							<AssoHomeScreen asso={ this.props.asso } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting }
 								follow={ this.followAsso.bind(this) } unfollow={ this.unfollowAsso.bind(this) } join={ this.joinAsso.bind(this) } leave={ this.leaveAsso.bind(this) } />
 						)} />
 					<Route path={`${this.props.match.url}/evenements`} render={ () => (
@@ -407,8 +412,7 @@ class AssoScreen extends React.Component {
 							<ArticleList articles={ this.state.articles } fetched={ this.state.articlesFetched } />
 						)} />
 					<Route path={`${this.props.match.url}/members`} render={ () => (
-							<MemberList members={ this.props.members } roles={ this.state.roles } isMember={ this.state.isMember } fetched={ this.state.membersFetched && this.state.rolesFetched }
-								leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>
+							<AssoMemberListScreen asso={ this.props.asso } isMember={ this.user.isMember } leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>
 						)} />
 					<Route path={`${this.props.match.url}/article`} render={ () => (
 							<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
