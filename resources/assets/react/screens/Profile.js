@@ -1,27 +1,27 @@
 import React from 'react';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import loggedUserActions from '../redux/custom/loggedUser/actions';
+import actions from '../redux/actions';
 
 // Profile Components
 import UserInfo from '../components/Profile/UserInfo';
 import AssociativeCarreer from '../components/Profile/AssociativeCarreer';
 
 @connect(store => ({
-	user: store.loggedUser.data,
+	user: store.getData('user', false),
 }))
 class ScreensProfile extends React.Component {
 	componentWillMount() {
-		this.props.dispatch(loggedUserActions.getInfo())
+		this.props.dispatch(actions.user.get())
 	}
 
 	load(name) {
 		let action = null;
 		switch (name) {
 			case 'info':
-				action = loggedUserActions.getInfo();
+				action = actions.user.get();
 			case 'details':
-				action = loggedUserActions.getDetails();
+				action = actions.user.details.get();
 		}
 		if (action != null)
 			this.props.dispatch(action)

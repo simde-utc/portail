@@ -8,7 +8,7 @@ import { findIndex } from 'lodash';
 import Member from './Member';
 
 @connect((store, props) => ({
-	user: store.loggedUser.data
+	user: store.getData('user', false)
 }))
 class MemberList extends React.Component {
 	getMemberBlocks(members, roles) {
@@ -36,10 +36,14 @@ class MemberList extends React.Component {
 	render() {
 		return (
 			<div className="container MemberList">
-				<h1 className="title">{ this.props.members.length > 0 && this.props.title }</h1>
-				<div className="d-flex justify-content-center flex-wrap mb-5">
-					{ this.getMemberBlocks(this.props.members, this.props.roles) }
-				</div>
+				<h1 className="title">{ this.props.title }</h1>
+				{ this.props.members.length > 0 ? (
+					<div className="d-flex justify-content-center flex-wrap mb-5">
+						{ this.getMemberBlocks(this.props.members, this.props.roles) }
+					</div>
+				) : (
+					<p>Aucun membre</p>
+				)}
 			</div>
 		);
 	}

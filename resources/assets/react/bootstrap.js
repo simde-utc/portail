@@ -1,5 +1,4 @@
 import store from './redux/store.js';
-import loggedUserActions from './redux/custom/loggedUser/actions';
 window._ = require('lodash');
 
 /**
@@ -33,7 +32,7 @@ window.axios.interceptors.response.use(
 	error => {
 		// Deal with Unauthenticated requests
 		if (error.response.status == 401) {
-			store.dispatch(loggedUserActions.removeUser())
+			//store.dispatch(loggedUserActions.removeUser())
 		}
 		return Promise.reject(error);
 	}
