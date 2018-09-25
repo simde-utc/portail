@@ -31,9 +31,10 @@ window.axios.interceptors.response.use(
 	response => response,
 	error => {
 		// Deal with Unauthenticated requests
-		if (error.response.status == 401) {
-			//store.dispatch(loggedUserActions.removeUser())
+		if (error.response.status === 401) {
+			store.resources.user = {};
 		}
+
 		return Promise.reject(error);
 	}
 );

@@ -51,63 +51,6 @@ class AssoScreen extends React.Component {
 		if (this.props.match.params.login !== props.match.params.login) {
 			this.loadAssosData(props.match.params.login);
 		}
-
-		// if (props.asso) {
-		// 	if (!this.state.dataRequested) {
-		// 		this.setState(prevState => ({ ...prevState, dataRequested: true }));
-		//
-		// 		actions.roles.all({ owner: 'asso,' + props.asso.id }).payload.then(res => {
-		// 			this.setState(prevState => ({ ...prevState, rolesFetched: true, roles: res.data }));
-		// 		});
-		//
-		// 		contactsActions.setUriParams({ resource: 'assos', resource_id: props.asso.id }).getAll().payload.then(res => {
-		// 			this.setState(prevState => ({ ...prevState, contactsFetched: true, contacts: res.data }));
-		// 		});
-		//
-		// 		articlesActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
-		// 			this.setState(prevState => ({ ...prevState, articlesFetched: true, articles: res.data }));
-		// 		});
-		//
-		// 		calendarsActions.getAll({ owner: 'asso,' + props.asso.id }).payload.then(res => {
-		// 			var calendars = res.data
-		// 			this.setState(prevState => ({ ...prevState, calendarsFetched: true, calendars: calendars }));
-		//
-		// 			calendars.forEach(calendar => {
-		// 				calendarEventsActions.setUriParams({ calendar_id: calendar.id }).getAll().payload.then(res => {
-		// 					this.setState(prevState => {
-		// 						prevState.events[calendar.id] = res.data;
-		//
-		// 						if (Object.keys(prevState.events).length === prevState.calendars.length)
-		// 						prevState.eventsFetched = true;
-		//
-		// 						return prevState;
-		// 					});
-		// 				}).catch(res => {
-		// 					prevState.events[calendar.id] = [];
-		//
-		// 					if (Object.keys(prevState.events).length === prevState.calendars.length)
-		// 					prevState.eventsFetched = true;
-		//
-		// 					return prevState;
-		// 				});
-		// 			})
-		// 		}).catch(res => {
-		// 			this.setState(prevState => ({ ...prevState, calendarsFetched: true }));
-		// 		});
-		// 	}
-		// }
-		// else if (props.members && this.state.isMember === undefined) {
-		// 	const isMember = findIndex(props.members, member => {
-		// 		return member.id === props.user.id
-		// 			&& member.validated_by
-		// 	})
-		//
-		// 	this.setState(prevState => ({ ...prevState, isMember: isMember }));
-		// }
-		// else {
-		// 	this.setState(prevState => ({ ...prevState, dataRequested: false }));
-		// 	this.componentWillMount();
-		// }
 	}
 
 	componentWillMount() {

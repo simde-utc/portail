@@ -114,7 +114,7 @@ class AssoHomeScreen extends React.Component {
 							<span className="d-block text-muted mb-4">{ asso.name }</span>
 							<span>{ asso.type && asso.type.description }</span>
 							<ReactMarkdown className="my-3" source={ asso.description } />
-							<ContactList contacts={ this.props.contacts } />
+							<ContactList className="mt-4" contacts={ this.props.contacts } />
 						</div>
 					</div>
 				) : null }
