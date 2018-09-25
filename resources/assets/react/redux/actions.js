@@ -7,23 +7,13 @@
 **/
 
 // Liste de toutes les actions REST api possibles
-export const actionsData = {
+export let actionsData = {
   all: {
     type: 'ALL_',
     method: 'get',
     action: 'updateAll',
   },
   find: {
-    type: 'FIND_',
-    method: 'get',
-    action: 'update',
-  },
-  one: {
-    type: 'FIND_',
-    method: 'get',
-    action: 'update',
-  },
-  get: {
     type: 'FIND_',
     method: 'get',
     action: 'update',
@@ -49,6 +39,12 @@ export const actionsData = {
     action: 'delete',
   },
 };
+
+// On crée des alias:
+actionsData.one = actionsData.find;
+actionsData.get = actionsData.find;
+actionsData.remove = actionsData.delete;
+
 
 // Gestionnaire d'actions (crée dynamiquement les routes api à appeler et où stocker les données)
 export const actionHandler = {
@@ -180,7 +176,7 @@ export class Actions {
     this.uri += '/' + id;
 
     if (!this.pathLocked) {
-      this.path.push('id:' + id);
+      this.path.push(id);
       this.idIsGiven = true;
     }
   }

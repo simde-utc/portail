@@ -16,8 +16,6 @@ import AssoMemberListScreen from './MemberList.js';
 
 import Calendar from '../../components/Calendar/index.js';
 
-/* TODO: Make it stateless & unconnected */
-/* TODO: Add notifications for article create, copy Erode project */
 @connect((store, props) => {
 	var asso = store.findData('assos', props.match.params.login, 'login');
 
@@ -25,7 +23,6 @@ import Calendar from '../../components/Calendar/index.js';
 		user: store.getData('user', false),
 		asso: asso,
 		member: store.findData(['user', 'assos'], props.match.params.login, 'login', false),
-		contacts: store.getData(['assos', asso.id, 'contacts']),
 		roles: store.getData(['assos', asso.id, 'roles']),
 		fetching: store.isFetching('assos'),
 		fetched: store.isFetched('assos'),
@@ -125,7 +122,6 @@ class AssoScreen extends React.Component {
 
 		action.payload.then(() => {
 			this.props.dispatch(actions.definePath(['assos', this.props.asso.id, 'roles']).roles.all({ owner: 'asso,' + this.props.asso.id }));
-			this.props.dispatch(actions.assos(this.props.asso.id).contacts.all());
 		});
 	}
 
@@ -412,7 +408,7 @@ class AssoScreen extends React.Component {
 
 				<Switch>
 					<Route path={`${this.props.match.url}`} exact render={ () => (
-							<AssoHomeScreen asso={ this.props.asso } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting }
+							<AssoHomeScreen asso={ this.props.asso } contacts={ this.props.contacts } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting }
 								follow={ this.followAsso.bind(this) } unfollow={ this.unfollowAsso.bind(this) } join={ this.joinAsso.bind(this) } leave={ this.leaveAsso.bind(this) } />
 						)} />
 					<Route path={`${this.props.match.url}/evenements`} render={ () => (

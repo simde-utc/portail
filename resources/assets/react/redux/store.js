@@ -70,7 +70,7 @@ export const initialState = {
       if (data[props[key]] !== undefined) {
         data = data[props[key]]
       }
-      else if (data.resources && data.resources[props[key]] !== undefined) {
+      else if (data.resources[props[key]] !== undefined) {
         data = data.resources[props[key]]
       }
       else {
@@ -89,12 +89,18 @@ export const initialState = {
     return this.get(this.propsToArray(props).concat(['data']), replacement, forceReplacement);
   },
   findData: function (props, value, key = 'id', replacement = {}, forceReplacement = true) {
-    var data = this.getData(props, []);
+    // Les ressources sont rangées par id:
+    if (key === 'id') {
+      return this.getData(this.propsToArray(props).concat(['value']), replacement, forceReplacement);
+    }
+    else {
+      var data = this.getData(props, []);
 
-    for (let k in data) {
-      if (data[k][key] === value) {
-        if (!forceReplacement || !(data[k] instanceof Object) || Object.keys(data[k]).length > 0)
+      for (let k in data) {
+        if (data[k][key] === value) {
+          if (!forceReplacement || !(data[k] instanceof Object) || Object.keys(data[k]).length > 0)
           return data[k];
+        }
       }
     }
 
@@ -148,122 +154,149 @@ export const initCrudState = (state, initialState = initialCrudState) => {
 
 // Ici, toute la magie opère, on génère dynmaiquement et automatiquement la route api et l'emplacement dans le store
 export const buildStorePath = (store, path) => {
-  var place = store.resources;
-  var part, isId = false;
+  var place = store;
+  var part;
 
   for (let key in path) {
     part = path[key];
-    isId = false;
 
-    if (place[part] !== undefined) {
-      place = place[part];
+    if (place.resources[part] === undefined) {
+      place.resources[part] = {};
+      initCrudState(place.resources[part]);
     }
-    else if (place.resources !== undefined) {
-      if (part.startsWith('id:')) {
-        part = part.slice(3);
-        isId = true;
-      }
 
-      if (place.resources[part] === undefined) {
-        place.resources[part] = {};
-      }
-
-      place = place.resources[part];
-    }
-    else {
-      place[part] = {};
-      initCrudState(place[part]);
-
-      place = place[part];
-    }
+    place = place.resources[part];
   }
 
   return place;
 }
+
+export const makeResourceSuccessed = (place, timestamp, status) => {
+  place.fetching = false;
+  place.fetched = true;
+  place.error = null;
+  place.lastUpdate = timestamp;
+  place.status = status;
+};
 
 // Ici on crée le store et on modifie ses données via immer en fonction de la récup des données
 export default createStore((state = initialState, action) => {
   console.log(action.type);
   if (action.meta && action.meta.path && action.meta.path.length > 0) {
     return produce(state, draft => {
-        var path = action.meta.path;
+      var path = action.meta.path;
+      var id;
 
-        // Si on ne modifie qu'une donnée précise, il faut qu'on change le statut pour la ressource
-        if (action.meta.action !== 'updateAll') {
-          path = path.slice(0, -1);
-        }
+      // Si on ne modifie qu'une donnée précise, il faut qu'on change le statut pour la ressource
+      if (action.meta.action !== 'updateAll') {
+        path = path.slice();
+        id = path.pop();
+      }
 
-        if (action.type.endsWith('_' + ASYNC_SUFFIXES.loading)) {
-          var place = buildStorePath(draft, path);
+      var place = buildStorePath(draft, path);
 
-          place.fetching = true;
-          place.status = null;
-        }
-        // Si on a défini que la réponse HTTP était valide:
-        else if (action.meta.validStatus.includes(action.payload.status || action.payload.response.status)) {
-          var place = buildStorePath(draft, path);
+      if (action.type.endsWith('_' + ASYNC_SUFFIXES.loading)) {
+        place.fetching = true;
+        place.status = null;
+      }
+      // Si on a défini que la réponse HTTP était valide:
+      else if (action.meta.validStatus.includes(action.payload.status || action.payload.response.status)) {
+        if (action.type.endsWith('_' + ASYNC_SUFFIXES.success)) {
+          const { timestamp, status, data } = action.payload;
+          makeResourceSuccessed(place, timestamp, status);
 
-          place.fetching = false;
-          place.fetched = true;
-          place.error = null;
-          place.lastUpdate = action.meta.timestamp;
-          place.status = action.payload.status;
+          if (action.meta.action === 'updateAll') {
+            place.data = data;
 
-          if (action.type.endsWith('_' + ASYNC_SUFFIXES.success)) {
+            if (Array.isArray(data)) {
+              for (let key in data) {
+                var element = data[key];
+                var placeForData = buildStorePath(draft, path.concat([element.id]));
+
+                makeResourceSuccessed(placeForData, timestamp, status);
+                placeForData.data = element;
+              }
+            }
+            else if (data.id) {
+              var placeForData = buildStorePath(draft, path.concat([data.id]));
+
+              makeResourceSuccessed(placeForData, timestamp, status);
+              placeForData.data = data;
+            }
+            else {
+              var keys = Object.keys(data);
+
+              for (let key in keys) {
+                var element = data[keys[key]];
+                var placeForData = buildStorePath(draft, path.concat([keys[key]]));
+
+                makeResourceSuccessed(placeForData, timestamp, status);
+                placeForData.data = element;
+              }
+            }
+          }
+          else {
             switch (action.meta.action) {
-              case 'create':
-                place.data.push(action.payload.data);
-                break;
-
-              case 'updateAll':
-                place.data = action.payload.data;
-                break;
-
               case 'update':
-                var index = place.data.findIndex(data => data.id == action.payload.data.id);
+                var index = place.data.findIndex(dataFromPlace => dataFromPlace.id === data.id);
 
-                if (index === -1) {
-                  place.data.push(action.payload.data);
+                if (index > -1) {
+                  place.data[index] = data;
+
+                  // On modifie/stock la donnée via l'id
+                  var placeForData = buildStorePath(draft, path.concat([data.id]));
+
+                  makeResourceSuccessed(placeForData, timestamp, status);
+                  placeForData.data = data;
+
+                  break;
                 }
-                else {
-                  place.data[index] = action.payload.data;
-                }
+
+              case 'create':
+                place.data.push(data);
+
+                // On modifie/stock la donnée via l'id
+                var placeForData = buildStorePath(draft, path.concat([data.id]));
+
+                makeResourceSuccessed(placeForData, timestamp, status);
+                placeForData.data = data;
 
                 break;
 
               case 'delete':
-                var index = place.data.findIndex(data => data.id == action.payload.data.id);
+                var index = place.data.findIndex(dataFromPlace => dataFromPlace.id === data.id);
 
                 if (index > -1) {
                   place.data.splice(index, 1);
+
+                  delete place.resources[data.id];
                 }
 
                 break;
             }
           }
         }
+      }
 
-        else if (action.type.endsWith('_' + ASYNC_SUFFIXES.error)) {
-          var place = buildStorePath(draft, path);
+      else if (action.type.endsWith('_' + ASYNC_SUFFIXES.error)) {
+        place.data = [];
+        place.fetching = false;
+        place.fetched = false;
+        place.error = action.payload;
+        place.status = action.payload.status;
+      }
+      // On a un success du côté de Redux mais on refuse de notre côté le code HTTP
+      else {
+        var place = buildStorePath(draft, path);
 
-          place.data = [];
-          place.fetching = false;
-          place.fetched = false;
-          place.error = action.payload;
-          place.status = action.payload.status;
-        }
-        // On a un success du côté de Redux mais on refuse de notre côté le code HTTP
-        else {
-          var place = buildStorePath(draft, path);
+        place.data = [];
+        place.fetching = false;
+        place.fetched = false;
+        place.error = 'NOT ACCEPTED';
+        place.status = action.payload.status;
+      }
 
-          place.data = [];
-          place.fetching = false;
-          place.fetched = false;
-          place.error = 'NOT ACCEPTED';
-          place.status = action.payload.status;
-        }
-
-        return draft;
+      return draft;
     });
   }
 

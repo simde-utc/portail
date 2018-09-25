@@ -1,7 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import AspectRatio from 'react-aspect-ratio';
 import { Button } from 'reactstrap';
-import { connect } from 'react-redux';
 
 import actions from '../../redux/actions';
 

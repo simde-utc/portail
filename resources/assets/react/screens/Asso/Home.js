@@ -1,9 +1,34 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import AspectRatio from 'react-aspect-ratio';
 import { Button } from 'reactstrap';
 import ReactMarkdown from 'react-markdown';
 
+import actions from '../../redux/actions';
+
+import ContactList from '../../components/Contact/List';
+
+@connect((store, props) => ({
+	isAuthenticated: store.isFetched('user'),
+	contacts: store.getData(['assos', props.asso.id, 'contacts']),
+}))
 class AssoHomeScreen extends React.Component {
+  componentWillMount() {
+    if (this.props.asso.id) {
+      this.loadAssosData(this.props.asso.id);
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    if (this.props.asso.id !== props.asso.id) {
+      this.loadAssosData(props.asso.id);
+    }
+  }
+
+  loadAssosData(id) {
+		this.props.dispatch(actions.assos(id).contacts.all());
+	}
+
 	getFollowButton(isFollowing, isMember) {
 		if (isFollowing && !isMember) {
 			return (
@@ -81,16 +106,16 @@ class AssoHomeScreen extends React.Component {
 							<AspectRatio className="mb-2" ratio="1">
 								<img src="http://assos.utc.fr/larsen/style/img/logo-bde.jpg" style={{ width: "100%" }} />
 							</AspectRatio>
-							{ this.getFollowButton(this.props.userIsFollowing, this.props.userIsMember) }
-							{ this.getMemberButton(this.props.userIsMember, this.props.userIsFollowing, this.props.userIsWaiting) }
+							{ this.props.isAuthenticated && this.getFollowButton(this.props.userIsFollowing, this.props.userIsMember) }
+							{ this.props.isAuthenticated && this.getMemberButton(this.props.userIsMember, this.props.userIsFollowing, this.props.userIsWaiting) }
 						</div>
 						<div className="col-md-8">
 							<h1 className={ "title mb-1 " + color }>{ asso.shortname }</h1>
 							<span className="d-block text-muted mb-4">{ asso.name }</span>
 							<span>{ asso.type && asso.type.description }</span>
 							<ReactMarkdown className="my-3" source={ asso.description } />
+							<ContactList contacts={ this.props.contacts } />
 						</div>
-						<div className="col-md-2"></div>
 					</div>
 				) : null }
 			</div>
