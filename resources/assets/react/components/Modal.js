@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Modal extends Component { 
+class Modal extends React.Component { 
 	render() {
 		// onClick={ this.props.onClose } in dimmer
 		return (

@@ -7,7 +7,7 @@ class ContactType extends Model
     protected $table = 'contacts_types';
 
     protected $fillable = [
-        'name', 'pattern'
+        'name', 'type', 'pattern'
     ];
 
     protected $hidden = [
@@ -15,7 +15,7 @@ class ContactType extends Model
     ];
 
     protected $must = [
-        'pattern',
+        'type', 'pattern',
     ];
 
     public function contacts() {

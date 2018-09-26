@@ -32,6 +32,11 @@ class AuthCas extends Auth // TODO must
             // On crée une notif de rappel de linkage
             $user = $model->user;
 
+            if (!$user->image) {
+              $user->image = config('portail.cas.image').$model->login;
+              $user->save();
+            }
+
             if (!$user->isPassword())
                 $user->notify(new RememberToLinkCAS());
         });

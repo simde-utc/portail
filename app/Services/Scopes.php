@@ -601,6 +601,8 @@ class Scopes {
 				if (strpos($scope, 'user') === 0)
 					return true;
 			}
+
+			return false;
 		}
 
 		foreach ($token->scopes as $scope) {
@@ -633,6 +635,8 @@ class Scopes {
 				if (strpos($scope, 'user') !== 0)
 					return false;
 			}
+
+			return true;
 		}
 
 		foreach ($token->scopes as $scope) {
