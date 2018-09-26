@@ -17,13 +17,14 @@ class ContactList extends React.Component {
 	render() {
 		return (
 			<div className={ "ContactList " + this.props.className }>
-				{ this.props.contacts.length > 0 ? (
+				{ this.props.authorized && (
+					this.props.contacts.length > 0 ? (
 					<div className="">
 						{ this.getContacts(this.props.contacts) }
 					</div>
 				) : (
 					<p>Aucun moyen de contact disponible</p>
-				)}
+				))}
 			</div>
 		);
 	}

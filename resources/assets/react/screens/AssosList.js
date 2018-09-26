@@ -4,8 +4,6 @@ import actions from '../redux/actions';
 import { Card, CardBody, CardTitle, CardSubtitle, CardFooter, Button } from 'reactstrap';
 import AspectRatio from 'react-aspect-ratio';
 
-import Block from '../components/Block';
-
 @connect(store => ({
 	assos: store.getData('assos'),
 	fetching: store.isFetching('assos'),
@@ -16,13 +14,13 @@ class ScreensAssosList extends React.Component {
 		this.props.dispatch(actions.assos.all())
 	}
 
-	getStage(assos) {
+	getStage(assos, parent) {
 		return (
-			<div className="d-md-inline-flex">
-				<div className="bg-bde align-self-stretch" style={{ width: 100 }}>
-					<span>BDE</span>
+			<div key={ parent.id } className={ "mb-4 rounded border-" + parent.shortname.toLowerCase() } style={{ borderWidth: 2 }}>
+				<div className={ "text-center h4 p-2 bg-" + parent.shortname.toLowerCase() }>
+					{ parent.shortname } <small>{ parent.name }</small>
 				</div>
-				<div className="d-md-inline-flex flex-wrap">
+				<div className="m-2" style={{ display: 'flex', overflowX: 'auto' }}>
 					{ assos.map(asso => {
 						var bg = 'bg-' + asso.login;
 
@@ -30,7 +28,7 @@ class ScreensAssosList extends React.Component {
 						bg += ' bg-' + asso.parent.login;
 
 						return (
-							<Card key={ asso.id } className={ "m-2 p-0 " + bg } style={{ width: 200 }} onClick={() => this.props.history.push('assos/' + asso.login)}>
+							<Card key={ asso.id } className={ "mr-3 p-0 " + bg } style={{ width: 200, minHeight: 250, flex: '0 0 auto' }} onClick={() => this.props.history.push('assos/' + asso.login)}>
 								<AspectRatio ratio="1" style={{ maxHeight: 150 }} className="d-flex justify-content-center mt-2">
 									<img src={ 'http://assos.utc.fr/larsen/style/img/logo-bde.jpg' } alt="Photo non disponible" className="img-thumbnail" style={{ height: '100%' }} />
 								</AspectRatio>
@@ -46,18 +44,50 @@ class ScreensAssosList extends React.Component {
 		)
 	}
 
+	getStages(assos) {
+		var categories = {};
+
+		assos.map(asso => {
+			var id;
+
+			if (asso.parent) {
+				id = asso.parent.id;
+
+				if (categories[id] === undefined) {
+					categories[id] = {
+						asso: asso.parent,
+						assos: [asso],
+					};
+				}
+				else {
+					categories[id].assos.push(asso);
+				}
+			}
+			else {
+				id = asso.id;
+
+				if (categories[id] === undefined) {
+					categories[id] = {
+						asso: asso,
+						assos: [asso],
+					};
+				}
+				else {
+					categories[id].assos.push(asso);
+				}
+			}
+		});
+
+		return Object.keys(categories).map(key => this.getStage(categories[key].assos, categories[key].asso))
+	}
+
 	render() {
 		return (
 			<div className="container">
 				<h1 className="title">Liste des associations</h1>
 				<div className="content">
 					<span className={"loader large" + (this.props.fetching ? ' active' : '') }></span>
-					{ this.getStage(this.props.assos.filter(asso => {
-						return asso.login === 'bde' || (asso.parent && asso.parent.login === 'bde')
-					})) }
-					{ this.getStage(this.props.assos.filter(asso => {
-						return asso.login !== 'bde' && (!asso.parent || asso.parent.login !== 'bde')
-					}).sort((asso1, asso2) => asso1.shortname > asso2.shortname)) }
+					{ this.getStages(this.props.assos) }
 				</div>
 			</div>
 		);

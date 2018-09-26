@@ -11,6 +11,7 @@ import ContactList from '../../components/Contact/List';
 @connect((store, props) => ({
 	isAuthenticated: store.isFetched('user'),
 	contacts: store.getData(['assos', props.asso.id, 'contacts']),
+	contactsFailed: store.hasFailed(['assos', props.asso.id, 'contacts']),
 }))
 class AssoHomeScreen extends React.Component {
   componentWillMount() {
@@ -110,11 +111,10 @@ class AssoHomeScreen extends React.Component {
 							{ this.props.isAuthenticated && this.getMemberButton(this.props.userIsMember, this.props.userIsFollowing, this.props.userIsWaiting) }
 						</div>
 						<div className="col-md-8">
-							<h1 className={ "title mb-1 " + color }>{ asso.shortname }</h1>
-							<span className="d-block text-muted mb-4">{ asso.name }</span>
-							<span>{ asso.type && asso.type.description }</span>
-							<ReactMarkdown className="my-3" source={ asso.description } />
-							<ContactList className="mt-4" contacts={ this.props.contacts } />
+							<h1 className={ "title " + color }>{ asso.shortname } <small className="text-muted h4">{ asso.name }</small></h1>
+							<span className="mt-4">{ asso.type && asso.type.description }</span>
+							<ReactMarkdown className="my-3 text-justify" source={ asso.description } />
+							<ContactList className="mt-4" contacts={ this.props.contacts } authorized={ !this.props.contactsFailed } />
 						</div>
 					</div>
 				) : null }

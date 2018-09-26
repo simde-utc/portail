@@ -109,6 +109,9 @@ export const initialState = {
   getError: function (props, replacement = null, forceReplacement = true) {
     return this.get(this.propsToArray(props).concat(['error']), replacement, forceReplacement);
   },
+  hasFailed: function (props, replacement = false, forceReplacement = true) {
+    return this.get(this.propsToArray(props).concat(['failed']), replacement, forceReplacement);
+  },
   getStatus: function (props, replacement = null, forceReplacement = true) {
     return this.get(this.propsToArray(props).concat(['status']), replacement, forceReplacement);
   },
@@ -128,6 +131,7 @@ export const initialState = {
 export const initialCrudState = {
   data: [],
   error: null,
+  failed: false,
   status: null,
   fetching: false,
   fetched: false,
@@ -175,6 +179,7 @@ export const makeResourceSuccessed = (place, timestamp, status) => {
   place.fetching = false;
   place.fetched = true;
   place.error = null;
+  place.failed = false;
   place.lastUpdate = timestamp;
   place.status = status;
 };
@@ -283,6 +288,7 @@ export default createStore((state = initialState, action) => {
         place.fetching = false;
         place.fetched = false;
         place.error = action.payload;
+        place.failed = true;
         place.status = action.payload.status;
       }
       // On a un success du côté de Redux mais on refuse de notre côté le code HTTP
@@ -293,6 +299,7 @@ export default createStore((state = initialState, action) => {
         place.fetching = false;
         place.fetched = false;
         place.error = 'NOT ACCEPTED';
+        place.failed = true;
         place.status = action.payload.status;
       }
 
