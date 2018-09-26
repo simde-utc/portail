@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import 'react-notifications/lib/notifications.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -18,6 +19,9 @@ import AssosListScreen from './screens/AssosList';
 import AssoDetailScreen from './screens/Asso';
 import ProfileScreen from './screens/Profile';
 
+@connect((store, props) => ({
+	isAuthenticated: store.isFetched('user'),
+}))
 class App extends React.Component {
 	render() {
 		return (
@@ -32,7 +36,7 @@ class App extends React.Component {
 							<Route path="/dashboard" component={ DashboardScreen } />
 							<Route path="/assos" exact component={ AssosListScreen } />
 							<Route path="/assos/:login" component={ AssoDetailScreen } />
-							<PrivateRoute path="/profile" component={ ProfileScreen } />
+							<PrivateRoute path="/profile" authorized={ this.props.user } component={ ProfileScreen } />
 							<Route component={ RouteNotFound } />
 						</Switch>
 					</ErrorCatcher>

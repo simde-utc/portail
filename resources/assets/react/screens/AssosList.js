@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import actions from '../redux/actions';
 import { Card, CardBody, CardTitle, CardSubtitle, CardFooter, Button } from 'reactstrap';
 import AspectRatio from 'react-aspect-ratio';
+import { sortBy } from 'lodash';
 
 @connect(store => ({
 	assos: store.getData('assos'),
@@ -78,7 +79,7 @@ class ScreensAssosList extends React.Component {
 			}
 		});
 
-		return Object.keys(categories).map(key => this.getStage(categories[key].assos, categories[key].asso))
+		return Object.keys(categories).map(key => this.getStage(sortBy(categories[key].assos, ['shortname']), categories[key].asso))
 	}
 
 	render() {

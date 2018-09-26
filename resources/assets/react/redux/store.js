@@ -47,7 +47,7 @@ export const middlewares = applyMiddleware(
 );
 
 // La racine du store
-export const initialState = {
+export const store = {
   // Converti tout simple une route uri (string) en array | ex: 'assos/calendars' => ['assos', 'calendars']
   propsToArray: function (props) {
     if (typeof props === 'string') {
@@ -185,7 +185,7 @@ export const makeResourceSuccessed = (place, timestamp, status) => {
 };
 
 // Ici on crée le store et on modifie ses données via immer en fonction de la récup des données
-export default createStore((state = initialState, action) => {
+export default createStore((state = store, action) => {
   console.log(action.type);
   if (action.meta && action.meta.path && action.meta.path.length > 0) {
     return produce(state, draft => {

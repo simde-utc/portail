@@ -7,14 +7,15 @@ import { NotificationManager } from 'react-notifications';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import Select from 'react-select';
 
-import Dropdown from './../../components/Dropdown.js';
-import ArticleForm from './../../components/Article/Form.js';
+import Dropdown from './../../components/Dropdown';
+import ArticleForm from './../../components/Article/Form';
+import PrivateRoute from './../../components/PrivateRoute';
 
-import AssoHomeScreen from './Home.js';
-import ArticleList from './ArticleList.js';
-import AssoMemberListScreen from './MemberList.js';
+import AssoHomeScreen from './Home';
+import ArticleList from './ArticleList';
+import AssoMemberListScreen from './MemberList';
 
-import Calendar from '../../components/Calendar/index.js';
+import Calendar from '../../components/Calendar/index';
 
 @connect((store, props) => {
 	var asso = store.findData('assos', props.match.params.login, 'login');
@@ -232,7 +233,7 @@ class AssoScreen extends React.Component {
 						).payload.then(() => {
 							this.props.dispatch(actions.user.assos.all())
 							this.props.dispatch(actions.assos(this.props.asso.id).members.all());
-							NotificationManager.warning('Vous avez validé avec succès le membre de cette association: ' + this.props.asso.name, 'Valider un membre d\'une association')
+							NotificationManager.success('Vous avez validé avec succès le membre de cette association: ' + this.props.asso.name, 'Valider un membre d\'une association')
 						}).catch(() => {
 							NotificationManager.error('Vous n\'avez pas le droit de valider le membre de cette association: ' + this.props.asso.name, 'Valider un membre d\'une association')
 						}).finally(() => {
@@ -338,9 +339,11 @@ class AssoScreen extends React.Component {
 					<li className="nav-item">
 						<NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/evenements`}>ÉVÈNEMENTS</NavLink>
 					</li>
-					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/members`}>TROMBINOSCOPE</NavLink>
-					</li>
+					{ this.props.user && (
+						<li className="nav-item">
+							<NavLink className="nav-link" activeClassName="active" to={`${this.props.match.url}/members`}>TROMBINOSCOPE</NavLink>
+						</li>
+					)}
 					<li className="nav-item dropdown">
 						<Dropdown title="CRÉER">
 							<Link className="dropdown-item" to={`${this.props.match.url}/article`}>Article</Link>
@@ -353,19 +356,19 @@ class AssoScreen extends React.Component {
 					<Route path={`${this.props.match.url}`} exact render={ () => (
 							<AssoHomeScreen asso={ this.props.asso } contacts={ this.props.contacts } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting }
 								follow={ this.followAsso.bind(this) } unfollow={ this.unfollowAsso.bind(this) } join={ this.joinAsso.bind(this) } leave={ this.leaveAsso.bind(this) } />
-						)} />
+					)} />
 					<Route path={`${this.props.match.url}/evenements`} render={ () => (
 							<Calendar events={ this.getAllEvents(this.state.events) } fetched={ this.state.articlesFetched } />
-						)} />
+					)} />
 					<Route path={`${this.props.match.url}/articles`} render={ () => (
 							<ArticleList asso={ this.props.asso } />
-						)} />
-					<Route path={`${this.props.match.url}/members`} render={ () => (
+					)} />
+				<PrivateRoute path={`${this.props.match.url}/members`} redirect={`${this.props.match.url}`} authorized={ this.props.user } component={ () => (
 							<AssoMemberListScreen asso={ this.props.asso } isMember={ this.user.isMember } leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>
-						)} />
+					)} />
 					<Route path={`${this.props.match.url}/article`} render={ () => (
 							<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
-						)} />
+					)} />
 				</Switch>
 			</div>
 		);

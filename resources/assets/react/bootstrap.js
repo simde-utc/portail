@@ -31,7 +31,7 @@ window.axios.interceptors.response.use(
 	response => response,
 	error => {
 		// Deal with Unauthenticated requests
-		if (error.response.status === 401) {
+		if (error.response.status === 401 && store.resources) {
 			store.resources.user = {};
 		}
 
