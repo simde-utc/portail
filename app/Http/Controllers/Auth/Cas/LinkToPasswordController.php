@@ -18,7 +18,7 @@ class LinkToPasswordController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth:cas');
+        $this->middleware(['auth:web', 'user:cas', 'user:!password']);
     }
 
     public function index(Request $request) {
@@ -26,55 +26,12 @@ class LinkToPasswordController extends Controller
     }
 
     public function store(Request $request) {
-        if ($request->filled('password_confirmation')) {
-            (new Password)->addAuth(\Auth::guard('cas')->id(), $request->input());
+        (new Password)->addAuth(\Auth::id(), $request->input());
 
-            \Auth::guard('cas')->user()->update([
-                'email' => $request->input('email')
-            ]);
+        \Auth::user()->update([
+            'email' => $request->input('email')
+        ]);
 
-            \Auth::guard('web')->login(\Auth::guard('cas')->user());
-            \Auth::guard('cas')->logout();
-
-            return redirect(\Session::get('url.intended', '/'));
-        }
-        else {
-            $redirect = (new Password)->login($request);
-
-            if (\Auth::guard('web')->check()) {
-                $casUser = \Auth::guard('cas')->user();
-
-                // On réaffecte notre CAS à notre ancien compte
-                $cas = $casUser->cas;
-                $cas->user_id = \Auth::guard('web')->id();
-
-                // On actualise les données de l'utilisateur avec le cas
-                $user = \Auth::guard('web')->user();
-                $user->firstname = $casUser->firstname;
-                $user->lastname = $casUser->lastname;
-
-                // On respécifie notre connexion via CAS
-                Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => 'cas']);
-
-                // On se déconnecte du mode cas et on supprime l'utilisateur inutile
-                \Auth::guard('cas')->logout();
-
-                try {
-                    $casUser->delete();
-                } catch (QueryException $e) {
-                    \Session::flash('error', 'Vos deux comptes possèdent une activité antérieure et il n\'est donc pas possible de les lier. Contactez le SiMDE pour réaliser cette tâche et veuillez actualiser pour continuer');
-                    \Session::flash('old', ['email' => $request->input('email')]);
-
-                    return view('auth.cas.link');
-                }
-
-                $cas->save();
-                $user->save();
-
-                return $redirect;
-            }
-            else
-                return view('auth.cas.link');
-        }
+        return redirect(\Session::get('url.intended', '/'));
     }
 }

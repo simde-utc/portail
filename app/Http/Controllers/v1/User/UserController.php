@@ -6,6 +6,7 @@ use App\Http\Controllers\v1\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\Controller\v1\HasUsers;
+use App\Traits\Controller\v1\HasImages;
 
 /**
  * @resource User
@@ -14,7 +15,7 @@ use App\Traits\Controller\v1\HasUsers;
  */
 class UserController extends Controller
 {
-	use HasUsers;
+	use HasUsers, HasImages;
 
 	public function __construct() {
 		$this->middleware(
@@ -64,7 +65,7 @@ class UserController extends Controller
 			return $this->hideData();
 		});
 
-		return response()->json($users, 200);
+		return response()->json($users->hideData(), 200);
 	}
 
 	/**
@@ -90,7 +91,8 @@ class UserController extends Controller
 			'is_active' => $active,
 		]);
 
-		// Envoyer un mail et vérifier en fonction de scopes
+		// On affecte l'image si tout s'est bien passé
+		$this->setImage($request, $user, 'users/'.$user->id);
 
 		if ($request->filled('details')) {
 			if (!\Scopes::hasOne($request, 'client-create-info-details'))
@@ -116,7 +118,7 @@ class UserController extends Controller
 			}
 		}
 
-		return response()->json($user, 201);
+		return response()->json($user->hideSubData(), 201);
 	}
 
 	/**
@@ -140,7 +142,7 @@ class UserController extends Controller
 				if (!\Scopes::has($request, 'user-get-info-identity-type'))
 					abort(403, 'Vous n\'avez pas le droit d\'avoir accès aux types de l\'utilisateur');
 
-				foreach ($user->types as $type) {
+				foreach ($user->getTypes() as $type) {
 					$method = 'is'.ucfirst($type);
 					$type = 'is_'.$type;
 
@@ -200,7 +202,7 @@ class UserController extends Controller
 			}
 		}
 		else
-			$user = $user->hideData();
+			$user = $user->hideSubData();
 
 		// Par défaut, on retourne au moins l'id de la personne et son nom
 		return response()->json($user);
@@ -221,6 +223,9 @@ class UserController extends Controller
 		$user->firstname = $request->input('firstname', $user->firstname);
 		$user->is_active = $request->input('is_active', $user->is_active);
 		$user->save();
+
+		// On affecte l'image si tout s'est bien passé
+		$this->setImage($request, $user, 'users/'.$user->id);
 
 		return response()->json($user, 200);
 	}

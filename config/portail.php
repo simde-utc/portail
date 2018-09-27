@@ -10,7 +10,6 @@ return [
 
 	// Les headers spécifiques au Portail (commençant par X-Portail)
 	'headers' => [
-		'request_type' 	=> 'X-Portail-Request-Type',
 		'warn'			=> 'X-Portail-Warn',
 		'version'		=> 'X-Portail-Version',
 	],
@@ -45,8 +44,13 @@ return [
 		]
 	],
 
+	'reservations' => [
+		'max_duration' => 2,
+	],
+
 	'cas' => [
-		'url'		=> 'https://cas.utc.fr/cas/'
+		'url'		=> env('CAS_URL', ''),
+		'image' => env('CAS_IMAGE', ''),
 	],
 
 	'ginger_key' 	=> env('GINGER_KEY', ''),

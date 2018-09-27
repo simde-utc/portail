@@ -8,6 +8,9 @@ use Cog\Contracts\Ownership\CanBeOwner;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveContacts;
 use App\Interfaces\Model\CanHaveEvents;
+use App\Interfaces\Model\CanHaveRoles;
+use App\Interfaces\Model\CanHavePermissions;
+use App\Interfaces\Model\CanComment;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Model\HasRoles;
@@ -25,7 +28,7 @@ use App\Notifications\User\UserDesactivation;
 use App\Notifications\User\UserModification;
 use App\Notifications\User\UserDeletion;
 
-class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents
+class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveRoles, CanHavePermissions, CanComment
 {
 	use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid {
 		HasHiddenData::hideData as protected hideDataFromTrait;
@@ -85,6 +88,9 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 			if ($model->getOriginal('firstname') !== $model->getAttribute('firstname'))
 				$edited['Prénom'] = $model->firstname;
 
+			if ($model->getOriginal('image') !== $model->getAttribute('image'))
+				$edited['Photo de profil'] = 'changée !';
+
 			if (count($edited) > 0)
 				$model->notify(new UserModification($edited));
         });
@@ -97,7 +103,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 	public $incrementing = false;
 
 	protected $fillable = [
-		'firstname', 'lastname', 'email', 'is_active', 'last_login_at',
+		'firstname', 'lastname', 'email', 'image', 'is_active', 'last_login_at',
 	];
 
 	protected $casts = [
@@ -113,11 +119,11 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 	];
 
 	protected $must = [
-		'me'
+		'image'
 	];
 
-	public $types = [
-		'admin', 'contributorBde', 'cas', 'password', 'active',
+	protected $types = [
+		'admin', 'contributorBde', 'casConfirmed', 'cas', 'password', 'active',
 	];
 
 	protected $selection = [
@@ -172,6 +178,10 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         return $this->preferences()->keyExistsInDB('CONTACT_EMAIL') ? $this->preferences()->valueOf('CONTACT_EMAIL') : null;
     }
 
+		public function getTypes() {
+			return $this->types;
+		}
+
 	public function type() {
 		foreach ($this->types as $type) {
 			$method = 'is'.ucfirst($type);
@@ -184,34 +194,40 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 	}
 
 	public function isActive() {
-        return $this->is_active === null || ((bool) $this->is_active) === true;
-    }
+    return $this->is_active === null || ((bool) $this->is_active) === true;
+  }
 
-    public function isCas() {
-		$cas = $this->cas;
+  public function isCas() {
+		$cas = $this->cas()->first();
 
-        return $cas && $cas->where('is_active', true)->exists();
-    }
+    return $cas && $cas->is_active;
+  }
 
-    public function isPassword() {
+  public function isCasConfirmed() {
+		$cas = $this->cas()->first();
+
+    return $cas && $cas->is_confirmed;
+  }
+
+  public function isPassword() {
 		return $this->password()->exists();
-    }
+  }
 
-    public function isApp() {
+  public function isApp() {
 		return $this->app()->exists();
-    }
+  }
 
-    public function isContributorBde() {
+  public function isContributorBde() {
 		try {
-	        return $this->details()->valueOf('isContributorBde');
+      return $this->details()->valueOf('isContributorBde');
 		} catch (PortailException $e) {
 			return null;
 		}
-    }
+  }
 
-    public function isAdmin() {
-        return $this->hasOneRole(config('portail.roles.admin.users'));
-    }
+  public function isAdmin() {
+      return $this->hasOneRole(config('portail.roles.admin.users'));
+  }
 
 	public function cas() {
 		return $this->hasOne(AuthCas::class);
@@ -287,6 +303,10 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     	return $this->belongsToMany(Calendar::class, 'calendars_followers')->withTimestamps();
     }
 
+	public function followedServices() {
+		return $this->belongsToMany(Service::class, 'services_followers')->withTimestamps();
+	}
+
     public function comments() {
 		return $this->hasMany('App\Models\Comment');
 	}
@@ -335,6 +355,34 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 		return true;
 	}
 
+	public function isRoleAccessibleBy(string $user_id): bool {
+		if ($this->id)
+			return $this->id === $user_id;
+		else
+			return true;
+	}
+
+	public function isRoleManageableBy(string $user_id): bool {
+		if ($this->id)
+			return $this->id === $user_id;
+		else
+			return $this->hasOnePermission('role');
+	}
+
+	public function isPermissionAccessibleBy(string $user_id): bool {
+		if ($this->id)
+			return $this->id === $user_id;
+		else
+			return true;
+	}
+
+	public function isPermissionManageableBy(string $user_id): bool {
+		if ($this->id)
+			return $this->id === $user_id;
+		else
+			return $this->hasOnePermission('permission');
+	}
+
 	public function contacts() {
 		return $this->morphMany(Contact::class, 'owned_by');
 	}
@@ -369,5 +417,18 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 
 	public function isEventManageableBy(string $user_id): bool {
 		return $this->id === $user_id;
+	}
+
+	// On ne peut bien sûr pas écrire au nom de quelqu'un d'autre
+	public function isCommentWritableBy(string $user_id): bool {
+		return $user_id === $this->id;
+	}
+
+	public function isCommentEditableBy(string $user_id): bool {
+		return $this->isCommentWritableBy($user_id);
+	}
+
+	public function isCommentDeletableBy(string $user_id): bool {
+		return $this->isCommentEditableBy($user_id);
 	}
 }

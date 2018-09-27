@@ -3,56 +3,58 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Cog\Contracts\Ownership\Ownable as OwnableContract;
+use Cog\Contracts\Ownership\CanBeOwner;
+use Cog\Laravel\Ownership\Traits\HasMorphOwner;
+use App\Traits\Model\HasCreatorSelection;
+use App\Interfaces\Model\CanHaveComments;
+use App\Interfaces\Model\CanComment;
 
-class Comment extends Model {
-    protected $table = 'comments';
+class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComments
+{
+  use HasMorphOwner, HasCreatorSelection, SoftDeletes;
 
-    protected $dates = ['deleted_at'];
+  protected $fillable = [
+    'body', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
+  ];
 
-    protected $fillable = [
-        'body', 'parent_id', 'user_id', 'visibility_id',
-    ];
+  protected $dates = [
+    'deleted_at'
+  ];
 
-    protected $with = [
-        'user',
-    ];
+  protected $with = [
+    'user',
+  ];
 
-    public function commentable() {
-        return $this->morphTo();
-    }
+	protected $withModelName = [
+		'created_by', 'owned_by',
+	];
 
-    public function user() {
-        return $this->belongsTo('App\Models\User', 'user_id');
-    }
+	protected $must = [
+		'body', 'created_by', 'created_at',
+	];
 
-    /**
-     * List Comments
-     *
-     * Retourne la liste des commentaires.
-     * ATTENTION : Pour le moment pas supprimer, modif body si comment supprimé.
-     * @param array $comments
-     * @param int $parent_id
-     * @return array
-     */
-    public static function getTree(array $comments, $parent_id = 0) {
-        $branch = array();
+  // Correspond à celui qui publie le commentaire
+  protected function created_by() {
+    return $this->morphTo('created_by');
+  }
 
-        foreach ($comments as $comment) {
-            if ($comment['deleted_at'] != null)
-                $comment['body'] = "Ce commentaire a été supprimé.";
+  // Sur quoi le commentaire est réalisé
+  protected function owned_by() {
+    return $this->morphTo('owned_by');
+  }
 
-            if ($comment['parent_id'] == $parent_id) {
-                $children = self::getTree($comments, $comment['id']);
+  public function comments() {
+    return $this->morphMany(Comment::class, 'owned_by');
+  }
 
-                if ($children) {
-                    $comment['children'] = $children;
-                } else {
-                    $comment['children'] = array();
-                }
-                $branch[] = $comment;
-            }
-        }
+  // Pour connaitre son accessibilité, on retrouve celle du parent qui agit sur un modèle
+  public function isCommentAccessibleBy(string $user_id): bool {
+    return $this->owned_by->isCommentAccessibleBy($user_id);
+  }
 
-        return $branch;
-    }
+  // Pour connaitre sa possibilité de modification, on retrouve celle du parent qui agit sur un modèle
+  public function isCommentManageableBy(CanComment $model): bool {
+    return $this->owned_by->isCommentManageableBy($model);
+  }
 }

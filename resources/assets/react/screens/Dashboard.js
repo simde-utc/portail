@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import AuthorizedClients from './../components/Passport/AuthorizedClients.js';
 import Clients from './../components/Passport/Clients.js';
 import PersonalAccessTokens from './../components/Passport/PersonalAccessTokens.js';
 
-class ScreensDashboard extends Component {
+class ScreensDashboard extends React.Component {
 	render() {
 		return (
 			<div className="container">

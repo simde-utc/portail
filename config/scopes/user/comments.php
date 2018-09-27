@@ -29,6 +29,7 @@ return [
             'scopes' => [
                 'articles' => [
                     'description' => 'Gérer les commentaires de l\'utilisateur sur des articles',
+                    ''
                 ],
             ]
         ],
@@ -61,6 +62,14 @@ return [
             'scopes' => [
                 'articles' => [
                     'description' => 'Créer des commentaires pour l\'utilisateur sur des articles',
+                ],
+            ]
+        ],
+        'remove' => [
+            'description' => 'Supprimer les commentaires pour l\'utilisateur',
+            'scopes' => [
+                'articles' => [
+                    'description' => 'Supprimer les commentaires pour l\'utilisateur sur des articles',
                 ],
             ]
         ],

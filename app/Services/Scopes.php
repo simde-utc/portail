@@ -515,8 +515,7 @@ class Scopes {
 	 * @return boolean
 	 */
 	public function isUserToken(Request $request) {
-		return $request->user() !== null
-			|| ($this->getToken($request)->transient() && $request->header(config('portail.headers.request_type')) == 'user');
+		return $request->user() !== null || $this->getToken($request)->transient();
 	}
 
 	/**
@@ -525,8 +524,7 @@ class Scopes {
 	 * @return boolean
 	 */
 	public function isClientToken(Request $request) {
-		return $request->user() === null
-			|| ($this->getToken($request)->transient() && $request->header(config('portail.headers.request_type')) == 'client');
+		return $request->user() === null;
 	}
 
 	/**
@@ -598,8 +596,14 @@ class Scopes {
 		if ($token === null)
 			return false;
 
-		if ($token->transient())
-			return true;
+		if ($token->transient()) {
+			foreach ($scopes as $scope) {
+				if (strpos($scope, 'user') === 0)
+					return true;
+			}
+
+			return false;
+		}
 
 		foreach ($token->scopes as $scope) {
 			if (in_array($scope, $scopes))
@@ -626,8 +630,14 @@ class Scopes {
 		if ($token === null)
 			return false;
 
-		if ($token->transient())
+		if ($token->transient()) {
+			foreach ($scopes as $scope) {
+				if (strpos($scope, 'user') !== 0)
+					return false;
+			}
+
 			return true;
+		}
 
 		foreach ($token->scopes as $scope) {
 			if (!in_array($scope, $scopes))

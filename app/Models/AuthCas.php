@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Model\HasHiddenData;
+use App\Notifications\Auth\RememberToLinkCAS;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 
 class AuthCas extends Auth // TODO must
@@ -12,16 +13,34 @@ class AuthCas extends Auth // TODO must
     public $incrementing = false;
 
 	protected $fillable = [
-	 	'user_id', 'login', 'email', 'last_login_at', 'is_active',
+	 	'user_id', 'login', 'email', 'last_login_at', 'is_active', 'is_confirmed',
 	];
 
 	protected $casts = [
 		'is_active' => 'boolean', // Si on se connecte via passsword, on désactive tout ce qui est relié au CAS car on suppose qu'il n'est plus étudiant
+		'is_confirmed' => 'boolean'
 	];
 
 	protected $must = [
-		'user_id', 'login', 'email', 'is_active',
+		'user_id', 'login', 'email', 'is_active', 'is_confirmed',
 	];
+
+    public static function boot() {
+        parent::boot();
+
+        static::created(function ($model) {
+            // On crée une notif de rappel de linkage
+            $user = $model->user;
+
+            if (!$user->image) {
+              $user->image = config('portail.cas.image').$model->login;
+              $user->save();
+            }
+
+            if (!$user->isPassword())
+                $user->notify(new RememberToLinkCAS());
+        });
+    }
 
 	public static function findByEmail($email) {
 		return (new static)->where('email', $email)->first();

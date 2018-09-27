@@ -1,15 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
+import actions from '../redux/actions.js';
 
-import ArticlesList from './../components/Articles/List.js';
+import ArticleList from './../components/Article/List.js';
 
-class ScreensHome extends Component {
-    render() {
-        return (
-            <div className="Home">
-                <ArticlesList />
-            </div>
-        );
-    }
+@connect(store => ({
+	articles: store.getData('articles'),
+	fetching: store.isFetching('articles'),
+	fetched: store.isFetched('articles')
+}))
+class ScreensHome extends React.Component {
+	componentWillMount() {
+		this.props.dispatch(actions.articles().all());
+	}
+
+  render() {
+    return (
+      <div className="container Home">
+        <ArticleList articles={ this.props.articles } fetched={ this.props.fetched } fetching={ this.props.fetching } />
+      </div>
+    );
+  }
 }
 
 export default ScreensHome;

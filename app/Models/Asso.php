@@ -10,9 +10,15 @@ use App\Interfaces\Model\CanHaveContacts;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveArticles;
+use App\Interfaces\Model\CanHaveRooms;
+use App\Interfaces\Model\CanHaveReservations;
 use App\Interfaces\Model\CanNotify;
+use App\Interfaces\Model\CanHaveRoles;
+use App\Interfaces\Model\CanHavePermissions;
+use App\Interfaces\Model\CanComment;
+use App\Exception\PortailException;
 
-class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify
+class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify, CanHaveRooms, CanHaveReservations, CanHaveRoles, CanHavePermissions, CanComment
 {
 	use HasStages, HasMembers, SoftDeletes {
 		HasMembers::members as membersAndFollowers;
@@ -22,8 +28,12 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		HasMembers::getUserRoles as getUsersRolesInThisAssociation;
 	}
 
+	protected $casts = [
+		'deleted_at' => 'datetime',
+	];
+
 	protected $fillable = [
-		'name', 'shortname', 'login', 'description', 'type_asso_id', 'parent_id',
+		'name', 'shortname', 'login', 'image', 'description', 'type_asso_id', 'parent_id',
 	];
 
 	protected $hidden = [
@@ -39,7 +49,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	];
 
 	protected $must = [
-		'name', 'shortname', 'login'
+		'name', 'shortname', 'login', 'image', 'parent',
 	]; // Children dans le cas où on affiche en mode étagé
 
 	protected $selection = [
@@ -56,19 +66,19 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
         static::created(function ($model) {
 			// On crée automatiquement des moyens de contacts !
-			Contact::create([
+			$model->contacts()->create([
 				'name' => 'Adresse email',
 				'value' => $model->login.'@assos.utc.fr',
 				'contact_type_id' => ContactType::where('name', 'Adresse email')->first()->id,
 				'visibility_id' => Visibility::findByType('public')->id,
-			])->changeOwnerTo($model)->save();
+			]);
 
-			Contact::create([
+			$model->contacts()->create([
 				'name' => 'Site Web',
 				'value' => 'https://assos.utc.fr/'.$model->login.'/',
 				'contact_type_id' => ContactType::where('name', 'Url')->first()->id,
 				'visibility_id' => Visibility::findByType('public')->id,
-			])->changeOwnerTo($model)->save();
+			]);
         });
     }
 
@@ -78,14 +88,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
 	public function type() {
 		return $this->belongsTo(AssoType::class, 'type_asso_id');
-	}
-
-	public function rooms() {
-		return $this->hasMany(Room::class);
-	}
-
-	public function reservations() {
-		return $this->hasMany(Reservation::class);
 	}
 
 	public function parent() {
@@ -141,7 +143,33 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function getLastUserWithRole($role) {
-		return $this->members()->wherePivot('role_id', Role::getRole($role)->id)->orderBy('semester_id', 'DESC')->first();
+		return $this->members()->wherePivot('role_id', Role::getRole($role, $this)->id)->orderBy('semester_id', 'DESC')->first();
+	}
+
+	public function isRoleAccessibleBy(string $user_id): bool {
+		return true;
+	}
+
+	public function isRoleManageableBy(string $user_id): bool {
+		if ($this->id)
+			return $this->hasOnePermission('role', [
+				'user_id' => $user_id,
+			]);
+		else
+			return User::find($user_id)->hasOnePermission('role');
+	}
+
+	public function isPermissionAccessibleBy(string $user_id): bool {
+		return true;
+	}
+
+	public function isPermissionManageableBy(string $user_id): bool {
+		if ($this->id)
+			return $this->hasOnePermission('permission', [
+				'user_id' => $user_id,
+			]);
+		else
+			return User::find($user_id)->hasOnePermission('permission');
 	}
 
 	public function contacts() {
@@ -153,50 +181,132 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 	}
 
 	public function isContactManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_contact', [
+		return $this->hasOnePermission('contact', [
 			'user_id' => $user_id,
 		]);
 	}
 
-    public function calendars() {
-    	return $this->morphMany(Calendar::class, 'owned_by');
-    }
+  public function calendars() {
+  	return $this->morphMany(Calendar::class, 'owned_by');
+  }
 
 	public function isCalendarAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
 	public function isCalendarManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_calendar', [
+		return $this->hasOnePermission('calendar', [
 			'user_id' => $user_id,
 		]);
 	}
 
-    public function events() {
-    	return $this->morphMany(Events::class, 'owned_by');
-    }
+  public function events() {
+  	return $this->morphMany(Events::class, 'owned_by');
+  }
 
 	public function isEventAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
 	public function isEventManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_event', [
+		return $this->hasOnePermission('event', [
 			'user_id' => $user_id,
 		]);
 	}
 
-    public function articles() {
-    	return $this->morphMany(Article::class, 'owned_by');
-    }
+  public function articles() {
+  	return $this->morphMany(Article::class, 'owned_by');
+  }
 
 	public function isArticleAccessibleBy(string $user_id): bool {
 		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
 	}
 
 	public function isArticleManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('asso_article', [
+		return $this->hasOnePermission('article', [
 			'user_id' => $user_id,
 		]);
+	}
+
+  public function rooms() {
+  	return $this->morphMany(Room::class, 'owned_by');
+  }
+
+	public function isRoomAccessibleBy(string $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isRoomManageableBy(string $user_id): bool {
+		return User::find($user_id)->hasOnePermission('room');
+	}
+
+	public function isRoomReservableBy(\Illuminate\Database\Eloquent\Model $model): bool {
+		if (!($model instanceof Asso))
+			throw new PortailException('Seules les associations peuvent réserver une salle appartenant à une association', 503);
+
+		// On regarde si l'asso est un enfant de celle possédant la salle (ex: Picsart peut réserver du PAE)
+		$toMatch = $model;
+		while ($toMatch) {
+			if ($toMatch->id === $this->id)
+				return true;
+
+			$toMatch = $toMatch->parent;
+		}
+
+		return $this->isReservationValidableBy($model); // Correspond aux assos parents
+	}
+
+  public function reservations() {
+  	return $this->morphMany(Reservation::class, 'owned_by');
+  }
+
+	public function isReservationAccessibleBy(string $user_id): bool {
+		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+	}
+
+	public function isReservationManageableBy(string $user_id): bool {
+		return $this->hasOnePermission('reservation', [
+			'user_id' => $user_id,
+		]);
+	}
+
+	public function isReservationValidableBy(\Illuminate\Database\Eloquent\Model $model): bool {
+		if ($model instanceof Asso) {
+			// On regarde si l'asso possédant la salle est un enfant de celle qui fait la demande (ex: BDE à le droit sur PAE)
+			$toMatch = $this;
+			while ($toMatch) {
+				if ($toMatch->id === $model->id)
+					return true;
+
+				$toMatch = $toMatch->parent;
+			}
+
+			return false;
+		}
+		else if ($model instanceof User) {
+			return $this->hasOnePermission('reservation', [
+				'user_id' => $user_id,
+			]);
+		}
+		else if ($model instanceof Client) {
+			return $model->asso->id === $this->id;
+		}
+		else
+			throw new PortailException('Seules les utilisateurs, associations et clients peuvent valider une salle appartenant à une association', 503);
+	}
+
+	// Les commentaires écrits par une asso se font uniquement par les gens pouvant en rédiger
+	public function isCommentWritableBy(string $user_id): bool {
+		return $this->hasOnePermission('comment', [
+			'user_id' => $user_id,
+		]);
+	}
+
+	public function isCommentEditableBy(string $user_id): bool {
+		return $this->isCommentWritableBy($user_id);
+	}
+
+	public function isCommentDeletableBy(string $user_id): bool {
+		return $this->isCommentEditableBy($user_id);
 	}
 }

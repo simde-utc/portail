@@ -18,16 +18,16 @@ trait HasMembers
 	/**
 	 * Méthode appelée au chargement du trait
 	 */
-    public static function bootHasMembers() {
+  public static function bootHasMembers() {
 		// Si on souhaite supprimer la ressource, on supprime les membres associés
-        static::deleting(function ($model) {
-            if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
-                return;
-            }
+    static::deleting(function ($model) {
+      if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
+        return;
+      }
 
-            $model->members()->detach();
-        });
-    }
+      $model->members()->detach();
+    });
+  }
 
 	/**
 	 * Récupération du nom de la table de relation
@@ -102,7 +102,7 @@ trait HasMembers
 		$members = User::getUsers(stringToArray($members));
 
 		if ($data['role_id'] ?? false) {
-			$role = Role::find($data['role_id'], $this->getTable());
+			$role = Role::find($data['role_id'], $this);
 
 			if ($role === null)
 				throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
@@ -126,7 +126,7 @@ trait HasMembers
 		try {
 			$this->allMembers()->withTimestamps()->attach($addMembers);
 		} catch (\Exception $e) {
-			throw new PortailException('Une des personnes est déjà membre');
+			throw new PortailException('Déjà membre', 409);
 		}
 
 		return $this;
@@ -146,7 +146,7 @@ trait HasMembers
 
 		if (!$force) {
 			if ($data['role_id'] ?? false) {
-				$role = Role::find($data['role_id'], $this->getTable());
+				$role = Role::find($data['role_id'], $this);
 
 				if ($role === null)
 					throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
@@ -160,7 +160,7 @@ trait HasMembers
 			}
 
 			if ($updatedData['role_id'] ?? false) {
-				$role = Role::find($updatedData['role_id'], $this->getTable());
+				$role = Role::find($updatedData['role_id'], $this);
 
 				if ($role === null)
 					throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
@@ -213,7 +213,7 @@ trait HasMembers
 			$manageableRoles = $this->getUserRoles($removed_by);
 			$manageablePermissions = $this->getUserPermissions($removed_by);
 
-			$role = Role::find($data['role_id'], $this->getTable());
+			$role = Role::find($data['role_id'], $this);
 
 			if ($role === null)
 				throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');

@@ -20,6 +20,7 @@ class CreateAssosTable extends Migration
 			$table->string('login', validation_max('login'))->unique();
 			$table->string('shortname', validation_max('login'))->unique();
 			$table->string('name', validation_max('name'))->unique();
+			$table->string('image', validation_max('url'))->nullable();
 			$table->text('description', validation_max('description'));
 
 			$table->timestamps();

@@ -55,14 +55,14 @@ trait HasRoles
 	 * @param bool $force 		Permet de sauter les sécurités d'ajout (à utiliser avec prudence)
 	 */
 	public function assignRoles($roles, array $data = [], bool $force = false) {
-		$data['semester_id'] = $data['semester_id'] ?? Semester::getThisSemester()->id;
+		$data['semester_id'] = array_key_exists('semester_id', $data) ? $data['semester_id'] : Semester::getThisSemester()->id;
 		$addRoles = [];
 
 		if (isset($data['validated_by']) || \Auth::id())
 			$manageableRoles = $this->getUserRoles($data['validated_by'] ?? \Auth::id());
 
 		$nbr = @count($roles) ?? 1;
-		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
+		$roles = Role::getRoles(stringToArray($roles), $this);
 
 		if (count($roles) !== $nbr)
 			throw new PortailException('Certains rôles donnés n\'ont pas pu être trouvé');
@@ -111,7 +111,7 @@ trait HasRoles
 			$manageableRoles = $this->getUserRoles($updatedData['validated_by'] ?? \Auth::id());
 
 		$nbr = @count($roles) ?? 1;
-		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
+		$roles = Role::getRoles(stringToArray($roles), $this);
 
 		if (count($roles) !== $nbr)
   			throw new PortailException('Certains rôles donnés n\'ont pas pu être trouvé');
@@ -157,7 +157,7 @@ trait HasRoles
 			$manageableRoles = $this->getUserRoles($removed_by);
 
 		$nbr = @count($roles) ?? 1;
-		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id);
+		$roles = Role::getRoles(stringToArray($roles), $this);
 
 		if (count($roles) !== $nbr)
   			throw new PortailException('Certains rôles donnés n\'ont pas pu être trouvé');
@@ -195,7 +195,7 @@ trait HasRoles
 	 */
     public function syncRoles($roles, array $data = [], $removed_by = null, bool $force = false) {
 		$currentRoles = $this->getUserAssignedRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? 0, false)->pluck('id');
-		$roles = Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id)->pluck('id');
+		$roles = Role::getRoles(stringToArray($roles), $this)->pluck('id');
 		$intersectedRoles = $currentRoles->intersect($roles);
 		$oldData = [];
 
@@ -215,7 +215,7 @@ trait HasRoles
 	 * @return bool
 	 */
     public function hasOneRole($roles, array $data = []) {
-        return Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id)->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
+        return Role::getRoles(stringToArray($roles), $this)->pluck('id')->intersect($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isNotEmpty();
     }
 
 	/**
@@ -226,7 +226,7 @@ trait HasRoles
 	 * @return bool
 	 */
     public function hasAllRoles($roles, array $data = []) {
-        return Role::getRoles(stringToArray($roles), $this->getTable().'-'.$this->id)->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isEmpty();
+        return Role::getRoles(stringToArray($roles), $this)->pluck('id')->diff($this->getUserRoles($data['user_id'] ?? $this->user_id ?? $this->id, $data['semester_id'] ?? Semester::getThisSemester()->id)->pluck('id'))->isEmpty();
     }
 
 	/**
@@ -294,17 +294,16 @@ trait HasRoles
 	public function getUserPermissions($user_id = null, $semester_id = null) {
 		$permissions = $this->getUserPermissionsFromHasPermissions($user_id, $semester_id);
 
-		foreach ($this->getUserRoles($user_id, $semester_id)->pluck('id') as $role_id)
-			$permissions = $permissions->merge(Role::find($role_id)->permissions);
+		foreach ($this->getUserRoles($user_id, $semester_id)->pluck('id') as $role_id) {
+			$permissions = $permissions->merge(Role::find($role_id, $this)->permissions);
+		}
 
 		return $permissions;
 	}
 
 	// Par défaut, un role n'est pas supprimable s'il a déjà été assigné
 	public function isRoleDeletable($role) {
-		$class = explode('-', $role->only_for)[0];
-
-		return $role->$class()->count() === 0;
+		return $role->{\ModelResolver::getCategory($role->owned_by_type)}()->count() === 0;
 	}
 
 	public function isRoleForIdDeletable($role, $id) {
@@ -312,8 +311,6 @@ trait HasRoles
 	}
 
 	public function beforeDeletingRole($role) {
-		$class = explode('-', $role->only_for)[0];
-
-		return $role->$class()->detach();
+		return $role->{\ModelResolver::getCategory($role->owned_by_type)}()->detach();
 	}
 }

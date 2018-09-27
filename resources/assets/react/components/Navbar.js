@@ -1,16 +1,16 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import loggedUserActions from '../redux/custom/loggedUser/actions';
+import actions from '../redux/actions.js';
 
 @connect(store => ({
-	user: store.loggedUser.data.info
+	user: store.getData('user', false),
+	login: store.getData('login', []),
 }))
 class Navbar extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			loginMethods: {},
 			collapse: false,
 			loginDropdown: false,
 			profileDropdown: false
@@ -20,9 +20,9 @@ class Navbar extends React.Component {
 
 	componentWillMount() {
 		// Get User Info
-		this.props.dispatch(loggedUserActions.getInfo())
+		this.props.dispatch(actions.user.get())
 		// Get Login Methods
-		axios.get('/api/v1/login').then(response => this.setState({ loginMethods: response.data}))
+		this.props.dispatch(actions.login.get())
 	}
 
 	toggle(key) {
@@ -32,16 +32,14 @@ class Navbar extends React.Component {
 	render() {
 		const { collapse, loginDropdown, profileDropdown } = this.state;
 		const { user } = this.props;
-		const loginMethods = Object.entries(this.state.loginMethods).filter(([key, loginMethod]) => {
+		const loginMethods = Object.entries(this.props.login).filter(([key, loginMethod]) => {
 			return loginMethod.login_url
 		}).map(([key, loginMethod]) => (
 			<a key={ key } className="dropdown-item" href={ loginMethod.login_url } title={ loginMethod.description }>
 				{ loginMethod.name }
 			</a>
 		))
-		const isAuthenticated = Boolean(user);
 		return (
-
 		<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle">
 			<a href="https://assos.utc.fr" title="BDE" className="navbar-brand">
 				<img src="https://bobby.nastuzzi.fr/assets/img/bde.png" width="45" alt=""></img>
@@ -51,9 +49,8 @@ class Navbar extends React.Component {
 			<button className="navbar-toggler" onClick={() => this.toggle('collapse')}>
 				<span className="fas fa-bars"></span>
 			</button>
-			
-			<div className={"collapse navbar-collapse" + (collapse ? ' show' : '')}>
 
+			<div className={"collapse navbar-collapse" + (collapse ? ' show' : '')}>
 		 		<div className="input-group col-md-6">
 					<input className="form-control py-2" type="search" placeholder="Rechercher ..." id="example-search-input"/>
 					<span className="input-group-append">
@@ -64,54 +61,13 @@ class Navbar extends React.Component {
 				</div>
 
 				<ul className="navbar-nav ml-auto">
-
-					<li className="nav-item no-gutters">
-						<a href="#" class="nav-link profilepic bg-secondary " >
-						<img src="https://scontent.fmad3-1.fna.fbcdn.net/v/t1.0-1/p160x160/23658429_1517909794962317_254345776605206375_n.jpg?_nc_cat=0&oh=dfba6aba2a80ab8c6de195dfa71b38b3&oe=5C3A5268"
-						 width="25" height="25" alt="" class="rounded-circle"></img>
-						Jean
-						</a>
-					</li>
-
-					<li className="nav-item"><a href="#" className="nav-link">	
-						<span class="fa-stack fa-sm notification">
-							<i class="fa fa-circle fa-stack-2x icon-background2"></i>
-							<i class="fa fa-bell fa-stack-1x"><span className="num">23</span></i>
-						</span>
-					</a></li>
-					
-					<li className="nav-item"><a href="#" className="nav-link">	
-						<span class="fa-stack fa-sm">
-							<i class="fa fa-circle fa-stack-2x icon-background2"></i>
-							<i class="fa fa-question fa-stack-1x"></i>
-						</span>
-					</a></li>
-					
-					<li className="nav-item"><a href="#" className="nav-link">	
-						<span class="fa-stack fa-sm">
-							<i class="fa fa-circle fa-stack-2x icon-background2"></i>
-							<i class="fa fa-cog fa-stack-1x"></i>
-						</span>
-					</a></li>
-					
-
-					<li className="nav-item"><a href="#" className="nav-link">	
-						<span class="fa-stack fa-sm">
-							<i class="fa fa-circle fa-stack-2x icon-background2"></i>
-							<i class="fa fa-lock fa-stack-1x"></i>
-						</span>
-					</a></li>
-					
-					{ isAuthenticated ? (
-						<li className="nav-item dropdown">
-							<a className="nav-link dropdown-toggle" onClick={() => this.toggle('loginDropdown')}>
-								{ user.name } <span className="caret"></span>
-							</a>
-							<div className={"dropdown-menu" + (loginDropdown ? ' show' : '')}>
-								<NavLink className="dropdown-item" to="/dashboard">Dashboard</NavLink>
-								<NavLink className="dropdown-item" to="/profile">Mon profil</NavLink>
-								<a className="dropdown-item" href="/logout">Se déconnecter</a>
-							</div>
+					{ this.props.user ? (
+						<li className="nav-item no-gutters">
+							<NavLink className="nav-link profilepic bg-secondary" to="/profile">
+								<img src={ this.props.user.image }
+								 width="25" height="25" alt="" className="rounded-circle mr-2" />
+							 	{ this.props.user.firstname }
+							</NavLink>
 						</li>
 					) : (
 						<li className="nav-item dropdown">
@@ -123,8 +79,39 @@ class Navbar extends React.Component {
 								<a className="dropdown-item" href="/login">Tout voir</a>
 							</div>
 						</li>
-					) }
+					)}
 
+
+					{ this.props.user && (
+						<li className="nav-item">
+							<NavLink className="nav-link" to="/notifications">
+								<span className="fa-stack fa-sm">
+									<i className="fa fa-circle fa-stack-2x icon-background2"></i>
+									<i className="fa fa-bell fa-stack-1x"></i>
+								</span>
+							</NavLink>
+						</li>
+					)}
+
+					<li className="nav-item">
+						<NavLink className="nav-link" to="/help">
+							<span className="fa-stack fa-sm">
+								<i className="fa fa-circle fa-stack-2x icon-background2"></i>
+								<i className="fa fa-question fa-stack-1x"></i>
+							</span>
+						</NavLink>
+					</li>
+
+					{ this.props.user && (
+						<li className="nav-item">
+							<a className="nav-link" href="/logout">
+								<span className="fa-stack fa-sm">
+									<i className="fa fa-circle fa-stack-2x icon-background2"></i>
+									<i className="fa fa-lock fa-stack-1x"></i>
+								</span>
+							</a>
+						</li>
+					)}
 				</ul>
 			</div>
 		</nav>
@@ -139,14 +126,14 @@ class Navbar extends React.Component {
 			// 				Portail des Assos
 			// 			</a>
 			// 		</div>
-						
+
 			// 		<button className="navbar-toggler" onClick={() => this.toggle('collapse')}>
 			// 			<span className="fas fa-bar"></span>
 			// 		</button>
 
 
 			// 	<div className={"collapse navbar-collapse" + (collapse ? ' show' : '')}>
-				
+
 			// 		<div className="input-group col-md-4 mr-auto">
 			// 			<input className="form-control py-2" type="search" placeholder="Rechercher ..." id="example-search-input"/>
 			// 			<span className="input-group-append">
@@ -167,13 +154,13 @@ class Navbar extends React.Component {
 			// 					<NavLink className="dropdown-item" to="/profile">Mon profil</NavLink>
 			// 					<a className="dropdown-item" href="/logout">Se déconnecter</a>
 			// 				</div>
-			// 			</div> 
+			// 			</div>
 			// 			{/* ) : ''} */}
 
 			// 			<div className="nav-item ml-auto">
 			// 				<button href="#" className="fas fa-bell"></button>
 			// 			</div>
-					
+
 
 			// 				<ul className="navbar-nav">
 			// 				</ul>
@@ -202,8 +189,8 @@ class Navbar extends React.Component {
 			// 					) }
 			// 				</ul>
 			// 			</div>
-			// </nav>					
-		
+			// </nav>
+
 		);
 	}
 }

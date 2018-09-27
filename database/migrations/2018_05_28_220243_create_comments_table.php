@@ -16,22 +16,13 @@ class CreateCommentsTable extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->text('body');
-            $table->uuid('parent_id')->nullable();
-            $table->uuid('user_id');
-            $table->uuid('visibility_id');
-            $table->uuid('commentable_id');
-            $table->string('commentable_type');
+            $table->uuid('created_by_id')->nullable();
+            $table->string('created_by_type')->nullable();
+            $table->uuid('owned_by_id')->nullable();
+            $table->string('owned_by_type')->nullable();
 
             $table->timestamps();
-            $table->timestamp('deleted_at');
-        });
-
-        // Obligé d'ajouter la contrainte après création... #LaravelBug
-        // https://github.com/laravel/framework/issues/25190
-        Schema::table('comments', function (Blueprint $table) {
-            $table->foreign('parent_id')->references('id')->on('comments');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('visibility_id')->references('id')->on('visibilities');
+            $table->softDeletes();
         });
     }
 

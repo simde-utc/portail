@@ -41,33 +41,31 @@ Route::delete('client/{user_id}', 'Client\ClientController@destroy')->middleware
 Route::group(['middleware' => 'user:active'], function () {
 	// Routes définies pour l'utlisateur
 	Route::apiResources([
-		'users'										=> 'User\UserController',
-		'users/{user_id}/auths'						=> 'User\AuthController',
-		'users/{user_id}/roles'						=> 'User\RoleController',
-		'users/{user_id}/details'					=> 'User\DetailController',
-		'users/{user_id}/preferences'				=> 'User\PreferenceController',
-		'users/{user_id}/calendars'					=> 'User\CalendarController',
-		'users/{user_id}/assos'						=> 'User\AssoController',
-		'users/{user_id}/notifications'				=> 'User\NotificationController',
-		'users/{user_id}/articles/{article_id}/actions'	=> 'User\Article\ActionController',
+		'users'											=> 'User\UserController',
+		'users/{user_id}/roles'			=> 'User\RoleController',
+		'users/{user_id}/calendars'	=> 'User\CalendarController',
 
 		// Routes `user` identiques à `users/{\Auth::id()}`
 		'user/roles'								=> 'User\RoleController',
-		'user/calendars'							=> 'User\CalendarController',
-		'user/contacts'								=> 'Contact\ContactController',
-		'user/notifications'						=> 'User\NotificationController',
+		'user/calendars'						=> 'User\CalendarController',
+		'user/contacts'							=> 'Contact\ContactController',
+		'user/permissions'					=> 'Permissions\AssignmentController',
 	]);
 
 	// Routes définies pour toutes ressources
 	Route::apiResources([
-		'{resource_type}/{resource_id}/contacts'	=> 'Contact\ContactController',
-		'{resource_type}/{resource_id}/comments'	=> 'Comment\CommentController',
-		'groups/{group_id}/members'					=> 'Group\MemberController',
-		'groups'									=> 'Group\GroupController',
-		'assos/{asso_id}/members'					=> 'Asso\MemberController',
-		'roles'										=> 'Role\RoleController',
-		'rooms'										=> 'Location\RoomController',
-		'calendars/{calendar_id}/events'			=> 'Calendar\EventController',
+		'{resource_type}/{resource_id}/contacts'		=> 'Contact\ContactController',
+		'{resource_type}/{resource_id}/comments'		=> 'Comment\CommentController',
+		'{resource_type}/{resource_id}/permissions'	=> 'Permission\AssignmentController',
+		'groups/{group_id}/members'									=> 'Group\MemberController',
+		'groups'																		=> 'Group\GroupController',
+		'assos/{asso_id}/members'										=> 'Asso\MemberController',
+		'roles'																			=> 'Role\RoleController',
+		'roles/{role_id}/permissions'								=> 'Role\PermissionController',
+		'permissions'																=> 'Permission\PermissionController',
+		'rooms'																			=> 'Room\RoomController',
+		'rooms/{room_id}/reservations'							=> 'Room\ReservationController',
+		'calendars/{calendar_id}/events'						=> 'Calendar\EventController',
 	]);
 });
 
@@ -75,25 +73,36 @@ Route::group(['middleware' => 'user:active'], function () {
 Route::group([], function () {
 	// Routes définies pour l'utlisateur
 	Route::apiResources([
+		'users/{user_id}/notifications'									=> 'User\NotificationController',
+		'users/{user_id}/articles/{article_id}/actions'	=> 'User\Article\ActionController',
+		'users/{user_id}/auths'													=> 'User\AuthController',
+		'users/{user_id}/details'												=> 'User\DetailController',
+		'users/{user_id}/preferences'										=> 'User\PreferenceController',
+		'users/{user_id}/assos'													=> 'User\AssoController',
+		'users/{user_id}/services'											=> 'User\ServiceController',
+
 		// Routes `user` identiques à `users/{\Auth::id()}`
-		'user/auths'								=> 'User\AuthController',
-		'user/details'								=> 'User\DetailController',
-		'user/preferences'							=> 'User\PreferenceController',
-		'user/assos'								=> 'User\AssoController',
-		'user/articles/{article_id}/actions'		=> 'User\Article\ActionController',
+		'user/auths'																		=> 'User\AuthController',
+		'user/details'																	=> 'User\DetailController',
+		'user/preferences'															=> 'User\PreferenceController',
+		'user/assos'																		=> 'User\AssoController',
+		'user/services'																	=> 'User\ServiceController',
+		'user/articles/{article_id}/actions'						=> 'User\Article\ActionController',
+		'user/notifications'														=> 'User\NotificationController',
 	]);
 
 	// Routes définies pour toutes ressources
 	Route::apiResources([
-		'assos'										=> 'Asso\AssoController',
-		'places'									=> 'Location\PlaceController',
-		'locations'									=> 'Location\LocationController',
-		'events'									=> 'Event\EventController',
-		'calendars'									=> 'Calendar\CalendarController',
-		'partners'									=> 'Partner\PartnerController',
-		'articles'									=> 'Article\ArticleController',
-		'articles/{article_id}/actions'				=> 'Article\ActionController',
-		'visibilities'								=> 'Visibility\VisibilityController',
-		'semesters'									=> 'Semester\SemesterController',
+		'assos'													=> 'Asso\AssoController',
+		'services'											=> 'Service\ServiceController',
+		'places'												=> 'Location\PlaceController',
+		'locations'											=> 'Location\LocationController',
+		'events'												=> 'Event\EventController',
+		'calendars'											=> 'Calendar\CalendarController',
+		'partners'											=> 'Partner\PartnerController',
+		'articles'											=> 'Article\ArticleController',
+		'articles/{article_id}/actions'	=> 'Article\ActionController',
+		'visibilities'									=> 'Visibility\VisibilityController',
+		'semesters'											=> 'Semester\SemesterController',
 	]);
 });

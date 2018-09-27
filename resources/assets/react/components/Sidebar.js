@@ -1,9 +1,40 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { withRouter, NavLink } from 'react-router-dom';
+import actions from '../redux/actions.js';
 
+@connect((store, props) => ({
+  user: store.getData('user', false), // Si user === false, alors on est pas co
+  assos: store.getData('user/assos'),
+}))
+class Sidebar extends React.Component {
+	componentWillMount() {
+    this.props.dispatch(actions.user.assos.all());
+  }
 
-class Sidebar extends React.Component { 
+  getAssos(assos) {
+    return assos.map(asso => {
+      let color = 'color-' + asso.login;
+
+      if (asso.parent)
+        color += ' color-' + asso.parent.login;
+
+      return (
+        <NavLink key={ asso.id } className="sidebar-link" to={ "/assos/" + asso.login }>
+          <i className={ asso.pivot.role_id ? 'fas fa-hands-helping' : 'fas fa-thumbs-up' }></i>
+          <span className={ color }>{ asso.shortname }</span>
+        </NavLink>
+    )});
+  }
+
 	render() {
+		// TODO: Groups to do (fetch and display like assos).
+		// <div className="sidebar-group">
+		// 	<h6 className="sidebar-header d-hover-zone">
+		// 		MES GROUPES <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/groups" />
+		// 	</h6>
+		// </div>
+
 		return (
 			<div className="sidebar col-md-3 col-xl-2 d-none d-md-flex flex-column justify-content-between">
 				<div className="sidebar-inner">
@@ -12,8 +43,6 @@ class Sidebar extends React.Component {
 							ACTUALITÉS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/news" />
 						</h6>
 						<NavLink exact className="sidebar-link" to="/"><i className="fas fa-newspaper"></i>Flux</NavLink>
-						<NavLink className="sidebar-link" to="/news/utc"><i className="fas fa-newspaper"></i>Actualités UTC</NavLink>
-						<NavLink className="sidebar-link" to="/news/assos"><i className="fas fa-newspaper"></i>Actualités Assos</NavLink>
 					</div>
 
 					<div className="sidebar-group">
@@ -31,26 +60,19 @@ class Sidebar extends React.Component {
 						<NavLink className="sidebar-link" to="/groupes"><i className="fas fa-users"></i>Groupes</NavLink>
 					</div>
 
-					<div className="sidebar-group">
-						<h6 className="sidebar-header d-hover-zone">
-							MES ASSOCIATIONS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/assos" />
-						</h6>
-						<NavLink className="sidebar-link" to="/assos/picasso"><i className="fas fa-beer"></i>Pic'Asso</NavLink>
-						<NavLink className="sidebar-link" to="/assos/simde"><i className="fas fa-code"></i>SiMDE</NavLink>
-					</div>
-
-					<div className="sidebar-group">
-						<h6 className="sidebar-header d-hover-zone">
-							MES GROUPES <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/groups" />
-						</h6>
-						<NavLink className="sidebar-link" to="/groupes/samymauch"><i className="fas fa-sad-tear"></i>Samyest Mauch</NavLink>
-						<NavLink className="sidebar-link" to="/groupes/wwbb"><i className="fas fa-skull"></i>Woolly Woolly Bang Bang</NavLink>
-					</div>
-				</div>
-				<p className="sidebar-footer">&lt;&#47;&gt; avec le sang par le SiMDE</p>
+          { this.props.user && (
+            <div>
+              <h6 className="sidebar-header d-hover-zone">
+                MES ASSOCIATIONS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/assos" />
+              </h6>
+              { this.getAssos(this.props.assos) }
+            </div>
+          )}
+        </div>
+				<p className="sidebar-footer small">&lt;&#47;&gt; avec le sang par le SiMDE</p>
 			</div>
 		);
 	}
 }
 
-export default Sidebar;
+export default withRouter(Sidebar);

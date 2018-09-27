@@ -21,10 +21,7 @@ class Cas extends BaseAuth
 	}
 
 	public function showLoginForm(Request $request) {
-		if (Auth::guard('cas')->check())
-			return redirect()->route('cas.request');
-		else
-			return parent::showLoginForm($request);
+		return parent::showLoginForm($request);
 	}
 
 	public function login(Request $request) {
@@ -47,7 +44,7 @@ class Cas extends BaseAuth
 
 		// Renvoie une erreur différente de la 200. On passe par le CAS.
 		if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
-			list($login, $email, $firstname, $lastname, $active) = [
+			list($login, $email, $firstname, $lastname, $is_confirmed) = [
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:mail'],
 				$parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:attributes']['cas:givenName'],
@@ -57,7 +54,7 @@ class Cas extends BaseAuth
 		}
 		else {
 			// Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update
-			list($login, $email, $firstname, $lastname, $active) = [
+			list($login, $email, $firstname, $lastname, $is_confirmed) = [
 				$ginger->getLogin(),
 				$ginger->getEmail(),
 				$ginger->getFirstname(),
@@ -66,25 +63,22 @@ class Cas extends BaseAuth
 			];
 		}
 
-		if (($cas = AuthCas::findByEmail($email)))
+		if ($cas = AuthCas::findByEmail($email)) {
+			$cas->update([
+				'is_confirmed' => $is_confirmed
+			]);
+
 			$user = $cas->user;
+		}
 		else {
 			$user = $this->updateOrCreateUser(compact('email', 'firstname', 'lastname'));
-			$cas = $this->createAuth($user->id, compact('login', 'email', 'active'));
+			$cas = $this->createAuth($user->id, compact('login', 'email', 'is_confirmed'));
 		}
 
 		if (!$user->isActive())
 			return $this->error($request, $user, $userAuth, 'Ce compte a été désactivé');
 
-		// On vérifie qu'on a bien lié son CAS à une connexion email/mot de passe
-		if ($user->password()->exists())
-			return $this->connect($request, $user, $cas);
-		else {
-			Auth::guard('cas')->login($user);
-			Session::updateOrCreate(['id' => \Session::getId()], ['auth_provider' => $this->name]);
-
-			return redirect()->route('cas.request');
-		}
+		return $this->connect($request, $user, $cas);
 	}
 
 	public function register(Request $request) {
