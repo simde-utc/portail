@@ -44,19 +44,20 @@ Route::group(['middleware' => 'user:active'], function () {
 		'users'											=> 'User\UserController',
 		'users/{user_id}/roles'			=> 'User\RoleController',
 		'users/{user_id}/calendars'	=> 'User\CalendarController',
+		'users/{user_id}/permissions'	=> 'Permission\AssignmentController',
 
 		// Routes `user` identiques à `users/{\Auth::id()}`
 		'user/roles'								=> 'User\RoleController',
 		'user/calendars'						=> 'User\CalendarController',
 		'user/contacts'							=> 'Contact\ContactController',
-		'user/permissions'					=> 'Permissions\AssignmentController',
+		'user/permissions'					=> 'Permission\AssignmentController',
 	]);
 
 	// Routes définies pour toutes ressources
 	Route::apiResources([
 		'{resource_type}/{resource_id}/contacts'		=> 'Contact\ContactController',
 		'{resource_type}/{resource_id}/comments'		=> 'Comment\CommentController',
-		'{resource_type}/{resource_id}/permissions'	=> 'Permission\AssignmentController',
+		'{resource_type}/{resource_id}/members/{user_id}/permissions' => 'Permission\AssignmentController',
 		'groups/{group_id}/members'									=> 'Group\MemberController',
 		'groups'																		=> 'Group\GroupController',
 		'assos/{asso_id}/members'										=> 'Asso\MemberController',

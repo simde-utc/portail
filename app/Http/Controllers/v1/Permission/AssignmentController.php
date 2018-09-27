@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Semester;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\PermissionRequest;
 use App\Services\Visible\Visible;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
@@ -46,8 +46,7 @@ class AssignmentController extends Controller
 	public function index(PermissionRequest $request): JsonResponse {
 		$this->checkTokenRights($request);
 
-		$permissions = $this->getPermissionsFromModel($request, $request->ressource)
-			->getSelection()
+		$permissions = $this->getPermissionsFromModel($request)
 			->map(function ($permission) {
 				return $permission->hideData();
 			});
@@ -68,13 +67,13 @@ class AssignmentController extends Controller
 
 		$semester_id = Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id;
 
-	 	$request->ressource->assignPermissions($request->input('permission_id'), [
+	 	$request->resource->assignPermissions($request->input('permission_id'), [
 			'user_id' => \Auth::id() ?? $request->input('user_id'),
 			'validated_by' => \Auth::id() ?? $request->input('validated_by'),
 			'semester_id' => $semester_id
-		], \Scopes::isClientToken());
+		], \Scopes::isClientToken($request));
 
-		$permission = $this->getPermissionFromModel($request, $request->ressource, $request->input('permission_id'));
+		$permission = $this->getPermissionFromModel($request, $request->input('permission_id'));
 
 		return response()->json($permission->hideSubData());
 	}
@@ -93,7 +92,7 @@ class AssignmentController extends Controller
 		if (is_null($permission_id))
 			list($user_id, $permission_id) = [$permission_id, $user_id];
 
-		$permission = $this->getPermissionFromModel($request, $request->ressource, $request->permission);
+		$permission = $this->getPermissionFromModel($request, $request->permission);
 
 		return response()->json($permission->hideSubData());
 	}
@@ -122,11 +121,11 @@ class AssignmentController extends Controller
 	public function destroy(PermissionRequest $request) {
 		$this->checkTokenRights($request, 'remove');
 
-		$permission = $this->getPermissionFromUser($request, $request->ressource, $request->permission, 'remove');
+		$permission = $this->getPermissionFromUser($request, $request->permission, 'remove');
 
 		$user->removePermissions($permission_id, [
 			'user_id' => \Auth::id() ?? $request->input('user_id'),
 			'semester_id' => $permission->pivot->semester_id,
-		], \Auth::id(), \Scopes::isClientToken());
+		], \Auth::id(), \Scopes::isClientToken($request));
 	}
 }

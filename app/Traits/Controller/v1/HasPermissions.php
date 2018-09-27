@@ -26,15 +26,22 @@ trait HasPermissions
 		abort(404, 'Impossible de trouver la permission');
 	}
 
-	protected function getPermissionsFromModel(Request $request, Model $model) {
+	protected function getPermissionsFromModel(Request $request) {
 		$semester_id = Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id;
+		$choices = $this->getChoices($request, ['owned', 'herited']);
 
-		return $model->permissions()->wherePivot('semester_id', $semester_id)
-			->withPivot(['semester_id', 'validated_by']);
+		if (count($choices) === 2)
+			$method = 'getUserPermissions';
+		else if (in_array('owned', $choices))
+			$method = 'getUserPermissionsFromHasPermissions';
+		else
+			$method = 'getUserPermissionsFromRoles';
+
+		return $request->resource->$method($request->user_id, $semester_id);
 	}
 
-	protected function getPermissionFromModel(Request $request, Model $model, string $permission_id, string $verb = 'get') {
-		$permission = $this->getPermissionsFromModel($request, $model)->find($permission);
+	protected function getPermissionFromModel(Request $request, string $permission_id, string $verb = 'get') {
+		$permission = $this->getPermissionsFromModel($request)->find($permission_id);
 
 		if ($permission) {
 			if (!$this->tokenCanSee($request, $permission, $verb))

@@ -17,10 +17,18 @@ class PermissionRequest extends FormRequest
     public function authorize()
     {
         if ($this->resource_type)
-            $this->resource = \ModelResolver::getModelFromCategory($this->resource_type, CanHavePermissions::class)->find($this->resource_id);
-        else // On est sur /user/permissions
+            $this->resource = \ModelResolver::getModelFromCategory($this->resource_type)->find($this->resource_id);
+        else // On est sur /user/permissions ou /users/{user_id}/permissions
             $this->resource = \Auth::user();
 
+        if (!$this->user_id)
+            $this->user_id = \Auth::id();
+
         return (bool) $this->resource;
+    }
+
+    public function rules()
+    {
+        return [];
     }
 }
