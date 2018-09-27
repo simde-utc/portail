@@ -193,9 +193,13 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 		return null;
 	}
 
+	public function isPublic() {
+		return true;
+	}
+
 	public function isActive() {
-    return $this->is_active === null || ((bool) $this->is_active) === true;
-  }
+		return $this->is_active === null || ((bool) $this->is_active) === true;
+	}
 
   public function isCas() {
 		$cas = $this->cas()->first();

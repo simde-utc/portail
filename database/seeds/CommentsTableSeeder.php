@@ -33,13 +33,14 @@ class CommentsTableSeeder extends Seeder
     ];
 
     foreach ($comments as $comment) {
-      $lastComment = Comment::create([
+      $model = Comment::create([
         'body' => $comment['body'],
         'created_by_id' => $comment['created_by']->id,
         'created_by_type' => get_class($comment['created_by']),
       ]);
 
-      $lastComment->changeOwnerTo($comment['owned_by'] ?? $lastComment)->save();
+      $model->changeOwnerTo($comment['owned_by'] ?? $lastComment)->save();
+      $lastComment = $model;
     }
   }
 }

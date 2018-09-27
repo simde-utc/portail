@@ -30,6 +30,9 @@ return [
                 'articles' => [
                     'description' => 'Gérer les commentaires sur des articles',
                 ],
+                'comments' => [
+                    'description' => 'Gérer les réponses de sur des commentaires',
+                ],
             ]
         ],
         'get' => [
@@ -37,6 +40,9 @@ return [
             'scopes' => [
                 'articles' => [
                     'description' => 'Récupérer les commentaires sur des articles',
+                ],
+                'comments' => [
+                    'description' => 'Récupérer les réponses de sur des commentaires',
                 ],
             ]
         ],
@@ -46,6 +52,9 @@ return [
                 'articles' => [
                     'description' => 'Modifier et créer des commentaires sur des articles',
                 ],
+                'comments' => [
+                    'description' => 'Modifier et créer les réponses de sur des commentaires',
+                ],
             ]
         ],
         'edit' => [
@@ -53,6 +62,9 @@ return [
             'scopes' => [
                 'articles' => [
                     'description' => 'Modifier les commentaires sur des articles',
+                ],
+                'comments' => [
+                    'description' => 'Modifier les réponses de sur des commentaires',
                 ],
             ]
         ],
@@ -62,6 +74,9 @@ return [
                 'articles' => [
                     'description' => 'Créer des commentaires sur des articles',
                 ],
+                'comments' => [
+                    'description' => 'Créer les réponses de sur des commentaires',
+                ],
             ]
         ],
         'remove' => [
@@ -69,6 +84,9 @@ return [
             'scopes' => [
                 'articles' => [
                     'description' => 'Supprimer les commentaires sur des articles',
+                ],
+                'comments' => [
+                    'description' => 'Supprimer les réponses de sur des commentaires',
                 ],
             ]
         ],

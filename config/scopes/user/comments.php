@@ -29,7 +29,9 @@ return [
             'scopes' => [
                 'articles' => [
                     'description' => 'Gérer les commentaires de l\'utilisateur sur des articles',
-                    ''
+                ],
+                'comments' => [
+                    'description' => 'Gérer les réponses de l\'utilisateur sur des commentaires',
                 ],
             ]
         ],
@@ -39,6 +41,9 @@ return [
                 'articles' => [
                     'description' => 'Récupérer les commentaires de l\'utilisateur sur des articles',
                 ],
+                'comments' => [
+                    'description' => 'Récupérer les réponses de l\'utilisateur sur des commentaires',
+                ],
             ]
         ],
         'set' => [
@@ -46,6 +51,9 @@ return [
             'scopes' => [
                 'articles' => [
                     'description' => 'Modifier et créer des commentaires pour l\'utilisateur sur des articles',
+                ],
+                'comments' => [
+                    'description' => 'Modifier et créer les réponses de l\'utilisateur sur des commentaires',
                 ],
             ]
         ],
@@ -55,6 +63,9 @@ return [
                 'articles' => [
                     'description' => 'Modifier les commentaires de l\'utilisateur sur des articles',
                 ],
+                'comments' => [
+                    'description' => 'Modifier les réponses de l\'utilisateur sur des commentaires',
+                ],
             ]
         ],
         'create' => [
@@ -63,6 +74,9 @@ return [
                 'articles' => [
                     'description' => 'Créer des commentaires pour l\'utilisateur sur des articles',
                 ],
+                'comments' => [
+                    'description' => 'Créer les réponses de l\'utilisateur sur des commentaires',
+                ],
             ]
         ],
         'remove' => [
@@ -70,6 +84,9 @@ return [
             'scopes' => [
                 'articles' => [
                     'description' => 'Supprimer les commentaires pour l\'utilisateur sur des articles',
+                ],
+                'comments' => [
+                    'description' => 'Supprimer les réponses de l\'utilisateur sur des commentaires',
                 ],
             ]
         ],
