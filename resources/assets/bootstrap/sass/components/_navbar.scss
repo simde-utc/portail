@@ -262,6 +262,27 @@
     }
   }
 
+  .nav-item{
+    color: $navbar-dark-active-color;
+
+    .notification{
+        .num {
+          position:absolute;
+          top:-5px;
+          right:-5px;
+          width:20px;
+          height:20px;
+          border-radius:50%;
+          background:#ff2c74;
+          color:#fff;
+          line-height:20px;
+          font-family:sans-serif;
+          text-align:center;
+      }
+    }
+
+  }
+
   .navbar-nav {
     .nav-link {
       color: $navbar-dark-color;
@@ -273,6 +294,11 @@
       &.disabled {
         color: $navbar-dark-disabled-color;
       }
+
+      &.profilepic{
+        border-radius: 24px;
+    }
+
     }
 
     .show > .nav-link,
@@ -296,7 +322,7 @@
   .navbar-text {
     color: $navbar-dark-color;
     a {
-      color: $navbar-dark-active-color;
+      color: $navbar-dark-color;
 
       @include hover-focus {
         color: $navbar-dark-active-color;
