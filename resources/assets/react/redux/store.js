@@ -186,7 +186,7 @@ export const makeResourceSuccessed = (place, timestamp, status) => {
 
 // Ici on crée le store et on modifie ses données via immer en fonction de la récup des données
 export default createStore((state = store, action) => {
-  console.log(action.type);
+  console.debug(action.type);
   if (action.meta && action.meta.path && action.meta.path.length > 0) {
     return produce(state, draft => {
       var path = action.meta.path;
