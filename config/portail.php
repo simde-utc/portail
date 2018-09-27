@@ -49,7 +49,8 @@ return [
 	],
 
 	'cas' => [
-		'url'		=> 'https://cas.utc.fr/cas/'
+		'url'		=> env('CAS_URL', ''),
+		'image' => env('CAS_IMAGE', ''),
 	],
 
 	'ginger_key' 	=> env('GINGER_KEY', ''),

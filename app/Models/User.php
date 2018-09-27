@@ -88,6 +88,9 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 			if ($model->getOriginal('firstname') !== $model->getAttribute('firstname'))
 				$edited['Prénom'] = $model->firstname;
 
+			if ($model->getOriginal('image') !== $model->getAttribute('image'))
+				$edited['Photo de profil'] = 'changée !';
+
 			if (count($edited) > 0)
 				$model->notify(new UserModification($edited));
         });
@@ -100,7 +103,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 	public $incrementing = false;
 
 	protected $fillable = [
-		'firstname', 'lastname', 'email', 'is_active', 'last_login_at',
+		'firstname', 'lastname', 'email', 'image', 'is_active', 'last_login_at',
 	];
 
 	protected $casts = [
@@ -116,7 +119,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 	];
 
 	protected $must = [
-		'me'
+		'image'
 	];
 
 	protected $types = [

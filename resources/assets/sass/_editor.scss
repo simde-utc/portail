@@ -1,0 +1,113 @@
+.editor-toolbar {
+    background-color: $dark-gray;
+    opacity: 1 !important;
+    border: none !important;
+
+    &.fullscreen {
+        top: 57px !important;
+
+        &.disabled-for-preview {
+            a:not(.no-disable) {
+                opacity: .33 !important;
+                background: none !important;
+            }
+        }
+
+        a {
+            color: #676767 !important;
+
+            &:hover {
+                color: black !important;
+                background-color: hsla(0, 0%, 0%, .1);
+                border: none;
+            }
+
+            &.active {
+                color: black !important;
+                background-color: hsla(0, 0%, 0%, .1);
+            }
+        }
+    }
+
+    a {
+        color: #b9b9b9 !important;
+        margin: 0 5px !important;
+        border: none !important;
+
+        &:hover {
+            background-color: hsla(0, 0, 0, .1) !important;
+            border: none !important;
+        }
+
+        &.active {
+            background-color: hsla(0, 0, 0, .1) !important;
+        }     
+    }
+
+    &.disabled-for-preview {
+        a:not(.no-disable) {
+            opacity: .33 !important;
+            background: none !important;
+        }
+    }
+}
+
+.editor-preview-side {
+    border: none !important;
+    border-top: 1px solid #ddd !important;
+    top: 106px !important;
+}
+
+.CodeMirror-fullscreen {
+    border-top: 1px solid #ddd !important; 
+    top: 106px !important;  
+}
+
+.editor-statusbar {
+    background: $dark-gray;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    height: 20px !important;
+    padding: 0 10px !important;
+
+    span {
+        font-size: 12px !important;
+    }
+}
+
+.CodeMirror {
+    border-radius: 0 !important;
+    height: 600px;
+    border-top: none;
+    border-bottom: none;
+    padding: 0 10px;
+    font-size: 18px;
+
+    h1, h2, h3 {
+        margin: 20px 0;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    h2 {
+        font-size: 25px;
+    }
+
+    h3, h4, h5, h6 {
+        font-size: 20px;   
+    }
+
+    p {
+        margin: 10px 0;
+    }
+
+    code {
+        font-size: 17px;
+    }
+
+    img {
+        width: 100% !important;
+    }
+}

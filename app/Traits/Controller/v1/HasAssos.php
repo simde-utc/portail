@@ -31,7 +31,7 @@ trait HasAssos
 		return Semester::getThisSemester();
 	}
 
-	protected function getChoices(Request $request, array $initialChoices = ['joined', 'joining', 'followed']) {
+	protected function getChoices(Request $request, array $initialChoices = ['joined', 'joining']) {
 		$scopeHead = \Scopes::getTokenType($request);
 		$choices = [];
 
@@ -63,7 +63,7 @@ trait HasAssos
 					->first();
 
 				if (!$asso)
-					abort(403, 'L\'utilisateur ne fait pas parti de l\'association');
+					abort(404, 'L\'utilisateur ne fait pas parti de l\'association');
 			}
 
 			return $asso;
@@ -76,11 +76,11 @@ trait HasAssos
 		$user = $asso->allMembers()
 			->wherePivot('user_id', $this->getUser($request, $user_id, true)->id)
 			->wherePivot('semester_id', $semester ? $semester->id : Semester::getThisSemester())
-			->first();
+			->whereNotNull('role_id')->first();
 
 		if ($user)
 			return $user;
 		else
-			abort(403, 'L\'utilisateur ne fait pas parti de l\'association');
+			abort(404, 'L\'utilisateur ne fait pas parti de l\'association');
 	}
 }

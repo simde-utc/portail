@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Traits\Model\HasOwnerSelection;
 use Illuminate\Support\Collection;
 use App\Interfaces\Model\CanHavePermissions;
+use Illuminate\Database\Eloquent\Builder;
 
 class Permission extends Model implements OwnableContract
 {
@@ -24,6 +25,10 @@ class Permission extends Model implements OwnableContract
 
 		protected $with = [
 			'owned_by',
+		];
+
+		protected $selection = [
+			'owner' => [],
 		];
 
     public function roles(): BelongsToMany {
@@ -53,6 +58,19 @@ class Permission extends Model implements OwnableContract
 
 		public function owned_by() {
 			return $this->morphTo('owned_by');
+		}
+
+		public function scopeOwner(Builder $query, string $owner_type, string $owner_id = null) {
+			$query = $query->where('owned_by_type', \ModelResolver::getModelName($owner_type));
+
+			if ($owner_id)
+				$query->where(function ($query) use ($owner_id) {
+					return $query->whereNull('owned_by_id')
+						->orWhere('owned_by_id', $owner_id);
+				});
+
+
+			return $query;
 		}
 
 		public static function find($id, CanHavePermissions $owner = null) {
