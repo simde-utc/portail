@@ -71,7 +71,7 @@
 		</div>
 	</nav>
 
-	<div class="container py-4 py-md-5">
+	<div class="container py-4 py-md-5" style="height: 100%">
 		@yield('content')
 	</div>
 

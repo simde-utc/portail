@@ -41,6 +41,19 @@ class CheckPassport
             $request->replace($input);
         }
 
+        // Méthode magique pour simplifier le dev
+        if (isset($input['scope']) && $input['scope'] === '*' && config('app.debug')) {
+            $scopes = [];
+
+            foreach (array_keys(\Scopes::all()) as $scope) {
+                if (substr($scope, 0, 11) === 'user-manage')
+                    $scopes[] = $scope;
+            }
+
+            $input['scope'] = implode(' ', $scopes);
+            $request->replace($input);
+        }
+
  		// On vérifie que les scopes sont bien définis et pour le bon type d'authentification
 		if (isset($input['scope']) && $input['scope'] !== '')
 			\Scopes::checkScopesForGrantType(explode(' ', $input['scope']), $input['grant_type'] ?? null);
