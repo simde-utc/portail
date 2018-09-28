@@ -1,3 +1,13 @@
+/**
+ * Assemblage, chargement et composition de l'application entière
+ *
+ * @author Alexandre Brasseur <alexandre.brasseur@etu.utc.fr>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license AGPL-3.0
+**/
+
 import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import 'react-notifications/lib/notifications.css';
@@ -12,16 +22,19 @@ import PrivateRoute from './components/PrivateRoute';
 import { NotificationContainer } from 'react-notifications';
 
 // Screens
+import AppLoader from './AppLoader';
 import HomeScreen from './screens/Home';
 import DashboardScreen from './screens/Dashboard';
 import AssosListScreen from './screens/AssosList';
 import AssoDetailScreen from './screens/Asso';
 import ProfileScreen from './screens/Profile';
 
+
 class App extends React.Component {
 	render() {
 		return (
 			<div className="h-100">
+				<AppLoader />
 				<Navbar />
 
 				<div className="d-flex w-100 h-100">

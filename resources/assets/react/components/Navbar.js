@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import actions from '../redux/actions.js';
 
 @connect(store => ({
 	user: store.getData('user', false),
+	permissions: store.getData('user/permissions'),
 	login: store.getData('login', []),
 }))
 class Navbar extends React.Component {
@@ -16,13 +16,6 @@ class Navbar extends React.Component {
 			profileDropdown: false
 		};
 		this.toggle.bind(this);
-	}
-
-	componentWillMount() {
-		// Get User Info
-		this.props.dispatch(actions.user.get())
-		// Get Login Methods
-		this.props.dispatch(actions.login.get())
 	}
 
 	toggle(key) {
@@ -80,6 +73,17 @@ class Navbar extends React.Component {
 							</li>
 						)}
 
+
+						{ this.props.user && this.props.permissions.length && (
+							<li className="nav-item">
+								<NavLink className="nav-link" to="/admin">
+									<span className="fa-stack fa-sm">
+										<i className="fa fa-circle fa-stack-2x icon-background2"></i>
+										<i className="fa fa-screwdriver fa-stack-1x"></i>
+									</span>
+								</NavLink>
+							</li>
+						)}
 
 						{ this.props.user && (
 							<li className="nav-item">

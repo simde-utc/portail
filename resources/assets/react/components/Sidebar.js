@@ -1,31 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
-import actions from '../redux/actions.js';
 
 @connect((store, props) => ({
   user: store.getData('user', false), // Si user === false, alors on est pas co
   assos: store.getData('user/assos'),
 }))
 class Sidebar extends React.Component {
-	componentWillMount() {
-    this.props.dispatch(actions.user.assos.all());
-  }
+    getAssos(assos) {
+        return assos.map(asso => {
+            let color = 'color-' + asso.login;
 
-  getAssos(assos) {
-    return assos.map(asso => {
-      let color = 'color-' + asso.login;
+            if (asso.parent)
+                color += ' color-' + asso.parent.login;
 
-      if (asso.parent)
-        color += ' color-' + asso.parent.login;
-
-      return (
-        <NavLink key={ asso.id } className="sidebar-link" to={ "/assos/" + asso.login }>
-          <i className={ asso.pivot.role_id ? 'fas fa-hands-helping' : 'fas fa-thumbs-up' }></i>
-          <span className={ color }>{ asso.shortname }</span>
-        </NavLink>
-    )});
-  }
+            return (
+            <NavLink key={ asso.id } className="sidebar-link" to={ "/assos/" + asso.login }>
+                <i className={ asso.pivot.role_id ? 'fas fa-hands-helping' : 'fas fa-thumbs-up' }></i>
+                <span className={ color }>{ asso.shortname }</span>
+            </NavLink>
+        )});
+    }
 
 	render() {
 		// TODO: Groups to do (fetch and display like assos).

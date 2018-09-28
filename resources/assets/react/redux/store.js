@@ -1,5 +1,6 @@
 /**
  * Création et gestion automatique et dynmaique du store géré par redux (store refait sur la base du travail d'Alexandre)
+ *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <alexandre.brasseur@etu.utc.fr>
  *
@@ -123,6 +124,11 @@ export const store = {
   },
   isFetched: function (props, replacement = false, forceReplacement = true) {
     return this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement);
+  },
+  // Permet de savoir si une requête s'est terminée
+  hasFinished: function (props, replacement = false, forceReplacement = true) {
+    return this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement) ||
+        this.get(this.propsToArray(props).concat(['failed']), replacement, forceReplacement);
   },
   resources: {},
 };
