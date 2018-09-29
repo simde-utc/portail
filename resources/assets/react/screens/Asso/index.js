@@ -26,8 +26,8 @@ import Calendar from '../../components/Calendar/index';
 		asso: asso,
 		member: store.findData(['user', 'assos'], props.match.params.login, 'login', false),
 		roles: store.getData(['assos', asso.id, 'roles']),
-		fetching: store.isFetching('assos'),
-		fetched: store.isFetched('assos'),
+		fetching: store.isFetching(['assos', props.match.params.login]),
+		fetched: store.isFetched(['assos', props.match.params.login]),
 	};
 })
 class AssoScreen extends React.Component {

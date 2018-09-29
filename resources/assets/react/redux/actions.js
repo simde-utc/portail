@@ -206,10 +206,10 @@ export class Actions {
 
     for (var key in queryParams) {
       if (queryParams.hasOwnProperty(key)) {
-        if (typeof queryParams[key] === 'string')
-          queries.push(encodeURIComponent(prefix ? ('[' + key + ']') : key) + '=' + encodeURIComponent(queryParams[key]))
-        else
+        if (Object.is(queryParams[key]))
           queries.push(this.generateQuery(queryParams[key], true))
+        else
+          queries.push(encodeURIComponent(prefix ? ('[' + key + ']') : key) + '=' + encodeURIComponent(queryParams[key]))
       }
     }
 

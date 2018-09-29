@@ -29,7 +29,7 @@ class AppLoader extends React.Component {
 		// Get Login Methods
 		this.props.dispatch(actions.login.all())
 		// Get User Info
-		this.props.dispatch(actions.user.get())
+		this.props.dispatch(actions.user.all({ allTypes: true }))
 		// Get User Permissions
 		this.props.dispatch(actions.user.permissions.all())
 		// Get User Assos
