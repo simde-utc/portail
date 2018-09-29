@@ -19,15 +19,16 @@ import AssoMemberListScreen from './MemberList';
 import Calendar from '../../components/Calendar/index';
 
 @connect((store, props) => {
-	var asso = store.findData('assos', props.match.params.login, 'login');
+	const login = props.match.params.login;
 
 	return {
 		user: store.getData('user', false),
-		asso: asso,
-		member: store.findData(['user', 'assos'], props.match.params.login, 'login', false),
-		roles: store.getData(['assos', asso.id, 'roles']),
-		fetching: store.isFetching(['assos', props.match.params.login]),
-		fetched: store.isFetched(['assos', props.match.params.login]),
+		asso: store.getData(['assos', login]),
+		member: store.findData(['user', 'assos'], login, 'login', false),
+		roles: store.getData(['assos', login, 'roles']),
+		fetching: store.isFetching(['assos', login]),
+		fetched: store.isFetched(['assos', login]),
+		failed: store.hasFailed(['assos', login]),
 	};
 })
 class AssoScreen extends React.Component {
@@ -35,7 +36,6 @@ class AssoScreen extends React.Component {
 		super(props);
 
 		this.state = {
-			redirect: false,
 			modal: {
 				show: false,
 				title: '',
@@ -282,15 +282,11 @@ class AssoScreen extends React.Component {
 		data.owned_by_type = "asso";
 		data.owned_by_id = this.props.asso.id;
 		this.props.dispatch(articlesActions.create(data));
-		this.setState(prev => ({ ...prev, redirect: true }));
 	}
 
 	render() {
-		if (this.state.redirect)
-			return <Redirect to="/" />;
-
-		// var createArticleButton = <span></span>;
-		// if (this.props.user.assos && this.props.user.assos.find( assos => assos.id === this.props.asso.id ))
+		if (this.props.failed)
+			return <NotFoundRoute />;
 
 		if (this.props.fetching || !this.props.fetched || !this.props.asso)
 			return (<span className="loader huge active"></span>);
@@ -320,15 +316,15 @@ class AssoScreen extends React.Component {
 		return (
 			<div className="asso w-100">
 				<Modal isOpen={ this.state.modal.show }>
-          <ModalHeader>{ this.state.modal.title }</ModalHeader>
-          <ModalBody>
-            { this.state.modal.body }
-          </ModalBody>
-          <ModalFooter>
-            <Button outline onClick={() => { this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }})); } }>Annuler</Button>
-            <Button outline color={ this.state.modal.button.type } onClick={ this.state.modal.button.onClick }>{ this.state.modal.button.text }</Button>
-          </ModalFooter>
-        </Modal>
+					<ModalHeader>{ this.state.modal.title }</ModalHeader>
+					<ModalBody>
+						{ this.state.modal.body }
+					</ModalBody>
+					<ModalFooter>
+						<Button outline onClick={() => { this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }})); } }>Annuler</Button>
+						<Button outline color={ this.state.modal.button.type } onClick={ this.state.modal.button.onClick }>{ this.state.modal.button.text }</Button>
+					</ModalFooter>
+		        </Modal>
 
 				<ul className={ "nav nav-tabs asso " + bg }>
 					<li className="nav-item">
@@ -364,7 +360,7 @@ class AssoScreen extends React.Component {
 					<Route path={`${this.props.match.url}/articles`} render={ () => (
 						<ArticleList asso={ this.props.asso } />
 					)} />
-					<LoggedRoute path={`${this.props.match.url}/members`} redirect={`${this.props.match.url}`} types={[ 'casConfirmed', 'contributerBde' ]} component={ () => (
+					<LoggedRoute path={`${this.props.match.url}/members`} redirect={`${this.props.match.url}`} types={[ 'casConfirmed', 'contributerBde' ]} render={ () => (
 						<AssoMemberListScreen asso={ this.props.asso } isMember={ this.user.isMember } leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>
 					)} />
 					<Route path={`${this.props.match.url}/article`} render={ () => (
