@@ -9,7 +9,8 @@ import Select from 'react-select';
 
 import Dropdown from './../../components/Dropdown';
 import ArticleForm from './../../components/Article/Form';
-import PrivateRoute from './../../components/PrivateRoute';
+import LoggedRoute from './../../routes/Logged';
+import NotFoundRoute from './../../routes/NotFound';
 
 import AssoHomeScreen from './Home';
 import ArticleList from './ArticleList';
@@ -354,20 +355,20 @@ class AssoScreen extends React.Component {
 
 				<Switch>
 					<Route path={`${this.props.match.url}`} exact render={ () => (
-							<AssoHomeScreen asso={ this.props.asso } contacts={ this.props.contacts } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting }
-								follow={ this.followAsso.bind(this) } unfollow={ this.unfollowAsso.bind(this) } join={ this.joinAsso.bind(this) } leave={ this.leaveAsso.bind(this) } />
+						<AssoHomeScreen asso={ this.props.asso } contacts={ this.props.contacts } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting }
+							follow={ this.followAsso.bind(this) } unfollow={ this.unfollowAsso.bind(this) } join={ this.joinAsso.bind(this) } leave={ this.leaveAsso.bind(this) } />
 					)} />
 					<Route path={`${this.props.match.url}/evenements`} render={ () => (
-							<Calendar events={ this.getAllEvents(this.state.events) } fetched={ this.state.articlesFetched } />
+						<Calendar events={ this.getAllEvents(this.state.events) } fetched={ this.state.articlesFetched } />
 					)} />
 					<Route path={`${this.props.match.url}/articles`} render={ () => (
-							<ArticleList asso={ this.props.asso } />
+						<ArticleList asso={ this.props.asso } />
 					)} />
-				<PrivateRoute path={`${this.props.match.url}/members`} redirect={`${this.props.match.url}`} authorized={ this.props.user } component={ () => (
-							<AssoMemberListScreen asso={ this.props.asso } isMember={ this.user.isMember } leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>
+					<LoggedRoute path={`${this.props.match.url}/members`} redirect={`${this.props.match.url}`} types={[ 'casConfirmed', 'contributerBde' ]} component={ () => (
+						<AssoMemberListScreen asso={ this.props.asso } isMember={ this.user.isMember } leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>
 					)} />
 					<Route path={`${this.props.match.url}/article`} render={ () => (
-							<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
+						<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
 					)} />
 				</Switch>
 			</div>

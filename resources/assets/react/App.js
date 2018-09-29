@@ -16,9 +16,9 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 // Components
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import ErrorCatcher from './components/ErrorCatcher';
-import RouteNotFound from './components/RouteNotFound';
-import PrivateRoute from './components/PrivateRoute';
+import ErrorCatcher from './routes/ErrorCatcher';
+import NotFoundRoute from './routes/NotFound';
+import LoggedRoute from './routes/Logged';
 import { NotificationContainer } from 'react-notifications';
 
 // Screens
@@ -45,8 +45,8 @@ class App extends React.Component {
 							<Route path="/dashboard" component={ DashboardScreen } />
 							<Route path="/assos" exact component={ AssosListScreen } />
 							<Route path="/assos/:login" component={ AssoDetailScreen } />
-							<PrivateRoute path="/profile" component={ ProfileScreen } />
-							<Route component={ RouteNotFound } />
+							<LoggedRoute path="/profile" component={ ProfileScreen } />
+							<Route component={ NotFoundRoute } />
 						</Switch>
 					</ErrorCatcher>
 				</div>
