@@ -10,10 +10,10 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { Route, Redirect } from 'react-router-dom'
+import { Route, Redirect, Link } from 'react-router-dom'
 
 const LoggedRoute = ({ component: Component, redirect, types, user, isAuthenticated, ...params }) => {
-	const isAllowed = () => {
+	const isAllowed = (() => {
 		if (isAuthenticated) {
 			if (types && types.length) {
 				for (let key in types) {
@@ -28,18 +28,24 @@ const LoggedRoute = ({ component: Component, redirect, types, user, isAuthentica
 		}
 
 		return false;
-	};
+	})();
+
+	if (!isAllowed && !redirect) {
+		window.location.href = '/login?redirect=' + window.location.href;
+
+		return (
+			<div></div>
+		);
+	}
 
 	return (
 		<Route
 			{ ...params }
-			render={ props => (
-				isAllowed() ? (
-					<Component {...props} />
-				) : (
-					<Redirect to={{ pathname: redirect || '/', state: { from: props.location } }} />
-				)
-			)}
+			render={ props => (isAllowed ? (
+				<Component {...props} />
+			) : (
+				<Redirect to={{ pathname: redirect, state: { from: props.location } }} />
+			))}
 		/>
 	);
 }
