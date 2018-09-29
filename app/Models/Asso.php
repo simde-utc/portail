@@ -82,8 +82,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
         });
     }
 
-	public function scopeFindByLogin($query, string $login) {
-		return $query->where('login', $login)->first();
+	public static function findByLogin(string $login) {
+		return self::where('login', $login)->first();
 	}
 
 	public function type() {
