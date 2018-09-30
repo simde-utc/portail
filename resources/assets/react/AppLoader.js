@@ -28,6 +28,8 @@ class AppLoader extends React.Component {
 	componentWillMount() {
 		// Get Login Methods
 		this.props.dispatch(actions.login.all())
+		// Get Semesters
+		this.props.dispatch(actions.semesters.all())
 		// Get User Info
 		this.props.dispatch(actions.user.all({ allTypes: true }))
 		// Get User Permissions

@@ -25,7 +25,12 @@ trait HasAssos
 			if (in_array('followed', $choices) && !\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-assos-members-followed-now'))
 				throw new PortailException('Vous n\'avez pas les droits pour spécifier un semestre particulier pour les associations que l\'utilisateur suit');
 
-			return Semester::getSemester($request->input('semester'));
+			$semester = Semester::getSemester($request->input('semester'));
+
+			if ($semester)
+				return $semester;
+			else
+				abort(400, 'Le semestre n\'existe pas');
 		}
 
 		return Semester::getThisSemester();

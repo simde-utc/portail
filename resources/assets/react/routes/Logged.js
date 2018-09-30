@@ -17,14 +17,6 @@ import { Route, Redirect, Link } from 'react-router-dom'
 	isAuthenticated: store.isFetched('user'),
 }))
 class LoggedRoute extends React.Component {
-	constructor(props) {
-		super(props)
-
-		this.state = {
-			route: <this.props.render />
-		};
-	}
-
 	isAllowed() {
 		if (this.props.isAuthenticated) {
 			if (this.props.types && this.props.types.length) {
@@ -56,7 +48,7 @@ class LoggedRoute extends React.Component {
 			return (
 				<Route
 					{ ...this.props }
-					render={(
+					render={props => (
 						<Redirect to={{ pathname: this.props.redirect, state: { from: props.location } }} />
 					)}
 				/>

@@ -13,7 +13,7 @@ import ArticleList from '../../components/Article/List';
 	fetched: store.isFetched(['assos', props.asso.id, 'articles']),
 	fetching: store.isFetching(['assos', props.asso.id, 'articles']),
 }))
-class AssoMemberListScreen extends React.Component {
+class AssoArticleList extends React.Component {
   componentWillMount() {
     if (this.props.asso.id) {
       this.loadAssosData(this.props.asso.id);
@@ -37,4 +37,4 @@ class AssoMemberListScreen extends React.Component {
 	}
 }
 
-export default AssoMemberListScreen;
+export default AssoArticleList;

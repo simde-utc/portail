@@ -324,7 +324,7 @@ class AssoScreen extends React.Component {
 						<Button outline onClick={() => { this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }})); } }>Annuler</Button>
 						<Button outline color={ this.state.modal.button.type } onClick={ this.state.modal.button.onClick }>{ this.state.modal.button.text }</Button>
 					</ModalFooter>
-		        </Modal>
+        </Modal>
 
 				<ul className={ "nav nav-tabs asso " + bg }>
 					<li className="nav-item">
