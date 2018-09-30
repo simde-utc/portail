@@ -32,6 +32,7 @@ class RolesTableSeeder extends Seeder
 					'room',
           'role',
           'permission',
+          'bobby',
 				]
 			],
 			[
@@ -51,6 +52,7 @@ class RolesTableSeeder extends Seeder
 					'room',
           'role',
           'permission',
+          'bobby',
 				]
 			],
 			[
@@ -71,6 +73,7 @@ class RolesTableSeeder extends Seeder
           'reservation',
           'role',
           'permission',
+          'bobby',
 				]
 			],
 			[
@@ -94,6 +97,7 @@ class RolesTableSeeder extends Seeder
           'reservation',
           'role',
           'permission',
+          'bobby',
 				]
 			],
 			[
@@ -284,6 +288,7 @@ class RolesTableSeeder extends Seeder
 				'permissions' => [
           'event',
           'reservation',
+          'bobby',
 				],
 			],
 			[
@@ -294,6 +299,9 @@ class RolesTableSeeder extends Seeder
 				'parents' => [
 					'resp logistique',
 				],
+        'permissions' => [
+          'bobby',
+        ],
 			],
 			[
 				'type' => 'resp',

@@ -225,7 +225,7 @@ class Role extends Model implements OwnableContract
 		$roles = stringToArray($roles);
 		$toAdd = static::getRoles($roles, $this->owned_by);
 
-		if (count($toAdd) !== count($roles))
+		if (count($toAdd) !== count($roles)) 
 			throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
 
 		if ($toAdd->find($this->id))

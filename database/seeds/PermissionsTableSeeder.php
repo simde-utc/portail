@@ -83,6 +83,12 @@ class PermissionsTableSeeder extends Seeder
         'owned_by' => new Asso,
 			],
 			[
+				'type' => 'bobby',
+				'name' => 'Service de réservation Bobby',
+				'description' => 'Gestion du service Bobby',
+        'owned_by' => new Asso,
+			],
+			[
 				'type' => 'member',
 				'name' => 'Membre',
 				'description' => 'Gestion des membres du groupe',
@@ -164,6 +170,12 @@ class PermissionsTableSeeder extends Seeder
 				'type' => 'permission',
 				'name' => 'Permission',
 				'description' => 'Gestion des permissions',
+        'owned_by' => new User,
+			],
+			[
+				'type' => 'bobby',
+				'name' => 'Service de réservation Bobby',
+				'description' => 'Gestion du service Bobby',
         'owned_by' => new User,
 			],
 		];
