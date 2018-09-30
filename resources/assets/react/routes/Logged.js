@@ -12,12 +12,24 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Route, Redirect, Link } from 'react-router-dom'
 
-const LoggedRoute = ({ component: Component, redirect, types, user, isAuthenticated, ...params }) => {
-	const isAllowed = (() => {
-		if (isAuthenticated) {
-			if (types && types.length) {
-				for (let key in types) {
-					if (user['is_' + types[key]]) {
+@connect(store => ({
+	user: store.getData('user'),
+	isAuthenticated: store.isFetched('user'),
+}))
+class LoggedRoute extends React.Component {
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			route: <this.props.render />
+		};
+	}
+
+	isAllowed() {
+		if (this.props.isAuthenticated) {
+			if (this.props.types && this.props.types.length) {
+				for (let key in this.props.types) {
+					if (this.props.user['is_' + this.props.types[key]]) {
 						return true;
 					}
 				}
@@ -28,29 +40,34 @@ const LoggedRoute = ({ component: Component, redirect, types, user, isAuthentica
 		}
 
 		return false;
-	})();
-
-	if (!isAllowed && !redirect) {
-		window.location.href = '/login?redirect=' + window.location.href;
-
-		return (
-			<div></div>
-		);
 	}
 
-	return (
-		<Route
-			{ ...params }
-			render={ props => (isAllowed ? (
-				<Component {...props} />
-			) : (
-				<Redirect to={{ pathname: redirect, state: { from: props.location } }} />
-			))}
-		/>
-	);
+	render() {
+		const allowed = this.isAllowed();
+
+		if (allowed) {
+			return (
+				<Route
+					{ ...this.props }
+				/>
+			);
+		}
+		else if (this.props.redirect) {
+			return (
+				<Route
+					{ ...this.props }
+					render={(
+						<Redirect to={{ pathname: this.props.redirect, state: { from: props.location } }} />
+					)}
+				/>
+			);
+		}
+		else {
+			window.location.href = '/login?redirect=' + window.location.href;
+
+			return null;
+		}
+	}
 }
 
-export default connect(store => ({
-	user: store.getData('user'),
-	isAuthenticated: store.isFetched('user'),
-}))(LoggedRoute);
+export default LoggedRoute;

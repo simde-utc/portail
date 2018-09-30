@@ -24,7 +24,6 @@ import Calendar from '../../components/Calendar/index';
 	return {
 		user: store.getData('user', false),
 		asso: store.getData(['assos', login]),
-		store: store,
 		member: store.findData(['user', 'assos'], login, 'login', false),
 		roles: store.getData(['assos', login, 'roles']),
 		fetching: store.isFetching(['assos', login]),
@@ -361,7 +360,7 @@ class AssoScreen extends React.Component {
 					<Route path={`${this.props.match.url}/articles`} render={ () => (
 						<ArticleList asso={ this.props.asso } />
 					)} />
-					<LoggedRoute path={`${this.props.match.url}/members`} redirect={`${this.props.match.url}`} types={[ 'casConfirmed', 'contributerBde' ]} component={ () => (
+					<LoggedRoute path={`${this.props.match.url}/members`} redirect={`${this.props.match.url}`} types={[ 'casConfirmed', 'contributerBde' ]} render={ () => (
 						<AssoMemberListScreen asso={ this.props.asso } isMember={ this.user.isMember } leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>
 					)} />
 					<Route path={`${this.props.match.url}/article`} render={ () => (

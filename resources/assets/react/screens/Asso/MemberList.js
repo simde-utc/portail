@@ -15,7 +15,7 @@ import MemberList from '../../components/Member/DoubleList';
 	roles: store.getData(['assos', props.asso.id, 'roles']),
 }))
 class AssoMemberListScreen extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.asso.id) {
       this.loadAssosData(this.props.asso.id);
     }
@@ -28,7 +28,7 @@ class AssoMemberListScreen extends React.Component {
   }
 
   loadAssosData(id) {
-		this.props.dispatch(actions.assos(this.props.asso.id).members.all());
+		this.props.dispatch(actions.assos(id).members.all());
 	}
 
 	render() {
