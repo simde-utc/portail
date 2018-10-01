@@ -19,6 +19,8 @@ class CreateTableAccess extends Migration
 			$table->string('name', validation_max('name'))->unique();
             $table->string('description')->nullable();
             $table->string('data')->nullable();
+
+            $table->timestamps();
         });
     }
 
