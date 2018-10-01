@@ -20,7 +20,9 @@ import actions from './redux/actions.js';
 		store.hasFinished('login'),
 		store.hasFinished('user'),
 		store.hasFinished('user/permissions'),
-		store.hasFinished('user/assos'),
+		// Important ?
+		// store.hasFinished('user/assos'),
+		// store.hasFinished('user/services'),
 	]
 }))
 class AppLoader extends React.Component {
@@ -36,6 +38,8 @@ class AppLoader extends React.Component {
 		this.props.dispatch(actions.user.permissions.all())
 		// Get User Assos
 		this.props.dispatch(actions.user.assos.all());
+		// Get User Services
+		this.props.dispatch(actions.user.services.all());
 	}
 
 	// Permet d'afficher le chargement initial de la page
