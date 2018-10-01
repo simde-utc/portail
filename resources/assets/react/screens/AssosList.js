@@ -10,7 +10,7 @@ import { sortBy } from 'lodash';
 	fetching: store.isFetching('assos'),
 	fetched: store.isFetched('assos')
 }))
-class ScreensAssosList extends React.Component {
+class AssosListScreen extends React.Component {
 	componentWillMount() {
 		this.props.dispatch(actions.assos.all())
 	}
@@ -95,4 +95,4 @@ class ScreensAssosList extends React.Component {
 	}
 }
 
-export default ScreensAssosList;
+export default AssosListScreen;

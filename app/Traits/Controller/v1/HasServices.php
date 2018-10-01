@@ -32,7 +32,7 @@ trait HasServices
 	}
 
 	protected function getFollowedService(User $user = null, string $id) {
-		$service = $user->services()->find($id);
+		$service = $user->followedServices()->find($id);
 
 		if ($service)
 			return $service;
