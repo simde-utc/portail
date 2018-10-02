@@ -65,7 +65,7 @@ class ServiceController extends Controller
 	 */
 	public function store(Request $request, string $user_id = null): JsonResponse {
 		$user = $this->getUser($request, $user_id);
-		$services = [];
+		$services = collect();
 		$service_ids = $request->input('service_ids', [$request->input('service_id')]);
 
 		foreach ($service_ids as $service_id) {

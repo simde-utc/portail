@@ -13,6 +13,11 @@ trait HasServices
 {
 	use HasUsers, HasVisibility;
 
+	// On affiche les services cachés aux gens avec une permission: service admin ?
+	protected function isPrivate($user_id = null, $model = null) {
+		return User::find($user_id)->permissions()->count() > 0;
+	}
+
 	protected function getService(User $user = null, string $id) {
 		$service = Service::find($id);
 
@@ -27,7 +32,7 @@ trait HasServices
 	}
 
 	protected function getFollowedService(User $user = null, string $id) {
-		$service = $user->services()->find($id);
+		$service = $user->followedServices()->find($id);
 
 		if ($service)
 			return $service;

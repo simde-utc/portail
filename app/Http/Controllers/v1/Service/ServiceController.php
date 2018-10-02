@@ -106,8 +106,9 @@ class ServiceController extends Controller
 		if ($service->update($request->input())) {
 			// On affecte l'image si tout s'est bien passé
 			$this->setImage($request, $service, 'services/'.$service->id);
-		}
+
 			return response()->json($service->hideSubData(), 201);
+		}
 		else
 			abort(500, 'Impossible de modifier la service');
 	}
