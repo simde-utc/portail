@@ -5,6 +5,8 @@ import { Card, CardBody, CardTitle, CardSubtitle, CardFooter, Button } from 'rea
 import AspectRatio from 'react-aspect-ratio';
 import { sortBy } from 'lodash';
 
+import Img from '../components/Image';
+
 @connect(store => ({
 	assos: store.getData('assos'),
 	fetching: store.isFetching('assos'),

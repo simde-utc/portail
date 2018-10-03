@@ -5,12 +5,18 @@ import { Card, CardBody, CardTitle, CardSubtitle, CardFooter, Button } from 'rea
 import AspectRatio from 'react-aspect-ratio';
 import { findIndex } from 'lodash';
 
+import Img from '../Image';
+
 class Member extends React.Component {
 	render() {
 		return (
 			<Card className="m-2 p-0" style={{ width: 225 }}>
 				<AspectRatio ratio="1" style={{ height: 200 }} className="d-flex justify-content-center mt-2">
-					<img src={ this.props.image } alt="Photo non disponible" className="img-thumbnail" style={{ height: '100%' }} />
+					<Img image={ this.props.image } className="img-thumbnail" style={{ height: '100%' }} unloader={(
+						<div className="d-flex justify-content-center align-items-center">
+							<i className="fa fa-9x fa-user-alt"></i>
+						</div>
+					)} />
 				</AspectRatio>
 				<CardBody>
 					<CardTitle>{ this.props.title }</CardTitle>

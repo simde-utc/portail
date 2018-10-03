@@ -14,6 +14,7 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 import LoadingScreen from 'react-loading-screen';
 
 import actions from './redux/actions.js';
+import bdeImage from '../images/bde.jpg'
 
 @connect(store => ({
 	loading: [
@@ -50,7 +51,7 @@ class AppLoader extends React.Component {
 			    bgColor='#f1f1f1'
 			    spinnerColor='#9ee5f8'
 			    textColor='#676767'
-			    logoSrc='http://assos.utc.fr/larsen/style/img/logo-bde.jpg'
+			    logoSrc={ bdeImage }
 			    text="Portail des Associations"
 			>
 				<div id="loaded"></div>
