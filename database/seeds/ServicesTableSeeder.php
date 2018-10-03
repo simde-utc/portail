@@ -30,7 +30,7 @@ class ServicesTableSeeder extends Seeder
                 'visibility' => 'cas',
             ], [
                 'login' => 'payutc_ext',
-                'shortname' => 'PayUTC',
+                'shortname' => 'PayUTC Ext',
                 'name' => 'Service de paiement Pay\'UT - Extérieur',
                 'description' => 'Besoin de recharger ta carte étudiante ?',
                 'url' => 'https://payutc.nemopay.net/login_int',
