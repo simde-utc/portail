@@ -11,6 +11,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { orderBy } from 'lodash';
 
 @connect((store, props) => ({
@@ -28,7 +29,7 @@ class Sidebar extends React.Component {
 
             return (
                 <NavLink key={ asso.id } className="sidebar-link" to={ "/assos/" + asso.login }>
-                    <i className={ asso.pivot.role_id ? 'fas fa-hands-helping' : 'fas fa-thumbs-up' }></i>
+                    <FontAwesomeIcon icon={ asso.pivot.role_id ? 'hands-helping' : 'thumbs-up' } />{ ' ' }
                     <span className={ color }>{ asso.shortname }</span>
                 </NavLink>
             )
@@ -38,7 +39,7 @@ class Sidebar extends React.Component {
     getServices(services) {
         return orderBy(services, 'name').map(service => (
             <a key={ service.id } className="sidebar-link" href={ service.url }>
-                <i className="fas fa-concierge-bell"></i>
+                <FontAwesomeIcon icon="concierge-bell" />{ ' ' }
                 <span>{ service.shortname }</span>
             </a>
         ));
@@ -52,7 +53,7 @@ class Sidebar extends React.Component {
 						<h6 className="sidebar-header d-hover-zone">
 							ACTUALITÉS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/news" />
 						</h6>
-						<NavLink exact className="sidebar-link" to="/"><i className="fas fa-newspaper"></i>Flux</NavLink>
+						<NavLink exact className="sidebar-link" to="/"><FontAwesomeIcon icon="newspaper" /> Flux</NavLink>
 					</div>
 
 					<div className="sidebar-group">
@@ -60,21 +61,21 @@ class Sidebar extends React.Component {
 							LIENS UTC <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/utc" />
 						</h6>
 						<a className="sidebar-link" target="_blank" href="https://ent.utc.fr">
-							<i className="fas fa-school"></i>ENT UTC</a>
+                            <FontAwesomeIcon icon="school" /> ENT UTC</a>
 						<a className="sidebar-link" target="_blank" href="https://webmail.utc.fr">
-							<i className="fas fa-paper-plane"></i>Webmail</a>
+							<FontAwesomeIcon icon="paper-plane" /> Webmail</a>
 						<a className="sidebar-link" target="_blank" href="https://moodle.utc.fr/login/index.php?authCAS=CAS">
-							<i className="fas fa-book"></i>Moodle</a>
+							<FontAwesomeIcon icon="book" /> Moodle</a>
 					</div>
 
 					<div className="sidebar-group">
 						<h6 className="sidebar-header d-hover-zone">
 							RACCOURCIS <NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/shortcuts" />
 						</h6>
-						<NavLink className="sidebar-link" to="/evenements"><i className="fas fa-calendar-alt"></i>Évènements</NavLink>
-                        <NavLink className="sidebar-link" to="/services"><i className="fas fa-concierge-bell"></i>Services</NavLink>
-						<NavLink className="sidebar-link" to="/assos"><i className="fas fa-hands-helping"></i>Associations</NavLink>
-						<NavLink className="sidebar-link" to="/groupes"><i className="fas fa-users"></i>Groupes</NavLink>
+						<NavLink className="sidebar-link" to="/evenements"><FontAwesomeIcon icon="calendar-alt" /> Évènements</NavLink>
+                        <NavLink className="sidebar-link" to="/services"><FontAwesomeIcon icon="concierge-bell" /> Services</NavLink>
+						<NavLink className="sidebar-link" to="/assos"><FontAwesomeIcon icon="hands-helping" /> Associations</NavLink>
+						<NavLink className="sidebar-link" to="/groupes"><FontAwesomeIcon icon="users" /> Groupes</NavLink>
 					</div>
 
                     { this.props.isAuthenticated && this.props.services.length > 0 && (

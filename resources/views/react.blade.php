@@ -12,12 +12,6 @@
 	{{-- Custom Bootstrap 4 --}}
 	<link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
 
-	{{-- Font Awesome 5 --}}
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-
-	{{-- TODO: Replace with material icons ?
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">  --}}
-
 	{{-- Custom Styles --}}
 	<link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>

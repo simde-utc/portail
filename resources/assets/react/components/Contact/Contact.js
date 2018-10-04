@@ -1,4 +1,5 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import CopyToClipboard from '../CopyToClipboard';
 
@@ -22,7 +23,7 @@ class Contact extends React.Component {
 	render() {
 		return (
 			<div className={ this.props.className }>
-				<i className={ "mr-2 fa fa-" + this.getIcon(this.props.type) }></i>
+				<FontAwesomeIcon className="mr-2" icon={ this.getIcon(this.props.type) } />
 				<span className="font-weight-bold mr-2">{ this.props.name }:</span>
 					<CopyToClipboard value={ this.props.value }>
 						<span>{ this.props.value }</span>

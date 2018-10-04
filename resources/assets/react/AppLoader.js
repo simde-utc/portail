@@ -13,8 +13,15 @@ import { connect } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import LoadingScreen from 'react-loading-screen';
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+
 import actions from './redux/actions.js';
 import bdeImage from '../images/bde.jpg'
+
+library.add(fas, far)
 
 @connect(store => ({
 	loading: [

@@ -1,4 +1,5 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -47,7 +48,7 @@ class Navbar extends React.Component {
 						<input className="form-control py-2" type="search" placeholder="Rechercher ..." id="example-search-input"/>
 						<span className="input-group-append">
 							<button className="btn btn-outline-secondary" type="button">
-								<i className="fa fa-search"></i>
+								<FontAwesomeIcon icon="search" />
 							</button>
 						</span>
 					</div>
@@ -55,7 +56,7 @@ class Navbar extends React.Component {
 					<ul className="navbar-nav ml-auto">
 						{ this.props.user ? (
 							<li className="nav-item no-gutters pl-2 pr-2">
-								<NavLink className="nav-link profilepic bg-secondary" to="/profile">
+								<NavLink className="nav-link d-flex profilepic bg-secondary" to="/profile">
 									<img src={ this.props.user.image }
 									 width="25" height="25" alt="" className="rounded-circle mr-2" />
 								 	{ this.props.user.firstname }
@@ -76,10 +77,10 @@ class Navbar extends React.Component {
 
 						{ this.props.user && this.props.permissions.length && (
 							<li className="nav-item">
-								<NavLink className="nav-link" to="/admin">
-									<span className="fa-stack fa-sm">
-										<i className="fa fa-circle fa-stack-2x icon-background2"></i>
-										<i className="fa fa-screwdriver fa-stack-1x"></i>
+								<NavLink className="nav-link d-flex" to="/admin">
+									<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
+										<FontAwesomeIcon icon="circle" className="icon-background2" />
+										<FontAwesomeIcon icon="screwdriver" transform="shrink-8" />
 									</span>
 								</NavLink>
 							</li>
@@ -87,30 +88,30 @@ class Navbar extends React.Component {
 
 						{ this.props.user && (
 							<li className="nav-item">
-								<NavLink className="nav-link" to="/notifications">
-									<span className="fa-stack fa-sm">
-										<i className="fa fa-circle fa-stack-2x icon-background2"></i>
-										<i className="fa fa-bell fa-stack-1x"></i>
+								<NavLink className="nav-link d-flex" to="/notifications">
+									<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
+										<FontAwesomeIcon icon="circle" className="icon-background2" />
+										<FontAwesomeIcon icon="bell" transform="shrink-8" />
 									</span>
 								</NavLink>
 							</li>
 						)}
 
 						<li className="nav-item">
-							<NavLink className="nav-link" to="/help">
-								<span className="fa-stack fa-sm">
-									<i className="fa fa-circle fa-stack-2x icon-background2"></i>
-									<i className="fa fa-question fa-stack-1x"></i>
+							<NavLink className="nav-link d-flex" to="/help">
+									<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
+									<FontAwesomeIcon icon="circle" className="icon-background2" />
+									<FontAwesomeIcon icon="question" transform="shrink-8" />
 								</span>
 							</NavLink>
 						</li>
 
 						{ this.props.user && (
 							<li className="nav-item">
-								<a className="nav-link" href="/logout">
-									<span className="fa-stack fa-sm">
-										<i className="fa fa-circle fa-stack-2x icon-background2"></i>
-										<i className="fa fa-lock fa-stack-1x"></i>
+								<a className="nav-link d-flex" href="/logout">
+										<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
+										<FontAwesomeIcon icon="circle" className="icon-background2" />
+										<FontAwesomeIcon icon="lock" transform="shrink-8" />
 									</span>
 								</a>
 							</li>
