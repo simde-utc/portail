@@ -146,8 +146,8 @@ class MemberController extends Controller
 			'role_id' => $user->pivot->role_id,
 			'semester_id' => $user->pivot->semester_id,
 		], [
-      'validated_by' => \Auth::id(),
-    ], (Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id && $user->pivot->validated_by)
+      		'validated_by' => \Auth::id(),
+    	], (Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id && $user->pivot->validated_by)
 			|| (($lastUser = $asso->getLastUserWithRole(config('portail.roles.admin.assos'))) && $lastUser->id === \Auth::id()));
 		// Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité
 
@@ -172,7 +172,9 @@ class MemberController extends Controller
 		if ($asso->removeMembers($user, [
 			'role_id' => $user->pivot->role_id,
 			'semester_id' => $user->pivot->semester_id,
-		], \Auth::id(), $user->id === \Auth::id()))
+		], \Auth::id(), ($user->id === \Auth::id())
+			|| (Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id && $user->pivot->validated_by)
+			|| (($lastUser = $asso->getLastUserWithRole(config('portail.roles.admin.assos'))) && $lastUser->id === \Auth::id())))
 			abort(204);
 		else
 			abort(500, 'Impossible de retirer la personne de l\'association');
