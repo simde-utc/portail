@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableAssosMembersAccess extends Migration
+class CreateTableAssosAccess extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateTableAssosMembersAccess extends Migration
      */
     public function up()
     {
-        Schema::create('assos_members_access', function (Blueprint $table) {
+        Schema::create('assos_access', function (Blueprint $table) {
+            $table->uuid('id')->primary();
 			$table->uuid('asso_id');
-            $table->uuid('user_id');
+            $table->uuid('access_id');
+            $table->uuid('member_id');
             $table->uuid('confirmed_by_id')->nullable();
-			$table->uuid('access_id');
 			$table->uuid('semester_id');
             $table->uuid('validated_by_id')->nullable();
             $table->boolean('validated')->default(false);
@@ -26,15 +27,15 @@ class CreateTableAssosMembersAccess extends Migration
 
 			$table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-			$table->foreign('asso_id')->references('id')->on('assos');
-			$table->foreign('confirmed_by_id')->references('id')->on('users');
-			$table->foreign('access_id')->references('id')->on('access');
+            $table->foreign('asso_id')->references('id')->on('assos');
+            $table->foreign('access_id')->references('id')->on('access');
+            $table->foreign('member_id')->references('id')->on('users');
+            $table->foreign('confirmed_by_id')->references('id')->on('users');
             $table->foreign('semester_id')->references('id')->on('semesters');
 			$table->foreign('validated_by_id')->references('id')->on('users');
 
             // On ne bloque pas avec le statut pour permettre multiple refus et multiple demande
-			$table->unique(['asso_id', 'user_id', 'semester_id']);
+			$table->unique(['asso_id', 'member_id', 'semester_id']);
 		});
     }
 
@@ -45,6 +46,6 @@ class CreateTableAssosMembersAccess extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assos_members_access');
+        Schema::dropIfExists('assos_access');
     }
 }

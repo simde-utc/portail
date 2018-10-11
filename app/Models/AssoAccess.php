@@ -7,12 +7,12 @@ use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 
-class AssoMemberAccess extends Model
+class AssoAccess extends Model
 {
-	protected $table = 'assos_members_access';
+	protected $table = 'assos_access';
 
 	protected $fillable = [
-		'asso_id', 'user_id', 'confirmed_by_id', 'access_id', 'semester_id', 'validated_by_id', 'validated', 'description', 'comment',
+		'asso_id', 'member_id', 'confirmed_by_id', 'access_id', 'semester_id', 'validated_by_id', 'validated', 'description', 'comment',
 	];
 
 	protected $casts = [
@@ -20,22 +20,22 @@ class AssoMemberAccess extends Model
 	];
 
 	protected $with = [
-		'asso', 'user', 'confirmed_by', 'validated_by', 'access', 'semester',
+		'asso', 'member', 'confirmed_by', 'validated_by', 'access', 'semester',
 	];
 
 	protected $hidden = [
-		'asso_id', 'user_id', 'confirmed_by_id', 'validated_by_id', 'access_id', 'semester_id',
+		'asso_id', 'member_id', 'confirmed_by_id', 'validated_by_id', 'access_id', 'semester_id',
 	];
 
 	protected $must = [
-		'asso', 'user', 'confirmed_by', 'access', 'semester', 'validated',
+		'asso', 'member', 'confirmed_by', 'access', 'semester', 'validated',
 	];
 
 	public function asso() {
 		return $this->belongsTo(Asso::class);
 	}
 
-	public function user() {
+	public function member() {
 		return $this->belongsTo(User::class);
 	}
 
