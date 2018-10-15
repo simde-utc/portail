@@ -17,13 +17,13 @@ class CreateTableAssosAccess extends Migration
             $table->uuid('id')->primary();
 			$table->uuid('asso_id');
             $table->uuid('access_id');
+            $table->uuid('semester_id');
             $table->uuid('member_id');
             $table->uuid('confirmed_by_id')->nullable();
-			$table->uuid('semester_id');
             $table->uuid('validated_by_id')->nullable();
-            $table->boolean('validated')->default(false);
+            $table->timestamp('validated_at')->nullable();
             $table->string('description')->nullable();
-            $table->string('comment')->nullable();
+            $table->string('comment');
 
 			$table->timestamps();
 

@@ -288,8 +288,8 @@ trait HasRoles
 	public function getUserPermissionsFromRoles($user_id = null, $semester_id = null) {
 		$permissions = collect();
 
-		foreach ($this->getUserRoles($user_id, $semester_id)->pluck('id') as $role_id) {
-			$permissions = $permissions->merge(Role::find($role_id, $this)->permissions);
+		foreach ($this->getUserRoles($user_id, $semester_id) as $role) {
+			$permissions = $permissions->merge($role->permissions);
 		}
 
 		return $permissions;
