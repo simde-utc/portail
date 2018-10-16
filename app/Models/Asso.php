@@ -98,6 +98,10 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 		return $this->hasMany(Asso::class, 'parent_id', 'id');
     }
 
+	public function access() {
+		return $this->hasMany(AssoAccess::class);
+	}
+
 	public function members() {
 		return $this->membersAndFollowers()->wherePivot('role_id', '!=', null);
 	}

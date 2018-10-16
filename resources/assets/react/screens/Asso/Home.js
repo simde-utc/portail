@@ -13,6 +13,7 @@ import Img from '../../components/Image';
 	isAuthenticated: store.isFetched('user'),
 	contacts: store.getData(['assos', props.asso.id, 'contacts']),
 	contactsFailed: store.hasFailed(['assos', props.asso.id, 'contacts']),
+	roles: store.getData(['assos', props.asso.id, 'roles']),
 }))
 class AssoHomeScreen extends React.Component {
   componentWillMount() {

@@ -61,6 +61,7 @@ Route::group(['middleware' => 'user:active'], function () {
 		'groups/{group_id}/members'									=> 'Group\MemberController',
 		'groups'																		=> 'Group\GroupController',
 		'assos/{asso_id}/members'										=> 'Asso\MemberController',
+		'assos/{asso_id}/access'										=> 'Asso\AccessController',
 		'roles'																			=> 'Role\RoleController',
 		'roles/{role_id}/permissions'								=> 'Role\PermissionController',
 		'permissions'																=> 'Permission\PermissionController',

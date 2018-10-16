@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
 			PlacesAndLocationsTableSeeder::class,
 			RoomsTableSeeder::class,
 			ReservationsTypesTableSeeder::class,
+			AccessTableSeeder::class,
 		]);
 
 		if (config('app.debug', false)) {
