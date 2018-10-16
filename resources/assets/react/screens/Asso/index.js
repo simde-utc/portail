@@ -9,7 +9,8 @@ import Select from 'react-select';
 
 import Dropdown from './../../components/Dropdown';
 import ArticleForm from './../../components/Article/Form';
-import PrivateRoute from './../../components/PrivateRoute';
+import LoggedRoute from './../../routes/Logged';
+import NotFoundRoute from './../../routes/NotFound';
 
 import AssoHomeScreen from './Home';
 import ArticleList from './ArticleList';
@@ -18,15 +19,17 @@ import AssoMemberListScreen from './MemberList';
 import Calendar from '../../components/Calendar/index';
 
 @connect((store, props) => {
-	var asso = store.findData('assos', props.match.params.login, 'login');
+	const login = props.match.params.login;
+	const asso = store.getData(['assos', login]);
 
 	return {
 		user: store.getData('user', false),
 		asso: asso,
-		member: store.findData(['user', 'assos'], props.match.params.login, 'login', false),
+		member: store.findData(['user', 'assos'], login, 'login', false),
 		roles: store.getData(['assos', asso.id, 'roles']),
-		fetching: store.isFetching('assos'),
-		fetched: store.isFetched('assos'),
+		fetching: store.isFetching(['assos', login]),
+		fetched: store.isFetched(['assos', login]),
+		failed: store.hasFailed(['assos', login]),
 	};
 })
 class AssoScreen extends React.Component {
@@ -34,7 +37,6 @@ class AssoScreen extends React.Component {
 		super(props);
 
 		this.state = {
-			redirect: false,
 			modal: {
 				show: false,
 				title: '',
@@ -281,15 +283,11 @@ class AssoScreen extends React.Component {
 		data.owned_by_type = "asso";
 		data.owned_by_id = this.props.asso.id;
 		this.props.dispatch(articlesActions.create(data));
-		this.setState(prev => ({ ...prev, redirect: true }));
 	}
 
 	render() {
-		if (this.state.redirect)
-			return <Redirect to="/" />;
-
-		// var createArticleButton = <span></span>;
-		// if (this.props.user.assos && this.props.user.assos.find( assos => assos.id === this.props.asso.id ))
+		if (this.props.failed)
+			return <NotFoundRoute />;
 
 		if (this.props.fetching || !this.props.fetched || !this.props.asso)
 			return (<span className="loader huge active"></span>);
@@ -319,15 +317,15 @@ class AssoScreen extends React.Component {
 		return (
 			<div className="asso w-100">
 				<Modal isOpen={ this.state.modal.show }>
-          <ModalHeader>{ this.state.modal.title }</ModalHeader>
-          <ModalBody>
-            { this.state.modal.body }
-          </ModalBody>
-          <ModalFooter>
-            <Button outline onClick={() => { this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }})); } }>Annuler</Button>
-            <Button outline color={ this.state.modal.button.type } onClick={ this.state.modal.button.onClick }>{ this.state.modal.button.text }</Button>
-          </ModalFooter>
-        </Modal>
+					<ModalHeader>{ this.state.modal.title }</ModalHeader>
+					<ModalBody>
+						{ this.state.modal.body }
+					</ModalBody>
+					<ModalFooter>
+						<Button outline onClick={() => { this.setState(prevState => ({ ...prevState, modal: { ...prevState.modal, show: false }})); } }>Annuler</Button>
+						<Button outline color={ this.state.modal.button.type } onClick={ this.state.modal.button.onClick }>{ this.state.modal.button.text }</Button>
+					</ModalFooter>
+        		</Modal>
 
 				<ul className={ "nav nav-tabs asso " + bg }>
 					<li className="nav-item">
@@ -354,20 +352,20 @@ class AssoScreen extends React.Component {
 
 				<Switch>
 					<Route path={`${this.props.match.url}`} exact render={ () => (
-							<AssoHomeScreen asso={ this.props.asso } contacts={ this.props.contacts } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting }
-								follow={ this.followAsso.bind(this) } unfollow={ this.unfollowAsso.bind(this) } join={ this.joinAsso.bind(this) } leave={ this.leaveAsso.bind(this) } />
+						<AssoHomeScreen asso={ this.props.asso } contacts={ this.props.contacts } userIsFollowing={ this.user.isFollowing } userIsMember={ this.user.isMember } userIsWaiting={ this.user.isWaiting }
+							follow={ this.followAsso.bind(this) } unfollow={ this.unfollowAsso.bind(this) } join={ this.joinAsso.bind(this) } leave={ this.leaveAsso.bind(this) } />
 					)} />
 					<Route path={`${this.props.match.url}/evenements`} render={ () => (
-							<Calendar events={ this.getAllEvents(this.state.events) } fetched={ this.state.articlesFetched } />
+						<Calendar events={ this.getAllEvents(this.state.events) } fetched={ this.state.articlesFetched } />
 					)} />
 					<Route path={`${this.props.match.url}/articles`} render={ () => (
-							<ArticleList asso={ this.props.asso } />
+						<ArticleList asso={ this.props.asso } />
 					)} />
-				<PrivateRoute path={`${this.props.match.url}/members`} redirect={`${this.props.match.url}`} authorized={ this.props.user } component={ () => (
-							<AssoMemberListScreen asso={ this.props.asso } isMember={ this.user.isMember } leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>
+					<LoggedRoute path={`${this.props.match.url}/members`} redirect={`${this.props.match.url}`} types={[ 'casConfirmed', 'contributerBde' ]} render={ () => (
+						<AssoMemberListScreen asso={ this.props.asso } isMember={ this.user.isMember } leaveMember={(id) => { this.leaveMember(id) }} validateMember={(id) => { this.validateMember(id) }}/>
 					)} />
 					<Route path={`${this.props.match.url}/article`} render={ () => (
-							<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
+						<ArticleForm post={ this.postArticle.bind(this) } events={ this.getAllEvents(this.state.events) } />
 					)} />
 				</Switch>
 			</div>

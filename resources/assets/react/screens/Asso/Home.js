@@ -7,11 +7,13 @@ import ReactMarkdown from 'react-markdown';
 import actions from '../../redux/actions';
 
 import ContactList from '../../components/Contact/List';
+import Img from '../../components/Image';
 
 @connect((store, props) => ({
 	isAuthenticated: store.isFetched('user'),
 	contacts: store.getData(['assos', props.asso.id, 'contacts']),
 	contactsFailed: store.hasFailed(['assos', props.asso.id, 'contacts']),
+	roles: store.getData(['assos', props.asso.id, 'roles']),
 }))
 class AssoHomeScreen extends React.Component {
   componentWillMount() {
@@ -105,7 +107,7 @@ class AssoHomeScreen extends React.Component {
 					<div className="row">
 						<div className="col-md-2 mt-3 px-1 d-flex flex-md-column">
 							<AspectRatio className="mb-2" ratio="1">
-								<img src="http://assos.utc.fr/larsen/style/img/logo-bde.jpg" style={{ width: "100%" }} />
+								<Img image={ asso.image } style={{ width: "100%" }} />
 							</AspectRatio>
 							{ this.props.isAuthenticated && this.getFollowButton(this.props.userIsFollowing, this.props.userIsMember) }
 							{ this.props.isAuthenticated && this.getMemberButton(this.props.userIsMember, this.props.userIsFollowing, this.props.userIsWaiting) }

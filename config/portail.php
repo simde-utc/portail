@@ -1,5 +1,14 @@
 <?php
 
+$roleToPermission = [
+	'president' => [
+		'access',
+	],
+	'resp logistique' => [
+		'access',
+	],
+];
+
 return [
 	// Gestion des versions du Portail
 	'versions' => [
@@ -31,17 +40,43 @@ return [
 			'assos' => 'president',
 			'groups' => 'group admin',
 		],
+		'assos' => [
+			env('APP_ASSO', 'simde') => [
+				'president' => 'superadmin',
+				'bureau' => 'admin',
+			],
+			'bde' => [
+				'president' => 'admin'
+			]
+		],
 	],
 
-	// Association gérant le portail:
-	'assos' => [
-		env('APP_ASSO', 'simde') => [
-			'president' => 'superadmin',
-			'bureau' => 'admin',
+	'roles' => [
+		// Roles admins
+		'admin' => [
+			'users' => 'admin',
+			'assos' => 'president',
+			'groups' => 'group admin',
 		],
-		'bde' => [
-			'president' => 'admin'
-		]
+		'assos' => [
+			env('APP_ASSO', 'simde') => [
+				'president' => 'superadmin',
+				'bureau' => 'admin',
+			],
+			'bde' => [
+				'president' => 'admin'
+			]
+		],
+	],
+
+	'permissions' => [
+		'assos' => [
+			'bde' => $roleToPermission,
+			'poleae' => $roleToPermission,
+			'polesec' => $roleToPermission,
+			'polete' => $roleToPermission,
+			'polevdc' => $roleToPermission,
+		],
 	],
 
 	'reservations' => [

@@ -5,12 +5,14 @@ import { Card, CardBody, CardTitle, CardSubtitle, CardFooter, Button } from 'rea
 import AspectRatio from 'react-aspect-ratio';
 import { sortBy } from 'lodash';
 
+import Img from '../components/Image';
+
 @connect(store => ({
 	assos: store.getData('assos'),
 	fetching: store.isFetching('assos'),
 	fetched: store.isFetched('assos')
 }))
-class ScreensAssosList extends React.Component {
+class AssosListScreen extends React.Component {
 	componentWillMount() {
 		this.props.dispatch(actions.assos.all())
 	}
@@ -95,4 +97,4 @@ class ScreensAssosList extends React.Component {
 	}
 }
 
-export default ScreensAssosList;
+export default AssosListScreen;

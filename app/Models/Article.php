@@ -137,7 +137,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
 
 	// Un commentaire quand il est publié il correspond à sa visibilité, aucun droit spécifique
   public function isCommentAccessibleBy(string $user_id): bool {
-		return User::find($user_id)->is{ucfirst($this->visibility->type)}();
+		return User::find($user_id)->{"is".ucfirst($this->visibility->type)}();
   }
 
 	// Un commentaire est uniquement rédigeable par la même instance possédant l'article ou un user

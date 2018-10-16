@@ -23,7 +23,7 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
   ];
 
   protected $with = [
-    'user',
+    'created_by', 'owned_by',
   ];
 
 	protected $withModelName = [
@@ -35,12 +35,12 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
 	];
 
   // Correspond à celui qui publie le commentaire
-  protected function created_by() {
+  public function created_by() {
     return $this->morphTo('created_by');
   }
 
   // Sur quoi le commentaire est réalisé
-  protected function owned_by() {
+  public function owned_by() {
     return $this->morphTo('owned_by');
   }
 

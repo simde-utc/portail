@@ -65,7 +65,7 @@ trait HasPermissions
 		try {
 			$this->permissions()->withTimestamps()->attach($addPermissions);
 		} catch (\Exception $e) {
-			throw new RoleException('Une des personnes possède déjà trop de permissions');
+			throw new PortailException('Une des personnes possède déjà trop de permissions');
 		}
 
 		return $this;
@@ -211,7 +211,7 @@ trait HasPermissions
 		if ($needToBeValidated)
 			$permissions = $permissions->wherePivot('validated_by', '!=', null);
 
-		return $permissions->get();
+		return $permissions->withPivot(['validated_by', 'semester_id'])->get();
 	}
 
 	/**

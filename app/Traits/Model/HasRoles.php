@@ -245,7 +245,7 @@ trait HasRoles
 			return new Collection;
 
 		if ($user_id !== null) {
-			if ($this->getTable() === 'users')
+			if (get_class($this) === User::class)
 				$roles = User::find($user_id)->roles();
 			else
 				$roles = $roles->wherePivot('user_id', $user_id);
@@ -256,7 +256,7 @@ trait HasRoles
 		if ($needToBeValidated)
 			$roles = $roles->wherePivot('validated_by', '!=', null);
 
-		return $roles->get();
+		return $roles->withPivot(['validated_by', 'semester_id'])->get();
 	}
 
 	/**
@@ -285,6 +285,16 @@ trait HasRoles
 		return $roles->unique('id');
 	}
 
+	public function getUserPermissionsFromRoles($user_id = null, $semester_id = null) {
+		$permissions = collect();
+
+		foreach ($this->getUserRoles($user_id, $semester_id) as $role) {
+			$permissions = $permissions->merge($role->permissions);
+		}
+
+		return $permissions;
+	}
+
 	/**
 	 * Override de la méthode du trait hasPermissions: Récupérer les permissions de cette instance ou de celui sur les users assignés et hérités d'une personne
 	 *
@@ -293,10 +303,7 @@ trait HasRoles
 	 */
 	public function getUserPermissions($user_id = null, $semester_id = null) {
 		$permissions = $this->getUserPermissionsFromHasPermissions($user_id, $semester_id);
-
-		foreach ($this->getUserRoles($user_id, $semester_id)->pluck('id') as $role_id) {
-			$permissions = $permissions->merge(Role::find($role_id, $this)->permissions);
-		}
+		$permissions = $permissions->merge($this->getUserPermissionsFromRoles($user_id, $semester_id));
 
 		return $permissions;
 	}

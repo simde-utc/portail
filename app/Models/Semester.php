@@ -14,7 +14,7 @@ class Semester extends Model
     ];
 
     protected $must = [
-        'is_spring', 'year', 'begining_at', 'ending_at',
+        'begining_at', 'ending_at',
     ];
 
     protected $selection = [
