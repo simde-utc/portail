@@ -70,8 +70,8 @@ class ArticlesTableSeeder extends Seeder
 	        [
 	        	'title' => 'Grand spectacle du PAE',
 		        'content' => 'Ce jeudi, les associations du PAE ont eu l\'honneur de présenter devant plus de 500 UTCéens un grand spectacle...',
-                'created_by' => Asso::findByLogin('pae'),
-		        'owner' => Asso::findByLogin('pae'),
+                'created_by' => Asso::findByLogin('poleae'),
+		        'owner' => Asso::findByLogin('poleae'),
 		        'visibility_id' => 'contributorBde',
                 'actions' => [
                     [

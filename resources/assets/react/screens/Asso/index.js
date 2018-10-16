@@ -20,12 +20,13 @@ import Calendar from '../../components/Calendar/index';
 
 @connect((store, props) => {
 	const login = props.match.params.login;
+	const asso = store.getData(['assos', login]);
 
 	return {
 		user: store.getData('user', false),
-		asso: store.getData(['assos', login]),
+		asso: asso,
 		member: store.findData(['user', 'assos'], login, 'login', false),
-		roles: store.getData(['assos', login, 'roles']),
+		roles: store.getData(['assos', asso.id, 'roles']),
 		fetching: store.isFetching(['assos', login]),
 		fetched: store.isFetched(['assos', login]),
 		failed: store.hasFailed(['assos', login]),

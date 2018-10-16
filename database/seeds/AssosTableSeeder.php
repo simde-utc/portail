@@ -38,7 +38,7 @@ DESC
 				'type_asso_id'  => '1901',
 			],
 			[
-				'login'			=> 'pae',
+				'login'			=> 'poleae',
 				'shortname'		=> 'PAE',
 				'name' 			=> 'Pôle Artistique et Évènementiel',
 				'description'	=> <<<DESC
@@ -53,7 +53,7 @@ DESC
 				'parent_login'  => 'bde',
 			],
 			[
-				'login'			=> 'psec',
+				'login'			=> 'polesec',
 				'shortname'		=> 'PSEC',
 				'name'			=> 'Pôle Solidarité Et Citoyenneté',
 				'description'	=> <<<DESC
@@ -66,7 +66,7 @@ DESC
 				'parent_login'	=> 'bde',
 			],
 			[
-				'login'			=> 'pte',
+				'login'			=> 'polete',
 				'shortname'		=> 'PTE',
 				'name'			=> 'Pôle Technologie et Entreprenariat',
 				'description'	=> <<<DESC
@@ -92,7 +92,7 @@ DESC
 				'parent_login'  => 'bde',
 			],
 			[
-				'login'			=> 'pvdc',
+				'login'			=> 'polevdc',
 				'shortname'		=> 'PVDC',
 				'name'			=> 'Pôle Vie de Campus',
 				'description'	=> <<<DESC
@@ -143,7 +143,7 @@ Ensemble, rendons cet événement inoubliable
 DESC
 ,
 				'type_asso_id'  => 'commission',
-				'parent_login'  => 'pvdc',
+				'parent_login'  => 'polevdc',
 			],
             [
 				'login'			=> 'comedmus',
@@ -158,7 +158,7 @@ Réalisée par des étudiants du script jusqu'aux décors en passant par la musi
 DESC
 ,
 				'type_asso_id'  => '1901',
-				'parent_login'  => 'pae',
+				'parent_login'  => 'poleae',
 			],
             [
 				'login'			=> 'hackathon',
@@ -169,7 +169,7 @@ Pendant 24h, les étudiants vont unir leurs forces pour développer des *projets
 DESC
 ,
 				'type_asso_id'  => 'commission',
-				'parent_login'  => 'pte',
+				'parent_login'  => 'polete',
 			],
             [
 				'login'			=> 'picasoft',
@@ -182,7 +182,7 @@ T'as déjà entendu parler de *"neutralité du net", "dégooglisons internet" ou
 DESC
 ,
 				'type_asso_id'  => '1901',
-				'parent_login'  => 'psec',
+				'parent_login'  => 'polesec',
 			],
         ];
 
