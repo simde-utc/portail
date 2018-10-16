@@ -146,12 +146,41 @@ class MemberController extends Controller
 			'role_id' => $user->pivot->role_id,
 			'semester_id' => $user->pivot->semester_id,
 		], [
-      'validated_by' => \Auth::id(),
-    ], (Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id && $user->pivot->validated_by)
-			|| (($lastUser = $asso->getLastUserWithRole(config('portail.roles.admin.assos'))) && $lastUser->id === \Auth::id()));
-		// Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité
+	    	'validated_by' => \Auth::id(),
+	    ], (Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id && $user->pivot->validated_by)
+				|| (($lastUser = $asso->getLastUserWithRole(config('portail.roles.admin.assos'))) && $lastUser->id === \Auth::id()));
 
-		return response()->json($this->getUserFromAsso($request, $asso, $member_id, $semester)->hideSubData());
+		// Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité
+		$member = $this->getUserFromAsso($request, $asso, $member_id, $semester);
+
+		// Ici, on va auto-affecter les droits et permissions que l'utilisateur doit posséder
+		if ($member->pivot->validated_by) {
+			$role = Role::find($member->pivot->role_id, $asso);
+
+			$roles = config('portail.roles.assos.'.($asso->login).'.'.($role->type));
+
+			if (count($roles) > 0) {
+				try {
+					$member->assignRoles($roles, [
+						'semester_id' => $member->pivot->semester_id,
+						'validated_by' => $member->id,
+					], true);
+				} catch(\Exception $e) { /* On ignore l'erreur */ }
+			}
+
+			$permissions = config('portail.permissions.assos.'.($asso->login).'.'.($role->type));
+
+			if (count($permissions) > 0) {
+				try {
+					$member->assignPermissions($permissions, [
+						'semester_id' => $member->pivot->semester_id,
+						'validated_by' => $member->id,
+					], true);
+				} catch(\Exception $e) { /* On ignore l'erreur */ }
+			}
+		}
+
+		return response()->json($member->hideSubData());
 	}
 
 	/**
