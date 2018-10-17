@@ -23,8 +23,8 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
     + Suppression du cache : `php artisan quick:clear`
     + Création de la clé : `php artisan key:generate`
     + Création des tables et des données : `php artisan migrate:fresh --seed`
-	+ Installation des dépendances JS : `npm install` (très long)
-	+ Compilation de l'application frontend : `npm run dev` (assez long)
+	+ Installation des dépendances JS : `npm install --production` (assez long)
+	+ Compilation de l'application frontend : `npm run prod` (assez long)
 
 - Lancer l'application via :
     + Artisan : `php artisan serve` et aller sur http://localhost:8000
@@ -33,6 +33,26 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
     + Lancer `php artisan queue:work` pour avoir l'envoie de notif qui marche
 - Ça part !
 
+
+## Mettre à jour
+
+- Lancer `php artisan quick:update`
+- Lancer `npm run prod` ou `npm run watch`
+- Tout est bon
+
+## Développement
+### Lancer en développement
+
+- Lancer `npm install` (assez long)
+- Lancer `npm run watch`
+- Enjoy
+
+
+### Développer
+
+- Respecter le linter imposé pour le PHP mais aussi pour le JS
+- Commenter en français
+- Lancer `php artisan quick:test` pour vérifier que tout est bon avant de push son code
 
 
 ## Documentation
