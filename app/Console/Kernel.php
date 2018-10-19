@@ -1,6 +1,7 @@
 <?php
 /**
  * Fichier générant la console et ses commandes.
+ * Permet le lancement de la console et de ses commandes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -13,9 +14,6 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
-/**
- * Permet le lancement de la console et de ses commandes.
- */
 class Kernel extends ConsoleKernel
 {
     /**

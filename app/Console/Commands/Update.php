@@ -1,6 +1,7 @@
 <?php
 /**
  * Fichier générant la commande quick:update.
+ * Met à jour l'application vers la version suivante après un git pull.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -12,9 +13,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-/**
- * Met à jour l'application vers la version suivante après un git pull.
- */
 class Update extends Command
 {
     /**

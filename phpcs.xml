@@ -47,8 +47,8 @@
     </rule>
 
     <!-- Contraintes sur les commentaires -->
-    <rule ref="Squiz.Commenting.ClassComment" />
     <rule ref="Squiz.Commenting.FileComment">
+        <type>warning</type>
         <exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
         <exclude name="Squiz.Commenting.FileComment.MissingSubpackageTag" />
         <exclude name="Squiz.Commenting.FileComment.SubpackageTagOrder" />
@@ -60,6 +60,7 @@
         <exclude name="Squiz.Commenting.FileComment.CopyrightTagOrder" />
     </rule>
     <rule ref="Squiz.Commenting.FunctionComment">
+        <type>warning</type>
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
     </rule>
     <rule ref="Squiz.Arrays.ArrayDeclaration.NoComma" />
@@ -77,7 +78,6 @@
                 <element key="dd" value="null"/>
                 <element key="is_null" value="null"/>
                 <element key="create_function" value="null"/>
-                <element key="abort" value="throw \HttpException"/>
             </property>
         </properties>
     </rule>

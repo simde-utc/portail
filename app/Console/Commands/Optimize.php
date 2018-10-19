@@ -1,6 +1,7 @@
 <?php
 /**
  * Fichier générant la commande quick:optimize.
+ * Optimise le cache de l'application.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -13,9 +14,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-/**
- * Optimise le cache de l'application.
- */
 class Optimize extends Command
 {
     /**

@@ -1,6 +1,7 @@
 <?php
 /**
  * Fichier générant la commande quick:install.
+ * Installe l'application.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -13,9 +14,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-/**
- * Installe l'application.
- */
 class Install extends Command
 {
     /**
@@ -38,8 +36,8 @@ class Install extends Command
 
     /**
      * Changement automatique du fichier .env
-     * @param  string $param Paramètre clé à changer
-     * @param  string $value Valeur à assigner
+     * @param  string $param Paramètre clé à changer.
+     * @param  string $value Valeur à assigner.
      * @return void
      */
     protected function changeEnv(string $param, string $value)

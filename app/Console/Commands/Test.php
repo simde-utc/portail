@@ -1,6 +1,7 @@
 <?php
 /**
  * Fichier générant la commande quick:test.
+ * Lance les tests suffisants pour pouvoir merge dans develop.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -14,9 +15,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
-/**
- * Lance les tests suffisants pour pouvoir merge dans develop.
- */
 class Test extends Command
 {
     /**
@@ -108,7 +106,7 @@ class Test extends Command
     /**
      * Lance une commande bash
      *
-     * @param string $command Commande à lancer
+     * @param string $command Commande à lancer.
      * @return Process
      */
     private function process(string $command)
