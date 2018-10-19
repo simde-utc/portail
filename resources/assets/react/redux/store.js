@@ -2,10 +2,10 @@
  * Création et gestion automatique et dynmaique du store géré par redux (store refait sur la base du travail d'Alexandre)
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
- * @author Alexandre Brasseur <alexandre.brasseur@etu.utc.fr>
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
- * @license AGPL-3.0
+ * @license GNU GPL-3.0
 **/
 
 import produce from 'immer';

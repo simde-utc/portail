@@ -61,7 +61,6 @@
     </rule>
     <rule ref="Squiz.Commenting.FunctionComment">
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
-        <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop" />
     </rule>
     <rule ref="Squiz.Arrays.ArrayDeclaration.NoComma" />
 
@@ -78,6 +77,7 @@
                 <element key="dd" value="null"/>
                 <element key="is_null" value="null"/>
                 <element key="create_function" value="null"/>
+                <element key="abort" value="throw \HttpException"/>
             </property>
         </properties>
     </rule>

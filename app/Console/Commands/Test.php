@@ -1,4 +1,12 @@
 <?php
+/**
+ * Fichier générant la commande quick:test.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Console\Commands;
 
@@ -6,24 +14,23 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
+/**
+ * Lance les tests suffisants pour pouvoir merge dans develop.
+ */
 class Test extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'quick:test {file*}';
 
     /**
-     * The console command description.
-     *
      * @var string
      */
     protected $description = 'Teste le code avant de pouvoir push le code';
 
     /**
-     * Create a new command instance.
+     * @return void
      */
     public function __construct()
     {
@@ -31,12 +38,14 @@ class Test extends Command
     }
 
     /**
-     * Execute the console command.
+     * Exécution de la commande.
      *
+     * @return mixed
      */
     public function handle()
     {
-        // Run Code Beautifier and Fixer...
+        $this->file = implode($this->argument('file'), ' ');
+
         if ($this->runPHPCS()) {
             $this->output->error('Des erreurs ont été rencontrées lors de la vérification du linting');
 
@@ -50,8 +59,7 @@ class Test extends Command
 
                     exit(1);
                 }
-            }
-            else {
+            } else {
                 exit(1);
             }
         }
@@ -62,27 +70,33 @@ class Test extends Command
     }
 
     /**
-     * Run Code Sniffer to detect PSR2 code standard.
+     * Lance le PHP Code Sniffer pour vérifier le style PHP
+     *
+     * @return integer
      */
     private function runPHPCS()
     {
         return $this->process(
-            "./vendor/bin/phpcs"
+            "./vendor/bin/phpcs ".$this->file
         );
     }
 
     /**
-     * Run Code Beautifier and Fixer.
+     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles
+     *
+     * @return integer
      */
     private function runPHPCBF()
     {
-        $this->process(
-            "./vendor/bin/phpcbf"
+        return $this->process(
+            "./vendor/bin/phpcbf ".$this->file
         );
     }
 
     /**
-     * Run PHP Unit test.
+     * Lance le PHP Unit pour tester que le code n'a pas cassé
+     *
+     * @return integer
      */
     private function runPHPUnit()
     {
@@ -92,10 +106,12 @@ class Test extends Command
     }
 
     /**
-     * @param $command
+     * Lance une commande bash
+     *
+     * @param string $command Commande à lancer
      * @return Process
      */
-    private function process($command)
+    private function process(string $command)
     {
         $process = new Process($command);
 

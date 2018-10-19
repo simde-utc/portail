@@ -3,7 +3,7 @@
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
- * @license AGPL-3.0
+ * @license GNU GPL-3.0
 **/
 
 // Liste de toutes les actions REST api possibles

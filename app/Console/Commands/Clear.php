@@ -1,54 +1,60 @@
 <?php
+/**
+ * Fichier générant la commande quick:clear.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * Efface le cache de l'application.
+ */
 class Clear extends Command
 {
-	/**
-	 * The name and signature of the console command.
-	 *
-	 * @var string
-	 */
-	protected $signature = 'quick:clear';
+    /**
+     * @var string
+     */
+    protected $signature = 'quick:clear';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Clear all compiled and cached resources';
+    /**
+     * @var string
+     */
+    protected $description = 'Clear all compiled and cached resources';
 
-	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    /**
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
-	public function handle()
-	{
-		shell_exec('composer dump-autoload');
+    /**
+     * Exécution de la commande.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        shell_exec('composer dump-autoload');
 
-		$this->call('view:clear');
-		$this->call('route:clear');
-		$this->call('config:clear');
-		$this->call('auth:clear-resets');
-		$this->call('cache:clear');
-		$this->call('clear-compiled');
-		$this->call('clear');
+        $this->call('view:clear');
+        $this->call('route:clear');
+        $this->call('config:clear');
+        $this->call('auth:clear-resets');
+        $this->call('cache:clear');
+        $this->call('clear-compiled');
+        $this->call('clear');
 
-		$this->call('config:cache');
-		$this->call('route:cache');
-		$this->call('view:cache');
-	}
+        $this->call('config:cache');
+        $this->call('route:cache');
+        $this->call('view:cache');
+    }
 }

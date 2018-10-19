@@ -1,45 +1,49 @@
 <?php
+/**
+ * Fichier générant la commande quick:optimize.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * Optimise le cache de l'application.
+ */
 class Optimize extends Command
 {
-	/**
-	 * The name and signature of the console command.
-	 *
-	 * @var string
-	 */
-	protected $signature = 'quick:optimize';
+    /**
+     * @var string
+     */
+    protected $signature = 'quick:optimize';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Optimize the application by caching resources';
+    /**
+     * @var string
+     */
+    protected $description = 'Optimize the application by caching resources';
 
-	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    /**
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
-	public function handle()
-	{
-		$this->call('view:cache');
-		$this->call('route:cache');
-		$this->call('config:clear');
-		$this->call('config:cache');
-	}
+    /**
+     * @return mixed
+     */
+    public function handle()
+    {
+        $this->call('view:cache');
+        $this->call('route:cache');
+        $this->call('config:clear');
+        $this->call('config:cache');
+    }
 }
