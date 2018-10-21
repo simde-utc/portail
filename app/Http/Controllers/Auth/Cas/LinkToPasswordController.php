@@ -1,4 +1,12 @@
 <?php
+/**
+ * Connexion entre le compte CAS et la connexion email/mdp.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\Auth\Cas;
 
@@ -13,23 +21,36 @@ class LinkToPasswordController extends Controller
     protected $redirectTo = '/';
 
     /**
-     * Create a new controller instance.
+     * Définition des middlewares: utilisateur cas et on password
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware(['auth:web', 'user:cas', 'user:!password']);
     }
 
-    public function index(Request $request) {
+    /**
+     * Renvoie la page de linkage
+     * @param  Request $request
+     * @return mixed
+     */
+    public function index(Request $request)
+    {
         return view('auth.cas.link');
     }
 
-    public function store(Request $request) {
+    /**
+     * Enregistre l'interconnexion des modes de connexion
+     * @param  Request $request
+     * @return mixed
+     */
+    public function store(Request $request)
+    {
         (new Password)->addAuth(\Auth::id(), $request->input());
 
         \Auth::user()->update([
-            'email' => $request->input('email')
+            'email' => $request->input('email'),
         ]);
 
         return redirect(\Session::get('url.intended', '/'));
