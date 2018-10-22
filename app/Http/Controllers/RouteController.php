@@ -24,6 +24,35 @@ class RouteController extends Controller
     }
 
     /**
+     * Permet de générer la liste des routes pour une version précise
+     * @param  string $version
+     * @return array
+     */
+    public function generateRouteList(string $version)
+    {
+        $routes = [];
+
+        foreach (Route::getRoutes() as $route) {
+            if (substr($route->uri, 0, strlen('api/'.$version)) === 'api/'.$version) {
+                $uri = str_replace('api/'.$version.'/', '', $route->uri);
+
+                if (isset($routes[$uri])) {
+                    $routes[$uri]['methods'][] = $route->methods[0];
+                } else {
+                    $routes[$uri] = [
+                        'url' => url($route->uri),
+                        'methods' => [
+                            $route->methods[0]
+                        ],
+                    ];
+                }
+            }
+        }
+
+        return $routes;
+    }
+
+    /**
      * Liste toutes les routes api d'une version précise.
      * @param  Request $request
      * @param  string  $version
@@ -35,7 +64,7 @@ class RouteController extends Controller
         $actualVersion = config('portail.version');
         $indexVersion = array_search($actualVersion, $versions);
 
-        if ($i = array_search($version, $versions) >= 0) {
+        if ($index = array_search($version, $versions) >= 0) {
             $file = base_path('routes/api/'.$version.'.php');
 
             if (file_exists($file)) {
@@ -43,42 +72,23 @@ class RouteController extends Controller
                     'forceJson'
                 ];
 
-                if ($i < $indexVersion) {
+                if ($index < $indexVersion) {
                     $middlewares[] = 'deprecatedVersion:'.$version;
-                } else if ($i > $indexVersion || $indexVersion === false) {
+                } else if ($index > $indexVersion || $indexVersion === false) {
                     $middlewares[] = 'betaVersion:'.$version;
-                }
-
-                $routes = [];
-
-                foreach (Route::getRoutes() as $route) {
-                    if (substr($route->uri, 0, strlen('api/'.$version)) === 'api/'.$version) {
-                        $uri = str_replace('api/'.$version.'/', '', $route->uri);
-
-                        if (isset($routes[$uri])) {
-                            $routes[$uri]['methods'][] = $route->methods[0];
-                        } else {
-                            $routes[$uri] = [
-                                'url' => url($route->uri),
-                                'methods' => [
-                                    $route->methods[0]
-                                ],
-                            ];
-                        }
-                    }
                 }
 
                 $data = [
                     'info' => 'Définition des routes api pour la '.$version,
                 ];
 
-                if ($i < $indexVersion) {
+                if ($index < $indexVersion) {
                     $data['deprecated'] = true;
-                } else if ($i > $indexVersion || $indexVersion === false) {
+                } else if ($index > $indexVersion || $indexVersion === false) {
                     $data['beta'] = true;
                 }
 
-                $data['routes'] = $routes;
+                $data['routes'] = $this->generateRouteList($version);
 
                 return response()->json($data);
             }

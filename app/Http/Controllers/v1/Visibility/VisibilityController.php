@@ -1,4 +1,15 @@
 <?php
+/**
+ * Gestion des visibilités.
+ *
+ * @author Josselin Pennors <josselin.pennors@etu.utc.fr>
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Visibility;
 
@@ -8,105 +19,113 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Visibility;
 
-
-/**
- * @resource Visibility
- *
- * Gestion des visibilités
- */
 class VisibilityController extends Controller
 {
-	public function __construct() {
-		// La récupération des assos est publique
-		$this->middleware(
-			\Scopes::allowPublic()->matchAnyUserOrClient(),
-			['only' => ['index', 'show']]
-		);
-		$this->middleware(
-			\Scopes::matchOne('user-manage-portail-visibility', 'client-manage-portail-visibility'),
-			['only' => ['store', 'update', 'destroy']]
-		);
-	}
+    /**
+     * Lisible par n'importe qui.
+     * Modifiable sous scopes.
+     */
+    public function __construct()
+    {
+        // La récupération des visibilités est publique.
+        $this->middleware(
+            \Scopes::allowPublic()->matchAnyUserOrClient(),
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+            \Scopes::matchOne('user-manage-portail-visibility', 'client-manage-portail-visibility'),
+            ['only' => ['store', 'update', 'destroy']]
+        );
+    }
 
-	/**
-	 * List Visibilities
-	 * @return JsonResponse
-	 */
+    /**
+     * Liste les visibilités
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        $visibilities = Visibility::getSelection()->map(function ($visibility) {
+            return $visibility->hideData();
+        });
 
-	public function index(): JsonResponse {
-		$visibilities = Visibility::getSelection()->map(function ($visibility) {
-			return $visibility->hideData();
-		});
+        return response()->json($visibilities, 200);
+    }
 
-		return response()->json($visibilities, 200);
-	}
+    /**
+     * Crée des visibilités
+     *
+     * @param VisibilityRequest $request
+     * @return JsonResponse
+     */
+    public function store(VisibilityRequest $request): JsonResponse
+    {
+        $visibility = Visibility::create($request->all());
 
-	/**
-	 * Create Visibility
-	 *
-	 * @param VisibilityRequest $request
-	 * @return JsonResponse
-	 */
-	public function store(VisibilityRequest $request): JsonResponse {
-		$visibility = Visibility::create($request->all());
+        if ($visibility) {
+            return response()->json($visibility->hideSubData(), 200);
+        } else {
+            return abort(500, 'Impossible de créer la visibilité');
+        }
+    }
 
-		if ($visibility)
-			return response()->json($visibility->hideSubData(), 200);
-		else
-			abort(500, 'Impossible de créer la visibilité');
-	}
+    /**
+     * Montre une visivilité
+     *
+     * @param  string $id
+     * @return JsonResponse
+     */
+    public function show(string $id): JsonResponse
+    {
+        $visibility = Visibility::find($id);
 
-	/**
-	 * Show Visibility
-	 *
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function show($id): JsonResponse {
-		$visibility = Visibility::find($id);
+        if ($visibility) {
+            return response()->json($visibility->hideSubData(), 200);
+        } else {
+            abort(404, 'Visibilité non trouvée');
+        }
+    }
 
-		if ($visibility)
-			return response()->json($visibility->hideSubData(), 200);
-		else
-			abort(404, 'Visibilité non trouvée');
-	}
+    /**
+     * Met à jour une visibilité
+     *
+     * @param VisibilityRequest $request
+     * @param  string            $id
+     * @return JsonResponse
+     */
+    public function update(VisibilityRequest $request, string $id): JsonResponse
+    {
+        $visibility = Visibility::find($id);
 
-	/**
-	 * Update Visibility
-	 *
-	 * @param VisibilityRequest $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function update(VisibilityRequest $request, string $id): JsonResponse {
-		$visibility = Visibility::find($id);
+        if ($visibility) {
+            if ($visibility->update($request->input())) {
+                return response()->json($visibility->hideSubData(), 201);
+            } else {
+                abort(500, 'Impossible de modifier la visibilité');
+            }
+        } else {
+            abort(404, 'Visibilité non trouvée');
+        }
+    }
 
-		if ($visibility) {
-			if ($visibility->update($request->input()))
-				return response()->json($visibility->hideSubData(), 201);
-			else
-				abort(500, 'Impossible de modifier la visibilité');
-		}
-		else
-			abort(404, 'Visibilité non trouvée');
-	}
+    /**
+     * Supprime une visibilité
+     *
+     * @param  string $id
+     * @return void
+     */
+    public function destroy(string $id): JsonResponse
+    {
+        $visibility = Visibility::find($id);
 
-	/**
-	 * Delete Visibility
-	 *
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function destroy(string $id): JsonResponse {
-		$visibility = Visibility::find($id);
-
-		if ($visibility) {
-			if ($visibility->delete())
-				abort(204);
-			else
-				abort(500, 'Impossible de supprimer la visibilité');
-		}
-		else
-			abort(404, 'Visibilité non trouvée');
-	}
+        if ($visibility) {
+            if ($visibility->delete()) {
+                abort(204);
+            } else {
+                abort(500, 'Impossible de supprimer la visibilité');
+            }
+        } else {
+            abort(404, 'Visibilité non trouvée');
+        }
+    }
 }

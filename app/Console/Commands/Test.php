@@ -20,7 +20,7 @@ class Test extends Command
     /**
      * @var string
      */
-    protected $signature = 'quick:test {file*}';
+    protected $signature = 'quick:test {file?*}';
 
     /**
      * @var string
@@ -55,11 +55,17 @@ class Test extends Command
                 if ($this->runPHPCS()) {
                     $this->output->error('Des erreurs n\'ont pas pu être corrigées lors de la vérification du linting');
 
-                    exit(1);
+                    return 1;
                 }
             } else {
-                exit(1);
+                return 1;
             }
+        }
+
+        if ($this->runPHPMD()) {
+            $this->output->error('Des erreurs d\'optimisation ont été détectées');
+
+            return 1;
         }
 
         $this->runPHPUnit();
@@ -88,6 +94,28 @@ class Test extends Command
     {
         return $this->process(
             "./vendor/bin/phpcbf ".$this->file
+        );
+    }
+
+    /**
+     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles
+     *
+     * @return integer
+     */
+    private function runPHPMD()
+    {
+        $fileList = explode(' ', $this->file);
+
+        if (count($fileList) === 0) {
+            $fileList = [
+                'app', 'bootstrap', 'config', 'database', 'resources/views', 'routes', 'tests',
+            ];
+        }
+
+        $files = implode($fileList, ',');
+
+        return $this->process(
+            "./vendor/bin/phpmd ".$files.' text phpmd.xml'
         );
     }
 

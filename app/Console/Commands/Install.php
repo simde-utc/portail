@@ -13,6 +13,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class Install extends Command
 {
@@ -75,56 +76,7 @@ class Install extends Command
         }
 
         if ($editEnv) {
-            $value = $this->ask('App name ?', 'Portail des Associations');
-            $this->changeEnv('APP_NAME', '"'.$value.'"');
-            $subBar->advance();
-
-            $value = $this->choice('Environment ?', ['develop', 'production'], 0);
-            $this->changeEnv('APP_ENV', $value);
-            $subBar->advance();
-
-            $value = $this->choice('Debug mode ?', ['true', 'false'], ($value === 'develop' ? 0 : 1));
-            $this->changeEnv('APP_DEBUG', $value);
-            $subBar->advance();
-
-            $value = $this->ask('App url ?', 'http://localhost');
-            $this->changeEnv('APP_URL', $value);
-            $subBar->advance();
-
-            $value = $this->ask('App asso ?', 'simde');
-            $this->changeEnv('APP_ASSO', $value);
-            $subBar->advance();
-
-            $value = $this->ask('Ginger key ?', '');
-            $this->changeEnv('GINGER_KEY', $value);
-            $subBar->advance();
-
-            $this->info(' [Quick Install] Preparation - Database');
-            $subBar->advance();
-
-            $value = $this->choice('Type ?', ['mysql', 'pgsql', 'sqlite'], 0);
-            $this->changeEnv('DB_CONNECTION', $value);
-            $subBar->advance();
-
-            $value = $this->ask('Host ?', '127.0.0.1');
-            $this->changeEnv('DB_HOST', $value);
-            $subBar->advance();
-
-            $value = $this->choice('Port ?', ['3306', '5432'], 0);
-            $this->changeEnv('DB_PORT', $value);
-            $subBar->advance();
-
-            $value = $this->ask('Database ?', 'portail');
-            $this->changeEnv('DB_DATABASE', $value);
-            $subBar->advance();
-
-            $value = $this->ask('Username ?', 'portail');
-            $this->changeEnv('DB_USERNAME', $value);
-            $subBar->advance();
-
-            $value = $this->ask('Password ?', 'portail');
-            $this->changeEnv('DB_PASSWORD', $value);
-            $subBar->advance();
+            $this->editEnv($bar, $subBar);
         } else {
             $subBar->finish();
         }
@@ -174,5 +126,66 @@ class Install extends Command
         // Fin.
         $bar->finish();
         $this->info(' [Quick Install] Installation finished !');
+    }
+
+    /**
+     * Permet des changements de le fichier env
+     *
+     * @param ProgressBar $bar
+     * @param ProgressBar $subBar
+     * @return void
+     */
+    private function editEnv(ProgressBar $bar, ProgressBar $subBar)
+    {
+        $value = $this->ask('App name ?', 'Portail des Associations');
+        $this->changeEnv('APP_NAME', '"'.$value.'"');
+        $subBar->advance();
+
+        $value = $this->choice('Environment ?', ['develop', 'production'], 0);
+        $this->changeEnv('APP_ENV', $value);
+        $subBar->advance();
+
+        $value = $this->choice('Debug mode ?', ['true', 'false'], ($value === 'develop' ? 0 : 1));
+        $this->changeEnv('APP_DEBUG', $value);
+        $subBar->advance();
+
+        $value = $this->ask('App url ?', 'http://localhost');
+        $this->changeEnv('APP_URL', $value);
+        $subBar->advance();
+
+        $value = $this->ask('App asso ?', 'simde');
+        $this->changeEnv('APP_ASSO', $value);
+        $subBar->advance();
+
+        $value = $this->ask('Ginger key ?', '');
+        $this->changeEnv('GINGER_KEY', $value);
+        $subBar->advance();
+
+        $this->info(' [Quick Install] Preparation - Database');
+        $subBar->advance();
+
+        $value = $this->choice('Type ?', ['mysql', 'pgsql', 'sqlite'], 0);
+        $this->changeEnv('DB_CONNECTION', $value);
+        $subBar->advance();
+
+        $value = $this->ask('Host ?', '127.0.0.1');
+        $this->changeEnv('DB_HOST', $value);
+        $subBar->advance();
+
+        $value = $this->choice('Port ?', ['3306', '5432'], 0);
+        $this->changeEnv('DB_PORT', $value);
+        $subBar->advance();
+
+        $value = $this->ask('Database ?', 'portail');
+        $this->changeEnv('DB_DATABASE', $value);
+        $subBar->advance();
+
+        $value = $this->ask('Username ?', 'portail');
+        $this->changeEnv('DB_USERNAME', $value);
+        $subBar->advance();
+
+        $value = $this->ask('Password ?', 'portail');
+        $this->changeEnv('DB_PASSWORD', $value);
+        $subBar->advance();
     }
 }

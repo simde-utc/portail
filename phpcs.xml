@@ -3,8 +3,8 @@
     <description>Standard défini pour le Portail</description>
 
     <!-- Liste des fichiers/dossiers à inspecter -->
-    <file>bootstrap</file>
     <file>app</file>
+    <file>bootstrap</file>
     <file>config</file>
     <file>database</file>
     <file>resources/views</file>
@@ -76,7 +76,6 @@
                 <element key="delete" value="unset"/>
                 <element key="print" value="echo"/>
                 <element key="dd" value="null"/>
-                <element key="is_null" value="null"/>
                 <element key="create_function" value="null"/>
             </property>
         </properties>
