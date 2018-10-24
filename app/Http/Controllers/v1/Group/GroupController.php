@@ -1,4 +1,18 @@
 <?php
+/**
+ * Gère les groupes.
+ *
+ * TODO: Refaire les scopes
+ * TODO: Exporter dans un Trait
+ *
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Group;
 
@@ -11,19 +25,12 @@ use App\Models\Visibility;
 use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasGroups;
 
-/**
- * Gestion des groupes utilisateurs
- *
- * @resource Group
- */
 class GroupController extends Controller
 {
 	use HasGroups;
 
 	/**
-	 * Scopes Group
-	 *
-	 * Les Scopes requis pour manipuler les Groups
+	 * Nécessité de pouvoir gérer les groupes.
 	 */
 	public function __construct() {
 		$this->middleware(
@@ -37,7 +44,7 @@ class GroupController extends Controller
 	}
 
 	/**
-	 * Display a listing of the resource.
+	 * Liste les groupes.
 	 *
 	 * @param Request $request
 	 * @return JsonResponse
@@ -55,8 +62,9 @@ class GroupController extends Controller
 
 		return response()->json($groups, 200);
 	}
+
 	/**
-	 * Store a newly created resource in storage.
+	 * Créer un groupe.
 	 *
 	 * @param GroupRequest $request
 	 * @return JsonResponse
@@ -68,10 +76,12 @@ class GroupController extends Controller
 		$group->icon = $request->icon;
 		$group->visibility_id = $request->visibility_id ?? Visibility::findByType('private')->id;
 
-		if ($group->save()) { // Le créateur du groupe devient automatiquement admin et membre de son groupe
-			// Les ids des membres à ajouter seront passé dans la requête.
-			// ids est un array de user ids.
-			// TODO: Envoyer un mail d'invitation dans le groupe
+		if ($group->save()) {
+			/* Le créateur du groupe devient automatiquement admin et membre de son groupe.
+			   Les ids des membres à ajouter seront passé dans la requête.
+			   ids est un array de user ids.
+		     */
+			// TODO: Envoyer un mail d'invitation dans le groupe.
 
 			try {
 				$group->assignMembers($request->input('member_ids', []), [
@@ -90,10 +100,10 @@ class GroupController extends Controller
 	}
 
 	/**
-	 * Display the specified resource.
+	 * Montre un groupe.
 	 *
-	 * @param Request $request
-	 * @param  int $id
+	 * @param Request 	$request
+	 * @param string 	$id
 	 * @return JsonResponse
 	 */
 	public function show(Request $request, string $id): JsonResponse {
@@ -113,10 +123,10 @@ class GroupController extends Controller
 	}
 
 	/**
-	 * Update Group
+	 * Met à jour un groupe.
 	 *
-	 * @param GroupRequest $request
-	 * @param  int $id
+	 * @param GroupRequest 	$request
+	 * @param string 		$id
 	 * @return JsonResponse
 	 */
 	public function update(GroupRequest $request, string $id): JsonResponse {
@@ -158,9 +168,9 @@ class GroupController extends Controller
 	}
 
 	/**
-	 * Delete Group
+	 * Supprime un groupe.
 	 *
-	 * @param  int $id
+	 * @param string $id
 	 * @return JsonResponse
 	 */
 	public function destroy(string $id): JsonResponse {

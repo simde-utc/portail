@@ -1,4 +1,15 @@
 <?php
+/**
+ * Gère les évènements.
+ *
+ * @author Josselin Pennors <josselin.pennors@hotmail.fr>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Event;
 
@@ -15,15 +26,13 @@ use App\Services\Visible\Visible;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Traits\HasVisibility;
 
-/**
- * @resource Event
- *
- * Gestion des évènements
- */
 class EventController extends Controller
 {
 	use HasEvents, HasCreatorsAndOwners;
 
+	/**
+	 * Nécessité de gérer les événements.
+	 */
 	public function __construct() {
 		$this->middleware(
 			\Scopes::matchOneOfDeepestChildren('user-get-events', 'client-get-events'),
@@ -44,10 +53,11 @@ class EventController extends Controller
 	}
 
 	/**
-	 * List Events
-	 *
-	 * @return JsonResponse
-	 */
+     * Liste les événements.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
 	public function index(Request $request): JsonResponse {
 		$events = Event::getSelection()->filter(function ($event) use ($request) {
 			return $this->tokenCanSee($request, $event, 'get', 'events') && (!\Auth::id() || $this->isVisible($event, \Auth::id()) || $this->isEventFollowed($request, $event, \Auth::id()));
@@ -59,11 +69,11 @@ class EventController extends Controller
 	}
 
 	/**
-	 * Create Event
-	 *
-	 * @param Request $request
-	 * @return JsonResponse
-	 */
+     * Crée un événement.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
 	public function store(Request $request): JsonResponse {
 		$inputs = $request->all();
 
@@ -92,11 +102,12 @@ class EventController extends Controller
 	}
 
 	/**
-	 * Show Event
-	 *
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
+     * Montre un événement.
+     *
+     * @param Request 	$request
+     * @param string	$id
+     * @return JsonResponse
+     */
 	public function show(Request $request, string $id): JsonResponse {
 		$event = $this->getEvent($request, \Auth::user(), $id);
 
@@ -104,12 +115,12 @@ class EventController extends Controller
 	}
 
 	/**
-	 * Update Event
-	 *
-	 * @param Request $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
+     * Met à jour un événement.
+     *
+     * @param Request 	$request
+     * @param string	$id
+     * @return JsonResponse
+     */
 	public function update(Request $request, string $id): JsonResponse {
 		$event = $this->getEvent($request, \Auth::user(), $id, 'set');
 		$inputs = $request->all();
@@ -128,11 +139,12 @@ class EventController extends Controller
 	}
 
 	/**
-	 * Delete Event
-	 *
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
+     * Supprime un événement.
+     *
+     * @param Request 	$request
+     * @param string	$id
+     * @return void
+     */
 	public function destroy(Request $request, string $id): JsonResponse {
 		$event = $this->getEvent($request, \Auth::user(), $id);
 		$event->softDelete();

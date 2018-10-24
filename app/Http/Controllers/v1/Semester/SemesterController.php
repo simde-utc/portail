@@ -18,7 +18,7 @@ use App\Models\Semester;
 class SemesterController extends Controller
 {
     /**
-     * Récupération publique ou sous scopes
+     * Récupération publique ou sous scopes.
      */
     public function __construct()
     {
