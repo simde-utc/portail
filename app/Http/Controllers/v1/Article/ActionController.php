@@ -1,4 +1,12 @@
 <?php
+/**
+ * Gère les actions des articles.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Article;
 
@@ -14,19 +22,12 @@ use App\Traits\HasVisibility;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Controller\v1\HasArticles;
 
-/**
- * @resource Article
- *
- * Les articles écrits et postés par les associations
- */
 class ActionController extends Controller
 {
 	use HasArticles;
 
 	/**
-	 * Scopes Article
-	 *
-	 * Les Scopes requis pour manipuler les Articles
+	 * Nécessité de pouvoir voir les articles et de pouvoir gérer les actions des articles
 	 */
 	public function __construct() {
   		$this->middleware(array_merge(
@@ -56,10 +57,10 @@ class ActionController extends Controller
   	}
 
 	/**
-	 * List Articles
+	 * Liste les actions de l'article
 	 *
-	 * Retourne la liste des articles. ?all pour voir ceux en plus des assos suivies, ?notRemoved pour uniquement cacher les articles non visibles
-	 * @param \Illuminate\Http\Request $request
+	 * @param Request $request
+	 * @param string  $article_id
 	 * @return JsonResponse
 	 */
 	public function index(Request $request, string $article_id): JsonResponse {
@@ -70,22 +71,22 @@ class ActionController extends Controller
 	}
 
 	/**
-	 * Create Article
+	 * Impossible d'ajouter depuis ce controlleur une action pour l'article
 	 *
-	 * Créer un article
-	 * @param ArticleRequest $request
-	 * @return JsonResponse
+	 * @param Request $request
+	 * @param string  $article_id
+	 * @return void
 	 */
-	public function store(Request $request): JsonResponse {
+	public function store(Request $request, string $article_id): JsonResponse {
 		abort(419);
 	}
 
 	/**
-	 * Show Article
+	 * Montre une action de l'article
 	 *
-	 * Affiche l'article s'il existe et si l'utilisateur peut le voir.
 	 * @param Request $request
-	 * @param  int $id
+	 * @param string  $article_id
+	 * @param string  $key
 	 * @return JsonResponse
 	 */
 	public function show(Request $request, string $article_id, string $key): JsonResponse {
@@ -96,26 +97,26 @@ class ActionController extends Controller
 	}
 
 	/**
-	 * Update Article
+	 * Impossible de mettre un jour une action de l'article
 	 *
-	 * Met à jour l'article s'il existe
-	 * @param ArticleRequest $request
-	 * @param  int $id
+	 * @param Request $request
+	 * @param string  $article_id
+	 * @param string  $key
 	 * @return JsonResponse
 	 */
-	public function update(Request $request, string $id): JsonResponse {
+	public function update(Request $request, string $article_id, string $key): JsonResponse {
 		abort(419);
 	}
 
 	/**
-	 * Delete Article
+	 * Impossible de supprimer une action de l'article
 	 *
-	 * Supprime l'article s'il existe
-	 * @param ArticleRequest $request
-	 * @param  int $id
+	 * @param Request $request
+	 * @param string  $article_id
+	 * @param string  $key
 	 * @return JsonResponse
 	 */
-	public function destroy(ArticleRequest $request, string $id): JsonResponse {
+	public function destroy(ArticleRequest $request, string $article_id, string $key): JsonResponse {
 		abort(419);
 	}
 }

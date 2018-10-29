@@ -1,4 +1,15 @@
 <?php
+/**
+ * Gère les associations.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Asso;
 
@@ -13,164 +24,164 @@ use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasAssos;
 use App\Traits\Controller\v1\HasImages;
 
-/**
- * @resource Association
- *
- * Gestion des associations
- */
 class AssoController extends Controller
 {
-	use HasAssos, HasImages;
+    use HasAssos, HasImages;
 
-	public function __construct() {
-		// La récupération des assos est publique
-		$this->middleware(
-			\Scopes::allowPublic()->matchOne('user-get-assos', 'client-get-assos'),
-			['only' => ['index', 'show']]
-		);
-		$this->middleware(
-			array_merge(
-				\Scopes::matchOne('user-create-assos', 'client-create-assos'),
-				['permission:asso']
-			),
-			['only' => ['store']]
-		);
-		$this->middleware(
-			array_merge(
-				\Scopes::matchOne('user-edit-assos', 'client-edit-assos'),
-				['permission:asso']
-			),
-			['only' => ['update']]
-		);
-		$this->middleware(
-			array_merge(
-				\Scopes::matchOne('user-remove-assos', 'client-remove-assos'),
-				['permission:asso']
-			),
-			['only' => ['destroy']]
-		);
-	}
+    /**
+     * Lecture publique
+     * Nécessité de gérer les associations
+     */
+    public function __construct()
+    {
+        $this->middleware(
+	        \Scopes::allowPublic()->matchOne('user-get-assos', 'client-get-assos'),
+	        ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+	        array_merge(
+		        \Scopes::matchOne('user-create-assos', 'client-create-assos'),
+		        ['permission:asso']
+	        ),
+	        ['only' => ['store']]
+        );
+        $this->middleware(
+	        array_merge(
+		        \Scopes::matchOne('user-edit-assos', 'client-edit-assos'),
+		        ['permission:asso']
+	        ),
+	        ['only' => ['update']]
+        );
+        $this->middleware(
+	        array_merge(
+		        \Scopes::matchOne('user-remove-assos', 'client-remove-assos'),
+		        ['permission:asso']
+	        ),
+        	['only' => ['destroy']]
+        );
+    }
 
-	/**
-	 * List Associations
-	 *
-	 * Retourne la liste des associations
-	 * @param AssoRequest $request
-	 * @return JsonResponse
-	 * @throws PortailException
-	 */
-	public function index(AssoRequest $request): JsonResponse {
-		$assos = Asso::getSelection()->map(function ($asso) {
-			return $asso->hideData();
-		});
+    /**
+     * Listes les associations
+     *
+     * @param AssoRequest $request
+     * @return JsonResponse
+     */
+    public function index(AssoRequest $request): JsonResponse
+    {
+        $assos = Asso::getSelection()->map(function ($asso) {
+            return $asso->hideData();
+        });
 
-		return response()->json($assos, 200);
-	}
+        return response()->json($assos, 200);
+    }
 
-	/**
-	 * Store Association
-	 *
-	 * Créer une Association
-	 * @param AssoRequest $request
-	 * @return JsonResponse
-	 */
-	public function store(AssoRequest $request): JsonResponse {
-		$asso = Asso::create($request->input());
+    /**
+     * Ajoute une association
+     *
+     * @param AssoRequest $request
+     * @return JsonResponse
+     */
+    public function store(AssoRequest $request): JsonResponse
+    {
+        $asso = Asso::create($request->input());
 
-		if ($asso) {
-			// On affecte l'image si tout s'est bien passé
-			$this->setImage($request, $asso, 'assos/'.$asso->id);
+        if ($asso) {
+            // On affecte l'image si tout s'est bien passé.
+            $this->setImage($request, $asso, 'assos/'.$asso->id);
 
-			// Après la création, on ajoute son président (non confirmé évidemment)
-			$asso->assignRoles(config('portail.roles.admin.assos'), [
-				'user_id' => $request->input('user_id'),
-			], true);
+            // Après la création, on ajoute son président (non confirmé évidemment).
+            $asso->assignRoles(config('portail.roles.admin.assos'), [
+                'user_id' => $request->input('user_id'),
+            ], true);
 
-			// On met l'asso en état inactif
-			$asso->delete();
+            // On met l'asso en état inactif (en attente de confirmation).
+            $asso->delete();
 
-			return response()->json($asso, 201);
-		}
-		else
-			abort(500, 'L\'asso n\'as pas pu être créée');
-	}
+            return response()->json($asso, 201);
+        } else {
+            abort(500, 'L\'asso n\'as pas pu être créée');
+        }
+    }
 
-	/**
-	 * Show Association
-	 *
-	 * Retourne l'association si elle existe
-	 * @param Request $request
-	 * @param  int/string $id
-	 * @return JsonResponse
-	 * @throws PortailException
-	 */
-	public function show(Request $request, string $id): JsonResponse {
-		$asso = $this->getAsso($request, $id);
+    /**
+     * Montre une association
+     *
+     * @param AssoRequest $request
+     * @param string      $asso_id
+     * @return JsonResponse
+     */
+    public function show(Request $request, string $asso_id): JsonResponse
+    {
+        $asso = $this->getAsso($request, $asso_id);
 
-		return response()->json($asso->hideSubData(), 200);
-	}
+        return response()->json($asso->hideSubData(), 200);
+    }
 
-	/**
-	 * Update Association
-	 *
-	 * Met à jour l'association si elle existe
-	 * @param AssoRequest $request
-	 * @param  int/string $id
-	 * @return JsonResponse
-	 */
-	public function update(AssoRequest $request, string $id): JsonResponse {
-		$asso = $this->getAsso($request, $id);
+    /**
+     * Met à jour une association
+     *
+     * @param AssoRequest $request
+     * @param string      $asso_id
+     * @return JsonResponse
+     */
+    public function update(AssoRequest $request, string $asso_id): JsonResponse
+    {
+        $asso = $this->getAsso($request, $asso_id);
 
-		if (isset($request['validate'])) {
-			$asso->updateRoles(config('portail.roles.admin.assos'), [
-				'validated_by' => null,
-			], [
-				'validated_by' => \Auth::id(),
-			], $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id());
+        if (isset($request['validate'])) {
+            $asso->updateRoles(config('portail.roles.admin.assos'), [
+                'validated_by' => null,
+            ], [
+                'validated_by' => \Auth::id(),
+            ], $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id());
 
-			return response()->json($asso, 200);
-		}
+            return response()->json($asso, 200);
+        }
 
-		if (!$asso->hasOnePermission('asso_data', ['user_id' => \Auth::id()]) && !\Auth::user()->hasOneRole('admin'))
-			abort(403, 'Il est nécessaire de posséder les droits pour pouvoir modifier cette association');
+        if (!$asso->hasOnePermission('asso_data', ['user_id' => \Auth::id()]) && !\Auth::user()->hasOneRole('admin')) {
+            abort(403, 'Il est nécessaire de posséder les droits pour pouvoir modifier cette association');
+        }
 
-		if (isset($request['restore'])) {
-			if (!\Auth::user()->hasOnePermission('asso'))
-				abort(403, 'Il est nécessaire de posséder les droits associations pour pouvoir restaurer cette association');
+        if (isset($request['restore'])) {
+            if (!\Auth::user()->hasOnePermission('asso')) {
+                abort(403, 'Il est nécessaire de posséder les droits associations pour pouvoir restaurer cette association');
+            }
 
-			$asso->restore();
-		}
+            $asso->restore();
+        }
 
-		if ($asso->update($request->input())) {
-			// On affecte l'image si tout s'est bien passé
-			$this->setImage($request, $asso, 'assos/'.$asso->id);
+        if ($asso->update($request->input())) {
+            // On affecte l'image si tout s'est bien passé.
+            $this->setImage($request, $asso, 'assos/'.$asso->id);
 
-			return response()->json($asso, 200);
-		}
-		else
-			abort(500, 'L\'association n\'a pas pu être modifiée');
-	}
+            return response()->json($asso, 200);
+        } else {
+            abort(500, 'L\'association n\'a pas pu être modifiée');
+        }
+    }
 
-	/**
-	 * Delete Association
-	 *
-	 * Supprime l'association si elle existe
-	 * @param Request $request
-	 * @param  int/string $id
-	 * @return JsonResponse
-	 */
-	public function destroy(Request $request, string $id): JsonResponse {
-		$asso = $this->getAsso($request, $id);
+    /**
+     * Supprime une association
+     *
+     * @param AssoRequest $request
+     * @param string      $asso_id
+     * @return void
+     */
+    public function destroy(Request $request, string $asso_id): JsonResponse
+    {
+        $asso = $this->getAsso($request, $asso_id);
 
-		if ($asso->children()->exists())
-			abort(400, 'Il n\'est pas possible de supprimer une association parente');
+        if ($asso->children()->exists()) {
+            abort(400, 'Il n\'est pas possible de supprimer une association parente');
+        }
 
-		if ($asso->softDelete()) {
-			$this->deleteImage('assos/'.$asso->id);
+        if ($asso->softDelete()) {
+            $this->deleteImage('assos/'.$asso->id);
 
-			abort(204);
-		}
-		else
-			abort(500, 'L\'association n\'a pas pu être supprimée');
-	}
+            abort(204);
+        } else {
+            abort(500, 'L\'association n\'a pas pu être supprimée');
+        }
+    }
 }

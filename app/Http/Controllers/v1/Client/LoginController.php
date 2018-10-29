@@ -1,4 +1,14 @@
 <?php
+/**
+ * Gère la connexion d'un utilisateur.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Client;
 
@@ -9,17 +19,12 @@ use Illuminate\Http\Request;
 use App\Services\Auth\AuthService;
 use App\Models\Session;
 
-/**
- * @resource User
- *
- * Gestion des méthodes de Login
- */
 class LoginController extends Controller
 {
 	use AuthenticatesUsers;
 
 	/**
-	 * List Login providers
+	 * Liste les moyens de connexion.
 	 *
 	 * @return JsonResponse
 	 */
@@ -42,9 +47,8 @@ class LoginController extends Controller
 	}
 
 	/**
-	 * Disconnect User
+	 * Déconnecte l'utilisateur du portail et le renvoie sur la route de déconnexion de sa méthode de connexion
 	 *
-	 * Déconnecte l'utilisateur du portail et le renvoie sur la route de déconnection de sa méthode de connection
 	 * @param Request $request
 	 * @return JsonResponse
 	 */
@@ -58,7 +62,8 @@ class LoginController extends Controller
 			// On le déconnecte uniquement lorsque le service a fini son travail
 			Session::find($session_id)->update([
 				'user_id'       => null,
-				'auth_provider' => null,]);
+				'auth_provider' => null,
+			]);
 
 			return response()->json(['message' => 'Utilisateur déconnecté avec succès'], 202);
 		}

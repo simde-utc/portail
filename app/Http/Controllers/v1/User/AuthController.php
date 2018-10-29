@@ -170,7 +170,7 @@ class AuthController extends Controller
             $auth = $user->$name;
 
             if ($auth) {
-                $auth->delete()
+                $auth->delete();
 
                 abort(204);
             }

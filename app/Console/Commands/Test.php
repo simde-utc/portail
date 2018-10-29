@@ -28,6 +28,15 @@ class Test extends Command
     protected $description = 'Teste le code avant de pouvoir push le code';
 
     /**
+     * Tous les dossiers à vérifier
+     *
+     * @var array
+     */
+    protected $dirs = [
+        'app', 'bootstrap', 'config', 'database', 'resources/views', 'routes', 'tests',
+    ];
+
+    /**
      * @return void
      */
     public function __construct()
@@ -42,7 +51,22 @@ class Test extends Command
      */
     public function handle()
     {
-        $this->file = implode($this->argument('file'), ' ');
+        $this->files = $this->argument('file');
+        $bar = $this->output->createProgressBar(5);
+
+        $this->info(' [PHP Syntax] Vérification de la syntaxe PHP');
+        $bar->advance();
+        $this->info(PHP_EOL);
+
+        if ($this->runPHPSyntax()) {
+            $this->output->error('Des erreurs de syntaxe ont été détectées');
+
+            return 1;
+        }
+
+        $this->info(' [PHP CS] Vérification du linting PHP');
+        $bar->advance();
+        $this->info(PHP_EOL);
 
         if ($this->runPHPCS()) {
             $this->output->error('Des erreurs ont été rencontrées lors de la vérification du linting');
@@ -62,15 +86,68 @@ class Test extends Command
             }
         }
 
+        $this->info(' [PHP MD] Vérification des optimisations PHP');
+        $bar->advance();
+        $this->info(PHP_EOL);
+
         if ($this->runPHPMD()) {
             $this->output->error('Des erreurs d\'optimisation ont été détectées');
 
             return 1;
         }
 
-        $this->runPHPUnit();
+        $this->info(' [PHP Unit] Vérification des tests PHP');
+        $bar->advance();
+        $this->info(PHP_EOL);
+
+        if ($this->runPHPUnit()) {
+            $this->output->error('Des erreurs ont été rencontrées lors de la game');
+
+            return 1;
+        }
+
+        $this->info(PHP_EOL);
+        $bar->advance();
+        $this->info(PHP_EOL);
 
         $this->output->success('Code parfait √');
+    }
+
+    /**
+     * Lance php -l pour vérifier la syntaxe
+     *
+     * @return integer
+     */
+    private function runPHPSyntax()
+    {
+        $files = $this->files;
+
+        if (count($files) === 0) {
+            $command = "find {".implode($this->dirs, ',')."} -type f -name '*.php'";
+
+            $process = new Process($command);
+
+            $process->run(function ($type, $line) use (&$files) {
+                $files = explode("\n", $line);
+            });
+        }
+
+        foreach ($files as $file) {
+            $process = new Process("php -l ".$file);
+            $lines = [];
+
+            $process->run(function ($type, $line) use (&$lines) {
+                $lines[] = $line;
+            });
+
+            if ($process->getExitCode()) {
+                $this->output->write($lines);
+
+                return 1;
+            }
+        }
+
+        return 0;
     }
 
     /**
@@ -81,7 +158,7 @@ class Test extends Command
     private function runPHPCS()
     {
         return $this->process(
-            "./vendor/bin/phpcs ".$this->file
+            "./vendor/bin/phpcs ".implode($this->files, ' ')
         );
     }
 
@@ -93,7 +170,7 @@ class Test extends Command
     private function runPHPCBF()
     {
         return $this->process(
-            "./vendor/bin/phpcbf ".$this->file
+            "./vendor/bin/phpcbf ".implode($this->files, ' ')
         );
     }
 
@@ -104,15 +181,13 @@ class Test extends Command
      */
     private function runPHPMD()
     {
-        $fileList = explode(' ', $this->file);
+        $files = $this->files;
 
-        if (count($fileList) === 0) {
-            $fileList = [
-                'app', 'bootstrap', 'config', 'database', 'resources/views', 'routes', 'tests',
-            ];
+        if (count($files) === 0) {
+            $files = $dir;
         }
 
-        $files = implode($fileList, ',');
+        $files = implode($files, ',');
 
         return $this->process(
             "./vendor/bin/phpmd ".$files.' text phpmd.xml'

@@ -24,6 +24,10 @@ class ModelResolver {
 		return $this->namespace.'\\'.$this->toCamelCase($name);
 	}
 
+	public function findModel($name, $id, $instance = null) {
+		return $this->getModel($name, $instance)->find($id);
+	}
+
 	public function getModel($name, $instance = null) {
 		$model = resolve($this->getModelName($name));
 
