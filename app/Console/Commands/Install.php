@@ -88,15 +88,15 @@ class Install extends Command
         shell_exec('composer install');
         $bar->advance();
 
-        $this->info(' [Quick Install] Installing Node dependencies');
-        shell_exec('npm install');
-        shell_exec('npm run dev');
-        $bar->advance();
-
         // Configuration.
         $this->info(' [Quick Install] Setting keys');
         $this->call('key:generate');
         $this->call('passport:keys');
+        $bar->advance();
+
+        $this->info(' [Quick Install] Installing Node dependencies');
+        shell_exec('npm install');
+        shell_exec('npm run dev');
         $bar->advance();
 
         // Migration.

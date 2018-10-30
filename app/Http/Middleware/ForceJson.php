@@ -1,23 +1,32 @@
 <?php
+/**
+ * Middleware forçant la réponse en json.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 
 class ForceJson
 {
     /**
-     * Handle an incoming request.
+     * On force le retour en JSON.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  Request $request
+     * @param  Closure $next
      * @return mixed
      */
-	 public function handle(\Illuminate\Http\Request $request, Closure $next)
-	 {
-		// On force le retour en JSON:
-		$request->headers->set('Accept', 'application/json');
+    public function handle(Request $request, Closure $next)
+    {
+        $request->headers->set('Accept', 'application/json');
 
-		return $next($request);
+        return $next($request);
     }
 }
