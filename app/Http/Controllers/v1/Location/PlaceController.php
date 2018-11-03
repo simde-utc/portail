@@ -1,4 +1,15 @@
 <?php
+/**
+ * Gère les emplacements de lieux.
+ *
+ * TODO: Déplacer la récupération dans un Trait.
+ * TODO: Transformer en abort.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Location;
 
@@ -8,99 +19,107 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Traits\Controller\v1\HasPlaces;
 
-/**
- * @resource Place
- *
- * Gestion des emplacements
- */
 class PlaceController extends Controller
 {
     use HasPlaces;
 
-    public function __construct() {
-		$this->middleware(
+    /**
+     * Nécessité de pouvoir gérer les emplacements.
+     */
+    public function __construct()
+    {
+        $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-get-locations-places'),
-			['only' => ['index', 'show']]
-		);
-		$this->middleware(
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-create-locations-places'),
-			['only' => ['store']]
-		);
-		$this->middleware(
+            ['only' => ['store']]
+        );
+        $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-set-locations-places'),
-			['only' => ['update']]
-		);
-		$this->middleware(
+            ['only' => ['update']]
+        );
+        $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-manage-locations-places'),
-			['only' => ['destroy']]
-		);
+            ['only' => ['destroy']]
+        );
     }
 
-	/**
-	 * List Places
-	 *
-	 * @return JsonResponse
-	 */
-	public function index(): JsonResponse {
-		return response()->json(Place::get(), 200);
-	}
+    /**
+     * Liste les emplacements.
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        return response()->json(Place::get(), 200);
+    }
 
-	/**
-	 * Create Place
-	 *
-	 * @param Request $request
-	 * @return JsonResponse
-	 */
-	public function store(Request $request): JsonResponse {
-		$place = Place::create($request->all());
+    /**
+     * Créer un emplacement.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $place = Place::create($request->all());
 
-		if ($place)
-			return response()->json($place, 200);
-		else
-			abort(500, 'Impossible de créer le lieu');
+        if ($place) {
+            return response()->json($place, 200);
+        } else {
+            abort(500, 'Impossible de créer le lieu');
+        }
+    }
 
-	}
+    /**
+     * Montre un emplacement.
+     *
+     * @param Request $request
+     * @param string  $place_id
+     * @return JsonResponse
+     */
+    public function show(Request $request, string $place_id): JsonResponse
+    {
+        $place = $this->getPlace($request, $place_id);
 
-	/**
-	 * Show Place
-	 *
-	 * @param  string $id
-	 * @return JsonResponse
-	 */
-	public function show(Request $request, string $id): JsonResponse {
-        $place = $this->getPlace($request, $id);
+        return response()->json($place, 200);
+    }
 
-		return response()->json($place, 200);
-	}
+    /**
+     * Met à jour un emplacement.
+     *
+     * @param Request $request
+     * @param string  $place_id
+     * @return JsonResponse
+     */
+    public function update(Request $request, string $place_id): JsonResponse
+    {
+        $place = $this->getPlace($request, $place_id);
 
-	/**
-	 * Update Place
-	 *
-	 * @param  \Illuminate\Http\Request $request
-	 * @param  string $id
-	 * @return JsonResponse
-	 */
-	public function update(Request $request, string $id): JsonResponse {
-        $place = $this->getPlace($request, $id);
-
-		if ($place->update($request->input()))
-			return response()->json($place, 201);
-		else
+        if ($place->update($request->input())) {
+            return response()->json($place, 201);
+        } else {
             abort(500, 'Impossible d\'actualiser le lieu');
-	}
+        }
+    }
 
-	/**
-	 * Delete Place
-	 *
-	 * @param  string $id
-	 * @return JsonResponse
-	 */
-	public function destroy(string $id): JsonResponse {
-        $place = $this->getPlace($request, $id);
+    /**
+     * Supprime un emplacement.
+     *
+     * @param Request $request
+     * @param string  $place_id
+     * @return void
+     */
+    public function destroy(Request $request, string $place_id): JsonResponse
+    {
+        $place = $this->getPlace($request, $place_id);
 
-		if ($place->softDelete())
+        if ($place->softDelete()) {
             abort(204);
-		else
-			abort(500, 'Erreur lors de la suppression de le lieu');
-	}
+        } else {
+            abort(500, 'Erreur lors de la suppression de le lieu');
+        }
+    }
 }

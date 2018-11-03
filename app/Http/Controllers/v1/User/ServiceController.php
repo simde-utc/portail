@@ -1,4 +1,13 @@
 <?php
+/**
+ * Gère les services favoris des utilisateurs.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\User;
 
@@ -14,115 +23,130 @@ use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveServices;
 use App\Traits\HasVisibility;
 
-/**
- * @resource Service
- *
- * Gestion des calendriers
- */
 class ServiceController extends Controller
 {
-	use HasServices;
+    use HasServices;
 
-	public function __construct() {
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-get-services-followed', 'client-get-services-followed'),
-			['only' => ['index', 'show']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-create-services-followed', 'client-create-services-followed'),
-			['only' => ['store']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-edit-services-followed', 'client-edit-services-followed'),
-			['only' => ['update']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-manage-services-followed', 'client-manage-services-followed'),
-			['only' => ['destroy']]
-		);
-	}
+    /**
+     * Nécessité de pouvoir gérer les services suivis.
+     */
+    public function __construct()
+    {
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChildren('user-get-services-followed', 'client-get-services-followed'),
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChildren('user-create-services-followed', 'client-create-services-followed'),
+            ['only' => ['store']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChildren('user-edit-services-followed', 'client-edit-services-followed'),
+            ['only' => ['update']]
+        );
+        $this->middleware(
+            \Scopes::matchOneOfDeepestChildren('user-manage-services-followed', 'client-manage-services-followed'),
+            ['only' => ['destroy']]
+        );
+    }
 
-	/**
-	 * List Services
-	 *
-	 * @return JsonResponse
-	 */
-	public function index(Request $request, string $user_id = null): JsonResponse {
-		$user = $this->getUser($request, $user_id);
+    /**
+     * Liste les services suivis par l'utilisateur.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $user_id
+     * @return JsonResponse
+     */
+    public function index(Request $request, string $user_id=null): JsonResponse
+    {
+        $user = $this->getUser($request, $user_id);
 
-		$services = $user->followedServices()->getSelection()->map(function ($service) {
-			return $service->hideData();
-		});
+        $services = $user->followedServices()->getSelection()->map(function ($service) {
+            return $service->hideData();
+        });
 
-		return response()->json($services, 200);
-	}
+        return response()->json($services, 200);
+    }
 
-	/**
-	 * Create Service
-	 *
-	 * @param Request $request
-	 * @return JsonResponse
-	 */
-	public function store(Request $request, string $user_id = null): JsonResponse {
-		$user = $this->getUser($request, $user_id);
-		$services = collect();
-		$service_ids = $request->input('service_ids', [$request->input('service_id')]);
+    /**
+     * Ajouter un service suivi par l'utilisateur.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $user_id
+     * @return JsonResponse
+     */
+    public function store(Request $request, string $user_id=null): JsonResponse
+    {
+        $user = $this->getUser($request, $user_id);
+        $services = collect();
+        $service_ids = $request->input('service_ids', [$request->input('service_id')]);
 
-		foreach ($service_ids as $service_id) {
-			$service = $this->getService($user, $service_id);
+        foreach ($service_ids as $service_id) {
+            $service = $this->getService($user, $service_id);
 
-			$user->followedServices()->attach($service);
-			$services[] = $service;
-		}
+            $user->followedServices()->attach($service);
+            $services[] = $service;
+        }
 
-		$services = $services->map(function ($service) {
-			return $service->hideData();
-		});
+        $services = $services->map(function ($service) {
+            return $service->hideData();
+        });
 
-		return response()->json($services, 201);
-	}
+        return response()->json($services, 201);
+    }
 
-	/**
-	 * Show Service
-	 *
-	 * @param  string $id
-	 * @return JsonResponse
-	 */
-	public function show(Request $request, string $user_id, string $id = null): JsonResponse {
-        if (is_null($id))
+    /**
+     * Montre un service suivi par l'utilisateur.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $user_id
+     * @param string                   $id
+     * @return JsonResponse
+     */
+    public function show(Request $request, string $user_id, string $id=null): JsonResponse
+    {
+        if (is_null($id)) {
             list($user_id, $id) = [$id, $user_id];
+        }
 
-		$user = $this->getUser($request, $user_id);
-		$service = $this->getFollowedService($user, $id);
+        $user = $this->getUser($request, $user_id);
+        $service = $this->getFollowedService($user, $id);
 
-		return response()->json($service->hideSubData(), 200);
-	}
+        return response()->json($service->hideSubData(), 200);
+    }
 
-	/**
-	 * Update Service
-	 *
-	 * @param Request $request
-	 * @param  string $id
-	 */
-	public function update(Request $request, string $user_id, string $id = null): JsonResponse {
-		abort(405);
-	}
+    /**
+     * Il n'est pas possible de mettre à jour un service suivi par l'utilisateur.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $user_id
+     * @param string                   $id
+     * @return void
+     */
+    public function update(Request $request, string $user_id, string $id=null): JsonResponse
+    {
+        abort(405);
+    }
 
-	/**
-	 * Delete Service
-	 *
-	 * @param  string $id
-	 * @return JsonResponse
-	 */
-	public function destroy(Request $request, string $user_id, string $id = null): JsonResponse {
-		if (is_null($id))
-			list($user_id, $id) = [$id, $user_id];
+    /**
+     * Retire un service suivi par l'utilisateur.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $user_id
+     * @param string                   $id
+     * @return void
+     */
+    public function destroy(Request $request, string $user_id, string $id=null): JsonResponse
+    {
+        if (is_null($id)) {
+            list($user_id, $id) = [$id, $user_id];
+        }
 
-		$user = $this->getUser($request, $user_id);
-		$service = $this->getFollowedService($user, $id);
+        $user = $this->getUser($request, $user_id);
+        $service = $this->getFollowedService($user, $id);
 
-		$user->followedServices()->detach($service);
+        $user->followedServices()->detach($service);
 
-		abort(204);
-	}
+        abort(204);
+    }
 }

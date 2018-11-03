@@ -1,4 +1,12 @@
 <?php
+/**
+ * Gère les permissions.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Permission;
 
@@ -11,128 +19,127 @@ use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasPermissions;
 use App\Traits\Controller\v1\HasOwners;
 
-/**
- * Gestion des groupes utilisateurs
- *
- * @resource Permission
- */
 class PermissionController extends Controller
 {
-	use HasPermissions, HasOwners;
-	/**
-	 * Scopes Permission
-	 *
-	 * Les Scopes requis pour manipuler les Permissions
-	 */
-	public function __construct() {
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-get-permissions', 'client-get-permissions'),
-			['only' => ['index', 'show']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-create-permissions', 'client-create-permissions'),
-			['only' => ['store']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-edit-permissions', 'client-edit-permissions'),
-			['only' => ['update']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-remove-permissions', 'client-remove-permissions'),
-			['only' => ['destroy']]
-		);
-	}
+    use HasPermissions, HasOwners;
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @param Request $request
-	 * @return JsonResponse
-	 * @throws PortailException
-	 */
-	public function index(Request $request): JsonResponse {
-		$permissions = Permission::getSelection()->filter(function ($permission) use ($request) {
-			return $this->tokenCanSee($request, $permission);
-		})->values()->map(function ($permission) {
-			return $permission->hideData();
-		});
+    /**
+     * Nécessité de gérer les permissions.
+     */
+    public function __construct()
+    {
+        $this->middleware(
+        \Scopes::matchOneOfDeepestChildren('user-get-permissions', 'client-get-permissions'),
+        ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+        \Scopes::matchOneOfDeepestChildren('user-create-permissions', 'client-create-permissions'),
+        ['only' => ['store']]
+        );
+        $this->middleware(
+        \Scopes::matchOneOfDeepestChildren('user-edit-permissions', 'client-edit-permissions'),
+        ['only' => ['update']]
+        );
+        $this->middleware(
+        \Scopes::matchOneOfDeepestChildren('user-remove-permissions', 'client-remove-permissions'),
+        ['only' => ['destroy']]
+        );
+    }
 
-		return response()->json($permissions, 200);
-	}
+    /**
+     * Liste des permissions.
+     *
+     * @param  Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $permissions = Permission::getSelection()->filter(function ($permission) use ($request) {
+            return $this->tokenCanSee($request, $permission);
+        })->values()->map(function ($permission) {
+            return $permission->hideData();
+        });
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request $request
-	 * @return JsonResponse
-	 * @throws PortailException
-	 */
-	public function store(Request $request): JsonResponse {
-		$inputs = $request->all();
-		$owner = $this->getOwner($request, 'permission', 'permission', 'create');
+        return response()->json($permissions, 200);
+    }
 
-		$inputs['owned_by_id'] = $owner->id;
-		$inputs['owned_by_type'] = get_class($owner);
+    /**
+     * Crée une permission.
+     *
+     * @param  Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $inputs = $request->all();
+        $owner = $this->getOwner($request, 'permission', 'permission', 'create');
 
-		$permission = Permission::create($inputs);
+        $inputs['owned_by_id'] = $owner->id;
+        $inputs['owned_by_type'] = get_class($owner);
 
-		if ($permission)
-			return response()->json($permission->hideSubData(), 201);
-		else
-			abort(500, 'Impossible de créer le permission');
-	}
+        $permission = Permission::create($inputs);
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param Request $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function show(Request $request, string $id): JsonResponse {
-		$permission = $this->getPermission($request, $id);
-		$permission->nbr_assigned = $permission->users()->where('semester_id', Semester::getThisSemester()->id)->count();
+        if ($permission) {
+            return response()->json($permission->hideSubData(), 201);
+        } else {
+            abort(500, 'Impossible de créer le permission');
+        }
+    }
 
-		return response()->json($permission->hideSubData(), 200);
-	}
+    /**
+     * Montre une permission.
+     *
+     * @param  Request $request
+     * @param  string 	$permission_id
+     * @return JsonResponse
+     */
+    public function show(Request $request, string $permission_id): JsonResponse
+    {
+        $permission = $this->getPermission($request, $permission_id);
+        $permission->nbr_assigned = $permission->users()->where('semester_id', Semester::getThisSemester()->id)->count();
 
-	/**
-	 * Update Permission
-	 *
-	 * @param  \Illuminate\Http\Request $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 * @throws PortailException
-	 */
-	public function update(Request $request, string $id): JsonResponse {
-		$permission = $this->getPermission($request, $id, 'edit');
+        return response()->json($permission->hideSubData(), 200);
+    }
 
-		if ($permission->update($request->input())) {
-			$permission->nbr_assigned = $permission->users()->where('semester_id', Semester::getThisSemester()->id)->count();
+    /**
+     * Met à jour une permission.
+     *
+     * @param  Request $request
+     * @param  string 	$permission_id
+     * @return JsonResponse
+     */
+    public function update(Request $request, string $permission_id): JsonResponse
+    {
+        $permission = $this->getPermission($request, $permission_id, 'edit');
 
-			return response()->json($permission->hideSubData(), 200);
-		}
-		else
-			abort(500, 'Impossible de créer le permission');
-	}
+        if ($permission->update($request->input())) {
+            $permission->nbr_assigned = $permission->users()->where('semester_id', Semester::getThisSemester()->id)->count();
 
-	/**
-	 * Delete Permission
-	 *
-	 * @param Request $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function destroy(Request $request, string $id): JsonResponse {
-		$permission = $this->getPermission($request, $id, 'manage');
+            return response()->json($permission->hideSubData(), 200);
+        } else {
+            abort(500, 'Impossible de créer le permission');
+        }
+    }
 
-		if ($permission->isDeletable()) {
-			if ($permission->delete())
-				abort(204);
-			else
-				abort(500, "Impossible de supprimer le permission souhaité");
-		}
-		else
-			abort(403, "Il n'est pas autorisé de supprimer ce permission (possiblement car déjà assigné ou permissions enfants attachés)");
-	}
+    /**
+     * Supprime une permission.
+     *
+     * @param  Request $request
+     * @param  string 	$permission_id
+     * @return void
+     */
+    public function destroy(Request $request, string $permission_id): JsonResponse
+    {
+        $permission = $this->getPermission($request, $permission_id, 'manage');
+
+        if ($permission->isDeletable()) {
+            if ($permission->delete()) {
+                abort(204);
+            } else {
+                abort(500, "Impossible de supprimer le permission souhaité");
+            }
+        } else {
+            abort(403, "Il n'est pas autorisé de supprimer cettte permission (déjà assignée ou utilisée)");
+        }
+    }
 }

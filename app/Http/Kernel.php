@@ -1,4 +1,14 @@
 <?php
+/**
+ * Interconnecte l'ensemble des middlewares et des controlleurs
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Natan Danous <natan.danous@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http;
 
@@ -6,13 +16,6 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
-    /**
-     * The application's global HTTP middleware stack.
-     *
-     * These middleware are run during every request to your application.
-     *
-     * @var array
-     */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
@@ -21,11 +24,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrustProxies::class,
     ];
 
-    /**
-     * The application's route middleware groups.
-     *
-     * @var array
-     */
     protected $middlewareGroups = [
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
@@ -44,24 +42,17 @@ class Kernel extends HttpKernel
         ],
     ];
 
-    /**
-     * The application's route middleware.
-     *
-     * These middleware may be assigned to groups or used individually.
-     *
-     * @var array
-     */
     protected $routeMiddleware = [
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-		'auth.any' => \App\Http\Middleware\CheckAny::class,
-		'auth.user' => \App\Http\Middleware\CheckUser::class,
+        'auth.any' => \App\Http\Middleware\CheckAny::class,
+        'auth.user' => \App\Http\Middleware\CheckUser::class,
         'auth.client' => \App\Http\Middleware\CheckClient::class,
-		'auth.check' => \App\Http\Middleware\CheckAuth::class,
-		'authAjax.any' => \App\Http\Middleware\CheckAjaxAny::class,
-		'authAjax.user' => \App\Http\Middleware\CheckAjaxUser::class,
+        'auth.check' => \App\Http\Middleware\CheckAuth::class,
+        'authAjax.any' => \App\Http\Middleware\CheckAjaxAny::class,
+        'authAjax.user' => \App\Http\Middleware\CheckAjaxUser::class,
         'authAjax.client' => \App\Http\Middleware\CheckAjaxClient::class,
-		'authAjax.check' => \App\Http\Middleware\CheckAjaxAuth::class,
+        'authAjax.check' => \App\Http\Middleware\CheckAjaxAuth::class,
         'checkAjax' => \App\Http\Middleware\CheckAjax::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
@@ -71,9 +62,9 @@ class Kernel extends HttpKernel
         'user' => \App\Http\Middleware\UserIs::class,
         'role' => \App\Http\Middleware\UserHasRole::class,
         'permission' => \App\Http\Middleware\UserHasPermission::class,
-		'checkPassport' => \App\Http\Middleware\CheckPassport::class,
+        'checkPassport' => \App\Http\Middleware\CheckPassport::class,
         'forceJson' => \App\Http\Middleware\ForceJson::class,
         'deprecatedVersion' => \App\Http\Middleware\DeprecatedVersion::class,
-		'betaVersion' => \App\Http\Middleware\BetaVersion::class,
+        'betaVersion' => \App\Http\Middleware\BetaVersion::class,
     ];
 }

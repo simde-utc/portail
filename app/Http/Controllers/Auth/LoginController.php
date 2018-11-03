@@ -1,4 +1,13 @@
 <?php
+/**
+ * Gère la connexion via un formulaire.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\Auth;
 
@@ -14,103 +23,125 @@ use App\Models\Session;
 
 class LoginController extends Controller
 {
-	/*
-	|--------------------------------------------------------------------------
-	| Login Controller
-	|--------------------------------------------------------------------------
-	|
-	| This controller handles authenticating users for the application and
-	| redirecting them to your home screen. The controller uses a trait
-	| to conveniently provide its functionality to your applications.
-	|
-	*/
+    use AuthenticatesUsers;
 
-	use AuthenticatesUsers;
+    /**
+     * Où rediriger les connectés.
+     *
+     * @var string
+     */
+    protected $redirectTo = '/';
 
-	/**
-	 * Where to redirect users after login.
-	 *
-	 * @var string
-	 */
-	protected $redirectTo = '/';
+    /**
+     * Uniquement les non-connectés peuvent se connecter à leur compte.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest', ['except' => 'destroy']);
+        $this->middleware('auth:web', ['only' => 'destroy']);
 
-	public function __construct()	{
-		$this->middleware('guest', ['except' => 'destroy']);
-		$this->middleware('auth:web', ['only' => 'destroy']);
+        if ($url = \URL::previous()) {
+            \Session::put('url.intended', $url);
+        }
+    }
 
-		if ($url = \URL::previous()) {
-			\Session::put('url.intended', $url);
-		}
-	}
+    /**
+     * Affiche la vue de choix de méthode de login.
+     *
+     * @param  Request $request
+     * @return mixed
+     */
+    public function index(Request $request)
+    {
+        $provider = $request->cookie('auth_provider');
+        $provider_class = config("auth.services.$provider.class");
 
-	/**
-	 * Affiche la vue de choix de méthode de login
-	 */
-	public function index(Request $request) {
-		$provider = $request->cookie('auth_provider');
-		$provider_class = config("auth.services.$provider.class");
+        if ($provider_class === null || $request->query('see') === 'all') {
+            return view('login.index');
+        } else {
+            return redirect()->route('login.show', ['provider' => $provider]);
+        }
+    }
 
-		if ($provider_class === null || $request->query('see') === 'all')
-			return view('login.index');
-		else
-			return redirect()->route('login.show', ['provider' => $provider]);
-	}
+    /**
+     * Connection de l'utilisateur après passage par l'API.
+     *
+     * @param  Request $request
+     * @param  string  $provider Type d'authentification.
+     * @return mixed
+     */
+    public function store(Request $request, string $provider)
+    {
+        $provider_class = config("auth.services.$provider.class");
 
-	/**
-	 * Connection de l'utilisateur après passage par l'API
-	 */
-	public function store(Request $request, string $provider) {
-		$provider_class = config("auth.services.$provider.class");
+        if ($provider_class === null) {
+            return redirect()->route('login.show');
+        } else {
+            return resolve($provider_class)->login($request)
+                    ->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
+        }
+    }
 
-		if ($provider_class === null)
-			return redirect()->route('login.show');
-		else {
-			return resolve($provider_class)->login($request)->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
-		}
-	}
+    /**
+     * Récupère la classe d'authentication $provider_class dans le service container de Laravel et applique le show login.
+     *
+     * @param  Request $request
+     * @param  string  $provider Type d'authentification.
+     * @return mixed
+     */
+    public function show(Request $request, string $provider)
+    {
+        $provider_class = config("auth.services.$provider.class");
 
-	/**
-	 * Récupère la classe d'authentication $provider_class dans le service container de Laravel
-	 * et applique le show login
-	 */
-	public function show(Request $request, string $provider) {
-		$provider_class = config("auth.services.$provider.class");
+        if ($provider_class === null) {
+            return redirect()->route('login')->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
+        } else {
+            return resolve($provider_class)->showLoginForm($request);
+        }
+    }
 
-		if ($provider_class === null)
-			return redirect()->route('login')->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
-		else
-			return resolve($provider_class)->showLoginForm($request);
-	}
+    /**
+     * Actualisation du captcha.
+     *
+     * @param  Request $request
+     * @return mixed
+     */
+    public function update(Request $request)
+    {
+        return response()->json(['captcha' => captcha_img()]);
+    }
 
-	/**
-	 * Actualisation du captcha
-	 */
-	public function update(Request $request) {
-		return response()->json(['captcha' => captcha_img()]);
-	}
+    /**
+     * Déconnection de l'utilisateur.
+     *
+     * @param  Request $request
+     * @param  string  $redirect Url de redirection.
+     * @return mixed
+     */
+    public function destroy(Request $request, string $redirect=null)
+    {
+        $service = config("auth.services.".Session::find(\Session::getId())->auth_provider);
+        $redirect = $service === null ? null : resolve($service['class'])->logout($request);
 
-	/**
-	 * Déconnection de l'utilisateur
-	 */
-	public function destroy(Request $request, string $redirect = null) {
-		$service = config("auth.services.".Session::find(\Session::getId())->auth_provider);
-		$redirect = $service === null ? null : resolve($service['class'])->logout($request);
+        if ($redirect === null) {
+            $after_logout_redirection = $request->query('redirect', url()->previous());
 
-		if ($redirect === null) {
-			$after_logout_redirection = $request->query('redirect', url()->previous());
-			// Évite les redirections sur logout
-			if ($after_logout_redirection && $after_logout_redirection !== $request->url())
-				$redirect = redirect($after_logout_redirection);
-			else
-				$redirect = redirect('welcome');
-		}
+            // Évite les redirections sur logout.
+            if ($after_logout_redirection && $after_logout_redirection !== $request->url()) {
+                $redirect = redirect($after_logout_redirection);
+            } else {
+                $redirect = redirect('welcome');
+            }
+        }
 
-		// Ne pas oublier de détruire sa session
-		\Session::flush();
+        // Ne pas oublier de détruire sa session.
+        \Session::flush();
 
-		// On le déconnecte uniquement lorsque le service a fini son travail
-		Auth::logout();
+        // On le déconnecte uniquement lorsque le service a fini son travail.
+        Auth::logout();
 
-		return $redirect;
-	}
+        return $redirect;
+    }
 }

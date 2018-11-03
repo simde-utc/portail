@@ -1,4 +1,12 @@
 <?php
+/**
+ * Middleware vérifiant si l'utilisateur est connecté.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Middleware;
 
@@ -8,33 +16,35 @@ use App\Models\Passport\TokenSession;
 use Laravel\Passport\Client;
 use Laravel\Passport\AuthCode;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Http\Request;
 
 class CheckAuth
 {
     /**
-     * Handle an incoming request.
+     * Vérifie si l'utilisateur est bien connecté
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  Request $request
+     * @param  Closure $next
      * @return mixed
      */
-	 public function handle(\Illuminate\Http\Request $request, Closure $next)
-	 {
-		// On vérifie que l'utilisateur lié au token est toujours connecté
-		if ($request->user() !== null) {
-			$token = $request->user()->token();
+    public function handle(Request $request, Closure $next)
+    {
+        // On vérifie que l'utilisateur lié au token est toujours connecté.
+        if ($request->user() !== null) {
+            $token = $request->user()->token();
 
-			if (!$token->transient()) {
-				$client = Client::find($token->client_id);
+            if (!$token->transient()) {
+                $client = Client::find($token->client_id);
 
-				// On vérifie uniquement pour les tokens qui ne sont pas un token personnel ou lié à une application sans session
-				if ($client !== null && !$client->personal_access_client && !$client->password_client) {
-					if (!$request->user()->sessions()->exists())
-						return response()->json(['message' => 'L\'utilisateur n\'est plus connecté'], 410);
-				}
-			}
-		}
+                // On vérifie uniquement pour les tokens qui ne sont pas un token personnel ou lié à une application sans session.
+                if ($client !== null && !$client->personal_access_client && !$client->password_client) {
+                    if (!$request->user()->sessions()->exists()) {
+                        abort(410, 'L\'utilisateur n\'est plus connecté');
+                    }
+                }
+            }
+        }
 
-		return $next($request);
+        return $next($request);
     }
 }

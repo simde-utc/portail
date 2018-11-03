@@ -43,7 +43,7 @@ class UsersTableSeeder extends Seeder
 				],
 			],
 			[
-				'email'     => 'alexandre.brasseur@etu.utc.fr',
+				'email'     => 'abrasseur.pro@gmail.com',
 				'firstname' => 'Alexandre',
 				'lastname'  => 'Brasseur',
 				'role'		=> 'admin',

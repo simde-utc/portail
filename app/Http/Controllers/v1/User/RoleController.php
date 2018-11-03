@@ -1,4 +1,13 @@
 <?php
+/**
+ * Gère les roles de l'utilisateur.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\User;
 
@@ -16,127 +25,138 @@ use App\Traits\Controller\v1\HasRoles;
 
 class RoleController extends Controller
 {
-	use HasUsers, HasRoles;
+    use HasUsers, HasRoles;
 
-	public function __construct() {
-		$this->middleware(
-			array_merge(
-				\Scopes::matchOneOfDeepestChildren('user-get-roles-users-assigned', 'client-get-roles-users-assigned'),
-				\Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
-			),
-			['only' => ['index', 'show']]
-		);
-		$this->middleware(
-			array_merge(
-				\Scopes::matchOneOfDeepestChildren('user-create-roles-users-assigned', 'client-create-roles-users-assigned'),
-				\Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
-			),
-			['only' => ['store']]
-		);
-		$this->middleware(
-			array_merge(
-				\Scopes::matchOneOfDeepestChildren('user-edit-roles-users-assigned', 'client-edit-roles-users-assigned'),
-				\Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
-			),
-			['only' => ['update']]
-		);
-		$this->middleware(
-			array_merge(
-				\Scopes::matchOneOfDeepestChildren('user-remove-roles-users-assigned', 'client-remove-roles-users-assigned'),
-				\Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
-			),
-			['only' => ['destroy']]
-		);
-	}
+    /**
+     * Nécessite de pouvoir voir les rôles utilisateur et gérer les rôles de l'utilisateur.
+     */
+    public function __construct()
+    {
+        $this->middleware(
+            array_merge(
+                \Scopes::matchOneOfDeepestChildren('user-get-roles-users-assigned', 'client-get-roles-users-assigned'),
+                \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
+            ),
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+            array_merge(
+                \Scopes::matchOneOfDeepestChildren('user-create-roles-users-assigned', 'client-create-roles-users-assigned'),
+                \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
+            ),
+            ['only' => ['store']]
+        );
+        $this->middleware(
+            array_merge(
+                \Scopes::matchOneOfDeepestChildren('user-edit-roles-users-assigned', 'client-edit-roles-users-assigned'),
+                \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
+            ),
+            ['only' => ['update']]
+        );
+        $this->middleware(
+            array_merge(
+                \Scopes::matchOneOfDeepestChildren('user-remove-roles-users-assigned', 'client-remove-roles-users-assigned'),
+                \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
+            ),
+            ['only' => ['destroy']]
+        );
+    }
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @param Request $request
-	 * @param string|null $user_id
-	 * @return JsonResponse
-	 */
-	public function index(Request $request, string $user_id = null): JsonResponse {
-		$user = $this->getUser($request, $user_id, true);
-		$semester_id = Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id;
+    /**
+     * Liste les rôles de l'utilisateur.
+     *
+     * @param Request     $request
+     * @param string|null $user_id
+     * @return JsonResponse
+     */
+    public function index(Request $request, string $user_id=null): JsonResponse
+    {
+        $user = $this->getUser($request, $user_id, true);
+        $semester_id = (Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id);
 
-		$roles = $user->roles()->wherePivot('semester_id', $semester_id)
-			->withPivot('semester_id', 'validated_by')->getSelection()
-			->map(function ($role) {
-				return $role->hideData();
-			});
+        $roles = $user->roles()->wherePivot('semester_id', $semester_id)
+            ->withPivot('semester_id', 'validated_by')->getSelection()
+            ->map(function ($role) {
+                return $role->hideData();
+            });
 
-		return response()->json($roles, 200);
-	}
+        return response()->json($roles, 200);
+    }
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request $request
-	 * @param string|null $user_id
-	 * @return JsonResponse
-	 * @throws PortailException
-	 */
-	public function store(Request $request, string $user_id = null): JsonResponse {
-		$user = $this->getUser($request, $user_id, true);
+    /**
+     * Ajoute un rôle pour l'utilisateur.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param string|null              $user_id
+     * @return JsonResponse
+     * @throws PortailException Si l'utilisateur possède déjà un rôle on qu'on a pas le droit de le lui assigner.
+     */
+    public function store(Request $request, string $user_id=null): JsonResponse
+    {
+        $user = $this->getUser($request, $user_id, true);
 
-	 	$user->assignRoles($request->input('role_id'), [
-			'validated_by' => \Auth::id() ?? $request->input('validated_by'),
-			'semester_id' => Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id
-		], \Scopes::isClientToken());
-		$role = $this->getRoleFromUser($request, $user, $request->input('role_id'));
+        $user->assignRoles($request->input('role_id'), [
+            'validated_by' => (\Auth::id() ?? $request->input('validated_by')),
+            'semester_id' => (Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id)
+        ], \Scopes::isClientToken());
+        $role = $this->getRoleFromUser($request, $user, $request->input('role_id'));
 
-		return response()->json($role->hideSubData());
-	}
+        return response()->json($role->hideSubData());
+    }
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param Request $request
-	 * @param string $user_id
-	 * @param string|null $role_id
-	 * @return JsonResponse
-	 */
-	public function show(Request $request, string $user_id, string $role_id = null): JsonResponse {
-		if (is_null($role_id))
-			list($user_id, $role_id) = [$role_id, $user_id];
+    /**
+     * Montre un rôle de l'utilisateur.
+     *
+     * @param Request     $request
+     * @param string      $user_id
+     * @param string|null $role_id
+     * @return JsonResponse
+     */
+    public function show(Request $request, string $user_id, string $role_id=null): JsonResponse
+    {
+        if (is_null($role_id)) {
+            list($user_id, $role_id) = [$role_id, $user_id];
+        }
 
-		$user = $this->getUser($request, $user_id, true);
-		$role = $this->getRoleFromUser($request, $user, $role_id);
+        $user = $this->getUser($request, $user_id, true);
+        $role = $this->getRoleFromUser($request, $user, $role_id);
 
-		return response()->json($role->hideSubData());
-	}
+        return response()->json($role->hideSubData());
+    }
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request $request
-	 * @param string $user_id
-	 * @param string|null $role_id
-	 * @return void
-	 */
-	public function update(Request $request, string $user_id, string $role_id = null) {
-		abort(405, 'Impossible de modifier l\'assignation d\'un rôle');
-	}
+    /**
+     * Il est impossible de mettre à jour un rôle d'un utilisateur.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param string                   $user_id
+     * @param string|null              $role_id
+     * @return void
+     */
+    public function update(Request $request, string $user_id, string $role_id=null)
+    {
+        abort(405, 'Impossible de modifier l\'assignation d\'un rôle');
+    }
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param Request $request
-	 * @param string $user_id
-	 * @param string|null $role_id
-	 * @return void
-	 * @throws PortailException
-	 */
-	public function destroy(Request $request, string $user_id, string $role_id = null) {
-		if (is_null($role_id))
-			list($user_id, $role_id) = [$role_id, $user_id];
+    /**
+     * Supprime un rôle de l'utlisateur
+     *
+     * @param Request     $request
+     * @param string      $user_id
+     * @param string|null $role_id
+     * @return void
+     * @throws PortailException Si l'utilisateur ne possède pas le rôle on qu'on a pas le droit de le lui supprimer.
+     */
+    public function destroy(Request $request, string $user_id, string $role_id=null)
+    {
+        if (is_null($role_id)) {
+            list($user_id, $role_id) = [$role_id, $user_id];
+        }
 
-		$user = $this->getUser($request, $user_id, true);
-		$role = $this->getRoleFromUser($request, $user, $role_id);
+        $user = $this->getUser($request, $user_id, true);
+        $role = $this->getRoleFromUser($request, $user, $role_id);
 
-		$user->removeRoles($role_id, [
-			'semester_id' => $role->pivot->semester_id,
-		], \Auth::id(), \Scopes::isClientToken());
-	}
+        $user->removeRoles($role_id, [
+            'semester_id' => $role->pivot->semester_id,
+        ], \Auth::id(), \Scopes::isClientToken());
+    }
 }

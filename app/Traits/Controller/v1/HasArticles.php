@@ -64,14 +64,22 @@ trait HasArticles
 		$article = Article::find($id);
 
 		if ($article) {
-			if (!$this->tokenCanSee($request, $article, $verb))
-				abort(403, 'L\'application n\'a pas les droits sur cet article');
+			// On vérifie si l'accès est publique.
+	        if (\Scopes::isOauthRequest($request)) {
+				if (!$this->tokenCanSee($request, $article, $verb))
+					abort(403, 'L\'application n\'a pas les droits sur cet article');
 
-			 if ($user && !$this->isVisible($article, $user->id))
-				abort(403, 'Vous n\'avez pas les droits sur cet article');
+				if ($user && !$this->isVisible($article, $user->id))
+					abort(403, 'Vous n\'avez pas les droits sur cet article');
 
-			if ($verb !== 'get' && \Scopes::isUserToken($request) && !$article->owned_by->isArticleManageableBy(\Auth::id()))
-				abort(403, 'Vous n\'avez pas les droits suffisants');
+				if ($verb !== 'get' && \Scopes::isUserToken($request) && !$article->owned_by->isArticleManageableBy(\Auth::id()))
+					abort(403, 'Vous n\'avez pas les droits suffisants');
+	        }
+	        else {
+				if (!$this->isVisible($article)) {
+					abort(403, 'Vous n\'avez pas les droits sur cet article');
+				}
+	        }
 
 			return $article;
 		}

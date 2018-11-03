@@ -69,7 +69,7 @@ trait HasCalendars
 			return $event;
 		}
 
-		abort(404, 'L\'évènement n\'existe pas ou ne fait pas parti du calendrier');
+		abort(404, 'L\'événement n\'existe pas ou ne fait pas parti du calendrier');
 	}
 
 	protected function tokenCanSee(Request $request, Model $model, string $verb, string $type = 'calendars') {
