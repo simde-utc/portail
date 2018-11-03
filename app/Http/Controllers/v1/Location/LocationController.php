@@ -121,7 +121,7 @@ class LocationController extends Controller
     /**
      * Supprime un lieu.
      *
-     * @param  string  $location_id
+     * @param  string $location_id
      * @return JsonResponse
      */
     public function destroy(string $location_id): JsonResponse

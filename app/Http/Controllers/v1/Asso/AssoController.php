@@ -29,8 +29,8 @@ class AssoController extends Controller
     use HasAssos, HasImages;
 
     /**
-     * Lecture publique
-     * Nécessité de gérer les associations
+     * Nécessité de gérer les associations.
+     * Lecture publique.
      */
     public function __construct()
     {
@@ -62,7 +62,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Listes les associations
+     * Liste les associations.
      *
      * @param AssoRequest $request
      * @return JsonResponse
@@ -77,7 +77,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Ajoute une association
+     * Ajoute une association.
      *
      * @param AssoRequest $request
      * @return JsonResponse
@@ -105,7 +105,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Montre une association
+     * Montre une association.
      *
      * @param AssoRequest $request
      * @param string      $asso_id
@@ -119,7 +119,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Met à jour une association
+     * Met à jour une association.
      *
      * @param AssoRequest $request
      * @param string      $asso_id
@@ -162,7 +162,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Supprime une association
+     * Supprime une association.
      *
      * @param AssoRequest $request
      * @param string      $asso_id

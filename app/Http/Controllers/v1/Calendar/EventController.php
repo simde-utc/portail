@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les évènements des calendriers.
+ * Gère les événements des calendriers.
  *
  * TODO: En scopes
  *
@@ -147,9 +147,9 @@ class EventController extends Controller
         $calendar_ids = $event->owner->calendars()->get(['calendars.id'])->pluck('id');
         $event_calendar_ids = $event->calendars()->get(['calendars.id'])->pluck('id');
 
-        // On vérifie que celui qui possède l'event, possède l'évènement dans au moins 2 de ses calendriers.
+        // On vérifie que celui qui possède l'event, possède l'événement dans au moins 2 de ses calendriers.
         if (count($calendar_ids->intersect($event_calendar_ids)) === 1 && $calendar_ids->contains($calendar_id)) {
-            abort(400, 'L\'évènement doit au moins appartenir à un calendrier du propriétaire de l\'évènement');
+            abort(400, 'L\'événement doit au moins appartenir à un calendrier du propriétaire de l\'événement');
         }
 
         $calendar->events()->detach($event);

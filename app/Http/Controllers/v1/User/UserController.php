@@ -30,24 +30,24 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('client-get-users'),
-        ['only' => 'index']
+            \Scopes::matchOneOfDeepestChildren('client-get-users'),
+            ['only' => 'index']
         );
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('client-create-users'),
-        ['only' => 'store']
+            \Scopes::matchOneOfDeepestChildren('client-create-users'),
+            ['only' => 'store']
         );
         $this->middleware(
-        \Scopes::matchAnyUser(),
-        ['only' => 'show']
+            \Scopes::matchAnyUser(),
+            ['only' => 'show']
         );
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('user-set-info', 'client-edit-users'),
-        ['only' => 'update']
+            \Scopes::matchOneOfDeepestChildren('user-set-info', 'client-edit-users'),
+            ['only' => 'update']
         );
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('client-manage-users'),
-        ['only' => 'destroy']
+            \Scopes::matchOneOfDeepestChildren('client-manage-users'),
+            ['only' => 'destroy']
         );
     }
 
@@ -109,7 +109,7 @@ class UserController extends Controller
             'is_active' => $active,
         ]);
 
-        // On affecte l'image si tout s'est bien passé
+        // On affecte l'image si tout s'est bien passé.
         $this->setImage($request, $user, 'users/'.$user->id);
 
         if ($request->filled('details')) {
@@ -234,7 +234,7 @@ class UserController extends Controller
 
     /**
      * (Non géré) Supprime un utilisateur.
-     * TODO RGPD
+     * TODO RGPD.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id

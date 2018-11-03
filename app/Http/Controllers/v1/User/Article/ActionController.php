@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les actions utilisateurs sur les articles
+ * Gère les actions utilisateurs sur les articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,14 +28,14 @@ class ActionController extends Controller
     use HasArticles;
 
     /**
-     * Nécessité de pouvoir voir les artiles et gérer les actions utilisateurs
+     * Nécessité de pouvoir voir les artiles et gérer les actions utilisateurs.
      */
     public function __construct()
     {
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
-                 ['client-get-articles-assos', 'client-get-articles-groups']),
+                    ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-get-articles-actions-user', 'client-get-articles-actions-user')
             ),
             ['only' => ['index', 'show']]
@@ -43,7 +43,7 @@ class ActionController extends Controller
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
-                 ['client-get-articles-assos', 'client-get-articles-groups']),
+                    ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-create-articles-actions-user', 'client-create-articles-actions-user')
             ),
             ['only' => ['store']]
@@ -51,7 +51,7 @@ class ActionController extends Controller
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
-                 ['client-get-articles-assos', 'client-get-articles-groups']),
+                    ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-edit-articles-actions-user', 'client-edit-articles-actions-user')
             ),
             ['only' => ['update']]
@@ -59,7 +59,7 @@ class ActionController extends Controller
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
-                 ['client-get-articles-assos', 'client-get-articles-groups']),
+                    ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-manage-articles-actions-user', 'client-manage-articles-actions-user')
             ),
             ['only' => ['destroy']]
@@ -67,7 +67,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Liste les actions de l'utilisateur
+     * Liste les actions de l'utilisateur.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
@@ -88,7 +88,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Créer une action de l'utilisateur
+     * Créer une action de l'utilisateur.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
@@ -116,7 +116,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Montre une action de l'utilisateur
+     * Montre une action de l'utilisateur.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
@@ -138,7 +138,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Met à jour une action de l'utilisateur
+     * Met à jour une action de l'utilisateur.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
@@ -170,7 +170,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Supprime une action de l'utilisateur
+     * Supprime une action de l'utilisateur.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id

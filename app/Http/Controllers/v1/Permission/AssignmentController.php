@@ -26,7 +26,7 @@ class AssignmentController extends Controller
     use HasPermissions;
 
     /**
-     * Nécessité de pouvoir gérer les permissions assignées
+     * Nécessité de pouvoir gérer les permissions assignées.
      */
     public function __construct()
     {

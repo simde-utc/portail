@@ -148,7 +148,7 @@ class ReservationController extends Controller
 
         $calendar = $room->calendar;
 
-        // WARNING: L'évènement appartient bien sûr à celui qui possède le calendrier (pour éviter en fait que les gens modifient eux-même l'event).
+        // WARNING: L'événement appartient bien sûr à celui qui possède le calendrier (pour éviter en fait que les gens modifient eux-même l'event).
         $event = Event::create([
             'name' => ($inputs['name'] ?? ReservationType::find($inputs['reservation_type_id'])),
             'begin_at' => $inputs['begin_at'],

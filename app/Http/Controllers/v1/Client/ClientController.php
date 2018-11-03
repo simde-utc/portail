@@ -147,7 +147,7 @@ class ClientController extends Controller
     public function destroyCurrent(Request $request): JsonResponse
     {
         Token::where('client_id', $request->user()->token()->client_id)->where('user_id', $request->user()->id)
-			->where('revoked', false)->delete();
+        ->where('revoked', false)->delete();
 
         return response()->json(['message' => 'Tokens associés à l\'utilisateur supprimés avec succès'], 202);
     }

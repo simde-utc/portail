@@ -22,7 +22,8 @@ use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 class ClientController extends Controller
 {
     /**
-     * Affiche la liste des clients
+     * Affiche la liste des clients.
+     *
      * @param  Request $request
      * @return mixed
      */
@@ -39,7 +40,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Créer un nouveau client (nécessaire d'être un admin)
+     * Créer un nouveau client (nécessaire d'être un admin).
      *
      * @param  \Illuminate\Http\Request $request
      * @return Response
@@ -62,7 +63,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Actualise uniquement certains champs d'un client précis
+     * Actualise uniquement certains champs d'un client précis.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  string                   $clientId

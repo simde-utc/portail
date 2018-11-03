@@ -47,7 +47,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Liste les commentaires d'une ressource
+     * Liste les commentaires d'une ressource.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -68,7 +68,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Crée un commentaire pour une ressource
+     * Crée un commentaire pour une ressource.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -94,7 +94,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Montre un commentaire d'une ressource
+     * Montre un commentaire d'une ressource.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -107,7 +107,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Met à jour un commentaire d'une ressource
+     * Met à jour un commentaire d'une ressource.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -128,7 +128,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Supprime un commentaire d'une ressource
+     * Supprime un commentaire d'une ressource.
      *
      * @param CommentRequest $request
      * @return void

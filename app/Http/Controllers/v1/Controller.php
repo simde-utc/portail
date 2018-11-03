@@ -23,9 +23,9 @@ use Illuminate\Support\Collection;
 class Controller extends BaseController
 {
     /**
-     * Permet de savoir quoi afficher
-     * TODO: A déprécier pour la v1 officielle
-     * TODO: Ou a transformer en Trait fonctionnant avec getSelection
+     * Permet de savoir quoi afficher.
+     * TODO: A déprécier pour la v1 officielle.
+     * TODO: Ou a transformer en Trait fonctionnant avec getSelection.
      *
      * @param  Request $request
      * @param  array   $choices

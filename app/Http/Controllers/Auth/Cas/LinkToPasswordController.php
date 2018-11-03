@@ -21,7 +21,7 @@ class LinkToPasswordController extends Controller
     protected $redirectTo = '/';
 
     /**
-     * Définition des middlewares: utilisateur cas et on password
+     * Définition des middlewares: utilisateur cas et on password.
      *
      * @return void
      */
@@ -31,7 +31,8 @@ class LinkToPasswordController extends Controller
     }
 
     /**
-     * Renvoie la page de linkage
+     * Renvoie la page de linkage.
+     *
      * @param  Request $request
      * @return mixed
      */
@@ -41,7 +42,8 @@ class LinkToPasswordController extends Controller
     }
 
     /**
-     * Enregistre l'interconnexion des modes de connexion
+     * Enregistre l'interconnexion des modes de connexion.
+     *
      * @param  Request $request
      * @return mixed
      */

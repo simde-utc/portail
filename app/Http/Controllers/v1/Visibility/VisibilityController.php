@@ -39,7 +39,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Liste les visibilités
+     * Liste les visibilités.
      *
      * @return JsonResponse
      */
@@ -53,7 +53,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Crée des visibilités
+     * Crée des visibilités.
      *
      * @param VisibilityRequest $request
      * @return JsonResponse
@@ -70,7 +70,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Montre une visivilité
+     * Montre une visivilité.
      *
      * @param  string $id
      * @return JsonResponse
@@ -87,7 +87,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Met à jour une visibilité
+     * Met à jour une visibilité.
      *
      * @param VisibilityRequest $request
      * @param  string            $id
@@ -109,7 +109,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Supprime une visibilité
+     * Supprime une visibilité.
      *
      * @param  string $id
      * @return void

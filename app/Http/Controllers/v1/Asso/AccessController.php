@@ -30,7 +30,7 @@ class AccessController extends Controller
     use HasAssos;
 
     /**
-     * Nécessité de gérer les accès des associations
+     * Nécessité de gérer les accès des associations.
      */
     public function __construct()
     {
@@ -65,7 +65,8 @@ class AccessController extends Controller
     }
 
     /**
-     * [getAccess description]
+     * Récupération des accès.
+     *
      * @param  Request $request
      * @param  string  $access_id
      * @param  string  $user_id
@@ -95,7 +96,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Liste des accès.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -106,8 +107,7 @@ class AccessController extends Controller
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);
         $asso = $this->getAssoFromMember($request, $asso_id, \Auth::id(), $semester);
-        $access = $asso->access()
-        ->where('semester_id', $semester->id);
+        $access = $asso->access()->where('semester_id', $semester->id);
 
         if (\Auth::id() && !$asso->hasOnePermission('access', [ 'user_id' => \Auth::id() ])) {
             $access = $access->where(function ($query) {
@@ -124,7 +124,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Crée une demande d'accès.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -138,9 +138,9 @@ class AccessController extends Controller
         $asso = $this->getAssoFromMember($request, $asso_id, \Auth::id(), $semester);
 
         if ($asso->access()->where('semester_id', $semester->id)
-        ->whereNotNull('validated_at')
-        ->where('member_id', $user_id)
-        ->count() > 0) {
+            ->whereNotNull('validated_at')
+            ->where('member_id', $user_id)
+            ->count() > 0) {
             throw new PortailException("Une demande d\'accès a déjà été validée pour ce semestre");
         }
 
@@ -161,7 +161,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Montre une demande d'accès.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -180,7 +180,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Met à jour une demande d'accès.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -220,7 +220,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Supprime une demande d'accès.
      *
      * @param Request $request
      * @param string  $asso_id

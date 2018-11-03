@@ -24,7 +24,7 @@ class PermissionController extends Controller
     use HasPermissions, HasOwners;
 
     /**
-     * Nécessité de gérer les permissions
+     * Nécessité de gérer les permissions.
      */
     public function __construct()
     {

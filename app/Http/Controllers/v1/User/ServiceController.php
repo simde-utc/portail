@@ -28,7 +28,7 @@ class ServiceController extends Controller
     use HasServices;
 
     /**
-     * Nécessité de pouvoir gérer les services suivis
+     * Nécessité de pouvoir gérer les services suivis.
      */
     public function __construct()
     {

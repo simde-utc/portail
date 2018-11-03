@@ -27,8 +27,8 @@ class MemberController extends Controller
     use HasAssos;
 
     /**
-     * Nécessite de voir les associations et pouvoir gérer les membres
-     * L'utilisateur doit être du CAS ou contributeur BDE
+     * Nécessite de voir les associations et pouvoir gérer les membres.
+     * L'utilisateur doit être du CAS ou contributeur BDE.
      */
     public function __construct()
     {
@@ -71,7 +71,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Ajoute automatiquement des rôles et des permissions en fonction du membre
+     * Ajoute automatiquement des rôles et des permissions en fonction du membre.
      *
      * @param Asso $asso
      * @param User $user
@@ -112,7 +112,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Liste les membres de l'association
+     * Liste les membres de l'association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -125,24 +125,24 @@ class MemberController extends Controller
         $asso = $this->getAsso($request, $asso_id);
 
         $members = $asso->allMembers()
-        ->where('semester_id', $semester->id)
-        ->whereNotNull('role_id')
-        ->getSelection(true)
-        ->map(function ($member) {
-	            $member->pivot = [
-	                'role_id' => $member->role_id,
-	                'validated_by' => $member->validated_by,
-	                'semester_id' => $member->semester_id,
-	            ];
+            ->where('semester_id', $semester->id)
+            ->whereNotNull('role_id')
+            ->getSelection(true)
+            ->map(function ($member) {
+                $member->pivot = [
+                    'role_id' => $member->role_id,
+                    'validated_by' => $member->validated_by,
+                    'semester_id' => $member->semester_id,
+                ];
 
-	            return $member->hideData();
-        });
+                return $member->hideData();
+            });
 
         return response()->json($members, 200);
     }
 
     /**
-     * Ajoute un membre à l'association
+     * Ajoute un membre à l'association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -167,7 +167,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Montre un membre de l'association
+     * Montre un membre de l'association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -185,7 +185,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Modifie un membre de l'association
+     * Modifie un membre de l'association.
      *
      * @param Request $request
      * @param string  $asso_id

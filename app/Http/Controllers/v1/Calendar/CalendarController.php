@@ -30,9 +30,9 @@ class CalendarController extends Controller
 {
     use HasCalendars, HasCreatorsAndOwners;
 
-	/**
-	 * Nécessité de gérer les calendrier.
-	 */
+    /**
+     * Nécessité de gérer les calendrier.
+     */
     public function __construct()
     {
         $this->middleware(
@@ -63,8 +63,8 @@ class CalendarController extends Controller
     {
         $calendars = Calendar::getSelection()->filter(function ($calendar) use ($request) {
             return ($this->tokenCanSee($request, $calendar, 'get')
-				&& (!\Auth::id() || $this->isVisible($calendar, \Auth::id())))
-				|| $this->isCalendarFollowed($request, $calendar, \Auth::id());
+            && (!\Auth::id() || $this->isVisible($calendar, \Auth::id())))
+            || $this->isCalendarFollowed($request, $calendar, \Auth::id());
         })->values()->map(function ($calendar) {
             return $calendar->hideData();
         });

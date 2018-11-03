@@ -24,7 +24,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Permet de générer la liste des routes pour une version précise
+     * Permet de générer la liste des routes pour une version précise.
      * @param  string $version
      * @return array
      */

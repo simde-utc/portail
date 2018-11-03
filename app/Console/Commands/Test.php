@@ -33,7 +33,7 @@ class Test extends Command
      * @var array
      */
     protected $dirs = [
-        'app', 'bootstrap', 'config', 'database', 'resources/views', 'routes', 'tests',
+        'app', 'bootstrap', 'config', 'database', 'resources/lang', 'resources/views', 'routes', 'tests',
     ];
 
     /**
@@ -52,11 +52,9 @@ class Test extends Command
     public function handle()
     {
         $this->files = $this->argument('file');
-        $bar = $this->output->createProgressBar(5);
+        $bar = $this->output->createProgressBar(4);
 
         $this->info(' [PHP Syntax] Vérification de la syntaxe PHP');
-        $bar->advance();
-        $this->info(PHP_EOL);
 
         if ($this->runPHPSyntax()) {
             $this->output->error('Des erreurs de syntaxe ont été détectées');
@@ -64,9 +62,10 @@ class Test extends Command
             return 1;
         }
 
-        $this->info(' [PHP CS] Vérification du linting PHP');
+        $this->info(PHP_EOL);
         $bar->advance();
         $this->info(PHP_EOL);
+        $this->info(' [PHP CS] Vérification du linting PHP');
 
         if ($this->runPHPCS()) {
             $this->output->error('Des erreurs ont été rencontrées lors de la vérification du linting');
@@ -86,9 +85,10 @@ class Test extends Command
             }
         }
 
-        $this->info(' [PHP MD] Vérification des optimisations PHP');
+        $this->info(PHP_EOL);
         $bar->advance();
         $this->info(PHP_EOL);
+        $this->info(' [PHP MD] Vérification des optimisations PHP');
 
         if ($this->runPHPMD()) {
             $this->output->error('Des erreurs d\'optimisation ont été détectées');
@@ -96,9 +96,10 @@ class Test extends Command
             return 1;
         }
 
-        $this->info(' [PHP Unit] Vérification des tests PHP');
+        $this->info(PHP_EOL);
         $bar->advance();
         $this->info(PHP_EOL);
+        $this->info(' [PHP Unit] Vérification des tests PHP');
 
         if ($this->runPHPUnit()) {
             $this->output->error('Des erreurs ont été rencontrées lors de la game');
@@ -121,29 +122,50 @@ class Test extends Command
     private function runPHPSyntax()
     {
         $files = $this->files;
+        $failed = false;
 
         if (count($files) === 0) {
-            $command = "find {".implode($this->dirs, ',')."} -type f -name '*.php'";
+            $files = [];
 
-            $process = new Process($command);
+            $bar = $this->output->createProgressBar(count($this->dirs));
 
-            $process->run(function ($type, $line) use (&$files) {
-                $files = explode("\n", $line);
-            });
+            foreach ($this->dirs as $dir) {
+                $command = "find ".$dir." -iname '*.php' -exec php -l '{}' \; | grep '^No syntax errors' -v";
+
+                $process = new Process($command);
+
+                $process->run(function ($type, $line) use (&$failed) {
+                    if ($line !== '') {
+                        $this->output->write($line);
+                        $failed = true;
+                    }
+                });
+
+                if ($failed) {
+                    return 1;
+                }
+
+                $bar->advance();
+            }
         }
+        else {
+            $bar = $this->output->createProgressBar(count($files));
 
-        foreach ($files as $file) {
-            $process = new Process("php -l ".$file);
-            $lines = [];
+            foreach ($files as $file) {
+                $process = new Process("php -l ".$file);
+                $lines = [];
 
-            $process->run(function ($type, $line) use (&$lines) {
-                $lines[] = $line;
-            });
+                $process->run(function ($type, $line) use (&$lines) {
+                    $lines[] = $line;
+                });
 
-            if ($process->getExitCode()) {
-                $this->output->write($lines);
+                if ($process->getExitCode()) {
+                    $this->output->write($lines);
 
-                return 1;
+                    return 1;
+                }
+
+                $bar->advance();
             }
         }
 

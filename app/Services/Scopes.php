@@ -570,6 +570,10 @@ class Scopes {
 		return $clientFromPassport ? Client::find($clientFromPassport->id) : null;
 	}
 
+	public function isOauthRequest(Request $request) {
+		return (bool) $this->getToken($request);
+	}
+
 	/**
 	 * Retourne les Middleware à utiliser pour accéder à une route en matchant le scope ou les scopes
 	 * @param  string/array $scopes

@@ -2,7 +2,7 @@
 /**
  * Gère les articles.
  *
- * TODO: Add abort
+ * TODO: Add abort.
  *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -35,43 +35,44 @@ class ArticleController extends Controller
     use HasArticles, HasImages;
 
     /**
-     * Nécessité de gérer les articles
-     * Lecture publique
+     * Nécessité de gérer les articles.
+     * Lecture publique.
      */
     public function __construct()
     {
         $this->middleware(
 	        \Scopes::allowPublic()->matchOneOfDeepestChildren(
-        ['user-get-articles-assos', 'user-get-articles-groups'],
-        ['client-get-articles-assos', 'client-get-articles-groups']
-        ),
+                ['user-get-articles-assos', 'user-get-articles-groups'],
+                ['client-get-articles-assos', 'client-get-articles-groups']
+            ),
 	        ['only' => ['index', 'show']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren(
-        ['user-create-articles-assos', 'user-create-articles-groups'],
-        ['client-create-articles-assos', 'client-create-articles-groups']
-        ),
+                ['user-create-articles-assos', 'user-create-articles-groups'],
+                ['client-create-articles-assos', 'client-create-articles-groups']
+            ),
 	        ['only' => ['store']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren(
-        ['user-edit-articles-assos', 'user-edit-articles-groups'],
-        ['client-edit-articles-assos', 'client-edit-articles-groups']
-        ),
+                ['user-edit-articles-assos', 'user-edit-articles-groups'],
+                ['client-edit-articles-assos', 'client-edit-articles-groups']
+            ),
 	        ['only' => ['update']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren(
-        ['user-manage-articles-assos', 'user-manage-articles-groups'],
-        ['client-manage-articles-assos', 'client-manage-articles-groups']
-        ),
+                ['user-manage-articles-assos', 'user-manage-articles-groups'],
+                ['client-manage-articles-assos', 'client-manage-articles-groups']
+            ),
 	        ['only' => ['destroy']]
         );
     }
 
     /**
-     * Récupère le créateur ou le owner
+     * Récupère le créateur ou le owner.
+     *
      * @param  Request $request
      * @param  string  $verb
      * @param  string  $type
@@ -121,14 +122,14 @@ class ArticleController extends Controller
     }
 
     /**
-     * Liste les articles
+     * Liste les articles.
      *
      * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
-        if (\Scopes::getToken($request)) {
+        if (\Scopes::isOauthRequest($request)) {
             $articles = Article::getSelection()->filter(function ($article) use ($request) {
                 return $this->tokenCanSee($request, $article, 'get')
                 && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
@@ -145,7 +146,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Créer un article
+     * Créer un article.
      *
      * @param Request $request
      * @return JsonResponse
@@ -221,7 +222,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Montre un article
+     * Montre un article.
      *
      * @param Request $request
      * @param string  $article_id
@@ -235,7 +236,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Met à jour un article
+     * Met à jour un article.
      *
      * @param Request $request
      * @param string  $article_id
@@ -289,7 +290,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Supprime un article
+     * Supprime un article.
      *
      * @param Request $request
      * @param string  $article_id
