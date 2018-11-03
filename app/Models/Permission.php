@@ -100,7 +100,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Scope pour obtenir les permissions lié à un owner.
+     * Scope pour obtenir les permissions liés à un owner.
      *
      * @param  Builder $query
      * @param  string  $owner_type
@@ -114,7 +114,7 @@ class Permission extends Model implements OwnableContract
         if ($owner_id) {
             $query->where(function ($query) use ($owner_id) {
                 return $query->whereNull('owned_by_id')
-                ->orWhere('owned_by_id', $owner_id);
+                    ->orWhere('owned_by_id', $owner_id);
             });
         }
 
@@ -138,7 +138,7 @@ class Permission extends Model implements OwnableContract
 	        ->where('owned_by_type', get_class($owner))
 	        ->where(function ($query) use ($owner) {
 	            $query->whereNull('owned_by_id')
-	            ->orWhere('owned_by_id', $owner->id);
+	               ->orWhere('owned_by_id', $owner->id);
 	        });
 
         return $permissions->first();
@@ -159,11 +159,11 @@ class Permission extends Model implements OwnableContract
         }
 
         $permissions = static::where('type', $type)
-        ->where('owned_by_type', get_class($owner))
-        ->where(function ($query) use ($owner) {
-            $query->whereNull('owned_by_id')
-            ->orWhere('owned_by_id', $owner->id);
-        });
+            ->where('owned_by_type', get_class($owner))
+            ->where(function ($query) use ($owner) {
+                $query->whereNull('owned_by_id')
+                    ->orWhere('owned_by_id', $owner->id);
+            });
 
         return $permissions->first();
     }

@@ -89,7 +89,7 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
      * Indique si le commentaire est gérable.
      * Seule la personne qui possède le calendrier peut le modifier.
      *
-     * @param  string $user_id
+     * @param  CanComment $model
      * @return boolean
      */
     public function isCommentManageableBy(CanComment $model): bool

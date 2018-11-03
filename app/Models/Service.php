@@ -1,4 +1,12 @@
 <?php
+/**
+ * Modèle correspondant aux services.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Models;
 
@@ -6,34 +14,46 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Service extends Model
 {
-	use SoftDeletes;
+    use SoftDeletes;
 
-	protected $casts = [
-		'deleted_at' => 'datetime',
-	];
+    protected $casts = [
+        'deleted_at' => 'datetime',
+    ];
 
-	protected $fillable = [
-		'name', 'shortname', 'login', 'image', 'description', 'url', 'visibility_id'
-	];
+    protected $fillable = [
+        'name', 'shortname', 'login', 'image', 'description', 'url', 'visibility_id'
+    ];
 
-	protected $with = [
-		'visibility',
-	];
+    protected $with = [
+        'visibility',
+    ];
 
-	protected $must = [
-		'name', 'shortname', 'login', 'image', 'description', 'url'
-	];
+    protected $must = [
+        'name', 'shortname', 'login', 'image', 'description', 'url'
+    ];
 
-	protected $selection = [
-		'order' => 'oldest',
-		'filter' => [],
-	];
+    protected $selection = [
+        'order' => 'oldest',
+        'filter' => [],
+    ];
 
-	public function visibility() {
-		return $this->belongsTo(Visibility::class);
-	}
+    /**
+     * Relation avec la visibilité.
+     *
+     * @return mixed
+     */
+    public function visibility()
+    {
+        return $this->belongsTo(Visibility::class);
+    }
 
-	public function followers() {
-		return $this->hasMany(User::class, 'services_followers');
-	}
+    /**
+     * Relation avec les suiveurs.
+     *
+     * @return mixed
+     */
+    public function followers()
+    {
+        return $this->hasMany(User::class, 'services_followers');
+    }
 }

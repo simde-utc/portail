@@ -17,79 +17,86 @@ use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 
 class AssoAccess extends Model
 {
-	protected $table = 'assos_access';
+    protected $table = 'assos_access';
 
-	protected $fillable = [
-		'asso_id', 'member_id', 'confirmed_by_id', 'access_id', 'semester_id', 'validated_by_id', 'validated_at', 'description', 'comment',
-	];
+    protected $fillable = [
+        'asso_id', 'member_id', 'confirmed_by_id', 'access_id', 'semester_id', 'validated_by_id', 'validated_at',
+        'description', 'comment',
+    ];
 
-	protected $casts = [
-		'validated_at' => 'timestamp',
-	];
+    protected $casts = [
+        'validated_at' => 'timestamp',
+    ];
 
-	protected $with = [
-		'asso', 'member', 'confirmed_by', 'validated_by', 'access', 'semester',
-	];
+    protected $with = [
+        'asso', 'member', 'confirmed_by', 'validated_by', 'access', 'semester',
+    ];
 
-	protected $hidden = [
-		'asso_id', 'member_id', 'confirmed_by_id', 'validated_by_id', 'access_id', 'semester_id',
-	];
+    protected $hidden = [
+        'asso_id', 'member_id', 'confirmed_by_id', 'validated_by_id', 'access_id', 'semester_id',
+    ];
 
-	protected $must = [
-		'asso', 'member', 'confirmed_by', 'access', 'semester', 'validated',
-	];
+    protected $must = [
+        'asso', 'member', 'confirmed_by', 'access', 'semester', 'validated',
+    ];
 
-	/**
-	 * Relation avec l'association.
-	 *
-	 * @return mixed
-	 */
-	public function asso() {
-		return $this->belongsTo(Asso::class);
-	}
+    /**
+     * Relation avec l'association.
+     *
+     * @return mixed
+     */
+    public function asso()
+    {
+        return $this->belongsTo(Asso::class);
+    }
 
-	/**
-	 * Relation avec le membre.
-	 *
-	 * @return mixed
-	 */
-	public function member() {
-		return $this->belongsTo(User::class);
-	}
+    /**
+     * Relation avec le membre.
+     *
+     * @return mixed
+     */
+    public function member()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-	/**
-	 * Relation avec l'utilisateur ayant confirmé.
-	 *
-	 * @return mixed
-	 */
-	public function confirmed_by() {
-		return $this->belongsTo(User::class);
-	}
+    /**
+     * Relation avec l'utilisateur ayant confirmé.
+     *
+     * @return mixed
+     */
+    public function confirmed_by()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-	/**
-	 * Relation avec l'utilisateur ayant validé.
-	 *
-	 * @return mixed
-	 */
-	public function validated_by() {
-		return $this->belongsTo(User::class);
-	}
+    /**
+     * Relation avec l'utilisateur ayant validé.
+     *
+     * @return mixed
+     */
+    public function validated_by()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-	/**
-	 * Relation avec l'accès.
-	 *
-	 * @return mixed
-	 */
-	public function access() {
-		return $this->belongsTo(Access::class);
-	}
+    /**
+     * Relation avec l'accès.
+     *
+     * @return mixed
+     */
+    public function access()
+    {
+        return $this->belongsTo(Access::class);
+    }
 
-	/**
-	 * Relation avec le semestre.
-	 *
-	 * @return mixed
-	 */
-	public function semester() {
-		return $this->belongsTo(Semester::class);
-	}
+    /**
+     * Relation avec le semestre.
+     *
+     * @return mixed
+     */
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class);
+    }
 }
