@@ -1,4 +1,16 @@
 <?php
+/**
+ * Modèle correspondant aux événements.
+ *
+ * @author Thomas Meurou <thomas.meurou@yahoo.fr>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Josselin Pennors <josselin.pennors@hotmail.fr>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Models;
 
@@ -10,7 +22,8 @@ class Event extends Model implements OwnableContract
     use HasMorphOwner;
 
     protected $fillable = [
-        'name', 'location_id', 'visibility_id', 'begin_at', 'end_at', 'full_day', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
+        'name', 'location_id', 'visibility_id', 'begin_at', 'end_at', 'full_day', 'created_by_id', 'created_by_type',
+        'owned_by_id', 'owned_by_type',
     ];
 
     protected $casts = [
@@ -25,9 +38,9 @@ class Event extends Model implements OwnableContract
         'created_by', 'owned_by', 'visibility', 'location'
     ];
 
-  	protected $withModelName = [
-  		'created_by', 'owned_by',
-  	];
+    protected $withModelName = [
+        'created_by', 'owned_by',
+    ];
 
     protected $must = [
         'begin_at', 'end_at', 'full_day', 'location'
@@ -38,43 +51,67 @@ class Event extends Model implements OwnableContract
         'order' => [
             'default' => 'latest',
             'columns' => [
-                'date' => 'begin_at'
+                'date' => 'begin_at',
             ],
         ],
         'month' => [
             'columns' => [
                 'begin' => 'begin_at',
                 'end' => 'begin_at',
-            ]
+            ],
         ],
         'week' => [
             'columns' => [
                 'begin' => 'begin_at',
                 'end' => 'begin_at',
-            ]
+            ],
         ],
         'day' => [
             'columns' => [
                 'begin' => 'begin_at',
                 'end' => 'begin_at',
-            ]
+            ],
         ],
-		'filter' => [],
+        'filter' => [],
     ];
 
-    public function created_by() {
+    /**
+     * Relation avec la personne créatrive.
+     *
+     * @return mixed
+     */
+    public function created_by()
+    {
         return $this->morphTo();
     }
 
-    public function owned_by() {
+    /**
+     * Relation avec la personne possédant l'événement.
+     *
+     * @return mixed
+     */
+    public function owned_by()
+    {
         return $this->morphTo();
     }
 
-	public function visibility() {
-    	return $this->belongsTo(Visibility::class);
+    /**
+     * Relation avec la visibilité.
+     *
+     * @return mixed
+     */
+    public function visibility()
+    {
+        return $this->belongsTo(Visibility::class);
     }
 
-    public function getParticipantsAttribute() {
+    /**
+     * Crée dynamiquement l'attribut participants
+     *
+     * @return array
+     */
+    public function getParticipantsAttribute()
+    {
         return $this->calendars->map(function ($calendar) {
             return $calendar->owned_by;
         })->filter(function ($owner) {
@@ -82,35 +119,84 @@ class Event extends Model implements OwnableContract
         });
     }
 
-    public function calendars() {
+    /**
+     * Relation avec les calendriers.
+     *
+     * @return mixed
+     */
+    public function calendars()
+    {
         return $this->belongsToMany(Calendar::class, 'calendars_events')->withTimestamps();
     }
 
-    public function location() {
+    /**
+     * Relation avec le lieu.
+     *
+     * @return mixed
+     */
+    public function location()
+    {
         return $this->belongsTo(Location::class);
     }
 
-    public function details() {
+    /**
+     * Relation avec les détails.
+     *
+     * @return mixed
+     */
+    public function details()
+    {
         return $this->hasMany(EventDetail::class);
     }
 
-	public function user() {
-		return $this->morphTo(User::class, 'owned_by');
-	}
+    /**
+     * Relation avec l'utilisateur.
+     *
+     * @return mixed
+     */
+    public function user()
+    {
+        return $this->morphTo(User::class, 'owned_by');
+    }
 
-	public function asso() {
-		return $this->morphTo(Asso::class, 'owned_by');
-	}
+    /**
+     * Relation avec l'association.
+     *
+     * @return mixed
+     */
+    public function asso()
+    {
+        return $this->morphTo(Asso::class, 'owned_by');
+    }
 
-	public function client() {
-		return $this->morphTo(Client::class, 'owned_by');
-	}
+    /**
+     * Relation avec le client oauth.
+     *
+     * @return mixed
+     */
+    public function client()
+    {
+        return $this->morphTo(Client::class, 'owned_by');
+    }
 
-	public function group() {
-		return $this->morphTo(Group::class, 'owned_by');
-	}
+    /**
+     * Relation avec le groupe.
+     *
+     * @return mixed
+     */
+    public function group()
+    {
+        return $this->morphTo(Group::class, 'owned_by');
+    }
 
-    public function hideSubData(bool $addSubModelName = false) {
+    /**
+     * Surcharge de la méthode pour cacher les sous-données.
+     *
+     * @param boolean $addSubModelName
+     * @return mixed
+     */
+    public function hideSubData(bool $addSubModelName=false)
+    {
         $this->details = $this->details()->allToArray();
 
         return parent::hideSubData($addSubModelName);
