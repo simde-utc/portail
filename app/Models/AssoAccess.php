@@ -1,4 +1,12 @@
 <?php
+/**
+ * Modèle correspondant aux accès des associations.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Models;
 
@@ -31,26 +39,56 @@ class AssoAccess extends Model
 		'asso', 'member', 'confirmed_by', 'access', 'semester', 'validated',
 	];
 
+	/**
+	 * Relation avec l'association.
+	 *
+	 * @return mixed
+	 */
 	public function asso() {
 		return $this->belongsTo(Asso::class);
 	}
 
+	/**
+	 * Relation avec le membre.
+	 *
+	 * @return mixed
+	 */
 	public function member() {
 		return $this->belongsTo(User::class);
 	}
 
+	/**
+	 * Relation avec l'utilisateur ayant confirmé.
+	 *
+	 * @return mixed
+	 */
 	public function confirmed_by() {
 		return $this->belongsTo(User::class);
 	}
 
+	/**
+	 * Relation avec l'utilisateur ayant validé.
+	 *
+	 * @return mixed
+	 */
 	public function validated_by() {
 		return $this->belongsTo(User::class);
 	}
 
+	/**
+	 * Relation avec l'accès.
+	 *
+	 * @return mixed
+	 */
 	public function access() {
 		return $this->belongsTo(Access::class);
 	}
 
+	/**
+	 * Relation avec le semestre.
+	 *
+	 * @return mixed
+	 */
 	public function semester() {
 		return $this->belongsTo(Semester::class);
 	}
