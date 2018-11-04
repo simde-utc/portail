@@ -1,4 +1,14 @@
 <?php
+/**
+ * Service de l'application.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Providers;
 
@@ -8,30 +18,37 @@ use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
-	/**
-	 * Bootstrap any application services.
-	 *
-	 * @return void
-	 */
-	public function boot() {
-		Schema::defaultStringLength(191);       // Pour que 'email' puisse être une clé
+    /**
+     * Lancé à chaque démarrage de l'application.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        // Pour que 'email' puisse être une clé.
+        Schema::defaultStringLength(191);
 
-		$this->passport();
-	}
+        $this->passport();
+    }
 
-	public function passport() {
-		Passport::withoutCookieSerialization();
-	}
+    /**
+     * Contourne un correctif pour laisser Passport fonctionner.
+     *
+     * @return void
+     */
+    public function passport()
+    {
+        Passport::withoutCookieSerialization();
+    }
 
-	/**
-	 * Register any application services.
-	 *
-	 * @return void
-	 */
-	public function register() {
-		// ServiceProviders de développement
-		if (!$this->app->environment('production')) {
-		}
-
-	}
+    /**
+     * Enregistre tous les services de dévelopmment de l'application.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        if (!$this->app->environment('production')) {
+        }
+    }
 }
