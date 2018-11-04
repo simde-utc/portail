@@ -1,217 +1,268 @@
 <?php
+/**
+ * Service Ginger.
+ * Permet de récupérer des informations concernant un membre de l'UTC
+ *
+ * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Services;
 
-/**
- * Cette classe permet de récupérer des informations concernant un membre de l'UTC
- */
-class Ginger {
-	protected const URL = 'https://assos.utc.fr/ginger/v1/';
+class Ginger
+{
+    protected const URL = 'https://assos.utc.fr/ginger/v1/';
 
-	protected $user;
-	protected $responseCode;
-	protected $key;
+    protected $user;
+    protected $responseCode;
+    protected $key;
 
-	/**
-	 * Crée la classe avec la clé du portail par défaut
-	 */
-	public function __construct() {
-		$this->key = config('app.ginger_key');
-	}
+    /**
+     * Crée la classe avec la clé du portail par défaut.
+     */
+    public function __construct()
+    {
+        $this->key = config('app.ginger_key');
+    }
 
-	/**
-	 * Change la clé utilisée
-	 * @param string $key Clé Ginger donnée
-	 */
-	public function setKey($key) {
-		$this->key = $key;
+    /**
+     * Change la clé utilisée.
+     *
+     * @param string $key
+     * @return Ginger
+     */
+    public function setKey(string $key)
+    {
+        $this->key = $key;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Permet de récupérer auprès de Ginger un login précis
-	 * @param  string $login Login UTC
-	 * @return Ginger        Objet Ginger pour singleton
-	 */
-	public function user($login) {
-		$response = self::call(
-			'GET',
-			$login
-		);
+    /**
+     * Permet de récupérer auprès de Ginger un login précis.
+     *
+     * @param  string $login
+     * @return Ginger
+     */
+    public function user(string $login)
+    {
+        $response = self::call(
+        'GET',
+        $login
+        );
 
-		$this->responseCode = $response === null ? null : $response->status;
-		$this->user = $this->responseCode === 200 ? $response->content : null;
+        $this->responseCode = $response === null ? null : $response->status;
+        $this->user = $this->responseCode === 200 ? $response->content : null;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
- 	 * Permet de récupérer directement auprès de Ginger via un email précis
- 	 * @param  string $email
-	 * @return Ginger        Objet Ginger pour singleton
-	 */
-	public function userByEmail($email) {
-		$response = self::call(
-			'GET',
-			'mail/'.$email
-		);
+    /**
+     * Permet de récupérer directement auprès de Ginger via un email précis.
+     *
+     * @param  string $email
+     * @return Ginger
+     */
+    public function userByEmail(string $email)
+    {
+        $response = self::call(
+        'GET',
+        'mail/'.$email
+        );
 
-		$this->responseCode = $response === null ? null : $response->status;
-		$this->user = $this->responseCode === 200 ? $response->content : null;
+        $this->responseCode = $response === null ? null : $response->status;
+        $this->user = $this->responseCode === 200 ? $response->content : null;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Permet de récupérer directement auprès de Ginger via un login précis
-	 * @param  string $login Login UTC
-	 * @return array        Retourne l'ensemble des données de l'utilisateur
-	 */
-	public function getUser($login) {
-	 	return self::user($login)->get();
-	}
+    /**
+     * Permet de récupérer directement auprès de Ginger via un login précis.
+     *
+     * @param  string $login
+     * @return array        Retourne l'ensemble des données de l'utilisateur.
+     */
+    public function getUser(string $login)
+    {
+        return self::user($login)->get();
+    }
 
-	/**
-	 * Permet de récupérer directement auprès de Ginger via un email précis
-	 * @param  string $email
-	 * @return array        Retourne l'ensemble des données de l'utilisateur
-	 */
-	public function getUserByEmail($email) {
-	 	return self::userByEmail($email)->get();
-	}
+    /**
+     * Permet de récupérer directement auprès de Ginger via un email précis.
+     *
+     * @param  string $email
+     * @return array        Retourne l'ensemble des données de l'utilisateur.
+     */
+    public function getUserByEmail(string $email)
+    {
+        return self::userByEmail($email)->get();
+    }
 
-	/**
-	 * Indique si l'utilisateur existe ou non
-	 * @param  string $login Login UTC
-	 * @return boolean        Existance ou non
-	 */
-	public function userExists($login) {
-		$this->user($login);
+    /**
+     * Indique si l'utilisateur existe ou non.
+     *
+     * @param  string $login
+     * @return boolean
+     */
+    public function userExists(string $login)
+    {
+        $this->user($login);
 
-		return $this->get() !== null;
-	}
+        return $this->get() !== null;
+    }
 
-	/**
-	 * Identique à la fonction précédente mais à être utilisé après recherche d'un user
-	 * @return boolean Existance ou non
-	 */
-	public function exists() {
-		return $this->user !== null;
-	}
+    /**
+     * Identique à la fonction précédente mais à être utilisé après recherche d'un user.
+     *
+     * @return boolean
+     */
+    public function exists()
+    {
+        return $this->user !== null;
+    }
 
-	/**
-	 * Permet de récupérer auprès de Ginger le code de réponse pour un login précis
-	 * @param  string $login Login UTC
-	 * @return int        Retourne la code de réponse
-	 */
-	public function responseCode($login) {
-		$this->user($login);
+    /**
+     * Permet de récupérer auprès de Ginger le code de réponse pour un login précis.
+     *
+     * @param  string $login
+     * @return integer
+     */
+    public function responseCode(string $login)
+    {
+        $this->user($login);
 
-		return $this->responseCode;
-	}
+        return $this->responseCode;
+    }
 
-	/**
-	 * Permet de récupérer auprès de Ginger le code de réponse pour un login précis
-	 * @return int        Retourne la code de réponse
-	 */
-	public function getResponseCode() {
-		return $this->responseCode;
-	}
+    /**
+     * Permet de récupérer auprès de Ginger le code de réponse pour un login précis.
+     *
+     * @return integer
+     */
+    public function getResponseCode()
+    {
+        return $this->responseCode;
+    }
 
-	/**
-	 * Renvoie l'utlisateur si existance de celui-ci
-	 * @return array
-	 */
-	public function get() {
-		return $this->user;
-	}
+    /**
+     * Renvoie l'utlisateur si existance de celui-ci.
+     *
+     * @return array
+     */
+    public function get()
+    {
+        return $this->user;
+    }
 
-	/**
-	 * Renvoie le login de l'utilisateur si existant
-	 * @return string Ressource demandée
-	 */
-	public function getLogin() {
-		return ($this->user === null ? null : $this->user->login);
-	}
+    /**
+     * Renvoie le login de l'utilisateur si existant.
+     *
+     * @return string
+     */
+    public function getLogin()
+    {
+        return ($this->user === null ? null : $this->user->login);
+    }
 
-	/**
-	 * Renvoie le nom de l'utilisateur si existant
-	 * @return string Ressource demandée
-	 */
-	public function getLastname() {
-		return ($this->user === null ? null : $this->user->nom);
-	}
+    /**
+     * Renvoie le nom de l'utilisateur si existant.
+     *
+     * @return string
+     */
+    public function getLastname()
+    {
+        return ($this->user === null ? null : $this->user->nom);
+    }
 
-	/**
-	 * Renvoie le prenom de l'utilisateur si existant
-	 * @return string Ressource demandée
-	 */
-	public function getFirstname() {
-		return ($this->user === null ? null : $this->user->prenom);
-	}
+    /**
+     * Renvoie le prenom de l'utilisateur si existant.
+     *
+     * @return string
+     */
+    public function getFirstname()
+    {
+        return ($this->user === null ? null : $this->user->prenom);
+    }
 
-	/**
-	 * Renvoie le mail de l'utilisateur si existant
-	 * @return string Ressource demandée
-	 */
-	public function getEmail() {
-		return ($this->user === null ? null : $this->user->mail);
-	}
+    /**
+     * Renvoie le mail de l'utilisateur si existant.
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return ($this->user === null ? null : $this->user->mail);
+    }
 
-	/**
-	 * Renvoie le type de l'utilisateur si existant
-	 * @return string Ressource demandée
-	 */
-	public function getType() {
-		return ($this->user === null ? null : $this->user->type);
-	}
+    /**
+     * Renvoie le type de l'utilisateur si existant.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return ($this->user === null ? null : $this->user->type);
+    }
 
-	/**
-	 * Renvoie le badge de l'utilisateur si existant
-	 * @return string Ressource demandée
-	 */
-	public function getBadge() {
-		return ($this->user === null ? null : $this->user->badge_uid);
-	}
+    /**
+     * Renvoie le badge de l'utilisateur si existant.
+     *
+     * @return string
+     */
+    public function getBadge()
+    {
+        return ($this->user === null ? null : $this->user->badge_uid);
+    }
 
-	/**
-	 * Indique si l'utilisateur est adulte si existant
-	 * @return boolean Ressource demandée
-	 */
-	public function isAdult() {
-		return ($this->user === null ? null : $this->user->is_adulte);
-	}
+    /**
+     * Indique si l'utilisateur est adulte si existant.
+     *
+     * @return boolean
+     */
+    public function isAdult()
+    {
+        return ($this->user === null ? null : $this->user->is_adulte);
+    }
 
-	/**
-	 * Indique si l'utilisateur est contisant si existant
-	 * @return boolean Ressource demandée
-	 */
-	public function isContributor() {
-		return ($this->user === null ? null : $this->user->is_cotisant);
-	}
+    /**
+     * Indique si l'utilisateur est contisant si existant.
+     *
+     * @return boolean
+     */
+    public function isContributor()
+    {
+        return ($this->user === null ? null : $this->user->is_cotisant);
+    }
 
-	/**
-	 * Exécute la requête via Curl
-	 * @param  string $method Verbe à utiliser pour la requête
-	 * @param  string $route  Route vers laquelle pointer
-	 * @param  array  $params Paramètres à envoyer
-	 * @return object         Contient la réponse mais aussi le code HTTP et quelques headers
-	 */
-	protected function call($method, $route, $params = []) {
-		$curl = \Curl::to(self::URL.$route.'?key='.$this->key)
-			->withData($params)
-			->asJson()
-			->returnResponseObject();
+    /**
+     * Exécute la requête via Curl.
+     *
+     * @param  string $method
+     * @param  string $route
+     * @param  array  $params
+     * @return object         Contient la réponse mais aussi le code HTTP et quelques headers
+     */
+    protected function call(string $method, string $route, array $params=[])
+    {
+        $curl = \Curl::to(self::URL.$route.'?key='.$this->key)
+	        ->withData($params)
+	        ->asJson()
+	        ->returnResponseObject();
 
-		if (strpos($_SERVER['HTTP_HOST'], 'utc.fr'))
-			$curl = $curl->withProxy('proxyweb.utc.fr', 3128);
+        if (strpos(request()->getHttpHost(), 'utc.fr')) {
+            $curl = $curl->withProxy('proxyweb.utc.fr', 3128);
+        }
 
-		if ($method === 'POST')
-			$response = $curl->post();
-		else
-			$response = $curl->get();
+        if ($method === 'POST') {
+            $response = $curl->post();
+        } else {
+            $response = $curl->get();
+        }
 
-		return $response;
-	}
+        return $response;
+    }
 }

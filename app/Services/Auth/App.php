@@ -1,4 +1,12 @@
 <?php
+/**
+ * Service authentification application.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Services\Auth;
 
@@ -10,21 +18,30 @@ use Illuminate\Support\Facades\Hash;
 
 class App extends BaseAuth
 {
-	protected $name = 'app';
+    protected $name = 'app';
 
-	public function __construct() {
-		$this->config = config("auth.services.".$this->name);
-	}
+    /**
+     * Récupération de la configuration.
+     */
+    public function __construct()
+    {
+        $this->config = config("auth.services.".$this->name);
+    }
 
-	/**
-	 * Crée la connexion auth
-	 */
-	public function addAuth($user_id, array $info) {
-		return AuthApp::create([
-			'user_id' => $user_id,
-			'app_id' => $info['app_id'],
-			'password' => Hash::make($info['password']),
-			'key' => str_random(64)
-		]);
-	}
+    /**
+     * Crée la connexion auth.
+     *
+     * @param string $user_id
+     * @param array  $info
+     * @return AuthApp
+     */
+    public function addAuth(string $user_id, array $info)
+    {
+        return AuthApp::create([
+            'user_id' => $user_id,
+            'app_id' => $info['app_id'],
+            'password' => Hash::make($info['password']),
+            'key' => str_random(64)
+        ]);
+    }
 }
