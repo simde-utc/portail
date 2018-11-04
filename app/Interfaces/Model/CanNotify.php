@@ -1,7 +1,15 @@
 <?php
+/**
+ * Indique que le modèle peut créer des notifications.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Interfaces\Model;
 
-Interface CanNotify {
-    // Permet d'indiquer que la ressources pour créer une notification
+interface CanNotify
+{
 }
