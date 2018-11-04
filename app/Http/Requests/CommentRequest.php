@@ -1,4 +1,13 @@
 <?php
+/**
+ * Gestion de la requête pour les commentaires.
+ *
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Requests;
 
@@ -10,9 +19,10 @@ use App\Interfaces\Model\CanHaveComments;
 class CommentRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Détermine si l'utilisateur à le droit de faire cette requête.
+     * Ici on détermine en particulier la ressource concernée par notre commentaire.
      *
-     * @return bool
+     * @return boolean
      */
     public function authorize()
     {
@@ -24,27 +34,27 @@ class CommentRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Défini les règles de validation des champs.
      *
      * @return array
      */
     public function rules()
     {
         return [
-            'body'      => Validation::make($this)
-                        ->type('string')
-                        ->length(validation_between('comment'))
-                        ->post('required')
-                        ->get(),
+            'body' => Validation::make($this)
+                ->type('string')
+                ->length(validation_between('comment'))
+                ->post('required')
+                ->get(),
             'parent_id' => Validation::make($this)
-                        ->type('uuid')
-                        ->exists('comments', 'id')
-                        ->get(),
+                ->type('uuid')
+                ->exists('comments', 'id')
+                ->get(),
             'visibility_id' => Validation::make($this)
-                        ->type('uuid')
-                        ->exists('visibilities', 'id')
-                        ->post('required')
-                        ->get(),
+                ->type('uuid')
+                ->exists('visibilities', 'id')
+                ->post('required')
+                ->get(),
         ];
     }
 }

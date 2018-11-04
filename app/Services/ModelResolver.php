@@ -46,6 +46,10 @@ class ModelResolver {
 		return $this->getModel($singular, $instance);
 	}
 
+	public function findModelFromCategory($name, $id, $instance = null) {
+		return $this->getModelFromCategory($name, $instance)->find($id);
+	}
+
 	public function getName($modelName) {
 		return $this->toSnakeCase((new \ReflectionClass($modelName))->getShortName(), '_');
 	}
