@@ -25,36 +25,36 @@ return [
     'verbs' => [
         'manage' => [
             'description' => 'Gérer les groupes des utilisateursr',
-			'scopes' => [
-				'enabled' => [
-					'description' => 'Gérer les groupes actifs des utilisateursr',
-				],
-				'disabled' => [
-					'description' => 'Gérer les groupes inactifs des utilisateursr',
-				],
-			]
+            'scopes' => [
+                'enabled' => [
+                    'description' => 'Gérer les groupes actifs des utilisateursr',
+                ],
+                'disabled' => [
+                    'description' => 'Gérer les groupes inactifs des utilisateursr',
+                ],
+            ]
         ],
-	    'get' => [
-	        'description' => 'Récupérer les groupes des utilisateursr',
-			'scopes' => [
-				'enabled' => [
-					'description' => 'Récupérer les groupes actifs des utilisateursr',
-				],
-				'disabled' => [
-					'description' => 'Récupérer les groupes inactifs des utilisateursr',
-				],
-			]
-	    ],
-	    'set' => [
-	        'description' => 'Modifier les groupes des utilisateursr',
-			'scopes' => [
-				'enabled' => [
-					'description' => 'Modifier les groupes actifs des utilisateursr',
-				],
-				'disabled' => [
-					'description' => 'Modifier les groupes inactifs des utilisateursr',
-				],
-			]
-	    ],
+        'get' => [
+            'description' => 'Récupérer les groupes des utilisateursr',
+            'scopes' => [
+                'enabled' => [
+                    'description' => 'Récupérer les groupes actifs des utilisateursr',
+                ],
+                'disabled' => [
+                    'description' => 'Récupérer les groupes inactifs des utilisateursr',
+                ],
+            ]
+        ],
+        'set' => [
+            'description' => 'Modifier les groupes des utilisateursr',
+            'scopes' => [
+                'enabled' => [
+                    'description' => 'Modifier les groupes actifs des utilisateursr',
+                ],
+                'disabled' => [
+                    'description' => 'Modifier les groupes inactifs des utilisateursr',
+                ],
+            ]
+        ],
     ]
 ];

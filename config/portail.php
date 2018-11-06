@@ -1,94 +1,96 @@
 <?php
 
 $roleToPermission = [
-	'president' => [
-		'access',
-	],
-	'resp logistique' => [
-		'access',
-	],
+    'president' => [
+        'access',
+    ],
+    'resp logistique' => [
+        'access',
+    ],
 ];
 
 return [
 	// Gestion des versions du Portail
-	'versions' => [
-		'v1'
-	],
-	// Version actuelle du serveur (en dessous: déprécié, au dessus: en beta)
-	'version' => 'v0',
+    'versions' => [
+        'v1'
+    ],
+    // Version actuelle du serveur (en dessous: déprécié, au dessus: en beta)
+    'version' => 'v0',
 
-	// Les headers spécifiques au Portail (commençant par X-Portail)
-	'headers' => [
-		'warn'			=> 'X-Portail-Warn',
-		'version'		=> 'X-Portail-Version',
-	],
+    // Les headers spécifiques au Portail (commençant par X-Portail)
+    'headers' => [
+        'warn'			=> 'X-Portail-Warn',
+        'version'		=> 'X-Portail-Version',
+    ],
 
-	// Payutc
-	'payutc' => [
-		'app_key' 	=> env('PAYUTC_KEY', ''),
-		'fun_id' 	=> 41,
-		'prod' 		=> false,		// Si le serveur est en https : true
-		'viaUTC'	=> false,		// Si le serveur passe par le VPN ou le réseau de l'UTC : true
-		'trans_url' => 'https://payutc.nemopay.net/validation?tra_id=',
-	],
+    // Payutc
+    'payutc' => [
+        'app_key' 	=> env('PAYUTC_KEY', ''),
+        'fun_id' 	=> 41,
+        'prod' 		=> false,
+    // Si le serveur est en https : true
+        'viaUTC'	=> false,
+    // Si le serveur passe par le VPN ou le réseau de l'UTC : true
+        'trans_url' => 'https://payutc.nemopay.net/validation?tra_id=',
+    ],
 
-	// Définition des rôles
-	'roles' => [
-		// Roles admins
-		'admin' => [
-			'users' => 'admin',
-			'assos' => 'president',
-			'groups' => 'group admin',
-		],
-		'assos' => [
-			env('APP_ASSO', 'simde') => [
-				'president' => 'superadmin',
-				'bureau' => 'admin',
-			],
-			'bde' => [
-				'president' => 'admin'
-			]
-		],
-	],
+    // Définition des rôles
+    'roles' => [
+    // Roles admins
+        'admin' => [
+            'users' => 'admin',
+            'assos' => 'president',
+            'groups' => 'group admin',
+        ],
+        'assos' => [
+            env('APP_ASSO', 'simde') => [
+                'president' => 'superadmin',
+                'bureau' => 'admin',
+            ],
+            'bde' => [
+                'president' => 'admin',
+            ]
+        ],
+    ],
 
-	'roles' => [
-		// Roles admins
-		'admin' => [
-			'users' => 'admin',
-			'assos' => 'president',
-			'groups' => 'group admin',
-		],
-		'assos' => [
-			env('APP_ASSO', 'simde') => [
-				'president' => 'superadmin',
-				'bureau' => 'admin',
-			],
-			'bde' => [
-				'president' => 'admin'
-			]
-		],
-	],
+    'roles' => [
+    // Roles admins
+        'admin' => [
+            'users' => 'admin',
+            'assos' => 'president',
+            'groups' => 'group admin',
+        ],
+        'assos' => [
+            env('APP_ASSO', 'simde') => [
+                'president' => 'superadmin',
+                'bureau' => 'admin',
+            ],
+            'bde' => [
+                'president' => 'admin',
+            ]
+        ],
+    ],
 
-	'permissions' => [
-		'assos' => [
-			'bde' => $roleToPermission,
-			'poleae' => $roleToPermission,
-			'polesec' => $roleToPermission,
-			'polete' => $roleToPermission,
-			'polevdc' => $roleToPermission,
-		],
-	],
+    'permissions' => [
+        'assos' => [
+            'bde' => $roleToPermission,
+            'poleae' => $roleToPermission,
+            'polesec' => $roleToPermission,
+            'polete' => $roleToPermission,
+            'polevdc' => $roleToPermission,
+        ],
+    ],
 
-	'reservations' => [
-		'max_duration' => 2,
-	],
+    'reservations' => [
+        'max_duration' => 2,
+    ],
 
-	'cas' => [
-		'url'		=> env('CAS_URL', ''),
-		'image' => env('CAS_IMAGE', ''),
-	],
+    'cas' => [
+        'url'		=> env('CAS_URL', ''),
+        'image' => env('CAS_IMAGE', ''),
+    ],
 
-	'ginger_key' 	=> env('GINGER_KEY', ''),
+    'ginger_key' 	=> env('GINGER_KEY', ''),
 
-	'cookie_lifetime' => 518400,
+    'cookie_lifetime' => 518400,
 ];

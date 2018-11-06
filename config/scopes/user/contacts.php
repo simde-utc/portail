@@ -21,64 +21,64 @@
 
 // Toutes les routes commencant par user-{verbe}-contacts-
 return [
-	'description' => 'Contacts',
-	'icon' => 'address-card',
-	'verbs' => [
-		'manage' => [
-			'description' => 'Gérer les moyens et les informations de contact de l\'utilisateur, de ses associations et de ses groupes',
-			'scopes' => [
-				'users' => [
-					'description' => 'Gérer les moyens et les informations de contact de l\'utilisateur',
-				],
-				'assos' => [
-					'description' => 'Gérer les moyens et les informations de contact des associations de l\'utilisateur',
-				],
-				'groups' => [
-					'description' => 'Gérer les moyens et les informations de contact des groupes de l\'utilisateur',
-				],
-			]
-		],
-		'set' => [
-			'description' => 'Modifier et ajouter des moyens et des informations de contact de l\'utilisateur, de ses associations et de ses groupes',
-			'scopes' => [
-				'users' => [
-					'description' => 'Modifier et ajouter des moyens et des informations de contact de l\'utilisateur',
-				],
-				'assos' => [
-					'description' => 'Modifier et ajouter des moyens et des informations de contact des associations de l\'utilisateur',
-				],
-				'groups' => [
-					'description' => 'Modifier et ajouter des moyens et des informations de contact des groupes de l\'utilisateur',
-				],
-			]
-		],
-		'create' => [
-			'description' => 'Ajouter des moyens et des informations de contact de l\'utilisateur, de ses associations et de ses groupes',
-			'scopes' => [
-				'users' => [
-					'description' => 'Ajouter des moyens et des informations de contact de l\'utilisateur',
-				],
-				'assos' => [
-					'description' => 'Ajouter des moyens et des informations de contact des associations de l\'utilisateur',
-				],
-				'groups' => [
-					'description' => 'Ajouter des moyens et des informations de contact des groupes de l\'utilisateur',
-				],
-			]
-		],
-		'get' => [
-			'description' => 'Récupérer les moyens et les informations de contact de l\'utilisateur, de ses associations et de ses groupes',
-			'scopes' => [
-				'users' => [
-					'description' => 'Récupérer les moyens et les informations de contact de l\'utilisateur',
-				],
-				'assos' => [
-					'description' => 'Récupérer les moyens et les informations de contact des associations de l\'utilisateur',
-				],
-				'groups' => [
-					'description' => 'Récupérer les moyens et les informations de contact des groupes de l\'utilisateur',
-				],
-			]
-		],
-	]
+    'description' => 'Contacts',
+    'icon' => 'address-card',
+    'verbs' => [
+        'manage' => [
+            'description' => 'Gérer les moyens et les informations de contact de l\'utilisateur, de ses associations et de ses groupes',
+            'scopes' => [
+                'users' => [
+                    'description' => 'Gérer les moyens et les informations de contact de l\'utilisateur',
+                ],
+                'assos' => [
+                    'description' => 'Gérer les moyens et les informations de contact des associations de l\'utilisateur',
+                ],
+                'groups' => [
+                    'description' => 'Gérer les moyens et les informations de contact des groupes de l\'utilisateur',
+                ],
+            ]
+        ],
+        'set' => [
+            'description' => 'Modifier et ajouter des moyens et des informations de contact de l\'utilisateur, de ses associations et de ses groupes',
+            'scopes' => [
+                'users' => [
+                    'description' => 'Modifier et ajouter des moyens et des informations de contact de l\'utilisateur',
+                ],
+                'assos' => [
+                    'description' => 'Modifier et ajouter des moyens et des informations de contact des associations de l\'utilisateur',
+                ],
+                'groups' => [
+                    'description' => 'Modifier et ajouter des moyens et des informations de contact des groupes de l\'utilisateur',
+                ],
+            ]
+        ],
+        'create' => [
+            'description' => 'Ajouter des moyens et des informations de contact de l\'utilisateur, de ses associations et de ses groupes',
+            'scopes' => [
+                'users' => [
+                    'description' => 'Ajouter des moyens et des informations de contact de l\'utilisateur',
+                ],
+                'assos' => [
+                    'description' => 'Ajouter des moyens et des informations de contact des associations de l\'utilisateur',
+                ],
+                'groups' => [
+                    'description' => 'Ajouter des moyens et des informations de contact des groupes de l\'utilisateur',
+                ],
+            ]
+        ],
+        'get' => [
+            'description' => 'Récupérer les moyens et les informations de contact de l\'utilisateur, de ses associations et de ses groupes',
+            'scopes' => [
+                'users' => [
+                    'description' => 'Récupérer les moyens et les informations de contact de l\'utilisateur',
+                ],
+                'assos' => [
+                    'description' => 'Récupérer les moyens et les informations de contact des associations de l\'utilisateur',
+                ],
+                'groups' => [
+                    'description' => 'Récupérer les moyens et les informations de contact des groupes de l\'utilisateur',
+                ],
+            ]
+        ],
+    ]
 ];

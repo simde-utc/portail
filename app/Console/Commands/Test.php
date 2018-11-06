@@ -28,12 +28,12 @@ class Test extends Command
     protected $description = 'Teste le code avant de pouvoir push le code';
 
     /**
-     * Tous les dossiers à vérifier
+     * Tous les dossiers à vérifier.
      *
      * @var array
      */
     protected $dirs = [
-        'app', 'bootstrap', 'config', 'database', 'resources/lang', 'resources/views', 'routes', 'tests',
+        'app', 'bootstrap', 'config', 'database', 'resources/lang', 'routes', 'tests',
     ];
 
     /**
@@ -115,7 +115,7 @@ class Test extends Command
     }
 
     /**
-     * Lance php -l pour vérifier la syntaxe
+     * Lance php -l pour vérifier la syntaxe.
      *
      * @return integer
      */
@@ -147,8 +147,7 @@ class Test extends Command
 
                 $bar->advance();
             }
-        }
-        else {
+        } else {
             $bar = $this->output->createProgressBar(count($files));
 
             foreach ($files as $file) {
@@ -173,19 +172,26 @@ class Test extends Command
     }
 
     /**
-     * Lance le PHP Code Sniffer pour vérifier le style PHP
+     * Lance le PHP Code Sniffer pour vérifier le style PHP.
      *
      * @return integer
      */
     private function runPHPCS()
     {
-        return $this->process(
+        $excludedRules = [
+            'Generic.Files.LineLength,Squiz.Commenting.FileComment',
+            'Squiz.Commenting.InlineComment'
+        ];
+
+        return ($this->process(
             "./vendor/bin/phpcs ".implode($this->files, ' ')
-        );
+        ) + $this->process(
+            "./vendor/bin/phpcs config --exclude=".implode($excludedRules, ',')
+        ));
     }
 
     /**
-     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles
+     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles.
      *
      * @return integer
      */
@@ -197,7 +203,7 @@ class Test extends Command
     }
 
     /**
-     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles
+     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles.
      *
      * @return integer
      */
@@ -217,7 +223,7 @@ class Test extends Command
     }
 
     /**
-     * Lance le PHP Unit pour tester que le code n'a pas cassé
+     * Lance le PHP Unit pour tester que le code n'a pas cassé.
      *
      * @return integer
      */
@@ -229,7 +235,7 @@ class Test extends Command
     }
 
     /**
-     * Lance une commande bash
+     * Lance une commande bash.
      *
      * @param string $command Commande à lancer.
      * @return Process
