@@ -306,7 +306,7 @@ abstract class BaseAuth
      * @param \App\Models\Auth $userAuth
      * @return mixed
      */
-    protected function connect(Request $request, User $user, \App\Models\Auth $userAuth)
+    protected function connect(Request $request, User $user=null, \App\Models\Auth $userAuth=null)
     {
         // Si tout est bon, on le connecte.
         if ($user && $userAuth) {

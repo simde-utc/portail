@@ -70,7 +70,7 @@ class MemberController extends Controller
         $group = $this->getGroup($request, $group_id);
 
         $data = [
-            'semester_id' => $request->input('semester_id', 0),
+            'semester_id' => $request->input('semester_id', '0'),
             'role_id'     => $request->input('role_id', null),
         ];
         // TODO: Envoyer un mail d'invitation dans le groupe.
@@ -121,7 +121,7 @@ class MemberController extends Controller
         $member = $group->currentAllMembers->where('id', $member_id)->first();
 
         if ($member) {
-            if ($member_id === \Auth::id()) {
+            if ($member_id === (string) \Auth::id()) {
                 $data = [
                     'semester_id'  => $request->input('semester_id', $member->pivot->semester_id),
                     'role_id'      => $request->input('role_id', $member->pivot->role_id),
@@ -164,7 +164,7 @@ class MemberController extends Controller
 
         if ($member) {
             $data = [
-                'semester_id' => $request->input('semester_id', 0),
+                'semester_id' => $request->input('semester_id', '0'),
             ];
 
             $group->removeMembers($member_id, $data, \Auth::id());

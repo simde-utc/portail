@@ -40,15 +40,4 @@ class AppServiceProvider extends ServiceProvider
     {
         Passport::withoutCookieSerialization();
     }
-
-    /**
-     * Enregistre tous les services de dévelopmment de l'application.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        if (!$this->app->environment('production')) {
-        }
-    }
 }

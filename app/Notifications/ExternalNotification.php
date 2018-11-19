@@ -33,7 +33,7 @@ class ExternalNotification extends Notification
      */
     public function __construct(CanNotify $model, string $content, array $action=[])
     {
-        parent::__construct('external_'.\ModelResolver::getName($model));
+        parent::__construct('external_'.\ModelResolver::getName(get_class($model)));
 
         $this->subject = $model->name;
         $this->content = $content;

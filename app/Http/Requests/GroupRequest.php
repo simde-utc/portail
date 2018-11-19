@@ -29,7 +29,8 @@ class GroupRequest extends FormRequest
     {
         if ($this->isMethod('put') || $this->isMethod('patch') || $this->isMethod('delete')) {
             $group = Group::find($this->route('group'));
-            return $group && $this->user() && Visible::isOwner($group, $this->user()->id);
+
+            return $group && \Auth::id() && $group->id === \Auth::id();
         } else {
             return true;
         }
@@ -42,13 +43,13 @@ class GroupRequest extends FormRequest
      */
     public function rules()
     {
-        $id = $this->group;
+        $group = $this->group;
 
         return [
             'name' => Validation::make($this)
                 ->type('string')
                 ->length(validation_between('name'))
-                ->unique('groups', 'name,'.$id)
+                ->unique('groups', 'name,'.$group->id)
                 ->post('required')
                 ->get(),
             'icon' => Validation::make($this)

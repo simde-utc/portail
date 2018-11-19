@@ -18,6 +18,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Traits\Controller\v1\HasUsers;
 use App\Traits\Controller\v1\HasImages;
+use App\Exceptions\PortailException;
 
 class UserController extends Controller
 {
@@ -78,10 +79,10 @@ class UserController extends Controller
         }
 
         $users = $users->getSelection()->map(function ($user) {
-            return $this->hideData();
+            return $user->hideData();
         });
 
-        return response()->json($users->hideData(), 200);
+        return response()->json($users, 200);
     }
 
     /**

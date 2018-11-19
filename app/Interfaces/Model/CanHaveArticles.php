@@ -15,7 +15,7 @@ interface CanHaveArticles
     /**
      * Renvoie la liste des articles.
      *
-     * @return MorphMany
+     * @return mixed
      */
     public function articles();
 

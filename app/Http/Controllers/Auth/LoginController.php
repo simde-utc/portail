@@ -55,8 +55,8 @@ class LoginController extends Controller
      */
     public function index(Request $request)
     {
-        $provider = $request->cookie('auth_provider');
-        $provider_class = config("auth.services.$provider.class");
+        $provider = (string) $request->cookie('auth_provider');
+        $provider_class = config('auth.services.'.$provider.'.class');
 
         if ($provider_class === null || $request->query('see') === 'all') {
             return view('login.index');
@@ -126,11 +126,11 @@ class LoginController extends Controller
         $redirect = $service === null ? null : resolve($service['class'])->logout($request);
 
         if ($redirect === null) {
-            $after_logout_redirection = $request->query('redirect', url()->previous());
+            $redirectUrl = $request->query('redirect', url()->previous());
 
             // Évite les redirections sur logout.
-            if ($after_logout_redirection && $after_logout_redirection !== $request->url()) {
-                $redirect = redirect($after_logout_redirection);
+            if ($redirectUrl && $redirectUrl !== $request->url()) {
+                $redirect = redirect($redirectUrl);
             } else {
                 $redirect = redirect('welcome');
             }

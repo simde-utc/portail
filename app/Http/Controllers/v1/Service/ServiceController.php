@@ -81,14 +81,10 @@ class ServiceController extends Controller
     {
         $service = Service::create($request->all());
 
-        if ($service) {
-            // On affecte l'image si tout s'est bien passé.
-            $this->setImage($request, $service, 'services/'.$service->id);
+        // On affecte l'image si tout s'est bien passé.
+        $this->setImage($request, $service, 'services/'.$service->id);
 
-            return response()->json($service->hideSubData(), 200);
-        } else {
-            abort(500, 'Impossible de créer la service');
-        }
+        return response()->json($service->hideSubData(), 200);
     }
 
     /**
@@ -100,7 +96,7 @@ class ServiceController extends Controller
      */
     public function show(Request $request, string $service_id): JsonResponse
     {
-        $service = $this->getService($user, $service_id);
+        $service = $this->getService(\Auth::user(), $service_id);
 
         return response()->json($service->hideSubData(), 200);
     }
@@ -114,7 +110,7 @@ class ServiceController extends Controller
      */
     public function update(Request $request, string $service_id): JsonResponse
     {
-        $service = $this->getService($user, $service_id);
+        $service = $this->getService(\Auth::user(), $service_id);
 
         if ($service->update($request->input())) {
             // On affecte l'image si tout s'est bien passé.
@@ -133,9 +129,9 @@ class ServiceController extends Controller
      * @param string                   $service_id
      * @return void
      */
-    public function destroy(Request $request, string $service_id): JsonResponse
+    public function destroy(Request $request, string $service_id): void
     {
-        $service = $this->getService($user, $service_id);
+        $service = $this->getService(\Auth::user(), $service_id);
 
         if ($service->softDelete()) {
             $this->deleteImage('services/'.$service->id);

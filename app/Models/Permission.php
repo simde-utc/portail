@@ -18,6 +18,7 @@ use App\Traits\Model\HasOwnerSelection;
 use Illuminate\Support\Collection;
 use App\Interfaces\Model\CanHavePermissions;
 use Illuminate\Database\Eloquent\Builder;
+use Ramsey\Uuid\Uuid;
 
 class Permission extends Model implements OwnableContract
 {
@@ -124,17 +125,17 @@ class Permission extends Model implements OwnableContract
     /**
      * Retrouve une permission.
      *
-     * @param  string             $id
+     * @param  string             $permission_id
      * @param  CanHavePermissions $owner
      * @return Permission
      */
-    public static function find(string $id, CanHavePermissions $owner=null)
+    public static function find(string $permission_id, CanHavePermissions $owner=null)
     {
         if ($owner === null) {
             $owner = new User;
         }
 
-        $permissions = static::where('id', $id)
+        $permissions = static::where('id', $permission_id)
 	        ->where('owned_by_type', get_class($owner))
 	        ->where(function ($query) use ($owner) {
 	            $query->whereNull('owned_by_id')
@@ -181,10 +182,10 @@ class Permission extends Model implements OwnableContract
             $owner = new User;
         }
 
-        if (is_string($permission)) {
-            return static::findByType($permission, $owner);
-        } else if (is_int($permission)) {
+        if (Uuid::isValid($permission)) {
             return static::find($permission, $owner);
+        } else if (is_string($permission)) {
+            return static::findByType($permission, $owner);
         } else {
             return $permission;
         }

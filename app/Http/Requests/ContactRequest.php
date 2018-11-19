@@ -29,7 +29,7 @@ class ContactRequest extends FormRequest
     public function authorize()
     {
         if ($this->resource_type) {
-            $this->resource = \ModelResolver::getModelFromCategory(
+            $this->resource = \ModelResolver::findModelFromCategory(
                 $this->resource_type, $this->resource_id, CanHaveContacts::class
             );
         } else {

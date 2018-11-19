@@ -89,13 +89,9 @@ class ContactController extends Controller
         $this->checkTokenRights($request, 'create');
         $contact = Contact::create($request->input());
 
-        if ($contact) {
-            $contact->changeOwnerTo($request->resource)->save();
+        $contact->changeOwnerTo($request->resource)->save();
 
-            return response()->json(Contact::find($contact->id), 201);
-        } else {
-            abort(500, "Impossible de créer le contact");
-        }
+        return response()->json(Contact::find($contact->id), 201);
     }
 
     /**
@@ -134,7 +130,7 @@ class ContactController extends Controller
      * @param ContactRequest $request
      * @return void
      */
-    public function destroy(ContactRequest $request): JsonResponse
+    public function destroy(ContactRequest $request): void
     {
         $contact = $this->getContact($request, 'manage');
 

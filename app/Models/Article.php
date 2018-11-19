@@ -85,10 +85,12 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
             ->groupBy($this->getTable().'.id')
             ->orderByRaw('SUM(IF('.$actionTable.'.value='.((string) true).', 10, -5)) '.($order === 'liked' ? 'desc' : 'asc'));
 
-            return $query->selectRaw($this->getTable().'.*');
+            $query->selectRaw($this->getTable().'.*');
         } else {
             return parent::scopeOrder($query, $order);
         }
+
+        return $query;
     }
 
     /**
@@ -105,7 +107,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
         if (substr($action, 0, 1) === '!') {
             $action = substr($action, 1);
 
-            return $query->whereNotExists(function ($query) use ($action, $actionTable) {
+            $query->whereNotExists(function ($query) use ($action, $actionTable) {
                 if (\Auth::id()) {
                     $query = $query->where($actionTable.'.user_id', \Auth::id());
                 }

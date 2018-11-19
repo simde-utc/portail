@@ -254,7 +254,7 @@ class Ginger
 	        ->returnResponseObject();
 
         if (strpos(request()->getHttpHost(), 'utc.fr')) {
-            $curl = $curl->withProxy('proxyweb.utc.fr', 3128);
+            $curl = $curl->withProxy('proxyweb.utc.fr', '3128');
         }
 
         if ($method === 'POST') {

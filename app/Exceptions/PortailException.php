@@ -15,7 +15,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class PortailException extends HttpException
 {
     /**
-     * Création de l'exception
+     * Création de l'exception.
+     *
      * @param string     $message
      * @param integer    $statusCode
      * @param \Exception $previous
@@ -25,6 +26,6 @@ class PortailException extends HttpException
     public function __construct(string $message=null, int $statusCode=400,
 								\Exception $previous=null, array $headers=[], ?int $code=0)
     {
-        return parent::__construct($statusCode, $message, $previous, $headers, $code);
+        parent::__construct($statusCode, $message, $previous, $headers, $code);
     }
 }

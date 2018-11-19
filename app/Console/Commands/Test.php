@@ -37,6 +37,13 @@ class Test extends Command
     ];
 
     /**
+     * Tous les fichiers à tester.
+     *
+     * @var array
+     */
+    protected $files;
+
+    /**
      * @return void
      */
     public function __construct()
@@ -52,7 +59,7 @@ class Test extends Command
     public function handle()
     {
         $this->files = $this->argument('file');
-        $bar = $this->output->createProgressBar(4);
+        $bar = $this->output->createProgressBar(5);
 
         $this->info(' [PHP Syntax] Vérification de la syntaxe PHP');
 
@@ -65,12 +72,13 @@ class Test extends Command
         $this->info(PHP_EOL);
         $bar->advance();
         $this->info(PHP_EOL);
+        $this->info(PHP_EOL);
         $this->info(' [PHP CS] Vérification du linting PHP');
 
         if ($this->runPHPCS()) {
             $this->output->error('Des erreurs ont été rencontrées lors de la vérification du linting');
 
-            $value = $this->choice('Tenter de fixer les erreurs ?', ['Oui', 'Non'], 1);
+            $value = $this->choice('Tenter de fixer les erreurs ?', ['Oui', 'Non'], 'Non');
 
             if ($value === 'Oui') {
                 $this->runPHPCBF();
@@ -78,37 +86,51 @@ class Test extends Command
                 if ($this->runPHPCS()) {
                     $this->output->error('Des erreurs n\'ont pas pu être corrigées lors de la vérification du linting');
 
-                    return 1;
+                    return 2;
                 }
             } else {
-                return 1;
+                return 2;
             }
         }
 
         $this->info(PHP_EOL);
         $bar->advance();
         $this->info(PHP_EOL);
+        $this->info(PHP_EOL);
+        $this->info(' [PHP STAN] Vérification du code PHP');
+
+        if ($this->runPHPStan()) {
+            $this->output->error('Des erreurs de code ont été détectées');
+
+            return 3;
+        }
+
+        $bar->advance();
+        $this->info(PHP_EOL);
+        $this->info(PHP_EOL);
         $this->info(' [PHP MD] Vérification des optimisations PHP');
 
         if ($this->runPHPMD()) {
             $this->output->error('Des erreurs d\'optimisation ont été détectées');
 
-            return 1;
+            return 4;
         }
 
         $this->info(PHP_EOL);
         $bar->advance();
+        $this->info(PHP_EOL);
         $this->info(PHP_EOL);
         $this->info(' [PHP Unit] Vérification des tests PHP');
 
         if ($this->runPHPUnit()) {
             $this->output->error('Des erreurs ont été rencontrées lors de la game');
 
-            return 1;
+            return 5;
         }
 
         $this->info(PHP_EOL);
         $bar->advance();
+        $this->info(PHP_EOL);
         $this->info(PHP_EOL);
 
         $this->output->success('Code parfait √');
@@ -207,12 +229,32 @@ class Test extends Command
      *
      * @return integer
      */
+    private function runPHPStan()
+    {
+        $files = $this->files;
+
+        if (count($files) === 0) {
+            $files = $this->dirs;
+        }
+
+        $files = implode($files, ',');
+
+        return $this->process(
+            "php artisan code:analyse -p ".$files
+        );
+    }
+
+    /**
+     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles.
+     *
+     * @return integer
+     */
     private function runPHPMD()
     {
         $files = $this->files;
 
         if (count($files) === 0) {
-            $files = $dir;
+            $files = $this->dirs;
         }
 
         $files = implode($files, ',');
@@ -238,7 +280,7 @@ class Test extends Command
      * Lance une commande bash.
      *
      * @param string $command Commande à lancer.
-     * @return Process
+     * @return integer
      */
     private function process(string $command)
     {

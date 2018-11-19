@@ -35,18 +35,19 @@ class VisibilityRequest extends FormRequest
      */
     public function rules()
     {
-        $id = $this->visibility;
+        $visibility = $this->visibility;
+
         return [
             'name' => Validation::make($this)
                 ->type('string')
                 ->length('between:3,191')
-                ->unique('visibilities', 'name,'.$id)
+                ->unique('visibilities', 'name,'.$visibility->id)
                 ->post('required')
                 ->get(),
             'type' => Validation::make($this)
                 ->type('string')
                 ->length('between:3,191')
-                ->unique('visibilities', 'type,'.$id)
+                ->unique('visibilities', 'type,'.$visibility->id)
                 ->post('required')
                 ->get(),
             'parent_id' => Validation::make($this)

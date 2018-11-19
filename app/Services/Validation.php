@@ -50,10 +50,10 @@ class Validation
      * Récupère tous les appels.
      *
      * @param string $method
-     * @param string $args
+     * @param array  $args
      * @return Validation
      */
-    public function __call(string $method, string $args)
+    public function __call(string $method, array $args)
     {
         if ($this->request->isMethod($method)) {
             foreach ($args as $arg) {

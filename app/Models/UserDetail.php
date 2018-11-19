@@ -41,7 +41,7 @@ class UserDetail extends Model
      * Permet de retrouver l'utilisateur sur lequel on travaille à partir d'un query.
      *
      * @param Builder $query
-     * @return User/void
+     * @return User|null
      */
     protected function getUserFromQuery(Builder $query)
     {

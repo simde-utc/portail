@@ -65,7 +65,7 @@ class AuthCas extends Auth
      * TODO: transformer en scope.
      *
      * @param  string $email
-     * @return AuthCas
+     * @return AuthCas|null
      */
     public static function findByEmail(string $email)
     {
@@ -133,8 +133,8 @@ class AuthCas extends Auth
         ])
         ->returnResponseObject();
 
-        if (strpos($_SERVER['HTTP_HOST'], 'utc.fr')) {
-            $curl = $curl->withProxy('proxyweb.utc.fr', 3128);
+        if (strpos(request()->getHttpHost(), 'utc.fr')) {
+            $curl = $curl->withProxy('proxyweb.utc.fr', '3128');
         }
 
         $connected = $curl->post()->status === 201;

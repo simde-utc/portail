@@ -27,7 +27,7 @@ use App\Interfaces\Model\CanNotify;
 use App\Interfaces\Model\CanHaveRoles;
 use App\Interfaces\Model\CanHavePermissions;
 use App\Interfaces\Model\CanComment;
-use App\Exception\PortailException;
+use App\Exceptions\PortailException;
 
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles,
 	CanNotify, CanHaveRooms, CanHaveReservations, CanHaveRoles, CanHavePermissions, CanComment
@@ -246,12 +246,12 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      * Donne le dernier utilisateur avec un rôle.
      *
      * @param  mixed $role
-     * @return boolean
+     * @return User|null
      */
     public function getLastUserWithRole($role)
     {
         return $this->members()->wherePivot('role_id',
-        Role::getRole($role, $this)->id)->orderBy('semester_id', 'DESC'
+        	Role::getRole($role, $this)->id)->orderBy('semester_id', 'DESC'
         )->first();
     }
 
@@ -394,7 +394,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      */
     public function events()
     {
-        return $this->morphMany(Events::class, 'owned_by');
+        return $this->morphMany(Event::class, 'owned_by');
     }
 
     /**
@@ -577,7 +577,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
             return false;
         } else if ($model instanceof User) {
             return $this->hasOnePermission('reservation', [
-                'user_id' => $user_id,
+                'user_id' => $model->id,
             ]);
         } else if ($model instanceof Client) {
             return $model->asso->id === $this->id;

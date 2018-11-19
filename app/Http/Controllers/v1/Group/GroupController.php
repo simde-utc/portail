@@ -35,12 +35,12 @@ class GroupController extends Controller
     public function __construct()
     {
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('user-get-groups', 'client-get-groups'),
-        ['only' => ['index', 'show']]
+            \Scopes::matchOneOfDeepestChildren('user-get-groups', 'client-get-groups'),
+            ['only' => ['index', 'show']]
         );
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('user-manage-groups', 'client-manage-groups'),
-        ['only' => ['store', 'update', 'destroy']]
+            \Scopes::matchOneOfDeepestChildren('user-manage-groups', 'client-manage-groups'),
+            ['only' => ['store', 'update', 'destroy']]
         );
     }
 
@@ -90,7 +90,7 @@ class GroupController extends Controller
             // TODO: Envoyer un mail d'invitation dans le groupe.
             try {
                 $group->assignMembers($request->input('member_ids', []), [
-                    'semester_id' => $request->input('semester_id', 0),
+                    'semester_id' => $request->input('semester_id', '0'),
                 ]);
             } catch (PortailException $e) {
                 return response()->json(["message" => $e->getMessage()], 400);
@@ -108,16 +108,16 @@ class GroupController extends Controller
      * Montre un groupe.
      *
      * @param Request $request
-     * @param string 	$id
+     * @param string 	$group_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $id): JsonResponse
+    public function show(Request $request, string $group_id): JsonResponse
     {
         // On inclue les relations et on les formattent.
-        $group = Group::find($id);
+        $group = Group::find($group_id);
 
         if (\Auth::id()) {
-            $group = $this->hide($group, false, function ($group) use ($request) {
+            $group = $this->hide($group, false, function ($group) {
                 return $group->hideData();
             });
         }
@@ -133,12 +133,12 @@ class GroupController extends Controller
      * Met à jour un groupe.
      *
      * @param GroupRequest $request
-     * @param string       $id
+     * @param string       $group_id
      * @return JsonResponse
      */
-    public function update(GroupRequest $request, string $id): JsonResponse
+    public function update(GroupRequest $request, string $group_id): JsonResponse
     {
-        $group = Group::find($id);
+        $group = Group::find($group_id);
 
         if (!$group) {
             abort(404, "Groupe non trouvé");
@@ -164,7 +164,7 @@ class GroupController extends Controller
             if ($request->filled('member_ids')) {
                 try {
                     $group->syncMembers(array_merge($request->member_ids, [\Auth::id()]), [
-                        'semester_id' => $request->input('semester_id', 0),
+                        'semester_id' => $request->input('semester_id', '0'),
                         'removed_by'  => $group->user_id,
                     ], \Auth::id());
                 } catch (PortailException $e) {
@@ -172,7 +172,7 @@ class GroupController extends Controller
                 }
             }
 
-            $group = Group::with(['owner', 'visibility',])->find($id);
+            $group = Group::with(['owner', 'visibility',])->find($group_id);
 
             return response()->json($group->hideData(), 200);
         } else {
@@ -183,12 +183,12 @@ class GroupController extends Controller
     /**
      * Supprime un groupe.
      *
-     * @param string $id
+     * @param string $group_id
      * @return void
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(string $group_id): void
     {
-        $group = Group::find($id);
+        $group = Group::find($group_id);
 
         if (!$group || !$group->delete()) {
             abort(404, "Groupe non trouvé");

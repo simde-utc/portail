@@ -145,7 +145,7 @@ class Scopes
         foreach ($this->all() as $scope => $description) {
             $elements = explode('-', $scope);
 
-            if (!isset($categories[$elements[2]]) && !isset($categories[$elements[2]]['scopes'])) {
+            if (!isset($categories[$elements[2]]) || !isset($categories[$elements[2]]['scopes'])) {
                 $categorie = $this->scopes[$elements[0]][$elements[2]];
 
                 $categories[$elements[2]] = [
@@ -207,9 +207,9 @@ class Scopes
      * Recherche le scope existant (qui doit exister) et sa descendance.
      *
      * @param  string $scope
-     * @return array
+     * @return array|null
      */
-    private function find(string $scope)
+    protected function find(string $scope)
     {
         $elements = explode('-', $scope);
 
@@ -244,7 +244,7 @@ class Scopes
      * Renvoie le scope (doit exister !) avec sa description.
      *
      * @param  string $scope
-     * @return array      scope => description
+     * @return array  scope => description
      */
     public function get(string $scope)
     {
@@ -269,7 +269,7 @@ class Scopes
     {
         $categories = [];
 
-        if ($scopes === [] || $scopes === null) {
+        if ($scopes === []) {
             return [];
         }
 
@@ -289,7 +289,7 @@ class Scopes
                 throw new PortailException('Le scope '.$scope.' n\'existe pas !');
             }
 
-            if (!isset($categories[$elements[2]]) && !isset($categories[$elements[2]]['scopes'])) {
+            if (!isset($categories[$elements[2]]) || !isset($categories[$elements[2]]['scopes'])) {
                 $categorie = $this->scopes[$middleware][$elements[2]];
 
                 $categories[$elements[2]] = [

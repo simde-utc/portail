@@ -12,6 +12,8 @@ namespace App\Interfaces\Model;
 
 use App\Interfaces\Model\CanComment;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+
 interface CanHaveComments
 {
     /**

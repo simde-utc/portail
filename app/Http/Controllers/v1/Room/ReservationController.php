@@ -21,6 +21,7 @@ use App\Models\Room;
 use App\Models\Event;
 use App\Models\Reservation;
 use App\Models\ReservationType;
+use Carbon\Carbon;
 
 class ReservationController extends Controller
 {
@@ -86,7 +87,7 @@ class ReservationController extends Controller
             $validator = $this->getValidatorFromOwner($request, $owner, 'reservation', 'réservation', 'create');
 
             // Maintenant on vérifie qu'on a le droit de valider pour une résa dans une salle appartenant à qq'un.
-            if (!$room->owned_by->isReservationValidableBy($validator)) {
+            if (!Room::find($room_id)->owned_by->isReservationValidableBy($validator)) {
                 abort(403, 'Vous n\'avez pas le droit de valider cette réservation');
             }
 
@@ -226,7 +227,7 @@ class ReservationController extends Controller
      * @param  string  $reservation_id
      * @return void
      */
-    public function destroy(Request $request, string $room_id, string $reservation_id): JsonResponse
+    public function destroy(Request $request, string $room_id, string $reservation_id): void
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
         $reservation = $this->getReservationFromRoom($request, $room, \Auth::user(), $reservation_id, 'manage');

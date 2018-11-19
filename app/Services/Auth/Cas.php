@@ -44,7 +44,7 @@ class Cas extends BaseAuth
     {
         $ticket = $request->query('ticket');
 
-        if (!isset($ticket) || empty($ticket)) {
+        if (empty($ticket)) {
             return $this->error($request, null, null, 'Ticket CAS invalide');
         }
 
@@ -95,7 +95,7 @@ class Cas extends BaseAuth
         }
 
         if (!$user->isActive()) {
-            return $this->error($request, $user, $userAuth, 'Ce compte a été désactivé');
+            return $this->error($request, $user, $cas, 'Ce compte a été désactivé');
         }
 
         return $this->connect($request, $user, $cas);
@@ -171,7 +171,7 @@ class Cas extends BaseAuth
         	->returnResponseObject();
 
         if (strpos(request()->getHttpHost(), 'utc.fr')) {
-            $curl = $curl->withProxy('proxyweb.utc.fr', 3128);
+            $curl = $curl->withProxy('proxyweb.utc.fr', '3128');
         }
 
         $response = $curl->post();
@@ -195,7 +195,7 @@ class Cas extends BaseAuth
             	->returnResponseObject();
 
             $response = $curl->get();
-            $parsed = new xmlToArrayParser($response->content);
+            $parsed = new XmlToArrayParser($response->content);
 
             try {
                    $ginger = Ginger::user($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user']);
@@ -253,6 +253,7 @@ class XmlToArrayParser
     public  $array = [];
     private $parser;
     private $pointer;
+    private $parseError;
 
     /**
      * Parse le XML.
@@ -267,7 +268,7 @@ class XmlToArrayParser
         xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
         xml_set_element_handler($this->parser, "tag_open", "tag_close");
         xml_set_character_data_handler($this->parser, "cdata");
-        $this->parse_error = xml_parse($this->parser, ltrim($xml)) ? false : true;
+        $this->parseError = xml_parse($this->parser, ltrim($xml)) ? false : true;
     }
 
     /**
@@ -285,13 +286,13 @@ class XmlToArrayParser
      */
     public function get_xml_error()
     {
-        if ($this->parse_error) {
+        if ($this->parseError) {
             $errCode = xml_get_error_code ($this->parser);
             $thisError = "Error Code [".$errCode."] \"<strong style='color:red;'>".xml_error_string($errCode)."</strong>\",
 			at char ".xml_get_current_column_number($this->parser)."
 			on line ".xml_get_current_line_number($this->parser)."";
         } else {
-            $thisError = $this->parse_error;
+            $thisError = $this->parseError;
         }
 
         return $thisError;

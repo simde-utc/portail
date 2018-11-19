@@ -92,13 +92,9 @@ class CalendarController extends Controller
 
         $calendar = Calendar::create($inputs);
 
-        if ($calendar) {
-            $calendar = $this->getCalendar($request, \Auth::user(), $calendar->id);
+        $calendar = $this->getCalendar($request, \Auth::user(), $calendar->id);
 
-            return response()->json($calendar->hideSubData(), 201);
-        } else {
-            return response()->json(['message' => 'Impossible de créer le calendrier'], 500);
-        }
+        return response()->json($calendar->hideSubData(), 201);
     }
 
     /**
@@ -148,7 +144,7 @@ class CalendarController extends Controller
      * @param string 	$calendrier_id
      * @return void
      */
-    public function destroy(Request $request, string $calendrier_id): JsonResponse
+    public function destroy(Request $request, string $calendrier_id): void
     {
         $calendar = $this->getCalendar($request, \Auth::user(), $calendrier_id, 'manage');
         $calendar->softDelete();

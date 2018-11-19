@@ -86,22 +86,18 @@ class AssoController extends Controller
     {
         $asso = Asso::create($request->input());
 
-        if ($asso) {
-            // On affecte l'image si tout s'est bien passé.
-            $this->setImage($request, $asso, 'assos/'.$asso->id);
+        // On affecte l'image si tout s'est bien passé.
+        $this->setImage($request, $asso, 'assos/'.$asso->id);
 
-            // Après la création, on ajoute son président (non confirmé évidemment).
-            $asso->assignRoles(config('portail.roles.admin.assos'), [
-                'user_id' => $request->input('user_id'),
-            ], true);
+        // Après la création, on ajoute son président (non confirmé évidemment).
+        $asso->assignRoles(config('portail.roles.admin.assos'), [
+            'user_id' => $request->input('user_id'),
+        ], true);
 
-            // On met l'asso en état inactif (en attente de confirmation).
-            $asso->delete();
+        // On met l'asso en état inactif (en attente de confirmation).
+        $asso->delete();
 
-            return response()->json($asso, 201);
-        } else {
-            abort(500, 'L\'asso n\'as pas pu être créée');
-        }
+        return response()->json($asso, 201);
     }
 
     /**
@@ -168,7 +164,7 @@ class AssoController extends Controller
      * @param string      $asso_id
      * @return void
      */
-    public function destroy(Request $request, string $asso_id): JsonResponse
+    public function destroy(Request $request, string $asso_id): void
     {
         $asso = $this->getAsso($request, $asso_id);
 
@@ -176,12 +172,9 @@ class AssoController extends Controller
             abort(400, 'Il n\'est pas possible de supprimer une association parente');
         }
 
-        if ($asso->softDelete()) {
-            $this->deleteImage('assos/'.$asso->id);
+        $asso->delete();
+        $this->deleteImage('assos/'.$asso->id);
 
-            abort(204);
-        } else {
-            abort(500, 'L\'association n\'a pas pu être supprimée');
-        }
+        abort(204);
     }
 }

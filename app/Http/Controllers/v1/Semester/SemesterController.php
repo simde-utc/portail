@@ -46,7 +46,7 @@ class SemesterController extends Controller
      *
      * @return void
      */
-    public function store(): JsonResponse
+    public function store(): void
     {
         abort(405, 'Il n\'est pas possible de créer un semester');
     }
@@ -61,11 +61,7 @@ class SemesterController extends Controller
     {
         $semester = Semester::getSemester($semester_id);
 
-        if ($semester) {
-            return response()->json($semester->hideSubData(), 200);
-        } else {
-            abort(404, 'Semestre non existant');
-        }
+        return response()->json($semester->hideSubData(), 200);
     }
 
     /**
@@ -74,7 +70,7 @@ class SemesterController extends Controller
      * @param  string $semester_id
      * @return void
      */
-    public function update(string $semester_id): JsonResponse
+    public function update(string $semester_id): void
     {
         abort(405, 'Il n\'est pas possible de modifier un semester');
     }
@@ -85,7 +81,7 @@ class SemesterController extends Controller
      * @param  string $semester_id
      * @return void
      */
-    public function destroy(string $semester_id): JsonResponse
+    public function destroy(string $semester_id): void
     {
         abort(405, 'Il n\'est pas possible de supprimer un semester');
     }

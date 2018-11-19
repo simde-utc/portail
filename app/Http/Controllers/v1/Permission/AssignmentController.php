@@ -99,10 +99,6 @@ class AssignmentController extends Controller
     {
         $this->checkTokenRights($request);
 
-        if (is_null($permission_id)) {
-            list($user_id, $permission_id) = [$permission_id, $user_id];
-        }
-
         $permission = $this->getPermissionFromModel($request, $request->permission);
 
         return response()->json($permission->hideSubData());
@@ -129,9 +125,9 @@ class AssignmentController extends Controller
     {
         $this->checkTokenRights($request, 'remove');
 
-        $permission = $this->getPermissionFromUser($request, $request->permission, 'remove');
+        $permission = $this->getPermissionFromModel($request, $request->permission, 'remove');
 
-        $user->removePermissions($permission_id, [
+        \Auth::user()->removePermissions($permission->id, [
             'user_id' => (\Auth::id() ?? $request->input('user_id')),
             'semester_id' => $permission->pivot->semester_id,
         ], \Auth::id(), \Scopes::isClientToken($request));

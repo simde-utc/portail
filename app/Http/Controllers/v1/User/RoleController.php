@@ -87,7 +87,7 @@ class RoleController extends Controller
      * Ajoute un rôle pour l'utilisateur.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param string|null              $user_id
+     * @param  string|null              $user_id
      * @return JsonResponse
      * @throws PortailException Si l'utilisateur possède déjà un rôle on qu'on a pas le droit de le lui assigner.
      */
@@ -98,7 +98,7 @@ class RoleController extends Controller
         $user->assignRoles($request->input('role_id'), [
             'validated_by' => (\Auth::id() ?? $request->input('validated_by')),
             'semester_id' => (Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id)
-        ], \Scopes::isClientToken());
+        ], \Scopes::isClientToken($request));
         $role = $this->getRoleFromUser($request, $user, $request->input('role_id'));
 
         return response()->json($role->hideSubData());
@@ -157,6 +157,6 @@ class RoleController extends Controller
 
         $user->removeRoles($role_id, [
             'semester_id' => $role->pivot->semester_id,
-        ], \Auth::id(), \Scopes::isClientToken());
+        ], \Auth::id(), \Scopes::isClientToken($request));
     }
 }

@@ -16,6 +16,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserPreference;
 use App\Traits\Controller\v1\HasUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Database\Eloquent\Builder;
+use App\Exceptions\PortailException;
 
 class PreferenceController extends Controller
 {
@@ -50,7 +53,7 @@ class PreferenceController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param User                     $user
      * @param string                   $verb
-     * @return JsonResponse
+     * @return Builder
      */
     protected function getPreferences(Request $request, User $user, string $verb)
     {
@@ -125,21 +128,21 @@ class PreferenceController extends Controller
 
         // On ajoute l'id associé.
         if ($request->input('only_for') === 'asso') {
-            if (!\Scopes::has($request, 'user-'.$verb.'-info-preferences-asso')) {
+            if (!\Scopes::has($request, 'user-create-info-preferences-asso')) {
                 abort(403, 'Vous n\'avez pas les droits sur les préférences de l\'association');
             }
 
             $token = $request->user() ? $request->user()->token() : $request->token();
             $inputs['only_for'] .= '_'.$token->client->asso_id;
         } else if ($request->input('only_for') === 'client') {
-            if (!\Scopes::has($request, 'user-'.$verb.'-info-preferences-client')) {
+            if (!\Scopes::has($request, 'user-create-info-preferences-client')) {
                 abort(403, 'Vous n\'avez pas les droits sur les préférences du client');
             }
 
             $token = $request->user() ? $request->user()->token() : $request->token();
             $inputs['only_for'] .= '_'.$token->client->id;
         } else if ($request->input('only_for', 'global') === 'global') {
-            if (!\Scopes::has($request, 'user-'.$verb.'-info-preferences-global')) {
+            if (!\Scopes::has($request, 'user-create-info-preferences-global')) {
                 abort(403, 'Vous n\'avez pas les droits sur les préférences globale de l\'utilisateur');
             }
         } else {
@@ -148,8 +151,8 @@ class PreferenceController extends Controller
 
         if (\Scopes::isUserToken($request)) {
             $preference = UserPreference::create(array_merge(
-            $inputs,
-            ['user_id' => $user->id]
+                $inputs,
+                ['user_id' => $user->id]
             ));
 
             return response()->json($preference, 201);

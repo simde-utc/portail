@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\PasswordReset;
+use \Illuminate\Contracts\Auth\CanResetPassword;
 
 class ResetPasswordController extends Controller
 {
@@ -55,11 +56,11 @@ class ResetPasswordController extends Controller
     /**
      * Réinitilise le mot de passe.
      *
-     * @param  \Illuminate\Contracts\Auth\CanResetPassword $user
-     * @param  string                                      $password
+     * @param  CanResetPassword $user
+     * @param  string           $password
      * @return void
      */
-    protected function resetPassword(\Illuminate\Contracts\Auth\CanResetPassword $user, string $password)
+    protected function resetPassword(CanResetPassword $user, string $password)
     {
         $user->setRememberToken(Str::random(60));
         $user->save();

@@ -43,6 +43,8 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 	CanHaveRoles, CanHavePermissions, CanComment
 {
     use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid, UserRelations {
+        UserRelations::notifications insteadof Notifiable;
+        UserRelations::isRoleForIdDeletable insteadof HasRoles;
         HasHiddenData::hideData as protected hideDataFromTrait;
     }
 
@@ -164,7 +166,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
      * Retrouve un utilisateur par son adresse email.
      *
      * @param  string $email
-     * @return User
+     * @return User|null
      */
     public static function findByEmail(string $email)
     {
@@ -277,7 +279,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     /**
      * Donne le type majeur de l'utilisateur (admin, cas, cotisant, etc.).
      *
-     * @return string
+     * @return string|null
      */
     public function type()
     {
@@ -359,7 +361,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     /**
      * Indique si l'utilsateur est cotisant BDE-UTC.
      *
-     * @return boolean
+     * @return boolean|null
      */
     public function isContributorBde()
     {

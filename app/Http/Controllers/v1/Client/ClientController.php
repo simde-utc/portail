@@ -18,7 +18,7 @@ use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Laravel\Passport\Token;
+use App\Models\Token;
 use Lcobucci\JWT\Parser;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
@@ -89,14 +89,16 @@ class ClientController extends Controller
     {
         $bearerToken = $request->bearerToken();
         $token_id = (new Parser)->parse($bearerToken)->getHeader('jti');
-        $client_id = Token::find($tokenId)->client_id;
+        $client_id = Token::find($token_id)->client_id;
         $tokens = Token::where('client_id', $client_id)->where('user_id', $user_id);
 
         if ($request->input('revoked')) {
-            $tokens->where('revoked', $request->input('revoked') == 1 ? 1 : 0);
+            $tokens->where('revoked', $request->input('revoked') === '1' ? 1 : 0);
         }
 
-        return response()->json($tokens->get()->makeHidden('id')->makeHidden('session_id'));
+        $tokens = $tokens->get()->makeHidden('id')->makeHidden('session_id');
+
+        return response()->json($tokens);
     }
 
     /**

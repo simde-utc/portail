@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Exceptions\PortailException;
 use App\Interfaces\Model\CanHaveRoles;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Ramsey\Uuid\Uuid;
 
 class Role extends Model implements OwnableContract
 {
@@ -91,17 +93,17 @@ class Role extends Model implements OwnableContract
     /**
      * Récupère un rôle.
      *
-     * @param  string       $id
+     * @param  string       $role_id
      * @param  CanHaveRoles $owner
      * @return Role
      */
-    public static function find(string $id, CanHaveRoles $owner=null)
+    public static function find(string $role_id, CanHaveRoles $owner=null)
     {
         if ($owner === null) {
             $owner = new User;
         }
 
-        $roles = static::where('id', $id)
+        $roles = static::where('id', $role_id)
 	        ->where('owned_by_type', get_class($owner))
 	        ->where(function ($query) use ($owner) {
 	            $query->whereNull('owned_by_id')
@@ -140,7 +142,7 @@ class Role extends Model implements OwnableContract
      *
      * @param  mixed        $role
      * @param  CanHaveRoles $owner
-     * @return Role
+     * @return Role|null
      */
     public static function getRole($role, CanHaveRoles $owner=null)
     {
@@ -148,10 +150,10 @@ class Role extends Model implements OwnableContract
             $owner = new User;
         }
 
-        if (is_string($role)) {
-            return static::findByType($role, $owner);
-        } else if (is_int($role)) {
+        if (Uuid::isValid($role)) {
             return static::find($role, $owner);
+        } else if (is_string($role)) {
+            return static::findByType($role, $owner);
         } else {
             return $role;
         }
@@ -192,7 +194,7 @@ class Role extends Model implements OwnableContract
      *
      * @param  mixed        $role
      * @param  CanHaveRoles $owner
-     * @return Collection
+     * @return Collection|null
      */
     public static function getRoleAndItsParents($role, CanHaveRoles $owner=null)
     {
@@ -328,10 +330,10 @@ class Role extends Model implements OwnableContract
      */
     public function hasPermissionTo($permission): bool
     {
-        if (is_string($permission)) {
-            $permission = Permission::findByType($permission);
-        } else if (is_int($permission)) {
+        if (Uuid::isValid($permission)) {
             $permission = Permission::find($permission);
+        } else if (is_string($permission)) {
+            $permission = Permission::findByType($permission);
         }
 
         return $this->permissions->contains('id', $permission->id);
@@ -382,7 +384,9 @@ class Role extends Model implements OwnableContract
             throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
         }
 
-        if ($toAdd->find($this->id)) {
+        if ($toAdd->filter(function ($role) {
+            return $role->id = $this->id;
+        })->count() > 0) {
             throw new PortailException('Il n\'est pas possible de s\'auto-hériter', 400);
         }
 
@@ -430,7 +434,9 @@ class Role extends Model implements OwnableContract
             throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
         }
 
-        if ($toAdd->find($this->id)) {
+        if ($toAdd->filter(function ($role) {
+            return $role->id = $this->id;
+        })->count() > 0) {
             throw new PortailException('Il n\'est pas possible de s\'auto-hériter', 400);
         }
 
@@ -465,11 +471,11 @@ class Role extends Model implements OwnableContract
     /**
      * Surcharge de la méthode d'appel pour retourner une relation.
      *
-     * @param  string $method
-     * @param  array  $arguments
+     * @param  mixed $method
+     * @param  mixed $arguments
      * @return mixed
      */
-    public function __call(string $method, array $arguments)
+    public function __call($method, $arguments)
     {
         if (class_exists($this->owned_by_type) && method_exists($this->owned_by, 'getRoleRelationTable')) {
             return $this->belongsToMany($this->owned_by_type, $this->owned_by->getRoleRelationTable());
