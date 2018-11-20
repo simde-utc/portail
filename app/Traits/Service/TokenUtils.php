@@ -10,6 +10,12 @@
 
 namespace App\Traits\Service;
 
+use Illuminate\Http\Request;
+use Lcobucci\JWT\Parser;
+use Laravel\Passport\Token;
+use App\Models\Client;
+use App\Exceptions\PortailException;
+
 trait TokenUtils
 {
     /**
