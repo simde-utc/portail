@@ -179,10 +179,10 @@ trait HasKeyValue
     /**
      * Casting automatique des données.
      *
-     * @param  string $key
+     * @param  mixed $key
      * @return mixed
      */
-    public function getAttribute(string $key)
+    public function getAttribute($key)
     {
         $value = parent::getAttribute($key);
 
@@ -217,11 +217,11 @@ trait HasKeyValue
     /**
      * Casting automatique des données.
      *
-     * @param  string $key
-     * @param  mixed  $value
+     * @param  mixed $key
+     * @param  mixed $value
      * @return mixed
      */
-    public function setAttribute(string $key, $value)
+    public function setAttribute($key, $value)
     {
         if ($key === 'value') {
             switch (gettype($value)) {
@@ -274,10 +274,10 @@ trait HasKeyValue
     /**
      * Conversion en array.
      *
-     * @param  boolean $all
+     * @param  mixed $all
      * @return array
      */
-    public function toArray(bool $all=false)
+    public function toArray($all=0)
     {
         if ($all) {
             $array = parent::toArray();
@@ -294,22 +294,22 @@ trait HasKeyValue
     /**
      * Conversion en json.
      *
-     * @param  boolean $all
+     * @param  mixed $all
      * @return array
      */
-    public function toJson(bool $all=false)
+    public function toJson($options=0)
     {
-        return json_encode($this->toArray($all));
+        return json_encode($this->toArray($options));
     }
 
     /**
      * Override les appels non connu.
      *
-     * @param  string $method
-     * @param  array  $parameters
+     * @param  mixed $method
+     * @param  mixed $parameters
      * @return mixed
      */
-    public function __call(string $method, array $parameters)
+    public function __call($method, $parameters)
     {
         if (in_array($method, ['increment', 'decrement'])) {
             return $this->$method(...$parameters);

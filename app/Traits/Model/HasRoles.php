@@ -26,7 +26,7 @@ trait HasRoles
     }
 
     /**
-     * Méthode appelée au chargement du trait.
+     * Méthode appelée au chargement du class.
      *
      * @return void
      */
@@ -367,7 +367,7 @@ trait HasRoles
     }
 
     /**
-     * Override de la méthode du trait hasPermissions: Récupérer les permissions de cette instance ou de celui sur les users assignés et hérités d'une personne.
+     * Override de la méthode du class hasPermissions: Récupérer les permissions de cette instance ou de celui sur les users assignés et hérités d'une personne.
      *
      * @param string $user_id
      * @param string $semester_id

@@ -25,7 +25,7 @@ trait HasMembers
     use HasRoles;
 
     /**
-     * Méthode appelée au chargement du trait.
+     * Méthode appelée au chargement du class.
      *
      * @return void
      */

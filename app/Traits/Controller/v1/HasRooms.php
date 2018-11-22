@@ -1,4 +1,12 @@
 <?php
+/**
+ * Ajoute au controlleur un accès aux salles.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Traits\Controller\v1;
 
@@ -10,53 +18,87 @@ use Illuminate\Http\Request;
 
 trait HasRooms
 {
-	use HasVisibility;
+    use HasVisibility;
 
-	public function isPrivate($user_id, $room = null) {
-		if ($room === null)
-			return false;
+    /**
+     * Indique que l'utilisateur est membre de l'instance.
+     *
+     * @param  string $user_id
+     * @param  mixed  $model
+     * @return boolean
+     */
+    public function isPrivate(string $user_id, $room=null)
+    {
+        if ($room === null) {
+            return false;
+        }
 
-		return $room->owned_by->isRoomAccessibleBy($user_id);
-  }
+        return $room->owned_by->isRoomAccessibleBy($user_id);
+    }
 
-	protected function getRoom(Request $request, User $user, string $id, string $verb = 'get') {
-		$room = Room::find($id);
+    /**
+     * Récupère une salle.
+     *
+     * @param  Request $request
+     * @param  User    $user
+     * @param  string  $id
+     * @param  string  $verb
+     * @return Room|null
+     */
+    protected function getRoom(Request $request, User $user, string $id, string $verb='get')
+    {
+        $room = Room::find($id);
 
-		if ($room) {
-			if (!$this->tokenCanSee($request, $room, $verb))
-				abort(403, 'L\'application n\'a pas les droits sur cet salle');
+        if ($room) {
+            if (!$this->tokenCanSee($request, $room, $verb)) {
+                abort(403, 'L\'application n\'a pas les droits sur cet salle');
+            }
 
-			if (!$this->isVisible($room, $user->id))
-				abort(403, 'Vous n\'avez pas le droit de voir cette salle');
+            if (!$this->isVisible($room, $user->id)) {
+                abort(403, 'Vous n\'avez pas le droit de voir cette salle');
+            }
 
-			if ($verb !== 'get' && !$room->owned_by->isRoomManageableBy(\Auth::id()))
-				abort(403, 'Vous n\'avez pas les droits suffisants');
+            if ($verb !== 'get' && !$room->owned_by->isRoomManageableBy(\Auth::id())) {
+                abort(403, 'Vous n\'avez pas les droits suffisants');
+            }
 
-			return $room;
-		}
+            return $room;
+        }
 
-		abort(404, 'Impossible de trouver la salle');
-	}
+        abort(404, 'Impossible de trouver la salle');
+    }
 
-	protected function tokenCanSee(Request $request, Room $room, string $verb) {
-		$scopeHead = \Scopes::getTokenType($request);
+    /**
+     * Indique si le token peut voir la ressource.
+     *
+     * @param  Request $request
+     * @param  Room    $room
+     * @param  string  $verb
+     * @return boolean
+     */
+    protected function tokenCanSee(Request $request, Room $room, string $verb)
+    {
+        $scopeHead = \Scopes::getTokenType($request);
+        $type = \ModelResolver::getName($room->owned_by_type);
 
-		if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-rooms-'.\ModelResolver::getName($room->owned_by_type).'s-owned'))
-			return true;
+        if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-rooms-'.$type.'s-owned')) {
+            return true;
+        }
 
-		if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-rooms-'.\ModelResolver::getName($room->owned_by_type).'s-owned-asso'))
-				&& $room->created_by_type === Asso::class
-				&& $room->created_by_id === \Scopes::getClient($request)->asso->id)) {
-			if (\Scopes::isUserToken($request)) {
-				$functionToCall = 'isRoom'.($verb === 'get' ? 'Accessible' : 'Manageable').'By';
+        if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-rooms-'.$type.'s-owned-asso'))
+            && $room->created_by_type === Asso::class
+            && $room->created_by_id === \Scopes::getClient($request)->asso->id)) {
+            if (\Scopes::isUserToken($request)) {
+                $functionToCall = 'isRoom'.($verb === 'get' ? 'Accessible' : 'Manageable').'By';
 
-				if ($room->owned_by->$functionToCall(\Auth::id()))
-					return true;
-			}
-			else
-				return true;
-		}
+                if ($room->owned_by->$functionToCall(\Auth::id())) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
 
-		return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-rooms-'.\ModelResolver::getName($room->owned_by_type).'s-created');
-	}
+        return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-rooms-'.$type.'s-created');
+    }
 }

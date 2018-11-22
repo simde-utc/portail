@@ -19,7 +19,7 @@ use App\Models\User;
 trait HasPermissions
 {
     /**
-     * Méthode appelée au chargement du trait.
+     * Méthode appelée au chargement du class.
      *
      * @return void
      */
