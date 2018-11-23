@@ -1,19 +1,21 @@
 <?php
-
-/*
-    |--------------------------------------------------------------------------
-    |	Taille des validations
-    |--------------------------------------------------------------------------
-    | Utile pour les Requests et les Migrations
-    |
-    | helper pour les requests :
-    |		validation_between('login') 	=> donne between:1,15
-    | helper pour les migrations :
-    | 		validation_max('login') 		=> donne 15
-*/
+/**
+ * Fichier de configuration des validations.
+ * Helper pour les requests:
+ *  validation_between('login') => donne `between:1,15`
+ * Helper pour les migrations :
+ *  validation_max('login') => donne `15`
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 return [
-	// Login pour les assos et les étudiants
+	// Login pour les assos et les étudiants.
     'login' => [
         'min' => 1,
         'max' => 15,
@@ -25,7 +27,6 @@ return [
     ],
 
     'email' => [
-    // 'email' => true,
         'min' => 7,
         'max' => 127,
     ],
@@ -35,42 +36,39 @@ return [
         'max' => 255,
     ],
 
-    // Nom et prénom de personnes
+    // Nom et prénom de personnes.
     'name' => [
         'min' => 1,
         'max' => 63,
     ],
 
-    // Titre d'articles et d'évènements
+    // Titre d'articles et d'évènements.
     'title' => [
         'min' => 1,
         'max' => 127,
     ],
 
-    // Description courte d'assos
+    // Description courte d'assos.
     'description' => [
         'min' => 0,
         'max' => 8191,
     ],
 
-    // Chaine de charactère courte basique
+    // Chaine de charactère courte basique.
     'string' => [
         'min' => 0,
         'max' => 255,
     ],
 
-    // Contenu d'article
+    // Contenu d'article.
     'article' => [
         'min' => 0,
         'max' => 16383,
     ],
 
-    // Commentaire d'article
+    // Commentaire d'article.
     'comment' => [
         'min' => 1,
         'max' => 4095,
     ],
-
-
-
 ];

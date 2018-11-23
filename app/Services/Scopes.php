@@ -17,10 +17,11 @@ use Laravel\Passport\Token;
 use App\Models\Client;
 use App\Exceptions\PortailException;
 use App\Traits\Service\TokenUtils;
+use App\Traits\Service\ScopesIdentification;
 
 class Scopes
 {
-    use TokenUtils;
+    use TokenUtils, ScopesIdentification;
 
     /*
      * Liste des scopes en fonction des routes.

@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * Liste des scopes en fonction des routes
  *   - Définition des scopes:
  *      portée + '-' + verbe + '-' + categorie + (pour chaque sous-catégorie: '-' + sous-catégorie)
@@ -303,9 +302,6 @@ return [
                 'details' => [
                     'description' => 'Modifier tous les détails de l\'utilisateur (date de naissance, âge, majorité)',
                     'scopes' => [
-                        'birthdate' => [
-                            'description' => 'Modifier la date de naisssance de l\'utilisateur',
-                        ],
                         'birthdate' => [
                             'description' => 'Modifier la date de naisssance de l\'utilisateur',
                         ],

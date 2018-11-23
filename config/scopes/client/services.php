@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * Liste des scopes en fonction des routes
  *   - Définition des scopes:
  *      portée + "-" + verbe + "-" + categorie + (pour chaque sous-catégorie: '-' + sous-catégorie)

@@ -1,39 +1,49 @@
 <?php
+/**
+ * Surcouche des routes Oauth.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-| Attention !! Les routes sont préfixées avec 'oauth/'
-| Ces routes modifient celles définies par laravel-passport
-*/
+/**
+ * Liste les scopes.
+ */
 
-
-// Liste des Scopes
 Route::get('scopes', '\App\Services\Scopes@all');
 Route::get('scopes/categories', '\App\Services\Scopes@getAllByCategories');
 
-// Clients
+
+/*
+ * Gestion des clients.
+ */
+
 Route::get('clients', '\App\Http\Controllers\Passport\ClientController@index')
-		->middleware(['forceJson', 'web', 'auth']);
+	->middleware(['forceJson', 'web', 'auth']);
 Route::post('clients', '\App\Http\Controllers\Passport\ClientController@store')
-		->middleware(['forceJson', 'web', 'auth', 'permission:client']);
+	->middleware(['forceJson', 'web', 'auth', 'permission:client']);
 Route::put('clients/{client_id}', '\App\Http\Controllers\Passport\ClientController@update')
-		->middleware(['forceJson', 'web', 'auth', 'permission:client']);
+	->middleware(['forceJson', 'web', 'auth', 'permission:client']);
 Route::delete('clients/{client_id}', '\App\Http\Controllers\Passport\ClientController@destroy')
-		->middleware(['forceJson', 'web', 'auth', 'permission:client']);
+	->middleware(['forceJson', 'web', 'auth', 'permission:client']);
 
-// Authorizations
+
+/*
+ * Route d'authorisation
+ */
+
 Route::get('authorize', '\Laravel\Passport\Http\Controllers\AuthorizationController@authorize')
-		->middleware(['web', 'auth', 'checkPassport']);
+	->middleware(['web', 'auth', 'checkPassport']);
 
-// Tokens
+
+/*
+ * Gestion des tokens.
+ */
+
 Route::post('token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')
-		->middleware(['forceJson', 'throttle', 'checkPassport']);
+	->middleware(['forceJson', 'throttle', 'checkPassport']);
 Route::post('personal-access-tokens', '\Laravel\Passport\Http\Controllers\PersonalAccessTokenController@store')
-		->middleware(['forceJson', 'web', 'auth', 'checkPassport']);
+	->middleware(['forceJson', 'web', 'auth', 'checkPassport']);

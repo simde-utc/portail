@@ -1,7 +1,14 @@
 <?php
+/**
+ * Fichier de configuration des semestres.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 return [
-	// Génération des semestres
     'begining_at' => [
         [
             'month' => '09',
@@ -14,6 +21,7 @@ return [
             'time' => '00:00:00',
         ],
     ],
+
     'ending_at' => [
         [
             'month' => '01',
@@ -26,6 +34,7 @@ return [
             'time' => '23:59:59',
         ],
     ],
+
     'name' => [
         'A',
         'P',

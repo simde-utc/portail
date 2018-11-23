@@ -18,7 +18,6 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Group;
-use App\Services\Visible\Visible;
 use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;
 use App\Traits\Controller\v1\HasGroups;

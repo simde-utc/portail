@@ -20,7 +20,7 @@ class Test extends Command
     /**
      * @var string
      */
-    protected $signature = 'quick:test {file?*}';
+    protected $signature = 'quick:test {file?*} {--special}';
 
     /**
      * @var string
@@ -34,6 +34,15 @@ class Test extends Command
      */
     protected $dirs = [
         'app', 'bootstrap', 'config', 'database', 'resources/lang', 'routes', 'tests',
+    ];
+
+    /**
+     * Tous les dossiers à vérifier d'une manière particulière.
+     *
+     * @var array
+     */
+    protected $specialFiles = [
+        'config', 'resources/lang', 'routes', 'database'
     ];
 
     /**
@@ -201,15 +210,35 @@ class Test extends Command
     private function runPHPCS()
     {
         $excludedRules = [
-            'Generic.Files.LineLength,Squiz.Commenting.FileComment',
+            'Generic.Files.LineLength',
             'Squiz.Commenting.InlineComment'
         ];
 
-        return ($this->process(
-            "./vendor/bin/phpcs ".implode($this->files, ' ')
-        ) + $this->process(
-            "./vendor/bin/phpcs config --exclude=".implode($excludedRules, ',')
-        ));
+        // Les fichiers sont du type "spécial" (possèdent des règles en moins)
+        if ($this->option('special')) {
+            $specialFiles = $this->files;
+        }
+        else {
+            $files = [];
+            $specialFiles = [];
+
+            foreach ($this->files as $file) {
+                if (array_search($file, $this->specialFiles) === false) {
+                    $files[] = $file;
+                }
+                else {
+                    $specialFiles[] = $file;
+                }
+            }
+
+            if ($code = $this->process("./vendor/bin/phpcs ".implode($files, ' '))) {
+                return $code;
+            }
+        }
+
+        return $this->process(
+            "./vendor/bin/phpcs ".implode($specialFiles, ' ')." --exclude=".implode($excludedRules, ',')
+        );
     }
 
     /**

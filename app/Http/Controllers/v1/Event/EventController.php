@@ -22,7 +22,6 @@ use App\Models\Event;
 use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Services\Visible\Visible;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Traits\HasVisibility;
 

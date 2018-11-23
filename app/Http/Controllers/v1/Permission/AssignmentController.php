@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Semester;
 use App\Http\Requests\PermissionRequest;
-use App\Services\Visible\Visible;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasPermissions;

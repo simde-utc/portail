@@ -15,7 +15,6 @@ namespace App\Http\Requests;
 use App\Facades\Validation;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Group;
-use App\Services\Visible\Visible;
 
 class GroupRequest extends FormRequest
 {
