@@ -13,7 +13,7 @@ class ServicesTableSeeder extends Seeder
      */
     public function run()
     {
-  	    $services = [
+        $services = [
             [
                 'login' => 'wiki',
                 'shortname' => 'Wiki',
@@ -60,14 +60,14 @@ class ServicesTableSeeder extends Seeder
         ];
 
         foreach ($services as $service) {
-			Service::create([
+            Service::create([
                 'login' => $service['login'],
                 'shortname' => $service['shortname'],
                 'name' => $service['name'],
                 'description' => $service['description'],
                 'url' => $service['url'],
-                'visibility_id' => Visibility::where('type', $service['visibility'])->first()->id
+                'visibility_id' => Visibility::where('type', $service['visibility'])->first()->id,
             ]);
-      	}
+        }
     }
 }

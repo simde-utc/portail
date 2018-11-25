@@ -13,6 +13,7 @@ namespace App\Traits\Controller\v1;
 use App\Exceptions\PortailException;
 use App\Models\Event;
 use App\Models\User;
+use App\Models\Asso;
 use App\Models\Calendar;
 use App\Models\Client;
 use App\Traits\HasVisibility;
@@ -100,6 +101,24 @@ trait HasEvents
         }
 
         abort(404, 'Impossible de trouver le évènenement');
+    }
+
+    /**
+     * Uniquement les followers et ceux qui possèdent le droit peuvent le voir.
+     *
+     * @param  Request  $request
+     * @param  Calendar $calendar
+     * @param  string   $user_id
+     * @return boolean
+     */
+    protected function isCalendarFollowed(Request $request, Calendar $calendar, string $user_id)
+    {
+        $type = \ModelResolver::getName($calendar->owned_by_type);
+
+        return (
+            $calendar->followers()->wherePivot('user_id', $user_id)->exists()
+            && \Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-calendars-users-followed-'.$type)
+        );
     }
 
     /**

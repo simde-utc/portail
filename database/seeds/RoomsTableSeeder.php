@@ -19,7 +19,7 @@ class RoomsTableSeeder extends Seeder
             [
                 'location' => 'BDE-UTC (1er étage)',
                 'capacity' => 49,
-				        'visibility' => 'contributorBde',
+                'visibility' => 'contributorBde',
                 'owner' => Asso::where('login', 'bde')->first(),
             ],
         ];

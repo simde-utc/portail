@@ -20,9 +20,9 @@ trait HasUsers
     /**
      * Renvoie les informations sur un utilisateur via son id ou sur l'utilisateur actuellement connecté.
      *
-     * @param Request      $request
-     * @param integer|null $user_id
-     * @param boolean      $accessOtherUsers
+     * @param Request     $request
+     * @param string|null $user_id
+     * @param boolean     $accessOtherUsers
      * @return User
      */
     protected function getUser(Request $request, string $user_id=null, bool $accessOtherUsers=false): User

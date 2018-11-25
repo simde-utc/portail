@@ -4,7 +4,8 @@
 
     <!-- Liste des fichiers/dossiers à inspecter -->
     <file>app</file>
-    <file>bootstrap</file>
+    <file>bootstrap/app.php</file>
+    <file>bootstrap/helpers.php</file>
     <file>database</file>
     <file>resources/lang</file>
     <file>routes</file>

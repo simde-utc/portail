@@ -20,10 +20,10 @@ class CreateCalendarsFollowersTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-			$table->foreign('calendar_id')->references('id')->on('calendars');
+            $table->foreign('calendar_id')->references('id')->on('calendars');
 
             $table->primary(['user_id', 'calendar_id']);
-  		});
+        });
     }
 
     /**

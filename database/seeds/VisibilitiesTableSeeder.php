@@ -47,10 +47,10 @@ class VisibilitiesTableSeeder extends Seeder
 
         foreach ($visibilities as $visibility) {
             Visibility::create([
-				'type' => $visibility['type'],
-				'name' => $visibility['name'],
-                'parent_id' => Visibility::where('type', $visibility['parent'] ?? null)->first()->id ?? null,
-			]);
+                'type' => $visibility['type'],
+                'name' => $visibility['name'],
+                'parent_id' => (Visibility::where('type', ($visibility['parent'] ?? null))->first()->id ?? null),
+            ]);
         }
     }
 }

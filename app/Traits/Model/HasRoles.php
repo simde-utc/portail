@@ -47,7 +47,7 @@ trait HasRoles
      */
     public function getRoleRelationTable()
     {
-        return ($this->roleRelationTable ?? $this->getTable()).'_roles';
+        return ($this->roleRelationTable ?? $this->getTable().'_roles');
     }
 
     /**
@@ -72,6 +72,7 @@ trait HasRoles
     {
         $data['semester_id'] = array_key_exists('semester_id', $data) ? $data['semester_id'] : Semester::getThisSemester()->id;
         $addRoles = [];
+        $manageableRoles = collect();
 
         if (isset($data['validated_by']) || \Auth::id()) {
             $manageableRoles = $this->getUserRoles(($data['validated_by'] ?? \Auth::id()));
@@ -131,6 +132,7 @@ trait HasRoles
         $data['semester_id'] = ($data['semester_id'] ?? Semester::getThisSemester()->id);
         $updatedData['semester_id'] = ($updatedData['semester_id'] ?? Semester::getThisSemester()->id);
         $updatedRoles = [];
+        $manageableRoles = collect();
 
         if (isset($updatedData['validated_by']) || \Auth::id()) {
             $manageableRoles = $this->getUserRoles(($updatedData['validated_by'] ?? \Auth::id()));
@@ -167,7 +169,7 @@ trait HasRoles
                 $toUpdate->updateExistingPivot($updatedRole, $updatedData);
             }
         } catch (\Exception $e) {
-            throw new MemberException('Les données d\'un role ne peuvent être modifiées');
+            throw new PortailException('Les données d\'un role ne peuvent être modifiées');
         }
 
         return $this;
@@ -187,6 +189,7 @@ trait HasRoles
         $data['semester_id'] = ($data['semester_id'] ?? Semester::getThisSemester()->id);
         $delRoles = [];
         $removed_by = ($removed_by ?? \Auth::id());
+        $manageableRoles = collect();
 
         if ($removed_by !== null) {
             $manageableRoles = $this->getUserRoles($removed_by);
@@ -221,7 +224,7 @@ trait HasRoles
         try {
             $toDetach->detach($delRoles);
         } catch (\Exception $e) {
-            throw new MemberException('Une erreur a été recontrée à la suppression d\'un role utilisateur');
+            throw new PortailException('Une erreur a été recontrée à la suppression d\'un role utilisateur');
         }
 
         return $this;
@@ -291,7 +294,7 @@ trait HasRoles
      * @param string  $user_id
      * @param string  $semester_id
      * @param boolean $needToBeValidated
-     * @return Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function getUserAssignedRoles(string $user_id=null, string $semester_id=null, bool $needToBeValidated=true)
     {
@@ -299,7 +302,7 @@ trait HasRoles
         $roles = $this->roles();
 
         if ($roles === null) {
-            return new Collection;
+            return collect();
         }
 
         if ($user_id !== null) {
@@ -324,7 +327,7 @@ trait HasRoles
      *
      * @param string $user_id
      * @param string $semester_id
-     * @return mixed
+     * @return Collection
      */
     public function getUserRoles(string $user_id=null, string $semester_id=null)
     {
@@ -345,7 +348,7 @@ trait HasRoles
             }
         }
 
-        return $roles->unique('id');
+        return $roles;
     }
 
     /**

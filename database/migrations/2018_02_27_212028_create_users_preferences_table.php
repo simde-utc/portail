@@ -6,37 +6,37 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUsersPreferencesTable extends Migration
 {
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('users_preferences', function (Blueprint $table) {
-			$table->uuid('user_id');
-			$table->string('key');
-			$table->string('value')->nullable();
-			$table->enum('type', [
-				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
-			])->default('STRING');
-			$table->string('only_for')->default('global');
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('users_preferences', function (Blueprint $table) {
+            $table->uuid('user_id');
+            $table->string('key');
+            $table->string('value')->nullable();
+            $table->enum('type', [
+                'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
+            ])->default('STRING');
+            $table->string('only_for')->default('global');
 
-			$table->timestamps();
+            $table->timestamps();
 
-			$table->primary(['user_id', 'key', 'only_for']);
+            $table->primary(['user_id', 'key', 'only_for']);
 
-			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-		});
-	}
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::dropIfExists('users_preferences');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('users_preferences');
+    }
 }

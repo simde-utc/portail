@@ -112,7 +112,7 @@ class PlaceController extends Controller
     {
         $place = $this->getPlace($request, $place_id);
 
-        if ($place->softDelete()) {
+        if ($place->delete()) {
             abort(204);
         } else {
             abort(500, 'Erreur lors de la suppression de le lieu');

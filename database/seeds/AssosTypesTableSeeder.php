@@ -12,18 +12,18 @@ class AssosTypesTableSeeder extends Seeder
      */
     public function run()
     {
-  	    $types = [
-  		    '1901' => 'Association loi 1901',
-  		    'commission' => 'Commission',
-  		    'club' => 'Club',
-  		    'projet' => 'Projet',
-  	    ];
+        $types = [
+            '1901' => 'Association loi 1901',
+            'commission' => 'Commission',
+            'club' => 'Club',
+            'projet' => 'Projet',
+        ];
 
         foreach ($types as $type => $name) {
-    		AssoType::create([
-    			'type' => $type,
-    			'name' => $name,
-    		]);
-      	}
+            AssoType::create([
+                'type' => $type,
+                'name' => $name,
+            ]);
+        }
     }
 }

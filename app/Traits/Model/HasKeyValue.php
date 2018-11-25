@@ -294,8 +294,8 @@ trait HasKeyValue
     /**
      * Conversion en json.
      *
-     * @param  mixed $all
-     * @return array
+     * @param  mixed $options
+     * @return string
      */
     public function toJson($options=0)
     {

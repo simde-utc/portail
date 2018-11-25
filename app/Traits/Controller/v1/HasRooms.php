@@ -11,6 +11,7 @@
 namespace App\Traits\Controller\v1;
 
 use App\Traits\HasVisibility;
+use App\Models\Asso;
 use App\Models\Room;
 use App\Models\Model;
 use App\Models\User;
@@ -24,7 +25,7 @@ trait HasRooms
      * Indique que l'utilisateur est membre de l'instance.
      *
      * @param  string $user_id
-     * @param  mixed  $model
+     * @param  mixed  $room
      * @return boolean
      */
     public function isPrivate(string $user_id, $room=null)
@@ -41,13 +42,13 @@ trait HasRooms
      *
      * @param  Request $request
      * @param  User    $user
-     * @param  string  $id
+     * @param  string  $room_id
      * @param  string  $verb
      * @return Room|null
      */
-    protected function getRoom(Request $request, User $user, string $id, string $verb='get')
+    protected function getRoom(Request $request, User $user, string $room_id, string $verb='get')
     {
-        $room = Room::find($id);
+        $room = Room::find($room_id);
 
         if ($room) {
             if (!$this->tokenCanSee($request, $room, $verb)) {

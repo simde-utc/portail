@@ -146,7 +146,7 @@ class CalendarController extends Controller
     public function destroy(Request $request, string $calendrier_id): void
     {
         $calendar = $this->getCalendar($request, \Auth::user(), $calendrier_id, 'manage');
-        $calendar->softDelete();
+        $calendar->delete();
 
         abort(204);
     }

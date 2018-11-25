@@ -95,7 +95,7 @@ class Role extends Model implements OwnableContract
      *
      * @param  string       $role_id
      * @param  CanHaveRoles $owner
-     * @return Role
+     * @return Role|null
      */
     public static function find(string $role_id, CanHaveRoles $owner=null)
     {
@@ -119,7 +119,7 @@ class Role extends Model implements OwnableContract
      *
      * @param  string       $type
      * @param  CanHaveRoles $owner
-     * @return Role
+     * @return Role|null
      */
     public static function findByType(string $type, CanHaveRoles $owner=null)
     {
@@ -384,9 +384,11 @@ class Role extends Model implements OwnableContract
             throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
         }
 
-        if ($toAdd->filter(function ($role) {
-            return $role->id = $this->id;
-        })->count() > 0) {
+        $thisRole = $toAdd->filter(function ($role) {
+            return $role->id === $this->id;
+        });
+
+        if ($thisRole->count() > 0) {
             throw new PortailException('Il n\'est pas possible de s\'auto-hériter', 400);
         }
 
@@ -434,9 +436,11 @@ class Role extends Model implements OwnableContract
             throw new PortailException('Les rôles donnés n\'existent pas ou ne sont pas associés au même type', 400);
         }
 
-        if ($toAdd->filter(function ($role) {
-            return $role->id = $this->id;
-        })->count() > 0) {
+        $thisRole = $toAdd->filter(function ($role) {
+            return $role->id === $this->id;
+        });
+
+        if ($thisRole->count() > 0) {
             throw new PortailException('Il n\'est pas possible de s\'auto-hériter', 400);
         }
 

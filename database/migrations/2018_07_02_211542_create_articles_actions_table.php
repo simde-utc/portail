@@ -6,38 +6,38 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateArticlesActionsTable extends Migration
 {
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('articles_actions', function (Blueprint $table) {
-			$table->uuid('article_id');
-			$table->uuid('user_id');
-			$table->string('key');
-			$table->string('value')->nullable();
-			$table->enum('type', [
-				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
-			])->default('STRING');
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('articles_actions', function (Blueprint $table) {
+            $table->uuid('article_id');
+            $table->uuid('user_id');
+            $table->string('key');
+            $table->string('value')->nullable();
+            $table->enum('type', [
+                'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
+            ])->default('STRING');
 
-			$table->timestamps();
+            $table->timestamps();
 
-			$table->foreign('article_id')->references('id')->on('articles');
-			$table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('article_id')->references('id')->on('articles');
+            $table->foreign('user_id')->references('id')->on('users');
 
-			$table->primary(['article_id', 'user_id', 'key']);
-		});
-	}
+            $table->primary(['article_id', 'user_id', 'key']);
+        });
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::dropIfExists('articles_actions');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('articles_actions');
+    }
 }

@@ -15,7 +15,7 @@ class CreateSessionsTable extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-			$table->uuid('user_id')->nullable();
+            $table->uuid('user_id')->nullable();
             $table->string('auth_provider', 15)->nullable();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();

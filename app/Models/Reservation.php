@@ -60,7 +60,7 @@ class Reservation extends Model implements OwnableContract
         });
 
         self::deleting(function ($model) {
-            $model->event->softDelete();
+            $model->event->delete();
         });
     }
 

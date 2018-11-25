@@ -15,7 +15,7 @@ class CreateTableAssosAccess extends Migration
     {
         Schema::create('assos_access', function (Blueprint $table) {
             $table->uuid('id')->primary();
-			$table->uuid('asso_id');
+            $table->uuid('asso_id');
             $table->uuid('access_id');
             $table->uuid('semester_id');
             $table->uuid('member_id');
@@ -25,18 +25,18 @@ class CreateTableAssosAccess extends Migration
             $table->string('description')->nullable();
             $table->string('comment');
 
-			$table->timestamps();
+            $table->timestamps();
 
             $table->foreign('asso_id')->references('id')->on('assos');
             $table->foreign('access_id')->references('id')->on('access');
             $table->foreign('member_id')->references('id')->on('users');
             $table->foreign('confirmed_by_id')->references('id')->on('users');
             $table->foreign('semester_id')->references('id')->on('semesters');
-			$table->foreign('validated_by_id')->references('id')->on('users');
+            $table->foreign('validated_by_id')->references('id')->on('users');
 
             // On ne bloque pas avec le statut pour permettre multiple refus et multiple demande
-			$table->unique(['asso_id', 'member_id', 'semester_id']);
-		});
+            $table->unique(['asso_id', 'member_id', 'semester_id']);
+        });
     }
 
     /**

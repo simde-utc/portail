@@ -14,6 +14,7 @@ use App\Models\Reservation;
 use App\Models\Model;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Asso;
 use App\Models\Room;
 use Carbon\Carbon;
 

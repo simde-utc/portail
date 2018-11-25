@@ -14,16 +14,16 @@ class CreateCalendarsEventsTable extends Migration
     public function up()
     {
         Schema::create('calendars_events', function (Blueprint $table) {
-			$table->uuid('calendar_id');
+            $table->uuid('calendar_id');
             $table->uuid('event_id');
 
             $table->timestamps();
 
             $table->foreign('calendar_id')->references('id')->on('calendars');
-			$table->foreign('event_id')->references('id')->on('events');
+            $table->foreign('event_id')->references('id')->on('events');
 
             $table->unique(['calendar_id', 'event_id']);
-  		});
+        });
     }
 
     /**

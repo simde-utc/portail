@@ -33,7 +33,7 @@ class Test extends Command
      * @var array
      */
     protected $dirs = [
-        'app', 'bootstrap', 'config', 'database', 'resources/lang', 'routes', 'tests',
+        'app', 'bootstrap/app.php', 'bootstrap/helpers.php', 'config', 'database', 'resources/lang', 'routes', 'tests',
     ];
 
     /**
@@ -42,7 +42,7 @@ class Test extends Command
      * @var array
      */
     protected $specialFiles = [
-        'config', 'resources/lang', 'routes', 'database'
+        'config', 'database', 'resources/lang', 'routes'
     ];
 
     /**
@@ -211,27 +211,32 @@ class Test extends Command
     {
         $excludedRules = [
             'Generic.Files.LineLength',
+            'Squiz.Commenting.FileComment',
             'Squiz.Commenting.InlineComment'
         ];
 
+        if (count($this->files) === 0) {
+            $dirs = $this->dirs;
+        } else {
+            $dirs = $this->files;
+        }
+
         // Les fichiers sont du type "spécial" (possèdent des règles en moins)
         if ($this->option('special')) {
-            $specialFiles = $this->files;
-        }
-        else {
+            $specialFiles = $dirs;
+        } else {
             $files = [];
             $specialFiles = [];
 
-            foreach ($this->files as $file) {
+            foreach ($files as $file) {
                 if (array_search($file, $this->specialFiles) === false) {
                     $files[] = $file;
-                }
-                else {
+                } else {
                     $specialFiles[] = $file;
                 }
             }
 
-            if ($code = $this->process("./vendor/bin/phpcs ".implode($files, ' '))) {
+            if (count($files) && $code = $this->process("./vendor/bin/phpcs ".implode($files, ' '))) {
                 return $code;
             }
         }
@@ -266,11 +271,17 @@ class Test extends Command
             $files = $this->dirs;
         }
 
-        $files = implode($files, ',');
+        if (($index = array_search('database', $files)) !== false) {
+            unset($files[$index]);
+        }
 
-        return $this->process(
-            "php artisan code:analyse -p ".$files
-        );
+        if (count($files) === 0) {
+            return 0;
+        } else {
+            return $this->process(
+                "php artisan code:analyse -p ".implode($files, ',')
+            );
+        }
     }
 
     /**
@@ -286,11 +297,17 @@ class Test extends Command
             $files = $this->dirs;
         }
 
-        $files = implode($files, ',');
+        if (($index = array_search('database', $files)) !== false) {
+            unset($files[$index]);
+        }
 
-        return $this->process(
-            "./vendor/bin/phpmd ".$files.' text phpmd.xml'
-        );
+        if (count($files) === 0) {
+            return 0;
+        } else {
+            return $this->process(
+                "./vendor/bin/phpmd ".implode($files, ',').' text phpmd.xml'
+            );
+        }
     }
 
     /**

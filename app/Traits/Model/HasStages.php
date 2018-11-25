@@ -11,7 +11,6 @@
 namespace App\Traits\Model;
 
 use NastuzziSamy\Laravel\Traits\HasStages as BaseHasStages;
-use Illuminate\Database\Eloquent\Model;
 
 trait HasStages
 {
@@ -22,7 +21,7 @@ trait HasStages
      * Override de la méthode du trait HasHiddenData.
      *
      * @param boolean $addModelName
-     * @return Model|User
+     * @return mixed
      */
     public function hideData(bool $addModelName=false)
     {

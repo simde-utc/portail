@@ -10,12 +10,15 @@
 
 namespace App\Traits\Service;
 
+use App\Exceptions\PortailException;
+
 trait ScopesIdentification
 {
     /**
-     * Cette fonction permet de retrouver les plus petits scopes du scope donné
-     * (très utile pour lister les scopes minimum dans les controlleurs)
-     * @param  string/array $scope
+     * Cette fonction permet de retrouver les plus petits scopes du scope donné.
+     * (très utile pour lister les scopes minimum dans les controlleurs).
+     *
+     * @param  string|array $scope
      * @return array
      */
     public function getDeepestChildren($scope)
@@ -43,8 +46,8 @@ trait ScopesIdentification
 
         foreach ($current['scopes'] as $child => $data) {
             $deepestChildren = array_merge(
-            $deepestChildren,
-            $this->getDeepestChildren($scope.'-'.$child)
+                $deepestChildren,
+                $this->getDeepestChildren($scope.'-'.$child)
             );
         }
 
@@ -52,29 +55,32 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne la liste des scopes et des ses parents (prise en compte de l'héridité des verbes)
+     * Retourne la liste des scopes et des ses parents (prise en compte de l'héridité des verbes).
      *
-     * @param array $scopes
+     * @param  array  $scopes
+     * @param  string $middleware
      * @return array
      */
-    public function getMatchingScopes(array $scopes=[], bool $checkMiddleware=true, string $middleware=null)
+    public function getMatchingScopes(array $scopes=[], string $middleware=null)
     {
-        if ($scopes === [] || $scopes === null) {
-            throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
+        if ($scopes === []) {
+            throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser \
+                matchAny([bool $canBeUser = true, bool $canBeClient = true])');
         }
 
         $matchingScopes = [];
         foreach ($scopes as $scope) {
             if ($scope === null) {
-                throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
+                throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser \
+                    matchAny([bool $canBeUser = true, bool $canBeClient = true])');
             }
 
             $elements = explode('-', $scope);
             if (!isset($middleware)) {
                 $middleware = $elements[0];
-            } else if ($middleware !== $elements[0] && $checkMiddleware) {
+            } else if ($middleware !== $elements[0]) {
                 throw new PortailException('Les scopes ne sont pas définis avec les mêmes types d\'authentification !');
-                // Des scopes commençant par c- et u-
+                // Des scopes commençant par c- et u-.
             }
 
             $current = $this->getRelatives($scope, true);
@@ -89,9 +95,11 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les Middleware d'authentification
+     * Retourne les middlewares d'authentification.
      *
-     * @param boolean $userMustBeConnected
+     * @param  array   $userScopes
+     * @param  array   $clientScopes
+     * @param  boolean $matchOne
      * @return array
      */
     private function matchAny(array $userScopes=[], array $clientScopes=[], bool $matchOne=true)
@@ -99,7 +107,8 @@ trait ScopesIdentification
         $indicator = $matchOne ? '1' : '0';
         if (count($userScopes) > 0) {
             if (count($clientScopes) > 0) {
-                $middleware = $this->getAuthMiddleware().'.any:'.implode(',', [$indicator, implode('|', $userScopes), implode('|', $clientScopes)]);
+                $middleware = $this->getAuthMiddleware().'.any:'.implode(',',
+                    [$indicator, implode('|', $userScopes), implode('|', $clientScopes)]);
             } else {
                 $middleware = $this->getAuthMiddleware().'.user:'.implode(',', [$indicator, implode('|', $userScopes)]);
             }
@@ -116,7 +125,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les Middleware d'authentification pour tout client connecté à un utilisateur
+     * Retourne les middlewares d'authentification pour tout client connecté à un utilisateur.
      *
      * @return array
      */
@@ -129,7 +138,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les Middleware d'authentification pour tout client non connecté à un utilisateur
+     * Retourne les middlewares d'authentification pour tout client non connecté à un utilisateur.
      *
      * @return array
      */
@@ -142,7 +151,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les Middleware d'authentification pour tout client connecté ou non à un utilisateur
+     * Retourne les middlewares d'authentification pour tout client connecté ou non à un utilisateur.
      *
      * @return array
      */
@@ -155,74 +164,80 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les Middleware à utiliser pour accéder à une route en matchant le scope ou les scopes
-     * @param  string/array $scopes  Liste des scopes ou des scopes user/client à avoir si on est user/client
-     * @param  array        $scopes2 Liste des scopes client/user à avoir
-     * @return array
-     */
-    public function match($scopes, array $scopes2=[])
-    {
-        if (is_array($scopes)) {
-            return $this->matchAll($scopes, $scopes2);
-        } else {
-            array_push($scopes2, $scopes);
-            return $this->matchOne($scopes2);
-        }
-    }
-
-    /**
-     * Retourne les Middleware à utiliser pour accéder à une route en matchant au moins un scope parmi la liste
+     * Retourne les middlewares à utiliser pour accéder à une route en matchant le scope ou les scopes.
      *
-     * @param string/array $scopes
+     * @param  string|array $userScopes   Liste des scopes ou des scopes user/client à avoir si on est user/client.
+     * @param  array        $clientScopes Liste des scopes client/user à avoir.
      * @return array
      */
-    public function matchOne($scopes=[], $scopes2=[])
+    public function match($userScopes, array $clientScopes=[])
     {
-        $scopes = !is_array($scopes) ? [$scopes] : $scopes;
-        $scopes2 = !is_array($scopes2) ? [$scopes2] : $scopes2;
-        if (count($scopes) == 0) {
-            throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
-        }
-
-        if (explode('-', $scopes[0])[0] === 'user') {
-            return $this->matchAny($scopes, $scopes2);
+        if (is_array($userScopes)) {
+            return $this->matchAll($userScopes, $clientScopes);
         } else {
-            return $this->matchAny($scopes2, $scopes);
-        }
+            array_push($clientScopes, $userScopes);
 
-        return $this->matchAny($scopes, $scopes2);
-        return $this->matchAny($middleware !== 'client', $middleware !== 'user', $scopeList);
+            return $this->matchOne($clientScopes);
+        }
     }
 
     /**
-     * Retourne les Middleware à utiliser pour accéder à une route en matchant tous les scopes ou leurs parents de la liste
+     * Retourne les middlewares à utiliser pour accéder à une route en matchant au moins un scope parmi la liste.
      *
-     * @param string/array $scopes
+     * @param string|array $userScopes
+     * @param string|array $clientScopes
      * @return array
      */
-    public function matchAll(array $scopes=[], array $scopes2=[])
+    public function matchOne($userScopes=[], $clientScopes=[])
     {
-        if (count($scopes) == 0) {
-            throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser matchAny([bool $canBeUser = true, bool $canBeClient = true])');
+        $userScopes = !is_array($userScopes) ? [$userScopes] : $userScopes;
+        $clientScopes = !is_array($clientScopes) ? [$clientScopes] : $clientScopes;
+
+        if (count($userScopes) == 0) {
+            throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser \
+                matchAny([bool $canBeUser = true, bool $canBeClient = true])');
         }
 
-        if (explode('-', $scopes[0])[0] === 'user') {
-            return $this->matchAny($scopes, $scopes2, false);
+        if (explode('-', $userScopes[0])[0] === 'user') {
+            return $this->matchAny($userScopes, $clientScopes);
         } else {
-            return $this->matchAny($scopes2, $scopes, false);
+            return $this->matchAny($clientScopes, $userScopes);
         }
     }
 
     /**
-     * Crée le middleware pour vérifier qu'un scope possède au moins un des plus petits enfants des scopes donnés
-     * @param  string/array $scope
-     * @param  string/array $scopes2
+     * Retourne les middlewares à utiliser pour accéder à une route en matchant tous les scopes ou leurs parents de la liste.
+     *
+     * @param array $userScopes
+     * @param array $clientScopes
+     * @return array
      */
-    public function matchOneOfDeepestChildren($scope=null, $scope2=null)
+    public function matchAll(array $userScopes=[], array $clientScopes=[])
+    {
+        if (count($userScopes) == 0) {
+            throw new PortailException('Il est nécessaire de définir au moins un scope ou d\'utiliser \
+                matchAny([bool $canBeUser = true, bool $canBeClient = true])');
+        }
+
+        if (explode('-', $userScopes[0])[0] === 'user') {
+            return $this->matchAny($userScopes, $clientScopes, false);
+        } else {
+            return $this->matchAny($clientScopes, $userScopes, false);
+        }
+    }
+
+    /**
+     * Crée le middleware pour vérifier qu'un scope possède au moins un des plus petits enfants des scopes donnés.
+     *
+     * @param  string|array $userScope
+     * @param  string|array $clientScope
+     * @return array
+     */
+    public function matchOneOfDeepestChildren($userScope=null, $clientScope=null)
     {
         return $this->matchOne(
-        $scope ? $this->getDeepestChildren($scope) : null,
-        $scope2 ? $this->getDeepestChildren($scope2) : null
+            $userScope ? $this->getDeepestChildren($userScope) : null,
+            $clientScope ? $this->getDeepestChildren($clientScope) : null
         );
     }
 }

@@ -137,7 +137,7 @@ class CommentController extends Controller
     {
         $comment = $this->getComment($request, 'remove');
 
-        $comment->softDelete();
+        $comment->delete();
 
         abort(204);
     }

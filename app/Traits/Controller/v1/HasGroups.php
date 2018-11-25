@@ -11,6 +11,7 @@
 namespace App\Traits\Controller\v1;
 
 use App\Exceptions\PortailException;
+use App\Models\Asso;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
@@ -39,7 +40,7 @@ trait HasGroups
 
         try {
             return $model->hasOneMember(\Auth::id());
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

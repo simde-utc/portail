@@ -267,10 +267,12 @@ trait TokenUtils
      */
     public function checkScopesForGrantType(array $scopes, string $grantType=null)
     {
+        $middleware = null;
+
         foreach ($scopes as $scope) {
             $elements = explode('-', $scope);
 
-            if (!isset($middleware)) {
+            if (is_null($middleware)) {
                 $middleware = $elements[0];
             } else if ($middleware !== $elements[0]) {
                 throw new PortailException('Les scopes ne sont pas définis avec les mêmes types d\'authentification !');

@@ -12,6 +12,7 @@ namespace App\Traits\Controller\v1;
 
 use App\Exceptions\PortailException;
 use App\Models\Event;
+use App\Models\Asso;
 use App\Models\User;
 use App\Models\Article;
 use App\Models\Client;
@@ -51,26 +52,27 @@ trait HasArticles
      * @param  Request $request
      * @param  Model   $model
      * @param  string  $verb
+     * @param  string  $type
      * @return boolean
      */
-    protected function tokenCanSee(Request $request, Model $model, string $verb='get')
+    protected function tokenCanSee(Request $request, Model $model, string $verb='get', string $type='events')
     {
         if ($model instanceof Article) {
             $scopeHead = \Scopes::getTokenType($request);
-            $type = \ModelResolver::getName($model->owned_by_type);
+            $modelType = \ModelResolver::getName($model->owned_by_type);
 
-            if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-articles-'.$type.'s-owned')) {
+            if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$modelType.'s-owned')) {
                 return true;
             }
 
-            if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-articles-'.$type.'s-owned-user'))
+            if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$modelType.'s-owned-user'))
                 && \Auth::id()
                 && $model->created_by_type === User::class
                 && $model->created_by_id === \Auth::id())
-                || ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-articles-'.$type.'s-owned-client'))
+                || ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$modelType.'s-owned-client'))
                 && $model->created_by_type === Client::class
                 && $model->created_by_id === \Scopes::getClient($request)->id)
-                || ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-articles-'.$type.'s-owned-asso'))
+                || ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$modelType.'s-owned-asso'))
                 && $model->created_by_type === Asso::class
                 && $model->created_by_id === \Scopes::getClient($request)->asso->id)) {
                 if (\Scopes::isUserToken($request)) {
@@ -84,7 +86,7 @@ trait HasArticles
                 }
             }
 
-            return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-articles-'.$type.'s-created');
+            return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$modelType.'s-created');
         } else {
             return $this->tokenCanSeeEvent($request, $model, $verb);
         }

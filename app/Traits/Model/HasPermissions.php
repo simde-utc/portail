@@ -41,7 +41,7 @@ trait HasPermissions
      */
     protected function getPermissionRelationTable()
     {
-        return ($this->permissionRelationTable ?? $this->getTable()).'_permissions';
+        return ($this->permissionRelationTable ?? $this->getTable().'_permissions');
     }
 
     /**
@@ -66,6 +66,7 @@ trait HasPermissions
     {
         $data['semester_id'] = ($data['semester_id'] ?? Semester::getThisSemester()->id);
         $addPermissions = [];
+        $manageablePerms = collect();
 
         if (isset($data['validated_by']) || \Auth::id()) {
             $manageablePerms = $this->getUserPermissions(($data['validated_by'] ?? \Auth::id()));
@@ -108,6 +109,7 @@ trait HasPermissions
         $data['semester_id'] = ($data['semester_id'] ?? Semester::getThisSemester()->id);
         $updatedData['semester_id'] = ($updatedData['semester_id'] ?? Semester::getThisSemester()->id);
         $updatedPermissions = [];
+        $manageablePerms = collect();
 
         if (isset($updatedData['validated_by']) || \Auth::id()) {
             $manageablePerms = $this->getUserPermissions(($updatedData['validated_by'] ?? \Auth::id()));
@@ -136,7 +138,7 @@ trait HasPermissions
                 $toUpdate->updateExistingPivot($updatedPermission, $updatedData);
             }
         } catch (\Exception $e) {
-            throw new MemberException('Les données d\'une permission ne peuvent être modifiées');
+            throw new PortailException('Les données d\'une permission ne peuvent être modifiées');
         }
 
         return $this;
@@ -155,6 +157,7 @@ trait HasPermissions
     {
         $data['semester_id'] = ($data['semester_id'] ?? Semester::getThisSemester()->id);
         $delPermissions = [];
+        $manageablePerms = collect();
         $removed_by = ($removed_by ?? \Auth::id());
 
         if ($removed_by !== null) {
@@ -182,7 +185,7 @@ trait HasPermissions
         try {
             $toDetach->detach($delPermissions);
         } catch (\Exception $e) {
-            throw new MemberException('Une erreur a été recontrée à la suppression d\'une permission');
+            throw new PortailException('Une erreur a été recontrée à la suppression d\'une permission');
         }
 
         return $this;
@@ -259,7 +262,7 @@ trait HasPermissions
         $permissions = $this->permissions();
 
         if ($permissions === null) {
-            return new Collection;
+            return collect();
         }
 
         if ($this->getTable() !== 'users' || $user_id !== null) {

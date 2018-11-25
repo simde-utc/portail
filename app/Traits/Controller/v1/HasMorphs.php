@@ -55,6 +55,8 @@ trait HasMorphs
                     abort(400, 'L\'instance n\'a pas le droit de posséder de '.$modelName.'s');
                 }
             }
+        } else {
+            return null;
         }
 
         $scope = $scopeHead.'-'.$verb.'-'.$modelName.'s-'.$request->input($type.'_by_type', $scopeHead).'s-'.$type;

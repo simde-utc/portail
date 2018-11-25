@@ -48,7 +48,7 @@ trait HasMembers
      */
     protected function getMemberRelationTable()
     {
-        return ($this->memberRelationTable ?? $this->getTable()).'_members';
+        return ($this->memberRelationTable ?? $this->getTable().'_members');
     }
 
     /**
@@ -157,7 +157,7 @@ trait HasMembers
                 throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
             }
 
-            if (!$force && (isset($data['validated_by']) || \Auth::id())) {
+            if (!$force) {
                 $manageableRoles = $this->getUserRoles(($data['validated_by'] ?? \Auth::id()));
 
                 if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin')) {
@@ -338,7 +338,7 @@ trait HasMembers
     public function syncMembers($members, array $data=[], string $removed_by=null, bool $force=false)
     {
         $data['semester_id'] = ($data['semester_id'] ?? Semester::getThisSemester()->id);
-        $currentMembers = $this->currentMembers > pluck('id');
+        $currentMembers = $this->currentMembers->pluck('id');
         $members = User::getUsers(stringToArray($members))->pluck('id');
         $intersectedMembers = $currentMembers->intersect($members);
 

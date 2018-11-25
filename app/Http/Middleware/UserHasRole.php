@@ -30,7 +30,7 @@ class UserHasRole
             throw new \Exception('Il est nécessaire de spécifier au moins un rôle');
         }
 
-        if (\Auth::user()) {
+        if (\Auth::id()) {
             foreach ($args as $role) {
                 if ($wrongIfEqual = ($role[0] === '!')) {
                     $role = substr($role, 1);

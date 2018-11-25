@@ -159,7 +159,7 @@ class EventController extends Controller
     public function destroy(Request $request, string $event_id): void
     {
         $event = $this->getEvent($request, \Auth::user(), $event_id);
-        $event->softDelete();
+        $event->delete();
 
         abort(204);
     }

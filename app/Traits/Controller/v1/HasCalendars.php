@@ -46,24 +46,6 @@ trait HasCalendars
     }
 
     /**
-     * Uniquement les followers et ceux qui possèdent le droit peuvent le voir.
-     *
-     * @param  Request  $request
-     * @param  Calendar $calendar
-     * @param  string   $user_id
-     * @return boolean
-     */
-    protected function isCalendarFollowed(Request $request, Calendar $calendar, string $user_id)
-    {
-        $type = \ModelResolver::getName($calendar->owned_by_type);
-
-        return (
-            $calendar->followers()->wherePivot('user_id', $user_id)->exists()
-            && \Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-calendars-users-followed-'.$type)
-        );
-    }
-
-    /**
      * Récupère un événement depuis le calendrier.
      *
      * @param  Request  $request
@@ -73,7 +55,7 @@ trait HasCalendars
      * @param  string   $verb
      * @return Event|null
      */
-    protected function getEventFromCalendar(Request $request, User $user, Calendar $calendar, string $event_id,
+    protected function getEventFromCalendar(Request $request, User $user=null, Calendar $calendar, string $event_id,
         string $verb='get')
     {
         $event = $calendar->events()->find($event_id);

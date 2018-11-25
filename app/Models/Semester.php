@@ -35,7 +35,7 @@ class Semester extends Model
      * Permet de récupérer un semestre en fonction de son id et de son nom.
      *
      * @param  string $semester
-     * @return Semester
+     * @return Semester|null
      */
     public static function getSemester(string $semester)
     {
@@ -82,11 +82,11 @@ class Semester extends Model
     /**
      * Création d'un semestre.
      *
-     * @param  string $currentYear
-     * @param  string $currentMonth
+     * @param  integer|string $currentYear
+     * @param  string         $currentMonth
      * @return Semester|null
      */
-    public static function createASemester(string $currentYear=null, string $currentMonth=null)
+    public static function createASemester($currentYear=null, string $currentMonth=null)
     {
         $config = config('semester');
         $currentYear = (int) ($currentYear ?? date('y'));

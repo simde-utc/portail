@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Traits\Controller\v1\HasUsers;
+use App\Exceptions\PortailException;
 
 trait HasAssos
 {
@@ -26,7 +27,7 @@ trait HasAssos
      * @param  Request $request
      * @param  array   $choices
      * @param  string  $verb
-     * @return Asso
+     * @return Semester
      */
     protected function getSemester(Request $request, array $choices, string $verb='get')
     {
@@ -166,7 +167,7 @@ trait HasAssos
                 abort(404, 'L\'utilisateur ne fait pas parti de l\'association');
             }
         } else {
-            return $this->getAsso($request, $asso);
+            return $this->getAsso($request, $asso_id);
         }
     }
 }

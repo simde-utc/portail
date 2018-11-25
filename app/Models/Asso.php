@@ -27,6 +27,7 @@ use App\Interfaces\Model\CanNotify;
 use App\Interfaces\Model\CanHaveRoles;
 use App\Interfaces\Model\CanHavePermissions;
 use App\Interfaces\Model\CanComment;
+use Illuminate\Support\Collection;
 use App\Exceptions\PortailException;
 
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles,
@@ -129,7 +130,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      *
      * @return mixed
      */
-    protected function parent()
+    public function parent()
     {
         return $this->hasOne(Asso::class, 'id', 'parent_id');
     }
@@ -219,7 +220,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      *
      * @param  string $user_id
      * @param  string $semester_id
-     * @return array
+     * @return Collection
      */
     public function getUserRoles(string $user_id=null, string $semester_id=null)
     {

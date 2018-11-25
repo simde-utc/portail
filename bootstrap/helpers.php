@@ -13,13 +13,14 @@
 if (!function_exists('validation_between')) {
 
     /**
-     * Donne la chaine between pour les validations Requests
+     * Donne la chaine between pour les validations Requests.
      *
+     * @param string $validationId
      * @return string
      */
-    function validation_between(string $id)
+    function validation_between(string $validationId)
     {
-        $values = config("validation.$id");
+        $values = config("validation.$validationId");
         return "between:".$values['min'].",".$values['max'];
     }
 
@@ -28,20 +29,27 @@ if (!function_exists('validation_between')) {
 if (!function_exists('validation_max')) {
 
     /**
-     * Donne la valeur entière max pour les Migrations
+     * Donne la valeur entière max pour les Migrations.
      *
+     * @param string $validationId
      * @return integer
      */
-    function validation_max(string $id)
+    function validation_max(string $validationId)
     {
-        return config("validation.$id.max");
+        return config("validation.$validationId.max");
     }
 
 }
 
 if (!function_exists('convertPipeToArray') && !function_exists('stringToArray')) {
 
-    function convertPipeToArray(string $pipeString)
+    /**
+     * Converti les listes en string vers un array.
+     *
+     * @param  string|array $pipeString
+     * @return mixed
+     */
+    function convertPipeToArray($pipeString)
     {
         $pipeString = trim($pipeString);
 
@@ -63,6 +71,12 @@ if (!function_exists('convertPipeToArray') && !function_exists('stringToArray'))
         return explode('|', trim($pipeString, $quoteCharacter));
     }
 
+    /**
+     * Converti les listes en string vers un array.
+     *
+     * @param  string|array $toArray
+     * @return array
+     */
     function stringToArray($toArray)
     {
         if (is_string($toArray) && false !== strpos($toArray, '|')) {
@@ -91,13 +105,14 @@ if (!function_exists('convertPipeToArray') && !function_exists('stringToArray'))
 if (!function_exists('trimText')) {
 
     /**
-     * trims text to a space then adds ellipses if desired
-     * @param string  $input    text to trim
-     * @param integer $length   in characters to trim to
-     * @param boolean $ellipses if ellipses (...) are to be added
+     * Coupe le texte à une longueur choisie.
+     *
+     * @param string  $input
+     * @param integer $length
+     * @param string  $ellipses
      * @return string
      */
-    function trimText($input, $length, $ellipses='...')
+    function trimText(string $input, int $length, string $ellipses='...')
     {
         if (strlen($input) <= $length) {
             return $input;

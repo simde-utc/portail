@@ -133,7 +133,7 @@ class ServiceController extends Controller
     {
         $service = $this->getService(\Auth::user(), $service_id);
 
-        if ($service->softDelete()) {
+        if ($service->delete()) {
             $this->deleteImage('services/'.$service->id);
 
             abort(204);
