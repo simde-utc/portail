@@ -1,66 +1,102 @@
 <?php
+/**
+ * Notification créée par l'extérieure.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use App\Interfaces\Model\CanBeNotifiable;
+use App\Interfaces\Model\CanNotify;
 use App\Models\Model;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ExternalNotification extends Notification implements ShouldQueue
+class ExternalNotification extends Notification
 {
     use Queueable;
 
-    protected $type;
     protected $subject;
     protected $content;
     protected $action;
 
     /**
-     * Définition du type de notif et sa description
-     * @param string $type
+     * Définition du type de notif et sa description.
+     *
+     * @param CanNotify $model
+     * @param string    $content
+     * @param array     $action
      */
-    public function __construct(Can $model, string $content, array $action = []) {
-        parent::__construct('external_'.\ModelResolver::getName($model));
+    public function __construct(CanNotify $model, string $content, array $action=[])
+    {
+        parent::__construct('external_'.\ModelResolver::getName(get_class($model)));
 
         $this->subject = $model->name;
         $this->content = $content;
         $this->action = $action;
     }
 
-    public function getType() {
-        return $this->type;
-    }
-
-    protected function getAction(CanBeNotifiable $notifiable) {
+    /**
+     * Renvoie l'action.
+     * @param  CanBeNotifiable $notifiable
+     * @return array
+     */
+    protected function getAction(CanBeNotifiable $notifiable)
+    {
         return $this->action;
     }
 
-    protected function getSubject(CanBeNotifiable $notifiable) {
+    /**
+     * Renvoie le sujet de la notification.
+     *
+     * @param  CanBeNotifiable $notifiable
+     * @return string
+     */
+    protected function getSubject(CanBeNotifiable $notifiable)
+    {
         return $this->subject;
     }
 
-    protected function getContent(CanBeNotifiable $notifiable) {
+    /**
+     * Renvoie le contenu texte de la notification.
+     *
+     * @param  CanBeNotifiable $notifiable
+     * @return string
+     */
+    protected function getContent(CanBeNotifiable $notifiable)
+    {
         return $this->content;
     }
 
-    // On ne permet pas l'envoie de mail
-    protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail) {
+    /**
+     * Le contenu email est interdit pour les notifications externes.
+     *
+     * @param  CanBeNotifiable $notifiable
+     * @param  MailMessage     $mail
+     * @return null
+     */
+    protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail)
+    {
         return null;
     }
 
     /**
-     * Get the notification's delivery channels.
+     * Liste les canaux de notifications.
      *
-     * @param  mixed  $notifiable
+     * @param  CanBeNotifiable $notifiable
      * @return array
      */
-    public function via(CanBeNotifiable $notifiable) {
+    public function via(CanBeNotifiable $notifiable)
+    {
         $channels = parent::via($notifiable);
 
-        if (($key = array_search('mail', $channels)) !== false)
-    		unset($channels[$key]);
+        if (($key = array_search('mail', $channels)) !== false) {
+            unset($channels[$key]);
+        }
 
         return $channels;
     }

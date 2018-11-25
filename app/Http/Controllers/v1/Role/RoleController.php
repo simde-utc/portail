@@ -1,4 +1,12 @@
 <?php
+/**
+ * Gère les rôles.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Role;
 
@@ -11,135 +19,132 @@ use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasRoles;
 use App\Traits\Controller\v1\HasOwners;
 
-/**
- * Gestion des groupes utilisateurs
- *
- * @resource Role
- */
 class RoleController extends Controller
 {
-	use HasRoles, HasOwners;
-	/**
-	 * Scopes Role
-	 *
-	 * Les Scopes requis pour manipuler les Roles
-	 */
-	public function __construct() {
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-get-roles', 'client-get-roles'),
-			['only' => ['index', 'show']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-create-roles', 'client-create-roles'),
-			['only' => ['store']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-edit-roles', 'client-edit-roles'),
-			['only' => ['update']]
-		);
-		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren('user-remove-roles', 'client-remove-roles'),
-			['only' => ['destroy']]
-		);
-	}
+    use HasRoles, HasOwners;
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @param Request $request
-	 * @return JsonResponse
-	 * @throws PortailException
-	 */
-	public function index(Request $request): JsonResponse {
-		$roles = Role::getSelection()->filter(function ($role) use ($request) {
-			return $this->tokenCanSee($request, $role);
-		})->values()->map(function ($role) {
-			return $role->hideData();
-		});
+    /**
+     * Nécessité des gérer les rôles.
+     */
+    public function __construct()
+    {
+        $this->middleware(
+	        \Scopes::matchOneOfDeepestChildren('user-get-roles', 'client-get-roles'),
+	        ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+	        \Scopes::matchOneOfDeepestChildren('user-create-roles', 'client-create-roles'),
+	        ['only' => ['store']]
+        );
+        $this->middleware(
+	        \Scopes::matchOneOfDeepestChildren('user-edit-roles', 'client-edit-roles'),
+	        ['only' => ['update']]
+        );
+        $this->middleware(
+	        \Scopes::matchOneOfDeepestChildren('user-remove-roles', 'client-remove-roles'),
+	        ['only' => ['destroy']]
+        );
+    }
 
-		return response()->json($roles, 200);
-	}
+    /**
+     * Liste les rôles.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $roles = Role::getSelection()->filter(function ($role) use ($request) {
+            return $this->tokenCanSee($request, $role);
+        })->values()->map(function ($role) {
+            return $role->hideData();
+        });
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request $request
-	 * @return JsonResponse
-	 * @throws PortailException
-	 */
-	public function store(Request $request): JsonResponse {
-		$inputs = $request->all();
-		$owner = $this->getOwner($request, 'role', 'rôle', 'create');
+        return response()->json($roles, 200);
+    }
 
-		$inputs['owned_by_id'] = $owner->id;
-		$inputs['owned_by_type'] = get_class($owner);
+    /**
+     * Ajouter un rôle.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $inputs = $request->all();
+        $owner = $this->getOwner($request, 'role', 'rôle', 'create');
 
-		$role = Role::create($inputs);
+        $inputs['owned_by_id'] = $owner->id;
+        $inputs['owned_by_type'] = get_class($owner);
 
-		if ($role) {
-			if ($request->filled('parent_ids'))
-				$role->assignParentRole($request->parent_ids);
+        $role = Role::create($inputs);
 
-			return response()->json($role->hideSubData(), 201);
-		}
-		else
-			abort(500, 'Impossible de créer le role');
-	}
+        if ($request->filled('parent_ids')) {
+            $role->assignParentRole($request->parent_ids);
+        }
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param Request $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function show(Request $request, string $id): JsonResponse {
-		$role = $this->getRole($request, $id);
-		$role->nbr_assigned = $role->users()->where('semester_id', Semester::getThisSemester()->id)->count();
+        return response()->json($role->hideSubData(), 201);
+    }
 
-		return response()->json($role->hideSubData(), 200);
-	}
+    /**
+     * Montre un rôle.
+     *
+     * @param Request $request
+     * @param string 	$role_id
+     * @return JsonResponse
+     */
+    public function show(Request $request, string $role_id): JsonResponse
+    {
+        $role = $this->getRole($request, $role_id);
+        $role->nbr_assigned = $role->users()->where('semester_id', Semester::getThisSemester()->id)->count();
 
-	/**
-	 * Update Role
-	 *
-	 * @param  \Illuminate\Http\Request $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 * @throws PortailException
-	 */
-	public function update(Request $request, string $id): JsonResponse {
-		$role = $this->getRole($request, $id, 'edit');
+        return response()->json($role->hideSubData(), 200);
+    }
 
-		if ($role->update($request->input())) {
-			if ($request->filled('parent_ids'))
-				$role->syncParentRole($request->parent_ids); // Attention ! Ici on change tous ses parents
+    /**
+     * Met à jour un rôle.
+     *
+     * @param Request $request
+     * @param string 	$role_id
+     * @return JsonResponse
+     */
+    public function update(Request $request, string $role_id): JsonResponse
+    {
+        $role = $this->getRole($request, $role_id, 'edit');
 
-			$role->nbr_assigned = $role->users()->where('semester_id', Semester::getThisSemester()->id)->count();
+        if ($role->update($request->input())) {
+            if ($request->filled('parent_ids')) {
+                // WARNING: Ici on change tous ses parents.
+                $role->syncParentRole($request->parent_ids);
+            }
 
-			return response()->json($role->hideSubData(), 200);
-		}
-		else
-			abort(500, 'Impossible de créer le role');
-	}
+            $role->nbr_assigned = $role->users()->where('semester_id', Semester::getThisSemester()->id)->count();
 
-	/**
-	 * Delete Role
-	 *
-	 * @param Request $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function destroy(Request $request, string $id): JsonResponse {
-		$role = $this->getRole($request, $id, 'manage');
+            return response()->json($role->hideSubData(), 200);
+        } else {
+            abort(500, 'Impossible de créer le role');
+        }
+    }
 
-		if ($role->isDeletable()) {
-			if ($role->delete())
-				abort(204);
-			else
-				abort(500, "Impossible de supprimer le role souhaité");
-		}
-		else
-			abort(403, "Il n'est pas autorisé de supprimer ce rôle (possiblement car déjà assigné ou rôles enfants attachés)");
-	}
+    /**
+     * Supprime un rôle.
+     *
+     * @param Request $request
+     * @param string 	$role_id
+     * @return void
+     */
+    public function destroy(Request $request, string $role_id): void
+    {
+        $role = $this->getRole($request, $role_id, 'manage');
+
+        if ($role->isDeletable()) {
+            if ($role->delete()) {
+                abort(204);
+            } else {
+                abort(500, "Impossible de supprimer le role souhaité");
+            }
+        } else {
+            abort(403, "Il n'est pas autorisé de supprimer ce rôle (possiblement car déjà assigné ou rôles enfants attachés)");
+        }
+    }
 }

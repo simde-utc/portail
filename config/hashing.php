@@ -1,20 +1,14 @@
 <?php
+/**
+ * Fichier de configuration du hashing.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Hash Driver
-    |--------------------------------------------------------------------------
-    |
-    | This option controls the default hash driver that will be used to hash
-    | passwords for your application. By default, the bcrypt algorithm is
-    | used; however, you remain free to modify this option if you wish.
-    |
-    | Supported: "bcrypt", "argon"
-    |
-    */
-
     'driver' => 'bcrypt',
-
 ];

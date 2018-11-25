@@ -6,34 +6,34 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePermissionsTable extends Migration
 {
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('permissions', function (Blueprint $table) {
-			$table->uuid('id')->primary();
-			$table->string('type', 64);
-			$table->string('name', 128);
-			$table->string('description');
-      $table->uuid('owned_by_id')->nullable();
-      $table->string('owned_by_type')->nullable();
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('type', 64);
+            $table->string('name', 128);
+            $table->string('description');
+            $table->uuid('owned_by_id')->nullable();
+            $table->string('owned_by_type')->nullable();
 
-			$table->timestamps();
+            $table->timestamps();
 
-			$table->unique(['type', 'owned_by_type']);
-		});
-	}
+            $table->unique(['type', 'owned_by_type']);
+        });
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('permissions');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('permissions');
+    }
 }

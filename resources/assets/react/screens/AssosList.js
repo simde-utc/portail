@@ -19,8 +19,8 @@ class AssosListScreen extends React.Component {
 
 	getStage(assos, parent) {
 		return (
-			<div key={ parent.id } className={ "mb-4 rounded border-" + parent.shortname.toLowerCase() } style={{ borderWidth: 2 }}>
-				<div className={ "text-center h4 p-2 bg-" + parent.shortname.toLowerCase() }>
+			<div key={ parent.id } className={ "mb-4 rounded border-" + parent.login } style={{ borderWidth: 2 }}>
+				<div className={ "text-center h4 p-2 bg-" + parent.login }>
 					{ parent.shortname } <small>{ parent.name }</small>
 				</div>
 				<div className="m-2" style={{ display: 'flex', overflowX: 'auto' }}>

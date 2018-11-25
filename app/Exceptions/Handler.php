@@ -1,26 +1,36 @@
 <?php
+/**
+ * Fichier générant les exceptions.
+ * Gère les exceptions et renvoie un message HTTP
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
     /**
-     * A list of the exception types that are not reported.
+     * Exceptions à ne pas reporter.
      *
      * @var array
      */
-    protected $dontReport = [
-        //
-    ];
+    protected $dontReport = [];
 
     /**
-     * A list of the inputs that are never flashed for validation exceptions.
+     * Données à ne pas afficher en cas de retour de données formulaires.
      *
      * @var array
      */
@@ -30,51 +40,55 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
+     * Remonte les erreurs ici (via Sentry par ex).
      *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param  \Exception  $exception
+     * @param \Exception $exception
      * @return void
      */
-    public function report(Exception $exception) {
+    public function report(Exception $exception)
+    {
         parent::report($exception);
     }
 
     /**
-     * Render an exception into an HTTP response.
+     * Génère l'erreur gérée.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @param  mixed      $request
+     * @param  \Exception $exception
+     * @return mixed
      */
-    public function render($request, Exception $exception) {
-		if ($request->wantsJson() && !($exception instanceof ValidationException)) {
-	        // Define the response
-	        $response = [
-				'message' => ($exception instanceof \QueryException) ? 'Problème trouvé dans la requête SQL effectuée' : $exception->getMessage(),
-	        ];
+    public function render($request, Exception $exception)
+    {
+        if ($request->wantsJson() && !($exception instanceof ValidationException)) {
+            if ($exception instanceof QueryException) {
+                $response = [
+                    'message' => 'Problème trouvé dans la requête SQL effectuée',
+                ];
+            } else {
+                $response = [
+                    'message' => $exception->getMessage(),
+                ];
+            }
 
-	        // If the app is in debug mode
-	        if (config('app.debug') && !$this->isHttpException($exception)) {
-	            // Add the exception class name, message and stack trace to response
-				$response['message'] = $exception->getMessage();
-				$response['exception'] = get_class($exception);
-	            $response['trace'] = $exception->getTrace();
-	        }
+            // Tout montrer en debug.
+            if (config('app.debug') && !$this->isHttpException($exception)) {
+                $response['message'] = $exception->getMessage();
+                $response['exception'] = get_class($exception);
+                $response['trace'] = $exception->getTrace();
+            }
 
-            if ($this->isHttpException($exception))
+            if ($this->isHttpException($exception)) {
                 $status = $exception->getStatusCode();
-            else if ($exception instanceof AuthenticationException)
+            } else if ($exception instanceof AuthenticationException) {
                 $status = 401;
-            else
+            } else {
                 $status = 400;
+            }
 
-	        // Return a JSON response with the response array and status code
-	        return response()->json($response, $status);
-	    }
-        else if ($exception instanceof AuthorizationException)
+            return response()->json($response, $status);
+        } else if ($exception instanceof AuthorizationException) {
             return redirect('/');
+        }
 
         return parent::render($request, $exception);
     }

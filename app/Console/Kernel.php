@@ -1,4 +1,13 @@
 <?php
+/**
+ * Fichier générant la console et ses commandes.
+ * Permet le lancement de la console et de ses commandes.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Console;
 
@@ -8,28 +17,31 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     /**
-     * The Artisan commands provided by your application.
+     * Liste des commandes.
      *
      * @var array
      */
     protected $commands = [
-        //
+        Commands\Clear::class,
+        Commands\Install::class,
+        Commands\Optimize::class,
+        Commands\Test::class,
+        Commands\Update::class,
     ];
 
     /**
-     * Define the application's command schedule.
+     * Cron de l'application.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // $schedule->command('inspire')->hourly();
     }
 
     /**
-     * Register the commands for the application.
+     * Enregistre les commandes de l'applications.
      *
      * @return void
      */

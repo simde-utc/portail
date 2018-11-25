@@ -1,4 +1,12 @@
 <?php
+/**
+ * Gère les notification utilisateurs.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\User;
 
@@ -10,21 +18,15 @@ use App\Models\Notification;
 use App\Notifications\ExternalNotification;
 use App\Interfaces\Model\CanNotify;
 
-/**
- * @resource Notification
- *
- * Les notifications écrits par les utilisateurs
- */
 class NotificationController extends Controller
 {
     use HasNotifications;
 
     /**
-     * Scopes Notification
-     *
-     * Les Scopes requis pour manipuler les Notifications
+     * Nécessite de pouvoir gérer les notifications.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-notifications', 'client-get-notifications'),
             ['only' => ['index', 'show']]
@@ -43,24 +45,25 @@ class NotificationController extends Controller
         );
     }
 
-
     /**
-     * List Notifications
+     * Liste les notifications de l'utilisateur.
      *
-     * Retourne la liste des notifications.
      * @param \Illuminate\Http\Request $request
+     * @param string                   $user_id
      * @return JsonResponse
      */
-    public function index(Request $request, string $user_id = null): JsonResponse {
+    public function index(Request $request, string $user_id=null): JsonResponse
+    {
         $user = $this->getUser($request, $user_id);
         $choices = $this->getChoices($request, ['read', 'unread']);
         $notifications = $user->notifications();
 
         if (count($choices) === 1) {
-            if (in_array('read', $choices))
+            if (in_array('read', $choices)) {
                 $notifications = $notifications->whereNotNull('read_at');
-            else
+            } else {
                 $notifications = $notifications->whereNull('read_at');
+            }
         }
 
         $notifications = $notifications->getSelection()->map(function ($notification) {
@@ -71,13 +74,14 @@ class NotificationController extends Controller
     }
 
     /**
-     * Create Notification
+     * Créer une notification pour l'utlisateur.
      *
-     * Créer un notification.
      * @param Request $request
-     * @return JsonResponse
+     * @param string  $user_id
+     * @return void
      */
-    public function store(Request $request, string $user_id = null): JsonResponse {
+    public function store(Request $request, string $user_id=null): void
+    {
         $user = $this->getUser($request, $user_id);
 
         $user->notify(new ExternalNotification(
@@ -90,54 +94,64 @@ class NotificationController extends Controller
     }
 
     /**
-     * Show Notification
+     * Montre une notification de l'utlisateur.
      *
-     * Affiche le notification.
      * @param Request $request
+     * @param string  $user_id
+     * @param string  $notification_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $user_id = null, string $id = null): JsonResponse {
-        if (is_null($id))
-            list($user_id, $id) = [$id, $user_id];
+    public function show(Request $request, string $user_id=null, string $notification_id=null): JsonResponse
+    {
+        if (is_null($notification_id)) {
+            list($user_id, $notification_id) = [$notification_id, $user_id];
+        }
 
-        $notification = $this->getUserNotification($request, $user_id, $id);
+        $notification = $this->getUserNotification($request, $user_id, $notification_id);
 
         return response()->json($notification->hideSubData(), 200);
     }
 
     /**
-     * Update Notification
+     * Met à jour une notification de l'utlisateur.
      *
-     * Met à jour le notification.
      * @param Request $request
+     * @param string  $user_id
+     * @param string  $notification_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $user_id = null, string $id = null): JsonResponse {
-        if (is_null($id))
-            list($user_id, $id) = [$id, $user_id];
+    public function update(Request $request, string $user_id=null, string $notification_id=null): JsonResponse
+    {
+        if (is_null($notification_id)) {
+            list($user_id, $notification_id) = [$notification_id, $user_id];
+        }
 
-        $notification = $this->getUserNotification($request, $user_id, $id);
+        $notification = $this->getUserNotification($request, $user_id, $notification_id);
 
-        if ($request->has('read'))
+        if ($request->has('read')) {
             $notification->update(['read_at' => now()]);
-        else if ($request->has('unread'))
+        } else if ($request->has('unread')) {
             $notification->update(['read_at' => null]);
+        }
 
         return response()->json($notification->hideSubData(), 200);
     }
 
     /**
-     * Delete Notification
+     * Supprime une notification de l'utlisateur.
      *
-     * Supprime le notification.
      * @param Request $request
-     * @return JsonResponse
+     * @param string  $user_id
+     * @param string  $notification_id
+     * @return void
      */
-    public function destroy(Request $request, string $user_id = null, string $id = null): JsonResponse {
-        if (is_null($id))
-            list($user_id, $id) = [$id, $user_id];
+    public function destroy(Request $request, string $user_id=null, string $notification_id=null): void
+    {
+        if (is_null($notification_id)) {
+            list($user_id, $notification_id) = [$notification_id, $user_id];
+        }
 
-        $notification = $this->getUserNotification($request, $user_id, $id);
+        $notification = $this->getUserNotification($request, $user_id, $notification_id);
         $notification->delete();
 
         abort(204);

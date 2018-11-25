@@ -19,13 +19,13 @@ class CreatePlacesLocationsTable extends Migration
             $table->uuid('place_id');
             $table->point('position')->nullable();
 
-  			$table->timestamps();
+            $table->timestamps();
             $table->softDeletes();
-            
+
             $table->foreign('place_id')->references('id')->on('places');
 
             $table->unique(['name', 'place_id']);
-  		});
+        });
     }
 
     /**

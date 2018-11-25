@@ -1,9 +1,22 @@
 <?php
+/**
+ * Gère les articles.
+ *
+ * TODO: Add abort.
+ *
+ * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Article;
 
 use App\Http\Controllers\v1\Controller;
 use App\Facades\Scopes;
+use App\Models\Model;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Visibility;
@@ -17,249 +30,279 @@ use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Controller\v1\HasArticles;
 use App\Traits\Controller\v1\HasImages;
 
-/**
- * @resource Article
- *
- * Les articles écrits et postés par les associations
- */
 class ArticleController extends Controller
 {
-	use HasArticles, HasImages;
+    use HasArticles, HasImages;
 
-	/**
-	 * Scopes Article
-	 *
-	 * Les Scopes requis pour manipuler les Articles
-	 */
- 	public function __construct() {
- 		$this->middleware(
- 			\Scopes::allowPublic()->matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
- 			['only' => ['index', 'show']]
- 		);
- 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren(['user-create-articles-assos', 'user-create-articles-groups'], ['client-create-articles-assos', 'client-create-articles-groups']),
- 			['only' => ['store']]
- 		);
- 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren(['user-edit-articles-assos', 'user-edit-articles-groups'], ['client-edit-articles-assos', 'client-edit-articles-groups']),
- 			['only' => ['update']]
- 		);
- 		$this->middleware(
-			\Scopes::matchOneOfDeepestChildren(['user-manage-articles-assos', 'user-manage-articles-groups'], ['client-manage-articles-assos', 'client-manage-articles-groups']),
- 			['only' => ['destroy']]
- 		);
- 	}
+    /**
+     * Nécessité de gérer les articles.
+     * Lecture publique.
+     */
+    public function __construct()
+    {
+        $this->middleware(
+	        \Scopes::allowPublic()->matchOneOfDeepestChildren(
+                ['user-get-articles-assos', 'user-get-articles-groups'],
+                ['client-get-articles-assos', 'client-get-articles-groups']
+            ),
+	        ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+	        \Scopes::matchOneOfDeepestChildren(
+                ['user-create-articles-assos', 'user-create-articles-groups'],
+                ['client-create-articles-assos', 'client-create-articles-groups']
+            ),
+	        ['only' => ['store']]
+        );
+        $this->middleware(
+	        \Scopes::matchOneOfDeepestChildren(
+                ['user-edit-articles-assos', 'user-edit-articles-groups'],
+                ['client-edit-articles-assos', 'client-edit-articles-groups']
+            ),
+	        ['only' => ['update']]
+        );
+        $this->middleware(
+	        \Scopes::matchOneOfDeepestChildren(
+                ['user-manage-articles-assos', 'user-manage-articles-groups'],
+                ['client-manage-articles-assos', 'client-manage-articles-groups']
+            ),
+	        ['only' => ['destroy']]
+        );
+    }
 
-	public function getCreaterOrOwner(Request $request, string $verb = 'create', string $type = 'created') {
-		$scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
-		$scope = $scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type',\Scopes::isClientToken($request) ? 'client' : 'user').'s-'.$type;
+    /**
+     * Récupère le créateur ou le owner.
+     *
+     * @param  Request $request
+     * @param  string  $verb
+     * @param  string  $type
+     * @return Model
+     */
+    public function getCreaterOrOwner(Request $request, string $verb='create', string $type='created')
+    {
+        $scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
+        $scope = $scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type', $scopeHead).'s-'.$type;
 
-		if ($type === 'owned')
-			$scope = array_keys(\Scopes::getRelatives($scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type').'s-'.$type));
+        if ($type === 'owned') {
+            $scope = array_keys(\Scopes::getRelatives(
+                $scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type').'s-'.$type
+            ));
+        }
 
-		if (!\Scopes::hasOne($request, $scope))
-			abort(403, 'Il ne vous est pas autorisé de créer d\'articles');
+        if (!\Scopes::hasOne($request, $scope)) {
+            abort(403, 'Il ne vous est pas autorisé de créer d\'articles');
+        }
 
-		if ($request->filled($type.'_by_type')) {
-			if ($request->filled($type.'_by_id')) {
-				$createrOrOwner = \ModelResolver::getModel($request->input($type.'_by_type'))->find($request->input($type.'_by_id'));
+        if ($request->filled($type.'_by_type')) {
+            if ($request->filled($type.'_by_id')) {
+                $createrOrOwner = \ModelResolver::findModel(
+                    $request->input($type.'_by_type'),
+                    $request->input($type.'_by_id')
+                );
 
-				if (\Auth::id() && !$createrOrOwner->isArticleManageableBy(\Auth::id()))
-					abort(403, 'L\'utilisateur n\'a pas les droits de création');
-			}
-			else if ($request->input($type.'_by_type', 'client') === 'client')
-				$createrOrOwner = \Scopes::getClient($request);
-			else if ($request->input($type.'_by_type', 'client') === 'asso')
-				$createrOrOwner = \Scopes::getClient($request)->asso;
-		}
+                if (\Auth::id() && !$createrOrOwner->isArticleManageableBy(\Auth::id())) {
+                    abort(403, 'L\'utilisateur n\'a pas les droits de création');
+                }
+            } else if ($request->input($type.'_by_type', 'client') === 'client') {
+                $createrOrOwner = \Scopes::getClient($request);
+            } else if ($request->input($type.'_by_type', 'client') === 'asso') {
+                $createrOrOwner = \Scopes::getClient($request)->asso;
+            }
+        }
 
-		if (!isset($createrOrOwner))
-			$createrOrOwner = \Scopes::isClientToken($request) ? \Scopes::getClient($request) : \Auth::user();
+        if (!isset($createrOrOwner)) {
+            $createrOrOwner = \Scopes::isClientToken($request) ? \Scopes::getClient($request) : \Auth::user();
+        }
 
-		if (!($createrOrOwner instanceof CanHaveArticles))
-			abort(400, 'La personne créatrice/possédeur doit au moins pouvoir avoir un article');
+        if (!($createrOrOwner instanceof CanHaveArticles)) {
+            abort(400, 'La personne créatrice/possédeur doit au moins pouvoir avoir un article');
+        }
 
-		return $createrOrOwner;
-	}
+        return $createrOrOwner;
+    }
 
-	/**
-	 * List Articles
-	 *
-	 * Retourne la liste des articles. ?all pour voir ceux en plus des assos suivies, ?notRemoved pour uniquement cacher les articles non visibles
-	 * @param \Illuminate\Http\Request $request
-	 * @return JsonResponse
-	 */
-	public function index(Request $request): JsonResponse {
-		if (\Scopes::getToken($request)) {
-			$articles = Article::getSelection()->filter(function ($article) use ($request) {
-				return $this->tokenCanSee($request, $article, 'get') && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
-			});
-		}
-		else {
-			$articles = Article::getSelection()->filter(function ($article) use ($request) {
-				return $this->isVisible($article);
-			});
-		}
+    /**
+     * Liste les articles.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        if (\Scopes::isOauthRequest($request)) {
+            $articles = Article::getSelection()->filter(function ($article) use ($request) {
+                return $this->tokenCanSee($request, $article, 'get')
+                && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
+            });
+        } else {
+            $articles = Article::getSelection()->filter(function ($article) {
+                return $this->isVisible($article);
+            });
+        }
 
-		return response()->json($articles->values()->map(function ($article) {
-			return $article->hideData();
-		}), 200);
-	}
+        return response()->json($articles->values()->map(function ($article) {
+            return $article->hideData();
+        }), 200);
+    }
 
-	/**
-	 * Create Article
-	 *
-	 * Créer un article
-	 * @param ArticleRequest $request
-	 * @return JsonResponse
-	 */
-	public function store(Request $request): JsonResponse {
-		$inputs = $request->all();
+    /**
+     * Créer un article.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $inputs = $request->all();
 
-		// On récupère pour qui c'est créé
-		$owner = $this->getCreaterOrOwner($request, 'create', 'owned');
+        // On récupère pour qui c'est créé.
+        $owner = $this->getCreaterOrOwner($request, 'create', 'owned');
 
-		// Le créateur peut être multiple: le user, l'asso ou le client courant. Ou autre
-		if ($request->input('created_by_type', 'user') === 'user'
-			&& \Auth::id()
-			&& $request->input('created_by_id', \Auth::id()) === \Auth::id()
-			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-user'))
-			$creater = \Auth::user();
-		else if ($request->input('created_by_type', 'client') === 'client'
-			&& $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
-			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-client'))
-			$creater = \Scopes::getClient($request);
-		else if ($request->input('created_by_type') === 'asso'
-			&& $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
-			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-asso'))
-			$creater = \Scopes::getClient($request)->asso;
-		else
-			$creater = $this->getCreaterOrOwner($request, 'create', 'created');
+        // Le créateur peut être multiple: le user, l'asso ou le client courant. Ou autre.
+        if ($request->input('created_by_type', 'user') === 'user'
+	        && \Auth::id()
+	        && $request->input('created_by_id', \Auth::id()) === \Auth::id()
+	        && \Scopes::hasOne($request,
+        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-user')) {
+            $creater = \Auth::user();
+        } else if ($request->input('created_by_type', 'client') === 'client'
+	        && $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
+	        && \Scopes::hasOne($request,
+        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-client')) {
+            $creater = \Scopes::getClient($request);
+        } else if ($request->input('created_by_type') === 'asso'
+	        && $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
+	        && \Scopes::hasOne($request,
+        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-asso')) {
+            $creater = \Scopes::getClient($request)->asso;
+        } else {
+            $creater = $this->getCreaterOrOwner($request, 'create', 'created');
+        }
 
-		$inputs['created_by_id'] = $creater->id;
-		$inputs['created_by_type'] = get_class($creater);
-		$inputs['owned_by_id'] = $owner->id;
-		$inputs['owned_by_type'] = get_class($owner);
+        $inputs['created_by_id'] = $creater->id;
+        $inputs['created_by_type'] = get_class($creater);
+        $inputs['owned_by_id'] = $owner->id;
+        $inputs['owned_by_type'] = get_class($owner);
 
-		if ($request->filled('event_id')) // On fait vérifier que la personne à les droits sur l'event
-			$this->getEvent($request, \Auth::user(), $inputs['event_id']);
+        if ($request->filled('event_id')) {
+            // On fait vérifier que la personne à les droits sur l'event.
+            $this->getEvent($request, \Auth::user(), $inputs['event_id']);
+        }
 
-		$article = Article::create($inputs);
+        $article = Article::create($inputs);
 
-		if ($article) {
-			// On affecte l'image si tout s'est bien passé
-			$this->setImage($request, $article, 'articles', $article->id);
+        // On affecte l'image si tout s'est bien passé.
+        $this->setImage($request, $article, 'articles', $article->id);
 
-			// Tags
-			if ($request->has('tags') && is_array($inputs['tags'])) {
-				$tags = Tag::all();
+        // Tags.
+        if ($request->has('tags') && is_array($inputs['tags'])) {
+            $tags = Tag::all();
 
-				foreach ($inputs['tags'] as $tag_arr) {
-					if (!$tags->firstWhere('name', $tag_arr['name'])) {
-						$tag = new Tag;
-						$tag->name = $tag_arr['name'];
-						$tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
-						$tag->save();
-						$article->tags()->save($tag);
-					} else {
-						$tag = Tag::where('name', $tag_arr['name'])->first();
-						$article->tags()->save($tag);
-					}
-				}
-			}
+            foreach ($inputs['tags'] as $tag_arr) {
+                if (!$tags->firstWhere('name', $tag_arr['name'])) {
+                    $tag = new Tag;
+                    $tag->name = $tag_arr['name'];
+                    $tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
+                    $tag->save();
+                    $article->tags()->save($tag);
+                } else {
+                    $tag = Tag::where('name', $tag_arr['name'])->first();
+                    $article->tags()->save($tag);
+                }
+            }
+        }
 
-			$article = $this->getArticle($request, \Auth::user(), $article->id);
+        $article = $this->getArticle($request, \Auth::user(), $article->id);
 
-			return response()->json($article->hideSubData(), 201);
-		}
-		else
-			return response()->json(['message' => 'Impossible de créer le article'], 500);
-	}
+        return response()->json($article->hideSubData(), 201);
+    }
 
-	/**
-	 * Show Article
-	 *
-	 * Affiche l'article s'il existe et si l'utilisateur peut le voir.
-	 * @param Request $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function show(Request $request, string $id): JsonResponse {
-		$article = $this->getArticle($request, \Auth::user(), $id);
+    /**
+     * Montre un article.
+     *
+     * @param Request $request
+     * @param string  $article_id
+     * @return JsonResponse
+     */
+    public function show(Request $request, string $article_id): JsonResponse
+    {
+        $article = $this->getArticle($request, \Auth::user(), $article_id);
 
-		return response()->json($article->hideSubData(), 200);
-	}
+        return response()->json($article->hideSubData(), 200);
+    }
 
-	/**
-	 * Update Article
-	 *
-	 * Met à jour l'article s'il existe
-	 * @param ArticleRequest $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function update(Request $request, string $id): JsonResponse {
-		$article = $this->getCalendar($request, \Auth::user(), $id, 'edit');
-		$inputs = $request->all();
+    /**
+     * Met à jour un article.
+     *
+     * @param Request $request
+     * @param string  $article_id
+     * @return JsonResponse
+     */
+    public function update(Request $request, string $article_id): JsonResponse
+    {
+        $article = $this->getCalendar($request, \Auth::user(), $article_id, 'edit');
+        $inputs = $request->all();
 
-		if ($request->filled('owned_by_type')) {
-			$owner = $this->getCreaterOrOwner($request, 'edit', 'owned');
+        if ($request->filled('owned_by_type')) {
+            $owner = $this->getCreaterOrOwner($request, 'edit', 'owned');
 
-			$inputs['owned_by_id'] = $owner->id;
-			$inputs['owned_by_type'] = get_class($owner);
-		}
+            $inputs['owned_by_id'] = $owner->id;
+            $inputs['owned_by_type'] = get_class($owner);
+        }
 
-		if ($request->filled('event_id')) // On fait vérifier que la personne à les droits sur l'event
-			$this->getEvent($request, \Auth::user(), $inputs['event_id']);
+        if ($request->filled('event_id')) {
+            // On fait vérifier que la personne à les droits sur l'event.
+            $this->getEvent($request, \Auth::user(), $inputs['event_id']);
+        }
 
-		if ($article->update($inputs)) {
-			// On affecte l'image si tout s'est bien passé
-			$this->setImage($request, $article, 'articles', $article->id);
+        if ($article->update($inputs)) {
+            // On affecte l'image si tout s'est bien passé.
+            $this->setImage($request, $article, 'articles', $article->id);
 
-			// Tags
-			if ($request->has('tags') && is_array($inputs['tags'])) {
-				$tags = Tag::all();
+            // Tags.
+            if ($request->has('tags') && is_array($inputs['tags'])) {
+                $tags = Tag::all();
 
-				foreach ($inputs['tags'] as $tag_arr) {
-					if (!$tags->firstWhere('name', $tag_arr['name'])) {
-						$tag = new Tag;
-						$tag->name = $tag_arr['name'];
-						$tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
-						$tag->save();
-						$article->tags()->save($tag);
-					} else {
-						$tag = Tag::where('name', $tag_arr['name'])->first();
-						$article->tags()->save($tag);
-					}
-				}
-			}
+                foreach ($inputs['tags'] as $tag_arr) {
+                    if (!$tags->firstWhere('name', $tag_arr['name'])) {
+                        $tag = new Tag;
+                        $tag->name = $tag_arr['name'];
+                        $tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
+                        $tag->save();
+                        $article->tags()->save($tag);
+                    } else {
+                        $tag = Tag::where('name', $tag_arr['name'])->first();
+                        $article->tags()->save($tag);
+                    }
+                }
+            }
 
-			$article = $this->getArticle($request, \Auth::user(), $article->id);
+            $article = $this->getArticle($request, \Auth::user(), $article->id);
 
-			return response()->json($article->hideData(), 200);
-		}
-		else
-			abort(500, 'Impossible de modifier l\'article');
-	}
+            return response()->json($article->hideData(), 200);
+        } else {
+            abort(500, 'Impossible de modifier l\'article');
+        }
+    }
 
-	/**
-	 * Delete Article
-	 *
-	 * Supprime l'article s'il existe
-	 * @param ArticleRequest $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function destroy(ArticleRequest $request, string $id): JsonResponse {
-		$article = $this->getArticle($request, \Auth::user(), $id, 'remove');
-		$article->tags()->delete();
+    /**
+     * Supprime un article.
+     *
+     * @param Request $request
+     * @param string  $article_id
+     * @return void
+     */
+    public function destroy(Request $request, string $article_id): void
+    {
+        $article = $this->getArticle($request, \Auth::user(), $article_id, 'remove');
+        $article->tags()->delete();
 
-		if ($article->delete()) {
-			$this->deleteImage('articles/'.$article->id);
+        if ($article->delete()) {
+            $this->deleteImage('articles/'.$article->id);
 
-			abort(204);
-		}
-		else
-			abort(500, 'L\'article n\'a pas pu être supprimé');
-	}
+            abort(204);
+        } else {
+            abort(500, 'L\'article n\'a pas pu être supprimé');
+        }
+    }
 }

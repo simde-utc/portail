@@ -1,30 +1,55 @@
 <?php
+/**
+ * Fonctions globales.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 if (!function_exists('validation_between')) {
-	/**
-	 * Donne la chaine between pour les validations Requests
-	 *
-	 * @return string
-	 */
-	function validation_between(string $id) {
-		$values = config("validation.$id");
-		return "between:" . $values['min'] . "," . $values['max'];
-	}
+
+    /**
+     * Donne la chaine between pour les validations Requests.
+     *
+     * @param string $validationId
+     * @return string
+     */
+    function validation_between(string $validationId)
+    {
+        $values = config("validation.$validationId");
+        return "between:".$values['min'].",".$values['max'];
+    }
+
 }
 
 if (!function_exists('validation_max')) {
-	/**
-	 * Donne la valeur entière max pour les Migrations
-	 *
-	 * @return int
-	 */
-	function validation_max(string $id) {
-		return config("validation.$id.max");
-	}
+
+    /**
+     * Donne la valeur entière max pour les Migrations.
+     *
+     * @param string $validationId
+     * @return integer
+     */
+    function validation_max(string $validationId)
+    {
+        return config("validation.$validationId.max");
+    }
+
 }
 
 if (!function_exists('convertPipeToArray') && !function_exists('stringToArray')) {
-	function convertPipeToArray(string $pipeString)
+
+    /**
+     * Converti les listes en string vers un array.
+     *
+     * @param  string|array $pipeString
+     * @return mixed
+     */
+    function convertPipeToArray($pipeString)
     {
         $pipeString = trim($pipeString);
 
@@ -46,42 +71,61 @@ if (!function_exists('convertPipeToArray') && !function_exists('stringToArray'))
         return explode('|', trim($pipeString, $quoteCharacter));
     }
 
-	function stringToArray($toArray)
+    /**
+     * Converti les listes en string vers un array.
+     *
+     * @param  string|array $toArray
+     * @return array
+     */
+    function stringToArray($toArray)
     {
-		if (is_string($toArray) && false !== strpos($toArray, '|'))
+        if (is_string($toArray) && false !== strpos($toArray, '|')) {
             $toArray = convertPipeToArray($toArray);
-        if (is_string($toArray) || is_numeric($toArray))
+        }
+
+        if (is_string($toArray) || is_numeric($toArray)) {
             $toArray = [$toArray];
-		if (!is_array($toArray))
-			return $toArray;
+        }
 
-		foreach ($toArray as $key => $value) {
-			if (is_numeric($value))
-				$toArray[$key] = intval($value);
-		}
+        if (!is_array($toArray)) {
+            return $toArray;
+        }
 
-		return $toArray;
+        foreach ($toArray as $key => $value) {
+            if (is_numeric($value)) {
+                $toArray[$key] = intval($value);
+            }
+        }
+
+        return $toArray;
     }
+
 }
 
 if (!function_exists('trimText')) {
-	/**
-	 * trims text to a space then adds ellipses if desired
-	 * @param string $input text to trim
-	 * @param int $length in characters to trim to
-	 * @param bool $ellipses if ellipses (...) are to be added
-	 * @return string
-	 */
-	function trimText($input, $length, $ellipses = '...') {
-	    if (strlen($input) <= $length)
-	        return $input;
 
-	    $last_space = strrpos(substr($input, 0, $length), ' ');
-	    $trimmed_text = substr($input, 0, $last_space);
+    /**
+     * Coupe le texte à une longueur choisie.
+     *
+     * @param string  $input
+     * @param integer $length
+     * @param string  $ellipses
+     * @return string
+     */
+    function trimText(string $input, int $length, string $ellipses='...')
+    {
+        if (strlen($input) <= $length) {
+            return $input;
+        }
 
-	    if ($ellipses)
-	        $trimmed_text .= $ellipses;
+        $last_space = strrpos(substr($input, 0, $length), ' ');
+        $trimmed_text = substr($input, 0, $last_space);
 
-	    return $trimmed_text;
-	}
+        if ($ellipses) {
+            $trimmed_text .= $ellipses;
+        }
+
+        return $trimmed_text;
+    }
+
 }

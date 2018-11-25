@@ -1,4 +1,12 @@
 <?php
+/**
+ * Ajoute au controlleur un accès aux calendriers.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Traits\Controller\v1;
 
@@ -12,67 +20,72 @@ use Illuminate\Http\Request;
 
 trait HasCalendars
 {
-	use HasEvents {
-		HasEvents::isPrivate as isEventPrivate;
-		HasEvents::tokenCanSee as tokenCanSeeEvent;
-	}
-
-	public function isPrivate($user_id, $model = null) {
-		if ($model === null)
-			return false;
-
-		if ($model instanceof Event)
-			return $this->isEventPrivate($user_id, $model);
-
-		return $model->owned_by->isCalendarAccessibleBy($user_id);
+    use HasEvents {
+        HasEvents::isPrivate as isEventPrivate;
+        HasEvents::tokenCanSee as tokenCanSeeEvent;
     }
 
-	// Uniquement les followers et ceux qui possèdent le droit peuvent le voir
-	protected function isCalendarFollowed(Request $request, Calendar $calendar, string $user_id) {
-		return (
-			$calendar->followers()->wherePivot('user_id', $user_id)->exists()
-			&& \Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-calendars-users-followed-'.\ModelResolver::getName($calendar->owned_by_type))
-		);
-	}
+    /**
+     * Indique que l'utilisateur est membre de l'instance.
+     *
+     * @param  string $user_id
+     * @param  mixed  $model
+     * @return boolean
+     */
+    public function isPrivate(string $user_id, $model=null)
+    {
+        if ($model === null) {
+            return false;
+        }
 
-	protected function getCalendar(Request $request, User $user = null, string $id, string $verb = 'get') {
-		$calendar = Calendar::find($id);
+        if ($model instanceof Event) {
+            return $this->isEventPrivate($user_id, $model);
+        }
 
-		if ($calendar) {
-			if (!$this->isCalendarFollowed($request, $calendar, $user->id)) {
-				if (!$this->tokenCanSee($request, $calendar, $verb))
-					abort(403, 'L\'application n\'a pas les droits sur ce calendrier');
+        return $model->owned_by->isCalendarAccessibleBy($user_id);
+    }
 
-				if ($user && !$this->isVisible($calendar, $user->id))
-					abort(403, 'Vous n\'avez pas les droits sur ce calendrier');
-			}
+    /**
+     * Récupère un événement depuis le calendrier.
+     *
+     * @param  Request  $request
+     * @param  User     $user
+     * @param  Calendar $calendar
+     * @param  string   $event_id
+     * @param  string   $verb
+     * @return Event|null
+     */
+    protected function getEventFromCalendar(Request $request, User $user=null, Calendar $calendar, string $event_id,
+        string $verb='get')
+    {
+        $event = $calendar->events()->find($event_id);
 
-			if ($verb !== 'get' && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy(\Auth::id()))
-				abort(403, 'Vous n\'avez pas les droits suffisants');
+        if ($event) {
+            if (!$this->tokenCanSee($request, $event, $verb, 'events')) {
+                abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
+            }
 
-			return $calendar;
-		}
+            if ($user && !$this->isVisible($event, $user->id)) {
+                abort(403, 'Vous n\'avez pas les droits sur cet évènenement');
+            }
 
-		abort(404, 'Impossible de trouver le calendrier');
-	}
+            return $event;
+        }
 
-	protected function getEventFromCalendar(Request $request, User $user, Calendar $calendar, int $id, string $verb = 'get') {
-		$event = $calendar->events()->find($id);
+        abort(404, 'L\'événement n\'existe pas ou ne fait pas parti du calendrier');
+    }
 
-		if ($event) {
-			if (!$this->tokenCanSee($request, $event, $verb, 'events'))
-				abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
-
-			if ($user && !$this->isVisible($event, $user->id))
-				abort(403, 'Vous n\'avez pas les droits sur cet évènenement');
-
-			return $event;
-		}
-
-		abort(404, 'L\'évènement n\'existe pas ou ne fait pas parti du calendrier');
-	}
-
-	protected function tokenCanSee(Request $request, Model $model, string $verb, string $type = 'calendars') {
-		return $this->tokenCanSeeEvent($request, $model, $verb, $type);
-	}
+    /**
+     * Indique si le token peut voir la ressource.
+     *
+     * @param  Request $request
+     * @param  Model   $model
+     * @param  string  $verb
+     * @param  string  $type
+     * @return boolean
+     */
+    protected function tokenCanSee(Request $request, Model $model, string $verb, string $type='calendars')
+    {
+        return $this->tokenCanSeeEvent($request, $model, $verb, $type);
+    }
 }

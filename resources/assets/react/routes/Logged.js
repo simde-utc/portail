@@ -1,11 +1,11 @@
 /**
  * Gestion des routes privées (par défaut, on doit être au moins connecté et ensuite d'avoir une spécifité)
  *
- * @author Alexandre Brasseur <alexandre.brasseur@etu.utc.fr>
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
- * @license AGPL-3.0
+ * @license GNU GPL-3.0
 **/
 
 import React from 'react'

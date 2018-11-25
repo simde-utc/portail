@@ -15,8 +15,8 @@ class CreateTableAccess extends Migration
     {
         Schema::create('access', function (Blueprint $table) {
             $table->uuid('id')->primary();
-			$table->string('type', validation_max('name'))->unique();
-			$table->string('name', validation_max('name'))->unique();
+            $table->string('type', validation_max('name'))->unique();
+            $table->string('name', validation_max('name'))->unique();
             $table->string('description')->nullable();
             $table->string('data')->nullable();
 

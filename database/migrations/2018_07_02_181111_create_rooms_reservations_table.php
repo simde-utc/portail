@@ -26,7 +26,7 @@ class CreateRoomsReservationsTable extends Migration
             $table->uuid('validated_by_id')->nullable();
             $table->string('validated_by_type')->nullable();
 
-	$table->timestamps();
+            $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('room_id')->references('id')->on('rooms');

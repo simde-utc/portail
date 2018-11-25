@@ -1,4 +1,14 @@
 <?php
+/**
+ * Gère l'inscription via un formulaire.
+ *
+ * @author Natan Danous <natan.danous@gmail.com>
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\Auth;
 
@@ -12,28 +22,17 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
     use RegistersUsers;
 
     /**
-     * Where to redirect users after registration.
+     * Où rediriger les connectés.
      *
      * @var string
      */
     protected $redirectTo = '/';
 
     /**
-     * Create a new controller instance.
+     * Uniquement les non-connectés peuvent créer un compte.
      *
      * @return void
      */
@@ -43,42 +42,58 @@ class RegisterController extends Controller
     }
 
     /**
-     * Get a validator for an incoming registration request.
+     * Champs requis pour la validation du formulaire.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
-			'firstname' => 'required|string|max:255',
-			'lastname' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            //'password' => 'required|string|min:6|confirmed',
+            // 'password' => 'required|string|min:6|confirmed',
         ]);
     }
 
-	public function show(Request $request, string $provider = null) {
-		$config = config("auth.services.$provider");
+    /**
+     * Montre le formulaire spécifique à un type d'authentification.
+     * Redirige vers la page de connexion si non existant.
+     *
+     * @param  Request $request
+     * @param  string  $provider Type d'authentification.
+     * @return mixed
+     */
+    public function show(Request $request, string $provider=null)
+    {
+        $config = config("auth.services.$provider");
 
-		if ($config === null || !$config['registrable'])
-			return redirect()->route('login.show')->cookie('auth_provider', '', config('portail.cookie_lifetime'));
-		else
-			return resolve($config['class'])->showRegisterForm($request);
-	}
+        if ($config === null || !$config['registrable']) {
+            return redirect()->route('login.show')->cookie('auth_provider', '', config('portail.cookie_lifetime'));
+        } else {
+            return resolve($config['class'])->showRegisterForm($request);
+        }
+    }
 
-	/**
-	 * Enregistrement de l'utilisateur après passage par l'API
-	 */
-	public function store(Request $request, $provider) {
-		$config = config("auth.services.$provider");
+    /**
+     * Enregistrement de l'utilisateur pour un type d'authentification.
+     * Redirige vers la page de connexion si non existant.
+     *
+     * @param  Request $request
+     * @param  string  $provider Type d'authentification.
+     * @return mixed
+     */
+    public function store(Request $request, string $provider)
+    {
+        $config = config("auth.services.$provider");
 
-		if ($config === null || !$config['registrable'])
-			return redirect()->route('register.show')->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
-		else {
-			setcookie('auth_provider', $provider, config('portail.cookie_lifetime'));
+        if ($config === null || !$config['registrable']) {
+            return redirect()->route('register.show')->cookie('auth_provider', $provider, config('portail.cookie_lifetime'));
+        } else {
+            setcookie('auth_provider', $provider, config('portail.cookie_lifetime'));
 
-			return resolve($config['class'])->register($request);
-		}
-	}
+            return resolve($config['class'])->register($request);
+        }
+    }
 }

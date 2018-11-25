@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ruleset name="Samy">
+    <description>Standard défini pour le Portail</description>
+
+    <!-- Liste des fichiers/dossiers à inspecter -->
+    <file>app</file>
+    <file>bootstrap/app.php</file>
+    <file>bootstrap/helpers.php</file>
+    <file>database</file>
+    <file>resources/lang</file>
+    <file>routes</file>
+    <file>tests</file>
+
+    <!-- Paramètres custom -->
+    <arg name="basepath" value="."/>
+    <arg name="colors" />
+    <arg name="parallel" value="25" />
+    <arg value="sp"/>
+
+    <!-- Inclusion du standard Zend à l'exception de quelques règles -->
+    <rule ref="Zend">
+        <exclude name="Generic.WhiteSpace.DisallowTabIndent" />
+        <exclude name="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore" />
+        <exclude name="Zend.NamingConventions.ValidVariableName.NotCamelCaps" />
+        <exclude name="PEAR.Functions.FunctionCallSignature" />
+    </rule>
+
+    <!-- Un espace entre chaque fonction -->
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="spacingBeforeFirst" value="0" />
+            <property name="spacingAfterLast" value="0" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.FunctionClosingBraceSpace">
+        <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace.SpacingBeforeClose" />
+    </rule>
+
+    <!-- Contraintes sur les longueurs -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="128" />
+            <property name="absoluteLineLimit" value="null" />
+            <property name="ignoreComments" value="true" />
+        </properties>
+    </rule>
+
+    <!-- Contraintes sur les commentaires -->
+    <rule ref="Squiz.Commenting.FileComment">
+        <type>warning</type>
+        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
+        <exclude name="Squiz.Commenting.FileComment.MissingSubpackageTag" />
+        <exclude name="Squiz.Commenting.FileComment.SubpackageTagOrder" />
+        <exclude name="Squiz.Commenting.FileComment.IncorrectAuthor" />
+        <exclude name="Squiz.Commenting.FileComment.AuthorTagOrder" />
+        <exclude name="Squiz.Commenting.FileComment.DuplicateAuthorTag" />
+        <exclude name="Squiz.Commenting.FileComment.PackageTagOrder" />
+        <exclude name="Squiz.Commenting.FileComment.IncorrectCopyright" />
+        <exclude name="Squiz.Commenting.FileComment.CopyrightTagOrder" />
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <type>warning</type>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
+    </rule>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.NoComma" />
+
+    <!-- Pour une bonne indentation des arrays -->
+    <rule ref="Generic.Arrays.ArrayIndent" />
+
+    <!-- Suppression de méthodes -->
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array">
+                <element key="sizeof" value="count"/>
+                <element key="delete" value="unset"/>
+                <element key="print" value="echo"/>
+                <element key="dd" value="null"/>
+                <element key="create_function" value="null"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Ligne de fin forcée -->
+    <rule ref="PSR2.Files.EndFileNewline"/>
+
+    <!-- Obligation de commenter -->
+    <rule ref="Squiz.Commenting.BlockComment" />
+    <rule ref="Squiz.Commenting.DocCommentAlignment" />
+    <rule ref="Squiz.Commenting.EmptyCatchComment" />
+    <rule ref="Squiz.Commenting.InlineComment" />
+    <rule ref="Squiz.Commenting.PostStatementComment" />
+
+    <!-- Pas de tag de fin PHP -->
+    <rule ref="Zend.Files.ClosingTag"/>
+
+    <!-- Règles à tester -->
+    <rule ref="Squiz.Arrays.ArrayBracketSpacing" />
+    <rule ref="Squiz.ControlStructures.ControlSignature" />
+    <rule ref="Squiz.ControlStructures.ElseIfDeclaration" />
+    <rule ref="Squiz.Formatting.OperatorBracket" />
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing" />
+    <rule ref="Squiz.Scope.MethodScope" />
+    <rule ref="Squiz.Strings.ConcatenationSpacing" />
+    <rule ref="Squiz.WhiteSpace.ControlStructureSpacing" />
+    <rule ref="Squiz.WhiteSpace.OperatorSpacing" />
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace" />
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <!-- <rule ref="Generic.Commenting.Todo"/> -->
+    <rule ref="Generic.ControlStructures.InlineControlStructure"/>
+    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <rule ref="Generic.NamingConventions.ConstructorName"/>
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <rule ref="Generic.PHP.LowerCaseKeyword"/>
+    <rule ref="Generic.Strings.UnnecessaryStringConcat"/>
+    <rule ref="Generic.WhiteSpace.ScopeIndent"/>
+    <rule ref="PSR2.Classes.PropertyDeclaration"/>
+    <rule ref="PSR2.Methods.MethodDeclaration"/>
+</ruleset>

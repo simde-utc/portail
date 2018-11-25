@@ -1,11 +1,11 @@
 /**
  * Assemblage, chargement et composition de l'application entière
  *
- * @author Alexandre Brasseur <alexandre.brasseur@etu.utc.fr>
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
- * @license AGPL-3.0
+ * @license GNU GPL-3.0
 **/
 
 import React from 'react';

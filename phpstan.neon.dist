@@ -1,0 +1,23 @@
+includes:
+	- ./vendor/nunomaduro/larastan/extension.neon
+parameters:
+	level: 5
+	ignoreErrors:
+		- '#Access to an undefined property App\\Interfaces\\Model\\#'
+		- '#Call to an undefined method (Illuminate\\Database\\Eloquent\\Collection&iterable<static(Illuminate\\Database\\Eloquent\\Builder)>)|Illuminate\\Database\\Eloquent\\Model|static(Illuminate\\Database\\Eloquent\\Builder)::#'
+		- '#Call to an undefined method Exception::getStatusCode()#'
+		- '#.*expects Illuminate\\Contracts\\Auth\\Authenticatable, Illuminate\\Contracts\\Auth\\CanResetPassword given#'
+		- '#Call to an undefined static method App\\Facades\\#'
+		- '#Call to an undefined method App\\Services\\#'
+		- '#Call to an undefined method Illuminate\\Http\\Request::token()#'
+		- '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::key()#'
+		- '#Parameter .* \$user of .* expects App\\Models\\User|null, Illuminate\\Contracts\\Auth\\Authenticatable|null given#'
+		- '#Call to static method .*() on an unknown class App\\Models\\#'
+		- '#Call to an undefined method App\\Http\\Controllers\\v1\\Asso\\AccessController::where()#'
+		- '#Access to an undefined property Illuminate\\Contracts\\Auth\\CanResetPassword::\$password#'
+		- '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::valueOf()#'
+		- '#Access to an undefined property Illuminate\\Database\\Eloquent\\Builder::\$key#'
+		- '#Access to an undefined property Illuminate\\Database\\Eloquent\\Builder::\$value#'
+		- '#Call to an undefined method App\\Http\\Controllers\\v1\\.*Controller::exists()#'
+		- '#Call to an undefined method Illuminate\\Database\\Query\\Builder::withPivot()#'
+		- '#Call to an undefined method App\\Models\\Role::users()#'

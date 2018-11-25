@@ -1,4 +1,13 @@
 <?php
+/**
+ * Modèle correspondant aux authentifications mots de passe.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Models;
 
@@ -6,34 +15,53 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\Model\HasHiddenData;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 
-
-class AuthPassword extends Auth // TODO must
+class AuthPassword extends Auth
 {
     use HasHiddenData, HasSelection;
 
     public $incrementing = false;
 
-	protected $fillable = [
-	 	'user_id', 'password', 'last_login_at',
-	];
+    protected $fillable = [
+        'user_id', 'password', 'last_login_at',
+    ];
 
-	protected $hidden = [
-		'password',
-	];
+    protected $hidden = [
+        'password',
+    ];
 
-	protected $must = [
-		'user_id',
-	];
+    protected $must = [
+        'user_id',
+    ];
 
-	public function user() {
-		return $this->belongsTo(User::class);
-	}
-
-	public function getUserByIdentifiant($email) {
-		return User::where('email', $email)->first();
+    /**
+     * Relation avec l'utlisateur.
+     *
+     * @return mixed
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
-	public function isPasswordCorrect($password) {
-		return Hash::check($password, $this->password);
-	}
+    /**
+     * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     *
+     * @param string $email
+     * @return mixed
+     */
+    public function getUserByIdentifiant(string $email)
+    {
+        return User::where('email', $email)->first();
+    }
+
+    /**
+     * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     *
+     * @param string $password
+     * @return boolean
+     */
+    public function isPasswordCorrect(string $password)
+    {
+        return Hash::check($password, $this->password);
+    }
 }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Ajoute au controlleur un accès aux emplacements.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Traits\Controller\v1;
 
@@ -9,12 +17,21 @@ use Illuminate\Database\Eloquent\Model;
 
 trait HasPlaces
 {
-	protected function getPlace(Request $request, string $id) {
-		$place = Place::find($id);
+    /**
+     * Récupère un emplacement.
+     *
+     * @param  Request $request
+     * @param  string  $place_id
+     * @return Place|null
+     */
+    protected function getPlace(Request $request, string $place_id)
+    {
+        $place = Place::find($place_id);
 
-		if ($place)
-			return $place;
-		else
-			abort(404, 'Impossible de trouver le lieu');
-	}
+        if ($place) {
+            return $place;
+        } else {
+            abort(404, 'Impossible de trouver le lieu');
+        }
+    }
 }

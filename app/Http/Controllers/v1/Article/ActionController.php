@@ -1,4 +1,12 @@
 <?php
+/**
+ * Gère les actions des articles.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\v1\Article;
 
@@ -13,109 +21,117 @@ use App\Models\Article;
 use App\Traits\HasVisibility;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Controller\v1\HasArticles;
+use App\Exception\PortailException;
 
-/**
- * @resource Article
- *
- * Les articles écrits et postés par les associations
- */
 class ActionController extends Controller
 {
-	use HasArticles;
+    use HasArticles;
 
-	/**
-	 * Scopes Article
-	 *
-	 * Les Scopes requis pour manipuler les Articles
-	 */
-	public function __construct() {
-  		$this->middleware(array_merge(
-				\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
-  				\Scopes::matchOne('user-get-articles-actions', 'client-get-articles-actions')
-			),
-  			['only' => ['index', 'show']]
-  		);
-  		$this->middleware(array_merge(
-				\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
-  				\Scopes::matchOne('user-create-articles-actions', 'client-create-articles-actions')
-			),
-  			['only' => ['store']]
-  		);
-  		$this->middleware(array_merge(
-				\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
-  				\Scopes::matchOne('user-edit-articles-actions', 'client-edit-articles-actions')
-			),
-  			['only' => ['update']]
-  		);
-  		$this->middleware(array_merge(
-				\Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'], ['client-get-articles-assos', 'client-get-articles-groups']),
-  				\Scopes::matchOne('user-manage-articles-actions', 'client-manage-articles-actions')
-			),
-  			['only' => ['destroy']]
-  		);
-  	}
+    /**
+     * Nécessité de pouvoir voir les articles et de pouvoir gérer les actions des articles.
+     */
+    public function __construct()
+    {
+        $this->middleware(
+        array_merge(
+		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
+        ['client-get-articles-assos', 'client-get-articles-groups']),
+		        \Scopes::matchOne('user-get-articles-actions', 'client-get-articles-actions')
+	        ),
+	        ['only' => ['index', 'show']]
+        );
+        $this->middleware
+        (array_merge(
+		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
+        ['client-get-articles-assos', 'client-get-articles-groups']),
+		        \Scopes::matchOne('user-create-articles-actions', 'client-create-articles-actions')
+	        ),
+	        ['only' => ['store']]
+        );
+        $this->middleware(
+        array_merge(
+		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
+        ['client-get-articles-assos', 'client-get-articles-groups']),
+		        \Scopes::matchOne('user-edit-articles-actions', 'client-edit-articles-actions')
+	        ),
+	        ['only' => ['update']]
+        );
+        $this->middleware(
+        array_merge(
+		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
+        ['client-get-articles-assos', 'client-get-articles-groups']),
+		        \Scopes::matchOne('user-manage-articles-actions', 'client-manage-articles-actions')
+	        ),
+	        ['only' => ['destroy']]
+        );
+    }
 
-	/**
-	 * List Articles
-	 *
-	 * Retourne la liste des articles. ?all pour voir ceux en plus des assos suivies, ?notRemoved pour uniquement cacher les articles non visibles
-	 * @param \Illuminate\Http\Request $request
-	 * @return JsonResponse
-	 */
-	public function index(Request $request, string $article_id): JsonResponse {
-		$article = $this->getArticle($request, \Auth::user(), $article_id);
-		$actions = $article->actions()->groupToArray();
+    /**
+     * Liste les actions de l'article.
+     *
+     * @param Request $request
+     * @param string  $article_id
+     * @return JsonResponse
+     */
+    public function index(Request $request, string $article_id): JsonResponse
+    {
+        $article = $this->getArticle($request, \Auth::user(), $article_id);
+        $actions = $article->actions()->groupToArray();
 
-		return response()->json($actions, 200);
-	}
+        return response()->json($actions, 200);
+    }
 
-	/**
-	 * Create Article
-	 *
-	 * Créer un article
-	 * @param ArticleRequest $request
-	 * @return JsonResponse
-	 */
-	public function store(Request $request): JsonResponse {
-		abort(419);
-	}
+    /**
+     * Impossible d'ajouter depuis ce controlleur une action pour l'article.
+     *
+     * @param Request $request
+     * @param string  $article_id
+     * @return void
+     */
+    public function store(Request $request, string $article_id): void
+    {
+        abort(419);
+    }
 
-	/**
-	 * Show Article
-	 *
-	 * Affiche l'article s'il existe et si l'utilisateur peut le voir.
-	 * @param Request $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function show(Request $request, string $article_id, string $key): JsonResponse {
-		$article = $this->getArticle($request, \Auth::user(), $article_id);
-		$actions = $article->actions()->where('key', $key)->groupToArray();
+    /**
+     * Montre une action de l'article.
+     *
+     * @param Request $request
+     * @param string  $article_id
+     * @param string  $key
+     * @return JsonResponse
+     */
+    public function show(Request $request, string $article_id, string $key): JsonResponse
+    {
+        $article = $this->getArticle($request, \Auth::user(), $article_id);
+        $actions = $article->actions()->where('key', $key)->groupToArray();
 
-		return response()->json($actions, 200);
-	}
+        return response()->json($actions, 200);
+    }
 
-	/**
-	 * Update Article
-	 *
-	 * Met à jour l'article s'il existe
-	 * @param ArticleRequest $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function update(Request $request, string $id): JsonResponse {
-		abort(419);
-	}
+    /**
+     * Impossible de mettre un jour une action de l'article.
+     *
+     * @param Request $request
+     * @param string  $article_id
+     * @param string  $key
+     * @return void
+     */
+    public function update(Request $request, string $article_id, string $key): void
+    {
+        abort(419);
+    }
 
-	/**
-	 * Delete Article
-	 *
-	 * Supprime l'article s'il existe
-	 * @param ArticleRequest $request
-	 * @param  int $id
-	 * @return JsonResponse
-	 */
-	public function destroy(ArticleRequest $request, string $id): JsonResponse {
-		abort(419);
-	}
+    /**
+     * Impossible de supprimer une action de l'article.
+     *
+     * @param Request $request
+     * @param string  $article_id
+     * @param string  $key
+     * @return void
+     */
+    public function destroy(Request $request, string $article_id, string $key): void
+    {
+        abort(419);
+    }
 }

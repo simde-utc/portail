@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * Liste des scopes en fonction des routes
  *   - Définition des scopes:
  *      portée + "-" + verbe + "-" + categorie + (pour chaque sous-catégorie: '-' + sous-catégorie)
@@ -21,35 +20,35 @@
 
 // Toutes les routes commencant par client-{verbe}-locations-
 return [
-	'description' => 'Emplacements et lieux',
-	'verbs' => [
-		'manage' => [
-			'description' => 'Gérer totalement les lieux et les emplacements',			'scopes' => [
-				'places' => [
-					'description' => 'Gérer totalement les emplacements',
-				],
-			]
-		],
-		'set' => [
-			'description' => 'Modifier et créer des lieux et des emplacements',			'scopes' => [
-				'places' => [
-					'description' => 'Modifier et créer des emplacements',
-				],
-			]
-		],
-		'get' => [
-			'description' => 'Récupérer les lieux et les emplacements',			'scopes' => [
-				'places' => [
-					'description' => 'Récupérer les emplacements',
-				],
-			]
-		],
-		'create' => [
-			'description' => 'Créer de nouveaux lieux et emplacements',			'scopes' => [
-				'places' => [
-					'description' => 'Créer de nouveaux emplacements',
-				],
-			]
-		],
+    'description' => 'Emplacements et lieux',
+    'verbs' => [
+        'manage' => [
+            'description' => 'Gérer totalement les lieux et les emplacements',			'scopes' => [
+                'places' => [
+                    'description' => 'Gérer totalement les emplacements',
+                ],
+            ]
+        ],
+        'set' => [
+            'description' => 'Modifier et créer des lieux et des emplacements',			'scopes' => [
+                'places' => [
+                    'description' => 'Modifier et créer des emplacements',
+                ],
+            ]
+        ],
+        'get' => [
+            'description' => 'Récupérer les lieux et les emplacements',			'scopes' => [
+                'places' => [
+                    'description' => 'Récupérer les emplacements',
+                ],
+            ]
+        ],
+        'create' => [
+            'description' => 'Créer de nouveaux lieux et emplacements',			'scopes' => [
+                'places' => [
+                    'description' => 'Créer de nouveaux emplacements',
+                ],
+            ]
+        ],
     ]
 ];

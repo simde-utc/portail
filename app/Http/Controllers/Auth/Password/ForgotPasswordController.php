@@ -1,4 +1,12 @@
 <?php
+/**
+ * Gère la demande de réinitilisation de mots de passe.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Http\Controllers\Auth\Password;
 
@@ -8,21 +16,10 @@ use Illuminate\Http\Request;
 
 class ForgotPasswordController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset emails and
-    | includes a trait which assists in sending these notifications from
-    | your application to your users. Feel free to explore this trait.
-    |
-    */
-
     use SendsPasswordResetEmails;
 
     /**
-     * Create a new controller instance.
+     * Où rediriger les connectés.
      *
      * @return void
      */
@@ -32,9 +29,9 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Display the form to request a password reset link.
+     * Montre le formulaire de demande de réinitilisation.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function showLinkRequestForm()
     {
@@ -42,9 +39,9 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Validate the email for the given request.
+     * Validation de la demande.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return void
      */
     protected function validateEmail(Request $request)
