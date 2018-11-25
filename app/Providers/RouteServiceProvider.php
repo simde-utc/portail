@@ -98,7 +98,11 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::prefix('api')
             ->middleware('forceJson')
-            ->get('/{version}/', $this->namespace.'\RouteController@index');
+            ->get('/', $this->namespace.'\RouteController@index');
+
+        Route::prefix('api')
+            ->middleware('forceJson')
+            ->get('/{version}/', $this->namespace.'\RouteController@show');
 
         for ($i = 0; $i < count($versions); $i++) {
             $version = $versions[$i];

@@ -2,7 +2,7 @@
     "name": "simde-utc/portail-api",
     "description": "Portail des Assos de l'UTC.",
     "keywords": ["framework", "laravel", "simde", "api", "utc", "students", "clubs", "assos"],
-    "license": "MIT",
+    "license": "GPL-v3",
     "type": "project",
     "require": {
         "php": ">=7.1.3",

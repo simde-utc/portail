@@ -119,6 +119,17 @@ class ModelResolver
     }
 
     /**
+     * Donne le nom court de la classe.
+     *
+     * @param  mixed $class
+     * @return string
+     */
+    public function getNameFromClass($class)
+    {
+        return $this->getName(get_class($class));
+    }
+
+    /**
      * Donne la catégorie du modèle.
      *
      * @param  string $modelName

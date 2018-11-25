@@ -21,7 +21,7 @@ trait HasHiddenData
      */
     public function getModelAttribute(): string
     {
-        return \ModelResolver::getName($this);
+        return \ModelResolver::getNameFromClass($this);
     }
 
     /**

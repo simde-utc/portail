@@ -53,18 +53,57 @@ class RouteController extends Controller
     }
 
     /**
+     * Indique toutes les versions du Portail.
+     *
+     * @param  Request $request
+     * @return mixed
+     */
+    public function index(Request $request)
+    {
+        $versions = config('portail.versions');
+        $actualVersion = config('portail.version');
+        $indexVersion = array_search($actualVersion, $versions);
+        $data = [];
+
+        foreach ($versions as $version) {
+            if (($index = array_search($version, $versions)) >= 0) {
+                $versionData = [
+                    'name' => $version,
+                    'info' => 'Routes définies pour la '.$version,
+                ];
+
+                if ($index < $indexVersion) {
+                    $versionData['deprecated'] = true;
+                    $versionData['status'] = '[x] L\'utilisation de cette version doit se faire uniquement par de vieux services';
+                } else if ($index > $indexVersion || $indexVersion === false) {
+                    $versionData['beta'] = true;
+                    $versionData['status'] = '[x] Version non stable, pouvant encore changée';
+                } else {
+                    $versionData['status'] = '[√] Version à utiliser';
+                }
+
+                $versionData['routes'] = url('api/'.$version);
+
+                $data[$version] = $versionData;
+            }
+        }
+
+        return response()->json($data);
+    }
+
+    /**
      * Liste toutes les routes api d'une version précise.
      * @param  Request $request
      * @param  string  $version
      * @return mixed
      */
-    public function index(Request $request, string $version)
+    public function show(Request $request, string $version)
     {
         $versions = config('portail.versions');
         $actualVersion = config('portail.version');
         $indexVersion = array_search($actualVersion, $versions);
 
-        if ($index = array_search($version, $versions) >= 0) {
+        if (($index = array_search($version, $versions)) >= 0) {
             $file = base_path('routes/api/'.$version.'.php');
 
             if (file_exists($file)) {
