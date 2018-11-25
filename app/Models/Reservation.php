@@ -1,4 +1,16 @@
 <?php
+/**
+ * Modèle correspondant aux réservations.
+ *
+ * @author Thomas Meurou <thomas.meurou@yahoo.fr>
+ * @author Josselin Pennors <josselin.pennors@hotmail.fr>
+ * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Models;
 
@@ -14,57 +26,101 @@ class Reservation extends Model implements OwnableContract
     protected $table = 'rooms_reservations';
 
     protected $fillable = [
-      'room_id', 'reservation_type_id', 'event_id', 'description', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'validated_by_id', 'validated_by_type',
+        'room_id', 'reservation_type_id', 'event_id', 'description', 'created_by_id', 'created_by_type', 'owned_by_id',
+        'owned_by_type', 'validated_by_id', 'validated_by_type',
     ];
 
     protected $hidden = [
-      'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'validated_by_id', 'validated_by_type', 'reservation_type_id', 'event_id', 'room_id',
+        'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'validated_by_id', 'validated_by_type',
+        'reservation_type_id', 'event_id', 'room_id',
     ];
 
     protected $with = [
-      'created_by', 'owned_by', 'validated_by', 'type', 'event', 'room',
+        'created_by', 'owned_by', 'validated_by', 'type', 'event', 'room',
     ];
 
     protected $must = [
-      'room_id', 'reservation_type_id', 'event_id', 'description', 'owned_by', 'validated_by', 'type', 'event',
+        'room_id', 'reservation_type_id', 'event_id', 'description', 'owned_by', 'validated_by', 'type', 'event',
     ];
 
-    protected static function boot() {
-  		parent::boot();
+    /**
+     * Lancé à la création du modèle
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
 
-  		self::updating(function ($model) {
-  			$model->event->update([
-  				'owned_by_id' => $model->owned_by_id,
-  				'owned_by_type' => $model->owned_by_type,
-  			]);
-  		});
+        self::updating(function ($model) {
+            $model->event->update([
+                'owned_by_id' => $model->owned_by_id,
+                'owned_by_type' => $model->owned_by_type,
+            ]);
+        });
 
-      self::deleting(function ($model) {
-        $model->event->softDelete();
-      });
-  	}
-
-  	public function type() {
-  		return $this->belongsTo(ReservationType::class, 'reservation_type_id');
-  	}
-
-    public function room() {
-      return $this->belongsTo(Room::class);
+        self::deleting(function ($model) {
+            $model->event->delete();
+        });
     }
 
-    public function event() {
-      return $this->belongsTo(Event::class);
+    /**
+     * Relation avec le type de réservation.
+     *
+     * @return mixed
+     */
+    public function type()
+    {
+        return $this->belongsTo(ReservationType::class, 'reservation_type_id');
     }
 
-    public function created_by() {
-      return $this->morphTo('created_by');
+    /**
+     * Relation avec la salle.
+     *
+     * @return mixed
+     */
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
     }
 
-    public function owned_by() {
-      return $this->morphTo('owned_by');
+    /**
+     * Relation avec l'événement.
+     *
+     * @return mixed
+     */
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
     }
 
-    public function validated_by() {
-      return $this->morphTo('validated_by');
+    /**
+     * Relation avec le créateur.
+     *
+     * @return mixed
+     */
+    public function created_by()
+    {
+        return $this->morphTo('created_by');
+    }
+
+    /**
+     * Relation avec le possédeur.
+     *
+     * @return mixed
+     */
+    public function owned_by()
+    {
+        return $this->morphTo('owned_by');
+    }
+
+    /**
+     * Relation avec la personne validatrice.
+     *
+     * @return mixed
+     */
+    public function validated_by()
+    {
+        return $this->morphTo('validated_by');
     }
 }

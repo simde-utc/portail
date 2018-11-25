@@ -1,4 +1,14 @@
 <?php
+/**
+ * Modèle correspondant aux visibilités.
+ *
+ * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Models;
 
@@ -13,12 +23,12 @@ class Visibility extends Model
     protected $table = 'visibilities';
 
     protected $fillable = [
-		'type', 'name', 'parent_id'
-	];
+        'type', 'name', 'parent_id'
+    ];
 
-	protected $hidden = [
-		'created_at', 'updated_at'
-	];
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
 
     protected $must = [
         'type',
@@ -30,23 +40,56 @@ class Visibility extends Model
         'filter' => [],
     ];
 
-	public static function findByType($type) {
-		return static::where('type', $type)->first();
-	}
+    /**
+     * Retrouve une visibilité par son type.
+     * TODO: Transformer en scope.
+     * TODO: A exporter en Trait
+     *
+     * @param  string $type
+     * @return Visibility
+     */
+    public static function findByType(string $type)
+    {
+        return static::where('type', $type)->first();
+    }
 
-    public function parent() {
+    /**
+     * Relation avec la visibilité parent
+     *
+     * @return mixed
+     */
+    public function parent()
+    {
         return $this->belongsTo(Visibility::class, 'parent_id');
     }
 
-    public function children() {
+    /**
+     * Relation avec les visibilités enfants
+     *
+     * @return mixed
+     */
+    public function children()
+    {
         return $this->hasMany(Visibility::class, 'parent_id');
     }
 
-    public function articles() {
+    /**
+     * Relation avec l'article
+     *
+     * @return mixed
+     */
+    public function articles()
+    {
         return $this->hasMany('App\Models\Article');
     }
 
-    public function events() {
+    /**
+     * Relation avec l'événement
+     *
+     * @return mixed
+     */
+    public function events()
+    {
         return $this->hasMany('App\Models\Event');
     }
 }

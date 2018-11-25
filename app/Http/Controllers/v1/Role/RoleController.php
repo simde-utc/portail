@@ -79,15 +79,11 @@ class RoleController extends Controller
 
         $role = Role::create($inputs);
 
-        if ($role) {
-            if ($request->filled('parent_ids')) {
-                $role->assignParentRole($request->parent_ids);
-            }
-
-            return response()->json($role->hideSubData(), 201);
-        } else {
-            abort(500, 'Impossible de créer le role');
+        if ($request->filled('parent_ids')) {
+            $role->assignParentRole($request->parent_ids);
         }
+
+        return response()->json($role->hideSubData(), 201);
     }
 
     /**
@@ -137,7 +133,7 @@ class RoleController extends Controller
      * @param string 	$role_id
      * @return void
      */
-    public function destroy(Request $request, string $role_id): JsonResponse
+    public function destroy(Request $request, string $role_id): void
     {
         $role = $this->getRole($request, $role_id, 'manage');
 

@@ -80,7 +80,7 @@ class NotificationController extends Controller
      * @param string  $user_id
      * @return void
      */
-    public function store(Request $request, string $user_id=null): JsonResponse
+    public function store(Request $request, string $user_id=null): void
     {
         $user = $this->getUser($request, $user_id);
 
@@ -98,16 +98,16 @@ class NotificationController extends Controller
      *
      * @param Request $request
      * @param string  $user_id
-     * @param string  $id
+     * @param string  $notification_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $user_id=null, string $id=null): JsonResponse
+    public function show(Request $request, string $user_id=null, string $notification_id=null): JsonResponse
     {
-        if (is_null($id)) {
-            list($user_id, $id) = [$id, $user_id];
+        if (is_null($notification_id)) {
+            list($user_id, $notification_id) = [$notification_id, $user_id];
         }
 
-        $notification = $this->getUserNotification($request, $user_id, $id);
+        $notification = $this->getUserNotification($request, $user_id, $notification_id);
 
         return response()->json($notification->hideSubData(), 200);
     }
@@ -117,16 +117,16 @@ class NotificationController extends Controller
      *
      * @param Request $request
      * @param string  $user_id
-     * @param string  $id
+     * @param string  $notification_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $user_id=null, string $id=null): JsonResponse
+    public function update(Request $request, string $user_id=null, string $notification_id=null): JsonResponse
     {
-        if (is_null($id)) {
-            list($user_id, $id) = [$id, $user_id];
+        if (is_null($notification_id)) {
+            list($user_id, $notification_id) = [$notification_id, $user_id];
         }
 
-        $notification = $this->getUserNotification($request, $user_id, $id);
+        $notification = $this->getUserNotification($request, $user_id, $notification_id);
 
         if ($request->has('read')) {
             $notification->update(['read_at' => now()]);
@@ -142,16 +142,16 @@ class NotificationController extends Controller
      *
      * @param Request $request
      * @param string  $user_id
-     * @param string  $id
+     * @param string  $notification_id
      * @return void
      */
-    public function destroy(Request $request, string $user_id=null, string $id=null): JsonResponse
+    public function destroy(Request $request, string $user_id=null, string $notification_id=null): void
     {
-        if (is_null($id)) {
-            list($user_id, $id) = [$id, $user_id];
+        if (is_null($notification_id)) {
+            list($user_id, $notification_id) = [$notification_id, $user_id];
         }
 
-        $notification = $this->getUserNotification($request, $user_id, $id);
+        $notification = $this->getUserNotification($request, $user_id, $notification_id);
         $notification->delete();
 
         abort(204);

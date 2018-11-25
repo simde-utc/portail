@@ -108,18 +108,18 @@ class AssoController extends Controller
      *
      * @param Request $request
      * @param string  $user_id
-     * @param string  $id
+     * @param string  $asso_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $user_id, string $id=null): JsonResponse
+    public function show(Request $request, string $user_id, string $asso_id=null): JsonResponse
     {
-        if (is_null($id)) {
-            list($user_id, $id) = [$id, $user_id];
+        if (is_null($asso_id)) {
+            list($user_id, $asso_id) = [$asso_id, $user_id];
         }
 
         $user = $this->getUser($request, $user_id);
         $semester = $this->getSemester($request, ['followed']);
-        $asso = $this->getAsso($request, $id, $user, $semester);
+        $asso = $this->getAsso($request, $asso_id, $user, $semester);
 
         return response()->json($asso->hideSubData(), 200);
     }
@@ -129,10 +129,10 @@ class AssoController extends Controller
      *
      * @param Request $request
      * @param string  $user_id
-     * @param string  $id
+     * @param string  $asso_id
      * @return void
      */
-    public function update(Request $request, string $user_id, string $id=null)
+    public function update(Request $request, string $user_id, string $asso_id=null)
     {
         abort(405);
     }
@@ -142,18 +142,18 @@ class AssoController extends Controller
      *
      * @param Request $request
      * @param string  $user_id
-     * @param string  $id
+     * @param string  $asso_id
      * @return void
      */
-    public function destroy(Request $request, string $user_id, string $id=null)
+    public function destroy(Request $request, string $user_id, string $asso_id=null)
     {
-        if (is_null($id)) {
-            list($user_id, $id) = [$id, $user_id];
+        if (is_null($asso_id)) {
+            list($user_id, $asso_id) = [$asso_id, $user_id];
         }
 
         $user = $this->getUser($request, $user_id);
         $semester = $this->getSemester($request, ['followed']);
-        $asso = $this->getAsso($request, $id, $user, $semester);
+        $asso = $this->getAsso($request, $asso_id, $user, $semester);
 
         if ($asso->removeMembers($user, [
             'semester_id' => $asso->pivot->semester_id,

@@ -19,7 +19,6 @@ use App\Models\Calendar;
 use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\HasVisibility;
 
@@ -96,8 +95,8 @@ class CalendarController extends Controller
 
         $calendars = $calendars->filter(function ($calendar) use ($request) {
             return ($this->tokenCanSee($request, $calendar, 'get')
-                && (!\Auth::id() || $this->isVisible($calendar, \Auth::id())))
-                || $this->isCalendarFollowed($request, $calendar, \Auth::id());
+                && (!\Auth::id() || $this->isVisible($calendar, (string) \Auth::id())))
+                || $this->isCalendarFollowed($request, $calendar, (string) \Auth::id());
         })->values()->map(function ($calendar) {
             return $calendar->hideData();
         });
@@ -115,14 +114,14 @@ class CalendarController extends Controller
     public function store(Request $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id);
-        $calendars = [];
+        $calendars = collect();
         $calendar_ids = $request->input('calendar_ids', [$request->input('calendar_id')]);
 
         foreach ($calendar_ids as $calendar_id) {
             $calendar = $this->getCalendar($request, $user, $calendar_id);
 
             $user->followedCalendars()->attach($calendar);
-            $calendars[] = $calendar;
+            $calendars->push($calendar);
         }
 
         $calendars = $calendars->map(function ($calendar) {
@@ -137,20 +136,20 @@ class CalendarController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
-     * @param string                   $id
+     * @param string                   $calendar_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $user_id, string $id=null): JsonResponse
+    public function show(Request $request, string $user_id, string $calendar_id=null): JsonResponse
     {
-        if (is_null($id)) {
-            list($user_id, $id) = [$id, $user_id];
+        if (is_null($calendar_id)) {
+            list($user_id, $calendar_id) = [$calendar_id, $user_id];
         }
 
         $user = $this->getUser($request, $user_id);
-        $calendar = $this->getCalendar($request, $user, $id);
+        $calendar = $this->getCalendar($request, $user, $calendar_id);
         $calendar_ids = $user->calendars()->pluck('calendars.id')->merge($user->followedCalendars()->pluck('calendars.id'));
 
-        if (!$calendar_ids->contains($id)) {
+        if (!$calendar_ids->contains($calendar_id)) {
             abort(404, 'Le calendrier n\'est pas suivi par la personne ou n\'existe pas');
         }
 
@@ -162,10 +161,10 @@ class CalendarController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
-     * @param string                   $id
+     * @param string                   $calendar_id
      * @return void
      */
-    public function update(Request $request, string $user_id, string $id=null)
+    public function update(Request $request, string $user_id, string $calendar_id=null)
     {
         abort(405);
     }
@@ -175,27 +174,27 @@ class CalendarController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
-     * @param string                   $id
+     * @param string                   $calendar_id
      * @return void
      */
-    public function destroy(Request $request, string $user_id, string $id=null): JsonResponse
+    public function destroy(Request $request, string $user_id, string $calendar_id=null): void
     {
-        if (is_null($id)) {
-            list($user_id, $id) = [$id, $user_id];
+        if (is_null($calendar_id)) {
+            list($user_id, $calendar_id) = [$calendar_id, $user_id];
         }
 
         $user = $this->getUser($request, $user_id);
-        $calendar = $this->getCalendar($request, $user, $id);
+        $calendar = $this->getCalendar($request, $user, $calendar_id);
         $calendar_ids = $user->followedCalendars()->pluck('calendars.id');
 
-        if ($calendar_ids->contains($id)) {
+        if ($calendar_ids->contains($calendar_id)) {
             $user->followedCalendars()->detach($calendar);
 
             abort(204);
         } else {
             $calendar_ids = $user->calendars()->pluck('calendars.id');
 
-            if ($calendar_ids->contains($id)) {
+            if ($calendar_ids->contains($calendar_id)) {
                 abort(403, 'Il n\'est pas possible de ne plus suivre un calendrier appartenu par la personne');
             } else {
                 abort(404, 'Le calendrier n\'est pas suivi par la personne ou n\'existe pas');

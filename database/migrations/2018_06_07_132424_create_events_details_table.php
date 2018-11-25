@@ -6,36 +6,36 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateEventsDetailsTable extends Migration
 {
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('events_details', function (Blueprint $table) {
-			$table->uuid('event_id');
-			$table->string('key');
-			$table->string('value')->nullable();
-			$table->enum('type', [
-				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
-			])->default('STRING');
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('events_details', function (Blueprint $table) {
+            $table->uuid('event_id');
+            $table->string('key');
+            $table->string('value')->nullable();
+            $table->enum('type', [
+                'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
+            ])->default('STRING');
 
-			$table->timestamps();
-			
-			$table->foreign('event_id')->references('id')->on('events');
+            $table->timestamps();
 
-			$table->primary(['event_id', 'key']);
-		});
-	}
+            $table->foreign('event_id')->references('id')->on('events');
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::dropIfExists('events_details');
-	}
+            $table->primary(['event_id', 'key']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('events_details');
+    }
 }

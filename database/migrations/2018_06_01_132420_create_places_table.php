@@ -25,7 +25,7 @@ class CreatePlacesTable extends Migration
             $table->softDeletes();
 
             $table->unique(['address', 'city', 'country']);
-  		});
+        });
     }
 
     /**

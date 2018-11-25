@@ -74,10 +74,10 @@ class MemberController extends Controller
      * Ajoute automatiquement des rôles et des permissions en fonction du membre.
      *
      * @param Asso $asso
-     * @param User $user
+     * @param User $member
      * @return void
      */
-    protected function addRolesAndPermissions(Asso $asso, User $user)
+    protected function addRolesAndPermissions(Asso $asso, User $member)
     {
         // Ici, on va auto-affecter les droits et permissions que l'utilisateur doit posséder.
         if ($member->pivot->validated_by) {
@@ -238,7 +238,7 @@ class MemberController extends Controller
      * @param string  $member_id
      * @return void
      */
-    public function destroy(Request $request, string $asso_id, string $member_id): JsonResponse
+    public function destroy(Request $request, string $asso_id, string $member_id): void
     {
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices, 'remove');

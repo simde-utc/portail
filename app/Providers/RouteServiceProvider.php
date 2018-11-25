@@ -1,4 +1,13 @@
 <?php
+/**
+ * Service des routes.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Providers;
 
@@ -9,63 +18,60 @@ use Laravel\Passport\Passport;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * This namespace is applied to your controller routes.
-     *
-     * In addition, it is set as the URL generator's root namespace.
+     * Namespace où les controlleurs sont tous définis par défaut.
      *
      * @var string
      */
     protected $namespace = 'App\Http\Controllers';
 
     /**
-     * Define your route model bindings, pattern filters, etc.
+     * Définition des routes.
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         parent::boot();
     }
 
     /**
-     * Define the routes for the application.
+     * Définition des routes de l'applications.
      *
      * @return void
      */
-    public function map() {
-		$this->mapPassportRoutes();
+    public function map()
+    {
+        $this->mapPassportRoutes();
 
         $this->mapApiRoutes();
 
-        // A définir en dernier
+        // A définir en dernier car récupère les HTTP 404.
         $this->mapWebRoutes();
     }
 
     /**
-     * Define the "web" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
+     * Définition des routes Passport.
      *
      * @return void
      */
-    protected function mapPassportRoutes() {
-		Passport::routes();
+    protected function mapPassportRoutes()
+    {
+        Passport::routes();
 
-		Route::prefix('oauth')
-			->group(base_path('routes/oauth.php'));
+        Route::prefix('oauth')
+        ->group(base_path('routes/oauth.php'));
     }
 
-
     /**
-     * Define the "web" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
+     * Définition des routes Web.
      *
      * @return void
      */
-    protected function mapWebRoutes() {
+    protected function mapWebRoutes()
+    {
         $services = config('auth.services');
 
-		foreach ($services as $provider => $data) {
+        foreach ($services as $provider => $data) {
             $file = base_path('routes/auth/'.$provider.'.php');
 
             if (file_exists($file)) {
@@ -74,19 +80,18 @@ class RouteServiceProvider extends ServiceProvider
             }
         }
 
-        // A définir en dernier car la route '/' override tout
+        // A définir en dernier car la route '/' override tout.
         Route::middleware('web')
             ->namespace($this->namespace)->group(base_path('routes/web.php'));
     }
 
     /**
-     * Define the "api" routes for the application.
-     *
-     * These routes are typically stateless.
+     * Définition des routes Api.
      *
      * @return void
      */
-    protected function mapApiRoutes() {
+    protected function mapApiRoutes()
+    {
         $versions = config('portail.versions');
         $actualVersion = config('portail.version');
         $indexVersion = array_search($actualVersion, $versions);
@@ -95,7 +100,7 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('forceJson')
             ->get('/{version}/', $this->namespace.'\RouteController@index');
 
-		for ($i = 0; $i < count($versions); $i++) {
+        for ($i = 0; $i < count($versions); $i++) {
             $version = $versions[$i];
             $file = base_path('routes/api/'.$version.'.php');
 
@@ -104,10 +109,11 @@ class RouteServiceProvider extends ServiceProvider
                     'forceJson'
                 ];
 
-                if ($i < $indexVersion)
+                if ($i < $indexVersion) {
                     $middlewares[] = 'deprecatedVersion:'.$version;
-                else if ($i > $indexVersion || $indexVersion === false)
+                } else if ($i > $indexVersion || $indexVersion === false) {
                     $middlewares[] = 'betaVersion:'.$version;
+                }
 
                 Route::prefix('api/'.$version)
                     ->namespace($this->namespace.'\\'.$version)

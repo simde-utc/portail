@@ -19,7 +19,6 @@ use App\Models\Service;
 use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveServices;
 use App\Traits\HasVisibility;
 
@@ -100,17 +99,17 @@ class ServiceController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
-     * @param string                   $id
+     * @param string                   $service_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $user_id, string $id=null): JsonResponse
+    public function show(Request $request, string $user_id, string $service_id=null): JsonResponse
     {
-        if (is_null($id)) {
-            list($user_id, $id) = [$id, $user_id];
+        if (is_null($service_id)) {
+            list($user_id, $service_id) = [$service_id, $user_id];
         }
 
         $user = $this->getUser($request, $user_id);
-        $service = $this->getFollowedService($user, $id);
+        $service = $this->getFollowedService($user, $service_id);
 
         return response()->json($service->hideSubData(), 200);
     }
@@ -120,10 +119,10 @@ class ServiceController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
-     * @param string                   $id
+     * @param string                   $service_id
      * @return void
      */
-    public function update(Request $request, string $user_id, string $id=null): JsonResponse
+    public function update(Request $request, string $user_id, string $service_id=null): void
     {
         abort(405);
     }
@@ -133,17 +132,17 @@ class ServiceController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
-     * @param string                   $id
+     * @param string                   $service_id
      * @return void
      */
-    public function destroy(Request $request, string $user_id, string $id=null): JsonResponse
+    public function destroy(Request $request, string $user_id, string $service_id=null): void
     {
-        if (is_null($id)) {
-            list($user_id, $id) = [$id, $user_id];
+        if (is_null($service_id)) {
+            list($user_id, $service_id) = [$service_id, $user_id];
         }
 
         $user = $this->getUser($request, $user_id);
-        $service = $this->getFollowedService($user, $id);
+        $service = $this->getFollowedService($user, $service_id);
 
         $user->followedServices()->detach($service);
 

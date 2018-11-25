@@ -1,4 +1,13 @@
 <?php
+/**
+ * Modèle correspondant aux groupes.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Models;
 
@@ -11,24 +20,14 @@ use App\Interfaces\Model\CanHaveContacts;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Interfaces\Model\CanHaveRoles;
 use App\Interfaces\Model\CanHavePermissions;
+use App\Models\Role;
 
-class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles, CanHaveRoles, CanHavePermissions
+class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles,
+    CanHaveRoles, CanHavePermissions
 {
     use SoftDeletes, HasMembers;
 
-    public static function boot() {
-        parent::boot();
-
-        static::created(function ($model) {
-            $model->assignRoles('group admin', [
-				'user_id' => $model->user_id,
-				'validated_by' => $model->user_id,
-				'semester_id' => 0,
-			], true);
-        });
-    }
-
-	protected $roleRelationTable = 'groups_members';
+    protected $roleRelationTable = 'groups_members';
 
     protected $fillable = [
         'name', 'user_id', 'icon_id', 'visibility_id', 'is_active',
@@ -57,108 +56,270 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
         'week' => null,
         'month' => null,
         'year' => null,
-		'filter' => [],
+        'filter' => [],
     ];
 
-    public function owner() {
+    /**
+     * Appelé dès la création du modèle.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            $model->assignRoles('group admin', [
+                'user_id' => $model->user_id,
+                'validated_by' => $model->user_id,
+                'semester_id' => 0,
+            ], true);
+        });
+    }
+
+    /**
+     * Relation avec le possédeur du groupe.
+     *
+     * @return mixed
+     */
+    public function owner()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function visibility() {
-    	return $this->belongsTo(Visibility::class, 'visibility_id');
+    /**
+     * Relation avec la visibilité.
+     *
+     * @return mixed
+     */
+    public function visibility()
+    {
+        return $this->belongsTo(Visibility::class, 'visibility_id');
     }
 
-	// Par défaut, un role n'est pas supprimable s'il a déjà été assigné
-    // Mais on permet sa suppression s'il est assigné à un seul groupe
-	public function isRoleForIdDeletable($role, $id) {
-		return true;
-	}
-
-	public function isRoleAccessibleBy(string $user_id): bool {
-		if ($this->id)
-			return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-		else
-			return true;
-	}
-
-	public function isRoleManageableBy(string $user_id): bool {
-		if ($this->id)
-			return $this->hasOnePermission('role', [
-				'user_id' => $user_id,
-			]);
-		else
-			return User::find($user_id)->hasOnePermission('role');
-	}
-
-	public function isPermissionAccessibleBy(string $user_id): bool {
-		if ($this->id)
-			return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-		else
-			return true;
-	}
-
-	public function isPermissionManageableBy(string $user_id): bool {
-		if ($this->id)
-			return $this->hasOnePermission('permission', [
-				'user_id' => $user_id,
-			]);
-		else
-			return User::find($user_id)->hasOnePermission('permission');
-	}
-
-    public function contacts() {
-    	return $this->morphMany(Contact::class, 'owned_by');
+    /**
+     * Indique s'il est possible de supprimer un rôle pour le groupe d'un id précis.
+     * Par défaut, un role n'est pas supprimable s'il a déjà été assigné.
+     * Mais on permet sa suppression s'il est assigné à un seul groupe.
+     *
+     * @param  Role   $role
+     * @param  string $group_id
+     * @return boolean
+     */
+    public function isRoleForIdDeletable(Role $role, string $group_id)
+    {
+        return true;
     }
 
-	public function isContactAccessibleBy(string $user_id): bool {
-		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-	}
-
-	public function isContactManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('contact', [
-			'user_id' => $user_id,
-		]);
-	}
-
-    public function calendars() {
-    	return $this->morphMany(Calendar::class, 'owned_by');
+    /**
+     * Indique si un rôle est accessible.
+     * Uniquement par les membres pour les rôles customs de l'associations sinon toujours visibles
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isRoleAccessibleBy(string $user_id): bool
+    {
+        if ($this->id) {
+            return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+        } else {
+            return true;
+        }
     }
 
-	public function isCalendarAccessibleBy(string $user_id): bool {
-		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-	}
-
-	public function isCalendarManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('calendar', [
-			'user_id' => $user_id,
-		]);
-	}
-
-    public function events() {
-    	return $this->morphMany(Event::class, 'owned_by');
+    /**
+     * Indique si un rôle est gérable.
+     * Uniquement par les membres pour les rôles customs de l'associations sinon toujours visibles
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isRoleManageableBy(string $user_id): bool
+    {
+        if ($this->id) {
+            return $this->hasOnePermission('role', [
+                'user_id' => $user_id,
+            ]);
+        } else {
+            return User::find($user_id)->hasOnePermission('role');
+        }
     }
 
-	public function isEventAccessibleBy(string $user_id): bool {
-		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-	}
-
-	public function isEventManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('event', [
-			'user_id' => $user_id,
-		]);
-	}
-
-    public function articles() {
-    	return $this->morphMany(Article::class, 'owned_by');
+    /**
+     * Indique si une permission est accessible.
+     * Uniquement par les membres pour les permissions customs de l'associations sinon toujours visibles
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isPermissionAccessibleBy(string $user_id): bool
+    {
+        if ($this->id) {
+            return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+        } else {
+            return true;
+        }
     }
 
-	public function isArticleAccessibleBy(string $user_id): bool {
-		return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-	}
+    /**
+     * Indique si une permission est gérable.
+     * Uniquement par les membres pour les permissions customs de l'associations sinon toujours visibles
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isPermissionManageableBy(string $user_id): bool
+    {
+        if ($this->id) {
+            return $this->hasOnePermission('permission', [
+                'user_id' => $user_id,
+            ]);
+        } else {
+            return User::find($user_id)->hasOnePermission('permission');
+        }
+    }
 
-	public function isArticleManageableBy(string $user_id): bool {
-		return $this->hasOnePermission('article', [
-			'user_id' => $user_id,
-		]);
-	}
+    /**
+     * Relation avec les moyens de contact.
+     *
+     * @return mixed
+     */
+    public function contacts()
+    {
+        return $this->morphMany(Contact::class, 'owned_by');
+    }
+
+    /**
+     * Indique si le moyen de contact est accessible.
+     * Uniquement par les membres du groupe.
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isContactAccessibleBy(string $user_id): bool
+    {
+        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+    }
+
+    /**
+     * Indique si le moyen de contact est gérable.
+     * Uniquement par les membres du groupe.
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isContactManageableBy(string $user_id): bool
+    {
+        return $this->hasOnePermission('contact', [
+            'user_id' => $user_id,
+        ]);
+    }
+
+    /**
+     * Relation avec les calendriers.
+     *
+     * @return mixed
+     */
+    public function calendars()
+    {
+        return $this->morphMany(Calendar::class, 'owned_by');
+    }
+
+    /**
+     * Indique si le calendrier privé est accessible.
+     * Uniquement par les membres du groupe.
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isCalendarAccessibleBy(string $user_id): bool
+    {
+        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+    }
+
+    /**
+     * Indique si le calendrier privé est gérable.
+     * Uniquement par les membres du groupe.
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isCalendarManageableBy(string $user_id): bool
+    {
+        return $this->hasOnePermission('calendar', [
+            'user_id' => $user_id,
+        ]);
+    }
+
+    /**
+     * Relation avec les événements.
+     *
+     * @return mixed
+     */
+    public function events()
+    {
+        return $this->morphMany(Event::class, 'owned_by');
+    }
+
+    /**
+     * Indique si l'événement privé est accessible.
+     * Uniquement par les membres du groupe.
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isEventAccessibleBy(string $user_id): bool
+    {
+        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+    }
+
+    /**
+     * Indique si l'événement privé est gérable.
+     * Uniquement par les membres du groupe.
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isEventManageableBy(string $user_id): bool
+    {
+        return $this->hasOnePermission('event', [
+            'user_id' => $user_id,
+        ]);
+    }
+
+    /**
+     * Relation avec les articles.
+     *
+     * @return mixed
+     */
+    public function articles()
+    {
+        return $this->morphMany(Article::class, 'owned_by');
+    }
+
+    /**
+     * Indique si l'article privé est accessible.
+     * Uniquement par les membres du groupe.
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isArticleAccessibleBy(string $user_id): bool
+    {
+        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
+    }
+
+    /**
+     * Indique si l'article privé est gérable.
+     * Uniquement par les membres du groupe.
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isArticleManageableBy(string $user_id): bool
+    {
+        return $this->hasOnePermission('article', [
+            'user_id' => $user_id,
+        ]);
+    }
 }

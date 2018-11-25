@@ -66,11 +66,7 @@ class PlaceController extends Controller
     {
         $place = Place::create($request->all());
 
-        if ($place) {
-            return response()->json($place, 200);
-        } else {
-            abort(500, 'Impossible de créer le lieu');
-        }
+        return response()->json($place, 200);
     }
 
     /**
@@ -112,11 +108,11 @@ class PlaceController extends Controller
      * @param string  $place_id
      * @return void
      */
-    public function destroy(Request $request, string $place_id): JsonResponse
+    public function destroy(Request $request, string $place_id): void
     {
         $place = $this->getPlace($request, $place_id);
 
-        if ($place->softDelete()) {
+        if ($place->delete()) {
             abort(204);
         } else {
             abort(500, 'Erreur lors de la suppression de le lieu');

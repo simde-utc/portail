@@ -20,7 +20,7 @@ class Test extends Command
     /**
      * @var string
      */
-    protected $signature = 'quick:test {file?*}';
+    protected $signature = 'quick:test {file?*} {--special}';
 
     /**
      * @var string
@@ -28,13 +28,29 @@ class Test extends Command
     protected $description = 'Teste le code avant de pouvoir push le code';
 
     /**
-     * Tous les dossiers à vérifier
+     * Tous les dossiers à vérifier.
      *
      * @var array
      */
     protected $dirs = [
-        'app', 'bootstrap', 'config', 'database', 'resources/lang', 'resources/views', 'routes', 'tests',
+        'app', 'bootstrap/app.php', 'bootstrap/helpers.php', 'config', 'database', 'resources/lang', 'routes', 'tests',
     ];
+
+    /**
+     * Tous les dossiers à vérifier d'une manière particulière.
+     *
+     * @var array
+     */
+    protected $specialFiles = [
+        'config', 'database', 'resources/lang', 'routes'
+    ];
+
+    /**
+     * Tous les fichiers à tester.
+     *
+     * @var array
+     */
+    protected $files;
 
     /**
      * @return void
@@ -52,7 +68,7 @@ class Test extends Command
     public function handle()
     {
         $this->files = $this->argument('file');
-        $bar = $this->output->createProgressBar(4);
+        $bar = $this->output->createProgressBar(5);
 
         $this->info(' [PHP Syntax] Vérification de la syntaxe PHP');
 
@@ -65,12 +81,13 @@ class Test extends Command
         $this->info(PHP_EOL);
         $bar->advance();
         $this->info(PHP_EOL);
+        $this->info(PHP_EOL);
         $this->info(' [PHP CS] Vérification du linting PHP');
 
         if ($this->runPHPCS()) {
             $this->output->error('Des erreurs ont été rencontrées lors de la vérification du linting');
 
-            $value = $this->choice('Tenter de fixer les erreurs ?', ['Oui', 'Non'], 1);
+            $value = $this->choice('Tenter de fixer les erreurs ?', ['Oui', 'Non'], 'Non');
 
             if ($value === 'Oui') {
                 $this->runPHPCBF();
@@ -78,44 +95,58 @@ class Test extends Command
                 if ($this->runPHPCS()) {
                     $this->output->error('Des erreurs n\'ont pas pu être corrigées lors de la vérification du linting');
 
-                    return 1;
+                    return 2;
                 }
             } else {
-                return 1;
+                return 2;
             }
         }
 
         $this->info(PHP_EOL);
         $bar->advance();
         $this->info(PHP_EOL);
+        $this->info(PHP_EOL);
+        $this->info(' [PHP STAN] Vérification du code PHP');
+
+        if ($this->runPHPStan()) {
+            $this->output->error('Des erreurs de code ont été détectées');
+
+            return 3;
+        }
+
+        $bar->advance();
+        $this->info(PHP_EOL);
+        $this->info(PHP_EOL);
         $this->info(' [PHP MD] Vérification des optimisations PHP');
 
         if ($this->runPHPMD()) {
             $this->output->error('Des erreurs d\'optimisation ont été détectées');
 
-            return 1;
+            return 4;
         }
 
         $this->info(PHP_EOL);
         $bar->advance();
+        $this->info(PHP_EOL);
         $this->info(PHP_EOL);
         $this->info(' [PHP Unit] Vérification des tests PHP');
 
         if ($this->runPHPUnit()) {
             $this->output->error('Des erreurs ont été rencontrées lors de la game');
 
-            return 1;
+            return 5;
         }
 
         $this->info(PHP_EOL);
         $bar->advance();
+        $this->info(PHP_EOL);
         $this->info(PHP_EOL);
 
         $this->output->success('Code parfait √');
     }
 
     /**
-     * Lance php -l pour vérifier la syntaxe
+     * Lance php -l pour vérifier la syntaxe.
      *
      * @return integer
      */
@@ -147,8 +178,7 @@ class Test extends Command
 
                 $bar->advance();
             }
-        }
-        else {
+        } else {
             $bar = $this->output->createProgressBar(count($files));
 
             foreach ($files as $file) {
@@ -173,19 +203,51 @@ class Test extends Command
     }
 
     /**
-     * Lance le PHP Code Sniffer pour vérifier le style PHP
+     * Lance le PHP Code Sniffer pour vérifier le style PHP.
      *
      * @return integer
      */
     private function runPHPCS()
     {
+        $excludedRules = [
+            'Generic.Files.LineLength',
+            'Squiz.Commenting.FileComment',
+            'Squiz.Commenting.InlineComment'
+        ];
+
+        if (count($this->files) === 0) {
+            $dirs = $this->dirs;
+        } else {
+            $dirs = $this->files;
+        }
+
+        // Les fichiers sont du type "spécial" (possèdent des règles en moins)
+        if ($this->option('special')) {
+            $specialFiles = $dirs;
+        } else {
+            $files = [];
+            $specialFiles = [];
+
+            foreach ($files as $file) {
+                if (array_search($file, $this->specialFiles) === false) {
+                    $files[] = $file;
+                } else {
+                    $specialFiles[] = $file;
+                }
+            }
+
+            if (count($files) && $code = $this->process("./vendor/bin/phpcs ".implode($files, ' '))) {
+                return $code;
+            }
+        }
+
         return $this->process(
-            "./vendor/bin/phpcs ".implode($this->files, ' ')
+            "./vendor/bin/phpcs ".implode($specialFiles, ' ')." --exclude=".implode($excludedRules, ',')
         );
     }
 
     /**
-     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles
+     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles.
      *
      * @return integer
      */
@@ -197,7 +259,33 @@ class Test extends Command
     }
 
     /**
-     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles
+     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles.
+     *
+     * @return integer
+     */
+    private function runPHPStan()
+    {
+        $files = $this->files;
+
+        if (count($files) === 0) {
+            $files = $this->dirs;
+        }
+
+        if (($index = array_search('database', $files)) !== false) {
+            unset($files[$index]);
+        }
+
+        if (count($files) === 0) {
+            return 0;
+        } else {
+            return $this->process(
+                "php artisan code:analyse -p ".implode($files, ',')
+            );
+        }
+    }
+
+    /**
+     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles.
      *
      * @return integer
      */
@@ -206,18 +294,24 @@ class Test extends Command
         $files = $this->files;
 
         if (count($files) === 0) {
-            $files = $dir;
+            $files = $this->dirs;
         }
 
-        $files = implode($files, ',');
+        if (($index = array_search('database', $files)) !== false) {
+            unset($files[$index]);
+        }
 
-        return $this->process(
-            "./vendor/bin/phpmd ".$files.' text phpmd.xml'
-        );
+        if (count($files) === 0) {
+            return 0;
+        } else {
+            return $this->process(
+                "./vendor/bin/phpmd ".implode($files, ',').' text phpmd.xml'
+            );
+        }
     }
 
     /**
-     * Lance le PHP Unit pour tester que le code n'a pas cassé
+     * Lance le PHP Unit pour tester que le code n'a pas cassé.
      *
      * @return integer
      */
@@ -229,10 +323,10 @@ class Test extends Command
     }
 
     /**
-     * Lance une commande bash
+     * Lance une commande bash.
      *
      * @param string $command Commande à lancer.
-     * @return Process
+     * @return integer
      */
     private function process(string $command)
     {

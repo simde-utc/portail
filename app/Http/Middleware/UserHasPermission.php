@@ -30,7 +30,7 @@ class UserHasPermission
             throw new \Exception('Il est nécessaire de spécifier au moins un permission');
         }
 
-        if (\Auth::user()) {
+        if (\Auth::id()) {
             foreach ($args as $permission) {
                 if ($wrongIfEqual = ($permission[0] === '!')) {
                     $permission = substr($permission, 1);

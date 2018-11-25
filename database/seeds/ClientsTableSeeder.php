@@ -55,7 +55,8 @@ class ClientsTableSeeder extends Seeder
             ],
         ];
 
-        foreach ($clients as $client => $values)
+        foreach ($clients as $client => $values) {
             Client::create($values);
+        }
     }
 }

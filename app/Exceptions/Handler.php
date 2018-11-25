@@ -14,8 +14,10 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
@@ -53,12 +55,12 @@ class Handler extends ExceptionHandler
      *
      * @param  mixed      $request
      * @param  \Exception $exception
-     * @return \Illuminate\Http\Response
+     * @return mixed
      */
     public function render($request, Exception $exception)
     {
         if ($request->wantsJson() && !($exception instanceof ValidationException)) {
-            if ($exception instanceof \QueryException) {
+            if ($exception instanceof QueryException) {
                 $response = [
                     'message' => 'Problème trouvé dans la requête SQL effectuée',
                 ];

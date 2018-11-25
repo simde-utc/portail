@@ -1,4 +1,12 @@
 <?php
+/**
+ * Ajoute au controlleur un accès aux services.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Traits\Controller\v1;
 
@@ -11,32 +19,57 @@ use App\Traits\HasVisibility;
 
 trait HasServices
 {
-	use HasUsers, HasVisibility;
+    use HasUsers, HasVisibility;
 
-	// On affiche les services cachés aux gens avec une permission: service admin ?
-	protected function isPrivate($user_id = null, $model = null) {
-		return User::find($user_id)->permissions()->count() > 0;
-	}
+    /**
+     * Indique que l'utilisateur est membre de l'instance.
+     *
+     * @param  string $user_id
+     * @param  mixed  $model
+     * @return boolean
+     */
+    protected function isPrivate(string $user_id=null, $model=null)
+    {
+        return User::find($user_id)->permissions()->count() > 0;
+    }
 
-	protected function getService(User $user = null, string $id) {
-		$service = Service::find($id);
+    /**
+     * Récupère un service.
+     *
+     * @param  User   $user
+     * @param  string $service_id
+     * @return Service|null
+     */
+    protected function getService(User $user=null, string $service_id)
+    {
+        $service = Service::find($service_id);
 
-		if ($service) {
-			if (!$this->isVisible($service, $user->id))
-				abort(403, 'Vous n\'avez pas le droit de voir ce service');
+        if ($service) {
+            if (!$this->isVisible($service, $user->id)) {
+                abort(403, 'Vous n\'avez pas le droit de voir ce service');
+            }
 
-			return $service;
-		}
+            return $service;
+        }
 
-		abort(404, 'Impossible de trouver le service');
-	}
+        abort(404, 'Impossible de trouver le service');
+    }
 
-	protected function getFollowedService(User $user = null, string $id) {
-		$service = $user->followedServices()->find($id);
+    /**
+     * Récupère un service suivi.
+     *
+     * @param  User   $user
+     * @param  string $service_id
+     * @return Service|null
+     */
+    protected function getFollowedService(User $user=null, string $service_id)
+    {
+        $service = $user->followedServices()->find($service_id);
 
-		if ($service)
-			return $service;
+        if ($service) {
+            return $service;
+        }
 
-		abort(404, 'Impossible de trouver le service ou il n\'est pas suivi par l\'utilisateur');
-	}
+        abort(404, 'Impossible de trouver le service ou il n\'est pas suivi par l\'utilisateur');
+    }
 }

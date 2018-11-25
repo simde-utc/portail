@@ -22,7 +22,6 @@ use App\Models\Event;
 use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Services\Visible\Visible;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Traits\HasVisibility;
 
@@ -37,20 +36,20 @@ class EventController extends Controller
     public function __construct()
     {
         $this->middleware(
-        \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-events', 'client-get-events'),
-        ['only' => ['index', 'show']]
+            \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-events', 'client-get-events'),
+            ['only' => ['index', 'show']]
         );
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('user-create-events', 'client-create-events'),
-        ['only' => ['store']]
+            \Scopes::matchOneOfDeepestChildren('user-create-events', 'client-create-events'),
+            ['only' => ['store']]
         );
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('user-set-events', 'client-set-events'),
-        ['only' => ['update']]
+            \Scopes::matchOneOfDeepestChildren('user-set-events', 'client-set-events'),
+            ['only' => ['update']]
         );
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('user-manage-events', 'client-manage-events'),
-        ['only' => ['destroy']]
+            \Scopes::matchOneOfDeepestChildren('user-manage-events', 'client-manage-events'),
+            ['only' => ['destroy']]
         );
     }
 
@@ -69,7 +68,7 @@ class EventController extends Controller
                 || $this->isEventFollowed($request, $event, \Auth::id()));
             });
         } else {
-            $events = Event::getSelection()->filter(function ($event) use ($request) {
+            $events = Event::getSelection()->filter(function ($event) {
                 return $this->isVisible($event);
             });
         }
@@ -105,25 +104,21 @@ class EventController extends Controller
 
         $event = Event::create($inputs);
 
-        if ($event) {
-            $event = $this->getEvent($request, \Auth::user(), $event->id);
+        $event = $this->getEvent($request, \Auth::user(), $event->id);
 
-            return response()->json($event->hideSubData(), 201);
-        } else {
-            return response()->json(['message' => 'Impossible de créer l\'évènenement'], 500);
-        }
+        return response()->json($event->hideSubData(), 201);
     }
 
     /**
      * Montre un événement.
      *
      * @param Request $request
-     * @param string  $id
+     * @param string  $event_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $id): JsonResponse
+    public function show(Request $request, string $event_id): JsonResponse
     {
-        $event = $this->getEvent($request, \Auth::user(), $id);
+        $event = $this->getEvent($request, \Auth::user(), $event_id);
 
         return response()->json($event->hideSubData(), 200);
     }
@@ -132,12 +127,12 @@ class EventController extends Controller
      * Met à jour un événement.
      *
      * @param Request $request
-     * @param string  $id
+     * @param string  $event_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $id): JsonResponse
+    public function update(Request $request, string $event_id): JsonResponse
     {
-        $event = $this->getEvent($request, \Auth::user(), $id, 'set');
+        $event = $this->getEvent($request, \Auth::user(), $event_id, 'set');
         $inputs = $request->all();
 
         if ($request->filled('owned_by_type')) {
@@ -158,13 +153,13 @@ class EventController extends Controller
      * Supprime un événement.
      *
      * @param Request $request
-     * @param string  $id
+     * @param string  $event_id
      * @return void
      */
-    public function destroy(Request $request, string $id): JsonResponse
+    public function destroy(Request $request, string $event_id): void
     {
-        $event = $this->getEvent($request, \Auth::user(), $id);
-        $event->softDelete();
+        $event = $this->getEvent($request, \Auth::user(), $event_id);
+        $event->delete();
 
         abort(204);
     }

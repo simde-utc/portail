@@ -72,16 +72,16 @@ class AccessController extends Controller
      * @param  string  $user_id
      * @param  Asso    $asso
      * @param  string  $semester_id
-     * @return AssoAccess/void
+     * @return AssoAccess|void
      */
     protected function getAccess(Request $request, string $access_id, string $user_id=null, Asso $asso, string $semester_id)
     {
         $access = AssoAccess::where('id', $access_id)
-        ->where('asso_id', $asso->id)
-        ->where('semester_id', $semester_id);
+            ->where('asso_id', $asso->id)
+            ->where('semester_id', $semester_id);
 
         if ($user_id && !$asso->hasOnePermission('access', [ 'user_id' => $user_id ])) {
-            $access = $access->where(function ($query) {
+            $access = $access->where(function ($query) use ($user_id) {
                 return $query->whereNotNull('validated_at')->orWhere('member_id', $user_id);
             });
         }
@@ -227,7 +227,7 @@ class AccessController extends Controller
      * @param string  $access_id
      * @return void
      */
-    public function destroy(Request $request, string $asso_id, string $access_id): JsonResponse
+    public function destroy(Request $request, string $asso_id, string $access_id): void
     {
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);

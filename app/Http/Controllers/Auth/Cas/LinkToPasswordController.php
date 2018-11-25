@@ -49,7 +49,7 @@ class LinkToPasswordController extends Controller
      */
     public function store(Request $request)
     {
-        (new Password)->addAuth(\Auth::id(), $request->input());
+        (new Password)->addAuth((string) \Auth::id(), $request->input());
 
         \Auth::user()->update([
             'email' => $request->input('email'),

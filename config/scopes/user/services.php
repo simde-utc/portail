@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * Liste des scopes en fonction des routes
  *   - Définition des scopes:
  *      portée + "-" + verbe + "-" + categorie + (pour chaque sous-catégorie: '-' + sous-catégorie)
@@ -28,10 +27,10 @@ return [
             'description' => 'Gérer tous les services créés et suivis par l\'utilisateur',
             'scopes' => [
                 'created' => [
-                    'description' => 'Gérer tous les services créés'
+                    'description' => 'Gérer tous les services créés',
                 ],
                 'followed' => [
-                    'description' => 'Gérer tous les services suivis par l\'utilisateur'
+                    'description' => 'Gérer tous les services suivis par l\'utilisateur',
                 ],
             ]
         ],
@@ -39,10 +38,10 @@ return [
             'description' => 'Récupérer tous les services',
             'scopes' => [
                 'created' => [
-                    'description' => 'Récupérer tous les services créés'
+                    'description' => 'Récupérer tous les services créés',
                 ],
                 'followed' => [
-                    'description' => 'Récupérer tous les services suivis par l\'utilisateur'
+                    'description' => 'Récupérer tous les services suivis par l\'utilisateur',
                 ],
             ]
         ],
@@ -50,10 +49,10 @@ return [
             'description' => 'Modifier et créer des services',
             'scopes' => [
                 'created' => [
-                    'description' => 'Modifier et créer tous les services créés'
+                    'description' => 'Modifier et créer tous les services créés',
                 ],
                 'followed' => [
-                    'description' => 'Modifier et créer tous les services suivis par l\'utilisateur'
+                    'description' => 'Modifier et créer tous les services suivis par l\'utilisateur',
                 ],
             ]
         ],
@@ -61,10 +60,10 @@ return [
             'description' => 'Modifier les services',
             'scopes' => [
                 'created' => [
-                    'description' => 'Modifier tous les services créés'
+                    'description' => 'Modifier tous les services créés',
                 ],
                 'followed' => [
-                    'description' => 'Modifier tous les services suivis par l\'utilisateur'
+                    'description' => 'Modifier tous les services suivis par l\'utilisateur',
                 ],
             ]
         ],
@@ -72,10 +71,10 @@ return [
             'description' => 'Créer des services',
             'scopes' => [
                 'created' => [
-                    'description' => 'Créer tous les services créés'
+                    'description' => 'Créer tous les services créés',
                 ],
                 'followed' => [
-                    'description' => 'Créer tous les services suivis par l\'utilisateur'
+                    'description' => 'Créer tous les services suivis par l\'utilisateur',
                 ],
             ]
         ],

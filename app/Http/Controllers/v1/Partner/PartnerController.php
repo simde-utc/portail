@@ -51,11 +51,7 @@ class PartnerController extends Controller
     {
         $partner = Partner::create($request->input());
 
-        if ($partner) {
-            return response()->json($partner, 200);
-        } else {
-            return response()->json(['message' => 'Le partenaire n\'a pas pu être créé'], 500);
-        }
+        return response()->json($partner->hideSubData(), 200);
     }
 
     /**
@@ -69,7 +65,7 @@ class PartnerController extends Controller
         $partner = Partner::find($partner_id);
 
         if ($partner) {
-            return response()->json($partner, 200);
+            return response()->json($partner->hideSubData(), 200);
         } else {
             return response()->json(['message' => 'Le partenaire demandé n\'a pas été trouvé'], 404);
         }
@@ -92,7 +88,7 @@ class PartnerController extends Controller
                 && ($partner->name != $request->input('name'))) {
                     return response()->json('Ce partenaire existe déjà, conflit', 409);
                 } else {
-                    return response()->json($partner, 200);
+                    return response()->json($partner->hideSubData(), 200);
                 }
             }
 

@@ -21,6 +21,7 @@ use App\Models\Article;
 use App\Traits\HasVisibility;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Controller\v1\HasArticles;
+use App\Exception\PortailException;
 
 class ActionController extends Controller
 {
@@ -87,7 +88,7 @@ class ActionController extends Controller
      * @param string  $article_id
      * @return void
      */
-    public function store(Request $request, string $article_id): JsonResponse
+    public function store(Request $request, string $article_id): void
     {
         abort(419);
     }
@@ -116,7 +117,7 @@ class ActionController extends Controller
      * @param string  $key
      * @return void
      */
-    public function update(Request $request, string $article_id, string $key): JsonResponse
+    public function update(Request $request, string $article_id, string $key): void
     {
         abort(419);
     }
@@ -129,7 +130,7 @@ class ActionController extends Controller
      * @param string  $key
      * @return void
      */
-    public function destroy(Request $request, string $article_id, string $key): JsonResponse
+    public function destroy(Request $request, string $article_id, string $key): void
     {
         abort(419);
     }

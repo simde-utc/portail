@@ -11,7 +11,7 @@
 namespace App\Http\Controllers\Passport;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Exceptions\PortailException;
 use App\Models\Client;
@@ -35,7 +35,7 @@ class ClientController extends Controller
             $roles = Role::getRoleAndItsParents('resp info');
             $assos = \Auth::user()->currentJoinedAssos()->wherePivotIn('role_id', $roles->pluck('id'));
 
-            return Client::where('asso_id', $assos->pluck('id'))->getPaginate();
+            return Client::where('asso_id', $assos->pluck('id'))->getSelection();
         }
     }
 
@@ -43,13 +43,13 @@ class ClientController extends Controller
      * Créer un nouveau client (nécessaire d'être un admin).
      *
      * @param  \Illuminate\Http\Request $request
-     * @return Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
         \Scopes::checkScopesForGrantType(($request->scopes ?? []), 'client_credentials');
 
-        return response()->json(Client::create([
+        $client = Client::create([
             'user_id' => \Auth::id(),
             'asso_id' => $request->asso_id,
             'name' => $request->name,
@@ -59,7 +59,9 @@ class ClientController extends Controller
             'password_client' => false,
             'revoked' => false,
             'scopes' => json_encode($request->input('scopes', [])),
-        ])->makeVisible('secret'), 201);
+        ]);
+
+        return response()->json($client->makeVisible('secret'), 201);
     }
 
     /**
@@ -67,7 +69,7 @@ class ClientController extends Controller
      *
      * @param  \Illuminate\Http\Request $request
      * @param  string                   $clientId
-     * @return Response
+     * @return JsonResponse
      */
     public function update(Request $request, string $clientId)
     {
@@ -80,12 +82,14 @@ class ClientController extends Controller
                 throw new PortailException('Il n\'est pas possible de change l\'association à laquelle ce client est lié');
             }
 
-            return response()->json($client->update([
+            $client->update([
                 'user_id' => \Auth::id(),
                 'name' => $request->input('name', $client->name),
                 'redirect' => $request->input('redirect', $client->redirect),
                 'scopes' => isset($request['scopes']) ? json_encode($request->input('scopes', [])) : $client->scopes,
-            ]), 200);
+            ]);
+
+            return response()->json($client->toArray(), 200);
         } else {
             abort(404, 'Le client n\'a pas été trouvé');
         }
@@ -96,7 +100,7 @@ class ClientController extends Controller
      *
      * @param  Request $request
      * @param  string  $clientId
-     * @return mixed
+     * @return void
      */
     public function destroy(Request $request, string $clientId)
     {

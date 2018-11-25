@@ -21,7 +21,6 @@ use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
-use App\Services\Visible\Visible;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\HasVisibility;
 
@@ -60,13 +59,14 @@ class EventController extends Controller
     public function index(Request $request, string $calendar_id): JsonResponse
     {
         $calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
-        $events = $calendar->events()->getSelection()->filter(function ($event) use ($request) {
-            return ($this->tokenCanSee($request, $event, 'get')
-            && (!\Auth::id() || $this->isVisible($event, \Auth::id())))
-            || $this->isEventFollowed($request, $event, \Auth::id());
-        })->values()->map(function ($event) use ($request) {
-            return $event->hideData();
-        });
+        $events = $calendar->events()->getSelection()
+            ->filter(function ($event) use ($request) {
+                return ($this->tokenCanSee($request, $event, 'get')
+                && (!\Auth::id() || $this->isVisible($event, \Auth::id())))
+                || $this->isEventFollowed($request, $event, \Auth::id());
+            })->values()->map(function ($event) {
+                return $event->hideData();
+            });
 
         return response()->json($events, 200);
     }
@@ -80,18 +80,18 @@ class EventController extends Controller
      */
     public function store(Request $request, string $calendar_id): JsonResponse
     {
-        $calendar = $this->getCalendar($request, $calendar_id);
         $user = \Auth::user();
+        $calendar = $this->getCalendar($request, $user, $calendar_id);
 
         $events = [];
 
         if ($request->filled('event_ids')) {
             foreach ($request->input('event_ids') as $event_id) {
-                $events[] = $this->getEvent($request, $event_id);
+                $events[] = $this->getEvent($request, $user, $event_id);
                 $calendar->events()->attach(end($events));
             }
         } else {
-            $events[] = $this->getEvent($request, $request->input('event_id'));
+            $events[] = $this->getEvent($request, $user, $request->input('event_id'));
             $calendar->events()->attach($events[0]);
         }
 
@@ -126,7 +126,7 @@ class EventController extends Controller
      * @param string 	$event_id
      * @return void
      */
-    public function update(Request $request, string $calendar_id, string $event_id): JsonResponse
+    public function update(Request $request, string $calendar_id, string $event_id): void
     {
         abort(405);
     }
@@ -139,7 +139,7 @@ class EventController extends Controller
      * @param string 	$event_id
      * @return void
      */
-    public function destroy(Request $request, string $calendar_id, string $event_id): JsonResponse
+    public function destroy(Request $request, string $calendar_id, string $event_id): void
     {
         $calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
         $event = $this->getEventFromCalendar($request, \Auth::user(), $calendar, $event_id);

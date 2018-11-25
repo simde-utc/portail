@@ -31,7 +31,7 @@ class LoginController extends Controller
     public function index(): JsonResponse
     {
         if (\Auth::check()) {
-            return $this->alreadyConnected();
+            abort(400, 'Déjà connecté !');
         }
 
         $services = config('auth.services');

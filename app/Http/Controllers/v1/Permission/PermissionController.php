@@ -79,11 +79,7 @@ class PermissionController extends Controller
 
         $permission = Permission::create($inputs);
 
-        if ($permission) {
-            return response()->json($permission->hideSubData(), 201);
-        } else {
-            abort(500, 'Impossible de créer le permission');
-        }
+        return response()->json($permission->hideSubData(), 201);
     }
 
     /**
@@ -128,7 +124,7 @@ class PermissionController extends Controller
      * @param  string 	$permission_id
      * @return void
      */
-    public function destroy(Request $request, string $permission_id): JsonResponse
+    public function destroy(Request $request, string $permission_id): void
     {
         $permission = $this->getPermission($request, $permission_id, 'manage');
 

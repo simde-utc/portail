@@ -75,7 +75,7 @@ class CommentController extends Controller
      */
     public function store(CommentRequest $request): JsonResponse
     {
-        $creater = \ModelResolver::getModel($request->input($type.'_by_type'))->find($request->input($type.'_by_id'));
+        $creater = \ModelResolver::getModel($request->input('created_by_type'))->find($request->input('created_by_id'));
 
         if (!$request->ressource->isCommentManageableBy($creater)
             || (\Auth::id() && !$request->ressource->isCommentWritableBy($creater))) {
@@ -133,11 +133,11 @@ class CommentController extends Controller
      * @param CommentRequest $request
      * @return void
      */
-    public function destroy(CommentRequest $request): JsonResponse
+    public function destroy(CommentRequest $request): void
     {
         $comment = $this->getComment($request, 'remove');
 
-        $comment->softDelete();
+        $comment->delete();
 
         abort(204);
     }

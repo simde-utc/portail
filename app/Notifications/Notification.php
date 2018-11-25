@@ -1,4 +1,12 @@
 <?php
+/**
+ * Notification de base.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Notifications;
 
@@ -15,61 +23,101 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     protected $type;
 
     /**
-     * Définition du type de notif et sa description
+     * Définition du type de notification.
+     *
      * @param string $type
      */
-    public function __construct(string $type) {
+    public function __construct(string $type)
+    {
         $this->type = $type;
     }
 
-    public function getType() {
+    /**
+     * Retourne le type de notification.
+     *
+     * @return string
+     */
+    public function getType()
+    {
         return $this->type;
     }
 
-    protected function getAction(CanBeNotifiable $notifiable) {
+    /**
+     * Action réalisable via la notification.
+     *
+     * @param  CanBeNotifiable $notifiable
+     * @return array
+     */
+    protected function getAction(CanBeNotifiable $notifiable)
+    {
         return [];
     }
 
+    /**
+     * Sujet de la notification.
+     *
+     * @param  CanBeNotifiable $notifiable
+     * @return string
+     */
     abstract protected function getSubject(CanBeNotifiable $notifiable);
+
+    /**
+     * Contenu texte de la notification.
+     *
+     * @param  CanBeNotifiable $notifiable
+     * @return string
+     */
     abstract protected function getContent(CanBeNotifiable $notifiable);
+
+    /**
+     * Contenu email de la notification.
+     *
+     * @param  CanBeNotifiable $notifiable
+     * @param  MailMessage     $mail
+     * @return MailMessage
+     */
     abstract protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail);
 
     /**
-     * Get the notification's delivery channels.
+     * Liste les canaux de notifications.
      *
-     * @param  mixed  $notifiable
+     * @param  CanBeNotifiable $notifiable
      * @return array
      */
-    public function via(CanBeNotifiable $notifiable) {
+    public function via(CanBeNotifiable $notifiable)
+    {
         return $notifiable->notificationChannels($this->type);
     }
 
     /**
-     * Get the mail representation of the notification.
+     * Retourne la réprésentation email de la notification.
      *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @param  CanBeNotifiable $notifiable
+     * @return MailMessage
      */
-    public function toMail(CanBeNotifiable $notifiable) {
+    public function toMail(CanBeNotifiable $notifiable)
+    {
         $action = $this->getAction($notifiable);
         $mail = $this->getMailBody(
             $notifiable,
             (new MailMessage)->subject($this->getSubject($notifiable))
         );
 
-        if ($action && isset($action['name']) && isset($action['url']))
+        if ($action && isset($action['name']) && isset($action['url'])) {
             $mail->action($action['name'], $action['url']);
+        }
 
         return $mail;
     }
 
     /**
-     * Get the array representation of the notification.
+     * Renvoie la notification sous forme de tableau.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
-    public function toArray($notifiable) {
+    public function toArray($notifiable)
+    {
         return [
             'type' => $this->type,
             'content' => $this->getContent($notifiable),

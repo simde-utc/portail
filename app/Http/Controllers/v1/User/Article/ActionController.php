@@ -22,6 +22,7 @@ use App\Models\Article;
 use App\Traits\HasVisibility;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Controller\v1\HasArticles;
+use App\Exceptions\PortailException;
 
 class ActionController extends Controller
 {

@@ -141,11 +141,11 @@ class Install extends Command
         $this->changeEnv('APP_NAME', '"'.$value.'"');
         $subBar->advance();
 
-        $value = $this->choice('Environment ?', ['develop', 'production'], 0);
+        $value = $this->choice('Environment ?', ['develop', 'production'], 'develop');
         $this->changeEnv('APP_ENV', $value);
         $subBar->advance();
 
-        $value = $this->choice('Debug mode ?', ['true', 'false'], ($value === 'develop' ? 0 : 1));
+        $value = $this->choice('Debug mode ?', ['true', 'false'], ($value === 'develop' ? 'true' : 'false'));
         $this->changeEnv('APP_DEBUG', $value);
         $subBar->advance();
 
@@ -164,7 +164,7 @@ class Install extends Command
         $this->info(' [Quick Install] Preparation - Database');
         $subBar->advance();
 
-        $value = $this->choice('Type ?', ['mysql', 'pgsql', 'sqlite'], 0);
+        $value = $this->choice('Type ?', ['mysql', 'pgsql', 'sqlite'], 'mysql');
         $this->changeEnv('DB_CONNECTION', $value);
         $subBar->advance();
 
@@ -172,7 +172,7 @@ class Install extends Command
         $this->changeEnv('DB_HOST', $value);
         $subBar->advance();
 
-        $value = $this->choice('Port ?', ['3306', '5432'], 0);
+        $value = $this->choice('Port ?', ['3306', '5432'], '3306');
         $this->changeEnv('DB_PORT', $value);
         $subBar->advance();
 

@@ -6,36 +6,36 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUsersDetailsTable extends Migration
 {
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('users_details', function (Blueprint $table) {
-			$table->uuid('user_id');
-			$table->string('key');
-			$table->string('value')->nullable();
-			$table->enum('type', [
-				'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
-			])->default('STRING');
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('users_details', function (Blueprint $table) {
+            $table->uuid('user_id');
+            $table->string('key');
+            $table->string('value')->nullable();
+            $table->enum('type', [
+                'STRING', 'INTEGER', 'DOUBLE', 'BOOLEAN', 'ARRAY', 'DATETIME', 'NULL',
+            ])->default('STRING');
 
-			$table->timestamps();
+            $table->timestamps();
 
-			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-			$table->primary(['user_id', 'key']);
-		});
-	}
+            $table->primary(['user_id', 'key']);
+        });
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::dropIfExists('users_details');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('users_details');
+    }
 }

@@ -4,10 +4,10 @@
 
     <!-- Liste des fichiers/dossiers à inspecter -->
     <file>app</file>
-    <file>bootstrap</file>
-    <file>config</file>
+    <file>bootstrap/app.php</file>
+    <file>bootstrap/helpers.php</file>
     <file>database</file>
-    <file>resources/views</file>
+    <file>resources/lang</file>
     <file>routes</file>
     <file>tests</file>
 
@@ -84,16 +84,20 @@
     <!-- Ligne de fin forcée -->
     <rule ref="PSR2.Files.EndFileNewline"/>
 
-
-    <!-- Règles à tester -->
-    <rule ref="Squiz.Arrays.ArrayBracketSpacing" />
-    <rule ref="Squiz.ControlStructures.ControlSignature" />
-    <rule ref="Squiz.ControlStructures.ElseIfDeclaration" />
+    <!-- Obligation de commenter -->
     <rule ref="Squiz.Commenting.BlockComment" />
     <rule ref="Squiz.Commenting.DocCommentAlignment" />
     <rule ref="Squiz.Commenting.EmptyCatchComment" />
     <rule ref="Squiz.Commenting.InlineComment" />
     <rule ref="Squiz.Commenting.PostStatementComment" />
+
+    <!-- Pas de tag de fin PHP -->
+    <rule ref="Zend.Files.ClosingTag"/>
+
+    <!-- Règles à tester -->
+    <rule ref="Squiz.Arrays.ArrayBracketSpacing" />
+    <rule ref="Squiz.ControlStructures.ControlSignature" />
+    <rule ref="Squiz.ControlStructures.ElseIfDeclaration" />
     <rule ref="Squiz.Formatting.OperatorBracket" />
     <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing" />
     <rule ref="Squiz.Scope.MethodScope" />
@@ -102,7 +106,7 @@
     <rule ref="Squiz.WhiteSpace.OperatorSpacing" />
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace" />
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-    <rule ref="Generic.Commenting.Todo"/>
+    <!-- <rule ref="Generic.Commenting.Todo"/> -->
     <rule ref="Generic.ControlStructures.InlineControlStructure"/>
     <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
@@ -113,5 +117,4 @@
     <rule ref="Generic.WhiteSpace.ScopeIndent"/>
     <rule ref="PSR2.Classes.PropertyDeclaration"/>
     <rule ref="PSR2.Methods.MethodDeclaration"/>
-    <rule ref="Zend.Files.ClosingTag"/>
 </ruleset>

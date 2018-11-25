@@ -36,6 +36,6 @@ class CreateVisibilitiesTable extends Migration
      */
     public function down()
     {
-		Schema::dropIfExists('visibilities');
+        Schema::dropIfExists('visibilities');
     }
 }

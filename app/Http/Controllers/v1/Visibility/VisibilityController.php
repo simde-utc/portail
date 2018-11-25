@@ -62,22 +62,18 @@ class VisibilityController extends Controller
     {
         $visibility = Visibility::create($request->all());
 
-        if ($visibility) {
-            return response()->json($visibility->hideSubData(), 200);
-        } else {
-            return abort(500, 'Impossible de créer la visibilité');
-        }
+        return response()->json($visibility->hideSubData(), 200);
     }
 
     /**
      * Montre une visivilité.
      *
-     * @param  string $id
+     * @param  string $visibility_id
      * @return JsonResponse
      */
-    public function show(string $id): JsonResponse
+    public function show(string $visibility_id): JsonResponse
     {
-        $visibility = Visibility::find($id);
+        $visibility = Visibility::find($visibility_id);
 
         if ($visibility) {
             return response()->json($visibility->hideSubData(), 200);
@@ -90,12 +86,12 @@ class VisibilityController extends Controller
      * Met à jour une visibilité.
      *
      * @param VisibilityRequest $request
-     * @param  string            $id
+     * @param  string            $visibility_id
      * @return JsonResponse
      */
-    public function update(VisibilityRequest $request, string $id): JsonResponse
+    public function update(VisibilityRequest $request, string $visibility_id): JsonResponse
     {
-        $visibility = Visibility::find($id);
+        $visibility = Visibility::find($visibility_id);
 
         if ($visibility) {
             if ($visibility->update($request->input())) {
@@ -111,12 +107,12 @@ class VisibilityController extends Controller
     /**
      * Supprime une visibilité.
      *
-     * @param  string $id
+     * @param  string $visibility_id
      * @return void
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(string $visibility_id): void
     {
-        $visibility = Visibility::find($id);
+        $visibility = Visibility::find($visibility_id);
 
         if ($visibility) {
             if ($visibility->delete()) {

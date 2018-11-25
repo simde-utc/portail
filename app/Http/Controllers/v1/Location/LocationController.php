@@ -71,12 +71,7 @@ class LocationController extends Controller
     {
         $location = Location::create($request->all());
 
-        if ($location) {
-            return response()->json($location, 200);
-        } else {
-            return response()->json(['message' => 'Impossible de créer l\'emplacement'], 500);
-        }
-
+        return response()->json($location, 200);
     }
 
     /**
@@ -129,7 +124,7 @@ class LocationController extends Controller
         $location = Location::find($location_id);
 
         if ($location) {
-            if ($location->softDelete()) {
+            if ($location->delete()) {
                 return response()->json(['message' => 'L\'emplacement a bien été supprimée'], 200);
             } else {
                 return response()->json(['message' => 'Erreur lors de la suppression de l\'emplacement'], 500);

@@ -1,32 +1,16 @@
 <?php
+/**
+ * Fichier de configuration des queues.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Queue Driver
-    |--------------------------------------------------------------------------
-    |
-    | Laravel's queue API supports an assortment of back-ends via a single
-    | API, giving you convenient access to each back-end using the same
-    | syntax for each one. Here you may set the default queue driver.
-    |
-    | Supported: "sync", "database", "beanstalkd", "sqs", "redis", "null"
-    |
-    */
-
     'default' => env('QUEUE_DRIVER', 'sync'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Queue Connections
-    |--------------------------------------------------------------------------
-    |
-    | Here you may configure the connection information for each server that
-    | is used by your application. A default configuration has been added
-    | for each back-end shipped with Laravel. You are free to add more.
-    |
-    */
 
     'connections' => [
 
@@ -64,23 +48,10 @@ return [
             'retry_after' => 90,
             'block_for' => null,
         ],
-
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Failed Queue Jobs
-    |--------------------------------------------------------------------------
-    |
-    | These options configure the behavior of failed queue job logging so you
-    | can control which database and table are used to store the jobs that
-    | have failed. You may change them to any database / table you wish.
-    |
-    */
 
     'failed' => [
         'database' => env('DB_CONNECTION', 'mysql'),
         'table' => 'failed_jobs',
     ],
-
 ];

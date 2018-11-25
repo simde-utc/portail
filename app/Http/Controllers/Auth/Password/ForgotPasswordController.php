@@ -31,7 +31,7 @@ class ForgotPasswordController extends Controller
     /**
      * Montre le formulaire de demande de réinitilisation.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function showLinkRequestForm()
     {

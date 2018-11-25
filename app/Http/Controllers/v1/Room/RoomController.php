@@ -62,7 +62,8 @@ class RoomController extends Controller
     public function index(Request $request): JsonResponse
     {
         $rooms = Room::getSelection()->filter(function ($room) use ($request) {
-            return $this->tokenCanSee($request, $room, 'get') && (!\Auth::id() || $this->isVisible($room, \Auth::id()));
+            return $this->tokenCanSee($request, $room, 'get')
+                && (!\Auth::id() || $this->isVisible($room, (string) \Auth::id()));
         })->values()->map(function ($room) {
             return $room->hideData();
         });
@@ -90,13 +91,7 @@ class RoomController extends Controller
 
         $room = Room::create($inputs);
 
-        if ($room) {
-            $room = $this->getRoom($request, \Auth::user(), $room->id);
-
-            return response()->json($room->hideSubData(), 201);
-        } else {
-            abort(500, 'Impossible de créer la salle');
-        }
+        return response()->json($room->refresh()->hideSubData(), 201);
     }
 
     /**

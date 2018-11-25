@@ -85,7 +85,7 @@ class ArticleController extends Controller
 
         if ($type === 'owned') {
             $scope = array_keys(\Scopes::getRelatives(
-            $scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type').'s-'.$type
+                $scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type').'s-'.$type
             ));
         }
 
@@ -96,8 +96,8 @@ class ArticleController extends Controller
         if ($request->filled($type.'_by_type')) {
             if ($request->filled($type.'_by_id')) {
                 $createrOrOwner = \ModelResolver::findModel(
-                $request->input($type.'_by_type'),
-                $request->input($type.'_by_id')
+                    $request->input($type.'_by_type'),
+                    $request->input($type.'_by_id')
                 );
 
                 if (\Auth::id() && !$createrOrOwner->isArticleManageableBy(\Auth::id())) {
@@ -135,7 +135,7 @@ class ArticleController extends Controller
                 && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
             });
         } else {
-            $articles = Article::getSelection()->filter(function ($article) use ($request) {
+            $articles = Article::getSelection()->filter(function ($article) {
                 return $this->isVisible($article);
             });
         }
@@ -191,34 +191,30 @@ class ArticleController extends Controller
 
         $article = Article::create($inputs);
 
-        if ($article) {
-            // On affecte l'image si tout s'est bien passé.
-            $this->setImage($request, $article, 'articles', $article->id);
+        // On affecte l'image si tout s'est bien passé.
+        $this->setImage($request, $article, 'articles', $article->id);
 
-            // Tags.
-            if ($request->has('tags') && is_array($inputs['tags'])) {
-                $tags = Tag::all();
+        // Tags.
+        if ($request->has('tags') && is_array($inputs['tags'])) {
+            $tags = Tag::all();
 
-                foreach ($inputs['tags'] as $tag_arr) {
-                    if (!$tags->firstWhere('name', $tag_arr['name'])) {
-                        $tag = new Tag;
-                        $tag->name = $tag_arr['name'];
-                        $tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
-                        $tag->save();
-                        $article->tags()->save($tag);
-                    } else {
-                        $tag = Tag::where('name', $tag_arr['name'])->first();
-                        $article->tags()->save($tag);
-                    }
+            foreach ($inputs['tags'] as $tag_arr) {
+                if (!$tags->firstWhere('name', $tag_arr['name'])) {
+                    $tag = new Tag;
+                    $tag->name = $tag_arr['name'];
+                    $tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
+                    $tag->save();
+                    $article->tags()->save($tag);
+                } else {
+                    $tag = Tag::where('name', $tag_arr['name'])->first();
+                    $article->tags()->save($tag);
                 }
             }
-
-            $article = $this->getArticle($request, \Auth::user(), $article->id);
-
-            return response()->json($article->hideSubData(), 201);
-        } else {
-            return response()->json(['message' => 'Impossible de créer le article'], 500);
         }
+
+        $article = $this->getArticle($request, \Auth::user(), $article->id);
+
+        return response()->json($article->hideSubData(), 201);
     }
 
     /**
@@ -296,7 +292,7 @@ class ArticleController extends Controller
      * @param string  $article_id
      * @return void
      */
-    public function destroy(Request $request, string $article_id): JsonResponse
+    public function destroy(Request $request, string $article_id): void
     {
         $article = $this->getArticle($request, \Auth::user(), $article_id, 'remove');
         $article->tags()->delete();

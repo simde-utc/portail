@@ -1,17 +1,13 @@
 <?php
+/**
+ * Fichier de configuration des uuids.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Uuid Column
-    |--------------------------------------------------------------------------
-    |
-    | Every model that needs to be scoped by uuid
-    | should have a uuid column that reference the uuid value.
-    |
-    */
-
     'default_uuid_column' => 'id',
-
 ];
