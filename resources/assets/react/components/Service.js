@@ -13,7 +13,9 @@ class Service extends React.Component {
 	render() {
 		return (
 			<div className="Service row m-0 my-3 my-md-4 justify-content-start">
-				<Img src={ this.props.service.image } style={{ maxWidth: 100 }} />
+				<div>
+                    <Img src={ this.props.service.image } style={{ maxWidth: 100 }} />
+				</div>
 				<a className="col-12 col-md-9 body" href={ this.props.service.url }>
 					<h3>{ this.props.service.name }</h3>
 					{ this.props.service.description }
