@@ -14,6 +14,7 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
     + Spécifier si l'installation est en prod/dev et si on est en debug
     + Spécifier les identifiants de connexions à la base de données (par exemple localhost)
     + Spécifier les identifiants redis (par défaut redis n'a pas de mdp)
+    + Spécifier les CAS_URL et CAS_IMAGE
     + Spécifier, facultativement, les identifiants mail et notifications (pour que les queues marchent)
 - Créer la base de données `portail` à la mano
 - Installer les packages avec `composer install` (attention à être dans le bon dossier)

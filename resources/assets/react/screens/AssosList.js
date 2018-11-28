@@ -33,7 +33,7 @@ class AssosListScreen extends React.Component {
 						return (
 							<Card key={ asso.id } className={ "mr-3 p-0 " + bg } style={{ width: 200, minHeight: 250, flex: '0 0 auto' }} onClick={() => this.props.history.push('assos/' + asso.login)}>
 								<AspectRatio ratio="1" style={{ maxHeight: 150 }} className="d-flex justify-content-center mt-2">
-									<img src={ 'http://assos.utc.fr/larsen/style/img/logo-bde.jpg' } alt="Photo non disponible" className="img-thumbnail" style={{ height: '100%' }} />
+									<img src={ 'http://assos.utc.fr/larsen/style/img/logo-bde.jpg' } alt="Photo non disponible" className="img-thumbnail" />
 								</AspectRatio>
 								<CardBody>
 									<CardTitle>{ asso.shortname }</CardTitle>

@@ -105,6 +105,21 @@ class EventsTableSeeder extends Seeder
 					],
 				],
 			],
+            [
+                'name'     	=> 'Test',
+                'location'	=> 'Bâtiment A',
+                'begin_at'	=> '2018-03-11',
+                'end_at'	=> '2018-03-11',
+                'full_day'	=> true,
+                'created_by'=> User::where('firstname', 'Arthur')->first(),
+                'owner'		=> Asso::where('login', 'bde')->first(),
+                'visibility'=> 'public',
+                'details'	=> [
+                    'categories' 	=> [
+                        'ASSOS', 'RENCONTRES'
+                    ],
+                ],
+            ],
 		];
 
 		foreach ($events as $event) {
