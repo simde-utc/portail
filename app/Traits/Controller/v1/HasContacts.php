@@ -43,7 +43,7 @@ trait HasContacts
      */
     protected function checkTokenRights(Request $request, string $verb='get')
     {
-        $category = \ModelResolver::getCategory($request->resource);
+        $category = \ModelResolver::getCategoryFromClass($request->resource);
 
         if (!\Scopes::hasOne($request, \Scopes::getTokenType($request).'-'.$verb.'-contacts-'.$category)) {
             abort(503, 'L\'application n\'a pas le droit de voir les contacts de cette ressource');

@@ -58,9 +58,9 @@ class AssignmentController extends Controller
         $this->checkTokenRights($request);
 
         $permissions = $this->getPermissionsFromModel($request)
-        ->map(function ($permission) {
-            return $permission->hideData();
-        });
+            ->map(function ($permission) {
+                return $permission->hideData();
+            });
 
         return response()->json($permissions, 200);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware vérifiant si la requête vient d'un client oauth client ou est en ajax.
+ * Middleware vérifiant si la requête vient d'un client oauth user ou est en ajax.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -14,10 +14,10 @@ use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 
-class CheckAjaxClient
+class CheckPublicUser
 {
     /**
-     * Vérifie si c'est un client oauth client ou si la requête est en ajax.
+     * Vérifie si c'est un client oauth user ou si la requête est en ajax.
      *
      * @param  Request $request
      * @param  Closure $next
@@ -27,9 +27,9 @@ class CheckAjaxClient
     public function handle(Request $request, Closure $next, string ...$args)
     {
         try {
-            return app(\App\Http\Middleware\CheckClient::class)->handle($request, $next, ...$args);
+            return app(\App\Http\Middleware\CheckUser::class)->handle($request, $next, ...$args);
         } catch (AuthenticationException $e) {
-            return app(\App\Http\Middleware\CheckAjax::class)->handle($request, $next);
+            return app(\App\Http\Middleware\CheckPublic::class)->handle($request, $next);
         }
     }
 }

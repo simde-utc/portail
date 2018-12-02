@@ -149,6 +149,17 @@ class ModelResolver
     }
 
     /**
+     * Donne le nom court de la classe.
+     *
+     * @param  mixed $class
+     * @return string
+     */
+    public function getCategoryFromClass($class)
+    {
+        return $this->getCategory(get_class($class));
+    }
+
+    /**
      * Converti du texte en camelcase.
      *
      * @param  string $name

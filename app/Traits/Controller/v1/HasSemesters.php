@@ -14,12 +14,10 @@ use App\Models\Semester;
 
 trait HasSemesters
 {
-    use HasUsers;
-
     /**
      * Récupère le semestre sépcifié.
      *
-     * @param  string  $semester_id
+     * @param  string $semester_id
      * @return Semester
      */
     protected function getSemester(string $semester_id=null)
