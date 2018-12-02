@@ -19,7 +19,7 @@ use App\Exceptions\PortailException;
 
 trait HasAssos
 {
-    use HasUsers;
+    use HasUsers, HasSemesters;
 
     /**
      * Récupère le semestre en fonction des choix.
@@ -52,13 +52,7 @@ trait HasAssos
                     les associations que l\'utilisateur suit');
             }
 
-            $semester = Semester::getSemester($request->input('semester'));
-
-            if ($semester) {
-                return $semester;
-            } else {
-                abort(400, 'Le semestre n\'existe pas');
-            }
+            return parent::getSemester($request->input('semester'));
         }
 
         return Semester::getThisSemester();

@@ -22,7 +22,7 @@ class Semester extends Model
     ];
 
     protected $must = [
-        'begining_at', 'ending_at',
+        'is_spring', 'begining_at', 'ending_at',
     ];
 
     protected $selection = [
@@ -34,12 +34,12 @@ class Semester extends Model
     /**
      * Permet de récupérer un semestre en fonction de son id et de son nom.
      *
-     * @param  string $semester
+     * @param  string $semester_id
      * @return Semester|null
      */
-    public static function getSemester(string $semester)
+    public static function getSemester(string $semester_id=null)
     {
-        return static::where('id', $semester)->orWhere('name', $semester)->first();
+        return static::where('id', $semester_id)->orWhere('name', $semester_id)->firstOrFail();
     }
 
     /**
