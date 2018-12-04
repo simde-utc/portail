@@ -1,4 +1,8 @@
-# Portail des assos - API
+# Portail des assos - API 
+
+[![Build Status](https://travis-ci.org/simde-utc/portail.svg?branch=master)](https://travis-ci.org/simde-utc/portail)
+[![GitHub license](https://img.shields.io/github/license/simde-utc/portail.svg)](https://github.com/simde-utc/portail/blob/develop/LICENSE)
+[![Api version](https://img.shields.io/badge/version%20api-v1-blue.svg)](https://assos.utc.fr/api/v1)
 
 Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Laravel 5.6](https://laravel.com/) nécessitant au moins PHP 7.1.3
 
@@ -34,11 +38,14 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
 - Ça part !
 
 
+
 ## Mettre à jour
 
 - Lancer `php artisan quick:update`
 - Lancer `npm run prod` ou `npm run watch`
 - Tout est bon
+
+
 
 ## Développement
 ### Lancer en développement
