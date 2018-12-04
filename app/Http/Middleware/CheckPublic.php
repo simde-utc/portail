@@ -14,7 +14,7 @@ use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 
-class CheckAjax
+class CheckPublic
 {
     /**
      * Vérifie la requête.
@@ -25,10 +25,13 @@ class CheckAjax
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->ajax()) {
-            throw new AuthenticationException;
+        // Pas de token requis.
+        try {
+            if ($request->token()) {
+                throw new AuthenticationException('Client connecté mais non requis.');
+            }
+        } catch (\BadMethodCallException $e) {
+            return $next($request);
         }
-
-        return $next($request);
     }
 }

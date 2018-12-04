@@ -21,3 +21,4 @@ parameters:
 		- '#Call to an undefined method App\\Http\\Controllers\\v1\\.*Controller::exists()#'
 		- '#Call to an undefined method Illuminate\\Database\\Query\\Builder::withPivot()#'
 		- '#Call to an undefined method App\\Models\\Role::users()#'
+		- '#Method App\\Http\\Controllers\\v1\\(Asso|User)\\.+::getSemester\(\) invoked with [0-9]+ parameters, 0-1 required#'
