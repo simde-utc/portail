@@ -163,6 +163,16 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
+     * Récupère le mot de passe de l'utilisateur.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password()->password;
+    }
+
+    /**
      * Retrouve un utilisateur par son adresse email.
      *
      * @param  string $email

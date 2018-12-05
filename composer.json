@@ -9,6 +9,7 @@
         "cybercog/laravel-ownership": "^5.1",
         "diadal/passport": "^1.0@dev",
         "doctrine/dbal": "^2.6",
+        "encore/laravel-admin": "^1.6",
         "fideloper/proxy": "~4.0",
         "grimzy/laravel-mysql-spatial": "^2.1",
         "ixudra/curl": "^6.16",

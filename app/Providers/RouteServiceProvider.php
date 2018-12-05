@@ -45,6 +45,19 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapApiRoutes();
 
+        \Admin::registerAuthRoutes();
+
+        Route::group([
+            'prefix'        => config('admin.route.prefix'),
+            'namespace'     => config('admin.route.namespace'),
+            'middleware'    => config('admin.route.middleware'),
+        ], function (\Illuminate\Routing\Router $router) {
+
+            $router->get('/', 'HomeController@index');
+
+        });
+
+
         // A définir en dernier car récupère les HTTP 404.
         $this->mapWebRoutes();
     }
