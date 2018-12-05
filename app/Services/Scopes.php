@@ -307,4 +307,22 @@ class Scopes
 
         return $categories;
     }
+
+    /**
+     * Retourne les scopes pour le développement.
+     *
+     * @return array
+     */
+    public function getDevScopes()
+    {
+        $scopes = [];
+
+        foreach (array_keys(self::all()) as $scope) {
+            if (substr($scope, 0, 11) === 'user-manage') {
+                $scopes[] = $scope;
+            }
+        }
+
+        return $scopes;
+    }
 }
