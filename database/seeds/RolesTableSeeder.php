@@ -24,6 +24,8 @@ class RolesTableSeeder extends Seeder
                 'limited_at' => 1,
                 'owned_by' => new User,
                 'permissions' => [
+                    'superadmin',
+                    'admin',
                     'user',
                     'asso',
                     'group',
@@ -45,6 +47,7 @@ class RolesTableSeeder extends Seeder
                     'superadmin',
                 ],
                 'permissions' => [
+                    'admin',
                     'user',
                     'asso',
                     'group',

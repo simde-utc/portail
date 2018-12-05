@@ -41,22 +41,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        $this->mapAdminRoutes();
+
         $this->mapPassportRoutes();
 
         $this->mapApiRoutes();
-
-        \Admin::registerAuthRoutes();
-
-        Route::group([
-            'prefix'        => config('admin.route.prefix'),
-            'namespace'     => config('admin.route.namespace'),
-            'middleware'    => config('admin.route.middleware'),
-        ], function (\Illuminate\Routing\Router $router) {
-
-            $router->get('/', 'HomeController@index');
-
-        });
-
 
         // A définir en dernier car récupère les HTTP 404.
         $this->mapWebRoutes();
@@ -144,5 +133,19 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::any('api/{whatever}', $this->namespace.'\RouteController@versionNotFound')
             ->where('whatever', '.*');
+    }
+
+    protected function mapAdminRoutes() {
+        \Admin::registerAuthRoutes();
+
+        Route::group([
+            'prefix'        => config('admin.route.prefix'),
+            'namespace'     => config('admin.route.namespace'),
+            'middleware'    => config('admin.route.middleware'),
+        ], function (\Illuminate\Routing\Router $router) {
+            $router->get('/', 'HomeController@index');
+        });
+
+        require app_path('Admin/extensions.php');
     }
 }

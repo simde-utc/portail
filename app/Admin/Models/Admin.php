@@ -8,17 +8,14 @@
  * @license GNU GPL-3.0
  */
 
-namespace App\Models;
+namespace App\Admin\Models;
 
-use Encore\Admin\Auth\Database\HasPermissions;
-use Illuminate\Auth\Authenticatable;
-use Encore\Admin\Traits\AdminBuilder;
+use Encore\Admin\Auth\Database\Administrator;
 use Illuminate\Support\Collection;
+use App\Models\User;
 
-class Admin extends Model
+class Admin extends Administrator
 {
-    use Authenticatable, HasPermissions, AdminBuilder;
-
     protected $table = 'users';
 
     public $incrementing = false;
@@ -49,6 +46,16 @@ class Admin extends Model
     }
 
     /**
+     * Donne le username.
+     *
+     * @return string
+     */
+    public function getUsernameAttribute()
+    {
+        return $this->email;
+    }
+
+    /**
      * Créer l'attribut name à la volée (concaténation du prénom et du nom).
      *
      * @return string
@@ -60,6 +67,18 @@ class Admin extends Model
         } else {
             return 'Compte invité';
         }
+    }
+
+    /**
+     * Get avatar attribute.
+     *
+     * @param string $avatar
+     *
+     * @return string
+     */
+    public function getAvatarAttribute($avatar)
+    {
+        return $this->image;
     }
 
     /**
@@ -79,7 +98,9 @@ class Admin extends Model
      */
     public function allPermissions(): Collection
     {
-        return $this->getUser()->getUserPermissions();
+        $permission_ids = $this->getUser()->getUserPermissions()->pluck('id');
+
+        return Permission::whereIn('id', $permission_ids)->get();
     }
 
     /**
@@ -105,6 +126,7 @@ class Admin extends Model
      */
     public function isAdministrator(): bool
     {
+        return false;
         return $this->getUser()->hasOneRole('admin');
     }
 

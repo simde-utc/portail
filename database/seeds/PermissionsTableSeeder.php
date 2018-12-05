@@ -131,6 +131,18 @@ class PermissionsTableSeeder extends Seeder
                 'owned_by' => new Group,
             ],
             [
+                'type' => 'superadmin',
+                'name' => 'Super-Administrateur',
+                'description' => 'Super administration',
+                'owned_by' => new User,
+            ],
+            [
+                'type' => 'admin',
+                'name' => 'Administrateur',
+                'description' => 'Administration',
+                'owned_by' => new User,
+            ],
+            [
                 'type' => 'user',
                 'name' => 'Utilisateur',
                 'description' => 'Gestion des utilisateurs',

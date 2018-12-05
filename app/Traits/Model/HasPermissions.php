@@ -85,7 +85,7 @@ trait HasPermissions
 
             $addPermissions[$permission->id] = $data;
         }
-
+        dd($addPermissions);
         try {
             $this->permissions()->withTimestamps()->attach($addPermissions);
         } catch (\Exception $e) {

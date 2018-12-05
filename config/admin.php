@@ -52,7 +52,7 @@ return [
 
         'namespace' => 'App\\Http\\Controllers\\Admin',
 
-        'middleware' => ['web', 'admin'],
+        'middleware' => ['web', 'admin-portail'],
     ],
 
     /*
@@ -112,7 +112,7 @@ return [
         'providers' => [
             'admin' => [
                 'driver' => 'eloquent',
-                'model'  => App\Models\Admin::class,
+                'model'  => App\Admin\Models\Admin::class,
             ],
         ],
     ],
@@ -153,25 +153,18 @@ return [
 
         // User tables and model.
         'users_table' => 'users',
-        'users_model' => App\Models\Admin::class,
+        'users_model' => App\Admin\Models\Admin::class,
 
-        // Role table and model.
-        'roles_table' => 'admin_roles',
-        'roles_model' => Encore\Admin\Auth\Database\Role::class,
-
-        // Permission table and model.
-        'permissions_table' => 'admin_permissions',
-        'permissions_model' => Encore\Admin\Auth\Database\Permission::class,
+        // Permission and role modesl.
+        'roles_model' => App\Admin\Models\Role::class,
+        'permissions_model' => App\Admin\Models\Permission::class,
 
         // Menu table and model.
         'menu_table' => 'admin_menu',
-        'menu_model' => Encore\Admin\Auth\Database\Menu::class,
+        'menu_model' => App\Admin\Models\Menu::class,
 
         // Pivot table for table above.
         'operation_log_table'    => 'admin_operation_log',
-        'user_permissions_table' => 'admin_user_permissions',
-        'role_users_table'       => 'admin_role_users',
-        'role_permissions_table' => 'admin_role_permissions',
         'role_menu_table'        => 'admin_role_menu',
     ],
 

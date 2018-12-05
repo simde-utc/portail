@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use Encore\Admin\Controllers\AuthController as BaseAuthController;
-use App\Models\Admin;
+use App\Admin\Models\Admin;
+use Illuminate\Http\Request;
 
 class AuthController extends BaseAuthController
 {
@@ -21,5 +22,19 @@ class AuthController extends BaseAuthController
         else {
             return redirect('/login');
         }
+    }
+
+    /**
+     * User logout.
+     *
+     * @return Redirect
+     */
+    public function getLogout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        return redirect('/');
     }
 }

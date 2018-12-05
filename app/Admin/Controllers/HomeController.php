@@ -14,7 +14,7 @@ class HomeController extends Controller
     {
         return $content
             ->header('Dashboard')
-            ->description('Description...')
+            ->description('Dashboard du SiMDE')
             ->row(Dashboard::title())
             ->row(function (Row $row) {
 

@@ -220,8 +220,4 @@ class Permission extends Model implements OwnableContract
             return $permissions;
         }
     }
-
-    public function shouldPassThrough($request): bool {
-        return true;
-    }
 }
