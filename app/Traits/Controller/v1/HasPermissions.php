@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
 
 trait HasPermissions
 {
+    use HasSemesters;
+
     /**
      * Récupère une permission.
      *
@@ -53,7 +55,7 @@ trait HasPermissions
      */
     protected function getPermissionsFromModel(Request $request)
     {
-        $semester_id = (Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id);
+        $semester_id = $this->getSemester($request->input('semester'))->id;
         $choices = $this->getChoices($request, ['owned', 'herited']);
 
         if (count($choices) === 2) {

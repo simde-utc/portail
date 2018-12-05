@@ -306,7 +306,6 @@ return [
     */
     'extensions' => [
         'api-tester' => [
-
             // route prefix for APIs
             'prefix' => 'api',
 
@@ -314,7 +313,11 @@ return [
             'guard'  => 'api',
 
             // If you are not using the default user model as the authentication model, set it up
-            'class' => \App\Admin\ApiTester::class,
+            'class' => \App\Admin\Extensions\ApiTester::class,
+        ],
+
+        'chartjs' => [
+            'enable' => true
         ]
     ],
 ];

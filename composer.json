@@ -13,6 +13,7 @@
         "fideloper/proxy": "~4.0",
         "grimzy/laravel-mysql-spatial": "^2.1",
         "ixudra/curl": "^6.16",
+        "laravel-admin-ext/chartjs": "^1.0",
         "laravel/framework": "5.6.*",
         "laravel/passport": "^6.0",
         "laravel/tinker": "~1.0",

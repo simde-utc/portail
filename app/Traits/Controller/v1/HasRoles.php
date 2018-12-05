@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 
 trait HasRoles
 {
+    use HasSemesters;
+
     /**
      * Récupère un rôle.
      *
@@ -55,7 +57,7 @@ trait HasRoles
      */
     protected function getRoleFromUser(Request $request, User $user, string $role_id)
     {
-        $semester_id = (Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id);
+        $semester_id = $this->getSemester($request->input('semester'))->id;
 
         $role = $user->roles()->wherePivot('role_id', $role_id)
         ->wherePivot('semester_id', $semester_id)

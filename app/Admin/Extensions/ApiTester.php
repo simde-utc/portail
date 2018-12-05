@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin;
+namespace App\Admin\Extensions;
 
 use Encore\Admin\ApiTester\ApiTester as BaseApiTester;
 use App\Models\User;
@@ -11,20 +11,27 @@ class ApiTester extends BaseApiTester
     /**
      * Retrouve l'utilisateur pour l'api-tester.
      *
-     * @param  $user_id
+     * @param  mixed $auth
+     * @param  mixed $user_id
      * @return User
      */
     protected function getUser($auth, $user_id)
     {
-        if (config('app.debug')) {
+        if (is_null($user_id)) {
+            $user = User::find(\Auth::guard('admin')->id());
+        }
+        else {
             if (\Uuid::validate($user_id)) {
                 $user = User::find($user_id);
             } else {
                 $user = User::where('email', $user_id)->first();
             }
-        }
-        else {
-            $user = \Auth::guard('web')->user();
+
+            if (!config('app.debug')) {
+                if (\Auth::guard('admin')->id() !== $user->id) {
+                    abort(400, 'Il n\'est pas possible de spécifier un utilisateur autre.');
+                }
+            }
         }
 
         if (is_null($user)) {
@@ -37,5 +44,13 @@ class ApiTester extends BaseApiTester
         $user->withAccessToken($token);
 
         return $user;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function import()
+    {
+        parent::createMenu('Api tester', 'api-tester', 'fa-sliders');
     }
 }
