@@ -302,3 +302,26 @@ return [
     */
     'extension_dir' => app_path('Admin/Extensions'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Settings for extensions.
+    |--------------------------------------------------------------------------
+    |
+    | You can find all available extensions here
+    | https://github.com/laravel-admin-extensions.
+    |
+    */
+    'extensions' => [
+        'api-tester' => [
+
+            // route prefix for APIs
+            'prefix' => 'api',
+
+            // auth guard for api
+            'guard'  => 'api',
+
+            // If you are not using the default user model as the authentication model, set it up
+            'class' => \App\Admin\ApiTester::class,
+        ]
+    ],
+];

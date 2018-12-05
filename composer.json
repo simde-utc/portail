@@ -17,6 +17,7 @@
         "laravel/passport": "^6.0",
         "laravel/tinker": "~1.0",
         "mews/captcha": "^2.2",
+        "nastuzzi-samy/api-tester": "^1.1",
         "nastuzzi-samy/laravel-model-stages": "^1.0",
         "nastuzzi-samy/laravel-query-selection": "^2.0",
         "phpmd/phpmd": "^2.6",
