@@ -202,6 +202,12 @@ class PermissionsTableSeeder extends Seeder
                 'description' => 'Gestion des demandes d\'accès',
                 'owned_by' => new User,
             ],
+            [
+                'type' => 'search',
+                'name' => 'Recherche',
+                'description' => 'Rechercher des utilisateurs',
+                'owned_by' => new User,
+            ],
         ];
 
         foreach ($permissions as $permission) {

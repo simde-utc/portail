@@ -27,22 +27,18 @@ trait HasUsers
      */
     protected function getUser(Request $request, string $user_id=null, bool $accessOtherUsers=false): User
     {
-        if ($accessOtherUsers) {
-            $user = $user_id ? User::find($user_id) : \Auth::user();
+        if (\Uuid::validate($user_id)) {
+            $user = User::find($user_id);
         } else {
-            if (\Uuid::validate($user_id)) {
-                $user = User::find($user_id);
-            } else {
-                $user = User::where('email', $user_id)->first();
-            }
+            $user = User::where('email', $user_id)->first();
+        }
 
-            if (\Scopes::isUserToken($request)) {
-                if (is_null($user_id)) {
-                    $user = \Auth::user();
-                }
-                else if ($user->id !== \Auth::id()) {
-                    abort(403, 'Vous n\'avez pas le droit d\'accéder aux données d\'un autre utilisateur');
-                }
+        if (\Scopes::isUserToken($request)) {
+            if (is_null($user_id)) {
+                $user = \Auth::user();
+            }
+            else if (!$accessOtherUsers && $user->id !== \Auth::id()) {
+                abort(403, 'Vous n\'avez pas le droit d\'accéder aux données d\'un autre utilisateur');
             }
         }
 

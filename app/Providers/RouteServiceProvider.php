@@ -143,7 +143,7 @@ class RouteServiceProvider extends ServiceProvider
             'namespace'     => config('admin.route.namespace'),
             'middleware'    => config('admin.route.middleware'),
         ], function (\Illuminate\Routing\Router $router) {
-            $router->get('/', 'HomeController@index');
+            require base_path('routes/admin.php');
         });
 
         require app_path('Admin/extensions.php');

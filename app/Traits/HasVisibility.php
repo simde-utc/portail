@@ -210,7 +210,9 @@ trait HasVisibility
      */
     public function isContributorBDE(string $user_id, $model=null)
     {
-        return Ginger::user(AuthCas::find($user_id)->login)->isContributor();
+        $cas = AuthCas::find($user_id);
+
+        return $cas && Ginger::user($cas->login)->isContributor();
     }
 
     /**

@@ -305,6 +305,10 @@ return [
     |
     */
     'extensions' => [
+        'search' => [
+            'limit' => 5,
+        ],
+
         'api-tester' => [
             // route prefix for APIs
             'prefix' => 'api',

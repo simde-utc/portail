@@ -287,6 +287,18 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
+     * Retourne les types d'utilisateurs possible.
+     *
+     * @return bool
+     */
+    public function isType(string $type)
+    {
+		$method = 'is'.ucfirst($type);
+
+		return method_exists($this, $method) && $this->$method();
+    }
+
+    /**
      * Donne le type majeur de l'utilisateur (admin, cas, cotisant, etc.).
      *
      * @return string|null

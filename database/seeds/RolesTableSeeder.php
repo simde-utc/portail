@@ -36,6 +36,7 @@ class RolesTableSeeder extends Seeder
                     'permission',
                     'bobby',
                     'access',
+                    'search',
                 ],
             ],
             [
@@ -58,6 +59,7 @@ class RolesTableSeeder extends Seeder
                     'permission',
                     'bobby',
                     'access',
+                    'search',
                 ],
             ],
             [
