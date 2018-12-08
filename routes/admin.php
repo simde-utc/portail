@@ -11,6 +11,8 @@
 Route::get('/', 'HomeController@index');
 
 Route::get('search', 'SearchController@index')->name('search-index');
-Route::get('search/{user_id}', 'SearchController@show')->name('search-show');
 Route::post('search', 'SearchController@search')->name('search-search');
-Route::post('search/{user_id}', 'SearchController@impersonate')->name('search-impersonate');
+Route::get('search/{user_id}', 'SearchController@show')->name('search-show');
+Route::get('users/', 'UserController@index')->name('users-index');
+Route::get('users/{user_id}', 'UserController@show')->name('users-show');
+Route::post('users/{user_id}/impersonate', 'UserController@impersonate')->name('users-impersonate');

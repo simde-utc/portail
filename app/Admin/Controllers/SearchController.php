@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Traits\Controller\v1\HasUsers;
@@ -35,7 +35,7 @@ class SearchController extends Controller
     {
         return $content
             ->header('Recherche d\'un utilisateur')
-            ->description('Permet de rechercher un utilisateur (max. '.$this->limit.')')
+            ->description('Permet de rechercher un utilisateur (max. '.$this->limit.' en même temps)')
             ->body(view('admin.search.index', ['fields' => $this->fields]));
     }
 
@@ -76,6 +76,7 @@ class SearchController extends Controller
         $grid->email();
         $grid->firstname();
         $grid->lastname();
+        $grid->last_login_at();
         $grid->created_at();
         $grid->updated_at();
         $grid->types()->display(function () {
@@ -105,36 +106,12 @@ class SearchController extends Controller
 
         return $content
             ->header('Liste des utilisateurs trouvés')
-            ->description('Permet de rechercher un utilisateur (max. '.$this->limit.')')
+            ->description('Permet de rechercher un utilisateur (max. '.$this->limit.' en même temps)')
             ->body($grid);
     }
 
-    public function show(string $user_id) {
-        return redirect('admin/users/'.$user_id);
-    }
-
-    /**
-     * Index interface.
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function impersonate(Request $request)
+    public function show(Content $content, string $user_id)
     {
-        try {
-            $user = $this->getUser($request, $request->input('user'), true);
-        } catch (\Exception $e) {
-            return back()->withErrors(['user' => 'L\'utilisateur n\'existe pas']);
-        }
-
-        $lastUser = \Auth::guard('web')->user();
-
-        if ($lastUser->id === $user->id) {
-            return back()->withErrors(['user' => 'Il n\'est pas possible de devenir soit-même']);
-        }
-
-        \Auth::guard('web')->login($user);
-
-        return redirect('/');
+        return (new UserController)->show($content, $user_id);
     }
 }

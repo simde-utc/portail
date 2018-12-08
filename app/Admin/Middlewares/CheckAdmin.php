@@ -31,8 +31,10 @@ class CheckAdmin
             $menu = config('admin.database.menu_model')::where('uri', $extension)->first();
 
             if ($menu) {
-                if (\Admin::user()->can($menu->permission)) {
-                    return $next($request);
+                foreach (stringToArray($menu->permission) as $permission) {
+                    if (\Admin::user()->can($permission)) {
+                        return $next($request);
+                    }
                 }
 
                 Checker::error();

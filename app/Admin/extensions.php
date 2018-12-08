@@ -6,11 +6,20 @@ $lastOrder = $menuModel::max('order');
 
 $menuModel::create([
     'parent_id' => 0,
-    'order'     => $lastOrder + 1,
+    'order'     => ++$lastOrder,
     'title'     => 'Rechercher',
     'icon'      => 'fa-search',
     'uri'       => 'search',
     'permission'=> 'search'
+]);
+
+$menuModel::create([
+    'parent_id' => 0,
+    'order'     => ++$lastOrder,
+    'title'     => 'Utilisateurs',
+    'icon'      => 'fa-users',
+    'uri'       => 'users',
+    'permission'=> 'user'
 ]);
 
 App\Admin\Extensions\ApiTester::import();
