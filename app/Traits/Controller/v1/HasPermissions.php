@@ -105,7 +105,7 @@ trait HasPermissions
      */
     protected function checkTokenRights(Request $request, string $verb='get')
     {
-        $category = \ModelResolver::getCategoryFromClass($request->resource);
+        $category = \ModelResolver::getCategoryFromObject($request->resource);
 
         if (!\Scopes::hasOne($request, \Scopes::getTokenType($request).'-'.$verb.'-permissions-'.$category)) {
             abort(503, 'L\'application n\'a pas le droit de voir les permissions de cette ressource');

@@ -16,6 +16,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 
 class UserDeletion extends Notification
 {
+    // On ne souhaite pas garder la notification en bdd
+    protected $exceptedVia = ['database'];
+
     /**
      * Déclare le type de notification.
      */
@@ -44,23 +47,6 @@ class UserDeletion extends Notification
     protected function getContent(CanBeNotifiable $notifiable)
     {
         return 'Nous espérons vous revoir';
-    }
-
-    /**
-     * Liste les canaux de notifications.
-     *
-     * @param  CanBeNotifiable $notifiable
-     * @return array
-     */
-    public function via(CanBeNotifiable $notifiable)
-    {
-        $channels = parent::via($notifiable);
-
-        if (($key = array_search('database', $channels)) !== false) {
-            unset($channels[$key]);
-        }
-
-        return $channels;
     }
 
     /**

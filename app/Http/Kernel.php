@@ -42,6 +42,7 @@ class Kernel extends HttpKernel
         ],
 
         'admin-portail' => [
+            'auth:web',
             'admin.auth',
             'admin.pjax',
             'admin.log',
