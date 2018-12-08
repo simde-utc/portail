@@ -208,6 +208,18 @@ class PermissionsTableSeeder extends Seeder
                 'description' => 'Rechercher des utilisateurs',
                 'owned_by' => new User,
             ],
+            [
+                'type' => 'user-impersonate',
+                'name' => 'Personnification',
+                'description' => 'Devenir un autre utilisateur',
+                'owned_by' => new User,
+            ],
+            [
+                'type' => 'user-contributeBDE',
+                'name' => 'Cotisation BDE',
+                'description' => 'Gestion de la cotisation BDE',
+                'owned_by' => new User,
+            ],
         ];
 
         foreach ($permissions as $permission) {

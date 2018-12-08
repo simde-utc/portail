@@ -47,7 +47,7 @@ return [
                 'bureau' => 'admin',
             ],
             'bde' => [
-                'president' => 'admin',
+                'president' => 'superadmin',
             ]
         ],
     ],
