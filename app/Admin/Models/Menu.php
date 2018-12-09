@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux admins.
+ * Modèle correspondant aux menus admins.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -11,19 +11,37 @@
 namespace App\Admin\Models;
 
 use Encore\Admin\Auth\Database\Menu as BaseMenu;
+use Illuminate\Support\Facades\DB;
 
 class Menu extends BaseMenu
 {
-    public static function create($args)
+    /**
+     * Défini l'ordre automatiquement.
+     *
+     * @param  array $args
+     * @return BaseMenu
+     */
+    public static function create(array $args)
     {
-        if (in_array('title', $args)) {
-            $menu = self::where('title', $args['title'])->first();
+        $menu = static::orderBy('order', 'DESC')->first();
 
-            if ($menu) {
-                return $menu;
-            }
-        }
+        $args['order'] = (($menu ? $menu->order : 0) + 1);
 
         return BaseMenu::create($args);
+    }
+
+    /**
+     * Retourne tous les menus sous forme de noeuds.
+     *
+     * @return array
+     */
+    public function allNodes() : array
+    {
+        $connection = config('admin.database.connection') ?: config('database.default');
+        $orderColumn = DB::connection($connection)->getQueryGrammar()->wrap($this->orderColumn);
+
+        $byOrder = $orderColumn.' = 0,'.$orderColumn;
+
+        return static::orderByRaw($byOrder)->get()->toArray();
     }
 }

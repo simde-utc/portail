@@ -73,7 +73,7 @@ class Admin extends Administrator
     /**
      * Get avatar attribute.
      *
-     * @param string $avatar
+     * @param mixed $avatar
      *
      * @return string
      */

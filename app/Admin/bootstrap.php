@@ -1,26 +1,20 @@
 <?php
-
 /**
- * Laravel-admin - admin builder based on Laravel.
- * @author z-song <https://github.com/z-song>
+ * Fonctions chargées uniquement pour l'interface admin
  *
- * Bootstraper for Admin.
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
- * Here you can remove builtin form field:
- * Encore\Admin\Form::forget(['map', 'editor']);
- *
- * Or extend custom form field:
- * Encore\Admin\Form::extend('php', PHPEditor::class);
- *
- * Or require js and css assets:
- * Admin::css('/packages/prettydocs/css/styles.css');
- * Admin::js('/packages/prettydocs/js/main.js');
- *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
  */
 
-Encore\Admin\Form::forget(['map', 'editor']);
-
-function arrayToTable($data)
+/**
+ * Permet de convertir un tableau pour l'interface admin.
+ *
+ * @param  array $data
+ * @return mixed
+ */
+function arrayToTable(array $data)
 {
     $rows = [];
 
@@ -37,6 +31,12 @@ function arrayToTable($data)
     return new Encore\Admin\Widgets\Table([], $rows);
 }
 
+/**
+ * Converti les valeurs pour l'admin.
+ *
+ * @param  mixed $value
+ * @return mixed
+ */
 function adminValue($value)
 {
     if (is_array($value)) {

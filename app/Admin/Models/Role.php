@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux admins.
+ * Modèle correspondant aux rôles admins.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -12,6 +12,8 @@ namespace App\Admin\Models;
 
 use Encore\Admin\Auth\Database\Role as BaseRole;
 use Illuminate\Support\Collection;
+use App\Models\User;
+use App\Interfaces\Model\CanHaveRoles;
 
 class Role extends BaseRole
 {

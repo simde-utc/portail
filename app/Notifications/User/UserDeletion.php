@@ -16,7 +16,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 
 class UserDeletion extends Notification
 {
-    // On ne souhaite pas garder la notification en bdd
+    // On ne souhaite pas garder la notification en bdd.
     protected $exceptedVia = ['database'];
 
     /**

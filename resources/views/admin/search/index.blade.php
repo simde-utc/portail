@@ -63,6 +63,16 @@
                         </div>
                     @endforeach
 
+                    <div style="width: 100%; border: SOLID 1px grey"></div>
+                    <br />
+                    <div class="form-group">
+                        <label for="any" class="col-sm-2 control-label">Recherche rapide</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="any" name="any">
+                        </div>
+                    </div>
+
                     <div class="form-group" style="margin-bottom: 0px;">
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-primary">Rechercher</button>

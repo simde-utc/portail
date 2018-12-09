@@ -10,6 +10,14 @@
 
 Route::get('/', 'HomeController@index');
 
+Route::get('dashboard', 'DashboardController@index')->name('dashboard-index');
+
+Route::get('auth/login', 'AuthController@getLogin');
+Route::post('auth/login', 'AuthController@postLogin');
+Route::get('auth/logout', 'AuthController@getLogout');
+
+Route::get('charts', 'ChartsController@index')->name('charts-index');
+
 Route::get('search', 'SearchController@index')->name('search-index');
 Route::post('search', 'SearchController@search')->name('search-search');
 Route::get('search/{user_id}', 'SearchController@show')->name('search-show');

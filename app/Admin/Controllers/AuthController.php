@@ -1,6 +1,14 @@
 <?php
+/**
+ * Authentifie les admins.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
-namespace App\Http\Controllers\Admin;
+namespace App\Admin\Controllers;
 
 use Encore\Admin\Controllers\AuthController as BaseAuthController;
 use App\Admin\Models\Admin;
@@ -8,6 +16,11 @@ use Illuminate\Http\Request;
 
 class AuthController extends BaseAuthController
 {
+    /**
+     * Vérification de la connexion.
+     *
+     * @return mixed
+     */
     public function getLogin()
     {
         if (\Auth::guard('web')->check()) {
@@ -16,7 +29,7 @@ class AuthController extends BaseAuthController
 
                 return redirect(config('admin.route.prefix'));
             } else {
-                abort(403, 'Accès refusé');
+                return redirect('/');
             }
         } else {
             return redirect('/login');
@@ -24,9 +37,10 @@ class AuthController extends BaseAuthController
     }
 
     /**
-     * User logout.
+     * Déconnexion.
      *
-     * @return Redirect
+     * @param Request $request
+     * @return mixed
      */
     public function getLogout(Request $request)
     {

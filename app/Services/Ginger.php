@@ -169,6 +169,14 @@ class Ginger
         return $contributions;
     }
 
+    /**
+     * Ajoute une contribution.
+     *
+     * @param string $begin
+     * @param string $end
+     * @param string $money
+     * @return mixed
+     */
     public function addContribution(string $begin, string $end, string $money)
     {
         if (!$this->get()) {
@@ -188,24 +196,41 @@ class Ginger
         return $this->parseContribution($response->content);
     }
 
-    protected function parseContribution($contribution=null)
+    /**
+     * Parse une contribution pour la retourner au bon format.
+     *
+     * @param  mixed $contribution
+     * @return mixed
+     */
+    protected function parseContribution($contribution)
     {
         if ($contribution) {
             return new class($contribution) {
+                /**
+                 * Création de la contribution.
+                 *
+                 * @param mixed $contribution
+                 */
                 public function __construct($contribution)
                 {
-                    $this->id = $contribution->id ?? null;
-                    $this->begin_at = $contribution->debut ?? null;
-                    $this->end_at = $contribution->fin ?? null;
-                    $this->money = $contribution->montant ?? null;
+                    $this->id = ($contribution->id ?? null);
+                    $this->begin_at = ($contribution->debut ?? null);
+                    $this->end_at = ($contribution->fin ?? null);
+                    $this->money = ($contribution->montant ?? null);
                 }
             };
         } else {
             return new class() {
-                public $id = null;
-                public $begin_at = null;
-                public $end_at = null;
-                public $money = null;
+                /**
+                 * Création d'un contribution null.
+                 */
+                public function __construct()
+                {
+                    $this->id = null;
+                    $this->begin_at = null;
+                    $this->end_at = null;
+                    $this->money = null;
+                }
             };
         }
     }

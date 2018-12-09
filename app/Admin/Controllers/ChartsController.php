@@ -1,4 +1,12 @@
 <?php
+/**
+ * Affiche des graphes.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Admin\Controllers;
 
@@ -7,8 +15,14 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Widgets\Box;
 use App\Models\User;
 
-class ChartJsController extends Controller
+class ChartsController extends Controller
 {
+    /**
+     * Affiche un tas de graphes.
+     *
+     * @param  Content $content
+     * @return Content
+     */
     public function index(Content $content)
     {
         $dates = [];
@@ -19,7 +33,7 @@ class ChartJsController extends Controller
         }
 
         return $content
-            ->header('Chartjs')
-            ->body(new Box('Utilisateurs', view('admin.chartjs.users', ['data' => $dates])));
+            ->header('Charts')
+            ->body(new Box('Utilisateurs', view('admin.charts.users', ['data' => $dates])));
     }
 }

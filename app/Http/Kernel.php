@@ -45,7 +45,6 @@ class Kernel extends HttpKernel
             'auth:web',
             'admin.auth',
             'admin.pjax',
-            'admin.log',
             'admin.bootstrap',
             'admin.check',
         ],

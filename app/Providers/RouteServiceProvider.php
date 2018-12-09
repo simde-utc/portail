@@ -135,10 +135,13 @@ class RouteServiceProvider extends ServiceProvider
             ->where('whatever', '.*');
     }
 
+    /**
+     * Définition des routes Admin.
+     *
+     * @return void
+     */
     protected function mapAdminRoutes()
     {
-        \Admin::registerAuthRoutes();
-
         Route::group([
             'prefix'        => config('admin.route.prefix'),
             'namespace'     => config('admin.route.namespace'),
@@ -146,7 +149,5 @@ class RouteServiceProvider extends ServiceProvider
         ], function (\Illuminate\Routing\Router $router) {
             require base_path('routes/admin.php');
         });
-
-        require app_path('Admin/extensions.php');
     }
 }

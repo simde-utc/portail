@@ -80,7 +80,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
      */
     protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail)
     {
-        $content = '<br />'.str_replace(PHP_EOL, '<br />', htmlentities($this->getContent($notifiable)));
+        $content = '<br />'.str_replace(PHP_EOL, '<br />', htmlentities($this->getContent($notifiable))).'<br />';
 
         return $mail
             ->line($notifiable->name)

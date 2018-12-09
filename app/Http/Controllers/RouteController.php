@@ -74,7 +74,7 @@ class RouteController extends Controller
 
                 if ($index < $indexVersion) {
                     $versionData['deprecated'] = true;
-                    $versionData['status'] = '[x] L\'utilisation de cette version doit se faire uniquement par de vieux services';
+                    $versionData['status'] = '[x] L\'utilisation de cette version n\'est pas recommandée';
                 } else if ($index > $indexVersion || $indexVersion === false) {
                     $versionData['beta'] = true;
                     $versionData['status'] = '[x] Version non stable, pouvant encore changée';

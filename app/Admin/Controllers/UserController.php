@@ -1,4 +1,12 @@
 <?php
+/**
+ * Affiche les utilisateurs en admin.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Admin\Controllers;
 
@@ -73,6 +81,13 @@ class UserController extends Controller
             ->body($grid);
     }
 
+    /**
+     * Montre un utilisateur.
+     *
+     * @param  Content $content
+     * @param  string  $user_id
+     * @return mixed
+     */
     public function show(Content $content, string $user_id)
     {
         $user = User::findOrFail($user_id);
@@ -107,110 +122,138 @@ class UserController extends Controller
         });
 
         $generateLeft = function (Column $column) use ($user, $image) {
-            $column->row($image);
-
-            if (\Auth::guard('admin')->user()->can('user-contributeBde')) {
-                $ginger = \Ginger::userByEmail($user->email);
-                $contributeBde = new Show($user);
-                $contributeBde->login(' ')->unescape()->as(function () use ($ginger) {
-                    return 'Login: '.adminValue($ginger->getLogin());
-                });
-                $contributeBde->contributerType(' ')->unescape()->as(function () use ($ginger) {
-                    return 'Type: '.adminValue($ginger->getType());
-                });
-                $contributeBde->major(' ')->unescape()->as(function () use ($ginger) {
-                    return 'Majeur: '.adminValue($ginger->isAdult());
-                });
-                $contributeBde->contributor(' ')->unescape()->as(function () use ($ginger) {
-                    return 'Cotisant: '.adminValue($ginger->isContributor());
-                });
-                $contributeBde->divider();
-
-                $contributions = [];
-
-                foreach (array_reverse($ginger->getContributions()) as $contribution) {
-                    $semesters = Semester::whereDate('begin_at', '<', $contribution->end_at)
-                        ->whereDate('end_at', '>', $contribution->begin_at)
-                        ->orderBy('begin_at')->get(['name']);
-
-                    $name = implode($semesters->pluck('name')->toArray(), '-');
-
-                    if (!isset($contributions[$name])) {
-                        $contributions[$name] = [];
-                    }
-
-                    $contributions[$name][] = [
-                        'début' => $contribution->begin_at,
-                        'fin' => $contribution->end_at,
-                        'montant' => $contribution->money.'€',
-                    ];
-                }
-
-                foreach ($contributions as $key => $value) {
-                    $contributeBde->$key($key)->unescape()->as(function () use ($value) {
-                        return adminValue($value);
-                    });
-                }
-
-                $contributeBde->panel()
-                    ->title('Cotisation BDE')
-                    ->tools(function ($tools) use ($user, $ginger) {
-                        $tools->disableEdit();
-                        $tools->disableList();
-                        $tools->disableDelete();
-
-                        if ($ginger->isContributor()) {
-                            $tools->prepend(view('admin.users.contributeBde.delete', ['user' => $user]));
-                        } else {
-                            $tools->prepend(view('admin.users.contributeBde.create', ['user' => $user]));
-                        }
-                    });
-
-                $column->row($contributeBde);
-            }
+            return $this->generateLeft($column, $user, $image);
         };
-
         $generateRight = function (Column $column) use ($user, $details) {
-            if (!\Auth::guard('admin')->user()->can('user')) {
-                $column->row($details);
-            } else {
-                if (\Auth::guard('admin')->user()->can('user-impersonate')) {
-                    $details->panel()
-                        ->tools(function ($tools) use ($user) {
-                            $tools->prepend(view('admin.users.impersonate', ['user' => $user]));
-                        });
-                }
-
-                $column->row($details);
-
-                $info = new Show($user);
-                $info->details()->unescape()->as(function () {
-                    return arrayToTable($this->details()->allToArray());
-                });
-                $info->preferences()->unescape()->as(function () {
-                    return arrayToTable($this->preferences()->allToArray());
-                });
-
-                $info->panel()
-                    ->title('Information')
-                    ->tools(function ($tools) {
-                        $tools->disableEdit();
-                        $tools->disableList();
-                        $tools->disableDelete();
-                    });
-
-                $column->row($info);
-            }
+            $this->generateRight($column, $user, $details);
         };
 
         return $content
             ->header($user->name)
             ->description('Détail de l\'utilisateur')
-            ->row(function (Row $row) use ($user, $generateLeft, $generateRight) {
+            ->row(function (Row $row) use ($generateLeft, $generateRight) {
                 $row->column(3, $generateLeft);
-
                 $row->column(9, $generateRight);
             });
+    }
+
+    /**
+     * Génère la partie gauche de l'affichage d'un utlisateur.
+     *
+     * @param  Column $column
+     * @param  User   $user
+     * @param  mixed  $image
+     * @return mixed
+     */
+    protected function generateLeft(Column $column, User $user, $image)
+    {
+        $column->row($image);
+
+        if (\Auth::guard('admin')->user()->can('user-contributeBde')) {
+            $ginger = \Ginger::userByEmail($user->email);
+            $contributeBde = new Show($user);
+            $contributeBde->login(' ')->unescape()->as(function () use ($ginger) {
+                return 'Login: '.adminValue($ginger->getLogin());
+            });
+            $contributeBde->contributerType(' ')->unescape()->as(function () use ($ginger) {
+                return 'Type: '.adminValue($ginger->getType());
+            });
+            $contributeBde->major(' ')->unescape()->as(function () use ($ginger) {
+                return 'Majeur: '.adminValue($ginger->isAdult());
+            });
+            $contributeBde->contributor(' ')->unescape()->as(function () use ($ginger) {
+                return 'Cotisant: '.adminValue($ginger->isContributor());
+            });
+            $contributeBde->divider();
+
+            $contributions = [];
+
+            foreach (array_reverse($ginger->getContributions()) as $contribution) {
+                $semesters = Semester::whereDate('begin_at', '<', $contribution->end_at)
+                    ->whereDate('end_at', '>', $contribution->begin_at)
+                    ->orderBy('begin_at')->get(['name']);
+
+                $name = implode($semesters->pluck('name')->toArray(), '-');
+
+                if (!isset($contributions[$name])) {
+                    $contributions[$name] = [];
+                }
+
+                $contributions[$name][] = [
+                    'début' => $contribution->begin_at,
+                    'fin' => $contribution->end_at,
+                    'montant' => $contribution->money.'€',
+                ];
+            }
+
+            foreach ($contributions as $key => $value) {
+                $contributeBde->$key($key)->unescape()->as(function () use ($value) {
+                    return adminValue($value);
+                });
+            }
+
+            $contributeBde->panel()
+                ->title('Cotisation BDE')
+                ->tools(function ($tools) use ($user, $ginger) {
+                    $tools->disableEdit();
+                    $tools->disableList();
+                    $tools->disableDelete();
+
+                    if ($ginger->isContributor()) {
+                        $tools->prepend(view('admin.users.contributeBde.delete', ['user' => $user]));
+                    } else {
+                        $tools->prepend(view('admin.users.contributeBde.create', ['user' => $user]));
+                    }
+                });
+
+            $column->row($contributeBde);
+        }
+
+        return $column;
+    }
+
+    /**
+     * Génère la partie droite de l'affichage d'un utlisateur.
+     *
+     * @param  Column $column
+     * @param  User   $user
+     * @param  mixed  $details
+     * @return mixed
+     */
+    protected function generateRight(Column $column, User $user, $details)
+    {
+        if (!\Auth::guard('admin')->user()->can('user')) {
+            $column->row($details);
+        } else {
+            if (\Auth::guard('admin')->user()->can('user-impersonate')) {
+                $details->panel()
+                    ->tools(function ($tools) use ($user) {
+                        $tools->prepend(view('admin.users.impersonate', ['user' => $user]));
+                    });
+            }
+
+            $column->row($details);
+
+            $info = new Show($user);
+            $info->details()->unescape()->as(function () {
+                return arrayToTable($this->details()->allToArray());
+            });
+            $info->preferences()->unescape()->as(function () {
+                return arrayToTable($this->preferences()->allToArray());
+            });
+
+            $info->panel()
+                ->title('Information')
+                ->tools(function ($tools) {
+                    $tools->disableEdit();
+                    $tools->disableList();
+                    $tools->disableDelete();
+                });
+
+            $column->row($info);
+        }
+
+        return $column;
     }
 
     /**
@@ -244,7 +287,7 @@ class UserController extends Controller
             );
         }
 
-        // Création de la notification pour confirmer le changement
+        // Création de la notification pour confirmer le changement.
         $userNotification = new UserImpersonation($admin, $request->input('description'), (bool) $request->input('admin'));
 
         if ($request->input('admin')) {
@@ -267,7 +310,8 @@ class UserController extends Controller
      */
     public function contributeBde(Request $request, string $user_id)
     {
-        if ((!$request->filled('money') && !$request->filled('custom')) || !\Auth::guard('admin')->user()->can('user-contributeBde')) {
+        if ((!$request->filled('money') && !$request->filled('custom'))
+            || !\Auth::guard('admin')->user()->can('user-contributeBde')) {
             return redirect()->action(
                 '\App\Admin\Controllers\UserController@show', ['user_id' => $user_id]
             );
@@ -294,7 +338,7 @@ class UserController extends Controller
 
         // Création de la notification de confirmation de cotisation.
         $userNotification = new UserContributionBde($semesters, $money, \Auth::guard('admin')->user());
-        $ginger->addContribution(now()->format('Y-m-d'), end($semesters)->end_at->format('Y-m-d'), $money);
+        $ginger->addContribution(now()->format('Y-m-d'), end($semesters)->end_at, $money);
 
         $user->notify($userNotification);
 

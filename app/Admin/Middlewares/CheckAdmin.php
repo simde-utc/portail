@@ -1,4 +1,12 @@
 <?php
+/**
+ * Vérifie les droits d'accéder à la page admin.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Admin\Middlewares;
 
@@ -11,9 +19,9 @@ class CheckAdmin
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
-     * @param array   $args
+     * @param Request  $request
+     * @param \Closure $next
+     * @param mixed    ...$args
      * @return mixed
      */
     public function handle(Request $request, \Closure $next, ...$args)
@@ -25,7 +33,7 @@ class CheckAdmin
         $path = Str::after($request->route()->uri, config('admin.route.prefix'));
         $pathList = explode('/', $path);
 
-        $extension = $pathList[0] ?: $pathList[1] ?? null;
+        $extension = ($pathList[0] ?: ($pathList[1] ?? null));
 
         if ($extension) {
             $menu = config('admin.database.menu_model')::where('uri', $extension)->first();

@@ -33,6 +33,7 @@ class SemesterController extends Controller
     /**
      * Liste les semestres.
      *
+     * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse

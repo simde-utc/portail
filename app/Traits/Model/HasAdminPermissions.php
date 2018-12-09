@@ -29,8 +29,7 @@ trait HasAdminPermissions
     /**
      * Check if user has permission.
      *
-     * @param $permission
-     *
+     * @param string $permission
      * @return boolean
      */
     public function can(string $permission) : bool
@@ -56,7 +55,6 @@ trait HasAdminPermissions
      * Check if user is $role.
      *
      * @param string $role
-     *
      * @return mixed
      */
     public function isRole(string $role) : bool
@@ -68,7 +66,6 @@ trait HasAdminPermissions
      * Check if user in $roles.
      *
      * @param array $roles
-     *
      * @return mixed
      */
     public function inRoles(array $roles=[]) : bool
@@ -79,8 +76,7 @@ trait HasAdminPermissions
     /**
      * If visible for roles.
      *
-     * @param $roles
-     *
+     * @param array $roles
      * @return boolean
      */
     public function visible(array $roles=[]) : bool

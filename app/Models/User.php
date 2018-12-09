@@ -289,6 +289,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     /**
      * Retourne les types d'utilisateurs possible.
      *
+     * @param string $type
      * @return boolean
      */
     public function isType(string $type)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux admins.
+ * Modèle correspondant aux permisisons admins.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -14,6 +14,8 @@ use Encore\Admin\Auth\Database\Permission as BasePermission;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\User;
+use App\Interfaces\Model\CanHavePermissions;
 
 class Permission extends BasePermission
 {
@@ -74,12 +76,13 @@ class Permission extends BasePermission
         return $permissions->first();
     }
 
-    public static function pluck(string ...$names)
+    /**
+     * Adaptation à l'interface admin.
+     *
+     * @return string
+     */
+    public function getSlugAttribute()
     {
-        if (($key = array_search('slug', $names)) !== false) {
-            unset($names[$key]);
-        }
-
-        return static::getQuery()->pluck(...$names);
+        return $this->name;
     }
 }
