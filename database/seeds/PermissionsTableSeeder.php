@@ -131,6 +131,18 @@ class PermissionsTableSeeder extends Seeder
                 'owned_by' => new Group,
             ],
             [
+                'type' => 'superadmin',
+                'name' => 'Super-Administrateur',
+                'description' => 'Super administration',
+                'owned_by' => new User,
+            ],
+            [
+                'type' => 'admin',
+                'name' => 'Administrateur',
+                'description' => 'Administration',
+                'owned_by' => new User,
+            ],
+            [
                 'type' => 'user',
                 'name' => 'Utilisateur',
                 'description' => 'Gestion des utilisateurs',
@@ -188,6 +200,24 @@ class PermissionsTableSeeder extends Seeder
                 'type' => 'access',
                 'name' => 'Demande d\'accès',
                 'description' => 'Gestion des demandes d\'accès',
+                'owned_by' => new User,
+            ],
+            [
+                'type' => 'search',
+                'name' => 'Recherche',
+                'description' => 'Rechercher des utilisateurs',
+                'owned_by' => new User,
+            ],
+            [
+                'type' => 'user-impersonate',
+                'name' => 'Personnification',
+                'description' => 'Devenir un autre utilisateur',
+                'owned_by' => new User,
+            ],
+            [
+                'type' => 'user-contributeBde',
+                'name' => 'Cotisation BDE',
+                'description' => 'Gestion de la cotisation BDE',
                 'owned_by' => new User,
             ],
         ];

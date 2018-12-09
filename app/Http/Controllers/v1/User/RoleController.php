@@ -71,7 +71,7 @@ class RoleController extends Controller
     public function index(Request $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id, true);
-        $semester_id = (Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id);
+        $semester_id = Semester::getSemester($request->input('semester'))->id;
 
         $roles = $user->roles()->wherePivot('semester_id', $semester_id)
             ->withPivot('semester_id', 'validated_by')->getSelection()
@@ -96,7 +96,7 @@ class RoleController extends Controller
 
         $user->assignRoles($request->input('role_id'), [
             'validated_by' => (\Auth::id() ?? $request->input('validated_by')),
-            'semester_id' => (Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id)
+            'semester_id' => Semester::getSemester($request->input('semester'))->id
         ], \Scopes::isClientToken($request));
         $role = $this->getRoleFromUser($request, $user, $request->input('role_id'));
 

@@ -221,18 +221,18 @@ class Test extends Command
             $dirs = $this->files;
         }
 
-        // Les fichiers sont du type "spécial" (possèdent des règles en moins)
+        // Les fichiers sont du type "spécial" (possèdent des règles en moins).
         if ($this->option('special')) {
             $specialFiles = $dirs;
         } else {
             $files = [];
             $specialFiles = [];
 
-            foreach ($files as $file) {
-                if (array_search($file, $this->specialFiles) === false) {
-                    $files[] = $file;
+            foreach ($dirs as $dir) {
+                if (array_search($dir, $this->specialFiles) === false) {
+                    $files[] = $dir;
                 } else {
-                    $specialFiles[] = $file;
+                    $specialFiles[] = $dir;
                 }
             }
 

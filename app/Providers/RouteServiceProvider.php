@@ -41,6 +41,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        $this->mapAdminRoutes();
+
         $this->mapPassportRoutes();
 
         $this->mapApiRoutes();
@@ -131,5 +133,21 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::any('api/{whatever}', $this->namespace.'\RouteController@versionNotFound')
             ->where('whatever', '.*');
+    }
+
+    /**
+     * Définition des routes Admin.
+     *
+     * @return void
+     */
+    protected function mapAdminRoutes()
+    {
+        Route::group([
+            'prefix'        => config('admin.route.prefix'),
+            'namespace'     => config('admin.route.namespace'),
+            'middleware'    => config('admin.route.middleware'),
+        ], function (\Illuminate\Routing\Router $router) {
+            require base_path('routes/admin.php');
+        });
     }
 }

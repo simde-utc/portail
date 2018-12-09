@@ -33,10 +33,15 @@ class SemesterController extends Controller
     /**
      * Liste les semestres.
      *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        if ($request->has('year')) {
+            return response()->json(Semester::getThisYear($request->input('year')), 200);
+        }
+
         $semesters = Semester::getSelection()->map(function ($semester) {
             return $semester->hideData();
         });

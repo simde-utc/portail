@@ -163,6 +163,16 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
+     * Récupère le mot de passe de l'utilisateur.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password()->password;
+    }
+
+    /**
      * Retrouve un utilisateur par son adresse email.
      *
      * @param  string $email
@@ -274,6 +284,19 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     public function getTypes()
     {
         return $this->types;
+    }
+
+    /**
+     * Retourne les types d'utilisateurs possible.
+     *
+     * @param string $type
+     * @return boolean
+     */
+    public function isType(string $type)
+    {
+        $method = 'is'.ucfirst($type);
+
+        return method_exists($this, $method) && $this->$method();
     }
 
     /**

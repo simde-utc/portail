@@ -59,7 +59,8 @@ trait HasReservations
      * @param  string  $verb
      * @return Reservation|null
      */
-    protected function getReservationFromRoom(Request $request, Room $room, User $user, string $reservation_id, string $verb='get')
+    protected function getReservationFromRoom(Request $request, Room $room, User $user, string $reservation_id,
+        string $verb='get')
     {
         $reservation = $room->reservations()->find($reservation_id);
 

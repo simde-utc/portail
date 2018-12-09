@@ -94,12 +94,15 @@
     <!-- Pas de tag de fin PHP -->
     <rule ref="Zend.Files.ClosingTag"/>
 
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+        <exclude name="Squiz.Functions.GlobalFunction" />
+    </rule>
+
     <!-- Règles à tester -->
     <rule ref="Squiz.Arrays.ArrayBracketSpacing" />
     <rule ref="Squiz.ControlStructures.ControlSignature" />
     <rule ref="Squiz.ControlStructures.ElseIfDeclaration" />
     <rule ref="Squiz.Formatting.OperatorBracket" />
-    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing" />
     <rule ref="Squiz.Scope.MethodScope" />
     <rule ref="Squiz.Strings.ConcatenationSpacing" />
     <rule ref="Squiz.WhiteSpace.ControlStructureSpacing" />

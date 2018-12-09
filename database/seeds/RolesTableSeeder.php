@@ -21,9 +21,11 @@ class RolesTableSeeder extends Seeder
                 'type' => 'superadmin',
                 'name' => 'Super administrateur',
                 'description' => 'Personne ayant réellement tous les droits sur le service',
-                'limited_at' => 1,
+                'limited_at' => 2,
                 'owned_by' => new User,
                 'permissions' => [
+                    'superadmin',
+                    'admin',
                     'user',
                     'asso',
                     'group',
@@ -34,6 +36,9 @@ class RolesTableSeeder extends Seeder
                     'permission',
                     'bobby',
                     'access',
+                    'search',
+                    'user-impersonate',
+                    'user-contributeBde',
                 ],
             ],
             [
@@ -45,6 +50,7 @@ class RolesTableSeeder extends Seeder
                     'superadmin',
                 ],
                 'permissions' => [
+                    'admin',
                     'user',
                     'asso',
                     'group',
@@ -55,6 +61,9 @@ class RolesTableSeeder extends Seeder
                     'permission',
                     'bobby',
                     'access',
+                    'search',
+                    'user-impersonate',
+                    'user-contributeBde',
                 ],
             ],
             [

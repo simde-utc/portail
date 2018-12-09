@@ -33,7 +33,7 @@ class ExternalNotification extends Notification
      */
     public function __construct(CanNotify $model, string $content, array $action=[])
     {
-        parent::__construct('external_'.\ModelResolver::getName(get_class($model)));
+        parent::__construct('external_'.\ModelResolver::getNameFromObject($model));
 
         $this->subject = $model->name;
         $this->content = $content;
@@ -70,34 +70,5 @@ class ExternalNotification extends Notification
     protected function getContent(CanBeNotifiable $notifiable)
     {
         return $this->content;
-    }
-
-    /**
-     * Le contenu email est interdit pour les notifications externes.
-     *
-     * @param  CanBeNotifiable $notifiable
-     * @param  MailMessage     $mail
-     * @return null
-     */
-    protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail)
-    {
-        return null;
-    }
-
-    /**
-     * Liste les canaux de notifications.
-     *
-     * @param  CanBeNotifiable $notifiable
-     * @return array
-     */
-    public function via(CanBeNotifiable $notifiable)
-    {
-        $channels = parent::via($notifiable);
-
-        if (($key = array_search('mail', $channels)) !== false) {
-            unset($channels[$key]);
-        }
-
-        return $channels;
     }
 }

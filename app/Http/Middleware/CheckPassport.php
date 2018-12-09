@@ -35,7 +35,9 @@ class CheckPassport
 
         // Méthode magique pour simplifier le dev.
         if (isset($input['scope']) && $input['scope'] === '*' && config('app.debug')) {
-            $this->populateWithDevScopes($request, $input);
+            $input['scope'] = implode(',', \Scopes::getDevScopes());
+
+            $request->replace($input);
         }
 
         // On vérifie que les scopes sont bien définis et pour le bon type d'authentification.
@@ -78,27 +80,6 @@ class CheckPassport
             // On override pour l'instant, on gèrera ça plus tard via la bdd.
             $input['scope'] = implode(' ', $scopes);
         }
-
-        $request->replace($input);
-    }
-
-    /**
-     * Peuple les scopes avec des scopes pur développement (à utiliser avec précaution).
-     * @param  Request $request
-     * @param  array   $input
-     * @return void
-     */
-    protected function populateWithDevScopes(Request $request, array $input)
-    {
-        $scopes = [];
-
-        foreach (array_keys(\Scopes::all()) as $scope) {
-            if (substr($scope, 0, 11) === 'user-manage') {
-                $scopes[] = $scope;
-            }
-        }
-
-        $input['scope'] = implode(' ', $scopes);
 
         $request->replace($input);
     }

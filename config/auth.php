@@ -62,6 +62,11 @@ return [
             'model' => App\Models\User::class,
             'table' => 'users'
         ],
+        'api' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+            'table' => 'users'
+        ],
     ],
 
     'passwords' => [

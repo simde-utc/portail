@@ -75,7 +75,7 @@ class AssignmentController extends Controller
     {
         $this->checkTokenRights($request, 'create');
 
-        $semester_id = (Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id);
+        $semester_id = Semester::getSemester($request->input('semester'))->id;
 
         $request->resource->assignPermissions($request->input('permission_id'), [
             'user_id' => (\Auth::id() ?? $request->input('user_id')),

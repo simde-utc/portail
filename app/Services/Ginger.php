@@ -51,8 +51,8 @@ class Ginger
     public function user(string $login)
     {
         $response = self::call(
-        'GET',
-        $login
+            'GET',
+            $login
         );
 
         $this->responseCode = $response === null ? null : $response->status;
@@ -70,8 +70,8 @@ class Ginger
     public function userByEmail(string $email)
     {
         $response = self::call(
-        'GET',
-        'mail/'.$email
+            'GET',
+            'mail/'.$email
         );
 
         $this->responseCode = $response === null ? null : $response->status;
@@ -136,6 +136,103 @@ class Ginger
         $this->user($login);
 
         return $this->responseCode;
+    }
+
+    /**
+     * Permet de récupérer auprès de Ginger les cotisations d'un utilisateur.
+     *
+     * @param  string $login
+     * @return array
+     */
+    public function getContributions(string $login=null)
+    {
+        if (!$this->get()) {
+            if ($login) {
+                $this->user($login);
+            }
+
+            if (!$this->get()) {
+                return [];
+            }
+        }
+
+        $contributionList = $this->call(
+            'GET',
+            $this->getLogin().'/cotisations'
+        )->content;
+        $contributions = [];
+
+        foreach ($contributionList as $contribution) {
+            $contributions[] = $this->parseContribution($contribution);
+        }
+
+        return $contributions;
+    }
+
+    /**
+     * Ajoute une contribution.
+     *
+     * @param string $begin
+     * @param string $end
+     * @param string $money
+     * @return mixed
+     */
+    public function addContribution(string $begin, string $end, string $money)
+    {
+        if (!$this->get()) {
+            return $this->parseContribution(null);
+        }
+
+        $response = $this->call(
+            'POST',
+            $this->getLogin().'/cotisations',
+            [
+                'debut' => $begin,
+                'fin' => $end,
+                'montant' => $money,
+            ]
+        );
+
+        return $this->parseContribution($response->content);
+    }
+
+    /**
+     * Parse une contribution pour la retourner au bon format.
+     *
+     * @param  mixed $contribution
+     * @return mixed
+     */
+    protected function parseContribution($contribution)
+    {
+        if ($contribution) {
+            return new class($contribution) {
+                /**
+                 * Création de la contribution.
+                 *
+                 * @param mixed $contribution
+                 */
+                public function __construct($contribution)
+                {
+                    $this->id = ($contribution->id ?? null);
+                    $this->begin_at = ($contribution->debut ?? null);
+                    $this->end_at = ($contribution->fin ?? null);
+                    $this->money = ($contribution->montant ?? null);
+                }
+            };
+        } else {
+            return new class() {
+                /**
+                 * Création d'un contribution null.
+                 */
+                public function __construct()
+                {
+                    $this->id = null;
+                    $this->begin_at = null;
+                    $this->end_at = null;
+                    $this->money = null;
+                }
+            };
+        }
     }
 
     /**
@@ -250,7 +347,6 @@ class Ginger
     {
         $curl = \Curl::to(self::URL.$route.'?key='.$this->key)
 	        ->withData($params)
-	        ->asJson()
 	        ->returnResponseObject();
 
         if (strpos(request()->getHttpHost(), 'utc.fr')) {
@@ -260,7 +356,7 @@ class Ginger
         if ($method === 'POST') {
             $response = $curl->post();
         } else {
-            $response = $curl->get();
+            $response = $curl->asJson()->get();
         }
 
         return $response;
