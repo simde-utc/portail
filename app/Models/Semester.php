@@ -13,7 +13,11 @@ namespace App\Models;
 class Semester extends Model
 {
     protected $fillable = [
-        'name', 'is_spring', 'year', 'begining_at', 'ending_at',
+        'name', 'is_spring', 'year', 'begin_at', 'end_at',
+    ];
+
+    protected $dates = [
+        'begin_at', 'end_at'
     ];
 
     protected $cast = [
@@ -22,7 +26,7 @@ class Semester extends Model
     ];
 
     protected $must = [
-        'is_spring', 'begining_at', 'ending_at',
+        'is_spring', 'begin_at', 'end_at',
     ];
 
     protected $selection = [
@@ -43,7 +47,7 @@ class Semester extends Model
     }
 
     /**
-     * Permet de récupére le semestre courant.
+     * Permet de récupérer le semestre courant.
      *
      * @param  string $currentYear
      * @param  string $currentMonth
@@ -52,22 +56,14 @@ class Semester extends Model
      */
     public static function getThisSemester(string $currentYear=null, string $currentMonth=null, string $currentDay=null)
     {
-        if ($currentYear === null) {
-            $currentYear = date('y');
-        }
-
-        if ($currentMonth === null) {
-            $currentMonth = date('m');
-        }
-
-        if ($currentDay === null) {
-            $currentDay = date('d');
-        }
+        $currentYear = $currentYear ?? date('y');
+        $currentMonth = $currentMonth ?? date('m');
+        $currentDay = $currentDay ?? date('d');
 
         $currentDate = $currentYear.'-'.$currentMonth.'-'.$currentDay;
 
-        $semester = self::whereDate('begining_at', '<=', $currentDate)
-          ->whereDate('ending_at', '>=', $currentDate)
+        $semester = self::whereDate('begin_at', '<=', $currentDate)
+          ->whereDate('end_at', '>=', $currentDate)
           ->first();
 
         if ($semester === null) {
@@ -77,6 +73,45 @@ class Semester extends Model
         }
 
         return $semester;
+    }
+
+    /**
+     * Permet de récupérer les semestres de cette année scolaire.
+     *
+     * @param  string $currentYear
+     * @param  string $currentMonth
+     * @param  string $currentDay
+     * @return array
+     */
+    public static function getThisYear(string $currentYear=null, string $currentMonth=null, string $currentDay=null)
+    {
+        $config = config('semester');
+        $currentYear = $currentYear ?? date('y');
+        $currentMonth = $currentMonth ?? date('m');
+        $currentDay = $currentDay ?? date('d');
+
+        $firstBegin = $config['begin_at'][0];
+        $firstEnd = $config['end_at'][0];
+
+        if (!static::isInTheSemester($firstBegin['month'], $firstEnd['month'], $currentMonth)) {
+            if ($currentMonth <= $firstBegin['month']) {
+                $currentYear--;
+            }
+
+            return static::getThisYear($currentYear, $firstBegin['month'], $firstBegin['day']);
+        }
+
+        $semesters = [];
+
+        foreach ($config['begin_at'] as $key => $semester) {
+            $semesters[] = static::getThisSemester($currentYear, $semester['month'], $semester['day']);
+
+            if ($semester['month'] > $config['end_at'][$key]['month']) {
+                $currentYear++;
+            }
+        }
+
+        return $semesters;
     }
 
     /**
@@ -92,11 +127,11 @@ class Semester extends Model
         $currentYear = (int) ($currentYear ?? date('y'));
         $currentMonth = ($currentMonth ?? date('m'));
 
-        foreach ($config['begining_at'] as $key => $value) {
+        foreach ($config['begin_at'] as $key => $value) {
             $beginingMonth = $value['month'];
-            $endingMonth = $config['ending_at'][$key]['month'];
+            $endingMonth = $config['end_at'][$key]['month'];
 
-            if (self::needToBeGenerated($beginingMonth, $endingMonth, $currentMonth)) {
+            if (self::isInTheSemester($beginingMonth, $endingMonth, $currentMonth)) {
                 if ($beginingMonth > $endingMonth && $currentMonth <= $endingMonth) {
                     $currentYear -= 1;
                 }
@@ -104,18 +139,18 @@ class Semester extends Model
                 $thisSemester = static::where('name', ($config['name'][$key]).$currentYear)->first();
 
                 if ($thisSemester === null) {
-                    $begin = $currentYear.'-'.($config['begining_at'][$key]['month']).'-';
-                    $begin .= ($config['begining_at'][$key]['day']).'-'.($config['begining_at'][$key]['time']);
+                    $begin = $currentYear.'-'.($config['begin_at'][$key]['month']).'-';
+                    $begin .= ($config['begin_at'][$key]['day']).'-'.($config['begin_at'][$key]['time']);
                     $end = ($beginingMonth > $endingMonth ? ($currentYear + 1) : $currentYear).'-';
-                    $end .= ($config['ending_at'][$key]['month']).'-'.($config['ending_at'][$key]['day']);
-                    $end .= '-'.($config['ending_at'][$key]['time']);
+                    $end .= ($config['end_at'][$key]['month']).'-'.($config['end_at'][$key]['day']);
+                    $end .= '-'.($config['end_at'][$key]['time']);
 
                     return self::create([
                         'name' => ($config['name'][$key]).$currentYear,
                         'is_spring' => $key,
                         'year' => $currentYear,
-                        'begining_at' => $begin,
-                        'ending_at' => $end,
+                        'begin_at' => $begin,
+                        'end_at' => $end,
                     ])->id;
                 } else {
                     return $thisSemester->id;
@@ -125,14 +160,14 @@ class Semester extends Model
     }
 
     /**
-     * Indique s'il est nécessaire de générer le semestre ou non en fonction du mois courant.
+     * Indique si le mois courant est dans le semestre.
      *
      * @param  string $beginingMonth
      * @param  string $endingMonth
      * @param  string $currentMonth
      * @return boolean
      */
-    protected static function needToBeGenerated(string $beginingMonth, string $endingMonth, string $currentMonth)
+    protected static function isInTheSemester(string $beginingMonth, string $endingMonth, string $currentMonth)
     {
         return ($beginingMonth <= $endingMonth && $beginingMonth <= $currentMonth && $currentMonth <= $endingMonth)
             || ($beginingMonth > $endingMonth && $beginingMonth <= $currentMonth && $currentMonth <= 12)

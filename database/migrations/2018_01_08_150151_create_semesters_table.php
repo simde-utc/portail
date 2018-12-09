@@ -19,9 +19,9 @@ class CreateSemestersTable extends Migration
             $table->boolean('is_spring')->default(0);
             $table->char('year', 2);
 
-            $table->timestamp('begining_at')->unique()->nullable();
+            $table->timestamp('begin_at')->unique()->nullable();
             // Le début du semestre
-            $table->timestamp('ending_at')->unique()->nullable();
+            $table->timestamp('end_at')->unique()->nullable();
             // La fin du semestre
             $table->timestamps();
         });

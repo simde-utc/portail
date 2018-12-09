@@ -12,7 +12,7 @@ class SemestersTableSeeder extends Seeder
      */
     public function run()
     {
-        $beginingMonths = config('semester.begining_at');
+        $beginingMonths = config('semester.begin_at');
 
         for ($startingYear = 11; $startingYear < date('y'); $startingYear) {
             foreach ($beginingMonths as $beginingMonth) {
