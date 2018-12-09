@@ -36,8 +36,7 @@ trait HasUsers
         if (\Scopes::isUserToken($request)) {
             if (is_null($user_id)) {
                 $user = \Auth::user();
-            }
-            else if (!$accessOtherUsers && $user->id !== \Auth::id()) {
+            } else if (!$accessOtherUsers && $user->id !== \Auth::id()) {
                 abort(403, 'Vous n\'avez pas le droit d\'accéder aux données d\'un autre utilisateur');
             }
         }

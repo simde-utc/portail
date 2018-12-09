@@ -19,8 +19,7 @@ class ApiTester extends BaseApiTester
     {
         if (is_null($user_id)) {
             $user = User::find(\Auth::guard('admin')->id());
-        }
-        else {
+        } else {
             if (\Uuid::validate($user_id)) {
                 $user = User::find($user_id);
             } else {

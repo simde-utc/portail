@@ -14,7 +14,8 @@ use Encore\Admin\Auth\Database\Menu as BaseMenu;
 
 class Menu extends BaseMenu
 {
-    public static function create($args) {
+    public static function create($args)
+    {
         if (in_array('title', $args)) {
             $menu = self::where('title', $args['title'])->first();
 

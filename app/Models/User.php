@@ -289,13 +289,13 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     /**
      * Retourne les types d'utilisateurs possible.
      *
-     * @return bool
+     * @return boolean
      */
     public function isType(string $type)
     {
-		$method = 'is'.ucfirst($type);
+        $method = 'is'.ucfirst($type);
 
-		return method_exists($this, $method) && $this->$method();
+        return method_exists($this, $method) && $this->$method();
     }
 
     /**

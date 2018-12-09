@@ -7,7 +7,8 @@ use App\Notifications\Notification;
 use App\Interfaces\Model\CanBeNotifiable;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class UserImpersonation extends Notification {
+class UserImpersonation extends Notification
+{
     protected $admin;
     protected $description;
     protected $asAdmin;

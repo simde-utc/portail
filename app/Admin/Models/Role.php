@@ -62,7 +62,7 @@ class Role extends BaseRole
      * Retrouve une role par son type.
      * TODO: Transformer en scope.
      *
-     * @param  string             $type
+     * @param  string       $type
      * @param  CanHaveRoles $owner
      * @return Role
      */

@@ -41,7 +41,8 @@ class Admin extends Administrator
      *
      * @return User
      */
-    public function getUser() {
+    public function getUser()
+    {
         return User::find($this->getKey());
     }
 
@@ -108,7 +109,7 @@ class Admin extends Administrator
      *
      * @param string $permission
      *
-     * @return bool
+     * @return boolean
      */
     public function can(string $permission): bool
     {
@@ -122,7 +123,7 @@ class Admin extends Administrator
     /**
      * Check if user is administrator.
      *
-     * @return bool
+     * @return boolean
      */
     public function isAdministrator(): bool
     {
@@ -135,7 +136,7 @@ class Admin extends Administrator
      *
      * @param string $role
      *
-     * @return bool
+     * @return boolean
      */
     public function isRole(string $role) : bool
     {
@@ -147,9 +148,9 @@ class Admin extends Administrator
      *
      * @param array $roles
      *
-     * @return bool
+     * @return boolean
      */
-    public function inRoles(array $roles = []) : bool
+    public function inRoles(array $roles=[]) : bool
     {
         return $this->getUser()->hasOneRole($roles);
     }
@@ -159,9 +160,9 @@ class Admin extends Administrator
      *
      * @param array $roles
      *
-     * @return bool
+     * @return boolean
      */
-    public function visible(array $roles = []) : bool
+    public function visible(array $roles=[]) : bool
     {
         if (empty($roles)) {
             return true;

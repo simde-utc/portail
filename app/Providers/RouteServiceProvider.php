@@ -135,7 +135,8 @@ class RouteServiceProvider extends ServiceProvider
             ->where('whatever', '.*');
     }
 
-    protected function mapAdminRoutes() {
+    protected function mapAdminRoutes()
+    {
         \Admin::registerAuthRoutes();
 
         Route::group([

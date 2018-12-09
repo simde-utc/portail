@@ -90,7 +90,7 @@ class ExampleController extends Controller
     /**
      * Make a show builder.
      *
-     * @param mixed   $id
+     * @param mixed $id
      * @return Show
      */
     protected function detail($id)

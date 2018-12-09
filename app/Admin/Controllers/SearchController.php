@@ -21,7 +21,8 @@ class SearchController extends Controller
 
     protected $limit;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->limit = config('admin.extensions.search.limit');
     }
 
@@ -59,7 +60,8 @@ class SearchController extends Controller
 
                 if ($field === 'loginCAS') {
                     $cas = AuthCas::where('login', 'LIKE', $value)->get(['user_id'])
-                        ->map(function ($cas) { return $cas->user_id; });
+                        ->map(function ($cas) { return $cas->user_id;
+                        });
 
                     $grid->model()->whereIn('id', $cas);
                 } else {

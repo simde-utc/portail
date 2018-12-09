@@ -20,7 +20,8 @@
 
 Encore\Admin\Form::forget(['map', 'editor']);
 
-function arrayToTable($data) {
+function arrayToTable($data)
+{
     $rows = [];
 
     foreach ($data as $key => $value) {
@@ -36,7 +37,8 @@ function arrayToTable($data) {
     return new Encore\Admin\Widgets\Table([], $rows);
 }
 
-function adminValue($value) {
+function adminValue($value)
+{
     if (is_array($value)) {
         return arrayToTable($value);
     } else if (is_bool($value)) {

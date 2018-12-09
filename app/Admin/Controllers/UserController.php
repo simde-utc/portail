@@ -217,7 +217,7 @@ class UserController extends Controller
      * Permet de devenir quelqu'un d'autre.
      *
      * @param Request $request
-     * @param string $user_id
+     * @param string  $user_id
      * @return mixed
      */
     public function impersonate(Request $request, string $user_id)
@@ -262,7 +262,7 @@ class UserController extends Controller
      * Permet de faire cotiser.
      *
      * @param Request $request
-     * @param string $user_id
+     * @param string  $user_id
      * @return mixed
      */
     public function contributeBde(Request $request, string $user_id)

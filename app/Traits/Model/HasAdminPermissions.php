@@ -31,7 +31,7 @@ trait HasAdminPermissions
      *
      * @param $permission
      *
-     * @return bool
+     * @return boolean
      */
     public function can(string $permission) : bool
     {
@@ -71,7 +71,7 @@ trait HasAdminPermissions
      *
      * @return mixed
      */
-    public function inRoles(array $roles = []) : bool
+    public function inRoles(array $roles=[]) : bool
     {
         return $this->hasOneRole($roles);
     }
@@ -81,9 +81,9 @@ trait HasAdminPermissions
      *
      * @param $roles
      *
-     * @return bool
+     * @return boolean
      */
-    public function visible(array $roles = []) : bool
+    public function visible(array $roles=[]) : bool
     {
         if (empty($roles)) {
             return true;

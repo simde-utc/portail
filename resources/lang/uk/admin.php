@@ -96,7 +96,7 @@ return [
         'text_empty'        => 'Пустий список',
         'filtered'          => '{0} / {1}',
         'filter_clear'      => 'Показати все',
-        'filter_placeholder'=> 'Фільтр',
+        'filter_placeholder' => 'Фільтр',
     ],
     'menu_titles'           => [],
 ];

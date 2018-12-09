@@ -10,7 +10,7 @@ $menuModel::create([
     'title'     => 'Rechercher',
     'icon'      => 'fa-search',
     'uri'       => 'search',
-    'permission'=> 'search'
+    'permission' => 'search',
 ]);
 
 $menuModel::create([
@@ -19,7 +19,7 @@ $menuModel::create([
     'title'     => 'Utilisateurs',
     'icon'      => 'fa-users',
     'uri'       => 'users',
-    'permission'=> 'user'
+    'permission' => 'user',
 ]);
 
 App\Admin\Extensions\ApiTester::import();

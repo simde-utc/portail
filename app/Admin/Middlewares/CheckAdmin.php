@@ -12,8 +12,8 @@ class CheckAdmin
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param Closure                 $next
-     * @param array                    $args
+     * @param Closure $next
+     * @param array   $args
      * @return mixed
      */
     public function handle(Request $request, \Closure $next, ...$args)

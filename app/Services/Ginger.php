@@ -144,7 +144,7 @@ class Ginger
      * @param  string $login
      * @return array
      */
-    public function getContributions(string $login = null)
+    public function getContributions(string $login=null)
     {
         if (!$this->get()) {
             if ($login) {
@@ -181,17 +181,19 @@ class Ginger
             [
                 'debut' => $begin,
                 'fin' => $end,
-                'montant' => $money
+                'montant' => $money,
             ]
         );
 
         return $this->parseContribution($response->content);
     }
 
-    protected function parseContribution($contribution = null) {
+    protected function parseContribution($contribution=null)
+    {
         if ($contribution) {
             return new class($contribution) {
-                public function __construct($contribution) {
+                public function __construct($contribution)
+                {
                     $this->id = $contribution->id ?? null;
                     $this->begin_at = $contribution->debut ?? null;
                     $this->end_at = $contribution->fin ?? null;

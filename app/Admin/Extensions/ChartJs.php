@@ -14,7 +14,7 @@ class ChartJs extends BaseChartJs
     protected static function registerRoutes()
     {
         parent::routes(function ($router) {
-            /* @var \Illuminate\Routing\Router $router */
+            // @var \Illuminate\Routing\Router $router
             $router->get('charts', 'App\Admin\Controllers\ChartJsController@index')->name('charts-index');
         });
     }

@@ -5,10 +5,10 @@ $(function () {
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: <?= json_encode(array_keys($data)) ?>,
+            labels: <?php echo json_encode(array_keys($data)) ?>,
             datasets: [{
                 label: 'Nombre d\'utilisateurs cumulé',
-                data: <?= json_encode(array_values($data)) ?>,
+                data: <?php echo json_encode(array_values($data)) ?>,
                 backgroundColor: '#35F',
                 borderColor: '#35F',
                 borderWidth: 1

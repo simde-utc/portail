@@ -56,9 +56,9 @@ class Semester extends Model
      */
     public static function getThisSemester(string $currentYear=null, string $currentMonth=null, string $currentDay=null)
     {
-        $currentYear = $currentYear ?? date('y');
-        $currentMonth = $currentMonth ?? date('m');
-        $currentDay = $currentDay ?? date('d');
+        $currentYear = ($currentYear ?? date('y'));
+        $currentMonth = ($currentMonth ?? date('m'));
+        $currentDay = ($currentDay ?? date('d'));
 
         $currentDate = $currentYear.'-'.$currentMonth.'-'.$currentDay;
 
@@ -86,9 +86,9 @@ class Semester extends Model
     public static function getThisYear(string $currentYear=null, string $currentMonth=null, string $currentDay=null)
     {
         $config = config('semester');
-        $currentYear = $currentYear ?? date('y');
-        $currentMonth = $currentMonth ?? date('m');
-        $currentDay = $currentDay ?? date('d');
+        $currentYear = ($currentYear ?? date('y'));
+        $currentMonth = ($currentMonth ?? date('m'));
+        $currentDay = ($currentDay ?? date('d'));
 
         $firstBegin = $config['begin_at'][0];
         $firstEnd = $config['end_at'][0];

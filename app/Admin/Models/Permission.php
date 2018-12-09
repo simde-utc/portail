@@ -74,7 +74,8 @@ class Permission extends BasePermission
         return $permissions->first();
     }
 
-    public static function pluck(string ...$names) {
+    public static function pluck(string ...$names)
+    {
         if (($key = array_search('slug', $names)) !== false) {
             unset($names[$key]);
         }

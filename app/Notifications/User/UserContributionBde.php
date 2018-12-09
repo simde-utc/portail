@@ -7,7 +7,8 @@ use App\Notifications\Notification;
 use App\Interfaces\Model\CanBeNotifiable;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class UserContributionBde extends Notification {
+class UserContributionBde extends Notification
+{
     protected $semesters;
     protected $money;
     protected $admin;
@@ -15,7 +16,7 @@ class UserContributionBde extends Notification {
     /**
      * Déclare le type de notification.
      */
-    public function __construct(array $semesters, int $money, Admin $admin = null)
+    public function __construct(array $semesters, int $money, Admin $admin=null)
     {
         $this->semesters = collect($semesters);
         $this->money = $money;
@@ -35,7 +36,8 @@ class UserContributionBde extends Notification {
         return 'Cotisation BDE pour l\'année '.$this->getSemestersName();
     }
 
-    protected function getSemestersName() {
+    protected function getSemestersName()
+    {
         return implode($this->semesters->pluck('name')->toArray(), '-');
     }
 
