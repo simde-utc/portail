@@ -38,7 +38,7 @@ class RolesTableSeeder extends Seeder
                     'access',
                     'search',
                     'user-impersonate',
-                    'user-contributeBDE',
+                    'user-contributeBde',
                 ],
             ],
             [
@@ -63,7 +63,7 @@ class RolesTableSeeder extends Seeder
                     'access',
                     'search',
                     'user-impersonate',
-                    'user-contributeBDE',
+                    'user-contributeBde',
                 ],
             ],
             [

@@ -53,7 +53,7 @@ Raisons:
 {$this->description}
 
 
-Si l'opération n'a pas été demandée, veuillez le signaler.
+Si l'opération n'est pas désirée, veuillez le signaler.
 CONTENT;
     }
 }

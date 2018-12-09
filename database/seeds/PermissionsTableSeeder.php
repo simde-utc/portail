@@ -215,7 +215,7 @@ class PermissionsTableSeeder extends Seeder
                 'owned_by' => new User,
             ],
             [
-                'type' => 'user-contributeBDE',
+                'type' => 'user-contributeBde',
                 'name' => 'Cotisation BDE',
                 'description' => 'Gestion de la cotisation BDE',
                 'owned_by' => new User,

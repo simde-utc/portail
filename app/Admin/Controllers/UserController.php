@@ -18,6 +18,8 @@ use App\Models\{
 use App\Notifications\Admin\{
     AdminImpersonation, UserImpersonation
 };
+use App\Notifications\User\UserContributionBde;
+use App\Models\Semester;
 
 class UserController extends Controller
 {
@@ -106,6 +108,66 @@ class UserController extends Controller
 
         $generateLeft = function (Column $column) use ($user, $image) {
             $column->row($image);
+
+            if (\Auth::guard('admin')->user()->can('user-contributeBde')) {
+                $ginger = \Ginger::userByEmail($user->email);
+                $contributeBde = new Show($user);
+                $contributeBde->login(' ')->unescape()->as(function () use ($ginger) {
+                    return 'Login: '.adminValue($ginger->getLogin());
+                });
+                $contributeBde->contributerType(' ')->unescape()->as(function () use ($ginger) {
+                    return 'Type: '.adminValue($ginger->getType());
+                });
+                $contributeBde->major(' ')->unescape()->as(function () use ($ginger) {
+                    return 'Majeur: '.adminValue($ginger->isAdult());
+                });
+                $contributeBde->contributor(' ')->unescape()->as(function () use ($ginger) {
+                    return 'Cotisant: '.adminValue($ginger->isContributor());
+                });
+                $contributeBde->divider();
+
+                $contributions = [];
+
+                foreach (array_reverse($ginger->getContributions()) as $contribution) {
+                    $semesters = Semester::whereDate('begin_at', '<', $contribution->end_at)
+                        ->whereDate('end_at', '>', $contribution->begin_at)
+                        ->orderBy('begin_at')->get(['name']);
+
+                    $name = implode($semesters->pluck('name')->toArray(), '-');
+
+                    if (!isset($contributions[$name])) {
+                        $contributions[$name] = [];
+                    }
+
+                    $contributions[$name][] = [
+                        'début' => $contribution->begin_at,
+                        'fin' => $contribution->end_at,
+                        'montant' => $contribution->money.'€',
+                    ];
+                }
+
+                foreach ($contributions as $key => $value) {
+                    $contributeBde->$key($key)->unescape()->as(function () use ($value) {
+                        return adminValue($value);
+                    });
+                }
+
+                $contributeBde->panel()
+                    ->title('Cotisation BDE')
+                    ->tools(function ($tools) use ($user, $ginger) {
+                        $tools->disableEdit();
+                        $tools->disableList();
+                        $tools->disableDelete();
+
+                        if ($ginger->isContributor()) {
+                            $tools->prepend(view('admin.users.contributeBde.delete', ['user' => $user]));
+                        } else {
+                            $tools->prepend(view('admin.users.contributeBde.create', ['user' => $user]));
+                        }
+                    });
+
+                $column->row($contributeBde);
+            }
         };
 
         $generateRight = function (Column $column) use ($user, $details) {
@@ -152,9 +214,10 @@ class UserController extends Controller
     }
 
     /**
-     * Index interface.
+     * Permet de devenir quelqu'un d'autre.
      *
      * @param Request $request
+     * @param string $user_id
      * @return mixed
      */
     public function impersonate(Request $request, string $user_id)
@@ -181,17 +244,62 @@ class UserController extends Controller
             );
         }
 
-        // Envoi de la notification pour confirmer le changement
+        // Création de la notification pour confirmer le changement
         $userNotification = new UserImpersonation($admin, $request->input('description'), (bool) $request->input('admin'));
-
-        $user->notify($userNotification);
-
-        \Auth::guard('web')->login($user);
 
         if ($request->input('admin')) {
             \Auth::guard('admin')->login(\App\Admin\Models\Admin::find($user->id));
         }
 
+        \Auth::guard('web')->login($user);
+
+        $user->notify($userNotification);
+
         return redirect('/');
+    }
+
+    /**
+     * Permet de faire cotiser.
+     *
+     * @param Request $request
+     * @param string $user_id
+     * @return mixed
+     */
+    public function contributeBde(Request $request, string $user_id)
+    {
+        if ((!$request->filled('money') && !$request->filled('custom')) || !\Auth::guard('admin')->user()->can('user-contributeBde')) {
+            return redirect()->action(
+                '\App\Admin\Controllers\UserController@show', ['user_id' => $user_id]
+            );
+        }
+
+        try {
+            $user = $this->getUser($request, $user_id, true);
+        } catch (\Exception $e) {
+            return redirect()->action(
+                '\App\Admin\Controllers\UserController@index'
+            );
+        }
+
+        $ginger = \Ginger::userByEmail($user->email);
+
+        if (!$ginger->exists() || $user->isContributorBde()) {
+            return redirect()->action(
+                '\App\Admin\Controllers\UserController@show', ['user_id' => $user_id]
+            );
+        }
+
+        $semesters = Semester::getThisYear();
+        $money = $request->input('money') ?: $request->input('custom');
+
+        // Création de la notification de confirmation de cotisation.
+        $userNotification = new UserContributionBde($semesters, $money, \Auth::guard('admin')->user());
+        $ginger->addContribution(now()->format('Y-m-d'), end($semesters)->end_at->format('Y-m-d'), $money);
+
+        $user->notify($userNotification);
+
+        return redirect()->action(
+            '\App\Admin\Controllers\UserController@show', ['user_id' => $user_id]
+        );
     }
 }

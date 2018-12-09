@@ -16,3 +16,4 @@ Route::get('search/{user_id}', 'SearchController@show')->name('search-show');
 Route::get('users/', 'UserController@index')->name('users-index');
 Route::get('users/{user_id}', 'UserController@show')->name('users-show');
 Route::post('users/{user_id}/impersonate', 'UserController@impersonate')->name('users-impersonate');
+Route::post('users/{user_id}/contributeBde', 'UserController@contributeBde')->name('users-contributeBde');

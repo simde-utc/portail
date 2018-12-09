@@ -16,12 +16,13 @@
 
           <div class="modal-body">
             <p>Voulez-vous vraiment devenir {{ $user->name }} (email: {{ $user->email }}) ?<br />
-            Ceci enverra une notification à la personne et à tous les admins</p>
+            Ceci enverra une notification à la personne concernée.</p>
             <input type="checkbox" id="admin" name="admin" /> <label for="admin">Se connecter aussi en interface admin</label><br />
             <br/>
-            <p>Raisons:</p>
-
-            <textarea style="width: 100%" rows="2" name="description" required></textarea>
+            <div class="col-md-offset-3">
+                <p>Raisons:</p>
+                <textarea style="width: 100%" rows="2" name="description" required></textarea>
+            </div>
           </div>
 
           <div class="modal-footer">
