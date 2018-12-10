@@ -73,7 +73,7 @@ class AdminMenuTableSeeder extends Seeder
                 'parent_id' => $parent_id,
                 'title' => $menu['title'],
                 'uri' => $menu['uri'],
-                'icon' => ($menu['icon'] ?? 'fa-').$menu['uri'],
+                'icon' => ($menu['icon'] ?? 'fa-'.$menu['uri']),
                 'permission' => ($menu['permission'] ?? $menu['uri']),
             ])->id;
 
