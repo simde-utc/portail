@@ -216,12 +216,12 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         $channels = $this->preferences()->valueOf('NOTIFICATION_CHANNELS');
 
         if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_EMAIL_AVOID'))
-        && ($key = array_search('mail', $channels)) !== false) {
+        	&& ($key = array_search('mail', $channels)) !== false) {
             unset($channels[$key]);
         }
 
         if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_PUSH_AVOID'))
-        && ($key = array_search('push', $channels)) !== false) {
+        	&& ($key = array_search('push', $channels)) !== false) {
             unset($channels[$key]);
         }
 

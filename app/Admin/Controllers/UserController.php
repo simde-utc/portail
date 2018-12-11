@@ -28,6 +28,7 @@ use App\Notifications\Admin\{
 };
 use App\Notifications\User\UserContributionBde;
 use App\Models\Semester;
+use App\Admin\GridGenerator;
 
 class UserController extends Controller
 {
@@ -41,21 +42,18 @@ class UserController extends Controller
      */
     public function index(Content $content)
     {
-        $grid = new Grid(new User());
+        $grid = new GridGenerator(User::class);
 
-        $grid->id()->sortable();
-        $grid->email()->sortable();
-        $grid->firstname()->sortable();
-        $grid->lastname()->sortable();
-        $grid->last_login_at()->sortable();
-        $grid->created_at()->sortable();
-        $grid->updated_at()->sortable();
+        $grid->addFields([
+            'id', 'email', 'firstname', 'lastname', 'last_login_at', 'created_at', 'updated_at'
+        ]);
+
         $grid->types()->display(function () {
             $badges = '';
 
-            foreach ($this->getTypes() as $type) {
+            foreach ($this->getTypeDescriptions() as $type => $description) {
                 if ($this->isType($type)) {
-                    $badges .= '<span class="badge">'.$type.'</span>';
+                    $badges .= '<span class="badge">'.$description.'</span>';
                 }
             }
 
@@ -78,7 +76,7 @@ class UserController extends Controller
         return $content
             ->header('Liste des utilisateurs')
             ->description('Affiche les derniers utilisateurs par défaut')
-            ->body($grid);
+            ->body($grid->get());
     }
 
     /**
@@ -112,9 +110,9 @@ class UserController extends Controller
         $details->types()->unescape()->as(function () {
             $badges = '';
 
-            foreach ($this->getTypes() as $type) {
+            foreach ($this->getTypeDescriptions() as $type => $description) {
                 if ($this->isType($type)) {
-                    $badges .= '<span class="badge">'.$type.'</span>';
+                    $badges .= '<span class="badge">'.$description.'</span>';
                 }
             }
 
@@ -153,16 +151,16 @@ class UserController extends Controller
             $ginger = \Ginger::userByEmail($user->email);
             $contributeBde = new Show($user);
             $contributeBde->login(' ')->unescape()->as(function () use ($ginger) {
-                return 'Login: '.adminValue($ginger->getLogin());
+                return 'Login: '.GridGenerator::adminValue($ginger->getLogin());
             });
             $contributeBde->contributerType(' ')->unescape()->as(function () use ($ginger) {
-                return 'Type: '.adminValue($ginger->getType());
+                return 'Type: '.GridGenerator::adminValue($ginger->getType());
             });
             $contributeBde->major(' ')->unescape()->as(function () use ($ginger) {
-                return 'Majeur: '.adminValue($ginger->isAdult());
+                return 'Majeur: '.GridGenerator::adminValue($ginger->isAdult());
             });
             $contributeBde->contributor(' ')->unescape()->as(function () use ($ginger) {
-                return 'Cotisant: '.adminValue($ginger->isContributor());
+                return 'Cotisant: '.GridGenerator::adminValue($ginger->isContributor());
             });
             $contributeBde->divider();
 
@@ -188,7 +186,7 @@ class UserController extends Controller
 
             foreach ($contributions as $key => $value) {
                 $contributeBde->$key($key)->unescape()->as(function () use ($value) {
-                    return adminValue($value);
+                    return GridGenerator::adminValue($value);
                 });
             }
 
@@ -236,10 +234,10 @@ class UserController extends Controller
 
             $info = new Show($user);
             $info->details()->unescape()->as(function () {
-                return arrayToTable($this->details()->allToArray());
+                return GridGenerator::arrayToTable($this->details()->allToArray());
             });
             $info->preferences()->unescape()->as(function () {
-                return arrayToTable($this->preferences()->allToArray());
+                return GridGenerator::arrayToTable($this->preferences()->allToArray());
             });
 
             $info->panel()
