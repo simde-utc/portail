@@ -11,10 +11,12 @@ abstract class Generator
 {
     protected $model;
     protected $generated;
+    protected $generatedModel;
 
     public function __construct(string $generated, string $model) {
         $this->model = $model;
-        $this->generated = new $generated(new $model);
+        $this->generatedModel = new $model;
+        $this->generated = new $generated($this->generatedModel);
     }
 
     public function get() {
@@ -52,21 +54,16 @@ abstract class Generator
      */
     public static function adminValue($value, $field = null, $model = null)
     {
-        if ($value instanceof Model) {
-        }
-
         if (is_array($value)) {
             if ($model) {
-                $instance = new $model;
-                $relation = $instance->$field();
+                $relation = (new $model)->$field();
 
                 if ($relation instanceof Relation) {
-                    $lastValue = $value;
-                    $value = [];
+                    $must = $relation->getModel()->getMustFields();
 
-                    foreach ($instance->getMustFields() as $key) {
-                        if (isset($lastValue[$key])) {
-                            $value[$key] = $lastValue[$key];
+                    foreach (array_keys($value) as $key) {
+                        if (!in_array($key, $must)) {
+                            unset($value[$key]);
                         }
                     }
                 }
@@ -80,12 +77,16 @@ abstract class Generator
         }
 
         try {
+            $date = new \Carbon\Carbon($value);
+
+            return $date->format('d/m/Y à H:m');
+        } catch (\Exception $e) {}
+
+        try {
             if (is_array($array = json_decode($value, true))) {
                 return Generator::arrayToTable($array);
             }
-        } catch (\Exception $e) {
-            return $value;
-        }
+        } catch (\Exception $e) {}
 
         return $value;
     }
@@ -93,15 +94,20 @@ abstract class Generator
     abstract protected function callCustomMethods($field);
 
     public function addFields(array $fields) {
-        $model = $this->model;
-
         foreach ($fields as $field) {
-            $fields[$field] = $this->callCustomMethods($this->generated->$field())->display(function ($value) use ($field, $model) {
-                return Generator::adminValue($value, $field, $model);
-            });
+            $this->generateField($field);
         }
 
         return $this;
+    }
+
+    protected function generateField($field) {
+        $model = $this->model;
+
+        $this->callCustomMethods($this->generated->$field())
+            ->{$this->valueMethod}(function ($value) use ($field, $model) {
+                return Generator::adminValue($value, $field, $model);
+            });
     }
 
     public function __call($method, $args)
