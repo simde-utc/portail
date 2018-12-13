@@ -18,9 +18,23 @@ class AdminMenuTableSeeder extends Seeder
                 'uri' => 'search',
             ],
             [
-                'title' => 'Utilisateurs',
-                'uri' => 'users',
-                'permission' => 'user',
+                'title' => 'Données',
+                'permission' => 'admin',
+                'uri' => '',
+                'icon' => 'fa-database',
+                'elements' => [
+                    [
+                        'title' => 'Utilisateurs',
+                        'uri' => 'users',
+                        'permission' => 'user',
+                    ],
+                    [
+                        'title' => 'Clients OAuth',
+                        'uri' => 'clients',
+                        'permission' => 'client',
+                        'icon' => 'fa-fire',
+                    ],
+                ]
             ],
             [
                 'title' => 'Administration',
@@ -44,7 +58,7 @@ class AdminMenuTableSeeder extends Seeder
                         'title' => 'Logs',
                         'uri' => 'logs',
                         'permission' => 'admin',
-                        'icon' => 'fa-database'
+                        'icon' => 'fa-eye'
                     ],
                     [
                         'title' => 'Tester l\'Api',
@@ -73,7 +87,7 @@ class AdminMenuTableSeeder extends Seeder
                 'parent_id' => $parent_id,
                 'title' => $menu['title'],
                 'uri' => $menu['uri'],
-                'icon' => ($menu['icon'] ?? 'fa-').$menu['uri'],
+                'icon' => ($menu['icon'] ?? 'fa-'.$menu['uri']),
                 'permission' => ($menu['permission'] ?? $menu['uri']),
             ])->id;
 

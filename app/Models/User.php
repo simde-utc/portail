@@ -129,7 +129,12 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     ];
 
     protected $types = [
-        'admin', 'contributorBde', 'casConfirmed', 'cas', 'password', 'active',
+        'admin' => 'administrateur',
+        'contributorBde' => 'contributeur BDE',
+        'casConfirmed' => 'membre UTC ou ESCOM',
+        'cas' => 'avec connexion CAS',
+        'password' => 'avec connexion email/mot de passe',
+        'active' => 'compte actif',
     ];
 
     protected $selection = [
@@ -211,12 +216,12 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         $channels = $this->preferences()->valueOf('NOTIFICATION_CHANNELS');
 
         if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_EMAIL_AVOID'))
-        && ($key = array_search('mail', $channels)) !== false) {
+        	&& ($key = array_search('mail', $channels)) !== false) {
             unset($channels[$key]);
         }
 
         if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_PUSH_AVOID'))
-        && ($key = array_search('push', $channels)) !== false) {
+        	&& ($key = array_search('push', $channels)) !== false) {
             unset($channels[$key]);
         }
 
@@ -283,6 +288,16 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
      */
     public function getTypes()
     {
+        return array_keys($this->types);
+    }
+
+    /**
+     * Retourne les types d'utilisateurs possible avec leur description.
+     *
+     * @return array
+     */
+    public function getTypeDescriptions()
+    {
         return $this->types;
     }
 
@@ -306,7 +321,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
      */
     public function type()
     {
-        foreach ($this->types as $type) {
+        foreach ($this->getTypes() as $type) {
             $method = 'is'.ucfirst($type);
 
             if (method_exists($this, $method) && $this->$method()) {

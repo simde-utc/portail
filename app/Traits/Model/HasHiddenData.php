@@ -25,6 +25,20 @@ trait HasHiddenData
     }
 
     /**
+     * Retourne la liste des champs obligatoires.
+     *
+     * @return array
+     */
+    public function getMustFields()
+    {
+        return array_merge(
+            ($this->optional ?? []),
+            ($this->must ?? []),
+            ['id', 'name', 'model', 'pivot']
+        );
+    }
+
+    /**
      * Cette méthode permet de cacher automatiquement des données des sous-modèles pour le retour json.
      *
      * @param boolean $addSubModelName
@@ -69,9 +83,7 @@ trait HasHiddenData
     {
         $this->makeHidden(array_diff(
             array_keys($this->toArray()),
-            ($this->optional ?? []),
-            ($this->must ?? []),
-            ['id', 'name', 'model', 'pivot']
+            $this->getMustFields()
             // On affiche au moins l'id, le nom et le modèle !
         ));
 

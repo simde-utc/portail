@@ -47,7 +47,11 @@ class UserIs
                 }
             }
 
-            throw new AuthorizationException('L\'utilisateur n\'est d\'aucun type: '.implode(', ', $args));
+            $descriptions = array_map(function ($type) {
+                return \Auth::user()->getTypeDescriptions()[$type];
+            }, $args);
+
+            throw new AuthorizationException('L\'utilisateur n\'est d\'aucun type: '.implode(', ', $descriptions));
         }
 
         return $next($request);
