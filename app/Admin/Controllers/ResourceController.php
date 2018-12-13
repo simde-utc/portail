@@ -1,4 +1,12 @@
 <?php
+/**
+ * Génère une gestion d'une ressource admin.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Admin\Controllers;
 
@@ -16,17 +24,42 @@ abstract class ResourceController extends Controller
 {
     use HasResourceActions;
 
+    /**
+     * Modèle de la ressource.
+     *
+     * @var string
+     */
     protected $model;
 
+    /**
+     * Définition des champs à afficher.
+     *
+     * @return array
+     */
     abstract protected function getFields(): array;
-    abstract protected function getDefaults(): array;
 
+    /**
+     * Définition des valeurs par défaut champs à afficher.
+     *
+     * @return array
+     */
+    protected function getDefaults(): array
+    {
+        return [];
+    }
+
+    /**
+     * Retourne les dépendances.
+     *
+     * @return array
+     */
     protected function getWith(): array
     {
         return [];
     }
+
     /**
-     * Index interface.
+     * Interface d'affichage global.
      *
      * @param Content $content
      * @return Content
@@ -44,7 +77,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Show interface.
+     * Montre une instance.
      *
      * @param mixed   $model_id
      * @param Content $content
@@ -63,7 +96,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Edit interface.
+     * Modifie une instance.
      *
      * @param mixed   $model_id
      * @param Content $content
@@ -78,7 +111,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Create interface.
+     * Crée une nouvelle instance.
      *
      * @param Content $content
      * @return Content
@@ -90,8 +123,9 @@ abstract class ResourceController extends Controller
             ->description('description')
             ->body($this->form());
     }
+
     /**
-     * Make a form builder.
+     * Créer le formulaire de base.
      *
      * @return Form
      */

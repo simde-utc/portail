@@ -24,7 +24,13 @@ trait HasHiddenData
         return \ModelResolver::getNameFromObject($this);
     }
 
-    public function getMustFields() {
+    /**
+     * Retourne la liste des champs obligatoires.
+     *
+     * @return array
+     */
+    public function getMustFields()
+    {
         return array_merge(
             ($this->optional ?? []),
             ($this->must ?? []),

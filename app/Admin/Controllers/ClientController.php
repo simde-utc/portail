@@ -1,4 +1,12 @@
 <?php
+/**
+ * Gère en admin les clients.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Admin\Controllers;
 
@@ -10,6 +18,11 @@ class ClientController extends ResourceController
 {
     protected $model = Client::class;
 
+    /**
+     * Définition des champs à afficher.
+     *
+     * @return array
+     */
     protected function getFields(): array
     {
         return [
@@ -27,13 +40,23 @@ class ClientController extends ResourceController
         ];
     }
 
+    /**
+     * Définition des valeurs par défaut champs à afficher.
+     *
+     * @return array
+     */
     protected function getDefaults(): array
     {
         return [
-            'user_id' => \Auth::guard('admin')->id()
+            'user_id' => \Auth::guard('admin')->id(),
         ];
     }
 
+    /**
+     * Retourne les dépendances.
+     *
+     * @return array
+     */
     protected function getWith(): array
     {
         return [

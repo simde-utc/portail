@@ -1,4 +1,12 @@
 <?php
+/**
+ * Génère une présentation admin.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 namespace App\Admin;
 
@@ -8,22 +16,49 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 class ShowGenerator extends Generator
 {
-    public $valueMethod = 'as';
+    /**
+     * Méthode correspondante à l'admin (qui change en fonction du type de formulaire...).
+     *
+     * @var string
+     */
+    protected $valueMethod = 'as';
 
-    public function __construct($model) {
+    /**
+     * Crée la présentation avec notre model
+     *
+     * @param mixed $model Modèle de la ressource à manipuler.
+     */
+    public function __construct($model)
+    {
         $this->model = get_class($model);
         $this->generatedModel = $model;
         $this->generated = new Show($model);
     }
 
-    protected function callCustomMethods($field) {
+    /**
+     * Indique qu'on peut afficher en html nos infos.
+     *
+     * @param  mixed $field
+     * @return mixed
+     */
+    protected function callCustomMethods($field)
+    {
         return $field->unescape();
     }
 
-    protected function generateField($field) {
-        if (method_exists($this->generatedModel, $field) && (($relation = $this->generatedModel->$field()) instanceof Relation)) {
+    /**
+     * Génère un nouveau champ et les champs liés.
+     *
+     * @param  string $field
+     * @return void
+     */
+    protected function generateField(string $field)
+    {
+        if (method_exists($this->generatedModel, $field)
+            && (($relation = $this->generatedModel->$field()) instanceof Relation)) {
             $must = $relation->getModel()->getMustFields();
             $resource = Str::plural($relation->getModel());
+
             $this->generated->$field($field, function ($value) use ($must, $resource) {
                 $value->setResource('/admin/'.$resource);
 
@@ -34,8 +69,7 @@ class ShowGenerator extends Generator
                         });
                 }
             });
-        }
-        else {
+        } else {
             parent::generateField($field);
         }
     }
