@@ -36,6 +36,16 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     ];
 
     /**
+     * Relation avec l'utilisateur.
+     *
+     * @return mixed
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
      * Relation avec l'association.
      *
      * @return mixed

@@ -28,7 +28,9 @@ use App\Notifications\Admin\{
 };
 use App\Notifications\User\UserContributionBde;
 use App\Models\Semester;
-use App\Admin\GridGenerator;
+use App\Admin\{
+    GridGenerator, ShowGenerator
+};
 
 class UserController extends Controller
 {
@@ -99,14 +101,12 @@ class UserController extends Controller
                 $tools->disableDelete();
             });
 
-        $details = new Show($user);
-        $details->id();
-        $details->email();
-        $details->firstname();
-        $details->lastname();
-        $details->last_login_at();
-        $details->created_at();
-        $details->updated_at();
+        $details = new ShowGenerator($user);
+
+        $details->addFields([
+            'id', 'email', 'firstname', 'lastname', 'last_login_at', 'created_at', 'updated_at'
+        ]);
+
         $details->types()->unescape()->as(function () {
             $badges = '';
 
@@ -123,7 +123,7 @@ class UserController extends Controller
             return $this->generateLeft($column, $user, $image);
         };
         $generateRight = function (Column $column) use ($user, $details) {
-            $this->generateRight($column, $user, $details);
+            $this->generateRight($column, $user, $details->get());
         };
 
         return $content
