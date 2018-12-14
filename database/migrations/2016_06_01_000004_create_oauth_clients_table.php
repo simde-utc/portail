@@ -19,9 +19,10 @@ class CreateOauthClientsTable extends Migration
             $table->uuid('asso_id')->nullable();
             $table->string('name');
             $table->string('secret', 100);
-            $table->text('redirect');
+            $table->string('redirect');
+            // Scopes définis pour le client credential.
             $table->text('scopes')->nullable();
-            // Scopes définis pour le client credential
+            $table->string('targeted_types')->nullable();
             $table->boolean('personal_access_client');
             $table->boolean('password_client');
             $table->boolean('revoked');

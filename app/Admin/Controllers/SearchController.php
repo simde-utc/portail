@@ -107,9 +107,9 @@ class SearchController extends Controller
         $grid->types()->display(function () {
             $badges = '';
 
-            foreach ($this->getTypes() as $type) {
+            foreach ($this->getTypeDescriptions() as $type => $description) {
                 if ($this->isType($type)) {
-                    $badges .= '<span class="badge">'.$type.'</span>';
+                    $badges .= '<span class="badge">'.$description.'</span>';
                 }
             }
 

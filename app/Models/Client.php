@@ -26,14 +26,24 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     public $incrementing = false;
 
     protected $fillable = [
-        'user_id', 'asso_id', 'name', 'secret', 'redirect', 'personal_access_client', 'password_client',
-        'revoked', 'created_at', 'updated_at', 'scopes'
+        'user_id', 'asso_id', 'name', 'secret', 'redirect', 'targeted_types',
+        'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'scopes'
     ];
 
     protected $selection = [
         'paginate' => null,
         'filter' => [],
     ];
+
+    /**
+     * Relation avec l'utilisateur.
+     *
+     * @return mixed
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Relation avec l'association.
