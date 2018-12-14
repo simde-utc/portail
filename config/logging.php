@@ -15,7 +15,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['daily'],
         ],
 
         'single' => [
@@ -29,6 +29,12 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
             'days' => 7,
+        ],
+
+        'admin' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/admin.log'),
+            'level' => 'debug',
         ],
 
         'slack' => [
