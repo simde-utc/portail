@@ -17,7 +17,6 @@ export default class Calendar extends React.Component {
 	}
 
 	getEvents(events) {
-		console.table(events);
 		if (events && events.length > 0) {
 			return events.map(eventToMap => ({
 				id: eventToMap.id,
