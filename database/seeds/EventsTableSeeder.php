@@ -107,7 +107,7 @@ class EventsTableSeeder extends Seeder
                     ],
                 ],
             ],
-		];
+        ];
 
         foreach ($events as $event) {
             $model = Event::create([
