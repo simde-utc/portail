@@ -288,10 +288,6 @@ class UserController extends Controller
         // Création de la notification pour confirmer le changement.
         $userNotification = new UserImpersonation($admin, $request->input('description'), (bool) $request->input('admin'));
 
-        if ($request->input('admin')) {
-            \Auth::guard('admin')->login(\App\Admin\Models\Admin::find($user->id));
-        }
-
         \Auth::guard('web')->login($user);
 
         $user->notify($userNotification);

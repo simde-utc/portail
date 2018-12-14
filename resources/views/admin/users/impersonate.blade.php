@@ -17,7 +17,6 @@
           <div class="modal-body">
             <p>Voulez-vous vraiment devenir {{ $user->name }} (email: {{ $user->email }}) ?<br />
             Ceci enverra une notification à la personne concernée.</p>
-            <input type="checkbox" id="admin" name="admin" /> <label for="admin">Se connecter aussi en interface admin</label><br />
             <br/>
             <div class="col-md-offset-3">
                 <p>Raisons:</p>
