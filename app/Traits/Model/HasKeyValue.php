@@ -303,68 +303,6 @@ trait HasKeyValue
     }
 
     /**
-     * Override les appels non connu.
-     *
-     * @param  mixed $method
-     * @param  mixed $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        if (in_array($method, ['increment', 'decrement'])) {
-            return $this->$method(...$parameters);
-        } else if (method_exists($this->newQuery(), $method)) {
-            return $this->newQuery()->$method(...$parameters);
-        } else {
-            $user_id = isset($parameters[0]) ? ((int) $parameters[0]) : null;
-            unset($parameters[0]);
-
-            $model = $this->newQuery()->key($user_id, $method, ...$parameters);
-
-            if ($model) {
-                return $model->value;
-            } else {
-                return null;
-            }
-        }
-    }
-
-    /**
-     * Défini les clés primaires du modèle.
-     *
-     * @return array
-     */
-    protected function getKeyForSaveQuery()
-    {
-        $primaryKeyForQuery = [count($this->primaryKey)];
-
-        foreach ($this->primaryKey as $i => $pKey) {
-            if (isset($this->original[$this->getKeyName()[$i]])) {
-                $primaryKeyForQuery[$i] = $this->original[$this->getKeyName()[$i]];
-            } else {
-                $primaryKeyForQuery[$i] = $this->getAttribute($this->getKeyName()[$i]);
-            }
-        }
-
-        return $primaryKeyForQuery;
-    }
-
-    /**
-     * Défini les clés pour les sauvegardes.
-     *
-     * @param  Builder $query
-     * @return Builder
-     */
-    protected function setKeysForSaveQuery(Builder $query)
-    {
-        foreach ($this->primaryKey as $i => $pKey) {
-            $query->where($this->getKeyName()[$i], '=', $this->getKeyForSaveQuery()[$i]);
-        }
-
-        return $query;
-    }
-
-    /**
      * Relation avec l'utilisateur.
      *
      * @return mixed

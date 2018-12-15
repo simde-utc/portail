@@ -19,10 +19,6 @@ class EventDetail extends Model
 
     protected $table = 'events_details';
 
-    protected $primaryKey = [
-        'event_id', 'key'
-    ];
-
     protected $fillable = [
         'event_id', 'key', 'value', 'type',
     ];

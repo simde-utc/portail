@@ -14,6 +14,7 @@ class CreateArticlesActionsTable extends Migration
     public function up()
     {
         Schema::create('articles_actions', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->uuid('article_id');
             $table->uuid('user_id');
             $table->string('key');
@@ -27,7 +28,7 @@ class CreateArticlesActionsTable extends Migration
             $table->foreign('article_id')->references('id')->on('articles');
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->primary(['article_id', 'user_id', 'key']);
+            $table->unique(['article_id', 'user_id', 'key']);
         });
     }
 
