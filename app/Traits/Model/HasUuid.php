@@ -13,7 +13,8 @@ namespace App\Traits\Model;
 trait HasUuid
 {
     /**
-     * Au lancement du modèle, crée dynamiquement les UUIDs
+     * Au lancement du modèle, crée dynamiquement les UUIDs.
+     *
      * @return void
      */
     protected static function bootHasUuid()

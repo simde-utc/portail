@@ -15,7 +15,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['daily'],
         ],
 
         'single' => [
@@ -24,9 +24,10 @@ return [
             'level' => 'debug',
         ],
 
+        // Crée dynamiquement un fichier par semaine.
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path('logs/errors/errors.log'),
             'level' => 'debug',
             'days' => 7,
         ],
