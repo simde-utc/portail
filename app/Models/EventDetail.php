@@ -28,16 +28,6 @@ class EventDetail extends Model
     ];
 
     /**
-     * Définition de la clé primaire.
-     *
-     * @return string
-     */
-    public function getKeyName()
-    {
-        return 'event_id';
-    }
-
-    /**
      * Relation avec l'événement.
      * @return mixed
      */
