@@ -18,11 +18,17 @@ class AdminMenuTableSeeder extends Seeder
                 'uri' => 'search',
             ],
             [
-                'title' => 'Données',
+                'title' => 'Ressources',
                 'permission' => 'admin',
                 'uri' => '',
                 'icon' => 'fa-database',
                 'elements' => [
+                    [
+                        'title' => 'Accès',
+                        'uri' => 'resources/access',
+                        'permission' => 'access',
+                        'icon' => 'fa-door-closed',
+                    ],
                     [
                         'title' => 'Utilisateurs',
                         'uri' => 'resources/users',

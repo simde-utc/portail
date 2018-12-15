@@ -27,5 +27,5 @@ Route::get('resources/users/{user_id}', 'Resource\\UserController@show')->name('
 Route::post('resources/users/{user_id}/impersonate', 'Resource\\UserController@impersonate')->name('users-impersonate');
 Route::post('resources/users/{user_id}/contributeBde', 'Resource\\UserController@contributeBde')->name('users-contributeBde');
 
+Route::resource('resources/access', 'Resource\\AccessController');
 Route::resource('resources/clients', 'Resource\\ClientController');
-Route::resource('resources/access', 'Resource\\ClientController');

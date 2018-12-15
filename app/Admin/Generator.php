@@ -85,8 +85,8 @@ abstract class Generator
     public static function adminValue($value, $field=null, $model=null)
     {
         if (is_array($value)) {
-            if ($model) {
-                $relation = (new $model)->$field();
+            if ($model && method_exists($generatedModel = new $model, $field)) {
+                    $relation = $generatedModel->$field();
 
                 if ($relation instanceof Relation) {
                     $must = $relation->getModel()->getMustFields();
