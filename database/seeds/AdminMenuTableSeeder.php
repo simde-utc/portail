@@ -42,6 +42,12 @@ class AdminMenuTableSeeder extends Seeder
                         'icon' => 'fa-actions',
                     ],
                     [
+                        'title' => 'Accès par association',
+                        'uri' => 'resources/asso-access',
+                        'permission' => 'asso-access',
+                        'icon' => 'fa-door',
+                    ],
+                    [
                         'title' => 'Utilisateurs',
                         'uri' => 'resources/users',
                         'permission' => 'user',

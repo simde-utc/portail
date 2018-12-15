@@ -232,6 +232,12 @@ class PermissionsTableSeeder extends Seeder
                 'description' => 'Gestion des actions sur les articles',
                 'owned_by' => new User,
             ],
+            [
+                'type' => 'asso-access',
+                'name' => 'Accès des associations',
+                'description' => 'Gestion des accès par association',
+                'owned_by' => new User,
+            ],
         ];
 
         foreach ($permissions as $permission) {

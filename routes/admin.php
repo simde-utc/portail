@@ -30,4 +30,5 @@ Route::post('resources/users/{user_id}/contributeBde', 'Resource\\UserController
 Route::resource('resources/access', 'Resource\\AccessController');
 Route::resource('resources/articles', 'Resource\\ArticleController');
 Route::resource('resources/article-actions', 'Resource\\ArticleActionController');
+Route::resource('resources/asso-access', 'Resource\\AssoAccessController');
 Route::resource('resources/clients', 'Resource\\ClientController');
