@@ -220,6 +220,12 @@ class PermissionsTableSeeder extends Seeder
                 'description' => 'Gestion de la cotisation BDE',
                 'owned_by' => new User,
             ],
+            [
+                'type' => 'article',
+                'name' => 'Article',
+                'description' => 'Gestion des articles',
+                'owned_by' => new User,
+            ],
         ];
 
         foreach ($permissions as $permission) {

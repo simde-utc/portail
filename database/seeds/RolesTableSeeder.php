@@ -25,20 +25,7 @@ class RolesTableSeeder extends Seeder
                 'owned_by' => new User,
                 'permissions' => [
                     'superadmin',
-                    'admin',
                     'user',
-                    'asso',
-                    'group',
-                    'client',
-                    'service',
-                    'room',
-                    'role',
-                    'permission',
-                    'bobby',
-                    'access',
-                    'search',
-                    'user-impersonate',
-                    'user-contributeBde',
                 ],
             ],
             [
@@ -51,7 +38,6 @@ class RolesTableSeeder extends Seeder
                 ],
                 'permissions' => [
                     'admin',
-                    'user',
                     'asso',
                     'group',
                     'client',
@@ -64,6 +50,7 @@ class RolesTableSeeder extends Seeder
                     'search',
                     'user-impersonate',
                     'user-contributeBde',
+                    'article'
                 ],
             ],
             [

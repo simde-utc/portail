@@ -30,9 +30,16 @@ class AdminMenuTableSeeder extends Seeder
                         'icon' => 'fa-door-closed',
                     ],
                     [
+                        'title' => 'Articles',
+                        'uri' => 'resources/articles',
+                        'permission' => 'article',
+                        'icon' => 'fa-newspaper',
+                    ],
+                    [
                         'title' => 'Utilisateurs',
                         'uri' => 'resources/users',
                         'permission' => 'user',
+                        'icon' => 'fa-users',
                     ],
                     [
                         'title' => 'Clients OAuth',

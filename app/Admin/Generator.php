@@ -86,10 +86,12 @@ abstract class Generator
     {
         if (is_array($value)) {
             if ($model && method_exists($generatedModel = new $model, $field)) {
-                    $relation = $generatedModel->$field();
+                $relation = $generatedModel->$field();
 
                 if ($relation instanceof Relation) {
-                    $must = $relation->getModel()->getMustFields();
+                    $must = [
+                        'id', 'type', 'name'
+                    ];
 
                     foreach (array_keys($value) as $key) {
                         if (!in_array($key, $must)) {
