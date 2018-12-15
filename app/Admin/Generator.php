@@ -90,7 +90,7 @@ abstract class Generator
 
                 if ($relation instanceof Relation) {
                     $must = [
-                        'id', 'type', 'name'
+                        'id', 'type', 'name', 'title'
                     ];
 
                     foreach (array_keys($value) as $key) {

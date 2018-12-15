@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les articles.
+ * Gère en admin les actions des articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -10,14 +10,13 @@
 
 namespace App\Admin\Controllers\Resource;
 
+use App\Models\ArticleAction;
 use App\Models\Article;
-use App\Models\Event;
-use App\Models\Visibility;
 use App\Models\User;
 
-class ArticleController extends ResourceController
+class ArticleActionController extends ResourceController
 {
-    protected $model = Article::class;
+    protected $model = ArticleAction::class;
 
     /**
      * Définition des champs à afficher.
@@ -28,15 +27,15 @@ class ArticleController extends ResourceController
     {
         return [
             'id' => 'display',
-            'title' => 'text',
-            'description' => 'text',
-            'content' => 'text',
-            'image' => 'image',
-            'event' => Event::get(['id', 'name']),
-            'visibility' => Visibility::get(['id', 'name']),
-            'tags' => 'display',
-            'created_by' => 'display',
-            'owned_by' => 'display',
+            'article' => Article::get(['id', 'title'])->map(function ($article) {
+                $article->name = $article->title;
+
+                return $article;
+            }),
+            'user' => User::get(['id', 'firstname', 'lastname']),
+            'key' => 'text',
+            'value' => 'text',
+            'type' => 'display',
             'created_at' => 'display',
             'updated_at' => 'display'
         ];
@@ -50,10 +49,7 @@ class ArticleController extends ResourceController
     protected function getDefaults(): array
     {
         return [
-            'visibility_id' => Visibility::first()->id,
             'user_id' => ($user_id = \Auth::guard('admin')->user()->id),
-            'created_by_type' => User::class,
-            'created_by_id' => $user_id
         ];
     }
 
@@ -65,7 +61,7 @@ class ArticleController extends ResourceController
     protected function getWith(): array
     {
         return [
-            'created_by', 'owned_by', 'tags', 'visibility', 'event',
+            'article', 'user'
         ];
     }
 }

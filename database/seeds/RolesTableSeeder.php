@@ -50,7 +50,8 @@ class RolesTableSeeder extends Seeder
                     'search',
                     'user-impersonate',
                     'user-contributeBde',
-                    'article'
+                    'article',
+                    'article-action',
                 ],
             ],
             [

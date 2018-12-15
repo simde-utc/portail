@@ -36,6 +36,12 @@ class AdminMenuTableSeeder extends Seeder
                         'icon' => 'fa-newspaper',
                     ],
                     [
+                        'title' => 'Actions d\'article',
+                        'uri' => 'resources/article-actions',
+                        'permission' => 'article-action',
+                        'icon' => 'fa-actions',
+                    ],
+                    [
                         'title' => 'Utilisateurs',
                         'uri' => 'resources/users',
                         'permission' => 'user',
