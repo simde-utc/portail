@@ -29,7 +29,7 @@ class ArticleController extends ResourceController
         return [
             'id' => 'display',
             'title' => 'text',
-            'description' => 'text',
+            'description' => 'textarea',
             'content' => 'text',
             'image' => 'image',
             'event' => Event::get(['id', 'name']),

@@ -27,7 +27,7 @@ class AccessController extends ResourceController
             'id' => 'display',
             'type' => 'display',
             'name' => 'text',
-            'description' => 'text',
+            'description' => 'textarea',
             'utc_access' => 'number',
             'created_at' => 'display',
             'updated_at' => 'display'

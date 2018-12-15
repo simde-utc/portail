@@ -24,9 +24,9 @@ abstract class Generator
     protected $generatedModel;
     protected $valueMethod;
 
-    protected const CHECK_ICON = '<i class="fa fa-check text-success"></i>' ;
-    protected const TIMES_ICON = '<i class="fa fa-times text-danger"></i>' ;
-    protected const QUESTION_ICON = '<i class="fa fa-question text-warning"></i>' ;
+    protected const POSITIVE_ICON = '<i class="fa fa-check text-success"></i>' ;
+    protected const NEGATIVE_ICON = '<i class="fa fa-times text-danger"></i>' ;
+    protected const NULL_ICON = '<span class="text-warning">~</span>' ;
 
     /**
      * Prépare la génréation.
@@ -103,9 +103,9 @@ abstract class Generator
 
             return Generator::arrayToTable($value);
         } else if (is_bool($value)) {
-            return new HtmlString($value ? static::CHECK_ICON : static::TIMES_ICON);
+            return new HtmlString($value ? static::POSITIVE_ICON : static::NEGATIVE_ICON);
         } else if (is_null($value)) {
-            return new HtmlString(static::QUESTION_ICON);
+            return new HtmlString(static::NULL_ICON);
         }
 
         try {

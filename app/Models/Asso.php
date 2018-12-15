@@ -46,11 +46,11 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     ];
 
     protected $fillable = [
-        'name', 'shortname', 'login', 'image', 'description', 'type_asso_id', 'parent_id',
+        'name', 'shortname', 'login', 'image', 'description', 'type_id', 'parent_id',
     ];
 
     protected $hidden = [
-        'type_asso_id', 'parent_id',
+        'type_id', 'parent_id',
     ];
 
     protected $with = [
@@ -122,7 +122,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      */
     public function type()
     {
-        return $this->belongsTo(AssoType::class, 'type_asso_id');
+        return $this->belongsTo(AssoType::class, 'type_id');
     }
 
     /**

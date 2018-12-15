@@ -35,7 +35,7 @@ class AssoAccessController extends ResourceController
             'semester' => Semester::get(['id', 'name']),
             'confirmed_by' => User::get(['id', 'firstname', 'lastname']),
             'validated_by' => User::get(['id', 'firstname', 'lastname']),
-            'description' => 'text',
+            'description' => 'textarea',
             'comment' => 'text',
             'validated_at' => 'datetime',
             'created_at' => 'display',
@@ -52,17 +52,6 @@ class AssoAccessController extends ResourceController
     {
         return [
             'semester_id' => Semester::getThisSemester()->id,
-        ];
-    }
-
-    /**
-     * Retourne les dépendances.
-     *
-     * @return array
-     */
-    protected function getWith(): array
-    {
-        return [
         ];
     }
 }
