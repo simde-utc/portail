@@ -16,6 +16,7 @@ use Illuminate\Support\{
 use Encore\Admin\Widgets\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Carbon\Carbon;
 
 abstract class Generator
 {
@@ -23,6 +24,10 @@ abstract class Generator
     protected $generated;
     protected $generatedModel;
     protected $valueMethod;
+
+    protected static $must = [
+        'id', 'type', 'name', 'title',
+    ];
 
     protected const POSITIVE_ICON = '<i class="fa fa-check text-success"></i>' ;
     protected const NEGATIVE_ICON = '<i class="fa fa-times text-danger"></i>' ;
@@ -75,6 +80,24 @@ abstract class Generator
     }
 
     /**
+     * Réduit le nombre d'informations au strict nécessaire.
+     *
+     * @param  array $value
+     * @return array
+     */
+    public static function reduceModelArray(array $value) {
+        foreach (array_keys($value) as $key) {
+            if (!in_array($key, static::$must)) {
+                unset($value[$key]);
+            } else if (is_array($value[$key])) {
+                $value[$key] = static::reduceModelArray($value[$key]);
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      * Converti les valeurs pour l'admin.
      *
      * @param  mixed $value
@@ -89,15 +112,7 @@ abstract class Generator
                 $relation = $generatedModel->$field();
 
                 if ($relation instanceof Relation) {
-                    $must = [
-                        'id', 'type', 'name', 'title'
-                    ];
-
-                    foreach (array_keys($value) as $key) {
-                        if (!in_array($key, $must)) {
-                            unset($value[$key]);
-                        }
-                    }
+                    $value = Generator::reduceModelArray($value);
                 }
             }
 
@@ -109,7 +124,7 @@ abstract class Generator
         }
 
         try {
-            $date = new \Carbon\Carbon($value);
+            $date = Carbon::createFromFormat(Carbon::DEFAULT_TO_STRING_FORMAT, $value);
 
             return $date->format('d/m/Y à H:m');
         } catch (\Exception $e) {

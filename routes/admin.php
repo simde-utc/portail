@@ -32,4 +32,5 @@ Route::resource('resources/articles', 'Resource\\ArticleController');
 Route::resource('resources/article-actions', 'Resource\\ArticleActionController');
 Route::resource('resources/assos', 'Resource\\AssoController');
 Route::resource('resources/asso-access', 'Resource\\AssoAccessController');
+Route::resource('resources/asso-types', 'Resource\\AssoTypeController');
 Route::resource('resources/clients', 'Resource\\ClientController');

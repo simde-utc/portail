@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Asso.
+ * Gère en admin les associations.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -46,7 +46,7 @@ class AssoController extends ResourceController
     protected function getWith(): array
     {
         return [
-            'parent'
+            'type', 'parent'
         ];
     }
 }

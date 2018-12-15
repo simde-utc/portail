@@ -53,6 +53,7 @@ class RolesTableSeeder extends Seeder
                     'article',
                     'article-action',
                     'asso-access',
+                    'asso-type',
                 ],
             ],
             [
