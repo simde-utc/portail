@@ -8,7 +8,7 @@
  * @license GNU GPL-3.0
  */
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Resource;
 
 use App\Models\Client;
 use App\Models\User;

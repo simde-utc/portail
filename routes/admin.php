@@ -22,9 +22,10 @@ Route::get('search', 'SearchController@index')->name('search-index');
 Route::post('search', 'SearchController@search')->name('search-search');
 Route::get('search/{user_id}', 'SearchController@show')->name('search-show');
 
-Route::get('users', 'UserController@index')->name('users-index');
-Route::get('users/{user_id}', 'UserController@show')->name('users-show');
-Route::post('users/{user_id}/impersonate', 'UserController@impersonate')->name('users-impersonate');
-Route::post('users/{user_id}/contributeBde', 'UserController@contributeBde')->name('users-contributeBde');
+Route::get('resources/users', 'Resource\\UserController@index')->name('users-index');
+Route::get('resources/users/{user_id}', 'Resource\\UserController@show')->name('users-show');
+Route::post('resources/users/{user_id}/impersonate', 'Resource\\UserController@impersonate')->name('users-impersonate');
+Route::post('resources/users/{user_id}/contributeBde', 'Resource\\UserController@contributeBde')->name('users-contributeBde');
 
-Route::resource('clients', 'ClientController');
+Route::resource('resources/clients', 'Resource\\ClientController');
+Route::resource('resources/access', 'Resource\\ClientController');

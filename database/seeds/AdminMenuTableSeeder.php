@@ -25,12 +25,12 @@ class AdminMenuTableSeeder extends Seeder
                 'elements' => [
                     [
                         'title' => 'Utilisateurs',
-                        'uri' => 'users',
+                        'uri' => 'resources/users',
                         'permission' => 'user',
                     ],
                     [
                         'title' => 'Clients OAuth',
-                        'uri' => 'clients',
+                        'uri' => 'resources/clients',
                         'permission' => 'client',
                         'icon' => 'fa-fire',
                     ],
