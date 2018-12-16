@@ -31,7 +31,7 @@ class GroupController extends ResourceController
             'icon' => 'text',
             'visibility' => Visibility::get(['id', 'name']),
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 

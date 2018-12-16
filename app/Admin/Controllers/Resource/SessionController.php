@@ -46,7 +46,7 @@ class SessionController extends ResourceController
     protected function getDefaults(): array
     {
         return [
-            'user_id' => \Auth::guard('admin')->id()
+            'user_id' => \Auth::guard('admin')->id(),
         ];
     }
 

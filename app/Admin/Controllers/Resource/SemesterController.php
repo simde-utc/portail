@@ -31,7 +31,7 @@ class SemesterController extends ResourceController
             'begin_at' => 'datetime',
             'end_at' => 'datetime',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 }

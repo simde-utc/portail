@@ -29,7 +29,7 @@ class VisibilityController extends ResourceController
             'name' => 'text',
             'parent' => Visibility::get(['id', 'name']),
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 
@@ -41,7 +41,7 @@ class VisibilityController extends ResourceController
     protected function getDefaults(): array
     {
         return [
-            'parent_id' => Visibility::orderBy('created_at', 'DESC')->first()->id
+            'parent_id' => Visibility::orderBy('created_at', 'DESC')->first()->id,
         ];
     }
 

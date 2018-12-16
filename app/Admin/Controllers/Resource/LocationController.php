@@ -31,7 +31,7 @@ class LocationController extends ResourceController
             'place' => Place::get(['id', 'name']),
             'position' => 'text',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 

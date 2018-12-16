@@ -46,7 +46,13 @@ class AuthPasswordController extends ResourceController
         ];
     }
 
-    protected function form() {
+    /**
+     * Génère le hash du mot de passe avant sauvegarde.
+     *
+     * @return mixed
+     */
+    protected function form()
+    {
         $form = parent::form();
 
         $form->saving(function ($form) {

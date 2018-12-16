@@ -84,10 +84,12 @@ abstract class Generator
     /**
      * Réduit le nombre d'informations au strict nécessaire.
      *
-     * @param  array $value
+     * @param  array    $value
+     * @param  Relation $relation
      * @return array
      */
-    public static function reduceModelArray(array $value, Relation $relation = null) {
+    public static function reduceModelArray(array $value, Relation $relation=null)
+    {
         $must = static::$must;
 
         if ($relation instanceof MorphTo) {

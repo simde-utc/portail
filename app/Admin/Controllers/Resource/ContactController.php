@@ -31,10 +31,9 @@ class ContactController extends ResourceController
             'value' => 'text',
             'type' => ContactType::get(['id', 'name']),
             'visibility' => Visibility::get(['id', 'name']),
-            'created_by' => 'display',
             'owned_by' => 'display',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 
@@ -47,8 +46,6 @@ class ContactController extends ResourceController
     {
         return [
             'visibility_id' => Visibility::first()->id,
-            'created_by_type' => User::class,
-            'created_by_id' => \Auth::guard('admin')->user()->id
         ];
     }
 
@@ -60,7 +57,7 @@ class ContactController extends ResourceController
     protected function getWith(): array
     {
         return [
-            'type', 'visibility', 'created_by', 'owned_by'
+            'type', 'visibility', 'owned_by'
         ];
     }
 }

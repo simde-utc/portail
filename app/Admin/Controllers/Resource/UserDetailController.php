@@ -32,7 +32,7 @@ class UserDetailController extends ResourceController
             'value' => 'text',
             'type' => 'display',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 
@@ -44,7 +44,7 @@ class UserDetailController extends ResourceController
     protected function getDefaults(): array
     {
         return [
-            'user_id' => \Auth::guard('admin')->id()
+            'user_id' => \Auth::guard('admin')->id(),
         ];
     }
 

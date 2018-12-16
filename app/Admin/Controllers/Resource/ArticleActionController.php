@@ -37,7 +37,7 @@ class ArticleActionController extends ResourceController
             'value' => 'text',
             'type' => 'display',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 

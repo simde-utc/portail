@@ -33,7 +33,7 @@ class UserPreferenceController extends ResourceController
             'type' => 'display',
             'only_for' => 'text',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 
@@ -45,7 +45,7 @@ class UserPreferenceController extends ResourceController
     protected function getDefaults(): array
     {
         return [
-            'user_id' => \Auth::guard('admin')->id()
+            'user_id' => \Auth::guard('admin')->id(),
         ];
     }
 

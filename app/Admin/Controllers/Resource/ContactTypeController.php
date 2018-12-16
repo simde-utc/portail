@@ -29,7 +29,7 @@ class ContactTypeController extends ResourceController
             'name' => 'text',
             'pattern' => 'text',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 }

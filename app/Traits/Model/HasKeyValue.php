@@ -122,7 +122,7 @@ trait HasKeyValue
             return [
                 strtolower($key) => $this->scopeValueOf($query, $key),
             ];
-        } else if (count($collection = $query->get()->toArray(true)) > 0) {
+        } else if (count($collection = $query->get()->toArray()) > 0) {
             return array_merge(...$collection);
         } else {
             return [];
@@ -274,7 +274,7 @@ trait HasKeyValue
     /**
      * Conversion en array.
      *
-     * @param  mixed $all
+     * @param  mixed $one
      * @return array
      */
     public function toArray($one=0)

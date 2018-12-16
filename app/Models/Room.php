@@ -73,7 +73,13 @@ class Room extends Model implements OwnableContract
         });
     }
 
-    public function getNameAttribute() {
+    /**
+     * Retourne le nom de la salle.
+     *
+     * @return string
+     */
+    public function getNameAttribute()
+    {
         return $this->location->name;
     }
 

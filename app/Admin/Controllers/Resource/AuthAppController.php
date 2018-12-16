@@ -31,7 +31,7 @@ class AuthAppController extends ResourceController
             'password' => 'text',
             'key' => 'text',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 

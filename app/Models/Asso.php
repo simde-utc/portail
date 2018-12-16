@@ -91,8 +91,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
                 'value' => $model->login.'@assos.utc.fr',
                 'type_id' => ContactType::where('name', 'Adresse email')->first()->id,
                 'visibility_id' => Visibility::findByType('public')->id,
-                'created_by_type' => static::class,
-                'created_by_id' => $model->id,
             ]);
 
             $model->contacts()->create([
@@ -100,8 +98,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
                 'value' => 'https://assos.utc.fr/'.$model->login.'/',
                 'type_id' => ContactType::where('name', 'Url')->first()->id,
                 'visibility_id' => Visibility::findByType('public')->id,
-                'created_by_type' => static::class,
-                'created_by_id' => $model->id,
             ]);
         });
     }

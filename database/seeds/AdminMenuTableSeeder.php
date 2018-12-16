@@ -291,7 +291,7 @@ class AdminMenuTableSeeder extends Seeder
             $menu_id = Menu::create([
                 'parent_id' => $parent_id,
                 'title' => $menu['title'],
-                'uri' => $menu['uri'] ?? '',
+                'uri' => ($menu['uri'] ?? ''),
                 'icon' => ($menu['icon'] ?? 'fa-'.$menu['uri']),
                 'permission' => ($menu['permission'] ?? $menu['uri']),
             ])->id;

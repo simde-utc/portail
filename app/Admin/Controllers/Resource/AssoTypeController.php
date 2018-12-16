@@ -28,7 +28,7 @@ class AssoTypeController extends ResourceController
             'type' => 'display',
             'name' => 'text',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 }

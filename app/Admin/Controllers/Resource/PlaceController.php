@@ -31,7 +31,7 @@ class PlaceController extends ResourceController
             'country' => 'text',
             'position' => 'text',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 }

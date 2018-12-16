@@ -30,7 +30,7 @@ class NotificationController extends ResourceController
             'data' => 'text',
             'read_at' => 'display',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 

@@ -63,7 +63,7 @@ class FormGenerator extends Generator
                 $options = [];
 
                 $name = ucfirst($field);
-                # https://github.com/laravel/framework/issues/26866
+                // Mauvais nommage: https://github.com/laravel/framework/issues/26866.
                 if (method_exists($relation, 'getForeignKey')) {
                     $field = $relation->getForeignKey();
                 } else {
