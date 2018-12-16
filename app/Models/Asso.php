@@ -89,15 +89,19 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
             $model->contacts()->create([
                 'name' => 'Adresse email',
                 'value' => $model->login.'@assos.utc.fr',
-                'contact_type_id' => ContactType::where('name', 'Adresse email')->first()->id,
+                'type_id' => ContactType::where('name', 'Adresse email')->first()->id,
                 'visibility_id' => Visibility::findByType('public')->id,
+                'created_by_type' => static::class,
+                'created_by_id' => $model->id,
             ]);
 
             $model->contacts()->create([
                 'name' => 'Site Web',
                 'value' => 'https://assos.utc.fr/'.$model->login.'/',
-                'contact_type_id' => ContactType::where('name', 'Url')->first()->id,
+                'type_id' => ContactType::where('name', 'Url')->first()->id,
                 'visibility_id' => Visibility::findByType('public')->id,
+                'created_by_type' => static::class,
+                'created_by_id' => $model->id,
             ]);
         });
     }
