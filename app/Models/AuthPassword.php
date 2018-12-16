@@ -12,15 +12,9 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Hash;
-use App\Traits\Model\HasHiddenData;
-use NastuzziSamy\Laravel\Traits\HasSelection;
 
 class AuthPassword extends Auth
 {
-    use HasHiddenData, HasSelection;
-
-    public $incrementing = false;
-
     protected $fillable = [
         'user_id', 'password', 'last_login_at',
     ];

@@ -27,6 +27,7 @@ use App\Traits\Model\HasRoles;
 use App\Traits\Model\HasHiddenData;
 use App\Traits\Model\HasUuid;
 use App\Traits\Model\UserRelations;
+use App\Traits\Model\IsLogged;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
@@ -42,7 +43,7 @@ use App\Notifications\User\UserDeletion;
 class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents,
 	CanHaveRoles, CanHavePermissions, CanComment
 {
-    use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid, UserRelations {
+    use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid, IsLogged, UserRelations {
         UserRelations::notifications insteadof Notifiable;
         UserRelations::isRoleForIdDeletable insteadof HasRoles;
         HasHiddenData::hideData as protected hideDataFromTrait;

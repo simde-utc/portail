@@ -11,15 +11,9 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Hash;
-use App\Traits\Model\HasHiddenData;
-use NastuzziSamy\Laravel\Traits\HasSelection;
 
 class AuthApp extends Auth
 {
-    use HasHiddenData, HasSelection;
-
-    public $incrementing = false;
-
     protected $fillable = [
         'user_id', 'app_id', 'password', 'key',
     ];

@@ -10,8 +10,15 @@
 
 namespace App\Models;
 
+use App\Traits\Model\{
+    HasHiddenData, IsLogged
+};
+use NastuzziSamy\Laravel\Traits\HasSelection;
+
 abstract class Auth extends Model
 {
+    use HasHiddenData, HasSelection, IsLogged;
+
     public $incrementing = false;
 
     /**
