@@ -2,6 +2,8 @@
 /**
  * Modèle correspondant aux préférences utilisateurs.
  *
+ * TODO: corriger le only_for
+ *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Natan Danous <natous.danous@hotmail.fr>
