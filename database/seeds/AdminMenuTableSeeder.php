@@ -53,12 +53,12 @@ class AdminMenuTableSeeder extends Seeder
                         'icon' => 'fa-chain',
                     ],
                     [
-                        'title' => 'Authentification',
+                        'title' => 'Authentifications',
                         'permission' => 'auth',
                         'icon' => 'fa-unlock-alt',
                         'elements' => [
                             [
-                                'title' => 'Applications',
+                                'title' => 'Application',
                                 'uri' => 'resources/auth-apps',
                                 'permission' => 'auth',
                                 'icon' => 'fa-mobile',
@@ -70,7 +70,7 @@ class AdminMenuTableSeeder extends Seeder
                                 'icon' => 'fa-hand-o-down',
                             ],
                             [
-                                'title' => 'Mots de passe',
+                                'title' => 'Mot de passe',
                                 'uri' => 'resources/auth-passwords',
                                 'permission' => 'auth',
                                 'icon' => 'fa-lock',
@@ -209,13 +209,13 @@ class AdminMenuTableSeeder extends Seeder
                         'icon' => 'fa-hashtag',
                         'elements' => [
                             [
-                                'title' => 'Associations',
+                                'title' => 'Association',
                                 'uri' => 'resources/asso-types',
                                 'permission' => 'asso-type',
                                 'icon' => 'fa-university',
                             ],
                             [
-                                'title' => 'Contacts',
+                                'title' => 'Contact',
                                 'uri' => 'resources/contact-types',
                                 'permission' => 'contact-type',
                                 'icon' => 'fa-address-card-o',

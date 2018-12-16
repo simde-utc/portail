@@ -34,16 +34,6 @@ class AuthPassword extends Auth
     ];
 
     /**
-     * Relation avec l'utlisateur.
-     *
-     * @return mixed
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
      *
      * @param string $email

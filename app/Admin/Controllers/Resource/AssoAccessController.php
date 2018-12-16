@@ -54,4 +54,16 @@ class AssoAccessController extends ResourceController
             'semester_id' => Semester::getThisSemester()->id,
         ];
     }
+
+    /**
+     * Retourne les dépendances.
+     *
+     * @return array
+     */
+    protected function getWith(): array
+    {
+        return [
+            'asso', 'access', 'member', 'semester', 'confirmed_by', 'validated_by'
+        ];
+    }
 }
