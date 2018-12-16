@@ -19,8 +19,7 @@ class AdminMenuTableSeeder extends Seeder
             ],
             [
                 'title' => 'Ressources',
-                'permission' => 'admin',
-                'uri' => '',
+                'permission' => '',
                 'icon' => 'fa-database',
                 'elements' => [
                     [
@@ -54,16 +53,180 @@ class AdminMenuTableSeeder extends Seeder
                         'icon' => 'fa-chain',
                     ],
                     [
+                        'title' => 'Authentification',
+                        'permission' => 'auth',
+                        'icon' => 'fa-unlock-alt',
+                        'elements' => [
+                            [
+                                'title' => 'Applications',
+                                'uri' => 'resources/auth-apps',
+                                'permission' => 'auth',
+                                'icon' => 'fa-mobile',
+                            ],
+                            [
+                                'title' => 'CAS-UTC',
+                                'uri' => 'resources/auth-cas',
+                                'permission' => 'auth',
+                                'icon' => 'fa-hand-o-down',
+                            ],
+                            [
+                                'title' => 'Mots de passe',
+                                'uri' => 'resources/auth-passwords',
+                                'permission' => 'auth',
+                                'icon' => 'fa-lock',
+                            ],
+                        ]
+                    ],
+                    [
+                        'title' => 'Calendriers',
+                        'uri' => 'resources/calendars',
+                        'permission' => 'calendar',
+                        'icon' => 'fa-calendar',
+                    ],
+                    [
                         'title' => 'Clients OAuth',
                         'uri' => 'resources/clients',
                         'permission' => 'client',
                         'icon' => 'fa-fire',
                     ],
                     [
-                        'title' => 'Types d\'associations',
-                        'uri' => 'resources/asso-types',
-                        'permission' => 'asso-type',
+                        'title' => 'Commentaires',
+                        'uri' => 'resources/comments',
+                        'permission' => 'comment',
+                        'icon' => 'fa-comments-o',
+                    ],
+                    [
+                        'title' => 'Détails utilisateurs',
+                        'uri' => 'resources/user-details',
+                        'permission' => 'user-detail',
+                        'icon' => 'fa-address-card-o',
+                    ],
+                    [
+                        'title' => 'Détails événements',
+                        'uri' => 'resources/event-details',
+                        'permission' => 'event-detail',
+                        'icon' => 'fa-tint',
+                    ],
+                    [
+                        'title' => 'Emplacements',
+                        'uri' => 'resources/places',
+                        'permission' => 'place',
+                        'icon' => 'fa-map-marker',
+                    ],
+                    [
+                        'title' => 'Evènements',
+                        'uri' => 'resources/events',
+                        'permission' => 'event',
+                        'icon' => 'fa-clock-o',
+                    ],
+                    [
+                        'title' => 'Groupes',
+                        'uri' => 'resources/groups',
+                        'permission' => 'group',
+                        'icon' => 'fa-users',
+                    ],
+                    [
+                        'title' => 'Lieux',
+                        'uri' => 'resources/locations',
+                        'permission' => 'location',
+                        'icon' => 'fa-map-pin',
+                    ],
+                    [
+                        'title' => 'Moyen de contacts',
+                        'uri' => 'resources/contacts',
+                        'permission' => 'contact',
+                        'icon' => 'fa-phone',
+                    ],
+                    [
+                        'title' => 'Notifications',
+                        'uri' => 'resources/notifications',
+                        'permission' => 'notification',
+                        'icon' => 'fa-bell-o',
+                    ],
+                    [
+                        'title' => 'Partenaires',
+                        'uri' => 'resources/partners',
+                        'permission' => 'partner',
+                        'icon' => 'fa-handshake-o',
+                    ],
+                    [
+                        'title' => 'Permissions',
+                        'uri' => 'resources/permissions',
+                        'permission' => 'permission',
+                        'icon' => 'fa-certificate',
+                    ],
+                    [
+                        'title' => 'Préférences utilisateurs',
+                        'uri' => 'resources/user-preferences',
+                        'permission' => 'user-preference',
+                        'icon' => 'fa-suitcase',
+                    ],
+                    [
+                        'title' => 'Réservations',
+                        'uri' => 'resources/reservations',
+                        'permission' => 'reservation',
+                        'icon' => 'fa-plus-square-o',
+                    ],
+                    [
+                        'title' => 'Roles',
+                        'uri' => 'resources/roles',
+                        'permission' => 'role',
+                        'icon' => 'fa-user-secret',
+                    ],
+                    [
+                        'title' => 'Salles',
+                        'uri' => 'resources/rooms',
+                        'permission' => 'room',
+                        'icon' => 'fa-home',
+                    ],
+                    [
+                        'title' => 'Semestres',
+                        'uri' => 'resources/semesters',
+                        'permission' => 'semester',
+                        'icon' => 'fa-hourglass-half',
+                    ],
+                    [
+                        'title' => 'Services',
+                        'uri' => 'resources/services',
+                        'permission' => 'service',
+                        'icon' => 'fa-fa',
+                    ],
+                    [
+                        'title' => 'Sessions',
+                        'uri' => 'resources/sessions',
+                        'permission' => 'session',
+                        'icon' => 'fa-connectdevelop',
+                    ],
+                    [
+                        'title' => 'Tags',
+                        'uri' => 'resources/tags',
+                        'permission' => 'tag',
+                        'icon' => 'fa-tag',
+                    ],
+                    [
+                        'title' => 'Types',
+                        'permission' => 'asso-type|contact-type|reservation-type',
                         'icon' => 'fa-hashtag',
+                        'elements' => [
+                            [
+                                'title' => 'Associations',
+                                'uri' => 'resources/asso-types',
+                                'permission' => 'asso-type',
+                                'icon' => 'fa-university',
+                            ],
+                            [
+                                'title' => 'Contacts',
+                                'uri' => 'resources/contact-types',
+                                'permission' => 'contact-type',
+                                'icon' => 'fa-address-card-o',
+                            ],
+                            [
+                                'title' => 'Réservation',
+                                'uri' => 'resources/reservation-types',
+                                'permission' => 'reservation-type',
+                                'icon' => 'fa-plus-square-o',
+                            ],
+                        ]
                     ],
                     [
                         'title' => 'Utilisateurs',
@@ -71,12 +234,17 @@ class AdminMenuTableSeeder extends Seeder
                         'permission' => 'user',
                         'icon' => 'fa-user',
                     ],
+                    [
+                        'title' => 'Visibilités',
+                        'uri' => 'resources/visibilities',
+                        'permission' => 'visibility',
+                        'icon' => 'fa-eye',
+                    ],
                 ]
             ],
             [
                 'title' => 'Administration',
                 'permission' => 'admin',
-                'uri' => '',
                 'icon' => 'fa-unlock-alt',
                 'elements' => [
                     [
@@ -123,7 +291,7 @@ class AdminMenuTableSeeder extends Seeder
             $menu_id = Menu::create([
                 'parent_id' => $parent_id,
                 'title' => $menu['title'],
-                'uri' => $menu['uri'],
+                'uri' => $menu['uri'] ?? '',
                 'icon' => ($menu['icon'] ?? 'fa-'.$menu['uri']),
                 'permission' => ($menu['permission'] ?? $menu['uri']),
             ])->id;
