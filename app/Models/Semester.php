@@ -16,9 +16,8 @@ class Semester extends Model
         'name', 'is_spring', 'year', 'begin_at', 'end_at',
     ];
 
-    protected $cast = [
-        'is_spring' => 'boolean',
-        'year' => 'char',
+    protected $casts = [
+        'is_spring' => 'bool',
     ];
 
     protected $must = [

@@ -16,12 +16,12 @@ class Service extends Model
 {
     use SoftDeletes;
 
-    protected $casts = [
-        'deleted_at' => 'datetime',
-    ];
-
     protected $fillable = [
         'name', 'shortname', 'login', 'image', 'description', 'url', 'visibility_id'
+    ];
+
+    protected $casts = [
+        'deleted_at' => 'datetime',
     ];
 
     protected $with = [
