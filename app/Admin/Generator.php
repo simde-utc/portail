@@ -15,7 +15,9 @@ use Illuminate\Support\{
 };
 use Encore\Admin\Widgets\Table;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\Relations\{
+    Relation, MorphTo
+};
 use Carbon\Carbon;
 
 abstract class Generator
@@ -85,9 +87,15 @@ abstract class Generator
      * @param  array $value
      * @return array
      */
-    public static function reduceModelArray(array $value) {
+    public static function reduceModelArray(array $value, Relation $relation = null) {
+        $must = static::$must;
+
+        if ($relation instanceof MorphTo) {
+            $must[] = 'model';
+        }
+
         foreach (array_keys($value) as $key) {
-            if (!in_array($key, static::$must)) {
+            if (!in_array($key, $must)) {
                 unset($value[$key]);
             } else if (is_array($value[$key])) {
                 $value[$key] = static::reduceModelArray($value[$key]);
@@ -112,7 +120,7 @@ abstract class Generator
                 $relation = $generatedModel->$field();
 
                 if ($relation instanceof Relation) {
-                    $value = Generator::reduceModelArray($value);
+                    $value = Generator::reduceModelArray($value, $relation);
                 }
             }
 

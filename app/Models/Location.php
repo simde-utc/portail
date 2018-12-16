@@ -49,12 +49,4 @@ class Location extends Model
     {
         return $this->belongsTo(Place::class);
     }
-
-    public function getPositionLatitudeAttribute() {
-        return $this->position->getLat();
-    }
-
-    public function getPositionLongitudeAttribute() {
-        return $this->position->getLng();
-    }
 }

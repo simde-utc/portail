@@ -53,7 +53,7 @@ class ReservationsTableSeeder extends Seeder
             Reservation::create([
                 'room_id' => $room->id,
                 'event_id' => $event->id,
-                'reservation_type_id' => ReservationType::where('type', $reservation['reservation_type'])->first()->id,
+                'type_id' => ReservationType::where('type', $reservation['reservation_type'])->first()->id,
                 'created_by_id' => $reservation['created_by']->id,
                 'created_by_type' => get_class($reservation['created_by']),
                 'validated_by_id' => $reservation['validated_by']->id,

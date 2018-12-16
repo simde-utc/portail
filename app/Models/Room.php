@@ -73,6 +73,10 @@ class Room extends Model implements OwnableContract
         });
     }
 
+    public function getNameAttribute() {
+        return $this->location->name;
+    }
+
     /**
      * Relation avec la visibilité.
      *
