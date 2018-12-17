@@ -21,10 +21,6 @@ class UserDetail extends Model
 
     protected $table = 'users_details';
 
-    protected $primaryKey = [
-        'user_id', 'key',
-    ];
-
     protected $fillable = [
         'user_id', 'key', 'value', 'type',
     ];

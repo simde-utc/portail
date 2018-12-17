@@ -8,7 +8,7 @@
  * @license GNU GPL-3.0
  */
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Resource;
 
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
@@ -107,7 +107,7 @@ abstract class ResourceController extends Controller
         return $content
             ->header('Edit')
             ->description('description')
-            ->body($this->form()->edit($model_id));
+            ->body($this->form()->get()->edit($model_id));
     }
 
     /**
@@ -121,13 +121,13 @@ abstract class ResourceController extends Controller
         return $content
             ->header('Create')
             ->description('description')
-            ->body($this->form());
+            ->body($this->form()->get());
     }
 
     /**
      * Créer le formulaire de base.
      *
-     * @return Form
+     * @return FormGenerator
      */
     protected function form()
     {
@@ -141,6 +141,6 @@ abstract class ResourceController extends Controller
             }
         });
 
-        return $form->get();
+        return $form;
     }
 }

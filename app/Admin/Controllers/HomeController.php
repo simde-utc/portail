@@ -11,10 +11,9 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
-use Encore\Admin\Controllers\Dashboard;
-use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
-use Encore\Admin\Layout\Row;
+use App\Admin\Models\Menu;
+use Encore\Admin\Widgets\Box;
 
 class HomeController extends Controller
 {
@@ -28,6 +27,8 @@ class HomeController extends Controller
     {
         return $content
             ->header('SiMDE')
-            ->description('Il y a une vie après les cours');
+            ->description('Il y a une vie après les cours')
+            ->row(new Box('Bienvenue', view('admin.home.welcome')))
+            ->row(new Box('Accès rapide', view('admin.home.index')));
     }
 }

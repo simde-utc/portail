@@ -14,6 +14,7 @@ class CreateUsersDetailsTable extends Migration
     public function up()
     {
         Schema::create('users_details', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->string('key');
             $table->string('value')->nullable();
@@ -25,7 +26,7 @@ class CreateUsersDetailsTable extends Migration
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            $table->primary(['user_id', 'key']);
+            $table->unique(['user_id', 'key']);
         });
     }
 

@@ -23,7 +23,7 @@ parameters:
 		- '#Call to an undefined method App\\Models\\Role::users()#'
 		- '#Method App\\Http\\Controllers\\v1\\(Asso|User)\\.+::getSemester\(\) invoked with [0-9]+ parameters, 0-1 required#'
 		- '#Call to an undefined method Encore\\Admin\\#'
-		- '#Call to an undefined method App\\Admin\\Controllers\\UserController#'
+		- '#Call to an undefined method App\\Admin\\Controllers\\Resource\\UserController#'
 		- '#Function adminValue not found#'
 		- '#Function arrayToTable not found#'
 		- '#Access to an undefined property class@anonymous/app/Services/Ginger.php#'

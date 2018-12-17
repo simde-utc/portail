@@ -18,6 +18,9 @@ class Admin extends Administrator
 {
     protected $table = 'users';
 
+    protected static $isAdministrator = [];
+    protected static $permissions = [];
+
     public $incrementing = false;
 
     protected $fillable = [
@@ -117,7 +120,11 @@ class Admin extends Administrator
             return true;
         }
 
-        return $this->getUser()->hasOnePermission($permission);
+        if (isset(static::$permissions[$this->id][$permission])) {
+            return static::$permissions[$this->id][$permission];
+        }
+
+        return static::$permissions[$this->id][$permission] = $this->getUser()->hasOnePermission($permission);
     }
 
     /**
@@ -127,8 +134,11 @@ class Admin extends Administrator
      */
     public function isAdministrator(): bool
     {
-        return false;
-        return $this->getUser()->hasOneRole('admin');
+        if (isset(static::$isAdministrator[$this->id])) {
+            return static::$isAdministrator[$this->id];
+        }
+
+        return static::$isAdministrator[$this->id] = $this->getUser()->hasOneRole('superadmin');
     }
 
     /**

@@ -59,7 +59,7 @@ class AssoRequest extends FormRequest
         ->length(validation_between('description'))
         ->post('required')
         ->get(),
-            'type_asso_id' => Validation::make($this)
+            'type_id' => Validation::make($this)
         ->type('uuid')
         ->exists('assos_types', 'id')
         ->post('required')

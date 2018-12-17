@@ -21,8 +21,6 @@ abstract class Auth extends Model
 
     public $incrementing = false;
 
-    protected $primaryKey = 'user_id';
-
     /**
      * Relation avec l'utilisateur.
      *

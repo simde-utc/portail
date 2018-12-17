@@ -21,7 +21,7 @@ class Contact extends Model implements OwnableContract
     use HasMorphOwner;
 
     protected $fillable = [
-        'name', 'value', 'contact_type_id', 'visibility_id', 'owned_by_id', 'owned_by_type',
+        'name', 'value', 'type_id', 'visibility_id', 'owned_by_id', 'owned_by_type',
     ];
 
     protected $with = [
@@ -29,7 +29,7 @@ class Contact extends Model implements OwnableContract
     ];
 
     protected $hidden = [
-        'contact_type_id', 'visibility_id', 'owned_by_id', 'owned_by_type',
+        'type_id', 'visibility_id', 'owned_by_id', 'owned_by_type',
     ];
 
     protected $must = [
@@ -58,6 +58,18 @@ class Contact extends Model implements OwnableContract
             } else {
                 throw new PortailException('Le type donné n\'existe pas', 400);
             }
+
+            $keys = $model->getKeyName();
+
+            if (!is_array($keys)) {
+                $keys = [$model->getKeyName()];
+            }
+
+            foreach ($keys as $key) {
+                $model->$key = $model->$key ?: \Uuid::generate()->string;
+            }
+
+            return $model;
         };
 
         static::creating($verificator);
@@ -91,7 +103,7 @@ class Contact extends Model implements OwnableContract
      */
     public function type()
     {
-        return $this->belongsTo(ContactType::class, 'contact_type_id');
+        return $this->belongsTo(ContactType::class, 'type_id');
     }
 
     /**
