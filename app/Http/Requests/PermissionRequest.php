@@ -11,11 +11,10 @@
 namespace App\Http\Requests;
 
 use Validation;
-use Illuminate\Foundation\Http\FormRequest;
 use App\Exceptions\PortailException;
 use App\Traits\Model\CanHavePermissions;
 
-class PermissionRequest extends FormRequest
+class PermissionRequest extends Request
 {
     /**
      * Détermine si l'utilisateur à le droit de faire cette requête.
@@ -62,7 +61,7 @@ class PermissionRequest extends FormRequest
             'owned_by_type' => Validation::type('string')
                 ->post('required')
                 ->get(),
-            'owned_by_id' => Validation::type('integer')
+            'owned_by_id' => Validation::type('uuid')
                 ->post('required')
                 ->get(),
         ];

@@ -85,6 +85,10 @@ class ArticleController extends Controller
             $scope = array_keys(\Scopes::getRelatives(
                 $scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type').'s-'.$type
             ));
+
+            if (count($scope) === 0) {
+                abort(403, 'Non autorisé a possédé un article');
+            }
         }
 
         if (!\Scopes::hasOne($request, $scope)) {
@@ -161,17 +165,17 @@ class ArticleController extends Controller
 	        && \Auth::id()
 	        && $request->input('created_by_id', \Auth::id()) === \Auth::id()
 	        && \Scopes::hasOne($request,
-        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-user')) {
+        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getNameFromObject($owner).'s-owned-user')) {
             $creater = \Auth::user();
         } else if ($request->input('created_by_type', 'client') === 'client'
 	        && $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
 	        && \Scopes::hasOne($request,
-        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-client')) {
+        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getNameFromObject($owner).'s-owned-client')) {
             $creater = \Scopes::getClient($request);
         } else if ($request->input('created_by_type') === 'asso'
 	        && $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
 	        && \Scopes::hasOne($request,
-        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-asso')) {
+        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getNameFromObject($owner).'s-owned-asso')) {
             $creater = \Scopes::getClient($request)->asso;
         } else {
             $creater = $this->getCreaterOrOwner($request, 'create', 'created');

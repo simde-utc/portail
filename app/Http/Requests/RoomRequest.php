@@ -14,21 +14,9 @@
 namespace App\Http\Requests;
 
 use Validation;
-use Illuminate\Foundation\Http\FormRequest;
 
-class RoomRequest extends FormRequest
+class RoomRequest extends Request
 {
-    /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * Tout est réalisé dans les controlleurs.
-     *
-     * @return boolean
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Défini les règles de validation des champs.
      *
@@ -43,12 +31,12 @@ class RoomRequest extends FormRequest
                 ->get(),
             'created_by_type' => Validation::type('string')
                 ->get(),
-            'created_by_id' => Validation::type('integer')
+            'created_by_id' => Validation::type('uuid')
                 ->get(),
             'owned_by_type' => Validation::type('string')
                 ->post('required')
                 ->get(),
-            'owned_by_id' => Validation::type('integer')
+            'owned_by_id' => Validation::type('uuid')
                 ->post('required')
                 ->get(),
             'visibility_id' => Validation::type('uuid')

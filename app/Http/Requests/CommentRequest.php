@@ -12,11 +12,10 @@
 namespace App\Http\Requests;
 
 use Validation;
-use Illuminate\Foundation\Http\FormRequest;
 use App\Exceptions\PortailException;
 use App\Interfaces\Model\CanHaveComments;
 
-class CommentRequest extends FormRequest
+class CommentRequest extends Request
 {
     /**
      * Détermine si l'utilisateur à le droit de faire cette requête.
@@ -47,12 +46,12 @@ class CommentRequest extends FormRequest
                 ->get(),
             'created_by_type' => Validation::type('string')
                 ->get(),
-            'created_by_id' => Validation::type('integer')
+            'created_by_id' => Validation::type('uuid')
                 ->get(),
             'owned_by_type' => Validation::type('string')
                 ->post('required')
                 ->get(),
-            'owned_by_id' => Validation::type('integer')
+            'owned_by_id' => Validation::type('uuid')
                 ->post('required')
                 ->get(),
         ];

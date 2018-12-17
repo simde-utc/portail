@@ -11,11 +11,16 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Request;
-
 class Validation
 {
     protected $args;
+    protected $request;
+
+    public function setRequest($request) {
+        $this->request = $request;
+
+        return $this;
+    }
 
     /**
      * Force une longueur maximale.
@@ -97,7 +102,7 @@ class Validation
      */
     public function __call(string $method, array $args)
     {
-        if ((new Request)->isMethod($method)) {
+        if ($this->request->isMethod($method)) {
             foreach ($args as $arg) {
                 array_push($this->args, $arg);
             }

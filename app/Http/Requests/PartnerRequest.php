@@ -14,21 +14,9 @@
 namespace App\Http\Requests;
 
 use Validation;
-use Illuminate\Foundation\Http\FormRequest;
 
-class PartnerRequest extends FormRequest
+class PartnerRequest extends Request
 {
-    /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * Tout est réalisé dans les controlleurs.
-     *
-     * @return boolean
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Défini les règles de validation des champs.
      *

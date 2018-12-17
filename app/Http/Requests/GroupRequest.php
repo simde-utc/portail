@@ -13,10 +13,9 @@
 namespace App\Http\Requests;
 
 use Validation;
-use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Group;
 
-class GroupRequest extends FormRequest
+class GroupRequest extends Request
 {
     /**
      * Détermine si l'utilisateur à le droit de faire cette requête.

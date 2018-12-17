@@ -12,13 +12,12 @@
 namespace App\Http\Requests;
 
 use Validation;
-use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Asso;
 use App\Models\User;
 use App\Exceptions\PortailException;
 use App\Interfaces\Model\CanHaveContacts;
 
-class ContactRequest extends FormRequest
+class ContactRequest extends Request
 {
     /**
      * Détermine si l'utilisateur à le droit de faire cette requête.
@@ -67,7 +66,7 @@ class ContactRequest extends FormRequest
             'owned_by_type' => Validation::type('string')
                 ->post('required')
                 ->get(),
-            'owned_by_id' => Validation::type('integer')
+            'owned_by_id' => Validation::type('uuid')
                 ->post('required')
                 ->get(),
         ];

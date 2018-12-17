@@ -12,21 +12,9 @@
 namespace App\Http\Requests;
 
 use Validation;
-use Illuminate\Foundation\Http\FormRequest;
 
-class ArticleRequest extends FormRequest
+class ArticleRequest extends Request
 {
-    /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * Tout est réalisé dans les controlleurs.
-     *
-     * @return boolean
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Défini les règles de validation des champs.
      *
@@ -44,12 +32,12 @@ class ArticleRequest extends FormRequest
                 ->post('required')
                 ->get(),
             'description' => Validation::type('string')
-                ->length('text')
+                ->length('description')
                 ->get(),
             'image' => Validation::type('image')
                 ->length('url')
                 ->get(),
-            'visibility_id' => Validation::type('integer')
+            'visibility_id' => Validation::type('uuid')
                 ->exists('visibilities', 'id')
                 ->post('required')
                 ->get(),
@@ -58,12 +46,12 @@ class ArticleRequest extends FormRequest
                 ->get(),
             'created_by_type' => Validation::type('string')
                 ->get(),
-            'created_by_id' => Validation::type('integer')
+            'created_by_id' => Validation::type('uuid')
                 ->get(),
             'owned_by_type' => Validation::type('string')
                 ->post('required')
                 ->get(),
-            'owned_by_id' => Validation::type('integer')
+            'owned_by_id' => Validation::type('uuid')
                 ->post('required')
                 ->get(),
             'tags' => Validation::type('array')
