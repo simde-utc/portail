@@ -38,22 +38,18 @@ class VisibilityRequest extends FormRequest
         $visibility = $this->visibility;
 
         return [
-            'name' => Validation::make($this)
-                ->type('string')
-                ->length('between:3,191')
-                ->unique('visibilities', 'name,'.$visibility->id)
-                ->post('required')
-                ->get(),
-            'type' => Validation::make($this)
-                ->type('string')
-                ->length('between:3,191')
+            'type' => Validation::type('string')
+                ->length('name')
                 ->unique('visibilities', 'type,'.$visibility->id)
                 ->post('required')
                 ->get(),
-            'parent_id' => Validation::make($this)
-                ->type('uuid')
-                ->exists('visibilities', 'id')
+            'name' => Validation::type('string')
+                ->length('name')
+                ->unique('visibilities', 'name,'.$visibility->id)
                 ->post('required')
+                ->get(),
+            'parent_id' => Validation::type('uuid')
+                ->exists('visibilities', 'id')
                 ->get(),
         ];
     }

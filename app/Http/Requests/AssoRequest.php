@@ -12,7 +12,7 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
+use Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AssoRequest extends FormRequest
@@ -36,43 +36,39 @@ class AssoRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => Validation::make($this)
-        ->type('string')
-        ->length(validation_between('name'))
-        ->unique('assos', 'name')
-        ->post('required')
-        ->get(),
-            'shortname' => Validation::make($this)
-        ->type('string')
-        ->length(validation_between('login'))
-        ->unique('assos', 'shortname')
-        ->post('required')
-        ->get(),
-            'login' => Validation::make($this)
-        ->type('string')
-        ->length(validation_between('login'))
-        ->unique('assos', 'login')
-        ->post('required')
-        ->get(),
-            'description' => Validation::make($this)
-        ->type('string')
-        ->length(validation_between('description'))
-        ->post('required')
-        ->get(),
-            'type_asso_id' => Validation::make($this)
-        ->type('uuid')
-        ->exists('assos_types', 'id')
-        ->post('required')
-        ->get(),
-            'parent_id' => Validation::make($this)
-        ->type('uuid')
-        ->exists('assos', 'id')
-        ->get(),
-            'user_id' => Validation::make($this)
-        ->type('uuid')
-        ->exists('users', 'id')
-        ->post('required')
-        ->get(),
+            'name' => Validation::type('string')
+                ->length('name')
+                ->unique('assos', 'name')
+                ->post('required')
+                ->get(),
+            'shortname' => Validation::type('string')
+                ->length('login')
+                ->unique('assos', 'shortname')
+                ->post('required')
+                ->get(),
+            'login' => Validation::type('string')
+                ->length('login')
+                ->unique('assos', 'login')
+                ->post('required')
+                ->get(),
+            'image' => Validation::type('url')
+                ->length('url')
+                ->get(),
+            'description' => Validation::type('string')
+                ->length('description')
+                ->post('required')
+                ->get(),
+            'type_asso_id' => Validation::type('uuid')
+                ->exists('assos_types', 'id')
+                ->post('required')
+                ->get(),
+            'parent_id' => Validation::type('uuid')
+                ->exists('assos', 'id')
+                ->get(),
+            'user_id' => Validation::type('uuid')
+                ->exists('users', 'id')
+                ->post('required')
+                ->get(),
         ];
     }
 }

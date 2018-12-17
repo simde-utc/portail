@@ -13,7 +13,7 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
+use Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoomRequest extends FormRequest
@@ -37,16 +37,29 @@ class RoomRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('string'))
+            'location_id' => Validation::type('uuid')
+                ->exists('locations', 'id')
                 ->post('required')
                 ->get(),
-            'asso_id' => Validation::make($this)
-                ->type('uuid')
-                ->exists('assos', 'id')
+            'created_by_type' => Validation::type('string')
+                ->get(),
+            'created_by_id' => Validation::type('integer')
+                ->get(),
+            'owned_by_type' => Validation::type('string')
                 ->post('required')
                 ->get(),
+            'owned_by_id' => Validation::type('integer')
+                ->post('required')
+                ->get(),
+            'visibility_id' => Validation::type('uuid')
+                ->exists('visibilities', 'id')
+                ->get(),
+            'calendar_id' => Validation::type('uuid')
+                ->exists('calendars', 'id')
+                ->post('required')
+                ->get(),
+            'capacity' => Validation::type('integer')
+                ->get()
         ];
     }
 }

@@ -12,7 +12,7 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
+use Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EventRequest extends FormRequest
@@ -36,38 +36,34 @@ class EventRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('title'))
+            'name' => Validation::type('string')
+                ->length('title')
                 ->post('required')
                 ->get(),
-            'description' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('article'))
-                ->post('required')
+            'location_id' => Validation::type('uuid')
+                ->exists('locations', 'id')
                 ->get(),
-            'image' => Validation::make($this)
-                ->type('image')
-                ->nullable()
-                ->length(validation_between('url')
-                )->get(),
-            'from' => Validation::make($this)
-                ->type('date')
-                ->post('required')
-                ->get(),
-            'to' => Validation::make($this)
-                ->type('date')
-                ->post('required')
-                ->get(),
-            'visibility_id' => Validation::make($this)
-                ->type('uuid')
+            'visibility_id' => Validation::type('uuid')
                 ->exists('visibilities', 'id')
                 ->post('required')
                 ->get(),
-            'place' => Validation::make($this)
-                ->type('string')
-                ->nullable()
-                ->length(validation_between('string'))
+            'begin_at' => Validation::type('datetime')
+                ->post('required')
+                ->get(),
+            'end_at' => Validation::type('datetime')
+                ->post('required')
+                ->get(),
+            'full_day' => Validation::type('bool')
+                ->get(),
+            'created_by_type' => Validation::type('string')
+                ->get(),
+            'created_by_id' => Validation::type('integer')
+                ->get(),
+            'owned_by_type' => Validation::type('string')
+                ->post('required')
+                ->get(),
+            'owned_by_id' => Validation::type('integer')
+                ->post('required')
                 ->get(),
         ];
     }

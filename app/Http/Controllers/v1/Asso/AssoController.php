@@ -103,7 +103,7 @@ class AssoController extends Controller
     /**
      * Montre une association.
      *
-     * @param AssoRequest $request
+     * @param Request $request
      * @param string      $asso_id
      * @return JsonResponse
      */
@@ -164,7 +164,7 @@ class AssoController extends Controller
      * @param string      $asso_id
      * @return void
      */
-    public function destroy(Request $request, string $asso_id): void
+    public function destroy(AssoRequest $request, string $asso_id): void
     {
         $asso = $this->getAsso($request, $asso_id);
 
@@ -173,7 +173,7 @@ class AssoController extends Controller
         }
 
         $asso->delete();
-        $this->deleteImage('assos/'.$asso->id);
+        // On ne supprime pas une asso réellement: $this->deleteImage('assos/'.$asso->id);
 
         abort(204);
     }

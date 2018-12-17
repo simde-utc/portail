@@ -2,8 +2,6 @@
 /**
  * Gère les articles.
  *
- * TODO: Add abort.
- *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -15,7 +13,7 @@
 namespace App\Http\Controllers\v1\Article;
 
 use App\Http\Controllers\v1\Controller;
-use App\Facades\Scopes;
+use Scopes;
 use App\Models\Model;
 use App\Models\User;
 use App\Models\Asso;
@@ -124,10 +122,10 @@ class ArticleController extends Controller
     /**
      * Liste les articles.
      *
-     * @param Request $request
+     * @param ArticleRequest $request
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(ArticleRequest $request): JsonResponse
     {
         if (\Scopes::isOauthRequest($request)) {
             $articles = Article::getSelection()->filter(function ($article) use ($request) {
@@ -142,16 +140,16 @@ class ArticleController extends Controller
 
         return response()->json($articles->values()->map(function ($article) {
             return $article->hideData();
-        }), 200);
+        }));
     }
 
     /**
      * Créer un article.
      *
-     * @param Request $request
+     * @param ArticleRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ArticleRequest $request): JsonResponse
     {
         $inputs = $request->all();
 
@@ -199,14 +197,13 @@ class ArticleController extends Controller
             $tags = Tag::all();
 
             foreach ($inputs['tags'] as $tag_arr) {
-                if (!$tags->firstWhere('name', $tag_arr['name'])) {
+                if ($tag = $tags->firstWhere('name', $tag_arr['name'])) {
+                    $article->tags()->save($tag);
+                } else {
                     $tag = new Tag;
                     $tag->name = $tag_arr['name'];
                     $tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
                     $tag->save();
-                    $article->tags()->save($tag);
-                } else {
-                    $tag = Tag::where('name', $tag_arr['name'])->first();
                     $article->tags()->save($tag);
                 }
             }
@@ -220,25 +217,25 @@ class ArticleController extends Controller
     /**
      * Montre un article.
      *
-     * @param Request $request
+     * @param ArticleRequest $request
      * @param string  $article_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $article_id): JsonResponse
+    public function show(ArticleRequest $request, string $article_id): JsonResponse
     {
         $article = $this->getArticle($request, \Auth::user(), $article_id);
 
-        return response()->json($article->hideSubData(), 200);
+        return response()->json($article->hideSubData());
     }
 
     /**
      * Met à jour un article.
      *
-     * @param Request $request
+     * @param ArticleRequest $request
      * @param string  $article_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $article_id): JsonResponse
+    public function update(ArticleRequest $request, string $article_id): JsonResponse
     {
         $article = $this->getCalendar($request, \Auth::user(), $article_id, 'edit');
         $inputs = $request->all();
@@ -279,7 +276,7 @@ class ArticleController extends Controller
 
             $article = $this->getArticle($request, \Auth::user(), $article->id);
 
-            return response()->json($article->hideData(), 200);
+            return response()->json($article->hideData());
         } else {
             abort(500, 'Impossible de modifier l\'article');
         }
@@ -288,11 +285,11 @@ class ArticleController extends Controller
     /**
      * Supprime un article.
      *
-     * @param Request $request
+     * @param ArticleRequest $request
      * @param string  $article_id
      * @return void
      */
-    public function destroy(Request $request, string $article_id): void
+    public function destroy(ArticleRequest $request, string $article_id): void
     {
         $article = $this->getArticle($request, \Auth::user(), $article_id, 'remove');
         $article->tags()->delete();

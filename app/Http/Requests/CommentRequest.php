@@ -11,7 +11,7 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
+use Validation;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Exceptions\PortailException;
 use App\Interfaces\Model\CanHaveComments;
@@ -41,18 +41,18 @@ class CommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'body' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('comment'))
+            'body' => Validation::type('string')
+                ->length('comment')
                 ->post('required')
                 ->get(),
-            'parent_id' => Validation::make($this)
-                ->type('uuid')
-                ->exists('comments', 'id')
+            'created_by_type' => Validation::type('string')
                 ->get(),
-            'visibility_id' => Validation::make($this)
-                ->type('uuid')
-                ->exists('visibilities', 'id')
+            'created_by_id' => Validation::type('integer')
+                ->get(),
+            'owned_by_type' => Validation::type('string')
+                ->post('required')
+                ->get(),
+            'owned_by_id' => Validation::type('integer')
                 ->post('required')
                 ->get(),
         ];

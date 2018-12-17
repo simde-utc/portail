@@ -11,54 +11,25 @@
 
 namespace App\Services;
 
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
 
 class Validation
 {
-    protected $request;
     protected $args;
-
-    /**
-     * Crée une validation pour une requête.
-     *
-     * @param Request $request
-     * @param array   $args
-     * @return Validation
-     */
-    public function make(Request $request, array $args=[])
-    {
-        $this->request = $request;
-        $this->args = is_array($args) ? $args : [$args];
-
-        return $this;
-    }
 
     /**
      * Force une longueur maximale.
      *
-     * @param string $arg
+     * @param string|int $arg
+     * @param int     $max
      * @return Validation
      */
-    public function length(string $arg)
+    public function length($arg, int $max = null)
     {
-        $this->args['length'] = $arg;
-
-        return $this;
-    }
-
-    /**
-     * Récupère tous les appels.
-     *
-     * @param string $method
-     * @param array  $args
-     * @return Validation
-     */
-    public function __call(string $method, array $args)
-    {
-        if ($this->request->isMethod($method)) {
-            foreach ($args as $arg) {
-                array_push($this->args, $arg);
-            }
+        if (is_null($max)) {
+            $this->args['length'] = validation_between($arg);
+        } else {
+            $this->args['length'] = $arg.','.$max;
         }
 
         return $this;
@@ -118,12 +89,33 @@ class Validation
     }
 
     /**
+     * Récupère tous les appels.
+     *
+     * @param string $method
+     * @param array  $args
+     * @return Validation
+     */
+    public function __call(string $method, array $args)
+    {
+        if ((new Request)->isMethod($method)) {
+            foreach ($args as $arg) {
+                array_push($this->args, $arg);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Compilation de la validation.
      *
      * @return string
      */
     public function get()
     {
-        return implode('|', array_values($this->args));
+        $result = implode('|', array_values($this->args));
+        $this->args = [];
+
+        return $result;
     }
 }

@@ -16,6 +16,7 @@ use App\Traits\Controller\v1\HasCreatorsAndOwners;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Room;
+use App\Http\Requests\RoomRequest;
 
 class RoomController extends Controller
 {
@@ -56,10 +57,10 @@ class RoomController extends Controller
     /**
      * Listes les salles.
      *
-     * @param  Request $request
+     * @param  RoomRequest $request
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(RoomRequest $request): JsonResponse
     {
         $rooms = Room::getSelection()->filter(function ($room) use ($request) {
             return $this->tokenCanSee($request, $room, 'get')
@@ -74,10 +75,10 @@ class RoomController extends Controller
     /**
      * Crée une salle.
      *
-     * @param  Request $request
+     * @param  RoomRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(RoomRequest $request): JsonResponse
     {
         $inputs = $request->all();
 
@@ -97,11 +98,11 @@ class RoomController extends Controller
     /**
      * Montre une salle.
      *
-     * @param Request $request
+     * @param RoomRequest $request
      * @param string  $room_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $room_id): JsonResponse
+    public function show(RoomRequest $request, string $room_id): JsonResponse
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
 
@@ -111,11 +112,11 @@ class RoomController extends Controller
     /**
      * Met à jour une salle.
      *
-     * @param Request $request
+     * @param RoomRequest $request
      * @param string  $room_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $room_id): JsonResponse
+    public function update(RoomRequest $request, string $room_id): JsonResponse
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id, 'edit');
         $inputs = $request->all();
@@ -137,11 +138,11 @@ class RoomController extends Controller
     /**
      * Supprime une salle.
      *
-     * @param Request $request
+     * @param RoomRequest $request
      * @param string  $room_id
      * @return void
      */
-    public function destroy(Request $request, string $room_id)
+    public function destroy(RoomRequest $request, string $room_id)
     {
         $room = $this->getRoom($request, \Auth::user(), 'manage');
 

@@ -12,7 +12,7 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
+use Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AssoTypeRequest extends FormRequest
@@ -36,16 +36,16 @@ class AssoTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => Validation::make($this)
-        ->type('string')
-        ->length(validation_between('name'))
-        ->post('required')
-        ->get(),
-            'description' => Validation::make($this)
-        ->type('string')
-        ->length(validation_between('description'))
-        ->post('required')
-        ->get(),
+            'type' => Validation::type('string')
+                ->length('name')
+                ->unique('assos_types', 'type')
+                ->post('required')
+                ->get(),
+            'name' => Validation::type('string')
+                ->length('description')
+                ->unique('assos_types', 'name')
+                ->post('required')
+                ->get(),
         ];
     }
 }

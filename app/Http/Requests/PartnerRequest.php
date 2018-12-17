@@ -13,7 +13,7 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
+use Validation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PartnerRequest extends FormRequest
@@ -37,19 +37,16 @@ class PartnerRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('name'))
+            'name' => Validation::type('string')
+                ->length('name')
                 ->post('required')
                 ->get(),
-            'description' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('description'))
+            'description' => Validation::type('string')
+                ->length('description')
                 ->post('required')
                 ->get(),
-            'image' => Validation::make($this)
-                ->type('image')
-                ->length(validation_between('url'))
+            'image' => Validation::type('image')
+                ->length('url')
                 ->post('required')
                 ->get(),
         ];

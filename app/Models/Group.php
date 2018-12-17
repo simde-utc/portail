@@ -30,11 +30,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     protected $roleRelationTable = 'groups_members';
 
     protected $fillable = [
-        'name', 'user_id', 'icon_id', 'visibility_id', 'is_active',
-    ];
-
-    protected $casts = [
-        'is_active' => 'boolean',
+        'name', 'user_id', 'icon', 'visibility_id',
     ];
 
     protected $dates = [
@@ -46,7 +42,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     ];
 
     protected $must = [
-        'icon_id'
+        'icon'
     ];
 
     protected $selection = [

@@ -11,7 +11,7 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
+use Validation;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Asso;
 use App\Models\User;
@@ -48,24 +48,26 @@ class ContactRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('name'))
+            'name' => Validation::type('string')
+                ->length('name')
                 ->post('required')
                 ->get(),
-            'value' => Validation::make($this)
-                ->type('string')
+            'value' => Validation::type('string')
                 ->nullable()
                 ->post('required')
                 ->get(),
-            'contact_type_id' => Validation::make($this)
-                ->type('uuid')
+            'contact_type_id' => Validation::type('uuid')
                 ->exists('contacts_types', 'id')
                 ->post('required')
                 ->get(),
-            'visibility_id' => Validation::make($this)
-                ->type('uuid')
+            'visibility_id' => Validation::type('uuid')
                 ->exists('visibilities', 'id')
+                ->post('required')
+                ->get(),
+            'owned_by_type' => Validation::type('string')
+                ->post('required')
+                ->get(),
+            'owned_by_id' => Validation::type('integer')
                 ->post('required')
                 ->get(),
         ];

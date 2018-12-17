@@ -41,9 +41,10 @@ class VisibilityController extends Controller
     /**
      * Liste les visibilités.
      *
+     * @param  VisibilityRequest $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(VisibilityRequest $request): JsonResponse
     {
         $visibilities = Visibility::getSelection()->map(function ($visibility) {
             return $visibility->hideData();
@@ -55,7 +56,7 @@ class VisibilityController extends Controller
     /**
      * Crée des visibilités.
      *
-     * @param VisibilityRequest $request
+     * @param  VisibilityRequest $request
      * @return JsonResponse
      */
     public function store(VisibilityRequest $request): JsonResponse
@@ -85,7 +86,7 @@ class VisibilityController extends Controller
     /**
      * Met à jour une visibilité.
      *
-     * @param VisibilityRequest $request
+     * @param  VisibilityRequest $request
      * @param  string            $visibility_id
      * @return JsonResponse
      */
@@ -107,10 +108,11 @@ class VisibilityController extends Controller
     /**
      * Supprime une visibilité.
      *
+     * @param  VisibilityRequest $request
      * @param  string $visibility_id
      * @return void
      */
-    public function destroy(string $visibility_id): void
+    public function destroy(VisibilityRequest $request, string $visibility_id): void
     {
         $visibility = Visibility::find($visibility_id);
 

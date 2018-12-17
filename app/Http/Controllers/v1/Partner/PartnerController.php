@@ -57,10 +57,11 @@ class PartnerController extends Controller
     /**
      * Montre un partenaire.
      *
+     * @param PartnerRequest $request
      * @param string $partner_id
      * @return JsonResponse
      */
-    public function show(string $partner_id): JsonResponse
+    public function show(PartnerRequest $request, string $partner_id): JsonResponse
     {
         $partner = Partner::find($partner_id);
 
@@ -75,7 +76,7 @@ class PartnerController extends Controller
      * Met à jour un partenaire.
      *
      * @param PartnerRequest $request
-     * @param  string         $partner_id
+     * @param string         $partner_id
      * @return JsonResponse
      */
     public function update(PartnerRequest $request, string $partner_id): JsonResponse
@@ -101,10 +102,11 @@ class PartnerController extends Controller
     /**
      * Supprime un partenaire.
      *
-     * @param  string $partner_id
+     * @param PartnerRequest $request
+     * @param string $partner_id
      * @return JsonResponse
      */
-    public function destroy(string $partner_id): JsonResponse
+    public function destroy(PartnerRequest $request, string $partner_id): JsonResponse
     {
         $partner = Partner::find($partner_id);
 
