@@ -14,26 +14,34 @@ use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Semester;
+use App\Traits\Controller\v1\HasSemesters;
 
 class SemesterController extends Controller
 {
+    use HasSemesters;
+
     /**
      * Récupération publique ou sous scopes.
      */
     public function __construct()
     {
         $this->middleware(
-        \Scopes::allowPublic()->matchAnyUserOrClient()
+            \Scopes::allowPublic()->matchAnyUserOrClient()
         );
     }
 
     /**
      * Liste les semestres.
      *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        if ($request->has('year')) {
+            return response()->json(Semester::getThisYear($request->input('year')), 200);
+        }
+
         $semesters = Semester::getSelection()->map(function ($semester) {
             return $semester->hideData();
         });
@@ -59,7 +67,7 @@ class SemesterController extends Controller
      */
     public function show(string $semester_id): JsonResponse
     {
-        $semester = Semester::getSemester($semester_id);
+        $semester = $this->getSemester($semester_id);
 
         return response()->json($semester->hideSubData(), 200);
     }

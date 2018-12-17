@@ -21,7 +21,21 @@ trait HasHiddenData
      */
     public function getModelAttribute(): string
     {
-        return \ModelResolver::getNameFromClass($this);
+        return \ModelResolver::getNameFromObject($this);
+    }
+
+    /**
+     * Retourne la liste des champs obligatoires.
+     *
+     * @return array
+     */
+    public function getMustFields()
+    {
+        return array_merge(
+            ($this->optional ?? []),
+            ($this->must ?? []),
+            ['id', 'name', 'model', 'pivot']
+        );
     }
 
     /**
@@ -69,9 +83,7 @@ trait HasHiddenData
     {
         $this->makeHidden(array_diff(
             array_keys($this->toArray()),
-            ($this->optional ?? []),
-            ($this->must ?? []),
-            ['id', 'name', 'model', 'pivot']
+            $this->getMustFields()
             // On affiche au moins l'id, le nom et le modèle !
         ));
 

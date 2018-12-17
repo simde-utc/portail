@@ -27,6 +27,7 @@ use App\Traits\Model\HasRoles;
 use App\Traits\Model\HasHiddenData;
 use App\Traits\Model\HasUuid;
 use App\Traits\Model\UserRelations;
+use App\Traits\Model\IsLogged;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Semester;
@@ -42,7 +43,7 @@ use App\Notifications\User\UserDeletion;
 class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents,
 	CanHaveRoles, CanHavePermissions, CanComment
 {
-    use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid, UserRelations {
+    use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid, IsLogged, UserRelations {
         UserRelations::notifications insteadof Notifiable;
         UserRelations::isRoleForIdDeletable insteadof HasRoles;
         HasHiddenData::hideData as protected hideDataFromTrait;
@@ -129,7 +130,12 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     ];
 
     protected $types = [
-        'admin', 'contributorBde', 'casConfirmed', 'cas', 'password', 'active',
+        'admin' => 'administrateur',
+        'contributorBde' => 'contributeur BDE',
+        'casConfirmed' => 'membre UTC ou ESCOM',
+        'cas' => 'avec connexion CAS',
+        'password' => 'avec connexion email/mot de passe',
+        'active' => 'compte actif',
     ];
 
     protected $selection = [
@@ -160,6 +166,16 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         } else {
             return 'Compte invité';
         }
+    }
+
+    /**
+     * Récupère le mot de passe de l'utilisateur.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password()->password;
     }
 
     /**
@@ -201,12 +217,12 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         $channels = $this->preferences()->valueOf('NOTIFICATION_CHANNELS');
 
         if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_EMAIL_AVOID'))
-        && ($key = array_search('mail', $channels)) !== false) {
+        	&& ($key = array_search('mail', $channels)) !== false) {
             unset($channels[$key]);
         }
 
         if (in_array($notificationType, $this->preferences()->valueOf('NOTIFICATION_PUSH_AVOID'))
-        && ($key = array_search('push', $channels)) !== false) {
+        	&& ($key = array_search('push', $channels)) !== false) {
             unset($channels[$key]);
         }
 
@@ -273,7 +289,30 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
      */
     public function getTypes()
     {
+        return array_keys($this->types);
+    }
+
+    /**
+     * Retourne les types d'utilisateurs possible avec leur description.
+     *
+     * @return array
+     */
+    public function getTypeDescriptions()
+    {
         return $this->types;
+    }
+
+    /**
+     * Retourne les types d'utilisateurs possible.
+     *
+     * @param string $type
+     * @return boolean
+     */
+    public function isType(string $type)
+    {
+        $method = 'is'.ucfirst($type);
+
+        return method_exists($this, $method) && $this->$method();
     }
 
     /**
@@ -283,7 +322,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
      */
     public function type()
     {
-        foreach ($this->types as $type) {
+        foreach ($this->getTypes() as $type) {
             $method = 'is'.ucfirst($type);
 
             if (method_exists($this, $method) && $this->$method()) {

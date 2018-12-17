@@ -136,6 +136,15 @@ class LoginController extends Controller
             }
         }
 
+        // Si on est en mode personnifié.
+        if ($user = Auth::guard('admin')->user()) {
+            if (Auth::guard('web')->id() !== $user->id) {
+                Auth::guard('web')->login($user);
+
+                return redirect('/');
+            }
+        }
+
         // Ne pas oublier de détruire sa session.
         \Session::flush();
 

@@ -163,7 +163,7 @@ class Test extends Command
             foreach ($this->dirs as $dir) {
                 $command = "find ".$dir." -iname '*.php' -exec php -l '{}' \; | grep '^No syntax errors' -v";
 
-                $process = new Process($command);
+                $process = Process::fromShellCommandline($command);
 
                 $process->run(function ($type, $line) use (&$failed) {
                     if ($line !== '') {
@@ -182,7 +182,7 @@ class Test extends Command
             $bar = $this->output->createProgressBar(count($files));
 
             foreach ($files as $file) {
-                $process = new Process("php -l ".$file);
+                $process = Process::fromShellCommandline("php -l ".$file);
                 $lines = [];
 
                 $process->run(function ($type, $line) use (&$lines) {
@@ -221,18 +221,18 @@ class Test extends Command
             $dirs = $this->files;
         }
 
-        // Les fichiers sont du type "spécial" (possèdent des règles en moins)
+        // Les fichiers sont du type "spécial" (possèdent des règles en moins).
         if ($this->option('special')) {
             $specialFiles = $dirs;
         } else {
             $files = [];
             $specialFiles = [];
 
-            foreach ($files as $file) {
-                if (array_search($file, $this->specialFiles) === false) {
-                    $files[] = $file;
+            foreach ($dirs as $dir) {
+                if (array_search($dir, $this->specialFiles) === false) {
+                    $files[] = $dir;
                 } else {
-                    $specialFiles[] = $file;
+                    $specialFiles[] = $dir;
                 }
             }
 
@@ -330,7 +330,7 @@ class Test extends Command
      */
     private function process(string $command)
     {
-        $process = new Process($command);
+        $process = Process::fromShellCommandline($command);
 
         $process->run(function ($type, $line) {
             $this->output->write($line);

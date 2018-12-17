@@ -71,7 +71,7 @@ class Permission extends Model implements OwnableContract
 
         if (($array['owned_by'] ?? null) === null) {
             $array['owned_by'] = [
-                'model' => \ModelResolver::getName($this->owned_by),
+                'model' => \ModelResolver::getNameFromObject($this->owned_by),
             ];
         } else {
             $array['owned_by'] = $this->owned_by->hideData(true);

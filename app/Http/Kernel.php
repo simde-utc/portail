@@ -40,6 +40,14 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
         ],
+
+        'admin-portail' => [
+            'auth:web',
+            'admin.auth',
+            'admin.pjax',
+            'admin.bootstrap',
+            'admin.check',
+        ],
     ];
 
     protected $routeMiddleware = [
@@ -49,11 +57,12 @@ class Kernel extends HttpKernel
         'auth.user' => \App\Http\Middleware\CheckUser::class,
         'auth.client' => \App\Http\Middleware\CheckClient::class,
         'auth.check' => \App\Http\Middleware\CheckAuth::class,
-        'authAjax.any' => \App\Http\Middleware\CheckAjaxAny::class,
-        'authAjax.user' => \App\Http\Middleware\CheckAjaxUser::class,
-        'authAjax.client' => \App\Http\Middleware\CheckAjaxClient::class,
-        'authAjax.check' => \App\Http\Middleware\CheckAjaxAuth::class,
-        'checkAjax' => \App\Http\Middleware\CheckAjax::class,
+        'auth.public' => \App\Http\Middleware\CheckPublic::class,
+        'auth.public.any' => \App\Http\Middleware\CheckPublicAny::class,
+        'auth.public.user' => \App\Http\Middleware\CheckPublicUser::class,
+        'auth.public.client' => \App\Http\Middleware\CheckPublicClient::class,
+        'auth.public.check' => \App\Http\Middleware\CheckPublicAuth::class,
+        'admin.check' => \App\Admin\Middlewares\CheckAdmin::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,

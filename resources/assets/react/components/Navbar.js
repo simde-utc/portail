@@ -77,12 +77,12 @@ class Navbar extends React.Component {
 
 						{ this.props.user && this.props.permissions.length && (
 							<li className="nav-item">
-								<NavLink className="nav-link d-flex" to="/admin">
+								<a className="nav-link d-flex" href="/admin">
 									<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
 										<FontAwesomeIcon icon="circle" className="icon-background2" />
 										<FontAwesomeIcon icon="screwdriver" transform="shrink-8" />
 									</span>
-								</NavLink>
+								</a>
 							</li>
 						)}
 

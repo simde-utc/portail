@@ -15,11 +15,14 @@ use App\Models\User;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Traits\Controller\v1\HasUsers;
+use App\Traits\Controller\v1\HasSemesters;
 use App\Exceptions\PortailException;
 
 trait HasAssos
 {
-    use HasUsers;
+    use HasUsers, HasSemesters {
+        getSemester as protected getSemesterFromTrait;
+    }
 
     /**
      * Récupère le semestre en fonction des choix.
@@ -52,13 +55,7 @@ trait HasAssos
                     les associations que l\'utilisateur suit');
             }
 
-            $semester = Semester::getSemester($request->input('semester'));
-
-            if ($semester) {
-                return $semester;
-            } else {
-                abort(400, 'Le semestre n\'existe pas');
-            }
+            return $this->getSemesterFromTrait($request->input('semester'));
         }
 
         return Semester::getThisSemester();

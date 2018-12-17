@@ -14,6 +14,7 @@ class CreateUsersPreferencesTable extends Migration
     public function up()
     {
         Schema::create('users_preferences', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->string('key');
             $table->string('value')->nullable();
@@ -24,7 +25,7 @@ class CreateUsersPreferencesTable extends Migration
 
             $table->timestamps();
 
-            $table->primary(['user_id', 'key', 'only_for']);
+            $table->unique(['user_id', 'key', 'only_for']);
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

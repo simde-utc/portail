@@ -26,14 +26,6 @@ class Visibility extends Model
         'type', 'name', 'parent_id'
     ];
 
-    protected $hidden = [
-        'created_at', 'updated_at'
-    ];
-
-    protected $must = [
-        'type',
-    ];
-
     protected $selection = [
         'paginate' => [],
         'order' => [],

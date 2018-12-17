@@ -143,6 +143,20 @@ class AuthController extends Controller
     }
 
     /**
+     * Il est impossible de modifier un système d'authentification actuellement.
+     * TODO
+     *
+     * @param  Request $request
+     * @param  string 	$user_id
+     * @param  string 	$name
+     * @return void
+     */
+    public function update(Request $request, string $user_id, string $name=null)
+    {
+        abort(405, 'Il n\'est pas possible de modifier un système d\'authentification');
+    }
+
+    /**
      * Supprime un système d'authentification de l'utilisateur.
      *
      * @param  Request $request

@@ -17,23 +17,34 @@ use App\Interfaces\Model\CanHaveArticles;
 use App\Interfaces\Model\CanNotify;
 use App\Traits\Model\HasHiddenData;
 use App\Traits\Model\HasUuid;
+use App\Traits\Model\IsLogged;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 
 class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify
 {
-    use HasHiddenData, HasSelection, HasUuid;
+    use HasHiddenData, HasSelection, HasUuid, IsLogged;
 
     public $incrementing = false;
 
     protected $fillable = [
-        'user_id', 'asso_id', 'name', 'secret', 'redirect', 'personal_access_client', 'password_client',
-        'revoked', 'created_at', 'updated_at', 'scopes'
+        'user_id', 'asso_id', 'name', 'secret', 'redirect', 'targeted_types',
+        'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'scopes'
     ];
 
     protected $selection = [
         'paginate' => null,
         'filter' => [],
     ];
+
+    /**
+     * Relation avec l'utilisateur.
+     *
+     * @return mixed
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Relation avec l'association.

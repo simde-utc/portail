@@ -14,6 +14,7 @@ class CreateEventsDetailsTable extends Migration
     public function up()
     {
         Schema::create('events_details', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->uuid('event_id');
             $table->string('key');
             $table->string('value')->nullable();
@@ -25,7 +26,7 @@ class CreateEventsDetailsTable extends Migration
 
             $table->foreign('event_id')->references('id')->on('events');
 
-            $table->primary(['event_id', 'key']);
+            $table->unique(['event_id', 'key']);
         });
     }
 

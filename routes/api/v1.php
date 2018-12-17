@@ -87,7 +87,6 @@ Route::group(['middleware' => 'user:active'], function () {
         'assos/{asso_id}/members' => 'Asso\MemberController',
         'assos/{asso_id}/access' => 'Asso\AccessController',
         'roles' => 'Role\RoleController',
-        'roles/{role_id}/permissions' => 'Role\PermissionController',
         'permissions' => 'Permission\PermissionController',
         'rooms' => 'Room\RoomController',
         'rooms/{room_id}/reservations' => 'Room\ReservationController',

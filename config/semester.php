@@ -9,7 +9,7 @@
  */
 
 return [
-    'begining_at' => [
+    'begin_at' => [
         [
             'month' => '09',
             'day' => '01',
@@ -22,7 +22,7 @@ return [
         ],
     ],
 
-    'ending_at' => [
+    'end_at' => [
         [
             'month' => '01',
             'day' => '31',

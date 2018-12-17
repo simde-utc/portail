@@ -15,12 +15,14 @@ use App\Interfaces\Model\CanBeNotifiable;
 use Illuminate\Notifications\Notification as BaseNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\HtmlString;
 
 abstract class Notification extends BaseNotification implements ShouldQueue
 {
     use Queueable;
 
     protected $type;
+    protected $exceptedVia = [];
 
     /**
      * Définition du type de notification.
@@ -76,7 +78,14 @@ abstract class Notification extends BaseNotification implements ShouldQueue
      * @param  MailMessage     $mail
      * @return MailMessage
      */
-    abstract protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail);
+    protected function getMailBody(CanBeNotifiable $notifiable, MailMessage $mail)
+    {
+        $content = '<br />'.str_replace(PHP_EOL, '<br />', htmlentities($this->getContent($notifiable))).'<br />';
+
+        return $mail
+            ->line($notifiable->name)
+            ->line(new HtmlString($content));
+    }
 
     /**
      * Liste les canaux de notifications.
@@ -86,7 +95,15 @@ abstract class Notification extends BaseNotification implements ShouldQueue
      */
     public function via(CanBeNotifiable $notifiable)
     {
-        return $notifiable->notificationChannels($this->type);
+        $channels = $notifiable->notificationChannels($this->type);
+
+        foreach ($this->exceptedVia as $excepted) {
+            if (($key = array_search($excepted, $channels)) !== false) {
+                unset($channels[$key]);
+            }
+        }
+
+        return $channels;
     }
 
     /**

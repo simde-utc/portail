@@ -58,9 +58,9 @@ class AssignmentController extends Controller
         $this->checkTokenRights($request);
 
         $permissions = $this->getPermissionsFromModel($request)
-        ->map(function ($permission) {
-            return $permission->hideData();
-        });
+            ->map(function ($permission) {
+                return $permission->hideData();
+            });
 
         return response()->json($permissions, 200);
     }
@@ -75,7 +75,7 @@ class AssignmentController extends Controller
     {
         $this->checkTokenRights($request, 'create');
 
-        $semester_id = (Semester::getSemester($request->input('semester'))->id ?? Semester::getThisSemester()->id);
+        $semester_id = Semester::getSemester($request->input('semester'))->id;
 
         $request->resource->assignPermissions($request->input('permission_id'), [
             'user_id' => (\Auth::id() ?? $request->input('user_id')),

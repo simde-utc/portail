@@ -44,7 +44,7 @@ class Scopes
 
     protected $scopes;
 
-    protected $allowPublicAjax = false;
+    protected $allowPublic = false;
 
     /**
      * Récupère la configuration des scopes.
@@ -62,7 +62,7 @@ class Scopes
      */
     public function allowPublic(bool $allow=true)
     {
-        $this->allowPublicAjax = $allow;
+        $this->allowPublic = $allow;
 
         return $this;
     }
@@ -74,7 +74,7 @@ class Scopes
      */
     protected function getAuthMiddleware()
     {
-        return $this->allowPublicAjax ? 'authAjax' : 'auth';
+        return $this->allowPublic ? 'auth.public' : 'auth';
     }
 
     /**
@@ -306,5 +306,23 @@ class Scopes
         }
 
         return $categories;
+    }
+
+    /**
+     * Retourne les scopes pour le développement.
+     *
+     * @return array
+     */
+    public function getDevScopes()
+    {
+        $scopes = [];
+
+        foreach (array_keys(self::all()) as $scope) {
+            if (substr($scope, 0, 11) === 'user-manage') {
+                $scopes[] = $scope;
+            }
+        }
+
+        return $scopes;
     }
 }

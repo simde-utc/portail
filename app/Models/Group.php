@@ -20,6 +20,7 @@ use App\Interfaces\Model\CanHaveContacts;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Interfaces\Model\CanHaveRoles;
 use App\Interfaces\Model\CanHavePermissions;
+use App\Models\User;
 use App\Models\Role;
 
 class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles,
@@ -30,11 +31,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     protected $roleRelationTable = 'groups_members';
 
     protected $fillable = [
-        'name', 'user_id', 'icon_id', 'visibility_id', 'is_active',
-    ];
-
-    protected $casts = [
-        'is_active' => 'boolean',
+        'name', 'user_id', 'icon', 'visibility_id',
     ];
 
     protected $dates = [
@@ -46,7 +43,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     ];
 
     protected $must = [
-        'icon_id'
+        'icon'
     ];
 
     protected $selection = [
@@ -82,9 +79,19 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
      *
      * @return mixed
      */
-    public function owner()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Relation avec le possédeur du groupe.
+     *
+     * @return mixed
+     */
+    public function owner()
+    {
+        return $this->user();
     }
 
     /**

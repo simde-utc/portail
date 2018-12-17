@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             RoomsTableSeeder::class,
             ReservationsTypesTableSeeder::class,
             AccessTableSeeder::class,
+            AdminMenuTableSeeder::class,
         ]);
 
         if (config('app.debug', false)) {

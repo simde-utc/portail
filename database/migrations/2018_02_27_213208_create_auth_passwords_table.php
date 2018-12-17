@@ -14,7 +14,8 @@ class CreateAuthPasswordsTable extends Migration
     public function up()
     {
         Schema::create('auth_passwords', function (Blueprint $table) {
-            $table->uuid('user_id')->primary();
+            $table->uuid('id')->primary();
+            $table->uuid('user_id')->unique();
             $table->string('password', 512);
 
             $table->timestamp('last_login_at')->nullable();

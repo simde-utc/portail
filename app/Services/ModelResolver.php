@@ -121,12 +121,12 @@ class ModelResolver
     /**
      * Donne le nom court de la classe.
      *
-     * @param  mixed $class
+     * @param  mixed $object
      * @return string
      */
-    public function getNameFromClass($class)
+    public function getNameFromObject($object)
     {
-        return $this->getName(get_class($class));
+        return $this->getName(get_class($object));
     }
 
     /**
@@ -146,6 +146,17 @@ class ModelResolver
         } else {
             return $name.'s';
         }
+    }
+
+    /**
+     * Donne le nom court de la classe.
+     *
+     * @param  mixed $object
+     * @return string
+     */
+    public function getCategoryFromObject($object)
+    {
+        return $this->getCategory(get_class($object));
     }
 
     /**
