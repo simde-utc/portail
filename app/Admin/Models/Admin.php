@@ -13,9 +13,12 @@ namespace App\Admin\Models;
 use Encore\Admin\Auth\Database\Administrator;
 use Illuminate\Support\Collection;
 use App\Models\User;
+use App\Traits\Model\HasHiddenData;
 
 class Admin extends Administrator
 {
+    use HasHiddenData;
+
     protected $table = 'users';
 
     protected static $isAdministrator = [];

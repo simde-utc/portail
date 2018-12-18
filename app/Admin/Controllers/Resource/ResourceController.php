@@ -68,7 +68,7 @@ abstract class ResourceController extends Controller
     {
         $grid = new GridGenerator($this->model);
 
-        $grid->addFields(array_keys($this->getFields()));
+        $grid->addFields($this->getFields());
 
         return $content
             ->header('Index')
