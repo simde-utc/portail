@@ -69,7 +69,7 @@ class AssoController extends Controller
      */
     public function index(AssoRequest $request): JsonResponse
     {
-        $assos = Asso::getSelection()->map(function ($asso) {
+        $assos = Asso::with('parent')->getSelection()->map(function ($asso) {
             return $asso->hideData();
         });
 
