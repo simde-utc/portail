@@ -63,7 +63,13 @@ class FormGenerator extends Generator
                 $options = [];
 
                 $name = ucfirst($field);
-                $field = $relation->getForeignKey();
+                // Mauvais nommage: https://github.com/laravel/framework/issues/26866.
+                if (method_exists($relation, 'getForeignKey')) {
+                    $field = $relation->getForeignKey();
+                } else {
+                    $field = $relation->getForeignKeyName();
+                }
+
                 $generatedField = $this->generated->select($field, $name);
 
                 foreach ($type as $instance) {

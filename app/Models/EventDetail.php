@@ -19,10 +19,6 @@ class EventDetail extends Model
 
     protected $table = 'events_details';
 
-    protected $primaryKey = [
-        'event_id', 'key'
-    ];
-
     protected $fillable = [
         'event_id', 'key', 'value', 'type',
     ];
@@ -30,16 +26,6 @@ class EventDetail extends Model
     protected $must = [
         'key', 'value'
     ];
-
-    /**
-     * Définition de la clé primaire.
-     *
-     * @return string
-     */
-    public function getKeyName()
-    {
-        return 'event_id';
-    }
 
     /**
      * Relation avec l'événement.

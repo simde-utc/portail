@@ -144,6 +144,6 @@ class SearchController extends Controller
      */
     public function show(Content $content, string $user_id)
     {
-        return (new UserController)->show($content, $user_id);
+        return (new Resource\UserController)->show($content, $user_id);
     }
 }

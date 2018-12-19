@@ -58,7 +58,7 @@ class ContactRequest extends FormRequest
                 ->nullable()
                 ->post('required')
                 ->get(),
-            'contact_type_id' => Validation::make($this)
+            'type_id' => Validation::make($this)
                 ->type('uuid')
                 ->exists('contacts_types', 'id')
                 ->post('required')

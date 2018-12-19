@@ -2,7 +2,7 @@
 /**
  * Modèle correspondant aux tags.
  *
- * TODO: Fillable, must, etc...
+ * TODO: must, etc...
  *
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -17,6 +17,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
 {
+    protected $fillable = [
+        'name', 'description'
+    ];
+
     /**
      * Relation avec l'article.
      *

@@ -16,13 +16,7 @@ class ArticleAction extends Model
 {
     use HasKeyValue;
 
-    public $incrementing = false;
-
     protected $table = 'articles_actions';
-
-    protected $primaryKey = [
-        'article_id', 'user_id', 'key'
-    ];
 
     protected $fillable = [
         'article_id', 'user_id', 'key', 'value', 'type'
@@ -30,10 +24,6 @@ class ArticleAction extends Model
 
     protected $must = [
         'created_at',
-    ];
-
-    protected $hidden = [
-        'visibility_id',
     ];
 
     /**
@@ -44,15 +34,5 @@ class ArticleAction extends Model
     public function article()
     {
         return $this->belongsTo(Article::class);
-    }
-
-    /**
-     * Relation avec l'utilisateur.
-     *
-     * @return mixed
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 }

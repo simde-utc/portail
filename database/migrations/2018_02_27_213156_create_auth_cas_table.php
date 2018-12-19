@@ -14,7 +14,8 @@ class CreateAuthCasTable extends Migration
     public function up()
     {
         Schema::create('auth_cas', function (Blueprint $table) {
-            $table->uuid('user_id')->primary();
+            $table->uuid('id')->primary();
+            $table->uuid('user_id')->unique();
             $table->string('login', validation_max('login'))->unique();
             $table->string('email', validation_max('email'))->unique();
             $table->boolean('is_active')->default(1);

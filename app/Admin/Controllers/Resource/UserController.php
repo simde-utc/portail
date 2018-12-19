@@ -8,7 +8,7 @@
  * @license GNU GPL-3.0
  */
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Resource;
 
 use App\Http\Controllers\Controller;
 use App\Traits\Controller\v1\HasUsers;

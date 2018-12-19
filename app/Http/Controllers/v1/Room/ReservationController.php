@@ -93,7 +93,7 @@ class ReservationController extends Controller
 
             $inputs['validated_by_id'] = $validator->id;
             $inputs['validated_by_type'] = get_class($validator);
-        } else if (!ReservationType::find($inputs['reservation_type_id'])->need_validation) {
+        } else if (!ReservationType::find($inputs['type_id'])->need_validation) {
             $inputs['validated_by_id'] = $inputs['owned_by_id'];
             $inputs['validated_by_type'] = $inputs['owned_by_type'];
         }
@@ -151,7 +151,7 @@ class ReservationController extends Controller
 
         // WARNING: L'événement appartient bien sûr à celui qui possède le calendrier (pour éviter en fait que les gens modifient eux-même l'event).
         $event = Event::create([
-            'name' => ($inputs['name'] ?? ReservationType::find($inputs['reservation_type_id'])),
+            'name' => ($inputs['name'] ?? ReservationType::find($inputs['type_id'])),
             'begin_at' => $inputs['begin_at'],
             'end_at' => $inputs['end_at'],
             'full_day' => ($inputs['full_day'] ?? false),

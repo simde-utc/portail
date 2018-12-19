@@ -20,11 +20,7 @@ class Access extends Model
     protected $table = 'access';
 
     protected $fillable = [
-        'type', 'name', 'description', 'data',
-    ];
-
-    protected $casts = [
-        'data' => 'array',
+        'type', 'name', 'description', 'utc_access',
     ];
 
     protected $must = [
