@@ -111,6 +111,8 @@ class GridGenerator extends Generator
         $model = $this->generatedModel;
 
         $this->generated->filter(function ($filter) use ($fields, $model) {
+            $filter->disableIdFilter();
+
             foreach ($fields as $field => $data) {
                 GridGenerator::generateFilter($filter, $field, $data, $model);
             }
