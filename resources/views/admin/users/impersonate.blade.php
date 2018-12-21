@@ -11,7 +11,7 @@
         <button class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Personnification - {{ $user->name }}</h4>
       </div>
-      <form id="impersonate-user" action="{{ url('/admin/users/'.$user->id.'/impersonate') }}" method="post">
+      <form id="impersonate-user" action="{{ url('/admin/resources/users/'.$user->id.'/impersonate') }}" method="post">
           {{ csrf_field() }}
 
           <div class="modal-body">
