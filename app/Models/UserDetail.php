@@ -21,10 +21,6 @@ class UserDetail extends Model
 
     protected $table = 'users_details';
 
-    protected $primaryKey = [
-        'user_id', 'key',
-    ];
-
     protected $fillable = [
         'user_id', 'key', 'value', 'type',
     ];
@@ -48,7 +44,7 @@ class UserDetail extends Model
         $wheres = $query->getQuery()->wheres;
 
         foreach ($wheres as $where) {
-            if ($where['column'] === $this->getTable().'.'.$this->primaryKey[0]	&& $where['operator'] === '=') {
+            if ($where['column'] === $this->getTable().'.user_id' && $where['operator'] === '=') {
                 return User::find($where['value']);
             }
         }

@@ -8,7 +8,7 @@
  * @license GNU GPL-3.0
  */
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Resource;
 
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
@@ -59,6 +59,16 @@ abstract class ResourceController extends Controller
     }
 
     /**
+     * Retourne le nom du modèle.
+     *
+     * @return string
+     */
+    protected function getName(): string
+    {
+        return ucfirst(\ModelResolver::getName($this->model));
+    }
+
+    /**
      * Interface d'affichage global.
      *
      * @param Content $content
@@ -68,11 +78,11 @@ abstract class ResourceController extends Controller
     {
         $grid = new GridGenerator($this->model);
 
-        $grid->addFields(array_keys($this->getFields()));
+        $grid->addFields($this->getFields());
 
         return $content
-            ->header('Index')
-            ->description('description')
+            ->header($this->getName())
+            ->description('Affichage global')
             ->body($grid->get());
     }
 
@@ -90,8 +100,8 @@ abstract class ResourceController extends Controller
         $show->addFields(array_keys($this->getFields()));
 
         return $content
-            ->header('Detail')
-            ->description('description')
+            ->header($this->getName())
+            ->description('Affichage détaillé')
             ->body($show->get());
     }
 
@@ -105,9 +115,9 @@ abstract class ResourceController extends Controller
     public function edit($model_id, Content $content)
     {
         return $content
-            ->header('Edit')
-            ->description('description')
-            ->body($this->form()->edit($model_id));
+            ->header($this->getName())
+            ->description('Modification')
+            ->body($this->form()->get()->edit($model_id));
     }
 
     /**
@@ -119,15 +129,15 @@ abstract class ResourceController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('Create')
-            ->description('description')
-            ->body($this->form());
+            ->header($this->getName())
+            ->description('Création')
+            ->body($this->form()->get());
     }
 
     /**
      * Créer le formulaire de base.
      *
-     * @return Form
+     * @return FormGenerator
      */
     protected function form()
     {
@@ -141,6 +151,6 @@ abstract class ResourceController extends Controller
             }
         });
 
-        return $form->get();
+        return $form;
     }
 }

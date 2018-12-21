@@ -20,6 +20,7 @@ use App\Interfaces\Model\CanHaveContacts;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Interfaces\Model\CanHaveRoles;
 use App\Interfaces\Model\CanHavePermissions;
+use App\Models\User;
 use App\Models\Role;
 
 class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles,
@@ -78,9 +79,19 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
      *
      * @return mixed
      */
-    public function owner()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Relation avec le possédeur du groupe.
+     *
+     * @return mixed
+     */
+    public function owner()
+    {
+        return $this->user();
     }
 
     /**

@@ -17,11 +17,12 @@ use App\Interfaces\Model\CanHaveArticles;
 use App\Interfaces\Model\CanNotify;
 use App\Traits\Model\HasHiddenData;
 use App\Traits\Model\HasUuid;
+use App\Traits\Model\IsLogged;
 use NastuzziSamy\Laravel\Traits\HasSelection;
 
 class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, CanHaveArticles, CanNotify
 {
-    use HasHiddenData, HasSelection, HasUuid;
+    use HasHiddenData, HasSelection, HasUuid, IsLogged;
 
     public $incrementing = false;
 

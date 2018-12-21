@@ -15,7 +15,7 @@ class CreateAssosTable extends Migration
     {
         Schema::create('assos', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('type_asso_id');
+            $table->uuid('type_id');
             $table->uuid('parent_id')->nullable();
             $table->string('login', validation_max('login'))->unique();
             $table->string('shortname', validation_max('login'))->unique();
@@ -29,7 +29,7 @@ class CreateAssosTable extends Migration
 
         // https://github.com/laravel/framework/issues/25190
         Schema::table('assos', function (Blueprint $table) {
-            $table->foreign('type_asso_id')->references('id')->on('assos_types');
+            $table->foreign('type_id')->references('id')->on('assos_types');
             $table->foreign('parent_id')->references('id')->on('assos');
         });
     }

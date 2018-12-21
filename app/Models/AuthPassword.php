@@ -12,15 +12,9 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Hash;
-use App\Traits\Model\HasHiddenData;
-use NastuzziSamy\Laravel\Traits\HasSelection;
 
 class AuthPassword extends Auth
 {
-    use HasHiddenData, HasSelection;
-
-    public $incrementing = false;
-
     protected $fillable = [
         'user_id', 'password', 'last_login_at',
     ];
@@ -32,16 +26,6 @@ class AuthPassword extends Auth
     protected $must = [
         'user_id',
     ];
-
-    /**
-     * Relation avec l'utlisateur.
-     *
-     * @return mixed
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     /**
      * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.

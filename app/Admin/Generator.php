@@ -15,7 +15,10 @@ use Illuminate\Support\{
 };
 use Encore\Admin\Widgets\Table;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\Relations\{
+    Relation, MorphTo
+};
+use Carbon\Carbon;
 
 abstract class Generator
 {
@@ -24,9 +27,13 @@ abstract class Generator
     protected $generatedModel;
     protected $valueMethod;
 
-    protected const CHECK_ICON = '<i class="fa fa-check text-success"></i>' ;
-    protected const TIMES_ICON = '<i class="fa fa-times text-danger"></i>' ;
-    protected const QUESTION_ICON = '<i class="fa fa-question text-warning"></i>' ;
+    protected static $must = [
+        'id', 'type', 'name', 'title',
+    ];
+
+    protected const POSITIVE_ICON = '<i class="fa fa-check text-success"></i>' ;
+    protected const NEGATIVE_ICON = '<i class="fa fa-times text-danger"></i>' ;
+    protected const NULL_ICON = '<span class="text-warning">~</span>' ;
 
     /**
      * Prépare la génréation.
@@ -75,6 +82,32 @@ abstract class Generator
     }
 
     /**
+     * Réduit le nombre d'informations au strict nécessaire.
+     *
+     * @param  array    $value
+     * @param  Relation $relation
+     * @return array
+     */
+    public static function reduceModelArray(array $value, Relation $relation=null)
+    {
+        $must = static::$must;
+
+        if ($relation instanceof MorphTo) {
+            $must[] = 'model';
+        }
+
+        foreach (array_keys($value) as $key) {
+            if (!in_array($key, $must)) {
+                unset($value[$key]);
+            } else if (is_array($value[$key])) {
+                $value[$key] = static::reduceModelArray($value[$key]);
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      * Converti les valeurs pour l'admin.
      *
      * @param  mixed $value
@@ -85,29 +118,23 @@ abstract class Generator
     public static function adminValue($value, $field=null, $model=null)
     {
         if (is_array($value)) {
-            if ($model) {
-                $relation = (new $model)->$field();
+            if ($model && method_exists($generatedModel = new $model, $field)) {
+                $relation = $generatedModel->$field();
 
                 if ($relation instanceof Relation) {
-                    $must = $relation->getModel()->getMustFields();
-
-                    foreach (array_keys($value) as $key) {
-                        if (!in_array($key, $must)) {
-                            unset($value[$key]);
-                        }
-                    }
+                    $value = Generator::reduceModelArray($value, $relation);
                 }
             }
 
             return Generator::arrayToTable($value);
         } else if (is_bool($value)) {
-            return new HtmlString($value ? static::CHECK_ICON : static::TIMES_ICON);
+            return new HtmlString($value ? static::POSITIVE_ICON : static::NEGATIVE_ICON);
         } else if (is_null($value)) {
-            return new HtmlString(static::QUESTION_ICON);
+            return new HtmlString(static::NULL_ICON);
         }
 
         try {
-            $date = new \Carbon\Carbon($value);
+            $date = Carbon::createFromFormat(Carbon::DEFAULT_TO_STRING_FORMAT, $value);
 
             return $date->format('d/m/Y à H:m');
         } catch (\Exception $e) {

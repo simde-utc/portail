@@ -40,10 +40,13 @@
 
                             <p>
                                 {{ Admin::user()->name }}
-                                <small>Member since admin {{ Admin::user()->created_at }}</small>
+                                <small>Membre depuis {{ Admin::user()->created_at }}</small>
                             </p>
                         </li>
                         <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="{{ url('/') }}" class="btn btn-default btn-flat">Retour Portail</a>
+                            </div>
                             <div class="pull-right">
                                 <a href="{{ admin_base_path('auth/logout') }}" class="btn btn-default btn-flat">{{ trans('admin.logout') }}</a>
                             </div>

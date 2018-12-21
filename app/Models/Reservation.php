@@ -26,13 +26,13 @@ class Reservation extends Model implements OwnableContract
     protected $table = 'rooms_reservations';
 
     protected $fillable = [
-        'room_id', 'reservation_type_id', 'event_id', 'description', 'created_by_id', 'created_by_type', 'owned_by_id',
+        'room_id', 'type_id', 'event_id', 'description', 'created_by_id', 'created_by_type', 'owned_by_id',
         'owned_by_type', 'validated_by_id', 'validated_by_type',
     ];
 
     protected $hidden = [
         'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'validated_by_id', 'validated_by_type',
-        'reservation_type_id', 'event_id', 'room_id',
+        'type_id', 'event_id', 'room_id',
     ];
 
     protected $with = [
@@ -40,7 +40,7 @@ class Reservation extends Model implements OwnableContract
     ];
 
     protected $must = [
-        'room_id', 'reservation_type_id', 'event_id', 'description', 'owned_by', 'validated_by', 'type', 'event',
+        'room_id', 'type_id', 'event_id', 'description', 'owned_by', 'validated_by', 'type', 'event',
     ];
 
     /**
@@ -71,7 +71,7 @@ class Reservation extends Model implements OwnableContract
      */
     public function type()
     {
-        return $this->belongsTo(ReservationType::class, 'reservation_type_id');
+        return $this->belongsTo(ReservationType::class, 'type_id');
     }
 
     /**

@@ -2,6 +2,8 @@
 /**
  * Modèle correspondant aux préférences utilisateurs.
  *
+ * TODO: corriger le only_for
+ *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -20,10 +22,6 @@ class UserPreference extends Model
     use HasKeyValue;
 
     protected $table = 'users_preferences';
-
-    protected $primaryKey = [
-        'user_id', 'key', 'only_for',
-    ];
 
     protected $fillable = [
         'user_id', 'key', 'value', 'type', 'only_for',

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les clients.
+ * Gère en admin les UserDetail.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -8,15 +8,15 @@
  * @license GNU GPL-3.0
  */
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Resource;
 
-use App\Models\Client;
-use App\Models\User;
-use App\Models\Asso;
+use App\Models\{
+    UserDetail, User
+};
 
-class ClientController extends ResourceController
+class UserDetailController extends ResourceController
 {
-    protected $model = Client::class;
+    protected $model = UserDetail::class;
 
     /**
      * Définition des champs à afficher.
@@ -28,15 +28,11 @@ class ClientController extends ResourceController
         return [
             'id' => 'display',
             'user' => User::get(['id', 'lastname', 'firstname']),
-            'asso' => Asso::get(['id', 'name']),
-            'name' => 'text',
-            'secret' => 'text',
-            'redirect' => 'text',
-            'targeted_types' => 'text',
-            'personal_access_client' => 'switch',
-            'password_client' => 'switch',
+            'key' => 'text',
+            'value' => 'text',
+            'type' => 'display',
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
         ];
     }
 
@@ -60,7 +56,7 @@ class ClientController extends ResourceController
     protected function getWith(): array
     {
         return [
-            'user', 'asso'
+            'user'
         ];
     }
 }

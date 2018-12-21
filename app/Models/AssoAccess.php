@@ -24,10 +24,6 @@ class AssoAccess extends Model
         'description', 'comment',
     ];
 
-    protected $casts = [
-        'validated_at' => 'timestamp',
-    ];
-
     protected $with = [
         'asso', 'member', 'confirmed_by', 'validated_by', 'access', 'semester',
     ];
