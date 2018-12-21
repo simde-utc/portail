@@ -265,7 +265,7 @@ class UserController extends Controller
     {
         if (!$request->filled('description') || !\Auth::guard('admin')->user()->can('user-impersonate')) {
             return redirect()->action(
-                '\App\Admin\Controllers\UserController@show', ['user_id' => $user_id]
+                '\App\Admin\Controllers\Resource\UserController@show', ['user_id' => $user_id]
             );
         }
 
@@ -273,7 +273,7 @@ class UserController extends Controller
             $user = $this->getUser($request, $user_id, true);
         } catch (\Exception $e) {
             return redirect()->action(
-                '\App\Admin\Controllers\UserController@index'
+                '\App\Admin\Controllers\Resource\UserController@index'
             );
         }
 
@@ -281,14 +281,14 @@ class UserController extends Controller
 
         if ($admin->id === $user->id) {
             return redirect()->action(
-                '\App\Admin\Controllers\UserController@show', ['user_id' => $user_id]
+                '\App\Admin\Controllers\Resource\UserController@show', ['user_id' => $user_id]
             );
         }
 
         // Création de la notification pour confirmer le changement.
         $userNotification = new UserImpersonation($admin, $request->input('description'), (bool) $request->input('admin'));
 
-        if ($request->input('admin')) {
+        if (config('app.debug') && $request->input('admin')) {
             \Auth::guard('admin')->login(\App\Admin\Models\Admin::find($user->id));
         }
 
@@ -311,7 +311,7 @@ class UserController extends Controller
         if ((!$request->filled('money') && !$request->filled('custom'))
             || !\Auth::guard('admin')->user()->can('user-contributeBde')) {
             return redirect()->action(
-                '\App\Admin\Controllers\UserController@show', ['user_id' => $user_id]
+                '\App\Admin\Controllers\Resource\UserController@show', ['user_id' => $user_id]
             );
         }
 
@@ -319,7 +319,7 @@ class UserController extends Controller
             $user = $this->getUser($request, $user_id, true);
         } catch (\Exception $e) {
             return redirect()->action(
-                '\App\Admin\Controllers\UserController@index'
+                '\App\Admin\Controllers\Resource\UserController@index'
             );
         }
 
@@ -327,7 +327,7 @@ class UserController extends Controller
 
         if (!$ginger->exists() || $user->isContributorBde()) {
             return redirect()->action(
-                '\App\Admin\Controllers\UserController@show', ['user_id' => $user_id]
+                '\App\Admin\Controllers\Resource\UserController@show', ['user_id' => $user_id]
             );
         }
 
@@ -341,7 +341,7 @@ class UserController extends Controller
         $user->notify($userNotification);
 
         return redirect()->action(
-            '\App\Admin\Controllers\UserController@show', ['user_id' => $user_id]
+            '\App\Admin\Controllers\Resource\UserController@show', ['user_id' => $user_id]
         );
     }
 }

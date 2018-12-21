@@ -122,10 +122,14 @@ trait HasKeyValue
             return [
                 strtolower($key) => $this->scopeValueOf($query, $key),
             ];
-        } else if (count($collection = $query->get()->toArray()) > 0) {
-            return array_merge(...$collection);
         } else {
-            return [];
+            $collection = [];
+
+            foreach ($query->get(['key', 'value', 'type']) as $keyValue) {
+                $collection[strtolower($keyValue->key)] = $keyValue->value;
+            }
+
+            return $collection;
         }
     }
 

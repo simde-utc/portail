@@ -11,17 +11,20 @@
         <button class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Personnification - {{ $user->name }}</h4>
       </div>
-      <form id="impersonate-user" action="{{ url('/admin/users/'.$user->id.'/impersonate') }}" method="post">
+      <form id="impersonate-user" action="{{ url('/admin/resources/users/'.$user->id.'/impersonate') }}" method="post">
           {{ csrf_field() }}
 
           <div class="modal-body">
             <p>Voulez-vous vraiment devenir {{ $user->name }} (email: {{ $user->email }}) ?<br />
             Ceci enverra une notification à la personne concernée.</p>
-            <input type="checkbox" id="admin" name="admin" /> <label for="admin">Se connecter aussi en interface admin</label><br />
             <br/>
             <div class="col-md-offset-3">
                 <p>Raisons:</p>
                 <textarea style="width: 100%" rows="2" name="description" required></textarea>
+
+                @if (config('app.debug'))
+                  <input type="checkbox" name="admin" id="admin" /> <label for="admin">Devenir aussi admin</label>
+                @endif
             </div>
           </div>
 
