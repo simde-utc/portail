@@ -44,7 +44,7 @@ class UserDetail extends Model
         $wheres = $query->getQuery()->wheres;
 
         foreach ($wheres as $where) {
-            if ($where['column'] === $this->getTable().'.'.'user_id' && $where['operator'] === '=') {
+            if ($where['column'] === $this->getTable().'.user_id' && $where['operator'] === '=') {
                 return User::find($where['value']);
             }
         }

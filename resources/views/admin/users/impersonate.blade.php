@@ -21,6 +21,10 @@
             <div class="col-md-offset-3">
                 <p>Raisons:</p>
                 <textarea style="width: 100%" rows="2" name="description" required></textarea>
+
+                @if (config('app.debug'))
+                  <input type="checkbox" name="admin" id="admin" /> <label for="admin">Devenir aussi admin</label>
+                @endif
             </div>
           </div>
 
