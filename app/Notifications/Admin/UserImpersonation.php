@@ -57,11 +57,8 @@ class UserImpersonation extends Notification
      */
     protected function getContent(CanBeNotifiable $notifiable)
     {
-        $adminText = $this->asAdmin ? 'Il s\'est aussi connecté en tant qu\'administrateur avec votre compte.'.PHP_EOL : '';
-
         return <<<CONTENT
 L'administrateur {$this->admin->name} s'est actuellement connecté sous votre compte pour effectuer des opérations.
-{$adminText}
 
 Raisons:
 {$this->description}

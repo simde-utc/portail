@@ -43,6 +43,7 @@ class Kernel extends HttpKernel
 
         'admin-portail' => [
             'auth:web',
+            'admin-portail.log',
             'admin.auth',
             'admin.pjax',
             'admin.bootstrap',
@@ -63,6 +64,7 @@ class Kernel extends HttpKernel
         'auth.public.client' => \App\Http\Middleware\CheckPublicClient::class,
         'auth.public.check' => \App\Http\Middleware\CheckPublicAuth::class,
         'admin.check' => \App\Admin\Middlewares\CheckAdmin::class,
+        'admin-portail.log' => \App\Admin\Middlewares\LogAdmin::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
