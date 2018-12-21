@@ -34,11 +34,10 @@ Route::resource('resources/assos', 'Resource\\AssoController');
 Route::resource('resources/asso-access', 'Resource\\AssoAccessController');
 Route::resource('resources/asso-types', 'Resource\\AssoTypeController');
 Route::resource('resources/auth-apps', 'Resource\\AuthAppController');
-Route::resource('resources/clients', 'Resource\\ClientController');
-
 Route::resource('resources/auth-cas', 'Resource\\AuthCasController');
 Route::resource('resources/auth-passwords', 'Resource\\AuthPasswordController');
 Route::resource('resources/calendars', 'Resource\\CalendarController');
+Route::resource('resources/clients', 'Resource\\ClientController');
 Route::resource('resources/comments', 'Resource\\CommentController');
 Route::resource('resources/contacts', 'Resource\\ContactController');
 Route::resource('resources/contact-types', 'Resource\\ContactTypeController');
