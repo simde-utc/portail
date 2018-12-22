@@ -28,7 +28,7 @@ abstract class Generator
     protected $valueMethod;
 
     protected static $must = [
-        'id', 'type', 'name', 'title',
+        'id', 'type', 'name', 'title', 'pivot',
     ];
 
     protected const POSITIVE_ICON = '<i class="fa fa-check text-success"></i>' ;
