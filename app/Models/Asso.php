@@ -54,15 +54,15 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     ];
 
     protected $with = [
-        'type', 'parent',
+        'type',
     ];
 
     protected $optional = [
-        'children',
+        'children', 'parent'
     ];
 
     protected $must = [
-        'name', 'shortname', 'login', 'image', 'parent',
+        'name', 'shortname', 'login', 'image',
     ];
 
     // Children dans le cas où on affiche en mode étagé.
