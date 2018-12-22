@@ -36,6 +36,16 @@ class UserController extends Controller
 {
     use HasUsers;
 
+    protected $fields = [
+        'id' => 'display',
+        'email' => 'email',
+        'firstname' => 'text',
+        'lastname' => 'text',
+        'last_login_at' => 'display',
+        'created_at' => 'display',
+        'updated_at' => 'display'
+    ];
+
     /**
      * Retourne le formulaire de recherche.
      *
@@ -46,9 +56,7 @@ class UserController extends Controller
     {
         $grid = new GridGenerator(User::class);
 
-        $grid->addFields([
-            'id', 'email', 'firstname', 'lastname', 'last_login_at', 'created_at', 'updated_at'
-        ]);
+        $grid->addFields($this->fields);
 
         $grid->types()->display(function () {
             $badges = '';
@@ -103,9 +111,7 @@ class UserController extends Controller
 
         $details = new ShowGenerator($user);
 
-        $details->addFields([
-            'id', 'email', 'firstname', 'lastname', 'last_login_at', 'created_at', 'updated_at'
-        ]);
+        $details->addFields($this->fields);
 
         $details->types()->unescape()->as(function () {
             $badges = '';
