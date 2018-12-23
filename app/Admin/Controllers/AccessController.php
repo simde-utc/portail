@@ -17,6 +17,8 @@ use App\Models\{
 use Encore\Admin\Layout\Content;
 use App\Admin\GridGenerator;
 use Encore\Admin\Grid\Displayers\Actions;
+use Illuminate\Http\Request;
+use App\Notifications\Admin\MemberAccessValidation;
 
 class AccessController extends Controller
 {
@@ -31,33 +33,31 @@ class AccessController extends Controller
     public function index(Content $content)
     {
         $grid = new GridGenerator($this->model);
+        $grid::$simplePrint = true;
 
         $grid->addFields([
             'id' => 'display',
             'asso' => Asso::get(['id', 'name']),
-            'access' => Access::get(['id', 'name']),
-            'semester' => Semester::get(['id', 'name']),
+            'member' => User::get(['id', 'firstname', 'lastname']),
         ]);
 
-        $addRoleToMember = function ($member) {
-            $user = Asso::find($this->asso_id)->currentMembers()->wherePivot('user_id', $member['id'])->first();
+        $grid->get()->role()->sortable()->display(function () {
+            $user = Asso::find($this->asso_id)->currentMembers()->wherePivot('user_id', $this->member['id'])->first();
 
             if ($user) {
-                $role = Role::find($user->pivot->role_id, $this->asso);
+                $this->role = Role::find($user->pivot->role_id, $this->asso);
 
-                $member['pivot'] = GridGenerator::reduceModelArray($role->toArray());
+                return GridGenerator::modelToTable($this->role->toArray());
             }
-
-            return GridGenerator::arrayToTable(GridGenerator::reduceModelArray($member));
-        };
-
-        $grid->get()->member()->sortable()->display($addRoleToMember);
-        $grid->get()->confirmed_by()->sortable()->display($addRoleToMember);
+        });
 
         $grid->addFields([
-            'validated_by' => User::get(['id', 'firstname', 'lastname']),
+            'access' => Access::get(['id', 'name', 'utc_access']),
+            'semester' => Semester::get(['id', 'name']),
             'description' => 'textarea',
             'comment' => 'text',
+            'validated_by' => User::get(['id', 'firstname', 'lastname']),
+            'validated' => 'switch',
             'validated_at' => 'datetime',
             'created_at' => 'display',
             'updated_at' => 'display'
@@ -74,13 +74,63 @@ class AccessController extends Controller
             $actions->disableView();
             $actions->disableDelete();
             $actions->disableEdit();
+
+            $row = $actions->row;
+
+            $generateAction = function ($view) use ($actions, $row) {
+                $actions->append(view($view, ['access' => $row])->__toString());
+            };
+
+            if ($row->confirmed_by) {
+                if ($row->validated_by) {
+                    if ($row->validated) {
+                        $generateAction('admin.access.validated');
+                    } else {
+                        $generateAction('admin.access.refused');
+                    }
+                } else {
+                    $generateAction('admin.access.validate');
+                }
+            } else {
+                $generateAction('admin.access.unconfirmed');
+            }
         });
 
         $grid->get()->model()->orderBy('created_at', 'DESC');
 
         return $content
-            ->header('Index')
-            ->description('description')
+            ->header('Gestion des accès')
+            ->description('Permet de savoir ce qui est validé')
             ->body($grid->get());
+    }
+
+    /**
+     * Sauvegarde du changement de la demande d'accès.
+     *
+     * @param  Request $request
+     * @param  string  $accessId
+     * @return mixed
+     */
+    public function store(Request $request, string $accessId)
+    {
+        if ($request->filled('validate') && $request->filled('comment')) {
+            $access = AssoAccess::find($accessId);
+
+            if ($access && $access->confirmed_by && is_null($access->validated_by)) {
+                $admin = \Auth::guard('admin')->user();
+
+                $access->comment = $request->input('comment');
+                $access->validated_by_id = $admin->id;
+                $access->validated_at = now();
+                $access->validated = $request->input('validate');
+
+                $notif = new MemberAccessValidation($access, $admin);
+                $access->save();
+
+                $access->member->notify($notif);
+            }
+        }
+
+        return back();
     }
 }

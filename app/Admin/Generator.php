@@ -27,8 +27,10 @@ abstract class Generator
     protected $generatedModel;
     protected $valueMethod;
 
+    public static $simplePrint = false;
+
     protected static $must = [
-        'id', 'type', 'name', 'title', 'pivot',
+        'id', 'type', 'name', 'title', 'pivot'
     ];
 
     protected const POSITIVE_ICON = '<i class="fa fa-check text-success"></i>' ;
@@ -108,6 +110,22 @@ abstract class Generator
     }
 
     /**
+     * Converti les modèles en tableau.
+     *
+     * @param  array    $value
+     * @param  Relation $relation
+     * @return mixed
+     */
+    public static function modelToTable(array $value, Relation $relation=null)
+    {
+        if (static::$simplePrint) {
+            return ($value['shortname'] ?? $value['name']);
+        }
+
+        return Generator::arrayToTable(Generator::reduceModelArray($value, $relation));
+    }
+
+    /**
      * Converti les valeurs pour l'admin.
      *
      * @param  mixed $value
@@ -122,7 +140,7 @@ abstract class Generator
                 $relation = $generatedModel->$field();
 
                 if ($relation instanceof Relation) {
-                    $value = Generator::reduceModelArray($value, $relation);
+                    return Generator::modelToTable($value, $relation);
                 }
             }
 
@@ -174,6 +192,12 @@ abstract class Generator
     public function addFields(array $fields)
     {
         foreach ($fields as $field) {
+            if (static::$simplePrint) {
+                if (in_array($field, ['id', 'updated_at'])) {
+                    continue;
+                }
+            }
+
             $this->generateField($field);
         }
 

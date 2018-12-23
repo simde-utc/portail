@@ -37,7 +37,7 @@ class AssoAccess extends Model
     ];
 
     protected $casts = [
-        'validated' => 'boolean'
+        'validated' => 'boolean',
     ];
 
     /**

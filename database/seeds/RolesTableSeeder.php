@@ -56,6 +56,7 @@ class RolesTableSeeder extends Seeder
                     'user-contributeBde',
                     'article',
                     'article-action',
+                    'handle-access',
                     'asso-access',
                     'asso-type',
                     'semester',

@@ -19,7 +19,7 @@ Route::get('auth/logout', 'AuthController@getLogout');
 Route::get('charts', 'ChartsController@index')->name('charts-index');
 
 Route::get('access', 'AccessController@index')->name('access-index');
-Route::post('access', 'AccessController@store')->name('access-store');
+Route::post('access/{access_id}', 'AccessController@store')->name('access-store');
 
 Route::get('search', 'SearchController@index')->name('search-index');
 Route::post('search', 'SearchController@search')->name('search-search');
