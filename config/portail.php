@@ -11,10 +11,10 @@
 
 $roleToPermission = [
     'president' => [
-        'access',
+        'handle-access',
     ],
     'resp logistique' => [
-        'access',
+        'handle-access',
     ],
 ];
 

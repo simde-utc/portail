@@ -38,6 +38,7 @@ class AssoAccessController extends ResourceController
             'description' => 'textarea',
             'comment' => 'text',
             'validated_at' => 'datetime',
+            'validated' => 'switch',
             'created_at' => 'display',
             'updated_at' => 'display'
         ];
