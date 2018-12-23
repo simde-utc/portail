@@ -21,7 +21,7 @@ class AssoAccess extends Model
 
     protected $fillable = [
         'asso_id', 'member_id', 'confirmed_by_id', 'access_id', 'semester_id', 'validated_by_id', 'validated_at',
-        'description', 'comment',
+        'description', 'comment', 'validated'
     ];
 
     protected $with = [
@@ -34,6 +34,10 @@ class AssoAccess extends Model
 
     protected $must = [
         'asso', 'member', 'confirmed_by', 'access', 'semester', 'validated',
+    ];
+
+    protected $casts = [
+        'validated' => 'boolean'
     ];
 
     /**

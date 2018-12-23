@@ -22,8 +22,9 @@ class CreateTableAssosAccess extends Migration
             $table->uuid('confirmed_by_id')->nullable();
             $table->uuid('validated_by_id')->nullable();
             $table->timestamp('validated_at')->nullable();
-            $table->string('description')->nullable();
-            $table->string('comment');
+            $table->string('description');
+            $table->string('comment')->nullable();
+            $table->boolean('validated')->default(false);
 
             $table->timestamps();
 
