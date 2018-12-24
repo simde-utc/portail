@@ -205,7 +205,8 @@ class AccessController extends Controller
         } else if (!$access->validated_by_id) {
             if (!User::find($user_id)->hasOnePermission('access')) {
                 $access->validated_by_id = $user_id;
-                $access->validated_at = $request->input('validate') ? now() : null;
+                $access->validated_at = now();
+                $access->validated = $request->input('validate');
                 $access->comment = $request->input('comment');
             } else {
                 abort(403, "Il ne vous est pas autorisé de valider ou refuser cette demande");
