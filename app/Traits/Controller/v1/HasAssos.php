@@ -94,9 +94,9 @@ trait HasAssos
     protected function getAsso(Request $request, string $asso_id, User $user=null, Semester $semester=null): Asso
     {
         if (\Uuid::validate($asso_id)) {
-            $asso = Asso::with('parent')->makeHidden('parent_id')->find($asso_id);
+            $asso = Asso::with('parent')->find($asso_id);
         } else {
-            $asso = Asso::with('parent')->makeHidden('parent_id')->findByLogin($asso_id);
+            $asso = Asso::with('parent')->findByLogin($asso_id);
         }
 
         if ($asso) {
@@ -111,7 +111,7 @@ trait HasAssos
                 }
             }
 
-            return $asso;
+            return $asso->makeHidden('parent_id');
         } else {
             abort(404, "Assocation non trouvée");
         }
