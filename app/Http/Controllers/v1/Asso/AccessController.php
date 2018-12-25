@@ -99,11 +99,11 @@ class AccessController extends Controller
     /**
      * Liste des accès.
      *
-     * @param AccessRequest $request
+     * @param Request $request
      * @param string  $asso_id
      * @return JsonResponse
      */
-    public function index(AccessRequest $request, string $asso_id): JsonResponse
+    public function index(Request $request, string $asso_id): JsonResponse
     {
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);
@@ -164,12 +164,12 @@ class AccessController extends Controller
     /**
      * Montre une demande d'accès.
      *
-     * @param AccessRequest $request
+     * @param Request $request
      * @param string  $asso_id
      * @param string  $access_id
      * @return JsonResponse
      */
-    public function show(AccessRequest $request, string $asso_id, string $access_id): JsonResponse
+    public function show(Request $request, string $asso_id, string $access_id): JsonResponse
     {
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);
@@ -224,12 +224,12 @@ class AccessController extends Controller
     /**
      * Supprime une demande d'accès.
      *
-     * @param AccessRequest $request
+     * @param Request $request
      * @param string  $asso_id
      * @param string  $access_id
      * @return void
      */
-    public function destroy(AccessRequest $request, string $asso_id, string $access_id): void
+    public function destroy(Request $request, string $asso_id, string $access_id): void
     {
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);

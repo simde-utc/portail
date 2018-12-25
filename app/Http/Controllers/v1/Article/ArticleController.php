@@ -13,7 +13,6 @@
 namespace App\Http\Controllers\v1\Article;
 
 use App\Http\Controllers\v1\Controller;
-use Scopes;
 use App\Models\Model;
 use App\Models\User;
 use App\Models\Asso;
@@ -126,10 +125,10 @@ class ArticleController extends Controller
     /**
      * Liste les articles.
      *
-     * @param ArticleRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(ArticleRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         if (\Scopes::isOauthRequest($request)) {
             $articles = Article::getSelection()->filter(function ($article) use ($request) {
@@ -221,11 +220,11 @@ class ArticleController extends Controller
     /**
      * Montre un article.
      *
-     * @param ArticleRequest $request
+     * @param Request $request
      * @param string  $article_id
      * @return JsonResponse
      */
-    public function show(ArticleRequest $request, string $article_id): JsonResponse
+    public function show(Request $request, string $article_id): JsonResponse
     {
         $article = $this->getArticle($request, \Auth::user(), $article_id);
 
@@ -235,11 +234,11 @@ class ArticleController extends Controller
     /**
      * Met à jour un article.
      *
-     * @param ArticleRequest $request
+     * @param Request $request
      * @param string  $article_id
      * @return JsonResponse
      */
-    public function update(ArticleRequest $request, string $article_id): JsonResponse
+    public function update(Request $request, string $article_id): JsonResponse
     {
         $article = $this->getCalendar($request, \Auth::user(), $article_id, 'edit');
         $inputs = $request->all();
@@ -289,11 +288,11 @@ class ArticleController extends Controller
     /**
      * Supprime un article.
      *
-     * @param ArticleRequest $request
+     * @param Request $request
      * @param string  $article_id
      * @return void
      */
-    public function destroy(ArticleRequest $request, string $article_id): void
+    public function destroy(Request $request, string $article_id): void
     {
         $article = $this->getArticle($request, \Auth::user(), $article_id, 'remove');
         $article->tags()->delete();

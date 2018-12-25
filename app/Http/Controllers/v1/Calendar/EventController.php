@@ -14,6 +14,7 @@ namespace App\Http\Controllers\v1\Calendar;
 
 use App\Http\Controllers\v1\Controller;
 use App\Traits\Controller\v1\HasCalendars;
+use App\Http\Requests\CalendarEventRequest;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Event;
@@ -62,8 +63,8 @@ class EventController extends Controller
         $events = $calendar->events()->getSelection()
             ->filter(function ($event) use ($request) {
                 return ($this->tokenCanSee($request, $event, 'get')
-                && (!\Auth::id() || $this->isVisible($event, \Auth::id())))
-                || $this->isEventFollowed($request, $event, \Auth::id());
+                    && (!\Auth::id() || $this->isVisible($event, \Auth::id())))
+                    || $this->isEventFollowed($request, $event, \Auth::id());
             })->values()->map(function ($event) {
                 return $event->hideData();
             });
@@ -74,11 +75,11 @@ class EventController extends Controller
     /**
      * Ajoute un événement au calendrier.
      *
-     * @param Request	$request
+     * @param CalendarEventRequest	$request
      * @param string 	$calendar_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $calendar_id): JsonResponse
+    public function store(CalendarEventRequest $request, string $calendar_id): JsonResponse
     {
         $user = \Auth::user();
         $calendar = $this->getCalendar($request, $user, $calendar_id);
@@ -121,12 +122,12 @@ class EventController extends Controller
     /**
      * Il est impossible de modifier un événement du calendrier.
      *
-     * @param Request	$request
+     * @param CalendarEventRequest	$request
      * @param string 	$calendar_id
      * @param string 	$event_id
      * @return void
      */
-    public function update(Request $request, string $calendar_id, string $event_id): void
+    public function update(CalendarEventRequest $request, string $calendar_id, string $event_id): void
     {
         abort(405);
     }

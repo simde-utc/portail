@@ -64,10 +64,10 @@ class AssoController extends Controller
     /**
      * Liste les associations.
      *
-     * @param AssoRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(AssoRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $assos = Asso::with('parent')->getSelection()->map(function ($asso) {
             return $asso->hideData();
@@ -160,11 +160,11 @@ class AssoController extends Controller
     /**
      * Supprime une association.
      *
-     * @param AssoRequest $request
+     * @param Request $request
      * @param string      $asso_id
      * @return void
      */
-    public function destroy(AssoRequest $request, string $asso_id): void
+    public function destroy(Request $request, string $asso_id): void
     {
         $asso = $this->getAsso($request, $asso_id);
 
