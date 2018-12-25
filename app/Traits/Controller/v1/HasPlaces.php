@@ -14,9 +14,12 @@ use App\Exceptions\PortailException;
 use App\Models\Place;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasPosition;
 
 trait HasPlaces
 {
+    use HasPosition;
+
     /**
      * Récupère un emplacement.
      *

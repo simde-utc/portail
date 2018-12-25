@@ -109,7 +109,7 @@ class VisibilityController extends Controller
      * Supprime une visibilité.
      *
      * @param  VisibilityRequest $request
-     * @param  string $visibility_id
+     * @param  string            $visibility_id
      * @return void
      */
     public function destroy(VisibilityRequest $request, string $visibility_id): void

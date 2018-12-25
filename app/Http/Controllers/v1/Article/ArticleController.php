@@ -158,23 +158,24 @@ class ArticleController extends Controller
 
         // On récupère pour qui c'est créé.
         $owner = $this->getCreaterOrOwner($request, 'create', 'owned');
+        $ownerName = \ModelResolver::getNameFromObject($owner);
 
         // Le créateur peut être multiple: le user, l'asso ou le client courant. Ou autre.
         if ($request->input('created_by_type', 'user') === 'user'
 	        && \Auth::id()
 	        && $request->input('created_by_id', \Auth::id()) === \Auth::id()
 	        && \Scopes::hasOne($request,
-                \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getNameFromObject($owner).'s-owned-user')) {
+                \Scopes::getTokenType($request).'-create-articles-'.$ownerName.'s-owned-user')) {
             $creater = \Auth::user();
         } else if ($request->input('created_by_type', 'client') === 'client'
 	        && $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
 	        && \Scopes::hasOne($request,
-                \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getNameFromObject($owner).'s-owned-client')) {
+                \Scopes::getTokenType($request).'-create-articles-'.$ownerName.'s-owned-client')) {
             $creater = \Scopes::getClient($request);
         } else if ($request->input('created_by_type') === 'asso'
-	        && $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
+	        && $request->input('created_by_id', ($asso_id = \Scopes::getClient($request)->asso->id)) === $asso_id
 	        && \Scopes::hasOne($request,
-                \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getNameFromObject($owner).'s-owned-asso')) {
+                \Scopes::getTokenType($request).'-create-articles-'.$ownerName.'s-owned-asso')) {
             $creater = \Scopes::getClient($request)->asso;
         } else {
             $creater = $this->getCreaterOrOwner($request, 'create', 'created');

@@ -128,7 +128,7 @@ class AccessController extends Controller
      * Crée une demande d'accès.
      *
      * @param AccessRequest $request
-     * @param string  $asso_id
+     * @param string        $asso_id
      * @return JsonResponse
      */
     public function store(AccessRequest $request, string $asso_id): JsonResponse
@@ -184,8 +184,8 @@ class AccessController extends Controller
      * Met à jour une demande d'accès.
      *
      * @param AccessRequest $request
-     * @param string  $asso_id
-     * @param string  $access_id
+     * @param string        $asso_id
+     * @param string        $access_id
      * @return JsonResponse
      */
     public function update(AccessRequest $request, string $asso_id, string $access_id): JsonResponse

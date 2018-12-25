@@ -57,10 +57,10 @@ class EventController extends Controller
     /**
      * Liste les événements.
      *
-     * @param EventRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(EventRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         if (\Scopes::isOauthRequest($request)) {
             $events = Event::getSelection()->filter(function ($event) use ($request) {
@@ -113,11 +113,11 @@ class EventController extends Controller
     /**
      * Montre un événement.
      *
-     * @param EventRequest $request
+     * @param Request $request
      * @param string  $event_id
      * @return JsonResponse
      */
-    public function show(EventRequest $request, string $event_id): JsonResponse
+    public function show(Request $request, string $event_id): JsonResponse
     {
         $event = $this->getEvent($request, \Auth::user(), $event_id);
 
@@ -128,7 +128,7 @@ class EventController extends Controller
      * Met à jour un événement.
      *
      * @param EventRequest $request
-     * @param string  $event_id
+     * @param string       $event_id
      * @return JsonResponse
      */
     public function update(EventRequest $request, string $event_id): JsonResponse
@@ -153,11 +153,11 @@ class EventController extends Controller
     /**
      * Supprime un événement.
      *
-     * @param EventRequest $request
+     * @param Request $request
      * @param string  $event_id
      * @return void
      */
-    public function destroy(EventRequest $request, string $event_id): void
+    public function destroy(Request $request, string $event_id): void
     {
         $event = $this->getEvent($request, \Auth::user(), $event_id);
         $event->delete();

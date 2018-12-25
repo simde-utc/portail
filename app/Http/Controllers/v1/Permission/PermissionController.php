@@ -87,7 +87,7 @@ class PermissionController extends Controller
      * Montre une permission.
      *
      * @param  PermissionRequest $request
-     * @param  string 	$permission_id
+     * @param  string            $permission_id
      * @return JsonResponse
      */
     public function show(PermissionRequest $request, string $permission_id): JsonResponse
@@ -102,7 +102,7 @@ class PermissionController extends Controller
      * Met à jour une permission.
      *
      * @param  PermissionRequest $request
-     * @param  string 	$permission_id
+     * @param  string            $permission_id
      * @return JsonResponse
      */
     public function update(PermissionRequest $request, string $permission_id): JsonResponse
@@ -122,7 +122,7 @@ class PermissionController extends Controller
      * Supprime une permission.
      *
      * @param  PermissionRequest $request
-     * @param  string 	$permission_id
+     * @param  string            $permission_id
      * @return void
      */
     public function destroy(PermissionRequest $request, string $permission_id): void

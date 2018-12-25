@@ -58,7 +58,7 @@ class PartnerController extends Controller
      * Montre un partenaire.
      *
      * @param PartnerRequest $request
-     * @param string $partner_id
+     * @param string         $partner_id
      * @return JsonResponse
      */
     public function show(PartnerRequest $request, string $partner_id): JsonResponse
@@ -103,7 +103,7 @@ class PartnerController extends Controller
      * Supprime un partenaire.
      *
      * @param PartnerRequest $request
-     * @param string $partner_id
+     * @param string         $partner_id
      * @return JsonResponse
      */
     public function destroy(PartnerRequest $request, string $partner_id): JsonResponse

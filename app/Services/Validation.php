@@ -11,12 +11,21 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
+
 class Validation
 {
     protected $args;
     protected $request;
 
-    public function setRequest($request) {
+    /**
+     * Défini la requête.
+     *
+     * @param Request $request
+     * @return Validation
+     */
+    public function setRequest(Request $request)
+    {
         $this->request = $request;
 
         return $this;
@@ -25,11 +34,11 @@ class Validation
     /**
      * Force une longueur maximale.
      *
-     * @param string|int $arg
-     * @param int     $max
+     * @param string|integer $arg
+     * @param integer        $max
      * @return Validation
      */
-    public function length($arg, int $max = null)
+    public function length($arg, int $max=null)
     {
         if (is_null($max)) {
             $this->args['length'] = validation_between($arg);

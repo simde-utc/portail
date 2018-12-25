@@ -31,6 +31,10 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
         'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'scopes'
     ];
 
+    protected $casts = [
+        'scopes' => 'array',
+    ];
+
     protected $selection = [
         'paginate' => null,
         'filter' => [],

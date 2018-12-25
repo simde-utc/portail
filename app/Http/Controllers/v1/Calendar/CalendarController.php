@@ -115,7 +115,7 @@ class CalendarController extends Controller
      * Met à jour un calendrier.
      *
      * @param CalendarRequest	$request
-     * @param string 	$calendrier_id
+     * @param string          $calendrier_id
      * @return JsonResponse
      */
     public function update(CalendarRequest $request, string $calendrier_id): JsonResponse

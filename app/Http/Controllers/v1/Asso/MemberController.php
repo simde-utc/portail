@@ -146,7 +146,7 @@ class MemberController extends Controller
      * Ajoute un membre à l'association.
      *
      * @param AssoMemberRequest $request
-     * @param string  $asso_id
+     * @param string            $asso_id
      * @return JsonResponse
      */
     public function store(AssoMemberRequest $request, string $asso_id): JsonResponse
@@ -189,8 +189,8 @@ class MemberController extends Controller
      * Modifie un membre de l'association.
      *
      * @param AssoMemberRequest $request
-     * @param string  $asso_id
-     * @param string  $member_id
+     * @param string            $asso_id
+     * @param string            $member_id
      * @return JsonResponse
      */
     public function update(AssoMemberRequest $request, string $asso_id, string $member_id): JsonResponse

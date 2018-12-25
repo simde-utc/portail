@@ -76,7 +76,7 @@ class EventController extends Controller
      * Ajoute un événement au calendrier.
      *
      * @param CalendarEventRequest	$request
-     * @param string 	$calendar_id
+     * @param string               $calendar_id
      * @return JsonResponse
      */
     public function store(CalendarEventRequest $request, string $calendar_id): JsonResponse
@@ -123,8 +123,8 @@ class EventController extends Controller
      * Il est impossible de modifier un événement du calendrier.
      *
      * @param CalendarEventRequest	$request
-     * @param string 	$calendar_id
-     * @param string 	$event_id
+     * @param string               $calendar_id
+     * @param string               $event_id
      * @return void
      */
     public function update(CalendarEventRequest $request, string $calendar_id, string $event_id): void

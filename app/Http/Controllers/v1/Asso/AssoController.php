@@ -104,7 +104,7 @@ class AssoController extends Controller
      * Montre une association.
      *
      * @param Request $request
-     * @param string      $asso_id
+     * @param string  $asso_id
      * @return JsonResponse
      */
     public function show(Request $request, string $asso_id): JsonResponse
@@ -161,7 +161,7 @@ class AssoController extends Controller
      * Supprime une association.
      *
      * @param Request $request
-     * @param string      $asso_id
+     * @param string  $asso_id
      * @return void
      */
     public function destroy(Request $request, string $asso_id): void
@@ -173,8 +173,7 @@ class AssoController extends Controller
         }
 
         $asso->delete();
-        // On ne supprime pas une asso réellement: $this->deleteImage('assos/'.$asso->id);
-
+        // On ne supprime pas une asso réellement: $this->deleteImage('assos/'.$asso->id);.
         abort(204);
     }
 }

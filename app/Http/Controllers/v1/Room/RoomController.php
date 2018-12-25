@@ -99,7 +99,7 @@ class RoomController extends Controller
      * Montre une salle.
      *
      * @param RoomRequest $request
-     * @param string  $room_id
+     * @param string      $room_id
      * @return JsonResponse
      */
     public function show(RoomRequest $request, string $room_id): JsonResponse
@@ -113,7 +113,7 @@ class RoomController extends Controller
      * Met à jour une salle.
      *
      * @param RoomRequest $request
-     * @param string  $room_id
+     * @param string      $room_id
      * @return JsonResponse
      */
     public function update(RoomRequest $request, string $room_id): JsonResponse
@@ -139,7 +139,7 @@ class RoomController extends Controller
      * Supprime une salle.
      *
      * @param RoomRequest $request
-     * @param string  $room_id
+     * @param string      $room_id
      * @return void
      */
     public function destroy(RoomRequest $request, string $room_id)
