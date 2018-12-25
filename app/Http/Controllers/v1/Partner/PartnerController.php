@@ -32,13 +32,11 @@ class PartnerController extends Controller
      */
     public function index(): JsonResponse
     {
-        $partners = Partner::all();
+        $partners = Partner::all()->map(function ($partner) {
+            return $partner->hideData();
+        });
 
-        if ($partners) {
-            return response()->json($partners, 200);
-        } else {
-            return response()->json(['message' => 'Erreur'], 500);
-        }
+        return response()->json($partners);
     }
 
     /**
@@ -51,7 +49,7 @@ class PartnerController extends Controller
     {
         $partner = Partner::create($request->input());
 
-        return response()->json($partner->hideSubData(), 200);
+        return response()->json($partner->hideSubData());
     }
 
     /**
@@ -66,9 +64,9 @@ class PartnerController extends Controller
         $partner = Partner::find($partner_id);
 
         if ($partner) {
-            return response()->json($partner->hideSubData(), 200);
+            return response()->json($partner->hideSubData());
         } else {
-            return response()->json(['message' => 'Le partenaire demandé n\'a pas été trouvé'], 404);
+            abort(404, 'Le partenaire demandé n\'a pas été trouvé');
         }
     }
 
@@ -84,19 +82,12 @@ class PartnerController extends Controller
         $partner = Partner::find($partner_id);
 
         if ($partner) {
-            if ($partner->update($request->input())) {
-                if (Partner::where('name', $request->input('name'))->get()->first()
-                && ($partner->name != $request->input('name'))) {
-                    return response()->json('Ce partenaire existe déjà, conflit', 409);
-                } else {
-                    return response()->json($partner->hideSubData(), 200);
-                }
-            }
+            $partner->update($request->input());
 
-            return response()->json(['message' => 'Erreur pendant la mise à jour du partenaire'], 500);
+            return response()->json($partner->hideSubData());
         }
 
-        return response()->json(['message' => 'Le partenaire demandé n\'a pas été trouvé'], 404);
+        abort(404, 'Le partenaire demandé n\'a pas été trouvé');
     }
 
     /**
@@ -111,13 +102,11 @@ class PartnerController extends Controller
         $partner = Partner::find($partner_id);
 
         if ($partner) {
-            if ($partner->delete()) {
-                return response()->json(['message' => 'Le partenaire a bien été supprimé'], 200);
-            } else {
-                return response()->json(['message' => 'Erreur lors de la suppression du partenaire'], 500);
-            }
+            $partner->delete();
+
+            abort(204);
         } else {
-            return response()->json(['message' => 'Le partenaire demandé n\'a pas été trouvé'], 404);
+            abort(404, 'Le partenaire demandé n\'a pas été trouvé');
         }
     }
 }

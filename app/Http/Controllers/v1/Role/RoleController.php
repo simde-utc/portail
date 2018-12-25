@@ -13,6 +13,7 @@ namespace App\Http\Controllers\v1\Role;
 use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\RoleRequest;
 use App\Models\Role;
 use App\Models\Semester;
 use App\Exceptions\PortailException;
@@ -66,10 +67,10 @@ class RoleController extends Controller
     /**
      * Ajouter un rôle.
      *
-     * @param Request $request
+     * @param RoleRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(RoleRequest $request): JsonResponse
     {
         $inputs = $request->all();
         $owner = $this->getOwner($request, 'role', 'rôle', 'create');
@@ -104,11 +105,11 @@ class RoleController extends Controller
     /**
      * Met à jour un rôle.
      *
-     * @param Request $request
+     * @param RoleRequest $request
      * @param string 	$role_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $role_id): JsonResponse
+    public function update(RoleRequest $request, string $role_id): JsonResponse
     {
         $role = $this->getRole($request, $role_id, 'edit');
 

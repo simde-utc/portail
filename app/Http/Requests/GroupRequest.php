@@ -46,6 +46,7 @@ class GroupRequest extends Request
         return [
             'name' => Validation::type('string')
                 ->length('name')
+                ->unique('groups', 'name')
                 ->post('required')
                 ->get(),
             'icon' => Validation::type('image')

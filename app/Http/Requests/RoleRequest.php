@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les calendriers.
+ * Gestion de la requête pour les roles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -12,7 +12,7 @@ namespace App\Http\Requests;
 
 use Validation;
 
-class CalendarRequest extends Request
+class RoleRequest extends Request
 {
     /**
      * Défini les règles de validation des champs.
@@ -22,20 +22,20 @@ class CalendarRequest extends Request
     public function rules()
     {
         return [
+            'type' => Validation::type('string')
+                ->length('title')
+                ->unique('roles', 'name')
+                ->post('required')
+                ->get(),
             'name' => Validation::type('string')
                 ->length('title')
-                ->unique('calendars', 'name')
+                ->unique('roles', 'name')
                 ->post('required')
                 ->get(),
             'description' => Validation::type('string')
                 ->length('text')
                 ->get(),
-            'color' => Validation::type('string')
-                ->length('title')
-                ->get(),
-            'visibility_id' => Validation::type('uuid')
-                ->exists('visibilities', 'id')
-                ->post('required')
+            'limited_at' => Validation::type('integer')
                 ->get(),
             'created_by_type' => Validation::type('string')
                 ->get(),

@@ -48,10 +48,12 @@ class PermissionRequest extends Request
         return [
             'type' => Validation::type('string')
                 ->length('name')
+                ->unique('permissions', 'type')
                 ->post('required')
                 ->get(),
             'name' => Validation::type('string')
                 ->length('name')
+                ->unique('permissions', 'name')
                 ->post('required')
                 ->get(),
             'description' => Validation::type('string')

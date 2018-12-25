@@ -50,10 +50,10 @@ class PermissionController extends Controller
     /**
      * Liste des permissions.
      *
-     * @param  PermissionRequest $request
+     * @param  Request $request
      * @return JsonResponse
      */
-    public function index(PermissionRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $permissions = Permission::getSelection()->filter(function ($permission) use ($request) {
             return $this->tokenCanSee($request, $permission);
@@ -86,11 +86,11 @@ class PermissionController extends Controller
     /**
      * Montre une permission.
      *
-     * @param  PermissionRequest $request
-     * @param  string            $permission_id
+     * @param  Request $request
+     * @param  string  $permission_id
      * @return JsonResponse
      */
-    public function show(PermissionRequest $request, string $permission_id): JsonResponse
+    public function show(Request $request, string $permission_id): JsonResponse
     {
         $permission = $this->getPermission($request, $permission_id);
         $permission->nbr_assigned = $permission->users()->where('semester_id', Semester::getThisSemester()->id)->count();
@@ -121,11 +121,11 @@ class PermissionController extends Controller
     /**
      * Supprime une permission.
      *
-     * @param  PermissionRequest $request
-     * @param  string            $permission_id
+     * @param  Request $request
+     * @param  string  $permission_id
      * @return void
      */
-    public function destroy(PermissionRequest $request, string $permission_id): void
+    public function destroy(Request $request, string $permission_id): void
     {
         $permission = $this->getPermission($request, $permission_id, 'manage');
 

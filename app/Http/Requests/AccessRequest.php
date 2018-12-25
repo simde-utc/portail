@@ -26,10 +26,12 @@ class AccessRequest extends Request
         return [
             'type' => Validation::type('string')
                 ->length('name')
+                ->unique('access', 'type')
                 ->post('required')
                 ->get(),
             'name' => Validation::type('string')
                 ->length('name')
+                ->unique('access', 'name')
                 ->post('required')
                 ->get(),
             'description' => Validation::type('string')
@@ -37,6 +39,7 @@ class AccessRequest extends Request
                 ->post('required')
                 ->get(),
             'utc_access' => Validation::type('integer')
+                ->unique('access', 'utc_access')
                 ->get(),
         ];
     }

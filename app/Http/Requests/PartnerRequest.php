@@ -27,6 +27,7 @@ class PartnerRequest extends Request
         return [
             'name' => Validation::type('string')
                 ->length('name')
+                ->unique('partners', 'name')
                 ->post('required')
                 ->get(),
             'description' => Validation::type('string')
