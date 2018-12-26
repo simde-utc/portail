@@ -106,7 +106,7 @@ class RoleController extends Controller
      * Met à jour un rôle.
      *
      * @param RoleRequest $request
-     * @param string 	$role_id
+     * @param string      $role_id
      * @return JsonResponse
      */
     public function update(RoleRequest $request, string $role_id): JsonResponse

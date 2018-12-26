@@ -13,6 +13,7 @@ namespace App\Http\Controllers\v1\Service;
 use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\ServiceRequest;
 use App\Models\Service;
 use App\Traits\Controller\v1\HasServices;
 use App\Traits\Controller\v1\HasImages;
@@ -57,7 +58,7 @@ class ServiceController extends Controller
     /**
      * Récupère la liste des services.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
@@ -74,10 +75,10 @@ class ServiceController extends Controller
     /**
      * Créer un service.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param ServiceRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ServiceRequest $request): JsonResponse
     {
         $service = Service::create($request->all());
 
@@ -90,8 +91,8 @@ class ServiceController extends Controller
     /**
      * Montre un service.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $service_id
+     * @param Request $request
+     * @param string  $service_id
      * @return JsonResponse
      */
     public function show(Request $request, string $service_id): JsonResponse
@@ -104,11 +105,11 @@ class ServiceController extends Controller
     /**
      * Met à jour un service.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $service_id
+     * @param ServiceRequest $request
+     * @param string         $service_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $service_id): JsonResponse
+    public function update(ServiceRequest $request, string $service_id): JsonResponse
     {
         $service = $this->getService(\Auth::user(), $service_id);
 
@@ -125,8 +126,8 @@ class ServiceController extends Controller
     /**
      * Supprime un service.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $service_id
+     * @param Request $request
+     * @param string  $service_id
      * @return void
      */
     public function destroy(Request $request, string $service_id): void

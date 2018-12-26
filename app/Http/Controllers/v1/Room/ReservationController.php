@@ -17,6 +17,7 @@ use App\Traits\Controller\v1\HasValidators;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\ReservationRequest;
 use App\Models\Room;
 use App\Models\Event;
 use App\Models\Reservation;
@@ -124,11 +125,11 @@ class ReservationController extends Controller
     /**
      * Crée une réservation réalisée pour la salle.
      *
-     * @param  Request $request
-     * @param  string  $room_id
+     * @param  ReservationRequest $request
+     * @param  string             $room_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $room_id): JsonResponse
+    public function store(ReservationRequest $request, string $room_id): JsonResponse
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
         $inputs = $request->all();
@@ -196,12 +197,12 @@ class ReservationController extends Controller
     /**
      * Met à jour une réservation de la salle.
      *
-     * @param  Request $request
-     * @param  string  $room_id
-     * @param  string  $reservation_id
+     * @param  ReservationRequest $request
+     * @param  string             $room_id
+     * @param  string             $reservation_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $room_id, string $reservation_id): JsonResponse
+    public function update(ReservationRequest $request, string $room_id, string $reservation_id): JsonResponse
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
         $reservation = $this->getReservationFromRoom($request, $room, \Auth::user(), $reservation_id, 'edit');

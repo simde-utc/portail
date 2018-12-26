@@ -95,9 +95,9 @@ class PartnerController extends Controller
      *
      * @param PartnerRequest $request
      * @param string         $partner_id
-     * @return JsonResponse
+     * @return void
      */
-    public function destroy(PartnerRequest $request, string $partner_id): JsonResponse
+    public function destroy(PartnerRequest $request, string $partner_id): void
     {
         $partner = Partner::find($partner_id);
 

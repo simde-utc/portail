@@ -57,10 +57,10 @@ class RoomController extends Controller
     /**
      * Listes les salles.
      *
-     * @param  RoomRequest $request
+     * @param  Request $request
      * @return JsonResponse
      */
-    public function index(RoomRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $rooms = Room::getSelection()->filter(function ($room) use ($request) {
             return $this->tokenCanSee($request, $room, 'get')
@@ -98,11 +98,11 @@ class RoomController extends Controller
     /**
      * Montre une salle.
      *
-     * @param RoomRequest $request
-     * @param string      $room_id
+     * @param Request $request
+     * @param string  $room_id
      * @return JsonResponse
      */
-    public function show(RoomRequest $request, string $room_id): JsonResponse
+    public function show(Request $request, string $room_id): JsonResponse
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
 
@@ -138,11 +138,11 @@ class RoomController extends Controller
     /**
      * Supprime une salle.
      *
-     * @param RoomRequest $request
-     * @param string      $room_id
+     * @param Request $request
+     * @param string  $room_id
      * @return void
      */
-    public function destroy(RoomRequest $request, string $room_id)
+    public function destroy(Request $request, string $room_id)
     {
         $room = $this->getRoom($request, \Auth::user(), 'manage');
 
