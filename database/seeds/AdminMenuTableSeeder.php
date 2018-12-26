@@ -18,6 +18,12 @@ class AdminMenuTableSeeder extends Seeder
                 'uri' => 'search',
             ],
             [
+                'title' => 'Gestion des accès',
+                'uri' => 'access',
+                'permission' => 'handle-access',
+                'icon' => 'fa-universal-access',
+            ],
+            [
                 'title' => 'Ressources',
                 'permission' => '',
                 'icon' => 'fa-database',

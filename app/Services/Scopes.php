@@ -74,7 +74,10 @@ class Scopes
      */
     protected function getAuthMiddleware()
     {
-        return $this->allowPublic ? 'auth.public' : 'auth';
+        $middleware = $this->allowPublic ? 'auth.public' : 'auth';
+        $this->allowPublic = false;
+
+        return $middleware;
     }
 
     /**

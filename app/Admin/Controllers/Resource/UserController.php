@@ -78,6 +78,12 @@ class UserController extends Controller
             $filter->like('lastname');
         });
 
+        $grid->tools(function ($tools) {
+            $tools->disableBatchActions();
+        });
+
+        $grid->disableCreation();
+
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
             $actions->disableEdit();

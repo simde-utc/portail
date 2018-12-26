@@ -108,7 +108,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      * TODO: Transformer en scope.
      *
      * @param  string $login
-     * @return Asso
+     * @return mixed
      */
     public static function findByLogin(string $login)
     {
