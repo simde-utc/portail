@@ -33,7 +33,7 @@ class CheckAuth
         if ($request->user() !== null) {
             $token = $request->user()->token();
 
-            if (!$token->transient()) {
+            if ($token && !$token->transient()) {
                 $client = Client::find($token->client_id);
 
                 // On vérifie uniquement pour les tokens qui ne sont pas un token personnel ou lié à une application sans session.
