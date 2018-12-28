@@ -210,9 +210,9 @@ class UserController extends Controller
                     $tools->disableDelete();
 
                     if ($ginger->isContributor()) {
-                        $tools->prepend(view('admin.users.contributeBde.delete', ['user' => $user]));
+                        $tools->prepend(view('admin.users.contributeBDE.delete', ['user' => $user]));
                     } else {
-                        $tools->prepend(view('admin.users.contributeBde.create', ['user' => $user]));
+                        $tools->prepend(view('admin.users.contributeBDE.create', ['user' => $user]));
                     }
                 });
 
