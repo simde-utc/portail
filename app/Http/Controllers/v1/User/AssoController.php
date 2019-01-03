@@ -14,7 +14,7 @@ namespace App\Http\Controllers\v1\User;
 use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\AssoRequest;
+use App\Http\Requests\UserAssoRequest;
 use App\Models\Asso;
 use App\Models\Semester;
 use App\Models\Role;
@@ -51,11 +51,11 @@ class AssoController extends Controller
     /**
      * Liste des associations de l'utlisateur.
      *
-     * @param AssoRequest $request
-     * @param string      $user_id
+     * @param Request $request
+     * @param string  $user_id
      * @return JsonResponse
      */
-    public function index(AssoRequest $request, string $user_id=null): JsonResponse
+    public function index(Request $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id);
         $choices = $this->getChoices($request, ['joined', 'joining', 'followed']);
@@ -83,11 +83,11 @@ class AssoController extends Controller
     /**
      * Ajoute une association suivie par l'utilisateur.
      *
-     * @param Request $request
-     * @param string  $user_id
+     * @param UserAssoRequest $request
+     * @param string          $user_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $user_id=null): JsonResponse
+    public function store(UserAssoRequest $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id);
         $semester = $this->getSemester($request, ['followed'], 'create');

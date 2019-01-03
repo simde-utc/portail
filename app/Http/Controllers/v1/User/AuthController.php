@@ -18,6 +18,7 @@ use App\Models\Model;
 use App\Models\UserDetail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserAuthRequest;
 use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasUsers;
 
@@ -73,11 +74,11 @@ class AuthController extends Controller
     /**
      * Ajoute un système d'authentification de l'utilisateur.
      *
-     * @param  Request $request
-     * @param  string 	$user_id
+     * @param  UserAuthRequest $request
+     * @param  string          $user_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $user_id=null)
+    public function store(UserAuthRequest $request, string $user_id=null)
     {
         $user = $this->getUser($request, $user_id);
         $name = $request->input('name');
