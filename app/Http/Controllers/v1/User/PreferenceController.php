@@ -12,11 +12,12 @@
 namespace App\Http\Controllers\v1\User;
 
 use App\Http\Controllers\v1\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserPreferenceRequest;
 use App\Models\User;
 use App\Models\UserPreference;
 use App\Traits\Controller\v1\HasUsers;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\PortailException;
 
@@ -50,9 +51,9 @@ class PreferenceController extends Controller
     /**
      * Récupère la liste des préférences d'un utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param User                     $user
-     * @param string                   $verb
+     * @param Request $request
+     * @param User    $user
+     * @param string  $verb
      * @return Builder
      */
     protected function getPreferences(Request $request, User $user, string $verb)
@@ -89,8 +90,8 @@ class PreferenceController extends Controller
     /**
      * Liste les préférences d'un utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
+     * @param Request $request
+     * @param string  $user_id
      * @return JsonResponse
      */
     public function index(Request $request, string $user_id=null)
@@ -117,14 +118,15 @@ class PreferenceController extends Controller
     /**
      * Créer une préférence pour un utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
+     * @param UserPreferenceRequest $request
+     * @param string                $user_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $user_id=null)
+    public function store(UserPreferenceRequest $request, string $user_id=null)
     {
         $user = $this->getUser($request, $user_id);
         $inputs = $request->input();
+        $token = \Scopes::getToken($request);
 
         // On ajoute l'id associé.
         if ($request->input('only_for') === 'asso') {
@@ -132,14 +134,12 @@ class PreferenceController extends Controller
                 abort(403, 'Vous n\'avez pas les droits sur les préférences de l\'association');
             }
 
-            $token = $request->user() ? $request->user()->token() : $request->token();
             $inputs['only_for'] .= '_'.$token->client->asso_id;
         } else if ($request->input('only_for') === 'client') {
             if (!\Scopes::has($request, 'user-create-info-preferences-client')) {
                 abort(403, 'Vous n\'avez pas les droits sur les préférences du client');
             }
 
-            $token = $request->user() ? $request->user()->token() : $request->token();
             $inputs['only_for'] .= '_'.$token->client->id;
         } else if ($request->input('only_for', 'global') === 'global') {
             if (!\Scopes::has($request, 'user-create-info-preferences-global')) {
@@ -162,9 +162,9 @@ class PreferenceController extends Controller
     /**
      * Montre une préférence d'un utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $key
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $key
      * @return JsonResponse
      */
     public function show(Request $request, string $user_id, string $key=null)
@@ -186,12 +186,12 @@ class PreferenceController extends Controller
     /**
      * Met à jour une préférence d'un utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $key
+     * @param UserPreferenceRequest $request
+     * @param string                $user_id
+     * @param string                $key
      * @return JsonResponse
      */
-    public function update(Request $request, string $user_id, string $key=null)
+    public function update(UserPreferenceRequest $request, string $user_id, string $key=null)
     {
         if (is_null($key)) {
             list($user_id, $key) = [$key, $user_id];
@@ -218,9 +218,9 @@ class PreferenceController extends Controller
     /**
      * Supprime une préférence d'un utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $key
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $key
      * @return void
      */
     public function destroy(Request $request, string $user_id, string $key=null)

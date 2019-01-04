@@ -183,10 +183,11 @@ class GroupController extends Controller
     /**
      * Supprime un groupe.
      *
-     * @param string $group_id
+     * @param Request $request
+     * @param string  $group_id
      * @return void
      */
-    public function destroy(string $group_id): void
+    public function destroy(Request $request, string $group_id): void
     {
         $group = Group::find($group_id);
 

@@ -19,6 +19,7 @@ use App\Models\Service;
 use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserServiceRequest;
 use App\Interfaces\CanHaveServices;
 use App\Traits\HasVisibility;
 
@@ -52,8 +53,8 @@ class ServiceController extends Controller
     /**
      * Liste les services suivis par l'utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
+     * @param Request $request
+     * @param string  $user_id
      * @return JsonResponse
      */
     public function index(Request $request, string $user_id=null): JsonResponse
@@ -70,11 +71,11 @@ class ServiceController extends Controller
     /**
      * Ajouter un service suivi par l'utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
+     * @param UserServiceRequest $request
+     * @param string             $user_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $user_id=null): JsonResponse
+    public function store(UserServiceRequest $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id);
         $services = collect();
@@ -97,9 +98,9 @@ class ServiceController extends Controller
     /**
      * Montre un service suivi par l'utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $service_id
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $service_id
      * @return JsonResponse
      */
     public function show(Request $request, string $user_id, string $service_id=null): JsonResponse
@@ -117,9 +118,9 @@ class ServiceController extends Controller
     /**
      * Il n'est pas possible de mettre à jour un service suivi par l'utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $service_id
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $service_id
      * @return void
      */
     public function update(Request $request, string $user_id, string $service_id=null): void
@@ -130,9 +131,9 @@ class ServiceController extends Controller
     /**
      * Retire un service suivi par l'utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $service_id
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $service_id
      * @return void
      */
     public function destroy(Request $request, string $user_id, string $service_id=null): void

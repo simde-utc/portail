@@ -15,7 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Semester;
-use App\Http\Requests\PermissionRequest;
+use App\Http\Requests\PermissionAssignmentRequest;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasPermissions;
@@ -50,10 +50,10 @@ class AssignmentController extends Controller
     /**
      * Liste les permissions assignées.
      *
-     * @param  PermissionRequest $request
+     * @param  Request $request
      * @return JsonResponse
      */
-    public function index(PermissionRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $this->checkTokenRights($request);
 
@@ -68,14 +68,14 @@ class AssignmentController extends Controller
     /**
      * Assigne une permission.
      *
-     * @param  PermissionRequest $request
+     * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
      */
-    public function store(PermissionRequest $request): JsonResponse
+    public function store(PermissionAssignmentRequest $request): JsonResponse
     {
         $this->checkTokenRights($request, 'create');
 
-        $semester_id = Semester::getSemester($request->input('semester'))->id;
+        $semester_id = Semester::getSemester($request->input('semester_id'))->id;
 
         $request->resource->assignPermissions($request->input('permission_id'), [
             'user_id' => (\Auth::id() ?? $request->input('user_id')),
@@ -91,10 +91,10 @@ class AssignmentController extends Controller
     /**
      * Montre une permission assignée.
      *
-     * @param  PermissionRequest $request
+     * @param  Request $request
      * @return JsonResponse
      */
-    public function show(PermissionRequest $request): JsonResponse
+    public function show(Request $request): JsonResponse
     {
         $this->checkTokenRights($request);
 
@@ -106,10 +106,10 @@ class AssignmentController extends Controller
     /**
      * Il n'est pas possible de modifier une assignation.
      *
-     * @param  PermissionRequest $request
+     * @param  PermissionAssignmentRequest $request
      * @return void
      */
-    public function update(PermissionRequest $request)
+    public function update(PermissionAssignmentRequest $request)
     {
         abort(405, 'Impossible de modifier l\'assignation d\'un permission');
     }
@@ -117,10 +117,10 @@ class AssignmentController extends Controller
     /**
      * Retraint d'une permission.
      *
-     * @param  PermissionRequest $request
+     * @param  Request $request
      * @return void
      */
-    public function destroy(PermissionRequest $request)
+    public function destroy(Request $request)
     {
         $this->checkTokenRights($request, 'remove');
 

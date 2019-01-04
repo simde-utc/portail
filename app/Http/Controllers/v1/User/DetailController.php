@@ -14,6 +14,7 @@ namespace App\Http\Controllers\v1\User;
 use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserDetailRequest;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Exceptions\PortailException;
@@ -84,11 +85,11 @@ class DetailController extends Controller
     /**
      * Créer un détail pour l'utilisateur.
      *
-     * @param Request $request
-     * @param string  $user_id
+     * @param UserDetailRequest $request
+     * @param string            $user_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $user_id=null)
+    public function store(UserDetailRequest $request, string $user_id=null)
     {
         $user = $this->getUser($request, $user_id);
 
@@ -129,12 +130,12 @@ class DetailController extends Controller
     /**
      * Met à jour un détail pour l'utilisateur.
      *
-     * @param Request $request
-     * @param string  $user_id
-     * @param string  $key
+     * @param UserDetailRequest $request
+     * @param string            $user_id
+     * @param string            $key
      * @return JsonResponse
      */
-    public function update(Request $request, string $user_id, string $key=null)
+    public function update(UserDetailRequest $request, string $user_id, string $key=null)
     {
         if (is_null($key)) {
             list($user_id, $key) = [$key, $user_id];

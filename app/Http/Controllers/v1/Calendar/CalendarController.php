@@ -16,6 +16,7 @@ namespace App\Http\Controllers\v1\Calendar;
 use App\Http\Controllers\v1\Controller;
 use App\Traits\Controller\v1\HasCalendars;
 use App\Traits\Controller\v1\HasCreatorsAndOwners;
+use App\Http\Requests\CalendarRequest;
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Calendar;
@@ -62,8 +63,8 @@ class CalendarController extends Controller
     {
         $calendars = Calendar::getSelection()->filter(function ($calendar) use ($request) {
             return ($this->tokenCanSee($request, $calendar, 'get')
-            && (!\Auth::id() || $this->isVisible($calendar, \Auth::id())))
-            || $this->isCalendarFollowed($request, $calendar, \Auth::id());
+                && (!\Auth::id() || $this->isVisible($calendar, \Auth::id())))
+                || $this->isCalendarFollowed($request, $calendar, \Auth::id());
         })->values()->map(function ($calendar) {
             return $calendar->hideData();
         });
@@ -74,10 +75,10 @@ class CalendarController extends Controller
     /**
      * Crée un calendrier.
      *
-     * @param Request $request
+     * @param CalendarRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(CalendarRequest $request): JsonResponse
     {
         $inputs = $request->all();
 
@@ -113,11 +114,11 @@ class CalendarController extends Controller
     /**
      * Met à jour un calendrier.
      *
-     * @param Request	$request
-     * @param string 	$calendrier_id
+     * @param CalendarRequest	$request
+     * @param string          $calendrier_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $calendrier_id): JsonResponse
+    public function update(CalendarRequest $request, string $calendrier_id): JsonResponse
     {
         $calendar = $this->getCalendar($request, \Auth::user(), $calendrier_id, 'edit');
         $inputs = $request->all();

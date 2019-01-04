@@ -24,6 +24,7 @@ use App\Models\AssoAccess;
 use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;
 use App\Traits\Controller\v1\HasAssos;
+use App\Http\Requests\AccessRequest;
 
 class AccessController extends Controller
 {
@@ -80,7 +81,7 @@ class AccessController extends Controller
             ->where('asso_id', $asso->id)
             ->where('semester_id', $semester_id);
 
-        if ($user_id && !$asso->hasOnePermission('access', [ 'user_id' => $user_id ])) {
+        if ($user_id && !$asso->hasOnePermission('access', ['user_id' => $user_id])) {
             $access = $access->where(function ($query) use ($user_id) {
                 return $query->whereNotNull('validated_at')->orWhere('member_id', $user_id);
             });
@@ -126,11 +127,11 @@ class AccessController extends Controller
     /**
      * Crée une demande d'accès.
      *
-     * @param Request $request
-     * @param string  $asso_id
+     * @param AccessRequest $request
+     * @param string        $asso_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $asso_id): JsonResponse
+    public function store(AccessRequest $request, string $asso_id): JsonResponse
     {
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);
@@ -182,12 +183,12 @@ class AccessController extends Controller
     /**
      * Met à jour une demande d'accès.
      *
-     * @param Request $request
-     * @param string  $asso_id
-     * @param string  $access_id
+     * @param AccessRequest $request
+     * @param string        $asso_id
+     * @param string        $access_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $asso_id, string $access_id): JsonResponse
+    public function update(AccessRequest $request, string $asso_id, string $access_id): JsonResponse
     {
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);

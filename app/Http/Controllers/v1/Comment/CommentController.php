@@ -14,6 +14,7 @@ namespace App\Http\Controllers\v1\Comment;
 
 use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use Carbon\Carbon;
@@ -49,10 +50,10 @@ class CommentController extends Controller
     /**
      * Liste les commentaires d'une ressource.
      *
-     * @param CommentRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(CommentRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $this->checkTokenRights($request);
 
@@ -96,10 +97,10 @@ class CommentController extends Controller
     /**
      * Montre un commentaire d'une ressource.
      *
-     * @param CommentRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function show(CommentRequest $request): JsonResponse
+    public function show(Request $request): JsonResponse
     {
         $comment = $this->getComment($request);
 
@@ -130,10 +131,10 @@ class CommentController extends Controller
     /**
      * Supprime un commentaire d'une ressource.
      *
-     * @param CommentRequest $request
+     * @param Request $request
      * @return void
      */
-    public function destroy(CommentRequest $request): void
+    public function destroy(Request $request): void
     {
         $comment = $this->getComment($request, 'remove');
 

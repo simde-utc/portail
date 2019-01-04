@@ -2,9 +2,6 @@
 /**
  * Gère les emplacements de lieux.
  *
- * TODO: Déplacer la récupération dans un Trait.
- * TODO: Transformer en abort.
- *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
@@ -17,6 +14,7 @@ use App\Http\Controllers\v1\Controller;
 use App\Models\Place;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\PlaceRequest;
 use App\Traits\Controller\v1\HasPlaces;
 
 class PlaceController extends Controller
@@ -53,20 +51,27 @@ class PlaceController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(Place::get(), 200);
+        $places = Place::get()->map(function ($place) {
+            return $place->hideData();
+        });
+
+        return response()->json($places);
     }
 
     /**
      * Créer un emplacement.
      *
-     * @param Request $request
+     * @param PlaceRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(PlaceRequest $request): JsonResponse
     {
-        $place = Place::create($request->all());
+        $inputs = $request->input();
+        $inputs['position'] = $this->getPosition($request);
 
-        return response()->json($place, 200);
+        $place = Place::create($inputs);
+
+        return response()->json($place->hideSubData());
     }
 
     /**
@@ -80,22 +85,25 @@ class PlaceController extends Controller
     {
         $place = $this->getPlace($request, $place_id);
 
-        return response()->json($place, 200);
+        return response()->json($place->hideSubData());
     }
 
     /**
      * Met à jour un emplacement.
      *
-     * @param Request $request
-     * @param string  $place_id
+     * @param PlaceRequest $request
+     * @param string       $place_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $place_id): JsonResponse
+    public function update(PlaceRequest $request, string $place_id): JsonResponse
     {
         $place = $this->getPlace($request, $place_id);
 
-        if ($place->update($request->input())) {
-            return response()->json($place, 201);
+        $inputs = $request->input();
+        $inputs['position'] = $this->getPosition($request);
+
+        if ($place->update($inputs)) {
+            return response()->json($place->hideSubData(), 201);
         } else {
             abort(500, 'Impossible d\'actualiser le lieu');
         }

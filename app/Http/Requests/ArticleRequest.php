@@ -11,22 +11,10 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
-use Illuminate\Foundation\Http\FormRequest;
+use Validation;
 
-class ArticleRequest extends FormRequest
+class ArticleRequest extends Request
 {
-    /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * Tout est réalisé dans les controlleurs.
-     *
-     * @return boolean
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Défini les règles de validation des champs.
      *
@@ -35,32 +23,39 @@ class ArticleRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('title'))
+            'title' => Validation::type('string')
+                ->length('title')
                 ->post('required')
                 ->get(),
-            'content' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('article'))
+            'content' => Validation::type('string')
+                ->length('article')
                 ->post('required')
                 ->get(),
-            'image' => Validation::make($this)
-                ->type('image')
-                ->length(validation_between('url'))
+            'description' => Validation::type('string')
+                ->length('description')
                 ->get(),
-            'toBePublished' => Validation::make($this)
-                ->type('boolean')
+            'image' => Validation::type('image')
+                ->length('url')
                 ->get(),
-            'visibility_id' => Validation::make($this)
-                ->type('integer')
+            'visibility_id' => Validation::type('uuid')
                 ->exists('visibilities', 'id')
                 ->post('required')
                 ->get(),
-            'asso_id' => Validation::make($this)
-                ->type('uuid')->exists('assos', 'id')
+            'event_id' => Validation::type('integer')
+                ->exists('events', 'id')
+                ->get(),
+            'created_by_type' => Validation::type('string')
+                ->get(),
+            'created_by_id' => Validation::type('uuid')
+                ->get(),
+            'owned_by_type' => Validation::type('string')
                 ->post('required')
                 ->get(),
+            'owned_by_id' => Validation::type('uuid')
+                ->post('required')
+                ->get(),
+            'tags' => Validation::type('array')
+                ->get()
         ];
     }
 }

@@ -14,6 +14,7 @@ namespace App\Http\Controllers\v1\User;
 use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRoleRequest;
 use App\Models\User;
 use App\Models\Semester;
 use App\Http\Requests\UserRequest;
@@ -85,18 +86,18 @@ class RoleController extends Controller
     /**
      * Ajoute un rôle pour l'utilisateur.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  string|null              $user_id
+     * @param  UserRoleRequest $request
+     * @param  string|null     $user_id
      * @return JsonResponse
      * @throws PortailException Si l'utilisateur possède déjà un rôle on qu'on a pas le droit de le lui assigner.
      */
-    public function store(Request $request, string $user_id=null): JsonResponse
+    public function store(UserRoleRequest $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id, true);
 
         $user->assignRoles($request->input('role_id'), [
             'validated_by' => (\Auth::id() ?? $request->input('validated_by')),
-            'semester_id' => Semester::getSemester($request->input('semester'))->id
+            'semester_id' => Semester::getSemester($request->input('semester_id'))->id
         ], \Scopes::isClientToken($request));
         $role = $this->getRoleFromUser($request, $user, $request->input('role_id'));
 
@@ -126,9 +127,9 @@ class RoleController extends Controller
     /**
      * Il est impossible de mettre à jour un rôle d'un utilisateur.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string|null              $role_id
+     * @param  Request     $request
+     * @param string      $user_id
+     * @param string|null $role_id
      * @return void
      */
     public function update(Request $request, string $user_id, string $role_id=null)

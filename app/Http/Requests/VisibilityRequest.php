@@ -13,21 +13,9 @@
 namespace App\Http\Requests;
 
 use App\Facades\Validation;
-use Illuminate\Foundation\Http\FormRequest;
 
-class VisibilityRequest extends FormRequest
+class VisibilityRequest extends Request
 {
-    /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * Tout est réalisé dans les controlleurs.
-     *
-     * @return boolean
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Défini les règles de validation des champs.
      *
@@ -35,25 +23,19 @@ class VisibilityRequest extends FormRequest
      */
     public function rules()
     {
-        $visibility = $this->visibility;
-
         return [
-            'name' => Validation::make($this)
-                ->type('string')
-                ->length('between:3,191')
-                ->unique('visibilities', 'name,'.$visibility->id)
+            'type' => Validation::type('string')
+                ->length('name')
+                ->unique('visibilities', 'type')
                 ->post('required')
                 ->get(),
-            'type' => Validation::make($this)
-                ->type('string')
-                ->length('between:3,191')
-                ->unique('visibilities', 'type,'.$visibility->id)
+            'name' => Validation::type('string')
+                ->length('name')
+                ->unique('visibilities', 'name')
                 ->post('required')
                 ->get(),
-            'parent_id' => Validation::make($this)
-                ->type('uuid')
+            'parent_id' => Validation::type('uuid')
                 ->exists('visibilities', 'id')
-                ->post('required')
                 ->get(),
         ];
     }

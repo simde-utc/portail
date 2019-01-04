@@ -2,9 +2,6 @@
 /**
  * Gère les lieux.
  *
- * TODO: Déplacer la récupération dans un Trait.
- * TODO: Transformer en abort.
- *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
@@ -17,36 +14,32 @@ use App\Http\Controllers\v1\Controller;
 use App\Models\Location;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\LocationRequest;
+use App\Traits\HasPosition;
 
 class LocationController extends Controller
 {
+    use HasPosition;
+
     /**
      * Nécessité de gérer les lieux.
      */
     public function __construct()
     {
         $this->middleware(
-            \Scopes::matchOne(
-                ['client-get-locations']
-            ),
+            \Scopes::matchOne(['client-get-locations']),
             ['only' => ['index', 'show']]
         );
         $this->middleware(
-            \Scopes::matchOne(
-                ['client-create-locations']
-            ),
+            \Scopes::matchOne(['client-create-locations']),
             ['only' => ['store']]
         );
         $this->middleware(
-            \Scopes::matchOne(
-                ['client-set-locations']
-            ),
+            \Scopes::matchOne(['client-set-locations']),
             ['only' => ['update']]
         );
         $this->middleware(
-            \Scopes::matchOne(
-                ['client-manage-locations']
-            ),
+            \Scopes::matchOne(['client-manage-locations']),
             ['only' => ['destroy']]
         );
     }
@@ -58,20 +51,28 @@ class LocationController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(Location::get(), 200);
+        $locations = Location::get()->map(function ($location) {
+            return $location->hideData();
+        });
+
+        return response()->json($locations);
     }
 
     /**
      * Crée un lieu.
      *
-     * @param Request $request
+     * @param LocationRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(LocationRequest $request): JsonResponse
     {
-        $location = Location::create($request->all());
+        $location = Location::create([
+            'name' => $request->input('name'),
+            'place_id' => $request->input('place_id'),
+            'position' => $this->getPosition($request),
+        ]);
 
-        return response()->json($location, 200);
+        return response()->json($location->hideSubData());
     }
 
     /**
@@ -85,31 +86,33 @@ class LocationController extends Controller
         $location = Location::with('place')->find($location_id);
 
         if ($location) {
-            return response()->json($location, 200);
+            return response()->json($location->hideSubData());
         } else {
-            return response()->json(['message' => 'Impossible de trouver l\'emplacement'], 500);
+            abort(404, 'Impossible de trouver l\'emplacement');
         }
     }
 
     /**
      * Met à jour un lieu.
      *
-     * @param  Request $request
-     * @param  string  $location_id
+     * @param  LocationRequest $request
+     * @param  string          $location_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $location_id): JsonResponse
+    public function update(LocationRequest $request, string $location_id): JsonResponse
     {
         $location = Location::with('place')->find($location_id);
 
         if ($location) {
-            if ($location->update($request->input())) {
-                return response()->json($location, 201);
-            } else {
-                return response()->json(['message' => 'Impossible d\'actualiser l\'emplacement'], 500);
+            $inputs = $request->input();
+
+            if ($position = $this->getPosition($request)) {
+                $inputs['position'] = $position;
             }
+
+            return response()->json($location, 201);
         } else {
-            return response()->json(['message' => 'Impossible de trouver l\'emplacement'], 500);
+            abort(404, 'Impossible de trouver l\'emplacement');
         }
     }
 
@@ -117,20 +120,18 @@ class LocationController extends Controller
      * Supprime un lieu.
      *
      * @param  string $location_id
-     * @return JsonResponse
+     * @return void
      */
-    public function destroy(string $location_id): JsonResponse
+    public function destroy(string $location_id): void
     {
         $location = Location::find($location_id);
 
         if ($location) {
-            if ($location->delete()) {
-                return response()->json(['message' => 'L\'emplacement a bien été supprimée'], 200);
-            } else {
-                return response()->json(['message' => 'Erreur lors de la suppression de l\'emplacement'], 500);
-            }
+            $location->delete();
+
+            abort(204);
         } else {
-            return response()->json(['message' => 'Impossible de trouver l\'emplacement'], 500);
+            abort(404, 'Impossible de trouver l\'emplacement');
         }
     }
 }
