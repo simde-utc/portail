@@ -12,11 +12,10 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
-use Illuminate\Foundation\Http\FormRequest;
+use Validation;
 use App\Models\Group;
 
-class GroupRequest extends FormRequest
+class GroupRequest extends Request
 {
     /**
      * Détermine si l'utilisateur à le droit de faire cette requête.
@@ -45,24 +44,21 @@ class GroupRequest extends FormRequest
         $group = $this->group;
 
         return [
-            'name' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('name'))
-                ->unique('groups', 'name,'.$group->id)
+            'name' => Validation::type('string')
+                ->length('name')
+                ->unique('groups', 'name')
                 ->post('required')
                 ->get(),
-            'icon' => Validation::make($this)
-                ->type('image')
-                ->length(validation_between('url'))
+            'icon' => Validation::type('image')
+                ->length('url')
                 ->nullable()
                 ->get(),
-            'visibility_id' => Validation::make($this)
-                ->type('uuid')
+            'user_id' => Validation::type('uuid')
+                ->exists('users', 'id')
+                ->get(),
+            'visibility_id' => Validation::type('uuid')
                 ->exists('visibilities', 'id')
                 ->post('required')
-                ->get(),
-            'is_active' => Validation::make($this)
-                ->type('boolean')
                 ->get(),
         ];
     }

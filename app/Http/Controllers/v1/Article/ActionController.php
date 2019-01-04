@@ -35,7 +35,7 @@ class ActionController extends Controller
         $this->middleware(
         array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
-        ['client-get-articles-assos', 'client-get-articles-groups']),
+                    ['client-get-articles-assos', 'client-get-articles-groups']),
 		        \Scopes::matchOne('user-get-articles-actions', 'client-get-articles-actions')
 	        ),
 	        ['only' => ['index', 'show']]
@@ -43,7 +43,7 @@ class ActionController extends Controller
         $this->middleware
         (array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
-        ['client-get-articles-assos', 'client-get-articles-groups']),
+                    ['client-get-articles-assos', 'client-get-articles-groups']),
 		        \Scopes::matchOne('user-create-articles-actions', 'client-create-articles-actions')
 	        ),
 	        ['only' => ['store']]
@@ -51,7 +51,7 @@ class ActionController extends Controller
         $this->middleware(
         array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
-        ['client-get-articles-assos', 'client-get-articles-groups']),
+                    ['client-get-articles-assos', 'client-get-articles-groups']),
 		        \Scopes::matchOne('user-edit-articles-actions', 'client-edit-articles-actions')
 	        ),
 	        ['only' => ['update']]
@@ -59,7 +59,7 @@ class ActionController extends Controller
         $this->middleware(
         array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
-        ['client-get-articles-assos', 'client-get-articles-groups']),
+                    ['client-get-articles-assos', 'client-get-articles-groups']),
 		        \Scopes::matchOne('user-manage-articles-actions', 'client-manage-articles-actions')
 	        ),
 	        ['only' => ['destroy']]

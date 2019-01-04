@@ -19,6 +19,7 @@ use App\Models\Calendar;
 use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserCalendarRequest;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\HasVisibility;
 
@@ -64,8 +65,8 @@ class CalendarController extends Controller
     /**
      * Liste les calendriers.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
+     * @param Request $request
+     * @param string  $user_id
      * @return JsonResponse
      */
     public function index(Request $request, string $user_id=null): JsonResponse
@@ -107,11 +108,11 @@ class CalendarController extends Controller
     /**
      * Crée un calendrier.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
+     * @param UserCalendarRequest $request
+     * @param string              $user_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $user_id=null): JsonResponse
+    public function store(UserCalendarRequest $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id);
         $calendars = collect();
@@ -134,9 +135,9 @@ class CalendarController extends Controller
     /**
      * Montre un calendrier.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $calendar_id
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $calendar_id
      * @return JsonResponse
      */
     public function show(Request $request, string $user_id, string $calendar_id=null): JsonResponse
@@ -159,9 +160,9 @@ class CalendarController extends Controller
     /**
      * Il n'est pas possible de mettre à jour un calendrier.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $calendar_id
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $calendar_id
      * @return void
      */
     public function update(Request $request, string $user_id, string $calendar_id=null)
@@ -172,9 +173,9 @@ class CalendarController extends Controller
     /**
      * Supprime un calendrier.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $calendar_id
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $calendar_id
      * @return void
      */
     public function destroy(Request $request, string $user_id, string $calendar_id=null): void

@@ -17,7 +17,7 @@ use App\Models\Visibility;
 use App\Models\ArticleAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\UserArticleActionRequest;
 use App\Models\Article;
 use App\Traits\HasVisibility;
 use App\Interfaces\Model\CanHaveArticles;
@@ -70,9 +70,9 @@ class ActionController extends Controller
     /**
      * Liste les actions de l'utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $article_id
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $article_id
      * @return JsonResponse
      */
     public function index(Request $request, string $user_id, string $article_id=null): JsonResponse
@@ -85,18 +85,18 @@ class ActionController extends Controller
         $article = $this->getArticle($request, $user, $article_id);
         $actions = $article->actions()->where('user_id', $user->id)->allToArray();
 
-        return response()->json($actions, 200);
+        return response()->json($actions);
     }
 
     /**
      * Créer une action de l'utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UserArticleActionRequest $request
      * @param string                   $user_id
      * @param string                   $article_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $user_id, string $article_id=null): JsonResponse
+    public function store(UserArticleActionRequest $request, string $user_id, string $article_id=null): JsonResponse
     {
         if (is_null($article_id)) {
             list($user_id, $article_id) = [$article_id, $user_id];
@@ -106,11 +106,11 @@ class ActionController extends Controller
         $article = $this->getArticle($request, $user, $article_id);
 
         $action = ArticleAction::create(array_merge(
-        $request->input(),
-        [
-            'article_id' => $article_id,
-            'user_id' => $user->id,
-        ]
+            $request->input(),
+            [
+                'article_id' => $article_id,
+                'user_id' => $user->id,
+            ]
         ));
 
         return response()->json($action, 201);
@@ -119,10 +119,10 @@ class ActionController extends Controller
     /**
      * Montre une action de l'utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $article_id
-     * @param string                   $key
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $article_id
+     * @param string  $key
      * @return JsonResponse
      */
     public function show(Request $request, string $user_id, string $article_id, string $key=null): JsonResponse
@@ -141,13 +141,14 @@ class ActionController extends Controller
     /**
      * Met à jour une action de l'utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UserArticleActionRequest $request
      * @param string                   $user_id
      * @param string                   $article_id
      * @param string                   $key
      * @return JsonResponse
      */
-    public function update(Request $request, string $user_id, string $article_id, string $key=null): JsonResponse
+    public function update(UserArticleActionRequest $request, string $user_id, string $article_id,
+        string $key=null): JsonResponse
     {
         if (is_null($key)) {
             list($user_id, $article_id, $key) = [$key, $user_id, $article_id];
@@ -173,10 +174,10 @@ class ActionController extends Controller
     /**
      * Supprime une action de l'utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
-     * @param string                   $article_id
-     * @param string                   $key
+     * @param Request $request
+     * @param string  $user_id
+     * @param string  $article_id
+     * @param string  $key
      * @return void
      */
     public function destroy(Request $request, string $user_id, string $article_id, string $key=null)

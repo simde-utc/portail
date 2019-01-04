@@ -17,6 +17,7 @@ use App\Http\Controllers\v1\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\GroupMemberRequest;
 use App\Models\Group;
 use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;
@@ -60,11 +61,11 @@ class MemberController extends Controller
     /**
      * Ajouter un membre au groupe.
      *
-     * @param Request $request
-     * @param string  $group_id
+     * @param GroupMemberRequest $request
+     * @param string             $group_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $group_id): JsonResponse
+    public function store(GroupMemberRequest $request, string $group_id): JsonResponse
     {
         $group = $this->getGroup($request, $group_id);
 
@@ -74,9 +75,9 @@ class MemberController extends Controller
         ];
         // TODO: Envoyer un mail d'invitation dans le groupe.
         try {
-            $group->assignMembers($request->input('member_ids', []), $data);
+            $group->assignMembers($request->input('member_ids', (array) $request->input('member_id')), $data);
         } catch (PortailException $e) {
-            return response()->json(["message" => $e->getMessage()], 400);
+            abort(400, $e->getMessage());
         }
 
         $members = $group->currentAllMembers->map(function ($member) {
@@ -109,12 +110,12 @@ class MemberController extends Controller
     /**
      * Met à jour un membre du groupe.
      *
-     * @param Request $request
-     * @param string  $group_id
-     * @param string  $member_id
+     * @param GroupMemberRequest $request
+     * @param string             $group_id
+     * @param string             $member_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $group_id, string $member_id): JsonResponse
+    public function update(GroupMemberRequest $request, string $group_id, string $member_id): JsonResponse
     {
         $group = $this->getGroup($request, $group_id);
         $member = $group->currentAllMembers->where('id', $member_id)->first();
@@ -139,7 +140,7 @@ class MemberController extends Controller
                     'semester_id' => $member->pivot->semester_id,
                 ], $data);
             } catch (PortailException $e) {
-                return response()->json(["message" => $e->getMessage()], 400);
+                abort(400, $e->getMessage());
             }
 
             return response()->json($group->currentAllMembers()->where('user_id', $member_id)->first()->hideData());

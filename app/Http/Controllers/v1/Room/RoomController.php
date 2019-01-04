@@ -16,6 +16,7 @@ use App\Traits\Controller\v1\HasCreatorsAndOwners;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Room;
+use App\Http\Requests\RoomRequest;
 
 class RoomController extends Controller
 {
@@ -74,10 +75,10 @@ class RoomController extends Controller
     /**
      * Crée une salle.
      *
-     * @param  Request $request
+     * @param  RoomRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(RoomRequest $request): JsonResponse
     {
         $inputs = $request->all();
 
@@ -111,11 +112,11 @@ class RoomController extends Controller
     /**
      * Met à jour une salle.
      *
-     * @param Request $request
-     * @param string  $room_id
+     * @param RoomRequest $request
+     * @param string      $room_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $room_id): JsonResponse
+    public function update(RoomRequest $request, string $room_id): JsonResponse
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id, 'edit');
         $inputs = $request->all();

@@ -13,22 +13,10 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
-use Illuminate\Foundation\Http\FormRequest;
+use Validation;
 
-class PartnerRequest extends FormRequest
+class PartnerRequest extends Request
 {
-    /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * Tout est réalisé dans les controlleurs.
-     *
-     * @return boolean
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Défini les règles de validation des champs.
      *
@@ -37,19 +25,17 @@ class PartnerRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('name'))
+            'name' => Validation::type('string')
+                ->length('name')
+                ->unique('partners', 'name')
                 ->post('required')
                 ->get(),
-            'description' => Validation::make($this)
-                ->type('string')
-                ->length(validation_between('description'))
+            'description' => Validation::type('string')
+                ->length('description')
                 ->post('required')
                 ->get(),
-            'image' => Validation::make($this)
-                ->type('image')
-                ->length(validation_between('url'))
+            'image' => Validation::type('image')
+                ->length('url')
                 ->post('required')
                 ->get(),
         ];

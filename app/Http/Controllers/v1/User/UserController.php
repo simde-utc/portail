@@ -16,6 +16,7 @@ use App\Http\Controllers\v1\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use App\Traits\Controller\v1\HasUsers;
 use App\Traits\Controller\v1\HasImages;
 use App\Exceptions\PortailException;
@@ -55,7 +56,7 @@ class UserController extends Controller
     /**
      * Récupère la liste des utilisateurs.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request)
@@ -88,7 +89,7 @@ class UserController extends Controller
     /**
      * Créer un nouvel utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function store(Request $request)
@@ -145,11 +146,11 @@ class UserController extends Controller
     /**
      * Montre un utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
+     * @param UserRequest $request
+     * @param string      $user_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $user_id=null)
+    public function show(UserRequest $request, string $user_id=null)
     {
         $user = $this->getUser($request, $user_id, true);
         $rightsOnUser = is_null($user_id) || (\Auth::id() && $user->id === \Auth::id());
@@ -213,8 +214,8 @@ class UserController extends Controller
     /**
      * Met à jour un utilisateur.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
+     * @param Request $request
+     * @param string  $user_id
      * @return JsonResponse
      */
     public function update(Request $request, string $user_id=null)
@@ -237,8 +238,8 @@ class UserController extends Controller
      * (Non géré) Supprime un utilisateur.
      * TODO RGPD.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $user_id
+     * @param Request $request
+     * @param string  $user_id
      * @return void
      */
     public function destroy(Request $request, string $user_id)

@@ -22,6 +22,7 @@ use App\Models\Event;
 use App\Models\Calendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\EventRequest;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Traits\HasVisibility;
 
@@ -81,10 +82,10 @@ class EventController extends Controller
     /**
      * Crée un événement.
      *
-     * @param Request $request
+     * @param EventRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(EventRequest $request): JsonResponse
     {
         $inputs = $request->all();
 
@@ -126,11 +127,11 @@ class EventController extends Controller
     /**
      * Met à jour un événement.
      *
-     * @param Request $request
-     * @param string  $event_id
+     * @param EventRequest $request
+     * @param string       $event_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $event_id): JsonResponse
+    public function update(EventRequest $request, string $event_id): JsonResponse
     {
         $event = $this->getEvent($request, \Auth::user(), $event_id, 'set');
         $inputs = $request->all();

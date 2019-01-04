@@ -203,6 +203,12 @@ class PermissionsTableSeeder extends Seeder
                 'owned_by' => new User,
             ],
             [
+                'type' => 'handle-access',
+                'name' => 'Gestion des accès',
+                'description' => 'Gestion des attributions d\'accès',
+                'owned_by' => new User,
+            ],
+            [
                 'type' => 'search',
                 'name' => 'Recherche',
                 'description' => 'Rechercher des utilisateurs',

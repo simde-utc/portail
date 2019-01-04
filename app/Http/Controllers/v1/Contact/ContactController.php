@@ -65,10 +65,10 @@ class ContactController extends Controller
     /**
      * Liste des contacts d'une ressource.
      *
-     * @param ContactRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(ContactRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $this->checkTokenRights($request);
         $contacts = $request->resource->contacts()->getSelection()->map(function ($contact) {
@@ -97,10 +97,10 @@ class ContactController extends Controller
     /**
      * Montre un contact d'une ressource.
      *
-     * @param ContactRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function show(ContactRequest $request): JsonResponse
+    public function show(Request $request): JsonResponse
     {
         $contact = $this->getContact($request);
 
@@ -127,10 +127,10 @@ class ContactController extends Controller
     /**
      * Supprime un contact pour une ressource.
      *
-     * @param ContactRequest $request
+     * @param Request $request
      * @return void
      */
-    public function destroy(ContactRequest $request): void
+    public function destroy(Request $request): void
     {
         $contact = $this->getContact($request, 'manage');
 

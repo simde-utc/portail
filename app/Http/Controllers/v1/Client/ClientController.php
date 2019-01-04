@@ -2,8 +2,6 @@
 /**
  * Gère les clients de l'utilisateur
  *
- * TODO: En abort
- *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -18,7 +16,7 @@ use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\Token;
+use Laravel\Passport\Token;
 use Lcobucci\JWT\Parser;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
@@ -32,13 +30,7 @@ class ClientController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $bearerToken = $request->bearerToken();
-        $tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
-        $client = Token::find($tokenId)->client->toArray();
-
-        $client['scopes'] = json_decode($client['scopes'], true);
-
-        return response()->json($client);
+        return response()->json(\Scopes::getClient($request));
     }
 
     /**
@@ -49,10 +41,8 @@ class ClientController extends Controller
      */
     public function getUsersClient(Request $request): JsonResponse
     {
-        $bearerToken = $request->bearerToken();
-        $tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
-        $clientId = Token::find($tokenId)->client_id;
-        $tokens = Token::where('client_id', $clientId);
+        $client = \Scopes::getClient($request);
+        $tokens = Token::where('client_id', $client->id);
 
         if ($request->input('revoked')) {
             $tokens->where('revoked', $request->input('revoked') == 1 ? 1 : 0);
@@ -69,10 +59,10 @@ class ClientController extends Controller
                 }
             }
 
-            array_push($result, [
+            $result[] = [
                 'user_id' => $user_id === '' ? null : $user_id,
                 'scopes'  => array_keys($scopes),
-            ]);
+            ];
         }
 
         return response()->json($result);
@@ -87,10 +77,7 @@ class ClientController extends Controller
      */
     public function getUserClient(Request $request, string $user_id): JsonResponse
     {
-        $bearerToken = $request->bearerToken();
-        $token_id = (new Parser)->parse($bearerToken)->getHeader('jti');
-        $client_id = Token::find($token_id)->client_id;
-        $tokens = Token::where('client_id', $client_id)->where('user_id', $user_id);
+        $tokens = Token::where('client_id', \Scopes::getClient($request)->id)->where('user_id', $user_id);
 
         if ($request->input('revoked')) {
             $tokens->where('revoked', $request->input('revoked') === '1' ? 1 : 0);
@@ -106,51 +93,44 @@ class ClientController extends Controller
      *
      * @param Request $request
      * @param string  $user_id
-     * @return JsonResponse
+     * @return void
      */
-    public function destroy(Request $request, string $user_id): JsonResponse
+    public function destroy(Request $request, string $user_id): void
     {
-        $bearerToken = $request->bearerToken();
-        $tokenId = (new Parser)->parse($bearerToken)->getHeader('jti');
-        $clientId = Token::find($tokenId)->client_id;
-
-        if (Token::where('client_id', $clientId)->where('user_id', $user_id)->where('revoked', false)->delete() === 0) {
-            return response()->json(['message' => 'Aucun token supprimé'], 404);
-        } else {
-            return response()->json(['message' => 'Tokens associés à l\'utilisateur supprimés avec succès'], 202);
+        if (Token::where('client_id', \Scopes::getClient($request)->id)
+            ->where('user_id', $user_id)->where('revoked', false)->delete()) {
+            abort(202, 'Tokens associés à l\'utilisateur supprimés avec succès');
         }
+
+        abort(404, 'Aucun token supprimé');
     }
 
     /**
      * Supprime les autorisations de tous les utilisateurs pour le client.
      *
      * @param Request $request
-     * @return JsonResponse
+     * @return void
      */
-    public function destroyAll(Request $request): JsonResponse
+    public function destroyAll(Request $request): void
     {
-        $bearerToken = $request->bearerToken();
-        $tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
-        $clientId = Token::find($tokenId)->client_id;
-
-        if (Token::where('client_id', $clientId)->where('revoked', false)->delete() === 0) {
-            return response()->json(['message' => 'Aucun token supprimé'], 404);
-        } else {
-            return response()->json(['message' => 'Tous vos tokens ont été supprimés avec succès'], 202);
+        if (Token::where('client_id', \Scopes::getClient($request)->id)->where('revoked', false)->delete()) {
+            abort(202, 'Tokens associés à l\'utilisateur supprimés avec succès');
         }
+
+        abort(404, 'Aucun token supprimé');
     }
 
     /**
      * Supprime les autorisations pour l'utilisateur courant.
      *
      * @param Request $request
-     * @return JsonResponse
+     * @return void
      */
-    public function destroyCurrent(Request $request): JsonResponse
+    public function destroyCurrent(Request $request): void
     {
-        Token::where('client_id', $request->user()->token()->client_id)->where('user_id', $request->user()->id)
-        ->where('revoked', false)->delete();
+        Token::where('client_id', \Scopes::getClient($request)->id)->where('user_id', $request->user()->id)
+            ->where('revoked', false)->delete();
 
-        return response()->json(['message' => 'Tokens associés à l\'utilisateur supprimés avec succès'], 202);
+        abort(202, 'Tokens associés à l\'utilisateur supprimés avec succès');
     }
 }

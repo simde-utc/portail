@@ -18,6 +18,9 @@ Route::get('auth/logout', 'AuthController@getLogout');
 
 Route::get('charts', 'ChartsController@index')->name('charts-index');
 
+Route::get('access', 'AccessController@index')->name('access-index');
+Route::post('access/{access_id}', 'AccessController@store')->name('access-store');
+
 Route::get('search', 'SearchController@index')->name('search-index');
 Route::post('search', 'SearchController@search')->name('search-search');
 Route::get('search/{user_id}', 'SearchController@show')->name('search-show');
@@ -34,11 +37,10 @@ Route::resource('resources/assos', 'Resource\\AssoController');
 Route::resource('resources/asso-access', 'Resource\\AssoAccessController');
 Route::resource('resources/asso-types', 'Resource\\AssoTypeController');
 Route::resource('resources/auth-apps', 'Resource\\AuthAppController');
-Route::resource('resources/clients', 'Resource\\ClientController');
-
 Route::resource('resources/auth-cas', 'Resource\\AuthCasController');
 Route::resource('resources/auth-passwords', 'Resource\\AuthPasswordController');
 Route::resource('resources/calendars', 'Resource\\CalendarController');
+Route::resource('resources/clients', 'Resource\\ClientController');
 Route::resource('resources/comments', 'Resource\\CommentController');
 Route::resource('resources/contacts', 'Resource\\ContactController');
 Route::resource('resources/contact-types', 'Resource\\ContactTypeController');

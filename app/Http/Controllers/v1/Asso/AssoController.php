@@ -64,12 +64,12 @@ class AssoController extends Controller
     /**
      * Liste les associations.
      *
-     * @param AssoRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(AssoRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $assos = Asso::getSelection()->map(function ($asso) {
+        $assos = Asso::with('parent')->getSelection()->map(function ($asso) {
             return $asso->hideData();
         });
 
@@ -103,8 +103,8 @@ class AssoController extends Controller
     /**
      * Montre une association.
      *
-     * @param AssoRequest $request
-     * @param string      $asso_id
+     * @param Request $request
+     * @param string  $asso_id
      * @return JsonResponse
      */
     public function show(Request $request, string $asso_id): JsonResponse
@@ -160,8 +160,8 @@ class AssoController extends Controller
     /**
      * Supprime une association.
      *
-     * @param AssoRequest $request
-     * @param string      $asso_id
+     * @param Request $request
+     * @param string  $asso_id
      * @return void
      */
     public function destroy(Request $request, string $asso_id): void
@@ -173,8 +173,7 @@ class AssoController extends Controller
         }
 
         $asso->delete();
-        $this->deleteImage('assos/'.$asso->id);
-
+        // On ne supprime pas une asso réellement: $this->deleteImage('assos/'.$asso->id);.
         abort(204);
     }
 }

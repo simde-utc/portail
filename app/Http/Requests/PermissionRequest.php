@@ -10,12 +10,11 @@
 
 namespace App\Http\Requests;
 
-use App\Facades\Validation;
-use Illuminate\Foundation\Http\FormRequest;
+use Validation;
 use App\Exceptions\PortailException;
 use App\Traits\Model\CanHavePermissions;
 
-class PermissionRequest extends FormRequest
+class PermissionRequest extends Request
 {
     /**
      * Détermine si l'utilisateur à le droit de faire cette requête.
@@ -41,12 +40,32 @@ class PermissionRequest extends FormRequest
 
     /**
      * Défini les règles de validation des champs.
-     * TODO: A faire :)
      *
      * @return array
      */
     public function rules()
     {
-        return [];
+        return [
+            'type' => Validation::type('string')
+                ->length('name')
+                ->unique('permissions', 'type')
+                ->post('required')
+                ->get(),
+            'name' => Validation::type('string')
+                ->length('name')
+                ->unique('permissions', 'name')
+                ->post('required')
+                ->get(),
+            'description' => Validation::type('string')
+                ->length('text')
+                ->post('required')
+                ->get(),
+            'owned_by_type' => Validation::type('string')
+                ->post('required')
+                ->get(),
+            'owned_by_id' => Validation::type('uuid')
+                ->post('required')
+                ->get(),
+        ];
     }
 }

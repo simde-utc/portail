@@ -18,6 +18,7 @@ use App\Models\Semester;
 use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasPermissions;
 use App\Traits\Controller\v1\HasOwners;
+use App\Http\Requests\PermissionRequest;
 
 class PermissionController extends Controller
 {
@@ -29,20 +30,20 @@ class PermissionController extends Controller
     public function __construct()
     {
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('user-get-permissions', 'client-get-permissions'),
-        ['only' => ['index', 'show']]
+            \Scopes::matchOneOfDeepestChildren('user-get-permissions', 'client-get-permissions'),
+            ['only' => ['index', 'show']]
         );
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('user-create-permissions', 'client-create-permissions'),
-        ['only' => ['store']]
+            \Scopes::matchOneOfDeepestChildren('user-create-permissions', 'client-create-permissions'),
+            ['only' => ['store']]
         );
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('user-edit-permissions', 'client-edit-permissions'),
-        ['only' => ['update']]
+            \Scopes::matchOneOfDeepestChildren('user-edit-permissions', 'client-edit-permissions'),
+            ['only' => ['update']]
         );
         $this->middleware(
-        \Scopes::matchOneOfDeepestChildren('user-remove-permissions', 'client-remove-permissions'),
-        ['only' => ['destroy']]
+            \Scopes::matchOneOfDeepestChildren('user-remove-permissions', 'client-remove-permissions'),
+            ['only' => ['destroy']]
         );
     }
 
@@ -66,10 +67,10 @@ class PermissionController extends Controller
     /**
      * Crée une permission.
      *
-     * @param  Request $request
+     * @param  PermissionRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(PermissionRequest $request): JsonResponse
     {
         $inputs = $request->all();
         $owner = $this->getOwner($request, 'permission', 'permission', 'create');
@@ -86,7 +87,7 @@ class PermissionController extends Controller
      * Montre une permission.
      *
      * @param  Request $request
-     * @param  string 	$permission_id
+     * @param  string  $permission_id
      * @return JsonResponse
      */
     public function show(Request $request, string $permission_id): JsonResponse
@@ -100,11 +101,11 @@ class PermissionController extends Controller
     /**
      * Met à jour une permission.
      *
-     * @param  Request $request
-     * @param  string 	$permission_id
+     * @param  PermissionRequest $request
+     * @param  string            $permission_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $permission_id): JsonResponse
+    public function update(PermissionRequest $request, string $permission_id): JsonResponse
     {
         $permission = $this->getPermission($request, $permission_id, 'edit');
 
@@ -121,7 +122,7 @@ class PermissionController extends Controller
      * Supprime une permission.
      *
      * @param  Request $request
-     * @param  string 	$permission_id
+     * @param  string  $permission_id
      * @return void
      */
     public function destroy(Request $request, string $permission_id): void

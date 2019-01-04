@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\Asso;
 use App\Models\Semester;
 use App\Models\Role;
+use App\Http\Requests\AssoMemberRequest;
 use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;
 use App\Traits\Controller\v1\HasAssos;
@@ -144,11 +145,11 @@ class MemberController extends Controller
     /**
      * Ajoute un membre à l'association.
      *
-     * @param Request $request
-     * @param string  $asso_id
+     * @param AssoMemberRequest $request
+     * @param string            $asso_id
      * @return JsonResponse
      */
-    public function store(Request $request, string $asso_id): JsonResponse
+    public function store(AssoMemberRequest $request, string $asso_id): JsonResponse
     {
         $user = $this->getUser($request, (\Auth::id() ?? $request->input('user_id')));
         $choices = $this->getChoices($request);
@@ -187,12 +188,12 @@ class MemberController extends Controller
     /**
      * Modifie un membre de l'association.
      *
-     * @param Request $request
-     * @param string  $asso_id
-     * @param string  $member_id
+     * @param AssoMemberRequest $request
+     * @param string            $asso_id
+     * @param string            $member_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $asso_id, string $member_id): JsonResponse
+    public function update(AssoMemberRequest $request, string $asso_id, string $member_id): JsonResponse
     {
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);

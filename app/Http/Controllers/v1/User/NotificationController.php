@@ -14,6 +14,7 @@ use App\Http\Controllers\v1\Controller;
 use App\Traits\Controller\v1\HasNotifications;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserNotificationRequest;
 use App\Models\Notification;
 use App\Notifications\ExternalNotification;
 use App\Interfaces\Model\CanNotify;
@@ -76,11 +77,11 @@ class NotificationController extends Controller
     /**
      * Créer une notification pour l'utlisateur.
      *
-     * @param Request $request
-     * @param string  $user_id
+     * @param UserNotificationRequest $request
+     * @param string                  $user_id
      * @return void
      */
-    public function store(Request $request, string $user_id=null): void
+    public function store(UserNotificationRequest $request, string $user_id=null): void
     {
         $user = $this->getUser($request, $user_id);
 
@@ -115,12 +116,12 @@ class NotificationController extends Controller
     /**
      * Met à jour une notification de l'utlisateur.
      *
-     * @param Request $request
-     * @param string  $user_id
-     * @param string  $notification_id
+     * @param UserNotificationRequest $request
+     * @param string                  $user_id
+     * @param string                  $notification_id
      * @return JsonResponse
      */
-    public function update(Request $request, string $user_id=null, string $notification_id=null): JsonResponse
+    public function update(UserNotificationRequest $request, string $user_id=null, string $notification_id=null): JsonResponse
     {
         if (is_null($notification_id)) {
             list($user_id, $notification_id) = [$notification_id, $user_id];

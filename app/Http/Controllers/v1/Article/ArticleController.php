@@ -2,8 +2,6 @@
 /**
  * Gère les articles.
  *
- * TODO: Add abort.
- *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -15,7 +13,6 @@
 namespace App\Http\Controllers\v1\Article;
 
 use App\Http\Controllers\v1\Controller;
-use App\Facades\Scopes;
 use App\Models\Model;
 use App\Models\User;
 use App\Models\Asso;
@@ -87,6 +84,10 @@ class ArticleController extends Controller
             $scope = array_keys(\Scopes::getRelatives(
                 $scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type').'s-'.$type
             ));
+
+            if (count($scope) === 0) {
+                abort(403, 'Non autorisé a possédé un article');
+            }
         }
 
         if (!\Scopes::hasOne($request, $scope)) {
@@ -142,38 +143,39 @@ class ArticleController extends Controller
 
         return response()->json($articles->values()->map(function ($article) {
             return $article->hideData();
-        }), 200);
+        }));
     }
 
     /**
      * Créer un article.
      *
-     * @param Request $request
+     * @param ArticleRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ArticleRequest $request): JsonResponse
     {
         $inputs = $request->all();
 
         // On récupère pour qui c'est créé.
         $owner = $this->getCreaterOrOwner($request, 'create', 'owned');
+        $ownerName = \ModelResolver::getNameFromObject($owner);
 
         // Le créateur peut être multiple: le user, l'asso ou le client courant. Ou autre.
         if ($request->input('created_by_type', 'user') === 'user'
 	        && \Auth::id()
 	        && $request->input('created_by_id', \Auth::id()) === \Auth::id()
 	        && \Scopes::hasOne($request,
-        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-user')) {
+                \Scopes::getTokenType($request).'-create-articles-'.$ownerName.'s-owned-user')) {
             $creater = \Auth::user();
         } else if ($request->input('created_by_type', 'client') === 'client'
 	        && $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
 	        && \Scopes::hasOne($request,
-        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-client')) {
+                \Scopes::getTokenType($request).'-create-articles-'.$ownerName.'s-owned-client')) {
             $creater = \Scopes::getClient($request);
         } else if ($request->input('created_by_type') === 'asso'
-	        && $request->input('created_by_id', \Scopes::getClient($request)->asso->id) === \Scopes::getClient($request)->asso->id
+	        && $request->input('created_by_id', ($asso_id = \Scopes::getClient($request)->asso->id)) === $asso_id
 	        && \Scopes::hasOne($request,
-        \Scopes::getTokenType($request).'-create-articles-'.\ModelResolver::getName($owner).'s-owned-asso')) {
+                \Scopes::getTokenType($request).'-create-articles-'.$ownerName.'s-owned-asso')) {
             $creater = \Scopes::getClient($request)->asso;
         } else {
             $creater = $this->getCreaterOrOwner($request, 'create', 'created');
@@ -199,14 +201,13 @@ class ArticleController extends Controller
             $tags = Tag::all();
 
             foreach ($inputs['tags'] as $tag_arr) {
-                if (!$tags->firstWhere('name', $tag_arr['name'])) {
+                if ($tag = $tags->firstWhere('name', $tag_arr['name'])) {
+                    $article->tags()->save($tag);
+                } else {
                     $tag = new Tag;
                     $tag->name = $tag_arr['name'];
                     $tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;
                     $tag->save();
-                    $article->tags()->save($tag);
-                } else {
-                    $tag = Tag::where('name', $tag_arr['name'])->first();
                     $article->tags()->save($tag);
                 }
             }
@@ -228,7 +229,7 @@ class ArticleController extends Controller
     {
         $article = $this->getArticle($request, \Auth::user(), $article_id);
 
-        return response()->json($article->hideSubData(), 200);
+        return response()->json($article->hideSubData());
     }
 
     /**
@@ -279,7 +280,7 @@ class ArticleController extends Controller
 
             $article = $this->getArticle($request, \Auth::user(), $article->id);
 
-            return response()->json($article->hideData(), 200);
+            return response()->json($article->hideData());
         } else {
             abort(500, 'Impossible de modifier l\'article');
         }
