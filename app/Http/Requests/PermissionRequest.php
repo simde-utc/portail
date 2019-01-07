@@ -17,28 +17,6 @@ use App\Traits\Model\CanHavePermissions;
 class PermissionRequest extends Request
 {
     /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * On détermine la ressource concernée et l'utilisateur.
-     *
-     * @return boolean
-     */
-    public function authorize()
-    {
-        if ($this->resource_type) {
-            $this->resource = \ModelResolver::getModelFromCategory($this->resource_type)->find($this->resource_id);
-        } else {
-            // On est sur /user/permissions ou /users/{user_id}/permissions.
-            $this->resource = \Auth::user();
-        }
-
-        if (!$this->user_id) {
-            $this->user_id = \Auth::id();
-        }
-
-        return (bool) $this->resource;
-    }
-
-    /**
      * Défini les règles de validation des champs.
      *
      * @return array
