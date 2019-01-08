@@ -69,7 +69,7 @@ class ServiceController extends Controller
             return $service->hideData();
         });
 
-        return response()->json($services, 200);
+        return response()->json($services->values(), 200);
     }
 
     /**
