@@ -111,7 +111,7 @@ trait HasAssos
                 }
             }
 
-            return $asso;
+            return $asso->makeHidden('parent_id');
         } else {
             abort(404, "Assocation non trouvée");
         }

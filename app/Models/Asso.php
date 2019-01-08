@@ -105,14 +105,13 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     /**
      * Retrouve une association par son login.
      *
-     * TODO: Transformer en scope.
-     *
+     * @param  mixed  $query
      * @param  string $login
-     * @return Asso
+     * @return mixed
      */
-    public static function findByLogin(string $login)
+    public function scopeFindByLogin($query, string $login)
     {
-        return self::where('login', $login)->first();
+        return $query->where('login', $login)->first();
     }
 
     /**

@@ -47,10 +47,10 @@ class GroupController extends Controller
     /**
      * Liste les groupes.
      *
-     * @param Request $request
+     * @param GroupRequest $request
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(GroupRequest $request): JsonResponse
     {
         // On inclue les relations et on les formattent.
         $groups = Group::getSelection();
@@ -107,11 +107,11 @@ class GroupController extends Controller
     /**
      * Montre un groupe.
      *
-     * @param Request $request
-     * @param string 	$group_id
+     * @param GroupRequest $request
+     * @param string       $group_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $group_id): JsonResponse
+    public function show(GroupRequest $request, string $group_id): JsonResponse
     {
         // On inclue les relations et on les formattent.
         $group = Group::find($group_id);
@@ -183,11 +183,11 @@ class GroupController extends Controller
     /**
      * Supprime un groupe.
      *
-     * @param Request $request
-     * @param string  $group_id
+     * @param GroupRequest $request
+     * @param string       $group_id
      * @return void
      */
-    public function destroy(Request $request, string $group_id): void
+    public function destroy(GroupRequest $request, string $group_id): void
     {
         $group = Group::find($group_id);
 

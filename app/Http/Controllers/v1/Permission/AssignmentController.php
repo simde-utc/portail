@@ -50,10 +50,10 @@ class AssignmentController extends Controller
     /**
      * Liste les permissions assignées.
      *
-     * @param  Request $request
+     * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(PermissionAssignmentRequest $request): JsonResponse
     {
         $this->checkTokenRights($request);
 
@@ -91,10 +91,10 @@ class AssignmentController extends Controller
     /**
      * Montre une permission assignée.
      *
-     * @param  Request $request
+     * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
      */
-    public function show(Request $request): JsonResponse
+    public function show(PermissionAssignmentRequest $request): JsonResponse
     {
         $this->checkTokenRights($request);
 
@@ -117,10 +117,10 @@ class AssignmentController extends Controller
     /**
      * Retraint d'une permission.
      *
-     * @param  Request $request
+     * @param  PermissionAssignmentRequest $request
      * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(PermissionAssignmentRequest $request)
     {
         $this->checkTokenRights($request, 'remove');
 

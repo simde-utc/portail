@@ -131,8 +131,8 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 
     protected $types = [
         'admin' => 'administrateur',
-        'contributorBde' => 'contributeur BDE',
-        'casConfirmed' => 'membre UTC ou ESCOM',
+        'contributorBde' => 'cotisant BDE',
+        'casConfirmed' => 'membre UTC/ESCOM',
         'cas' => 'avec connexion CAS',
         'password' => 'avec connexion email/mot de passe',
         'active' => 'compte actif',
