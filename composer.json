@@ -72,8 +72,8 @@
         ],
         "test": [
             "@composer install",
-            "@php artisan quick:clear",
-            "@php artisan quick:test"
+            "@php artisan portail:clear",
+            "@php artisan portail:test"
         ]
     },
     "config": {

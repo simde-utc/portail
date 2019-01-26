@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier générant la commande quick:update.
+ * Fichier générant la commande portail:update.
  * Met à jour l'application vers la version suivante après un git pull.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -18,7 +18,7 @@ class Update extends Command
     /**
      * @var string
      */
-    protected $signature = 'quick:update';
+    protected $signature = 'portail:update';
 
     /**
      * @var string
@@ -44,46 +44,46 @@ class Update extends Command
         $bar->advance();
 
         // Nettoyage du cache.
-        $this->info(' [Quick Update] Cleaning');
-        $this->call('quick:clear');
+        $this->info(' [Portail Update] Préparation');
+        $this->call('portail:clear');
         $bar->advance();
 
         // Mise à jour.
-        $this->info(' [Quick Update] Updating Composer dependencies');
+        $this->info(' [Portail Update] Mise à jour des dépendances Composer');
         shell_exec('composer update');
         $bar->advance();
 
-        $this->info(' [Quick Update] Updating Node dependencies');
+        $this->info(' [Portail Update]Mise à jour des dépendances NodeJS');
         shell_exec('npm update');
         shell_exec('npm run dev');
         $bar->advance();
 
         // Nettoyage du cache.
-        $this->info(' [Quick Update] Cleaning');
-        $this->call('quick:clear');
+        $this->info(' [Portail Update] Nettoyage');
+        $this->call('portail:clear');
         $bar->advance();
 
         // Migration.
-        $this->info(' [Quick Update] Migrating');
-        if ($this->confirm('Erase the database ?')) {
+        $this->info(' [Portail Update] Migration');
+        if ($this->confirm('Supprimer la base de données ?')) {
             $this->call('migrate:fresh');
         } else {
             $this->call('migrate');
         }
 
-        if ($this->confirm('Seed the database ?')) {
+        if ($this->confirm('Remplir la base de données ?')) {
             $this->call("db:seed");
         }
 
         $bar->advance();
 
         // Optimisation.
-        $this->info(' [Quick Update] Optimizing');
-        $this->call('quick:optimize');
+        $this->info(' [Portail Update] Optimisation');
+        $this->call('portail:optimize');
         $bar->advance();
 
         // Fin.
         $bar->finish();
-        $this->info(' [Quick Update] Installation finished !');
+        $this->info(' [Portail Update] Installation finie !');
     }
 }
