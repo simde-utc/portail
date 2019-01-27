@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\{
     DB, Storage
 };
 use App\Models\{
-    Asso, AssoType, Contact, ContactType, Client, Visibility
+    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Visibility
 };
 
 class OldToNew extends Command
@@ -54,12 +54,19 @@ class OldToNew extends Command
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        $bar = $this->output->createProgressBar(1);
+        $bar = $this->output->createProgressBar(2);
         $errors = [];
 
         try {
             $errors['Associations'] = $this->addAssos();
+            $this->info(PHP_EOL);
             $bar->advance();
+            $this->info(PHP_EOL);
+
+            $errors['Articles'] = $this->addArticles();
+            $this->info(PHP_EOL);
+            $bar->advance();
+            $this->info(PHP_EOL);
         } catch (\Exception $e) {
             throw $e;
         } finally {
@@ -67,6 +74,7 @@ class OldToNew extends Command
 
             $this->info(PHP_EOL.PHP_EOL);
             $this->info('Rapport:');
+            $this->info(PHP_EOL.PHP_EOL);
             foreach ($errors as $name => $subErrors) {
                 $this->info($name.':');
 
@@ -117,6 +125,15 @@ class OldToNew extends Command
         }
     }
 
+    protected function getModelFrom(array $models, int $value, string $key='id')
+    {
+        foreach ($models as $model) {
+            if ($model->$key === $value) {
+                return $model;
+            }
+        }
+    }
+
     protected function addAssos()
     {
         $this->info('Préparation des associations');
@@ -150,16 +167,21 @@ class OldToNew extends Command
                     $parent_id = Asso::where('login', $this->getModelFrom($assos, $pole->asso_id)->login)->first()->id ?? null;
                 }
 
-                $model = Asso::create([
+                $model = new Asso;
+                $model = $model->create([
                     'login' => $asso->login,
                     'shortname' => $asso->name,
                     'name' => $asso->summary ?: $asso->name,
                     'description' => $asso->description ?: $asso->name,
                     'type_id' => AssoType::where('name', $this->getModelFrom($assoTypes, $asso->type_id ?: 1)->name)->first()->id,
                     'parent_id' => $parent_id ?? null,
-                    'created_at' => $asso->created_at,
-                    'updated_at' => $asso->updated_at,
                 ]);
+
+                // Obliger de définir les dates après création.
+                $model->timestamps = false;
+                $model->created_at = $asso->created_at ?: $model->created_at;
+                $model->updated_at = $asso->updated_at ?: $model->updated_at;
+                $model->save();
 
                 // Permet de déterminer si une association est dans le cimetière ou non.
                 $isDeleted = !$asso->active ||
@@ -167,6 +189,7 @@ class OldToNew extends Command
                     $pole_id === self::CIMETIERE;
 
                 if ($isDeleted) {
+                    $model->timestamps = false;
                     $model->deleted_at = ($asso->updated_at ?? now());
                     $model->save();
                 }
@@ -234,12 +257,75 @@ class OldToNew extends Command
         return $errors;
     }
 
-    protected function getModelFrom(array $models, int $value, string $key='id')
+    protected function addArticles()
     {
-        foreach ($models as $model) {
-            if ($model->$key === $value) {
-                return $model;
+        $this->info('Préparation des articles');
+
+        // Nettoyage avant création massive.
+        Article::getQuery()->delete();
+        $this->removeDir(public_path('/images/articles'));
+
+        if (!($tag = Tag::where('name', 'old-portail')->first())) {
+            $tag = Tag::create([
+                'name' => 'old-portail',
+                'description' => 'Article de l\'ancien Portail'
+            ]);
+        }
+
+        $assos = $this->getDB()->select('SELECT * FROM asso');
+        $articles = $this->getDB()->select('SELECT * FROM article');
+        $visibility_id = Visibility::where('type', 'logged')->first()->id;
+
+        $this->info('Création des '.count($articles).' articles');
+
+        $bar = $this->output->createProgressBar(count($articles));
+        $errors = [];
+
+        foreach ($articles as $article) {
+            try {
+                $asso_id = Asso::where('login', $this->getModelFrom($assos, $article->asso_id)->login)->first()->id ?? null;
+
+                $model = Article::create([
+                    'title' => $article->name,
+                    'description' => $article->summary,
+                    'content' => $article->text,
+                    'visibility_id' => $visibility_id,
+                    'created_by_id' => $asso_id,
+                    'created_by_type' => Asso::class,
+                    'owned_by_id' => $asso_id,
+                    'owned_by_type' => Asso::class,
+                ]);
+
+                // Obliger de définir les dates après création.
+                $model->timestamps = false;
+                $model->created_at = $article->created_at ?: $model->created_at;
+                $model->updated_at = $article->updated_at ?: $model->updated_at;
+                $model->save();
+
+                // On ajoute le tag de l'ancien Portail.
+                $model->tags()->save($tag);
+
+                if ($article->image) {
+                    try {
+                        $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/articles/source/'.$article->image,
+                            $model, 'articles/'.$model->id);
+                    } catch (\Exception $e) {
+                        $errors[] = 'Image incorrecte pour l\'article '.$article->name;
+                    }
+                }
+
+                $bar->advance();
+            } catch (\Exception $e) {
+                $this->output->error('Impossible de créer l\'article '.$article->name);
+
+                throw $e;
+            } catch (\Error $e) {
+                $this->output->error('Impossible de créer l\'article '.$article->name);
+
+                throw $e;
             }
         }
+
+        return $errors;
     }
 }
