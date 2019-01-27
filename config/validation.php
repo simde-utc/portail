@@ -18,7 +18,7 @@ return [
 	// Login pour les assos et les étudiants.
     'login' => [
         'min' => 1,
-        'max' => 15,
+        'max' => 31,
     ],
 
     'type' => [
