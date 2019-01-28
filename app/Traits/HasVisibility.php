@@ -196,7 +196,7 @@ trait HasVisibility
      */
     public function isCas(string $user_id, $model=null)
     {
-        $cas = AuthCas::find($user_id);
+        $cas = AuthCas::where('user_id', $user_id)->first();
 
         return $cas && $cas->where('is_active', true)->exists();
     }
@@ -210,7 +210,7 @@ trait HasVisibility
      */
     public function isContributorBDE(string $user_id, $model=null)
     {
-        $cas = AuthCas::find($user_id);
+        $cas = AuthCas::where('user_id', $user_id)->first();
 
         return $cas && Ginger::user($cas->login)->isContributor();
     }
