@@ -2,6 +2,7 @@
 /**
  * Fichier générant la commande portail:old-to-new.
  * Télécharge toutes les données dans l'ancien Portail vers celui-ci.
+ * Basé sur la version de l'ancien Portail en date du 1er Janvier 2019.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\{
     DB, Storage
 };
 use App\Models\{
-    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Visibility
+    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas
 };
 
 class OldToNew extends Command
@@ -32,6 +33,36 @@ class OldToNew extends Command
     protected $description = 'Download all data from the old Portail';
 
     protected const CIMETIERE = 6;
+
+    protected $users = [];
+    protected $assos = [];
+    protected $semesters = [];
+    protected $roles = [];
+    protected $resultedRoles = [];
+
+    /**
+     * Défini les anciens rôles vers les nouveaux.
+     *
+     * @var array
+     */
+    protected const OLD_TO_NEW_ROLES = [
+        'Président' => 'Président',
+        'Bureau' => 'Bureau',
+        'Co-Président' => 'Vice-Président',
+        'Vice-président' => 'Vice-Président',
+        'Trésorier' => 'Trésorier',
+        'Vice-trésorier' => 'Vice-Trésorier',
+        'Secrétaire Général' => 'Secrétaire Général',
+        'Secrétaire' => 'Vice-Secrétaire',
+        'Resp Communication' => 'Responsable Communication',
+        'Resp Partenariat' => 'Responsable Partenariat',
+        'Resp Anim\'' => 'Responsable Animation',
+        'Resp Info' => 'Responsable Informatique',
+        'Resp Logistique' => 'Responsable Logistique',
+        'Développeur' => 'Développeur'
+    ];
+
+    protected const DEFAULT_ROLE = 'Membre de l\'association';
 
     /**
      * @return void
@@ -52,10 +83,18 @@ class OldToNew extends Command
             return;
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-
-        $bar = $this->output->createProgressBar(2);
+        $bar = $this->output->createProgressBar(5);
         $errors = [];
+
+        $this->info('Préparation des données à récupérer');
+
+        $this->users = $this->getDB()->select('SELECT * FROM sf_guard_user');
+        $this->semesters = $this->getDB()->select('SELECT * FROM semestre');
+        $this->roles = $this->getDB()->select('SELECT * FROM role');
+
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        $bar->advance();
+        $this->info(PHP_EOL);
 
         try {
             $errors['Associations'] = $this->addAssos();
@@ -67,19 +106,40 @@ class OldToNew extends Command
             $this->info(PHP_EOL);
             $bar->advance();
             $this->info(PHP_EOL);
+
+            $errors['Utilisateurs'] = $this->addUsers();
+            $this->info(PHP_EOL);
+            $bar->advance();
+            $this->info(PHP_EOL);
+
+            $errors['Membres'] = $this->addMembers();
+            $this->info(PHP_EOL);
+            $bar->advance();
+            $this->info(PHP_EOL);
         } catch (\Exception $e) {
             throw $e;
         } finally {
             DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
-            $this->info(PHP_EOL.PHP_EOL);
+            $this->info(PHP_EOL);
+            $this->info(PHP_EOL);
             $this->info('Rapport:');
-            $this->info(PHP_EOL.PHP_EOL);
             foreach ($errors as $name => $subErrors) {
+                $this->info(PHP_EOL);
                 $this->info($name.':');
 
                 foreach ($subErrors as $error) {
                     $this->error($error);
+                }
+            }
+
+            $this->info(PHP_EOL);
+            $this->info('Roles:');
+            foreach ($this->resultedRoles as $name => $value) {
+                if ($value) {
+                    $this->info('Le rôle '.$name.' est devenu: '.$value);
+                } else {
+                    $this->warn('Le rôle '.$name.' est devenu: '.self::DEFAULT_ROLE);
                 }
             }
         }
@@ -134,6 +194,39 @@ class OldToNew extends Command
         }
     }
 
+    protected function getUser(int $user_id)
+    {
+        $oldUser = $this->getModelFrom($this->users, $user_id);
+
+        return User::where('email', $oldUser->email_address)->first();
+    }
+
+    protected function getAsso(int $asso_id)
+    {
+        $oldAsso = $this->getModelFrom($this->assos, $asso_id);
+
+        return Asso::withTrashed()->where('login', $oldAsso->login)->first();
+    }
+
+    protected function getRole(int $role_id)
+    {
+        $oldRole = $this->getModelFrom($this->roles, $role_id);
+
+        if (isset(self::OLD_TO_NEW_ROLES[$name = $oldRole->name])) {
+            return Role::where('name', $this->resultedRoles[$name] = self::OLD_TO_NEW_ROLES[$name])->first();
+        }
+
+        $this->resultedRoles[$name] = false;
+        return Role::where('name', self::DEFAULT_ROLE)->first();
+    }
+
+    protected function getSemester(int $semester_id)
+    {
+        $oldSemester = $this->getModelFrom($this->semesters, $semester_id);
+
+        return Semester::where('name', $oldSemester->name)->first();
+    }
+
     protected function addAssos()
     {
         $this->info('Préparation des associations');
@@ -145,16 +238,17 @@ class OldToNew extends Command
 
         $assoTypes = $this->getDB()->select('SELECT * FROM type_asso');
         $poles = $this->getDB()->select('SELECT * FROM pole');
-        $assos = $this->getDB()->select('SELECT * FROM asso');
+        $this->assos = $this->getDB()->select('SELECT * FROM asso');
 
-        $this->info('Création des '.count($assos).' associations');
+        $this->info('Création des '.count($this->assos).' associations');
 
-        $bar = $this->output->createProgressBar(count($assos));
+        $bar = $this->output->createProgressBar(count($this->assos));
         $errors = [];
 
-        foreach ($assos as $asso) {
+        foreach ($this->assos as $asso) {
             try {
                 if ($asso->login === 'cimassos') {
+                    $bar->advance();
                     continue;
                 }
 
@@ -164,7 +258,7 @@ class OldToNew extends Command
                     $parent_id = Asso::where('login', 'bde')->first()->id ?? null;
                 } else if ($pole_id) {
                     $pole = $this->getModelFrom($poles, $pole_id);
-                    $parent_id = Asso::where('login', $this->getModelFrom($assos, $pole->asso_id)->login)->first()->id ?? null;
+                    $parent_id = $this->getAsso($pole->asso_id)->id ?? null;
                 }
 
                 $model = new Asso;
@@ -272,7 +366,6 @@ class OldToNew extends Command
             ]);
         }
 
-        $assos = $this->getDB()->select('SELECT * FROM asso');
         $articles = $this->getDB()->select('SELECT * FROM article');
         $visibility_id = Visibility::where('type', 'logged')->first()->id;
 
@@ -283,7 +376,7 @@ class OldToNew extends Command
 
         foreach ($articles as $article) {
             try {
-                $asso_id = Asso::where('login', $this->getModelFrom($assos, $article->asso_id)->login)->first()->id ?? null;
+                $asso_id = $this->getAsso($article->asso_id)->id ?? null;
 
                 $model = Article::create([
                     'title' => $article->name,
@@ -321,6 +414,126 @@ class OldToNew extends Command
                 throw $e;
             } catch (\Error $e) {
                 $this->output->error('Impossible de créer l\'article '.$article->name);
+
+                throw $e;
+            }
+        }
+
+        return $errors;
+    }
+
+    protected function addUsers()
+    {
+        $this->info('Préparation des utilisateurs');
+
+        // Nettoyage avant création massive.
+        User::getQuery()->delete();
+        AuthCas::getQuery()->delete();
+        $this->removeDir(public_path('/images/users'));
+
+        $this->info('Création des '.count($this->users).' utilisateurs');
+
+        $bar = $this->output->createProgressBar(count($this->users));
+        $errors = [];
+
+        foreach ($this->users as $user) {
+            try {
+                $model = User::create([
+                    'firstname' => $user->first_name,
+                    'lastname' => strtoupper($user->last_name),
+                    'email' => $user->email_address,
+                ]);
+
+                // Obliger de définir les dates après création.
+                $model->timestamps = false;
+                $model->created_at = $user->created_at ?: $model->created_at;
+                $model->updated_at = $user->updated_at ?: $model->updated_at;
+                $model->save();
+
+                $model->cas()->create([
+                    'email' => $user->email_address,
+                    'login' => $user->username,
+                    'is_active' => false,
+                    'is_confirmed' => false,
+                ]);
+
+                $bar->advance();
+            } catch (\Exception $e) {
+                $this->output->error('Impossible de créer l\'utilisateur '.$user->first_name);
+
+                throw $e;
+            } catch (\Error $e) {
+                $this->output->error('Impossible de créer l\'utilisateur '.$user->first_name);
+
+                throw $e;
+            }
+        }
+
+        return $errors;
+    }
+
+    protected function addMembers()
+    {
+        $members = $this->getDB()->select('SELECT * FROM asso_member');
+
+        $this->info('Création des '.count($members).' membres');
+
+        $bar = $this->output->createProgressBar(count($members));
+        $errors = [];
+
+        foreach ($members as $member) {
+            try {
+                try {
+                    $asso = $this->getAsso($member->asso_id);
+                    if (!$asso) {
+                        $this->output->error('Association non existante n°'.$member->asso_id);
+                        continue;
+                    }
+
+                    $role = $this->getRole($member->role_id);
+                    if (!$role) {
+                        $this->output->error('Rôle non existant n°'.$member->role_id);
+                        continue;
+                    }
+
+                    $user = $this->getUser($member->user_id);
+                    if (!$user) {
+                        $this->output->error('Utilisateur non existant n°'.$member->user_id);
+                        continue;
+                    }
+
+                    $semester = $this->getSemester($member->semestre_id);
+                    if (!$semester) {
+                        $this->output->error('Semestre non existant n°'.$member->semestre_id);
+                        continue;
+                    }
+
+                    try {
+                        $model = $asso->assignMembers($user->id, [
+                            'role_id' => $role->id,
+                            'semester_id' => $semester->id,
+                            'validated_by' => $user->id
+                        ], true);
+
+                        // Obliger de définir les dates après création.
+                        $model->timestamps = false;
+                        $model->created_at = $member->created_at ?: $model->created_at;
+                        $model->updated_at = $member->updated_at ?: $model->updated_at;
+                        $model->save();
+                    } catch (\Exception $e) {
+                        $errors[] = 'n°'.$member->id.': '.$e->getMessage();
+                    }
+                } catch (\Exception $e) {
+                    $errors[] = 'Information manquante pour le membre n°'.$member->id;
+                }
+
+                $bar->advance();
+            } catch (\Exception $e) {
+                $this->output->error('Impossible de créer le membre n°'.$member->id);
+
+                throw $e;
+            } catch (\Error $e) {
+                $this->output->error('Impossible de créer le membre n°'.$member->id);
 
                 throw $e;
             }
