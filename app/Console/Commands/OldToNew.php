@@ -48,7 +48,7 @@ class OldToNew extends Command
     protected const OLD_TO_NEW_ROLES = [
         'Président' => 'Président',
         'Bureau' => 'Bureau',
-        'Co-Président' => 'Vice-Président',
+        'Co-Président' => 'Bureau',
         'Vice-président' => 'Vice-Président',
         'Trésorier' => 'Trésorier',
         'Vice-trésorier' => 'Vice-Trésorier',
