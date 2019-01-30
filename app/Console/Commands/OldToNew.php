@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\{
     DB, Storage
 };
 use App\Models\{
-    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas
+    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas, Event
 };
 
 class OldToNew extends Command
@@ -91,6 +91,7 @@ class OldToNew extends Command
         $this->users = $this->getDB()->select('SELECT * FROM sf_guard_user');
         $this->semesters = $this->getDB()->select('SELECT * FROM semestre');
         $this->roles = $this->getDB()->select('SELECT * FROM role');
+        $this->events = $this->getDB()->select('SELECT * FROM event');
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         $bar->advance();
@@ -113,6 +114,11 @@ class OldToNew extends Command
             $this->info(PHP_EOL);
 
             $errors['Membres'] = $this->addMembers();
+            $this->info(PHP_EOL);
+            $bar->advance();
+            $this->info(PHP_EOL);
+
+            $errors['Evénements'] = $this->addEvents();
             $this->info(PHP_EOL);
             $bar->advance();
             $this->info(PHP_EOL);
@@ -261,14 +267,22 @@ class OldToNew extends Command
                     $parent_id = $this->getAsso($pole->asso_id)->id ?? null;
                 }
 
-                $model = new Asso;
-                $model = $model->create([
+                $model = Asso::create([
                     'login' => $asso->login,
                     'shortname' => $asso->name,
                     'name' => $asso->summary ?: $asso->name,
                     'description' => $asso->description ?: $asso->name,
                     'type_id' => AssoType::where('name', $this->getModelFrom($assoTypes, $asso->type_id ?: 1)->name)->first()->id,
                     'parent_id' => $parent_id ?? null,
+                ]);
+
+                // On crée un calendrier pour chaque association.
+                $model->calendars()->create([
+                    'name' => 'Evénements',
+                    'description' => 'Calendrier regroupant les événements de l\'associations',
+                    'visibility_id' => Visibility::where('type', 'public')->first()->id,
+                    'created_by_id' => $model->id,
+                    'created_by_type' => Asso::class,
                 ]);
 
                 // Obliger de définir les dates après création.
@@ -534,6 +548,80 @@ class OldToNew extends Command
                 throw $e;
             } catch (\Error $e) {
                 $this->output->error('Impossible de créer le membre n°'.$member->id);
+
+                throw $e;
+            }
+        }
+
+        return $errors;
+    }
+
+    protected function addEvents()
+    {
+        $this->info('Préparation des événements');
+
+        // Nettoyage avant création massive.
+        Event::getQuery()->delete();
+        $this->removeDir(public_path('/images/events'));
+
+        $events = $this->getDB()->select('SELECT * FROM event');
+        $eventTypes = $this->getDB()->select('SELECT * FROM event_type');
+        $visibility_id = Visibility::where('type', 'logged')->first()->id;
+
+        $this->info('Création des '.count($events).' événements');
+
+        $bar = $this->output->createProgressBar(count($events));
+        $errors = [];
+
+        foreach ($events as $event) {
+            try {
+                $asso_id = $this->getAsso($event->asso_id)->id ?? null;
+
+                $model = Event::create([
+                    'name' => $event->name,
+                    'begin_at' => $event->start_date,
+                    'end_at' => $event->end_date,
+                    'visibility_id' => $visibility_id,
+                    'created_by_id' => $asso_id,
+                    'created_by_type' => Asso::class,
+                    'owned_by_id' => $asso_id,
+                    'owned_by_type' => Asso::class,
+                ]);
+
+                // Obliger de définir les dates après création.
+                $model->timestamps = false;
+                $model->created_at = $event->created_at ?: $model->created_at;
+                $model->updated_at = $event->updated_at ?: $model->updated_at;
+                $model->save();
+
+                // On ajoute le type de l'événement.
+                $model->details()->create([
+                    'key' => 'TYPE',
+                    'value' => $this->getModelFrom($eventTypes, $event->type_id)->name
+                ]);
+
+                // On ajoute le tag de l'ancien Portail.
+                $model->details()->create([
+                    'key' => 'TAG',
+                    'value' => 'old-portail'
+                ]);
+
+                if ($event->affiche) {
+                    try {
+                        $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/events/source/'.$event->affiche,
+                            $model, 'events/'.$model->id);
+                    } catch (\Exception $e) {
+                        $errors[] = 'Image incorrecte pour l\'événement '.$event->name;
+                    }
+                }
+
+                $bar->advance();
+            } catch (\Exception $e) {
+                $this->output->error('Impossible de créer l\'événement '.$event->name);
+
+                throw $e;
+            } catch (\Error $e) {
+                $this->output->error('Impossible de créer l\'événement '.$event->name);
 
                 throw $e;
             }

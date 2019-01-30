@@ -48,6 +48,26 @@ class Calendar extends Model implements OwnableContract
     ];
 
     /**
+     * On défini une couleur au hasard si elle n'est pas définie.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (!$model->color) {
+                $model->color = '#';
+
+                for ($i = 0; $i < 6; $i++) {
+                    $model->color .= '0123456789ABCDEF'[random_int(0, 15)];
+                }
+            }
+        });
+    }
+
+    /**
      * Relation avec les évènements.
      *
      * @return mixed
