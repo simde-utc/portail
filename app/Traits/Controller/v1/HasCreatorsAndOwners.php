@@ -39,19 +39,19 @@ trait HasCreatorsAndOwners
             && \Auth::id()
             && $request->input('created_by_id', \Auth::id()) === \Auth::id()
             && \Scopes::hasOne($request, [$scopeBegin.'s-'.$type.'s-owned-user', $scopeBegin.'s-users-created'])) {
-            $creater = \Auth::user();
+            $creator = \Auth::user();
         } else if ($request->input('created_by_type', 'client') === 'client'
             && $request->input('created_by_id', $client->id) === $client->id
             && \Scopes::hasOne($request, [$scopeBegin.'s-'.$type.'s-owned-client', $scopeBegin.'s-clients-created'])) {
-            $creater = $client;
+            $creator = $client;
         } else if ($request->input('created_by_type') === 'asso'
             && $request->input('created_by_id', $client->asso->id) === $client->asso->id
             && \Scopes::hasOne($request, [$scopeBegin.'s-'.$type.'s-owned-asso', $scopeBegin.'s-assos-created'])) {
-            $creater = $client->asso;
+            $creator = $client->asso;
         } else {
-            $creater = $this->getMorph($request, $modelName, $modelText, $verb, 'created');
+            $creator = $this->getMorph($request, $modelName, $modelText, $verb, 'created');
         }
 
-        return $creater;
+        return $creator;
     }
 }

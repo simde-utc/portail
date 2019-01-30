@@ -75,7 +75,7 @@ class ArticleController extends Controller
      * @param  string  $type
      * @return Model
      */
-    public function getCreaterOrOwner(Request $request, string $verb='create', string $type='created')
+    public function getCreatorOrOwner(Request $request, string $verb='create', string $type='created')
     {
         $scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
         $scope = $scopeHead.'-'.$verb.'-articles-'.$request->input($type.'_by_type', $scopeHead).'s-'.$type;
@@ -96,30 +96,30 @@ class ArticleController extends Controller
 
         if ($request->filled($type.'_by_type')) {
             if ($request->filled($type.'_by_id')) {
-                $createrOrOwner = \ModelResolver::findModel(
+                $creatorOrOwner = \ModelResolver::findModel(
                     $request->input($type.'_by_type'),
                     $request->input($type.'_by_id')
                 );
 
-                if (\Auth::id() && !$createrOrOwner->isArticleManageableBy(\Auth::id())) {
+                if (\Auth::id() && !$creatorOrOwner->isArticleManageableBy(\Auth::id())) {
                     abort(403, 'L\'utilisateur n\'a pas les droits de création');
                 }
             } else if ($request->input($type.'_by_type', 'client') === 'client') {
-                $createrOrOwner = \Scopes::getClient($request);
+                $creatorOrOwner = \Scopes::getClient($request);
             } else if ($request->input($type.'_by_type', 'client') === 'asso') {
-                $createrOrOwner = \Scopes::getClient($request)->asso;
+                $creatorOrOwner = \Scopes::getClient($request)->asso;
             }
         }
 
-        if (!isset($createrOrOwner)) {
-            $createrOrOwner = \Scopes::isClientToken($request) ? \Scopes::getClient($request) : \Auth::user();
+        if (!isset($creatorOrOwner)) {
+            $creatorOrOwner = \Scopes::isClientToken($request) ? \Scopes::getClient($request) : \Auth::user();
         }
 
-        if (!($createrOrOwner instanceof CanHaveArticles)) {
+        if (!($creatorOrOwner instanceof CanHaveArticles)) {
             abort(400, 'La personne créatrice/possédeur doit au moins pouvoir avoir un article');
         }
 
-        return $createrOrOwner;
+        return $creatorOrOwner;
     }
 
     /**
@@ -157,7 +157,7 @@ class ArticleController extends Controller
         $inputs = $request->all();
 
         // On récupère pour qui c'est créé.
-        $owner = $this->getCreaterOrOwner($request, 'create', 'owned');
+        $owner = $this->getCreatorOrOwner($request, 'create', 'owned');
         $ownerName = \ModelResolver::getNameFromObject($owner);
 
         // Le créateur peut être multiple: le user, l'asso ou le client courant. Ou autre.
@@ -166,23 +166,23 @@ class ArticleController extends Controller
 	        && $request->input('created_by_id', \Auth::id()) === \Auth::id()
 	        && \Scopes::hasOne($request,
                 \Scopes::getTokenType($request).'-create-articles-'.$ownerName.'s-owned-user')) {
-            $creater = \Auth::user();
+            $creator = \Auth::user();
         } else if ($request->input('created_by_type', 'client') === 'client'
 	        && $request->input('created_by_id', \Scopes::getClient($request)->id) === \Scopes::getClient($request)->id
 	        && \Scopes::hasOne($request,
                 \Scopes::getTokenType($request).'-create-articles-'.$ownerName.'s-owned-client')) {
-            $creater = \Scopes::getClient($request);
+            $creator = \Scopes::getClient($request);
         } else if ($request->input('created_by_type') === 'asso'
 	        && $request->input('created_by_id', ($asso_id = \Scopes::getClient($request)->asso->id)) === $asso_id
 	        && \Scopes::hasOne($request,
                 \Scopes::getTokenType($request).'-create-articles-'.$ownerName.'s-owned-asso')) {
-            $creater = \Scopes::getClient($request)->asso;
+            $creator = \Scopes::getClient($request)->asso;
         } else {
-            $creater = $this->getCreaterOrOwner($request, 'create', 'created');
+            $creator = $this->getCreatorOrOwner($request, 'create', 'created');
         }
 
-        $inputs['created_by_id'] = $creater->id;
-        $inputs['created_by_type'] = get_class($creater);
+        $inputs['created_by_id'] = $creator->id;
+        $inputs['created_by_type'] = get_class($creator);
         $inputs['owned_by_id'] = $owner->id;
         $inputs['owned_by_type'] = get_class($owner);
 
@@ -245,7 +245,7 @@ class ArticleController extends Controller
         $inputs = $request->all();
 
         if ($request->filled('owned_by_type')) {
-            $owner = $this->getCreaterOrOwner($request, 'edit', 'owned');
+            $owner = $this->getCreatorOrOwner($request, 'edit', 'owned');
 
             $inputs['owned_by_id'] = $owner->id;
             $inputs['owned_by_type'] = get_class($owner);

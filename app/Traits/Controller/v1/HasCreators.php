@@ -25,7 +25,7 @@ trait HasCreators
      * @param  string  $verb
      * @return mixed
      */
-    protected function getCreater(Request $request, string $modelName, string $modelText, string $verb='create')
+    protected function getCreator(Request $request, string $modelName, string $modelText, string $verb='create')
     {
         return $this->getMorph($request, $modelName, $modelText, $verb, 'created');
     }

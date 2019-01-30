@@ -76,10 +76,10 @@ class CommentController extends Controller
      */
     public function store(CommentRequest $request): JsonResponse
     {
-        $creater = \ModelResolver::getModel($request->input('created_by_type'))->find($request->input('created_by_id'));
+        $creator = \ModelResolver::getModel($request->input('created_by_type'))->find($request->input('created_by_id'));
 
-        if (!$request->ressource->isCommentManageableBy($creater)
-            || (\Auth::id() && !$request->ressource->isCommentWritableBy($creater))) {
+        if (!$request->ressource->isCommentManageableBy($creator)
+            || (\Auth::id() && !$request->ressource->isCommentWritableBy($creator))) {
             abort(403, 'Il ne vous est pas autorisé de créer un commentaire pour cette instance');
         }
 
