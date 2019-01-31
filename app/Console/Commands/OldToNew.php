@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\{
     DB, Storage
 };
 use App\Models\{
-    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas, Event
+    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas, Event, Service
 };
 
 class OldToNew extends Command
@@ -83,7 +83,7 @@ class OldToNew extends Command
             return;
         }
 
-        $bar = $this->output->createProgressBar(5);
+        $bar = $this->output->createProgressBar(7);
         $errors = [];
 
         $this->info('Préparation des données à récupérer');
@@ -119,6 +119,11 @@ class OldToNew extends Command
             $this->info(PHP_EOL);
 
             $errors['Evénements'] = $this->addEvents();
+            $this->info(PHP_EOL);
+            $bar->advance();
+            $this->info(PHP_EOL);
+
+            $errors['Services'] = $this->addServices();
             $this->info(PHP_EOL);
             $bar->advance();
             $this->info(PHP_EOL);
@@ -622,6 +627,63 @@ class OldToNew extends Command
                 throw $e;
             } catch (\Error $e) {
                 $this->output->error('Impossible de créer l\'événement '.$event->name);
+
+                throw $e;
+            }
+        }
+
+        return $errors;
+    }
+
+    protected function addServices()
+    {
+        $this->info('Préparation des services');
+
+        // Nettoyage avant création massive.
+        Service::getQuery()->delete();
+        $this->removeDir(public_path('/images/services'));
+
+        $services = $this->getDB()->select('SELECT * FROM service');
+        $visibility_id = Visibility::where('type', 'logged')->first()->id;
+
+        $this->info('Création des '.count($services).' services');
+
+        $bar = $this->output->createProgressBar(count($services));
+        $errors = [];
+
+        foreach ($services as $service) {
+            try {
+                $model = Service::create([
+                    'name' => $service->nom,
+                    'shortname' => $service->nom,
+                    'login' => $service->nom,
+                    'description' => $service->resume,
+                    'visibility_id' => $visibility_id,
+                    'url' => $service->url,
+                ]);
+
+                // Obliger de définir les dates après création.
+                $model->timestamps = false;
+                $model->created_at = $service->created_at ?: $model->created_at;
+                $model->updated_at = $service->updated_at ?: $model->updated_at;
+                $model->save();
+
+                if ($service->logo) {
+                    try {
+                        $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/services/source/'.$service->logo,
+                            $model, 'services/'.$model->id);
+                    } catch (\Exception $e) {
+                        $errors[] = 'Image incorrecte pour le service '.$service->nom;
+                    }
+                }
+
+                $bar->advance();
+            } catch (\Exception $e) {
+                $this->output->error('Impossible de créer le service '.$service->nom);
+
+                throw $e;
+            } catch (\Error $e) {
+                $this->output->error('Impossible de créer le service '.$service->nom);
 
                 throw $e;
             }

@@ -45,6 +45,11 @@ class Visibility extends Model
         return static::where('type', $type)->first();
     }
 
+    public static function public()
+    {
+        return static::findByType('public');
+    }
+
     /**
      * Relation avec la visibilité parent
      *
