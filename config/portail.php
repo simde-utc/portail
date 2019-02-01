@@ -67,11 +67,11 @@ return [
     ],
 
     'cas' => [
-        'url' => env('CAS_URL', ''),
-        'image' => env('CAS_IMAGE', ''),
+        'url' => env('CAS_URL'),
+        'image' => env('CAS_IMAGE'),
     ],
 
-    'ginger_key' => env('GINGER_KEY', ''),
+    'ginger_key' => env('GINGER_KEY'),
 
     'cookie_lifetime' => 518400,
 ];

@@ -50,6 +50,7 @@ class Update extends Command
 
         // Mise à jour.
         $this->info(' [Quick Update] Updating Composer dependencies');
+        ini_set('memory_limit', '4G');
         shell_exec('composer update');
         $bar->advance();
 
@@ -85,5 +86,6 @@ class Update extends Command
         // Fin.
         $bar->finish();
         $this->info(' [Quick Update] Installation finished !');
+        $this->info(' [Quick Update] Don\'t forget to check .env.example for new keys.');
     }
 }

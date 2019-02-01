@@ -85,6 +85,7 @@ class Install extends Command
 
         // Installation.
         $this->info(' [Quick Install] Installing Composer dependencies');
+        ini_set('memory_limit', '4G');
         shell_exec('composer install');
         $bar->advance();
 
