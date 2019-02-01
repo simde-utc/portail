@@ -15,8 +15,37 @@ Tout d'abord, il faut définir des **types d'actions**. Ce sont des chaînes de 
 
 ### Les actions
 
-Les actions sont des objets qui sont dispatchés aux reducers. Elles contienent généralement un `type` et un `payload`. Elles sont définies dans le fichiers `actions.js`.
+Les actions sont des objets qui sont dispatchés aux reducers. Elles contienent généralement un `type` et un `payload`. Le gestionnaire d'action est défini dans le fichier `actions.js`. Il s'agit d'un Proxy couplé à une Classe qui permet ainsi de générer dynamiquement les actions désirées.
 
+Les actions possibles sur les ressources sont alors:
+- Requêtes Axios:
+	+ `all`: Récupère toutes les ressources (args: queryParams)
+	+ `find`/`one`/`get`: Récupère une ressource, pas forcément d'id nécessaire pour `one` (args: id, queryParams, jsonData)
+	+ `create`: Crée une ressource (args: queryParams, jsonData)
+	+ `update`: Met à jour une ressource (args: id, queryParams, jsonData)
+	+ `delete`/`remove`: Supprime une ressource (args: id, queryParams, jsonData)
+- Changement du store:
+	+ `definePath`: Définie le chemin d'accès et de sauvegarde de la ressource dans le store (args: path)
+	+ `addValidStatus`: Ajoute un status valide (args: status)
+	+ `defineValidStatus`: Définie les status valide (args: status)
+- N'importe quelle resource, permettant ainsi de nester la requête, par exemple: `actions.user.details.all()`.
+
+Exemples:
+```js
+import actions from 'actions';
+
+// Retrieve all semesters
+dispatch(actions.semesters.all());
+// Update an user's details
+dispatch(actions.user.details.update(1, null, {}));
+```
+
+
+## Le store
+
+Le store est l'endroit où toutes les ressources sont stockées.
+Ici le store c'est un peu Superman ou Inspecteur Gadget, il est pété.
+Le truc se contruit tout seul! Tout par de `resources`.
 
 ### Les reducers
 

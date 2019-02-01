@@ -32,6 +32,7 @@
 
 ## En cas de problèmes
 
+- Dans `php.ini` augmenter `memory_limit` à au moins 4G
 - `composer dump-autoload`
 - `php config:clear`
 

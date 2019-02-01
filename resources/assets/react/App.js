@@ -9,7 +9,7 @@
 **/
 
 import React from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import 'react-notifications/lib/notifications.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
