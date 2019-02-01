@@ -65,14 +65,6 @@ class OldToNew extends Command
     protected const DEFAULT_ROLE = 'Membre de l\'association';
 
     /**
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Exécution de la commande.
      *
      * @return mixed
