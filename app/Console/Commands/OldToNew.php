@@ -13,6 +13,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\{
     DB, Storage
 };
@@ -38,6 +39,7 @@ class OldToNew extends Command
     protected $assos = [];
     protected $semesters = [];
     protected $roles = [];
+    protected $events = [];
     protected $resultedRoles = [];
 
     /**
@@ -148,11 +150,26 @@ class OldToNew extends Command
         }
     }
 
-    protected function getDB()
+    /**
+     * Récupère la connexion à la base de données de l'ancien Portail.
+     *
+     * @return Connection
+     */
+    protected function getDB(): Connection
     {
         return DB::connection('old-portail');
     }
 
+    /**
+     * Crée une image à partir du l'ancien lien Portail.
+     *
+     * @param  string $url
+     * @param  mixed  $model
+     * @param  string $path
+     * @param  string $name
+     * @param  string $input
+     * @return mixed
+     */
     protected function createImageFromUrl(string $url, $model, string $path, string $name=null, string $input='image')
     {
         $image = file_get_contents($url);
@@ -172,7 +189,13 @@ class OldToNew extends Command
         ]);
     }
 
-    protected function removeDir(string $path)
+    /**
+     * Supprime un dossier et tout son contenu.
+     *
+     * @param  string $path
+     * @return void
+     */
+    protected function removeDir(string $path): void
     {
         if (file_exists($path)) {
             foreach (array_diff(scandir($path), ['..', '.']) as $file) {
@@ -188,6 +211,14 @@ class OldToNew extends Command
         }
     }
 
+    /**
+     * Récupère le modèle depuis la valeur d'un champ.
+     *
+     * @param  array   $models
+     * @param  integer $value
+     * @param  string  $key
+     * @return mixed|null
+     */
     protected function getModelFrom(array $models, int $value, string $key='id')
     {
         foreach ($models as $model) {
@@ -197,6 +228,12 @@ class OldToNew extends Command
         }
     }
 
+    /**
+     * Récupère l'utilisateur.
+     *
+     * @param  integer $user_id
+     * @return mixed|null
+     */
     protected function getUser(int $user_id)
     {
         $oldUser = $this->getModelFrom($this->users, $user_id);
@@ -204,6 +241,12 @@ class OldToNew extends Command
         return User::where('email', $oldUser->email_address)->first();
     }
 
+    /**
+     * Récupère l'association.
+     *
+     * @param  integer $asso_id
+     * @return mixed|null
+     */
     protected function getAsso(int $asso_id)
     {
         $oldAsso = $this->getModelFrom($this->assos, $asso_id);
@@ -211,6 +254,12 @@ class OldToNew extends Command
         return Asso::withTrashed()->where('login', $oldAsso->login)->first();
     }
 
+    /**
+     * Récupère le rôle.
+     *
+     * @param  integer $role_id
+     * @return mixed|null
+     */
     protected function getRole(int $role_id)
     {
         $oldRole = $this->getModelFrom($this->roles, $role_id);
@@ -223,6 +272,12 @@ class OldToNew extends Command
         return Role::where('name', self::DEFAULT_ROLE)->first();
     }
 
+    /**
+     * Récupère le semestre.
+     *
+     * @param  integer $semester_id
+     * @return mixed|null
+     */
     protected function getSemester(int $semester_id)
     {
         $oldSemester = $this->getModelFrom($this->semesters, $semester_id);
@@ -230,6 +285,11 @@ class OldToNew extends Command
         return Semester::where('name', $oldSemester->name)->first();
     }
 
+    /**
+     * Crée les associations depuis l'ancien Portail.
+     *
+     * @return mixed
+     */
     protected function addAssos()
     {
         $this->info('Préparation des associations');
@@ -258,19 +318,20 @@ class OldToNew extends Command
                 $pole_id = $asso->pole_id;
 
                 if ($pole_id === self::CIMETIERE || starts_with($asso->login, 'pole')) {
-                    $parent_id = Asso::where('login', 'bde')->first()->id ?? null;
+                    $parent_id = (Asso::where('login', 'bde')->first()->id ?? null);
                 } else if ($pole_id) {
                     $pole = $this->getModelFrom($poles, $pole_id);
-                    $parent_id = $this->getAsso($pole->asso_id)->id ?? null;
+                    $parent_id = ($this->getAsso($pole->asso_id)->id ?? null);
                 }
 
+                $typeName = $this->getModelFrom($assoTypes, $asso->type_id ?: 1)->name;
                 $model = Asso::create([
                     'login' => $asso->login,
                     'shortname' => $asso->name,
                     'name' => $asso->summary ?: $asso->name,
                     'description' => $asso->description ?: $asso->name,
-                    'type_id' => AssoType::where('name', $this->getModelFrom($assoTypes, $asso->type_id ?: 1)->name)->first()->id,
-                    'parent_id' => $parent_id ?? null,
+                    'type_id' => AssoType::where('name', $typeName)->first()->id,
+                    'parent_id' => ($parent_id ?? null),
                 ]);
 
                 // On crée un calendrier pour chaque association.
@@ -362,6 +423,11 @@ class OldToNew extends Command
         return $errors;
     }
 
+    /**
+     * Crée les articles depuis l'ancien Portail.
+     *
+     * @return mixed
+     */
     protected function addArticles()
     {
         $this->info('Préparation des articles');
@@ -373,7 +439,7 @@ class OldToNew extends Command
         if (!($tag = Tag::where('name', 'old-portail')->first())) {
             $tag = Tag::create([
                 'name' => 'old-portail',
-                'description' => 'Article de l\'ancien Portail'
+                'description' => 'Article de l\'ancien Portail',
             ]);
         }
 
@@ -387,7 +453,7 @@ class OldToNew extends Command
 
         foreach ($articles as $article) {
             try {
-                $asso_id = $this->getAsso($article->asso_id)->id ?? null;
+                $asso_id = ($this->getAsso($article->asso_id)->id ?? null);
 
                 $model = Article::create([
                     'title' => $article->name,
@@ -433,6 +499,11 @@ class OldToNew extends Command
         return $errors;
     }
 
+    /**
+     * Crée les utlisateurs depuis l'ancien Portail.
+     *
+     * @return mixed
+     */
     protected function addUsers()
     {
         $this->info('Préparation des utilisateurs');
@@ -483,6 +554,11 @@ class OldToNew extends Command
         return $errors;
     }
 
+    /**
+     * Crée les membres d'associations depuis l'ancien Portail.
+     *
+     * @return mixed
+     */
     protected function addMembers()
     {
         $members = $this->getDB()->select('SELECT * FROM asso_member');
@@ -523,7 +599,7 @@ class OldToNew extends Command
                         $model = $asso->assignMembers($user->id, [
                             'role_id' => $role->id,
                             'semester_id' => $semester->id,
-                            'validated_by' => $user->id
+                            'validated_by' => $user->id,
                         ], true);
 
                         // Obliger de définir les dates après création.
@@ -553,6 +629,11 @@ class OldToNew extends Command
         return $errors;
     }
 
+    /**
+     * Crée les événements depuis l'ancien Portail.
+     *
+     * @return mixed
+     */
     protected function addEvents()
     {
         $this->info('Préparation des événements');
@@ -572,7 +653,7 @@ class OldToNew extends Command
 
         foreach ($events as $event) {
             try {
-                $asso_id = $this->getAsso($event->asso_id)->id ?? null;
+                $asso_id = ($this->getAsso($event->asso_id)->id ?? null);
 
                 $model = Event::create([
                     'name' => $event->name,
@@ -594,13 +675,13 @@ class OldToNew extends Command
                 // On ajoute le type de l'événement.
                 $model->details()->create([
                     'key' => 'TYPE',
-                    'value' => $this->getModelFrom($eventTypes, $event->type_id)->name
+                    'value' => $this->getModelFrom($eventTypes, $event->type_id)->name,
                 ]);
 
                 // On ajoute le tag de l'ancien Portail.
                 $model->details()->create([
                     'key' => 'TAG',
-                    'value' => 'old-portail'
+                    'value' => 'old-portail',
                 ]);
 
                 if ($event->affiche) {
@@ -627,6 +708,11 @@ class OldToNew extends Command
         return $errors;
     }
 
+    /**
+     * Crée les services depuis l'ancien Portail.
+     *
+     * @return mixed
+     */
     protected function addServices()
     {
         $this->info('Préparation des services');

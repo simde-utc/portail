@@ -201,7 +201,7 @@ class ArticleController extends Controller
             $tags = Tag::all();
 
             foreach ($inputs['tags'] as $tag_arr) {
-                if ($tag = $tags->firstWhere('name', $tag_arr['name'])) {
+                if ($tag = $tags->where('name', $tag_arr['name'])->first()) {
                     $article->tags()->save($tag);
                 } else {
                     $tag = new Tag;
@@ -241,7 +241,7 @@ class ArticleController extends Controller
      */
     public function update(Request $request, string $article_id): JsonResponse
     {
-        $article = $this->getCalendar($request, \Auth::user(), $article_id, 'edit');
+        $article = $this->getArticle($request, \Auth::user(), $article_id, 'edit');
         $inputs = $request->all();
 
         if ($request->filled('owned_by_type')) {
@@ -265,7 +265,7 @@ class ArticleController extends Controller
                 $tags = Tag::all();
 
                 foreach ($inputs['tags'] as $tag_arr) {
-                    if (!$tags->firstWhere('name', $tag_arr['name'])) {
+                    if (!$tags->where('name', $tag_arr['name'])->first()) {
                         $tag = new Tag;
                         $tag->name = $tag_arr['name'];
                         $tag->description = array_key_exists("description", $tag_arr) ? $tag_arr['description'] : null;

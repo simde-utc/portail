@@ -68,11 +68,11 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     // Children dans le cas où on affiche en mode étagé.
     protected $selection = [
         'order' => [
-			'default' => 'oldest',
-			'columns' => [
-				'name' => 'shortname'
-			]
-		],
+            'default' => 'oldest',
+            'columns' => [
+                'name' => 'shortname',
+            ],
+        ],
         'stage' => null,
         'stages' => null,
         'filter' => [],
