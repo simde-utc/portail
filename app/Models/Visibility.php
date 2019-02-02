@@ -46,7 +46,17 @@ class Visibility extends Model
     }
 
     /**
-     * Relation avec la visibilité parent
+     * Retourne la visibilité publique.
+     *
+     * @return mixed
+     */
+    public static function public()
+    {
+        return static::findByType('public');
+    }
+
+    /**
+     * Relation avec la visibilité parent.
      *
      * @return mixed
      */
@@ -56,7 +66,7 @@ class Visibility extends Model
     }
 
     /**
-     * Relation avec les visibilités enfants
+     * Relation avec les visibilités enfants.
      *
      * @return mixed
      */
@@ -66,7 +76,7 @@ class Visibility extends Model
     }
 
     /**
-     * Relation avec l'article
+     * Relation avec l'article.
      *
      * @return mixed
      */
@@ -76,7 +86,7 @@ class Visibility extends Model
     }
 
     /**
-     * Relation avec l'événement
+     * Relation avec l'événement.
      *
      * @return mixed
      */

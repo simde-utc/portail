@@ -22,9 +22,9 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
 - Créer la base de données `portail` à la mano
 - Installer les packages avec `composer install` (attention à être dans le bon dossier)
 
-- Lancer l'installation et la préparation du serveur: `php artisan quick:install`
+- Lancer l'installation et la préparation du serveur: `php artisan portail:install`
 - OU Lancer les commances suivantes :
-    + Suppression du cache : `php artisan quick:clear`
+    + Suppression du cache : `php artisan portail:clear`
     + Création de la clé : `php artisan key:generate`
     + Création des tables et des données : `php artisan migrate:fresh --seed`
 	+ Installation des dépendances JS : `npm install --production` (assez long)
@@ -41,7 +41,7 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
 
 ## Mettre à jour
 
-- Lancer `php artisan quick:update`
+- Lancer `php artisan portail:update`
 - Lancer `npm run prod` ou `npm run watch`
 - Tout est bon
 
@@ -59,7 +59,7 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
 
 - Respecter le linter imposé pour le PHP mais aussi pour le JS
 - Commenter en français
-- Lancer `php artisan quick:test` pour vérifier que tout est bon avant de push son code
+- Lancer `php artisan portail:test` pour vérifier que tout est bon avant de push son code
 
 
 ## Documentation

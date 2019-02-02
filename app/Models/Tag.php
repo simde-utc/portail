@@ -13,8 +13,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class Tag extends Model
 {
     protected $fillable = [
@@ -28,6 +26,6 @@ class Tag extends Model
      */
     public function article()
     {
-        return $this->morphedByMany(Article::class, 'used_by', 'tags_used');
+        return $this->morphedByMany(Article::class, 'used_by', 'tags_used')->withTimestamps();
     }
 }

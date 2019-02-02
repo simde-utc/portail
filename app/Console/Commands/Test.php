@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier générant la commande quick:test.
+ * Fichier générant la commande portail:test.
  * Lance les tests suffisants pour pouvoir merge dans develop.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -20,7 +20,7 @@ class Test extends Command
     /**
      * @var string
      */
-    protected $signature = 'quick:test {file?*} {--special}';
+    protected $signature = 'portail:test {file?*} {--special}';
 
     /**
      * @var string

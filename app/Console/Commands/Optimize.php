@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier générant la commande quick:optimize.
+ * Fichier générant la commande portail:optimize.
  * Optimise le cache de l'application.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -19,7 +19,7 @@ class Optimize extends Command
     /**
      * @var string
      */
-    protected $signature = 'quick:optimize';
+    protected $signature = 'portail:optimize';
 
     /**
      * @var string

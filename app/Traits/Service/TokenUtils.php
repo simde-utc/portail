@@ -227,12 +227,7 @@ trait TokenUtils
      */
     public function hasAll(Request $request, array $scopes=[])
     {
-        if (is_array($scopes)) {
-            $scopes = $this->getMatchingScopes($scopes);
-        } else {
-            $scopes = $this->getMatchingScopes([$scopes]);
-        }
-
+        $scopes = $this->getMatchingScopes($scopes);
         $token = $this->getToken($request);
 
         if ($token === null) {

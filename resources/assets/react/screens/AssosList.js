@@ -14,7 +14,9 @@ import Img from '../components/Image';
 }))
 class AssosListScreen extends React.Component {
 	componentWillMount() {
-		this.props.dispatch(actions.assos.all())
+		this.props.dispatch(actions.assos.all({
+			'order': 'a-z'
+		}));
 	}
 
 	getStage(assos, parent) {
@@ -33,7 +35,7 @@ class AssosListScreen extends React.Component {
 						return (
 							<Card key={ asso.id } className={ "mr-3 p-0 " + bg } style={{ width: 200, minHeight: 250, flex: '0 0 auto' }} onClick={() => this.props.history.push('assos/' + asso.login)}>
 								<AspectRatio ratio="1" style={{ maxHeight: 150 }} className="d-flex justify-content-center mt-2">
-									<img src={ 'http://assos.utc.fr/larsen/style/img/logo-bde.jpg' } alt="Photo non disponible" className="img-thumbnail" style={{ height: '100%' }} />
+									<Img image={ asso.image } style={{ height: '100%' }} />
 								</AspectRatio>
 								<CardBody>
 									<CardTitle>{ asso.shortname }</CardTitle>
@@ -81,7 +83,8 @@ class AssosListScreen extends React.Component {
 			}
 		});
 
-		return Object.keys(categories).map(key => this.getStage(sortBy(categories[key].assos, ['shortname']), categories[key].asso))
+		return sortBy(categories, category => category.asso.shortname)
+			.map(({assos, asso}) => this.getStage(assos, asso))
 	}
 
 	render() {

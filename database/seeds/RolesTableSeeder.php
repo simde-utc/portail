@@ -258,7 +258,7 @@ class RolesTableSeeder extends Seeder
             ],
             [
                 'type' => 'resp animation',
-                'name' => 'Responsable animation',
+                'name' => 'Responsable Animation',
                 'description' => 'Responsable animation de l\'association',
                 'limited_at' => 1,
                 'owned_by' => new Asso,
@@ -280,7 +280,7 @@ class RolesTableSeeder extends Seeder
             ],
             [
                 'type' => 'resp partenariat',
-                'name' => 'Responsable partenariat',
+                'name' => 'Responsable Partenariat',
                 'description' => 'Responsable partenariat de l\'association',
                 'limited_at' => 1,
                 'owned_by' => new Asso,
@@ -302,7 +302,7 @@ class RolesTableSeeder extends Seeder
             ],
             [
                 'type' => 'resp logistique',
-                'name' => 'Responsable logistique',
+                'name' => 'Responsable Logistique',
                 'description' => 'Responsable logistique de l\'association',
                 'limited_at' => 1,
                 'owned_by' => new Asso,

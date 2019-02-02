@@ -17,7 +17,7 @@ before_script:
   - npm -g i npm
   - npm i
   - npm run prod
-  - php artisan quick:clear
+  - php artisan portail:clear
 
 script:
-  - php artisan quick:test
+  - php artisan portail:test
