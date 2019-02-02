@@ -369,44 +369,7 @@ class OldToNew extends Command
                     }
                 }
 
-                if ($asso->salle) {
-                    try {
-                        $model->contacts()->create([
-                            'name' => 'Bureau',
-                            'value' => $asso->salle,
-                            'type_id' => ContactType::where('type', 'door')->first()->id,
-                            'visibility_id' => Visibility::findByType('logged')->id,
-                        ]);
-                    } catch (\Exception $e) {
-                        $errors[] = 'Salle incorrecte pour l\'association '.$asso->name;
-                    }
-                }
-
-                if ($asso->phone) {
-                    try {
-                        $model->contacts()->create([
-                            'name' => 'Téléphone',
-                            'value' => $asso->phone,
-                            'type_id' => ContactType::where('type', 'phone')->first()->id,
-                            'visibility_id' => Visibility::findByType('public')->id,
-                        ]);
-                    } catch (\Exception $e) {
-                        $errors[] = 'Numéro incorrect pour l\'association '.$asso->name;
-                    }
-                }
-
-                if ($asso->facebook) {
-                    try {
-                        $model->contacts()->create([
-                            'name' => 'Facebook',
-                            'value' => $asso->facebook,
-                            'type_id' => ContactType::where('type', 'facebook')->first()->id,
-                            'visibility_id' => Visibility::findByType('public')->id,
-                        ]);
-                    } catch (\Exception $e) {
-                        $errors[] = 'Facebook incorrect pour l\'association '.$asso->name;
-                    }
-                }
+                $this->addAssoContacts($asso, $model);
 
                 $bar->advance();
             } catch (\Exception $e) {
@@ -421,6 +384,55 @@ class OldToNew extends Command
         }
 
         return $errors;
+    }
+
+    /**
+     * Ajoute des moyens de contacts aux associations.
+     *
+     * @param mixed $asso
+     * @param mixed $model
+     * @return void
+     */
+    protected function addAssoContacts($asso, $model)
+    {
+        if ($asso->salle) {
+            try {
+                $model->contacts()->create([
+                    'name' => 'Bureau',
+                    'value' => $asso->salle,
+                    'type_id' => ContactType::where('type', 'door')->first()->id,
+                    'visibility_id' => Visibility::findByType('logged')->id,
+                ]);
+            } catch (\Exception $e) {
+                $errors[] = 'Salle incorrecte pour l\'association '.$asso->name;
+            }
+        }
+
+        if ($asso->phone) {
+            try {
+                $model->contacts()->create([
+                    'name' => 'Téléphone',
+                    'value' => $asso->phone,
+                    'type_id' => ContactType::where('type', 'phone')->first()->id,
+                    'visibility_id' => Visibility::findByType('public')->id,
+                ]);
+            } catch (\Exception $e) {
+                $errors[] = 'Numéro incorrect pour l\'association '.$asso->name;
+            }
+        }
+
+        if ($asso->facebook) {
+            try {
+                $model->contacts()->create([
+                    'name' => 'Facebook',
+                    'value' => $asso->facebook,
+                    'type_id' => ContactType::where('type', 'facebook')->first()->id,
+                    'visibility_id' => Visibility::findByType('public')->id,
+                ]);
+            } catch (\Exception $e) {
+                $errors[] = 'Facebook incorrect pour l\'association '.$asso->name;
+            }
+        }
     }
 
     /**
