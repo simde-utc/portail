@@ -16,7 +16,7 @@
         "laravel-admin-ext/chartjs": "^1.0",
         "laravel-admin-ext/log-viewer": "^1.0",
         "laravel/framework": "5.6.*",
-        "laravel/passport": "^6.0",
+        "laravel/passport": "6.*",
         "laravel/tinker": "~1.0",
         "mews/captcha": "^2.2",
         "nastuzzi-samy/api-tester": "^1.1",
@@ -31,7 +31,7 @@
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~1.0",
         "nunomaduro/collision": "~1.1",
-        "nunomaduro/larastan": "^0.3.8",
+        "nunomaduro/larastan": "=0.3.13",
         "phpunit/phpunit": "~7.0",
         "symfony/thanks": "^1.0",
         "squizlabs/php_codesniffer": "3.*"
