@@ -84,9 +84,9 @@ class MemberController extends Controller
         if ($member->pivot->validated_by) {
             $role = Role::find($member->pivot->role_id, $asso);
 
-            $roles = config('portail.roles.assos.'.($asso->login).'.'.($role->type));
+            $roles = config('portail.roles.assos.'.($asso->login).'.'.($role->type), []);
 
-            if (count($roles) > 0) {
+            if (count($roles)) {
                 try {
                     $member->assignRoles($roles, [
                         'semester_id' => $member->pivot->semester_id,
@@ -97,9 +97,9 @@ class MemberController extends Controller
                 }
             }
 
-            $permissions = config('portail.permissions.assos.'.($asso->login).'.'.($role->type));
+            $permissions = config('portail.permissions.assos.'.($asso->login).'.'.($role->type), []);
 
-            if (count($permissions) > 0) {
+            if (count($permissions)) {
                 try {
                     $member->assignPermissions($permissions, [
                         'semester_id' => $member->pivot->semester_id,
