@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier générant la commande quick:install.
+ * Fichier générant la commande portail:install.
  * Installe l'application.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -20,7 +20,7 @@ class Install extends Command
     /**
      * @var string
      */
-    protected $signature = 'quick:install';
+    protected $signature = 'portail:install';
 
     /**
      * @var string
@@ -59,16 +59,16 @@ class Install extends Command
         $bar = $this->output->createProgressBar(9);
         $bar->advance();
 
-        $this->info(' [Quick Install] Preparation');
-        $this->info(' [Quick Install] Preparation - Portail');
+        $this->info(' [Portail Install] Préparation');
+        $this->info(' [Portail Install] Préparation - Portail');
         $subBar = $this->output->createProgressBar(14);
         $subBar->advance();
         $editEnv = true;
 
         if (file_exists('.env')) {
-            $this->info(' /!\ An .env file already exists /!\\ ');
+            $this->info(' /!\ Le fichier .env existe déjà /!\\ ');
 
-            if ($this->confirm('Edit over it ?')) {
+            if ($this->confirm('Le remplacer (ancienne version déplacée en .env.last) ?')) {
                 shell_exec('cp .env .env.last');
             } else {
                 $editEnv = false;
@@ -84,48 +84,51 @@ class Install extends Command
         $bar->advance();
 
         // Installation.
-        $this->info(' [Quick Install] Installing Composer dependencies');
+        $this->info(' [Portail Install] Installation des dépendances Composer');
         shell_exec('composer install');
         $bar->advance();
 
         // Configuration.
-        $this->info(' [Quick Install] Setting keys');
+        $this->info(' [Portail Install] Définition des clés');
         $this->call('key:generate');
         $this->call('passport:keys');
         $bar->advance();
 
-        $this->info(' [Quick Install] Installing Node dependencies');
+        $this->info(' [Portail Install] Installation des dépendances NodeJS');
         shell_exec('npm install');
         shell_exec('npm run dev');
         $bar->advance();
 
-        // Migration.
-        $this->info(' [Quick Install] Migrating');
-        if ($this->confirm('Erase the database ?')) {
+        $this->info(' [Portail Install] Migration');
+        if ($this->confirm('Supprimer la base de données ?')) {
             $this->call('migrate:fresh');
         } else {
             $this->call('migrate');
         }
 
-        if ($this->confirm('Seed the database ?')) {
+        if ($this->confirm('Remplir la base de données ?')) {
             $this->call("db:seed");
+
+            if (config('app.env') === 'production' && $this->confirm('Ajouter les données de l\'ancien Portail ?')) {
+                $this->call("portail:old-to-new");
+            }
         }
 
         $bar->advance();
 
         // Effacement.
-        $this->info(' [Quick Install] Cleaning');
-        $this->call('quick:clear');
+        $this->info(' [Portail Install] Nettoyage');
+        $this->call('portail:clear');
         $bar->advance();
 
         // Optimisation.
-        $this->info(' [Quick Install] Optimizing');
-        $this->call('quick:optimize');
+        $this->info(' [Portail Install] Optimisation');
+        $this->call('portail:optimize');
         $bar->advance();
 
         // Fin.
         $bar->finish();
-        $this->info(' [Quick Install] Installation finished !');
+        $this->info(' [Portail Install] Installation finie !');
     }
 
     /**
@@ -161,7 +164,7 @@ class Install extends Command
         $this->changeEnv('GINGER_KEY', $value);
         $subBar->advance();
 
-        $this->info(' [Quick Install] Preparation - Database');
+        $this->info(' [Portail Install] Préparation - Base de données');
         $subBar->advance();
 
         $value = $this->choice('Type ?', ['mysql', 'pgsql', 'sqlite'], 'mysql');

@@ -35,7 +35,7 @@ class Article extends React.Component {
 		return (
 			<div className="Article row m-0 my-3 my-md-4 justify-content-start">
 				<div className="col-12 col-md-3 col-xl-2 pt-1 pb-2 pb-md-0 pr-md-0 media" style={{ maxWidth: '250px' }}>
-					<Img className="align-self-start img-fluid rounded-circle mr-2" src={[ article.image, article.owned_by.image ]} style={{ maxWidth: 100 }} />
+					<Img className="align-self-start img-fluid" image={[ article.image, article.owned_by.image ]} style={{ maxWidth: 100 }} />
 					<div className="media-body">
 						<Link to={ "/assos/" + this.props.article.owned_by.login }>{ article.owned_by.shortname }</Link>
 						<span className="d-block text-muted small">{ getTime(article.created_at) }</span>

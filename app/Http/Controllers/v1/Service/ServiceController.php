@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ServiceRequest;
 use App\Models\Service;
+use App\Models\Visibility;
 use App\Traits\Controller\v1\HasServices;
 use App\Traits\Controller\v1\HasImages;
 
@@ -63,11 +64,18 @@ class ServiceController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $services = Service::getSelection()->filter(function ($service) {
-            return !\Auth::id() || $this->isVisible($service, \Auth::id());
-        })->map(function ($service) {
-            return $service->hideData();
-        });
+        if (\Scopes::isOauthRequest($request)) {
+            $services = Service::getSelection()->filter(function ($service) {
+                return !\Auth::id() || $this->isVisible($service, \Auth::id());
+            })->map(function ($service) {
+                return $service->hideData();
+            });
+        } else {
+            $services = Service::where('visibility_id', Visibility::public()->id)->getSelection()
+                ->map(function ($service) {
+                    return $service->hideData();
+                });
+        }
 
         return response()->json($services->values(), 200);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier générant la commande quick:clear.
+ * Fichier générant la commande portail:clear.
  * Efface le cache de l'application.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -19,7 +19,7 @@ class Clear extends Command
     /**
      * @var string
      */
-    protected $signature = 'quick:clear';
+    protected $signature = 'portail:clear';
 
     /**
      * @var string

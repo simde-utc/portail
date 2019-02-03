@@ -159,7 +159,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
      */
     public function tags()
     {
-        return $this->morphToMany(Tag::class, 'used_by', 'tags_used');
+        return $this->morphToMany(Tag::class, 'used_by', 'tags_used')->withTimestamps();
     }
 
     /**

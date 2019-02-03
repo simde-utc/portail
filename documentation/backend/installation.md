@@ -39,6 +39,6 @@
 ## Commandes
 
 Des commandes artisan ont été développées pour simplifier l'installation et la maintenance de l'application :
-- `php artisan quick:install` pour installer ou mettre à jour toute l'application
-- `php artisan quick:clear` pour supprimer les ressources mise en cache
-- `php artisan quick:optimize` pour mettre en cache les ressources
+- `php artisan portail:install` pour installer ou mettre à jour toute l'application
+- `php artisan portail:clear` pour supprimer les ressources mise en cache
+- `php artisan portail:optimize` pour mettre en cache les ressources
