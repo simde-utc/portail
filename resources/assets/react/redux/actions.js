@@ -202,14 +202,18 @@ export class Actions {
   }
 
   generateQueries(queryParams, prefix) {
-    var queries = []
+    var queries = [];
 
     for (var key in queryParams) {
       if (queryParams.hasOwnProperty(key)) {
-        if (Object.is(queryParams[key]))
-          queries.push(this.generateQuery(queryParams[key], true))
-        else
-          queries.push(encodeURIComponent(prefix ? ('[' + key + ']') : key) + '=' + encodeURIComponent(queryParams[key]))
+        var value = queryParams[key];
+
+        if (value !== undefined) {
+          if (Object.is(value))
+            queries.push(this.generateQuery(value, true))
+          else
+            queries.push(encodeURIComponent(prefix ? ('[' + key + ']') : key) + '=' + encodeURIComponent(value))
+        }
       }
     }
 

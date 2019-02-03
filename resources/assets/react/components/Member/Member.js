@@ -23,9 +23,11 @@ class Member extends React.Component {
 					<CardTitle>{ this.props.title }</CardTitle>
 					<CardSubtitle>{ this.props.description }</CardSubtitle>
 				</CardBody>
-				<CardFooter>
-					{ this.props.footer }
-				</CardFooter>
+				{ this.props.footer && (
+					<CardFooter>
+						{ this.props.footer }
+					</CardFooter>
+				)}
 			</Card>
 		)
 	}

@@ -8,7 +8,8 @@ import { findIndex } from 'lodash';
 import Member from './Member';
 
 @connect((store, props) => ({
-	user: store.getData('user', false)
+	user: store.getData('user', false),
+	currentSemester: store.getData(['semesters', 'current'], {})
 }))
 class MemberList extends React.Component {
 	getMemberBlocks(members, roles) {
@@ -20,16 +21,22 @@ class MemberList extends React.Component {
 					var description = roles[index].name;
 			}
 
-			return (
-				<Member key={ member.id } image={ member.image } title={ member.name } description={ description } footer={(
+			var props = {description};
+
+			if (member.pivot.semester_id === this.props.currentSemester.id) {
+				props.footer = (
 					<div>
 						{ !(this.props.isMember && member.pivot.validated_by) && (
 							<Button color="success" className="m-1" onClick={() => { this.props.validateMember && this.props.validateMember(member.id) }} outline>Valider</Button>
 						)}
 						<Button color="danger" className="m-1" onClick={() => { this.props.leaveMember && this.props.leaveMember(member.id) }} outline>Retirer</Button>
 					</div>
-				)} />
-			)
+				);
+			}
+
+			return (
+				<Member key={ member.id } image={ member.image } title={ member.name } { ...props } />
+			);
 		})
 	}
 
