@@ -115,7 +115,7 @@ trait UserRelations
     public function joinedAssos()
     {
         return $this->belongsToMany(Asso::class, 'assos_members')->whereNotNull('validated_by')->whereNotNull('role_id')
-        ->withPivot('semester_id', 'role_id', 'validated_by');
+            ->withPivot('semester_id', 'role_id', 'validated_by');
     }
 
     /**
@@ -136,7 +136,7 @@ trait UserRelations
     public function joiningAssos()
     {
         return $this->belongsToMany(Asso::class, 'assos_members')->whereNull('validated_by')->whereNotNull('role_id')
-        ->withPivot('semester_id', 'role_id', 'validated_by');
+            ->withPivot('semester_id', 'role_id', 'validated_by');
     }
 
     /**

@@ -131,6 +131,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 
     protected $types = [
         'admin' => 'administrateur',
+		'member' => 'membre d\'une association',
         'contributorBde' => 'cotisant BDE',
         'casConfirmed' => 'membre UTC/ESCOM',
         'cas' => 'avec connexion CAS',
@@ -409,6 +410,11 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         } catch (PortailException $e) {
             return null;
         }
+    }
+
+    public function isMember()
+    {
+        return $this->currentJoinedAssos()->count() > 0;
     }
 
     /**
