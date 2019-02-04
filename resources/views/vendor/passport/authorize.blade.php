@@ -35,6 +35,7 @@
                         </div>
                     @endif
                 </div>
+                En poursuivant, vous acceptez et vous certifiez avoir lu la <a href="{{ $client->policy_url }}" target="_blank">politique de confidentialité</a> du service <strong>{{ $client->name }}</strong>.
                 <div class="card-footer bg-transparent p-0">
                     <div class="row m-0">
                         <div class="col-6 p-0">

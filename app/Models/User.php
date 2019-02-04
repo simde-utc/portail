@@ -131,7 +131,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
 
     protected $types = [
         'admin' => 'administrateur',
-		'member' => 'membre d\'une association',
+        'member' => 'membre d\'une association',
         'contributorBde' => 'cotisant BDE',
         'casConfirmed' => 'membre UTC/ESCOM',
         'cas' => 'avec connexion CAS',
@@ -412,6 +412,11 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         }
     }
 
+    /**
+     * Indique si l'utlisateur fait partie d'une association.
+     *
+     * @return boolean
+     */
     public function isMember()
     {
         return $this->currentJoinedAssos()->count() > 0;
