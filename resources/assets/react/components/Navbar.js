@@ -36,7 +36,7 @@ class Navbar extends React.Component {
 		return (
 			<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle">
 				<NavLink to="/" className="navbar-brand">
-					Portail des Assos
+					Portail des associations
 				</NavLink>
 
 				<button className="navbar-toggler" onClick={() => this.toggle('collapse')}>
@@ -96,16 +96,7 @@ class Navbar extends React.Component {
 								</NavLink>
 							</li>
 						)}
-
-						<li className="nav-item">
-							<NavLink className="nav-link d-flex" to="/help">
-									<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
-									<FontAwesomeIcon icon="circle" className="icon-background2" />
-									<FontAwesomeIcon icon="question" transform="shrink-8" />
-								</span>
-							</NavLink>
-						</li>
-
+						
 						{ this.props.user && (
 							<li className="nav-item">
 								<a className="nav-link d-flex" href="/logout">
