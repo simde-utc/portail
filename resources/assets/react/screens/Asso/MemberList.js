@@ -11,6 +11,7 @@ import MemberList from '../../components/Member/DoubleList';
 @connect((store, props) => ({
 	user: store.getData('user', false),
 	semesters: store.getData('semesters'),
+	currentSemester: store.getData(['semesters', 'current']),
 	members: store.getData(['assos', props.asso.id, 'members']),
 	fetched: store.isFetched(['assos', props.asso.id, 'members']),
 	fetching: store.isFetching(['assos', props.asso.id, 'members']),
@@ -21,27 +22,27 @@ class AssoMemberListScreen extends React.Component {
 		super();
 
 		this.state = {
-			semester: '',
+			semester: undefined,
 		};
 	}
 
-  componentDidMount() {
-    if (this.props.asso.id) {
-      this.loadAssosData(this.props.asso.id);
-    }
-  }
-
-  componentWillReceiveProps(props) {
-		if (!this.state.semester && props.semesters.length > 0) {
-			this.setState(prevState => ({ ...prevState, semester: props.semesters[0].id }));
+	componentDidMount() {
+		if (this.props.asso.id) {
+			this.loadAssosData(this.props.asso.id);
 		}
 
-    if (this.props.asso.id !== props.asso.id) {
-      this.loadAssosData(props.asso.id);
-    }
-  }
+		if (this.props.currentSemester) {
+			this.setState(prevState => ({ ...prevState, semester: this.props.currentSemester.id }));
+		}
+	}
 
-  loadAssosData(id) {
+	componentWillReceiveProps(props) {
+		if (this.props.asso.id !== props.asso.id) {
+			this.loadAssosData(props.asso.id);
+		}
+	}
+
+	loadAssosData(id) {
 		this.props.dispatch(actions.assos(id).members.all({ semester: this.state.semester }));
 	}
 
@@ -61,6 +62,8 @@ class AssoMemberListScreen extends React.Component {
 	}
 
 	render() {
+		var semesters = this.getSemesters(this.props.semesters);
+
 		return (
 			<div>
 				<div style={{ position: 'absolute', right: '5%' }}>
@@ -69,8 +72,9 @@ class AssoMemberListScreen extends React.Component {
 						onChange={ this.handleSemesterChange.bind(this) }
 						placeholder=""
 						isSearchable={ true }
-						options={ this.getSemesters(this.props.semesters) }
-					/>
+						options={ semesters }
+						value={ semesters.filter(semester => semester.value === this.state.semester) }
+						/>
 				</div>
 				<MemberList members={ this.props.members } roles={ this.props.roles } fetched={ this.props.fetched } fetching={ this.props.fetching } { ...this.props } />
 			</div>

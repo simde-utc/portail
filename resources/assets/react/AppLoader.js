@@ -28,6 +28,7 @@ library.add(fas, far)
 		store.hasFinished('login'),
 		store.hasFinished('user'),
 		store.hasFinished('user/permissions'),
+		store.hasFinished('semesters/current'),
 		// Important ?
 		// store.hasFinished('user/assos'),
 		// store.hasFinished('user/services'),
@@ -37,13 +38,15 @@ class AppLoader extends React.Component {
 	// Toutes les infos à récupérer dès le lancement
 	componentWillMount() {
 		// Get Login Methods
-		this.props.dispatch(actions.login.all())
+		this.props.dispatch(actions.login.all());
 		// Get Semesters
-		this.props.dispatch(actions.semesters.all())
+		this.props.dispatch(actions.semesters.all());
+		// Get Current Semester
+		this.props.dispatch(actions.semesters('current').get());
 		// Get User Info
-		this.props.dispatch(actions.user.all({ allTypes: true }))
+		this.props.dispatch(actions.user.all({ allTypes: true }));
 		// Get User Permissions
-		this.props.dispatch(actions.user.permissions.all())
+		this.props.dispatch(actions.user.permissions.all());
 		// Get User Assos
 		this.props.dispatch(actions.user.assos.all());
 		// Get User Services
