@@ -98,8 +98,7 @@ trait HasRoles
                 }
 
                 if (isset($data['validated_by']) || \Auth::id()) {
-                    if (!$manageableRoles->contains('id', $role->id)
-                        && !$manageableRoles->contains('type', config('portail.roles.admin.'.$this->getTable()))) {
+                    if (!$manageableRoles->contains('id', $role->id)) {
                         throw new PortailException('La personne demandant la validation n\'est pas habilitée à donner \
                             ce rôle: '.$role->name);
                     }
@@ -147,9 +146,7 @@ trait HasRoles
 
         foreach ($roles as $role) {
             if (!$force && (isset($updatedData['validated_by']) || \Auth::id())) {
-                if (!$manageableRoles->contains('id', $role->id)
-                    && (!$manageableRoles->contains('type', config('portail.roles.admin.'.$this->getTable()))
-                        || $role->allChildren->contains('type', config('portail.roles.admin.'.$this->getTable())))) {
+                if (!$manageableRoles->contains('id', $role->id)) {
                     throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier \
                         ce rôle: '.$role->name);
                 }
@@ -204,9 +201,7 @@ trait HasRoles
 
         foreach ($roles as $role) {
             if (!$force && $removed_by !== null) {
-                if (!$manageableRoles->contains('id', $role->id)
-                    && (!$manageableRoles->contains('type', config('portail.roles.admin.'.$this->getTable()))
-                        || $role->allChildren->contains('type', config('portail.roles.admin.'.$this->getTable())))) {
+                if (!$manageableRoles->contains('id', $role->id)) {
                     throw new PortailException('La personne demandant la suppression n\'est pas habilitée à \
                         retirer ce rôle: '.$role->name);
                 }

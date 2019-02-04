@@ -160,7 +160,7 @@ trait HasMembers
             if (!$force) {
                 $manageableRoles = $this->getUserRoles(($data['validated_by'] ?? \Auth::id()));
 
-                if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin')) {
+                if (!$manageableRoles->contains('id', $data['role_id'])) {
                     throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à \
                         donner ce rôle: '.$role->name);
                 }
@@ -215,7 +215,7 @@ trait HasMembers
                 if (isset($updatedData['validated_by']) || \Auth::id()) {
                     $manageableRoles = $this->getUserRoles(($updatedData['validated_by'] ?? \Auth::id()));
 
-                    if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin')) {
+                    if (!$manageableRoles->contains('id', $role->id)) {
                         throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à \
                             modifier ce rôle: '.$role->name);
                     }
@@ -234,7 +234,7 @@ trait HasMembers
                         $manageableRoles ?? $this->getUserRoles(($updatedData['validated_by'] ?? \Auth::id()))
                     );
 
-                    if (!$manageableRoles->contains('id', $role->id) && !$manageableRoles->contains('type', 'admin')) {
+                    if (!$manageableRoles->contains('id', $role->id)) {
                         throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à \
                             modifier ce rôle: '.$role->name);
                     }
@@ -298,7 +298,7 @@ trait HasMembers
             }
 
             if (!$force && $removed_by !== null) {
-                if (!$manageableRoles->contains('id', $data['role_id']) && !$manageableRoles->contains('type', 'admin')) {
+                if (!$manageableRoles->contains('id', $data['role_id'])) {
                     throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée \
                         à modifier ce rôle: '.$role->name);
                 }

@@ -89,7 +89,7 @@ export const store = {
     getData: function (props, replacement = [], forceReplacement = true) {
         return this.get(this.propsToArray(props).concat(['data']), replacement, forceReplacement);
     },
-    findData: function (props, value, key = 'id', replacement = {}, forceReplacement = true) {
+    findData: function (props, value, key = 'id', replacement, forceReplacement = true) {
         // Les ressources sont rangées par id:
         if (key === 'id') {
             return this.getData(this.propsToArray(props).concat(['value']), replacement, forceReplacement);
