@@ -19,17 +19,17 @@ class DatabaseSeeder extends Seeder
             PermissionsTableSeeder::class,
             RolesTableSeeder::class,
             ContactsTypesTableSeeder::class,
-            AssosTableSeeder::class,
-            ServicesTableSeeder::class,
             PlacesAndLocationsTableSeeder::class,
-            RoomsTableSeeder::class,
             ReservationsTypesTableSeeder::class,
             AccessTableSeeder::class,
             AdminMenuTableSeeder::class,
         ]);
 
-        if (config('app.debug', false)) {
+        if ((bool) env('APP_DEBUG', config('app.debug', false))) {
             $this->call([
+                AssosTableSeeder::class,
+                RoomsTableSeeder::class,
+                ServicesTableSeeder::class,
                 UsersTableSeeder::class,
                 GroupsTableSeeder::class,
                 ArticlesTableSeeder::class,

@@ -73,12 +73,20 @@ class OldToNew extends Command
      */
     public function handle()
     {
-        if (!$this->confirm('Ceci va supprimer toutes les données actuelles en faveur de l\'ancien Portail. Confirmer ?')) {
+        if (!$this->confirm('Ceci va supprimer toutes les données actuelles en faveur de l\'ancien Portail.\
+Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
             return;
         }
 
-        $bar = $this->output->createProgressBar(7);
+        $bar = $this->output->createProgressBar(8);
         $errors = [];
+
+        $this->info('Migration et nettoyage de la base de données');
+
+        shell_exec('APP_DEBUG=0 php artisan migrate:fresh --seed');
+
+        $bar->advance();
+        $this->info(PHP_EOL);
 
         $this->info('Préparation des données à récupérer');
 
@@ -87,7 +95,6 @@ class OldToNew extends Command
         $this->roles = $this->getDB()->select('SELECT * FROM role');
         $this->events = $this->getDB()->select('SELECT * FROM event');
 
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         $bar->advance();
         $this->info(PHP_EOL);
 
@@ -124,8 +131,6 @@ class OldToNew extends Command
         } catch (\Exception $e) {
             throw $e;
         } finally {
-            DB::statement('SET FOREIGN_KEY_CHECKS = 1');
-
             $this->info(PHP_EOL);
             $this->info(PHP_EOL);
             $this->info('Rapport:');
@@ -187,28 +192,6 @@ class OldToNew extends Command
         return $model->update([
             $input => url($path.$name),
         ]);
-    }
-
-    /**
-     * Supprime un dossier et tout son contenu.
-     *
-     * @param  string $path
-     * @return void
-     */
-    protected function removeDir(string $path): void
-    {
-        if (file_exists($path)) {
-            foreach (array_diff(scandir($path), ['..', '.']) as $file) {
-                $subPath = $path.DIRECTORY_SEPARATOR.$file;
-                if (is_dir($subPath)) {
-                    $this->removeDir($subPath);
-                } else {
-                    unlink($subPath);
-                }
-            }
-
-            rmdir($path);
-        }
     }
 
     /**
@@ -293,11 +276,6 @@ class OldToNew extends Command
     protected function addAssos()
     {
         $this->info('Préparation des associations');
-
-        // Nettoyage avant création massive.
-        Client::getQuery()->delete();
-        Asso::getQuery()->delete();
-        $this->removeDir(public_path('/images/assos'));
 
         $assoTypes = $this->getDB()->select('SELECT * FROM type_asso');
         $poles = $this->getDB()->select('SELECT * FROM pole');
@@ -444,10 +422,6 @@ class OldToNew extends Command
     {
         $this->info('Préparation des articles');
 
-        // Nettoyage avant création massive.
-        Article::getQuery()->delete();
-        $this->removeDir(public_path('/images/articles'));
-
         if (!($tag = Tag::where('name', 'old-portail')->first())) {
             $tag = Tag::create([
                 'name' => 'old-portail',
@@ -519,12 +493,6 @@ class OldToNew extends Command
     protected function addUsers()
     {
         $this->info('Préparation des utilisateurs');
-
-        // Nettoyage avant création massive.
-        User::getQuery()->delete();
-        AuthCas::getQuery()->delete();
-        $this->removeDir(public_path('/images/users'));
-
         $this->info('Création des '.count($this->users).' utilisateurs');
 
         $bar = $this->output->createProgressBar(count($this->users));
@@ -573,6 +541,8 @@ class OldToNew extends Command
      */
     protected function addMembers()
     {
+        $this->info('Préparation des membres');
+
         $members = $this->getDB()->select('SELECT * FROM asso_member');
 
         $this->info('Création des '.count($members).' membres');
@@ -650,10 +620,6 @@ class OldToNew extends Command
     {
         $this->info('Préparation des événements');
 
-        // Nettoyage avant création massive.
-        Event::getQuery()->delete();
-        $this->removeDir(public_path('/images/events'));
-
         $events = $this->getDB()->select('SELECT * FROM event');
         $eventTypes = $this->getDB()->select('SELECT * FROM event_type');
         $visibility_id = Visibility::where('type', 'logged')->first()->id;
@@ -728,10 +694,6 @@ class OldToNew extends Command
     protected function addServices()
     {
         $this->info('Préparation des services');
-
-        // Nettoyage avant création massive.
-        Service::getQuery()->delete();
-        $this->removeDir(public_path('/images/services'));
 
         $services = $this->getDB()->select('SELECT * FROM service');
         $visibility_id = Visibility::where('type', 'logged')->first()->id;
