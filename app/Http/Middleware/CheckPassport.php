@@ -12,7 +12,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use App\Models\Client;
+use Illuminate\Auth\Access\AuthorizationException;
+use App\Models\{
+    Client, User
+};
 use Illuminate\Http\Request;
 
 class CheckPassport
@@ -56,8 +59,19 @@ class CheckPassport
         }
 
         // On vérifie si l'application n'est pas réduite à un certain public.
-        if ($targets = $client->targeted_types) {
-            return (new UserIs)->handle($request, $next, ...json_decode($targets, true));
+        if ($client->targeted_types) {
+            $targets = json_decode($client->targeted_types, true);
+            try {
+                return (new UserIs)->handle($request, $next, ...$targets);
+            } catch (AuthorizationException $e) {
+                $types = array_intersect_key((new User)->getTypeDescriptions(), array_flip($targets));
+
+                return response(view('auth.passport.denied', [
+                    'types' => array_values($types),
+                    'client' => $client,
+                    'request' => $request,
+                ]));
+            }
         } else {
             return $next($request);
         }

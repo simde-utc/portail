@@ -27,7 +27,7 @@ class AuthController extends BaseAuthController
             if (($user = \Auth::guard('web')->user())->getUserPermissions()->count()) {
                 $this->guard()->login(Admin::find($user->getKey()));
 
-                return redirect(config('admin.route.prefix'));
+                return redirect(redirect()->intended()->getTargetUrl() ?: config('admin.route.prefix'));
             } else {
                 return redirect('/');
             }
