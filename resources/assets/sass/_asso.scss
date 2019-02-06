@@ -49,7 +49,117 @@
 	}
 }
 
-
 .ArticleList .Article:not(:last-child) {
 	border-bottom: 1px solid $gray-light;
+}
+
+
+.pole-container{
+	vertical-align: top;
+	position: relative;
+	text-align: center;
+	border-radius: 10px;
+	border-color: black;
+	margin: 30px;
+	box-shadow: 0px 20px 48px -10px rgba(0,0,0,0.23);
+	padding: 30px;
+}
+.pole-container h2{
+	font-size: 30px;
+}
+
+.asso-card{
+	vertical-align: top;
+	width: 200px;
+	height: 300px;
+	margin: 10px 10px;
+	border-radius:10px;
+	cursor: pointer;
+	box-shadow: 0px 20px 48px -9px rgba(0,0,0,0.23);
+	display: inline-block;
+}
+.asso-card:hover{
+	box-shadow: 0px 20px 48px -1px rgba(0,0,0,0.23);
+}
+
+.thumbnail{
+	background-size: cover;
+	background-position: center;
+	width: 100%;
+	height: 66%;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	display: table;
+}
+.asso-card:hover > .thumbnail > .overlay{
+	visibility: visible;
+}
+.asso-card .thumbnail .overlay{
+	visibility: hidden;
+	width:100%;
+	height:100%;
+	padding: 10%;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	word-wrap: break-word;
+	color: white;
+	font-size: 20px;
+}
+.asso-card .thumbnail .overlay.bde{
+	background-color: rgba($bde, 0.8);
+}
+.asso-card .thumbnail .overlay.poleae{
+	background-color: rgba($poleae, 0.8);
+}
+.asso-card .thumbnail .overlay.polesec{
+	background-color: rgba($polesec, 0.8);
+}
+.asso-card .thumbnail .overlay.polete{
+	background-color: rgba($polete, 0.8);
+}
+.asso-card .thumbnail .overlay.polevdc{
+	background-color: rgba($polevdc, 0.8);
+}
+
+.content{
+	 height: 100px;
+	 width: 100%;
+	 display: table;
+ }
+
+.content .asso-shortname{
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	word-wrap: break-word;
+	margin: 5%;
+	width: 90%;
+	font-size: 20px;
+}
+
+.asso-card .card-line{
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	position: relative;
+	height: 12px;
+	width: 100%;
+	bottom: 10px;
+}
+.asso-card .card-line.bde{
+	background-color: rgba($bde, 0.7);
+}
+.asso-card .card-line.poleae{
+	background-color: rgba($poleae, 0.7);
+}
+.asso-card .card-line.polesec{
+	background-color: rgba($polesec, 0.7);
+}
+.asso-card .card-line.polete{
+	background-color: rgba($polete, 0.7);
+}
+.asso-card .card-line.polevdc{
+	background-color: rgba($polevdc, 0.7);
 }

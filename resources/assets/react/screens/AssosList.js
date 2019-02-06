@@ -6,6 +6,7 @@ import AspectRatio from 'react-aspect-ratio';
 import { sortBy } from 'lodash';
 
 import Img from '../components/Image';
+import AssoCard from '../components/AssoCard';
 
 @connect(store => ({
 	assos: store.getData('assos'),
@@ -21,32 +22,16 @@ class AssosListScreen extends React.Component {
 
 	getStage(assos, parent) {
 		return (
-			<div key={ parent.id } className={ "mb-4 rounded border-" + parent.login } style={{ borderWidth: 2 }}>
-				<div className={ "text-center h4 p-2 bg-" + parent.login }>
-					{ parent.shortname } <small>{ parent.name }</small>
-				</div>
-				<div className="m-2" style={{ display: 'flex', overflowX: 'auto' }}>
-					{ assos.map(asso => {
-						var bg = 'bg-' + asso.login;
+			<div className="pole-container" style={{ overflowX: 'auto' }}>
+				<h2>{ parent.shortname }</h2>
+				<small>{ parent.name }</small>
+				<br/>
 
-						if (asso.parent)
-						bg += ' bg-' + asso.parent.login;
-
-						return (
-							<Card key={ asso.id } className={ "mr-3 p-0 " + bg } style={{ width: 200, minHeight: 250, flex: '0 0 auto' }} onClick={() => this.props.history.push('assos/' + asso.login)}>
-								<AspectRatio ratio="1" style={{ maxHeight: 150 }} className="d-flex justify-content-center mt-2">
-									<Img image={ asso.image } style={{ height: '100%' }} />
-								</AspectRatio>
-								<CardBody>
-									<CardTitle>{ asso.shortname }</CardTitle>
-									<CardSubtitle>{ asso.name }</CardSubtitle>
-								</CardBody>
-							</Card>
-						);
-					})}
-				</div>
+				{ assos.map(asso => {
+					return <AssoCard key={ asso.id } name={ asso.name } shortname={ asso.shortname } image={ asso.image } login={ parent.login }/>;
+				})}
 			</div>
-		)
+		);
 	}
 
 	getStages(assos) {
