@@ -12,7 +12,7 @@ import bdeImage from '../../images/bde.jpg'
 
 class AssoCard extends React.Component {
 	render() {
-		var image = this.props.image;
+		let image = this.props.image;
 
 		if (!this.props.unloader) {
 			image = bdeImage;
@@ -23,7 +23,7 @@ class AssoCard extends React.Component {
 				 style={{backgroundImage: "url('" + image + "')"}}>
 				<div className={ "overlay " + this.props.login}>{ this.props.name }</div>
 			</div>
-			<div className="content">
+			<div className="name-container">
 				<div className="asso-shortname">{ this.props.shortname }</div>
 			</div>
 			<div className={"card-line "+ this.props.login}/>

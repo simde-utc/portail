@@ -7,7 +7,7 @@
 		overflow-y: visible;
 		border: none;
 		position: fixed;
-		margin-top: 0%;
+		margin-top: 0;
 		transform: translateY(-100%);
 		z-index: 100;
 		width: 100%;
@@ -56,16 +56,22 @@
 
 .pole-container{
 	vertical-align: top;
-	position: relative;
 	text-align: center;
 	border-radius: 10px;
 	border-color: black;
-	margin: 30px;
-	box-shadow: 0px 20px 48px -10px rgba(0,0,0,0.23);
-	padding: 30px;
+	margin: 20px;
+	padding: 15px;
+	box-shadow: 0 10 48 -10 rgba(0,0,0,0.23);
 }
 .pole-container h2{
 	font-size: 30px;
+}
+
+.pole-container > div {
+	overflow-x: auto;
+	white-space: nowrap;
+	border-radius: 10px;
+	padding: 15px;
 }
 
 .asso-card{
@@ -75,11 +81,12 @@
 	margin: 10px 10px;
 	border-radius:10px;
 	cursor: pointer;
-	box-shadow: 0px 20px 48px -9px rgba(0,0,0,0.23);
+	box-shadow: 0 10 48 -9 rgba(0,0,0,0.23);
 	display: inline-block;
+	white-space: normal;
 }
 .asso-card:hover{
-	box-shadow: 0px 20px 48px -1px rgba(0,0,0,0.23);
+	box-shadow: 0 5 48 -1 rgba(0,0,0,0.23);
 }
 
 .thumbnail{
@@ -124,13 +131,13 @@
 	background-color: rgba($polevdc, 0.8);
 }
 
-.content{
+.name-container{
 	 height: 100px;
 	 width: 100%;
 	 display: table;
  }
 
-.content .asso-shortname{
+.name-container .asso-shortname{
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
