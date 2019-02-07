@@ -61,7 +61,7 @@
 	border-color: black;
 	margin: 20px;
 	padding: 15px;
-	box-shadow: 0 10 48 -10 rgba(0,0,0,0.23);
+	box-shadow: 0 10px 48px -10px rgba(0,0,0,0.23);
 }
 .pole-container h2{
 	font-size: 30px;
@@ -81,12 +81,12 @@
 	margin: 10px 10px;
 	border-radius:10px;
 	cursor: pointer;
-	box-shadow: 0 10 48 -9 rgba(0,0,0,0.23);
+	box-shadow: 0 10px 48px -9px rgba(0,0,0,0.23);
 	display: inline-block;
 	white-space: normal;
 }
 .asso-card:hover{
-	box-shadow: 0 5 48 -1 rgba(0,0,0,0.23);
+	box-shadow: 0 5px 48px -1px rgba(0,0,0,0.23);
 }
 
 .thumbnail{
