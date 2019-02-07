@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import actions from '../redux/actions';
 import {sortBy} from 'lodash';
+import { NavLink } from 'react-router-dom';
 
 import AssoCard from '../components/AssoCard';
 
@@ -25,8 +26,11 @@ class AssosListScreen extends React.Component {
                 <div>
                     {
                         assos.map(asso => {
-                            return <AssoCard key={asso.id} name={asso.name} shortname={asso.shortname}
-                                             image={asso.image} login={parent.login}/>;
+                            return <NavLink to={'assos/' + asso.login}>
+                                        <AssoCard onClick={() => history.push('assos/' + asso.login)}
+                                                      key={asso.id} name={asso.name} shortname={asso.shortname}
+                                                      image={asso.image} login={parent.login}/>
+                                    </NavLink>;
                         })
                     }
                 </div>

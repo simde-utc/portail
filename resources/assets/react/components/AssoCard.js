@@ -12,11 +12,7 @@ import bdeImage from '../../images/bde.jpg'
 
 class AssoCard extends React.Component {
 	render() {
-		let image = this.props.image;
-
-		if (!this.props.unloader) {
-			image = bdeImage;
-		}
+		let image = ((this.props.image == null) ? bdeImage : this.props.image);
 
 		return <div className="asso-card">
 			<div className="thumbnail"
