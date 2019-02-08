@@ -66,7 +66,7 @@ class ServicesTableSeeder extends Seeder
                 'name' => $service['name'],
                 'description' => $service['description'],
                 'url' => $service['url'],
-                'visibility_id' => Visibility::where('type', $service['visibility'])->first()->id,
+                'visibility_id' => Visibility::findByType($service['visibility'])->first()->id,
             ]);
         }
     }

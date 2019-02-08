@@ -19,19 +19,19 @@ class GroupsTableSeeder extends Seeder
                 'user_id'       => User::where('firstname', 'Samy')->first()->id,
                 'name'          => 'LA13 Forever',
                 'icon'          => null,
-                'visibility_id' => Visibility::where('type', 'public')->first()->id,
+                'visibility_id' => Visibility::findByType('public')->first()->id,
             ],
             [
                 'user_id'       => User::where('firstname', 'Natan')->first()->id,
                 'name'          => 'Coloc',
                 'icon'          => null,
-                'visibility_id' => Visibility::where('type', 'private')->first()->id,
+                'visibility_id' => Visibility::findByType('private')->first()->id,
             ],
             [
                 'user_id'       => User::where('firstname', 'Rémy')->first()->id,
                 'name'          => 'Mon groupe sur invitation <3',
                 'icon'          => null,
-                'visibility_id' => Visibility::where('type', 'private')->first()->id,
+                'visibility_id' => Visibility::findByType('private')->first()->id,
             ],
         ];
 

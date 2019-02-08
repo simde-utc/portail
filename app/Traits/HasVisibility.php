@@ -182,9 +182,9 @@ trait HasVisibility
      * @param  mixed  $model
      * @return boolean
      */
-    public function isLogged(string $user_id, $model=null)
+    public function isActive(string $user_id, $model=null)
     {
-        return User::where('is_active', true)->where('id', $user_id)->exists();
+        return ($user = User::find($user_id)) && $user->isActive();
     }
 
     /**
