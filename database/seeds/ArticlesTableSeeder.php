@@ -93,7 +93,7 @@ class ArticlesTableSeeder extends Seeder
             $model = Article::create([
                 'title'           => $article['title'],
                 'content'         => $article['content'],
-                'visibility_id'   => Visibility::findByType($article['visibility_id'])->first()->id,
+                'visibility_id'   => Visibility::findByType($article['visibility_id'])->id,
                 'created_by_id'   => isset($article['created_by']) ? $article['created_by']->id : null,
                 'created_by_type' => isset($article['created_by']) ? get_class($article['created_by']) : null,
             ])->changeOwnerTo($article['owner']);
