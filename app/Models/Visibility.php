@@ -37,10 +37,10 @@ class Visibility extends Model
      * TODO: Transformer en scope.
      * TODO: A exporter en Trait
      *
-     * @param  string $type
-     * @return Visibility
+     * @param  string|null $type
+     * @return Visibility|null
      */
-    public static function findByType(string $type)
+    public static function findByType(string $type=null)
     {
         return static::where('type', $type)->first();
     }

@@ -49,7 +49,7 @@ class VisibilitiesTableSeeder extends Seeder
             Visibility::create([
                 'type' => $visibility['type'],
                 'name' => $visibility['name'],
-                'parent_id' => (Visibility::where('type', ($visibility['parent'] ?? null))->first()->id ?? null),
+                'parent_id' => (Visibility::findByType(($visibility['parent'] ?? null))->id ?? null),
             ]);
         }
     }

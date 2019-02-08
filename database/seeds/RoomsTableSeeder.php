@@ -28,7 +28,7 @@ class RoomsTableSeeder extends Seeder
             Room::create([
                 'location_id' => Location::where('name', $room['location'])->first()->id,
                 'capacity' => $room['capacity'],
-                'visibility_id' => Visibility::where('type', $room['visibility'])->first()->id,
+                'visibility_id' => Visibility::findByType($room['visibility'])->id,
             ])->changeOwnerTo($room['owner'])->save();
         }
     }
