@@ -379,7 +379,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                     'name' => 'Bureau',
                     'value' => $asso->salle,
                     'type_id' => ContactType::where('type', 'door')->first()->id,
-                    'visibility_id' => Visibility::findByType('logged')->id,
+                    'visibility_id' => Visibility::findByType('active')->id,
                 ]);
             } catch (\Exception $e) {
                 $errors[] = 'Salle incorrecte pour l\'association '.$asso->name;
@@ -430,7 +430,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
         }
 
         $articles = $this->getDB()->select('SELECT * FROM article');
-        $visibility_id = Visibility::where('type', 'logged')->first()->id;
+        $visibility_id = Visibility::where('type', 'active')->first()->id;
 
         $this->info('Création des '.count($articles).' articles');
 
@@ -622,7 +622,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
 
         $events = $this->getDB()->select('SELECT * FROM event');
         $eventTypes = $this->getDB()->select('SELECT * FROM event_type');
-        $visibility_id = Visibility::where('type', 'logged')->first()->id;
+        $visibility_id = Visibility::where('type', 'active')->first()->id;
 
         $this->info('Création des '.count($events).' événements');
 
@@ -696,7 +696,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
         $this->info('Préparation des services');
 
         $services = $this->getDB()->select('SELECT * FROM service');
-        $visibility_id = Visibility::where('type', 'logged')->first()->id;
+        $visibility_id = Visibility::where('type', 'active')->first()->id;
 
         $this->info('Création des '.count($services).' services');
 
