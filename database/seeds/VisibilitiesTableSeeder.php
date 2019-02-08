@@ -19,14 +19,14 @@ class VisibilitiesTableSeeder extends Seeder
                 'name' => 'Public',
             ],
             [
-                'type' => 'active',
+                'type' => 'logged',
                 'name' => 'Toute personne connectée',
                 'parent' => 'public',
             ],
             [
                 'type' => 'cas',
                 'name' => 'Toute personne connectée au CAS',
-                'parent' => 'active',
+                'parent' => 'logged',
             ],
             [
                 'type' => 'contributorBde',
