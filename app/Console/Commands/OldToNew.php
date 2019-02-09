@@ -26,7 +26,7 @@ class OldToNew extends Command
     /**
      * @var string
      */
-    protected $signature = 'portail:old-to-new';
+    protected $signature = 'portail:old-to-new {--quick}';
 
     /**
      * @var string
@@ -34,6 +34,8 @@ class OldToNew extends Command
     protected $description = 'Download all data from the old Portail';
 
     protected const CIMETIERE = 6;
+
+    protected const MAX_LOGICAL_MEMBERS = 8;
 
     protected $users = [];
     protected $assos = [];
@@ -338,7 +340,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                     $model->save();
                 }
 
-                if ($asso->logo) {
+                if ($asso->logo && !$this->option('quick')) {
                     try {
                         $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/assos/source/'.$asso->logo,
                             $model, 'assos/'.$model->id);
@@ -461,7 +463,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                 // On ajoute le tag de l'ancien Portail.
                 $model->tags()->save($tag);
 
-                if ($article->image) {
+                if ($article->image && !$this->option('quick')) {
                     try {
                         $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/articles/source/'.$article->image,
                             $model, 'articles/'.$model->id);
@@ -547,7 +549,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
 
         $this->info('Création des '.count($members).' membres');
 
-        $bar = $this->output->createProgressBar(count($members));
+        $bar = $this->output->createProgressBar(count($members) + 1);
         $errors = [];
 
         foreach ($members as $member) {
@@ -582,13 +584,9 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                             'role_id' => $role->id,
                             'semester_id' => $semester->id,
                             'validated_by' => $user->id,
+                            'created_at' => $member->created_at ?: now(),
+                            'updated_at' => $member->updated_at ?: now(),
                         ], true);
-
-                        // Obliger de définir les dates après création.
-                        $model->timestamps = false;
-                        $model->created_at = $member->created_at ?: $model->created_at;
-                        $model->updated_at = $member->updated_at ?: $model->updated_at;
-                        $model->save();
                     } catch (\Exception $e) {
                         $errors[] = 'n°'.$member->id.': '.$e->getMessage();
                     }
@@ -608,7 +606,33 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
             }
         }
 
+        $this->fixMembers($errors);
+        $bar->advance();
+
         return $errors;
+    }
+
+    /**
+     * Corrige les membres non logiques (je vous hais).
+     * Exemple: Christina.
+     *
+     * @param array $errors
+     * @return void
+     */
+    protected function fixMembers(array &$errors)
+    {
+        $excededMembers = DB::select('SELECT user_id, semester_id, users.lastname, firstname, semesters.name,
+            count(asso_id) as assos FROM assos_members, semesters, users WHERE assos_members.semester_id = semesters.id and
+            user_id = users.id and role_id is not NULL GROUP BY user_id, semester_id HAVING assos >
+            '.self::MAX_LOGICAL_MEMBERS.' ORDER BY assos DESC');
+
+        foreach ($excededMembers as $member) {
+            $errors[] = 'Suppression du membre '.$member->lastname.' '.$member->firstname.' de '.$member->assos.' 
+                associations au semestre '.$member->name;
+
+            DB::delete('DELETE FROM assos_members WHERE user_id = "'.$member->user_id.'" AND
+                semester_id = "'.$member->semester_id.'"');
+        }
     }
 
     /**
@@ -662,7 +686,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                     'value' => 'old-portail',
                 ]);
 
-                if ($event->affiche) {
+                if ($event->affiche && !$this->option('quick')) {
                     try {
                         $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/events/source/'.$event->affiche,
                             $model, 'events/'.$model->id);
@@ -720,7 +744,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                 $model->updated_at = $service->updated_at ?: $model->updated_at;
                 $model->save();
 
-                if ($service->logo) {
+                if ($service->logo && !$this->option('quick')) {
                     try {
                         $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/services/source/'.$service->logo,
                             $model, 'services/'.$model->id);
