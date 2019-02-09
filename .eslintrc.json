@@ -47,6 +47,7 @@
     "indent": ["error", "tab"],
     "no-console": [0],
     "no-case-declarations": [1],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "no-unused-vars": [1,
       { "vars": "local",
         "argsIgnorePattern": "^_",
@@ -75,6 +76,7 @@
         }],
     "react/jsx-no-bind": 0,
     "react/jsx-no-target-blank": 2,
+    "react/no-unescaped-entities": ["error", {"forbid": [">", "}", "\""]}],
     "prettier/prettier": ["error"]
   }
 }

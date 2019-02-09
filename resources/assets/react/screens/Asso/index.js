@@ -10,7 +10,7 @@ import Select from 'react-select';
 import Dropdown from './../../components/Dropdown';
 import ArticleForm from './../../components/Article/Form';
 import LoggedRoute from './../../routes/Logged';
-import NotFoundRoute from './../../routes/NotFound';
+import Http404 from './../../routes/Http404';
 
 import AssoHomeScreen from './Home';
 import ArticleList from './ArticleList';
@@ -287,7 +287,7 @@ class AssoScreen extends React.Component {
 
 	render() {
 		if (this.props.failed)
-			return <NotFoundRoute />;
+			return <Http404 />;
 
 		if (this.props.fetching || !this.props.fetched || !this.props.asso)
 			return (<span className="loader huge active"></span>);

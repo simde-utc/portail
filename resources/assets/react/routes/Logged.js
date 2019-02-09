@@ -6,11 +6,11 @@
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
-**/
+ */
 
-import React from 'react'
-import { connect } from 'react-redux'
-import { Route, Redirect, Link } from 'react-router-dom'
+import React from 'react';
+import { connect } from 'react-redux';
+import { Route, Redirect } from 'react-router-dom';
 
 @connect(store => ({
 	user: store.getData('user'),
@@ -18,15 +18,16 @@ import { Route, Redirect, Link } from 'react-router-dom'
 }))
 class LoggedRoute extends React.Component {
 	isAllowed() {
-		if (this.props.isAuthenticated) {
-			if (this.props.types && this.props.types.length) {
-				for (let key in this.props.types) {
-					if (this.props.user['is_' + this.props.types[key]]) {
+		const { isAuthenticated, user, types } = this.props;
+
+		if (isAuthenticated) {
+			if (types && types.length) {
+				for (let key = 0; key < types.length; key++) {
+					if (user[`is_${types[key]}`]) {
 						return true;
 					}
 				}
-			}
-			else {
+			} else {
 				return true;
 			}
 		}
@@ -36,27 +37,24 @@ class LoggedRoute extends React.Component {
 
 	render() {
 		if (this.isAllowed()) {
-			return (
-				<Route
-					{ ...this.props }
-				/>
-			);
+			return <Route {...this.props} />;
 		}
-		else if (this.props.redirect) {
+
+		const { redirect } = this.props;
+		if (redirect) {
 			return (
 				<Route
-					{ ...this.props }
+					{...this.props}
 					render={props => (
-						<Redirect to={{ pathname: this.props.redirect, state: { from: props.location } }} />
+						<Redirect to={{ pathname: redirect, state: { from: props.location } }} />
 					)}
 				/>
 			);
 		}
-		else {
-			window.location.href = '/login?redirect=' + window.location.href;
 
-			return null;
-		}
+		window.location.href = `/login?redirect=${window.location.href}`;
+
+		return null;
 	}
 }
 

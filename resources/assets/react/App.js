@@ -18,7 +18,7 @@ import { NotificationContainer } from 'react-notifications';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import ErrorCatcher from './routes/ErrorCatcher';
-import NotFoundRoute from './routes/NotFound';
+import Http404 from './routes/Http404';
 import LoggedRoute from './routes/Logged';
 
 // Screens
@@ -45,7 +45,7 @@ const App = () => (
 					<Route path="/assos/:login" component={AssoDetailScreen} />
 					<Route path="/services" exact component={ServicesListScreen} />
 					<LoggedRoute path="/profile" component={ProfileScreen} />
-					<Route component={NotFoundRoute} />
+					<Route component={Http404} />
 				</Switch>
 			</ErrorCatcher>
 		</div>
