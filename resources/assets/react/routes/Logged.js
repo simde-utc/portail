@@ -35,9 +35,7 @@ class LoggedRoute extends React.Component {
 	}
 
 	render() {
-		const allowed = this.isAllowed();
-
-		if (allowed) {
+		if (this.isAllowed()) {
 			return (
 				<Route
 					{ ...this.props }

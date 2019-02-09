@@ -10,10 +10,14 @@
 
 namespace App\Admin\Controllers;
 
+use DB;
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Widgets\Box;
-use App\Models\User;
+use App\Models\{
+    User, AuthCas, AuthPassword, AuthApp, Semester
+};
 
 class ChartsController extends Controller
 {
@@ -25,15 +29,160 @@ class ChartsController extends Controller
      */
     public function index(Content $content)
     {
-        $dates = [];
+        return $content
+            ->header('Charts')
+            ->body(new Box('Utilisateurs', view('admin.charts.users', $this->getUserData())))
+            ->body(new Box('Membres des associations', view('admin.charts.assos_members', $this->getMemberData())));
+    }
+
+    /**
+     * Récupère les données utilisateurs.
+     *
+     * @return array
+     */
+    protected function getUserData(): array
+    {
+        $users = [];
+        $usersBar = [];
         $nbr = 0;
 
         foreach (User::orderBy('created_at')->get(['created_at']) as $user) {
-            $dates[$user->created_at->format('d-m-Y H:m:s')] = ++$nbr;
+            $date = $user->created_at->format('d/m/Y');
+            $users[$date] = ++$nbr;
+
+            if (isset($usersBar[$date])) {
+                $usersBar[$date]++;
+            } else {
+                $usersBar[$date] = 1;
+            }
         }
 
-        return $content
-            ->header('Charts')
-            ->body(new Box('Utilisateurs', view('admin.charts.users', ['data' => $dates])));
+        return [
+            'users' => $users,
+            'usersBar' => $usersBar,
+            'auths' => [
+                'CAS-UTC' => AuthCas::count(),
+                'Email/Mot de passe' => AuthPassword::count(),
+                'Application' => AuthApp::count()
+            ]
+        ];
+    }
+
+    /**
+     * Récupère les membres utilisateurs.
+     *
+     * @return array
+     */
+    protected function getMemberData()
+    {
+        $semesters = Semester::get();
+        $memberList = DB::select('SELECT created_at FROM assos_members WHERE role_id is not NULL ORDER BY created_at');
+        $uniqueMemberList = DB::select('SELECT count(asso_id) as assos, created_at FROM assos_members WHERE role_id is not
+            NULL GROUP BY user_id, semester_id ORDER BY created_at');
+        $members = [];
+        $membersByDay = [];
+        $membersByMonth = [];
+        $membersBySemester = [];
+        $nbr = 0;
+
+        foreach ($memberList as $member) {
+            $date = (new Carbon($member->created_at))->format('d/m/Y');
+            $members[$date] = ++$nbr;
+            $membersByDay[$date] = (($membersByDay[$date] ?? 0) + 1);
+
+            $date = (new Carbon($member->created_at))->format('m/Y');
+            $membersByMonth[$date] = (($membersByMonth[$date] ?? 0) + 1);
+
+            foreach ($semesters as $semester) {
+                if ($member->created_at >= $semester->begin_at && $member->created_at <= $semester->end_at) {
+                    $membersBySemester[$semester->name] = (($membersBySemester[$semester->name] ?? 0) + 1);
+                    break;
+                }
+            }
+        }
+
+        $uMembers = [];
+        $uMembersByDay = [];
+        $uMembersByMonth = [];
+        $uMembersBySemester = [];
+        $assosPerMemberKeys = [];
+        $assosPerMemberValues = [];
+        $nbr = 0;
+
+        foreach ($uniqueMemberList as $member) {
+            $date = (new Carbon($member->created_at))->format('d/m/Y');
+            $uMembers[$date] = ++$nbr;
+            $uMembersByDay[$date] = (($uMembersByDay[$date] ?? 0) + 1);
+
+            $date = (new Carbon($member->created_at))->format('m/Y');
+            $uMembersByMonth[$date] = (($uMembersByMonth[$date] ?? 0) + 1);
+
+            foreach ($semesters as $semester) {
+                if ($member->created_at >= $semester->begin_at && $member->created_at <= $semester->end_at) {
+                    $uMembersBySemester[$semester->name] = (($uMembersBySemester[$semester->name] ?? 0) + 1);
+
+                    if (isset($assosPerMemberValues[$semester->name])) {
+                        $assosPerMemberValues[$semester->name][$member->assos] = (
+                            ($assosPerMemberValues[$semester->name][$member->assos] ?? 0) + 1
+                        );
+                    } else {
+                        $assosPerMemberValues[$semester->name] = [$member->assos => 1];
+                    }
+
+                    break;
+                }
+            }
+
+            $assosPerMemberKeys[$member->assos] = true;
+        }
+
+        foreach ($assosPerMemberValues as $semesterName => $assosPerMemberValue) {
+            $assosPerMemberValues[$semesterName] = $this->adjustKeysWith0($assosPerMemberKeys, $assosPerMemberValue);
+        }
+
+        $uMembers = $this->adjustKeys($members, $uMembers);
+        $uMembersByDay = $this->adjustKeys($membersByDay, $uMembersByDay);
+        $uMembersByMonth = $this->adjustKeys($membersByMonth, $uMembersByMonth);
+        $uMembersBySemester = $this->adjustKeys($membersBySemester, $uMembersBySemester);
+
+        return compact('members', 'membersByDay', 'membersByMonth', 'membersBySemester', 'uMembers',
+            'uMembersByDay', 'uMembersByMonth', 'uMembersBySemester', 'assosPerMemberKeys', 'assosPerMemberValues');
+    }
+
+    /**
+     * Adjuste les tableaux pour avoir les même clés.
+     *
+     * @param  array $reference
+     * @param  array $data
+     * @return array
+     */
+    protected function adjustKeys(array $reference, array $data)
+    {
+        $lastValue = 0;
+        $newData = [];
+
+        foreach (array_keys($reference) as $key) {
+            $lastValue = ($newData[$key] = ($data[$key] ?? $lastValue));
+        }
+
+        return $newData;
+    }
+
+    /**
+     * Adjuste les tableaux pour avoir les même clés en assigant 0.
+     *
+     * @param  array $reference
+     * @param  array $data
+     * @return array
+     */
+    protected function adjustKeysWith0(array $reference, array $data)
+    {
+        $newData = [];
+
+        foreach (array_keys($reference) as $key) {
+            $newData[$key] = ($data[$key] ?? 0);
+        }
+
+        return $newData;
     }
 }
