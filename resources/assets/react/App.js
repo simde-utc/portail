@@ -25,8 +25,8 @@ import LoggedRoute from './routes/Logged';
 import AppLoader from './AppLoader';
 import HomeScreen from './screens/Home';
 import DashboardScreen from './screens/Dashboard';
-import AssosListScreen from './screens/AssosList';
-import ServicesListScreen from './screens/ServicesList';
+import AssoListScreen from './screens/AssoList';
+import ServiceListScreen from './screens/ServiceList';
 import AssoDetailScreen from './screens/Asso';
 import ProfileScreen from './screens/Profile';
 
@@ -41,9 +41,9 @@ const App = () => (
 				<Switch>
 					<Route path="/" exact component={HomeScreen} />
 					<Route path="/dashboard" component={DashboardScreen} />
-					<Route path="/assos" exact component={AssosListScreen} />
+					<Route path="/assos" exact component={AssoListScreen} />
 					<Route path="/assos/:login" component={AssoDetailScreen} />
-					<Route path="/services" exact component={ServicesListScreen} />
+					<Route path="/services" exact component={ServiceListScreen} />
 					<LoggedRoute path="/profile" component={ProfileScreen} />
 					<Route component={Http404} />
 				</Switch>
