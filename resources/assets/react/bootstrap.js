@@ -8,7 +8,7 @@
  * @license GNU GPL-3.0
  */
 
-import { store } from './redux/store';
+import { initialCrudState } from './redux/store';
 
 window._ = require('lodash');
 
@@ -30,8 +30,8 @@ window.axios.interceptors.response.use(
 	response => response,
 	error => {
 		// Récupération des requêtes HTTP 401
-		if (error.response.status === 401 && store.resources) {
-			store.resources.user = {};
+		if (error.response.status === 401 && window.isLogged) {
+			window.location.reload();
 		}
 
 		return Promise.reject(error);
