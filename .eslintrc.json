@@ -42,6 +42,7 @@
   ],
 
   "rules": {
+    "camelcase": 0,
     "linebreak-style": [2, "unix"],
     "semi": [1, "always"],
     "indent": [0, "tab"],
