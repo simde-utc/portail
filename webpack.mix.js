@@ -1,4 +1,4 @@
-let mix = require('laravel-mix');
+const mix = require('laravel-mix');
 require('dotenv').config();
 /*
 |--------------------------------------------------------------------------
@@ -12,11 +12,11 @@ require('dotenv').config();
 */
 
 const sassOptions = {
-	outputStyle: 'compressed'
+	outputStyle: 'compressed',
 };
 
 // Custom Bootstrap
-mix.sass('resources/assets/bootstrap/sass/bootstrap.scss', 'public/css', sassOptions)
+mix.sass('resources/assets/bootstrap/sass/bootstrap.scss', 'public/css', sassOptions);
 // Custom CSS
 mix.sass('resources/assets/sass/app.scss', 'public/css', sassOptions);
 

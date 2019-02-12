@@ -1,11 +1,11 @@
 /**
  * Création et gestion automatique des actions que l'on dispatch via redux
- * 
+ *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
- * */
+ */
 
 // Liste de toutes les actions REST api possibles
 export const actionsData = {
