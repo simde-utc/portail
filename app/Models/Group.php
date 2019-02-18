@@ -14,6 +14,7 @@ namespace App\Models;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Model\HasMembers;
+use App\Traits\Model\HasDeletedSelection;
 use App\Interfaces\Model\CanHaveEvents;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveContacts;
@@ -26,7 +27,7 @@ use App\Models\Role;
 class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles,
     CanHaveRoles, CanHavePermissions
 {
-    use SoftDeletes, HasMembers;
+    use SoftDeletes, HasMembers, HasDeletedSelection;
 
     protected $roleRelationTable = 'groups_members';
 
@@ -54,6 +55,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
         'month' => null,
         'year' => null,
         'filter' => [],
+        'deleted' => 'without'
     ];
 
     /**

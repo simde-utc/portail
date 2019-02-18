@@ -11,10 +11,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Model\HasDeletedSelection;
 
 class Service extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasDeletedSelection;
 
     protected $fillable = [
         'name', 'shortname', 'login', 'image', 'description', 'url', 'visibility_id'
@@ -35,6 +36,7 @@ class Service extends Model
     protected $selection = [
         'order' => 'oldest',
         'filter' => [],
+        'deleted' => 'without',
     ];
 
     /**

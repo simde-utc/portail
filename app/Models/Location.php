@@ -13,10 +13,11 @@ namespace App\Models;
 
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Model\HasDeletedSelection;
 
 class Location extends Model
 {
-    use SpatialTrait, SoftDeletes;
+    use SpatialTrait, SoftDeletes, HasDeletedSelection;
 
     protected $table = "places_locations";
 

@@ -15,25 +15,20 @@ namespace App\Models;
 
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Model\HasMembers;
-use App\Traits\Model\HasStages;
-use App\Interfaces\Model\CanHaveContacts;
-use App\Interfaces\Model\CanHaveEvents;
-use App\Interfaces\Model\CanHaveCalendars;
-use App\Interfaces\Model\CanHaveArticles;
-use App\Interfaces\Model\CanHaveRooms;
-use App\Interfaces\Model\CanHaveReservations;
-use App\Interfaces\Model\CanNotify;
-use App\Interfaces\Model\CanHaveRoles;
-use App\Interfaces\Model\CanHavePermissions;
-use App\Interfaces\Model\CanComment;
+use App\Traits\Model\{
+    HasMembers, HasStages, HasDeletedSelection
+};
+use App\Interfaces\Model\{
+    CanHaveContacts, CanHaveEvents, CanHaveCalendars, CanHaveArticles, CanHaveRooms,
+    CanHaveReservations, CanNotify, CanHaveRoles, CanHavePermissions, CanComment
+};
 use Illuminate\Support\Collection;
 use App\Exceptions\PortailException;
 
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles,
 	CanNotify, CanHaveRooms, CanHaveReservations, CanHaveRoles, CanHavePermissions, CanComment
 {
-    use HasStages, HasMembers, SoftDeletes {
+    use HasStages, HasMembers, SoftDeletes, HasDeletedSelection {
         HasMembers::members as membersAndFollowers;
         HasMembers::currentMembers as currentMembersAndFollowers;
         HasMembers::joiners as protected joinersFromHasMembers;
@@ -62,7 +57,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     ];
 
     protected $must = [
-        'name', 'shortname', 'login', 'image',
+        'name', 'shortname', 'login', 'image', 'deleted_at',
     ];
 
     // Children dans le cas où on affiche en mode étagé.
@@ -73,9 +68,10 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
                 'name' => 'shortname',
             ],
         ],
+        'deleted' => 'without',
+        'filter' => [],
         'stage' => null,
         'stages' => null,
-        'filter' => [],
     ];
 
     protected $roleRelationTable = 'assos_members';
