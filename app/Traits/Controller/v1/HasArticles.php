@@ -108,7 +108,7 @@ trait HasArticles
         if ($article) {
             // On vérifie si l'accès est publique.
             if (\Scopes::isOauthRequest($request)) {
-                if (!$this->tokenCanSee($request, $article, $verb)) {
+                if (!$this->tokenCanSee($request, $article, $verb, 'articles')) {
                     abort(403, 'L\'application n\'a pas les droits sur cet article');
                 }
 
