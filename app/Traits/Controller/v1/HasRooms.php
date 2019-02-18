@@ -77,7 +77,7 @@ trait HasRooms
      * @param  string  $verb
      * @return boolean
      */
-    protected function tokenCanSee(Request $request, Room $room, string $verb)
+    protected function tokenCanSee(Request $request, Room $room, string $verb='get')
     {
         $scopeHead = \Scopes::getTokenType($request);
         $type = \ModelResolver::getName($room->owned_by_type);
