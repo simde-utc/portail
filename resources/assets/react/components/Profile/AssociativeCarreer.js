@@ -8,6 +8,8 @@
  * @license GNU GPL-3.0
  */
 
+import React from 'react';
+
 const AssociativeCarreer = () => (
 	<div>
 		<h2>Mon Parcours Associatif</h2>

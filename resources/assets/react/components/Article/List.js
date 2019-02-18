@@ -8,6 +8,7 @@
  * @license GNU GPL-3.0
  */
 
+import React from 'react';
 import Article from './Article';
 
 const ArticleList = ({ articles, fetched }) => (
