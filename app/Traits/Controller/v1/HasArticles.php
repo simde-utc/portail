@@ -55,7 +55,7 @@ trait HasArticles
      * @param  string  $type
      * @return boolean
      */
-    protected function tokenCanSee(Request $request, Model $model, string $verb='get', string $type='events')
+    protected function tokenCanSee(Request $request, Model $model, string $verb='get', string $type='articles')
     {
         if ($model instanceof Article) {
             $scopeHead = \Scopes::getTokenType($request);
