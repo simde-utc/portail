@@ -8,20 +8,18 @@
  * @license GNU GPL-3.0
  */
 
-import { initialCrudState } from './redux/store';
-
 window._ = require('lodash');
 
 // Permet d'exécuter des requêtes Ajax simplement vers le Portail
 window.axios = require('axios');
+
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // Récupération du token CSRF
 const token = document.head.querySelector('meta[name="csrf-token"]');
 if (token) {
 	window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-}
-else {
+} else {
 	console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 

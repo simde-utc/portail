@@ -25,14 +25,16 @@ import AssoCard from '../components/AssoCard';
 }))
 class AssoListScreen extends React.Component {
 	componentWillMount() {
-		this.props.dispatch(
+		const { dispatch } = this.props;
+
+		dispatch(
 			actions.assos.all({
 				order: 'a-z',
 			})
 		);
 	}
 
-	getStage(assos, parent) {
+	static getStage(assos, parent) {
 		return (
 			<div className="pole-container">
 				<h2>{parent.shortname}</h2>
@@ -40,9 +42,9 @@ class AssoListScreen extends React.Component {
 				<div>
 					{assos.map(asso => {
 						return (
-							<NavLink to={`assos/${asso.login}`}>
+							<NavLink key={asso.id} to={`assos/${asso.login}`}>
 								<AssoCard
-									onClick={() => history.push(`assos/${asso.login}`)}
+									onClick={() => window.history.push(`assos/${asso.login}`)}
 									key={asso.id}
 									name={asso.name}
 									shortname={asso.shortname}
@@ -57,49 +59,51 @@ class AssoListScreen extends React.Component {
 		);
 	}
 
-	getStages(assos) {
-		const categories = {};
+	static getStages(assos) {
+		let categories = {};
 
-		assos.map(asso => {
-			let id;
-
+		categories = assos.reduce((acc, asso) => {
 			if (asso.parent) {
-				id = asso.parent.id;
+				const { id } = asso.parent;
 
-				if (categories[id] === undefined) {
-					categories[id] = {
+				if (acc[id] === undefined) {
+					acc[id] = {
 						asso: asso.parent,
 						assos: [asso],
 					};
 				} else {
-					categories[id].assos.push(asso);
+					acc[id].assos.push(asso);
 				}
 			} else {
-				id = asso.id;
+				const { id } = asso.parent;
 
-				if (categories[id] === undefined) {
-					categories[id] = {
+				if (acc[id]) {
+					acc[id].assos.push(asso);
+				} else {
+					acc[id] = {
 						asso,
 						assos: [asso],
 					};
-				} else {
-					categories[id].assos.push(asso);
 				}
 			}
+
+			return acc;
 		});
 
 		return sortBy(categories, category => category.asso.shortname).map(({ assos, asso }) =>
-			this.getStage(assos, asso)
+			AssoListScreen.getStage(assos, asso)
 		);
 	}
 
 	render() {
+		const { fetching, assos } = this.props;
+
 		return (
 			<div className="container">
 				<h1 className="title">Liste des associations</h1>
 				<div className="content">
-					<span className={`loader large${this.props.fetching ? ' active' : ''}`} />
-					{this.getStages(this.props.assos)}
+					<span className={`loader large${fetching ? ' active' : ''}`} />
+					{AssoListScreen.getStages(assos)}
 				</div>
 			</div>
 		);

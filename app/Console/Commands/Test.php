@@ -68,8 +68,20 @@ class Test extends Command
     public function handle()
     {
         $this->files = $this->argument('file');
-        $bar = $this->output->createProgressBar(5);
+        $bar = $this->output->createProgressBar(6);
 
+        $this->info(' [JS Syntax] Vérification de la syntaxe JS');
+
+        if ($this->runEslint()) {
+            $this->output->error('Des erreurs de syntaxe ont été détectées');
+
+            return 1;
+        }
+
+        $this->info(PHP_EOL);
+        $bar->advance();
+        $this->info(PHP_EOL);
+        $this->info(PHP_EOL);
         $this->info(' [PHP Syntax] Vérification de la syntaxe PHP');
 
         if ($this->runPHPSyntax()) {
@@ -200,6 +212,16 @@ class Test extends Command
         }
 
         return 0;
+    }
+
+    /**
+     * Lance le linter JS.
+     *
+     * @return integer
+     */
+    private function runEslint()
+    {
+        return $this->process(" ./node_modules/.bin/eslint --ext .js resources/assets/react/**");
     }
 
     /**

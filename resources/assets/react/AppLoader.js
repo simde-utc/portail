@@ -19,6 +19,8 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import actions from './redux/actions';
 import bdeImage from '../images/bde.jpg';
 
+require('./bootstrap');
+
 @connect(store => ({
 	// Données importantes à charger
 	dataLoaded: [
@@ -33,7 +35,6 @@ class AppLoader extends React.Component {
 	componentWillMount() {
 		const { dispatch } = this.props;
 
-		require('./bootstrap');
 		library.add(fas, far);
 
 		// Récupère les méthodes de connexion
@@ -43,11 +44,13 @@ class AppLoader extends React.Component {
 		// Récupère le semestre courant
 		dispatch(actions.semesters('current').get());
 		// Récupère les données utilisateurs
-		dispatch(actions.user.all({ allTypes: true })).then(response => {
-			window.isLogged = true;
-		}).catch(response => {
-			window.isLogged = false;
-		});
+		dispatch(actions.user.all({ allTypes: true }))
+			.then(() => {
+				window.isLogged = true;
+			})
+			.catch(() => {
+				window.isLogged = false;
+			});
 		// Récupère les permissions de l'utilisateur
 		dispatch(actions.user.permissions.all());
 		// Récupère les associations de l'utilisateur

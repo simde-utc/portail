@@ -49,8 +49,7 @@ actionsData.remove = actionsData.delete;
 // Gestionnaire d'actions (crée dynamiquement les routes api à appeler et où stocker les données)
 export const actionHandler = {
 	get: (_target, prop) => {
-
-		let target = _target;
+		const target = _target;
 
 		// On crée la méthode de gestion de requête
 		const method = (...args) => {

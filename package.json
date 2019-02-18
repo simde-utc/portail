@@ -64,6 +64,7 @@
 		"redux-logger": "^3.0.6",
 		"redux-promise-middleware": "^5.1.1",
 		"redux-thunk": "^2.3.0",
+		"simplemde": "^1.11.2",
 		"webpack": "^3.12.0"
 	}
 }
