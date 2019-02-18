@@ -1,52 +1,55 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-class AuthorizedClients extends Component { 
-	constructor(props) {
-		super(props);
-		this.state = {
-			tokens: []
-		} 
-	} 
+import actions from '../../redux/actions';
 
+@connect(store => ({
+	tokens: store.isFetched(['oauth', 'tokens']),
+}))
+class AuthorizedClients extends Component {
 	componentDidMount() {
-		axios.get('/oauth/tokens').then(response => {
-			this.setState({ tokens: response.data });
-		});
+		const { dispatch } = this.props;
+
+		dispatch(actions.oauth.tokens.all());
 	}
 
 	render() {
-		if (this.state.tokens.length > 0)
-			return(
-				<div class="card drop-shadow mb-4">
-					<div class="card-body">
-						<div class="row">
-							<div class="col-6">
+		const { tokens } = this.props;
+
+		if (tokens.length) {
+			return (
+				<div className="card drop-shadow mb-4">
+					<div className="card-body">
+						<div className="row">
+							<div className="col-6">
 								<h5>Applications autorisées</h5>
 							</div>
 						</div>
 
-						<div class="row mt-3 mb-0" v-for="token in tokens">
-							<div class="col-sm-3 mb-2">
-								<b>token.client.name</b>
-							</div>
+						<div className="row mt-3 mb-0">
+							{tokens.map(token => (
+								<div key={token.id}>
+									<div className="col-sm-3 mb-2">
+										<b>{token.client.name}</b>
+									</div>
 
-							<div class="col-sm-6 mb-2">
-								<span v-if="token.scopes.length > 0">
-									token.scopes.join(', ')
-								</span>
-							</div>
+									<div className="col-sm-6 mb-2">
+										<span>{token.scopes.join(', ')}</span>
+									</div>
 
-							<div class="col-sm-3 text-md-right">
-								<a class="btn btn-primary btn-sm" onClick="revoke(token)">
-									Révoquer
-								</a>
-							</div>
+									<div className="col-sm-3 text-md-right">
+										<a className="btn btn-primary btn-sm" onClick="revoke(token)">
+											Révoquer
+										</a>
+									</div>
+								</div>
+							))}
 						</div>
 					</div>
 				</div>
 			);
-		else
-			return null;
+		}
+		return <div />;
 	}
 }
 

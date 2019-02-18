@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+/**
+ * Affiche les associations de l'utlisateur.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
-
-class AssociativeCarreer extends Component {
-	render() {
-		const { carreer } = this.props;
-		return (
-			<div>
-				<h2>Mon Parcours Associatif</h2>
-			</div>
-		);
-	}
-}
+const AssociativeCarreer = () => (
+	<div>
+		<h2>Mon Parcours Associatif</h2>
+	</div>
+);
 
 export default AssociativeCarreer;

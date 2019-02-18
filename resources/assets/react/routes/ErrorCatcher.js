@@ -1,41 +1,37 @@
-import React from 'react'
+/**
+ * Récupère les erreurs
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
-class ErrorDebugger extends React.Component {
-	render() {
-		const { error, info } = this.props.details
-		return (
-			<div className="container">
-				<h1 className="title">Oupss...</h1>
-				<p>Une erreur est survenue.</p>
-			</div>
-		)
-	}
-}
+import React from 'react';
+import Http500 from './Http500';
 
 export default class ErrorCatcher extends React.Component {
 	constructor(props) {
-		super(props)
+		super(props);
+
 		this.state = {
 			hasError: false,
-			error: null,
-			info: null
-		}
-	}
-
-	logError(error, info) {
-		console.warn("Error catched !", error, info)
+		};
 	}
 
 	componentDidCatch(error, info) {
-		this.setState({ hasError: true, error, info })
-		this.logError(error, info)
+		this.setState({ hasError: true });
+
+		console.warn('Error catched !', error, info);
 	}
 
 	render() {
-		let { hasError, error, info } = this.state
-		if (hasError)
-			return <ErrorDebugger details={ error, info } />
-		else
-			return this.props.children
+		const { hasError } = this.state;
+		const { children } = this.props;
+
+		if (hasError) {
+			return <Http500 />;
+		}
+		return children;
 	}
 }

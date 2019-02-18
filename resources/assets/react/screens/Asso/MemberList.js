@@ -1,6 +1,13 @@
+/**
+ * Affichage des membres d'une association.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
+
 import React from 'react';
-import AspectRatio from 'react-aspect-ratio';
-import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import Select from 'react-select';
 
@@ -18,69 +25,80 @@ import MemberList from '../../components/Member/DoubleList';
 	roles: store.getData(['assos', props.asso.id, 'roles']),
 }))
 class AssoMemberListScreen extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
+		this.state = {};
+		const { asso, currentSemester } = this.props;
 
-		this.state = {
-			semester: undefined,
-		};
-	}
-
-	componentDidMount() {
-		if (this.props.asso.id) {
-			this.loadAssosData(this.props.asso.id);
+		if (asso.id) {
+			this.loadAssosData(asso.id);
 		}
 
-		if (this.props.currentSemester) {
-			this.setState(prevState => ({ ...prevState, semester: this.props.currentSemester.id }));
+		if (currentSemester) {
+			this.state.semester = currentSemester.id;
 		}
 	}
 
-	componentWillReceiveProps(props) {
-		if (this.props.asso.id !== props.asso.id) {
-			this.loadAssosData(props.asso.id);
+	componentWillReceiveProps({ asso: { id } }) {
+		const { asso } = this.props;
+
+		if (asso.id !== id) {
+			this.loadAssosData(id);
 		}
 	}
 
-	loadAssosData(id) {
-		this.props.dispatch(actions.assos(id).members.all({ semester: this.state.semester }));
+	static getSemesters(semesters) {
+		return semesters.map(semester => ({
+			value: semester.id,
+			label: semester.name,
+		}));
 	}
 
 	handleSemesterChange(value) {
+		const {
+			asso: { id },
+		} = this.props;
 		if (value && value.value) {
-			this.setState(prevState => ({ ...prevState, semester: value.value }), () => {
-				this.loadAssosData(this.props.asso.id);
+			this.setState({ semester: value.value }, () => {
+				this.loadAssosData(id);
 			});
 		}
 	}
 
-	getSemesters(semesters) {
-		return semesters.map(semester => ({
-			value: semester.id,
-			label: semester.name
-		}));
+	loadAssosData(id) {
+		const { dispatch } = this.props;
+		const { semester } = this.state;
+
+		dispatch(actions.assos(id).members.all({ semester }));
 	}
 
 	render() {
-		var semesters = this.getSemesters(this.props.semesters);
+		const { semesters, members, roles, fetched, fetching } = this.props;
+		const { semester } = this.state;
+		const selectSemesters = AssoMemberListScreen.getSemesters(semesters);
 
 		return (
 			<div>
 				<div style={{ position: 'absolute', right: '5%' }}>
 					Semestre:
 					<Select
-						onChange={ this.handleSemesterChange.bind(this) }
+						onChange={this.handleSemesterChange.bind(this)}
 						placeholder=""
-						isSearchable={ true }
-						options={ semesters }
-						value={ semesters.filter(semester => semester.value === this.state.semester) }
-						/>
+						isSearchable
+						options={selectSemesters}
+						value={selectSemesters.filter(selectSemester => selectSemester.value === semester)}
+					/>
 				</div>
-				<MemberList members={ this.props.members } roles={ this.props.roles } fetched={ this.props.fetched } fetching={ this.props.fetching } { ...this.props } />
+				<MemberList
+					members={members}
+					roles={roles}
+					fetched={fetched}
+					fetching={fetching}
+					{...this.props}
+				/>
 			</div>
 		);
 	}
 }
 
 export default AssoMemberListScreen;
-// onInputChange={ this.handleSearchEvent.bind(this) }

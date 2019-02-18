@@ -4,14 +4,10 @@ export default class Selector extends React.Component {
 	constructor() {
 		super();
 
-		this.state = {
-
-		};
+		this.state = {};
 	}
 
 	render() {
-		return (
-			<div>On pourra sélectionner les calendriers ici</div>
-		);
+		return <div>On pourra sélectionner les calendriers ici</div>;
 	}
 }

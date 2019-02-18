@@ -5,13 +5,13 @@ import moment from 'moment';
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 
 export default class Calendar extends React.Component {
-	getEvents(events) {
-		if (events && events.length > 0) {
-			return events.map(eventToMap => ({
-				id: eventToMap.id,
-				title: eventToMap.name,
-				start: new Date(eventToMap.begin_at),
-				end: new Date(eventToMap.end_at),
+	static getEvents(events) {
+		if (events && events.length) {
+			return events.map(({ id, name, begin_at, end_at }) => ({
+				id,
+				title: name,
+				start: new Date(begin_at),
+				end: new Date(end_at),
 			}));
 		}
 
@@ -19,11 +19,8 @@ export default class Calendar extends React.Component {
 	}
 
 	render() {
-		return (
-			<BigCalendar
-				defaultView="week"
-				events={ this.getEvents(this.props.events) }
-			/>
-		);
+		const { events } = this.props;
+
+		return <BigCalendar defaultView="week" events={Calendar.getEvents(events)} />;
 	}
 }

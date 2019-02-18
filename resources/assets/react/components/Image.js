@@ -5,31 +5,20 @@
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
-**/
+ */
 
 import React from 'react';
 import Img from 'react-image';
-import bdeImage from '../../images/bde.jpg'
+import bdeImage from '../../images/bde.jpg';
 
-class Image extends React.Component {
-	render() {
-		var images = this.props.image;
+const Image = ({ images, unloader, ...props }) => {
+	const src = Array.isArray(images) ? images : [images];
 
-		if (!Array.isArray(images)) {
-			images = [images];
-		}
-
-		if (!this.props.unloader) {
-			images.push(bdeImage);
-		}
-
-		return (
-			<Img
-				loader={( <span className="loader large active"></span> )}
-				{ ...this.props }
-				src={ images } />
-		);
+	if (!unloader) {
+		src.push(bdeImage);
 	}
-}
+
+	return <Img loader={<span className="loader large active" />} {...props} src={src} />;
+};
 
 export default Image;

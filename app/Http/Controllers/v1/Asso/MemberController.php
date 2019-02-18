@@ -38,7 +38,7 @@ class MemberController extends Controller
 		        \Scopes::matchOne('user-get-assos', 'client-get-assos'),
 		        \Scopes::matchOneOfDeepestChildren('user-get-assos-members', 'client-get-assos-members'),
 		        \Scopes::matchOneOfDeepestChildren('user-get-roles-assos-assigned', 'client-get-assos-members-followed'),
-		        ['user:cas,contributerBde']
+		        ['user:cas,contributorBde']
 	        ),
 	        ['only' => ['index', 'show']]
         );
@@ -47,7 +47,7 @@ class MemberController extends Controller
 		        \Scopes::matchOne('user-get-assos', 'client-get-assos'),
 		        \Scopes::matchOneOfDeepestChildren('user-create-assos-members', 'client-create-assos-members'),
 		        \Scopes::matchOneOfDeepestChildren('user-create-roles-assos-assigned', 'client-create-assos-members-followed'),
-		        ['user:cas,contributerBde']
+		        ['user:cas,contributorBde']
 	        ),
 	        ['only' => ['store']]
         );
@@ -56,7 +56,7 @@ class MemberController extends Controller
 		        \Scopes::matchOne('user-get-assos', 'client-get-assos'),
 		        \Scopes::matchOneOfDeepestChildren('user-edit-assos-members', 'client-edit-assos-members'),
 		        \Scopes::matchOneOfDeepestChildren('user-edit-roles-assos-assigned', 'client-edit-assos-members-followed'),
-		        ['user:cas,contributerBde']
+		        ['user:cas,contributorBde']
 	        ),
 	        ['only' => ['update']]
         );
@@ -65,7 +65,7 @@ class MemberController extends Controller
 		        \Scopes::matchOne('user-get-assos', 'client-get-assos'),
 		        \Scopes::matchOneOfDeepestChildren('user-remove-assos-members', 'client-remove-assos-members'),
 		        \Scopes::matchOneOfDeepestChildren('user-remove-roles-assos-assigned', 'client-remove-assos-members-followed'),
-		        ['user:cas,contributerBde']
+		        ['user:cas,contributorBde']
 	        ),
 	        ['only' => ['destroy']]
         );
