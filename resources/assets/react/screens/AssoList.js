@@ -36,7 +36,7 @@ class AssoListScreen extends React.Component {
 
 	static getStage(assos, parent) {
 		return (
-			<div className="pole-container">
+			<div key={parent.id} className="pole-container">
 				<h2>{parent.shortname}</h2>
 				<small>{parent.name}</small>
 				<div>
@@ -60,9 +60,7 @@ class AssoListScreen extends React.Component {
 	}
 
 	static getStages(assos) {
-		let categories = {};
-
-		categories = assos.reduce((acc, asso) => {
+		const categories = assos.reduce((acc, asso) => {
 			if (asso.parent) {
 				const { id } = asso.parent;
 
@@ -75,7 +73,7 @@ class AssoListScreen extends React.Component {
 					acc[id].assos.push(asso);
 				}
 			} else {
-				const { id } = asso.parent;
+				const { id } = asso;
 
 				if (acc[id]) {
 					acc[id].assos.push(asso);
@@ -88,7 +86,7 @@ class AssoListScreen extends React.Component {
 			}
 
 			return acc;
-		});
+		}, {});
 
 		return sortBy(categories, category => category.asso.shortname).map(({ assos, asso }) =>
 			AssoListScreen.getStage(assos, asso)
