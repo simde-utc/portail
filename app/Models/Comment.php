@@ -16,12 +16,13 @@ use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use App\Traits\Model\HasCreatorSelection;
+use App\Traits\Model\HasDeletedSelection;
 use App\Interfaces\Model\CanHaveComments;
 use App\Interfaces\Model\CanComment;
 
 class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComments
 {
-    use HasMorphOwner, HasCreatorSelection, SoftDeletes;
+    use HasMorphOwner, HasCreatorSelection, SoftDeletes, HasDeletedSelection;
 
     protected $fillable = [
         'body', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
