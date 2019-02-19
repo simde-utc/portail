@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Cas;
 use Laravel\Passport\Token;
-use App\Models\Session;
 
 class LoginController extends Controller
 {
@@ -122,7 +121,7 @@ class LoginController extends Controller
      */
     public function destroy(Request $request, string $redirect=null)
     {
-        $service = config("auth.services.".Session::find(\Session::getId())->auth_provider);
+        $service = config("auth.services.".session('auth_provider'));
         $redirect = $service === null ? null : resolve($service['class'])->logout($request);
 
         if ($redirect === null) {
@@ -146,7 +145,7 @@ class LoginController extends Controller
         }
 
         // Ne pas oublier de détruire sa session.
-        \Session::flush();
+        session()->flush();
 
         // On le déconnecte uniquement lorsque le service a fini son travail.
         Auth::logout();

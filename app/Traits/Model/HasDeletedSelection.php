@@ -23,14 +23,12 @@ trait HasDeletedSelection
      */
     public function scopeDeleted(Builder $query, string $choice='without')
     {
-        $fieldName = $this->getSelectionOption('deleted.columns.deleted', 'deleted_at');
-
         switch ($choice) {
             case 'without':
-                $query->whereNull($this->getTable().'.'.$fieldName);
+                $query->whereNull($this->getTable().'.deleted_at');
                 break;
             case 'only':
-                $query->whereNotNull($this->getTable().'.'.$fieldName);
+                $query->whereNotNull($this->getTable().'.deleted_at');
                 break;
         }
 

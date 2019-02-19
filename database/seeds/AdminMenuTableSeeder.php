@@ -198,12 +198,6 @@ class AdminMenuTableSeeder extends Seeder
                         'icon' => 'fa-fa',
                     ],
                     [
-                        'title' => 'Sessions',
-                        'uri' => 'resources/sessions',
-                        'permission' => 'session',
-                        'icon' => 'fa-connectdevelop',
-                    ],
-                    [
                         'title' => 'Tags',
                         'uri' => 'resources/tags',
                         'permission' => 'tag',
