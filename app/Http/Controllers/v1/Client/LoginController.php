@@ -17,7 +17,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Services\Auth\AuthService;
-use App\Models\Session;
 
 class LoginController extends Controller
 {
@@ -57,18 +56,10 @@ class LoginController extends Controller
      */
     public function destroy(Request $request): JsonResponse
     {
-        $token = $request->user()->token();
-        $session_id = $token->session_id;
-        $service = config('auth.services.'.(Session::find($session_id)->auth_provider));
+        $service = config('auth.services.'.\Session::get('auth_provider'));
         $redirect = $service === null ? null : resolve($service['class'])->logout($request);
 
         if ($redirect === null) {
-            // On le déconnecte uniquement lorsque le service a fini son travail.
-            Session::find($session_id)->update([
-                'user_id'       => null,
-                'auth_provider' => null,
-            ]);
-
             return response()->json(['message' => 'Utilisateur déconnecté avec succès'], 202);
         } else {
             return response()->json(['redirect' => route('logout')], 200);

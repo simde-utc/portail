@@ -48,16 +48,6 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les sessions.
-     *
-     * @return mixed
-     */
-    public function sessions()
-    {
-        return $this->hasMany(Session::class);
-    }
-
-    /**
      * Relation avec les détails.
      *
      * @return mixed
