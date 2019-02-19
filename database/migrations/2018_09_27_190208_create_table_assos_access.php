@@ -34,9 +34,6 @@ class CreateTableAssosAccess extends Migration
             $table->foreign('confirmed_by_id')->references('id')->on('users');
             $table->foreign('semester_id')->references('id')->on('semesters');
             $table->foreign('validated_by_id')->references('id')->on('users');
-
-            // On ne bloque pas avec le statut pour permettre multiple refus et multiple demande
-            $table->unique(['asso_id', 'member_id', 'semester_id']);
         });
     }
 
