@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\{
     DB, Storage
 };
 use App\Models\{
-    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas, Event, Service
+    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas, Event, Service,
+    Access
 };
 
 class OldToNew extends Command
@@ -42,6 +43,7 @@ class OldToNew extends Command
     protected $semesters = [];
     protected $roles = [];
     protected $events = [];
+    protected $access = [];
     protected $resultedRoles = [];
 
     /**
@@ -80,12 +82,12 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
             return;
         }
 
-        $bar = $this->output->createProgressBar(8);
+        $bar = $this->output->createProgressBar(9);
         $errors = [];
 
         $this->info('Migration et nettoyage de la base de données');
 
-        shell_exec('APP_DEBUG=0 php artisan migrate:fresh --seed');
+        exec('APP_DEBUG=0 php artisan migrate:fresh --seed');
 
         $bar->advance();
         $this->info(PHP_EOL);
@@ -96,6 +98,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
         $this->semesters = $this->getDB()->select('SELECT * FROM semestre');
         $this->roles = $this->getDB()->select('SELECT * FROM role');
         $this->events = $this->getDB()->select('SELECT * FROM event');
+        $this->access = $this->getDB()->select('SELECT * FROM charte_locaux_type');
 
         $bar->advance();
         $this->info(PHP_EOL);
@@ -127,6 +130,11 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
             $this->info(PHP_EOL);
 
             $errors['Services'] = $this->addServices();
+            $this->info(PHP_EOL);
+            $bar->advance();
+            $this->info(PHP_EOL);
+
+            $errors['Accès'] = $this->addAssosAccess();
             $this->info(PHP_EOL);
             $bar->advance();
             $this->info(PHP_EOL);
@@ -268,6 +276,19 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
         $oldSemester = $this->getModelFrom($this->semesters, $semester_id);
 
         return Semester::where('name', $oldSemester->name)->first();
+    }
+
+    /**
+     * Récupère l'accès.
+     *
+     * @param  integer $access_id
+     * @return mixed|null
+     */
+    protected function getAccess(int $access_id)
+    {
+        $oldAccess = $this->getModelFrom($this->access, $access_id);
+
+        return Access::where('utc_access', $oldAccess->correspondance)->first();
     }
 
     /**
@@ -627,7 +648,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
             '.self::MAX_LOGICAL_MEMBERS.' ORDER BY assos DESC');
 
         foreach ($excededMembers as $member) {
-            $errors[] = 'Suppression du membre '.$member->lastname.' '.$member->firstname.' de '.$member->assos.' 
+            $errors[] = 'Suppression du membre '.$member->lastname.' '.$member->firstname.' de '.$member->assos.'
                 associations au semestre '.$member->name;
 
             DB::delete('DELETE FROM assos_members WHERE user_id = "'.$member->user_id.'" AND
@@ -760,6 +781,78 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                 throw $e;
             } catch (\Error $e) {
                 $this->output->error('Impossible de créer le service '.$service->nom);
+
+                throw $e;
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Crée les accès d'associations depuis l'ancien Portail.
+     *
+     * @return mixed
+     */
+    protected function addAssosAccess()
+    {
+        $this->info('Préparation des accès');
+
+        $accessList = $this->getDB()->select('SELECT * FROM charte_locaux');
+
+        $this->info('Création des '.count($accessList).' accès');
+
+        $bar = $this->output->createProgressBar(count($accessList));
+        $errors = [];
+
+        foreach ($accessList as $access) {
+            try {
+                try {
+                    $asso = $this->getAsso($access->asso_id);
+                    if (!$asso) {
+                        $this->output->error('Association non existante n°'.$access->asso_id);
+                        continue;
+                    }
+
+                    $type = $this->getAccess($access->type_id);
+                    if (!$type) {
+                        $this->output->error('Accès non existant n°'.$access->type_id);
+                        continue;
+                    }
+
+                    $user = $this->getUser($access->user_id);
+                    if (!$user) {
+                        $this->output->error('Utilisateur non existant n°'.$access->user_id);
+                        continue;
+                    }
+
+                    $semester = $this->getSemester($access->semestre_id);
+                    if (!$semester) {
+                        $this->output->error('Semestre non existant n°'.$access->semestre_id);
+                        continue;
+                    }
+
+                    try {
+                        $model = $asso->access()->create([
+                            'member_id' => $user->id,
+                            'access_id' => $type->id,
+                            'semester_id' => $semester->id,
+                            'description' => $access->motif,
+                        ]);
+                    } catch (\Exception $e) {
+                        $errors[] = 'n°'.$access->id.': '.$e->getMessage();
+                    }
+                } catch (\Exception $e) {
+                    $errors[] = 'Information manquante pour l\'accès n°'.$access->id;
+                }
+
+                $bar->advance();
+            } catch (\Exception $e) {
+                $this->output->error('Impossible de créer l\'accès n°'.$access->id);
+
+                throw $e;
+            } catch (\Error $e) {
+                $this->output->error('Impossible de créer l\'accès n°'.$access->id);
 
                 throw $e;
             }
