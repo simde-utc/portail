@@ -137,12 +137,20 @@ class AccessController extends Controller
         $semester = $this->getSemester($request, $choices);
         $user_id = (\Auth::id() ?? $request->input('user_id'));
         $asso = $this->getAssoFromMember($request, $asso_id, \Auth::id(), $semester);
+        $countAccess = $asso->access()->where('semester_id', $semester->id)
+        ->where('member_id', $user_id)
+            ->where(function ($query) {
+                $query->where(function ($query) {
+                    return $query->whereNull('validated_at');
+                })->orWhere(function ($query) {
+                          return $query->where('validated', true)
+                    ->whereNotNull('validated_at');
+                });
+            })
+            ->count();
 
-        if ($asso->access()->where('semester_id', $semester->id)
-            ->whereNotNull('validated_at')
-            ->where('member_id', $user_id)
-            ->count() > 0) {
-            throw new PortailException("Une demande d\'accès a déjà été validée pour ce semestre");
+        if ($countAccess > 0) {
+            throw new PortailException("Une demande d\'accès a déjà été validée ou est en cours pour ce semestre");
         }
 
         $comment = $request->input('comment');
