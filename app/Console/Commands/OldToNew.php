@@ -141,6 +141,9 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
         } catch (\Exception $e) {
             throw $e;
         } finally {
+            DB::delete('DELETE FROM jobs;');
+            DB::delete('DELETE FROM failed_jobs;');
+
             $this->info(PHP_EOL);
             $this->info(PHP_EOL);
             $this->info('Rapport:');
