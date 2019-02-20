@@ -200,7 +200,6 @@ class AssoScreen extends React.Component {
 
 	joinAsso() {
 		const { asso, dispatch, roles, user } = this.props;
-		const { role_id } = this.state;
 
 		this.setState(prevState => ({
 			...prevState,
@@ -234,6 +233,8 @@ class AssoScreen extends React.Component {
 					type: 'success',
 					text: "Rejoindre l'association",
 					onClick: () => {
+						const { role_id } = this.state;
+
 						if (!role_id) return;
 
 						actions
@@ -343,16 +344,22 @@ class AssoScreen extends React.Component {
 					type: 'success',
 					text: 'Valider le membre',
 					onClick: () => {
+						const { user, asso } = this.props;
+
 						actions
 							.assos(asso.id)
 							.members.update(member_id)
 							.payload.then(() => {
-								dispatch(actions.user.assos.all());
 								dispatch(actions.assos(asso.id).members.all());
 								NotificationManager.success(
 									`Vous avez validé avec succès le membre de cette association: ${asso.name}`,
 									"Valider un membre d'une association"
 								);
+
+								if (user.id === member_id) {
+									dispatch(actions.user.assos.all());
+									dispatch(actions.user.permissions.all());
+								}
 							})
 							.catch(() => {
 								NotificationManager.error(
