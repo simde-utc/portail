@@ -22,26 +22,22 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     use Queueable;
 
     protected $type;
+    protected $creator;
     protected $exceptedVia = [];
+    protected $icon;
 
     /**
      * Définition du type de notification.
      *
      * @param string $type
+     * @param string $icon
+     * @param mixed  $creator
      */
-    public function __construct(string $type)
+    public function __construct(string $type, string $icon=null, $creator=null)
     {
         $this->type = $type;
-    }
-
-    /**
-     * Retourne le type de notification.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
+        $this->icon = $icon;
+        $this->creator = ($creator ?? \Auth::user());
     }
 
     /**
@@ -128,6 +124,28 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
+     * Récupération du créateur.
+     *
+     * @param  mixed $notifiable
+     * @return mixed
+     */
+    public function getCreator($notifiable)
+    {
+        return ($this->creator ?? $notifiable);
+    }
+
+    /**
+     * Récupération de l'icône.
+     *
+     * @param  mixed $notifiable
+     * @return mixed
+     */
+    public function getIcon($notifiable)
+    {
+        return ($this->icon ?? $notifiable->getNotificationIcon($this));
+    }
+
+    /**
      * Renvoie la notification sous forme de tableau.
      *
      * @param  mixed $notifiable
@@ -139,6 +157,25 @@ abstract class Notification extends BaseNotification implements ShouldQueue
             'type' => $this->type,
             'content' => $this->getContent($notifiable),
             'action' => $this->getAction($notifiable),
+            'icon' => $this->getIcon($notifiable),
         ];
+    }
+
+    /**
+     * Renvoie la notification sous forme de tableau pour la db.
+     *
+     * @param  mixed $notifiable
+     * @return array
+     */
+    public function toDatabase($notifiable)
+    {
+        $created_by = $this->getCreator($notifiable);
+
+        return array_merge($this->toArray($notifiable), [
+            'created_by' => [
+                'id' => $created_by->id,
+                'type' => get_class($created_by),
+            ],
+        ]);
     }
 }
