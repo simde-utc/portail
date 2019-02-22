@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Model\{
     HasMembers, HasStages, HasDeletedSelection
 };
+use Illuminate\Notifications\Notifiable;
 use App\Interfaces\Model\{
     CanHaveContacts, CanHaveEvents, CanHaveCalendars, CanHaveArticles, CanHaveRooms,
     CanHaveReservations, CanNotify, CanHaveRoles, CanHavePermissions, CanComment
@@ -28,7 +29,7 @@ use App\Exceptions\PortailException;
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles,
 	CanNotify, CanHaveRooms, CanHaveReservations, CanHaveRoles, CanHavePermissions, CanComment
 {
-    use HasStages, HasMembers, SoftDeletes, HasDeletedSelection {
+    use HasStages, HasMembers, SoftDeletes, HasDeletedSelection, Notifiable {
         HasMembers::members as membersAndFollowers;
         HasMembers::currentMembers as currentMembersAndFollowers;
         HasMembers::joiners as protected joinersFromHasMembers;
@@ -213,6 +214,48 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     public function currentFollowers()
     {
         return $this->currentMembersAndFollowers()->wherePivot('role_id', null);
+    }
+
+    /**
+     * Notifie les membres de l'association.
+     *
+     * @param  mixed        $notification
+     * @param  string|array $restrictToRoleIds
+     * @return void
+     */
+    public function notifyMembers($notification, $restrictToRoleIds=null)
+    {
+        $members = $this->currentMembers();
+
+        if ($restrictToRoleIds) {
+            $members->wherePivotIn('role_id', (array) $restrictToRoleIds);
+        }
+
+        foreach ($members->get() as $member) {
+            $member->notify($notification);
+        }
+    }
+
+    /**
+     * Donne l'adresse email de notification.
+     *
+     * @param  mixed $notification
+     * @return string
+     */
+    public function routeNotificationForMail($notification)
+    {
+        return $this->contacts()->keyExistsInDB('CONTACT_EMAIL') ? $this->contacts()->valueOf('CONTACT_EMAIL') : null;
+    }
+
+    /**
+     * Donne l'icône de notification en tant que créateur.
+     *
+     * @param  Notification $notification
+     * @return string
+     */
+    public function getNotificationIcon(Notification $notification)
+    {
+        return $this->image;
     }
 
     /**
