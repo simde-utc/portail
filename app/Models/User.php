@@ -13,32 +13,27 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Interfaces\Model\CanBeNotifiable;
 use Cog\Contracts\Ownership\CanBeOwner;
-use App\Interfaces\Model\CanHaveCalendars;
-use App\Interfaces\Model\CanHaveContacts;
-use App\Interfaces\Model\CanHaveEvents;
-use App\Interfaces\Model\CanHaveRoles;
-use App\Interfaces\Model\CanHavePermissions;
-use App\Interfaces\Model\CanComment;
+use App\Interfaces\Model\{
+    CanBeNotifiable, CanHaveCalendars, CanHaveContacts, CanHaveEvents, CanHaveArticles,
+    CanHaveRoles, CanHavePermissions, CanComment
+};
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use App\Traits\Model\HasRoles;
-use App\Traits\Model\HasHiddenData;
-use App\Traits\Model\HasUuid;
-use App\Traits\Model\UserRelations;
-use App\Traits\Model\IsLogged;
+use App\Traits\Model\{
+    HasRoles, HasHiddenData, HasUuid, UserRelations, IsLogged
+};
 use NastuzziSamy\Laravel\Traits\HasSelection;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Semester;
-use App\Models\UserPreference;
-use App\Models\UserDetail;
+use App\Models\{
+    Semester, UserPreference, UserDetail
+};
 use App\Http\Requests\ContactRequest;
 use App\Exceptions\PortailException;
-use App\Notifications\User\UserCreation;
-use App\Notifications\User\UserDesactivation;
-use App\Notifications\User\UserModification;
-use App\Notifications\User\UserDeletion;
+use App\Notifications\Notification;
+use App\Notifications\User\{
+    UserCreation, UserDesactivation, UserModification, UserDeletion
+};
 
 class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents,
 	CanHaveRoles, CanHavePermissions, CanComment
@@ -246,7 +241,22 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
      */
     public function routeNotificationForMail($notification)
     {
-        return $this->preferences()->keyExistsInDB('CONTACT_EMAIL') ? $this->preferences()->valueOf('CONTACT_EMAIL') : null;
+        if ($this->preferences()->keyExistsInDB('CONTACT_EMAIL')) {
+            return $this->preferences()->valueOf('CONTACT_EMAIL');
+        } else {
+            return $this->email;
+        }
+    }
+
+    /**
+     * Donne l'icône de notification en tant que créateur.
+     *
+     * @param  Notification $notification
+     * @return string
+     */
+    public function getNotificationIcon(Notification $notification)
+    {
+        return $this->image;
     }
 
     /**

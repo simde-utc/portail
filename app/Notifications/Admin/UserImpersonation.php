@@ -35,7 +35,7 @@ class UserImpersonation extends Notification
         $this->description = $description;
         $this->asAdmin = $asAdmin;
 
-        parent::__construct('admin');
+        parent::__construct('admin', null, $admin->getUser());
     }
 
     /**

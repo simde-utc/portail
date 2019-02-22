@@ -35,7 +35,7 @@ class UserContributionBde extends Notification
         $this->money = $money;
         $this->admin = $admin;
 
-        parent::__construct($admin ? 'admin' : 'user');
+        parent::__construct($admin ? 'admin' : 'user', null, $admin->getUser());
     }
 
     /**

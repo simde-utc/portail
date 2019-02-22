@@ -88,7 +88,8 @@ class NotificationController extends Controller
         $user->notify(new ExternalNotification(
             \ModelResolver::getModel($request->input('notifier', 'client'), CanNotify::class),
             $request->input('content'),
-            $request->input('action', [])
+            $request->input('action', []),
+            \Scopes::getClient($request)->asso
         ));
 
         abort(201, 'Notification créée et envoyée');

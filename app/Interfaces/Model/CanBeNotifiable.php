@@ -10,6 +10,8 @@
 
 namespace App\Interfaces\Model;
 
+use App\Notifications\Notification;
+
 interface CanBeNotifiable
 {
     /**
@@ -19,4 +21,20 @@ interface CanBeNotifiable
      * @return array
      */
     public function notificationChannels(string $notificationType): array;
+
+    /**
+     * Envoi une notification.
+     *
+     * @param  mixed $instance
+     * @return void
+     */
+    public function notify($instance);
+
+    /**
+     * Donne l'icône de notification en tant que créateur.
+     *
+     * @param  Notification $notification
+     * @return void
+     */
+    public function getNotificationIcon(Notification $notification);
 }
