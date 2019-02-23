@@ -132,7 +132,7 @@ class RolesTableSeeder extends Seeder
                 'type' => 'secretaire general',
                 'name' => 'Secrétaire Général',
                 'description' => 'Administrateur de l\'organisation',
-                'position' => 10,
+                'position' => 5,
                 'limited_at' => 1,
                 'owned_by' => new Asso,
                 'parents' => [
@@ -154,7 +154,7 @@ class RolesTableSeeder extends Seeder
                 'type' => 'vice-secretaire',
                 'name' => 'Vice-Secrétaire',
                 'description' => 'Adjoint du secrétaire',
-                'position' => 11,
+                'position' => 25,
                 'limited_at' => 4,
                 'owned_by' => new Asso,
                 'parents' => [
@@ -173,7 +173,7 @@ class RolesTableSeeder extends Seeder
                 'type' => 'treasury',
                 'name' => 'Trésorier',
                 'description' => 'Responsable de la trésorie',
-                'position' => 25,
+                'position' => 10,
                 'limited_at' => 1,
                 'owned_by' => new Asso,
                 'parents' => [
@@ -187,7 +187,7 @@ class RolesTableSeeder extends Seeder
             [
                 'type' => 'vice-treasury',
                 'name' => 'Vice-Trésorier',
-                'position' => 26,
+                'position' => 30,
                 'description' => 'Co-responsable de la trésorie',
                 'limited_at' => 4,
                 'owned_by' => new Asso,
@@ -203,6 +203,7 @@ class RolesTableSeeder extends Seeder
                 'type' => 'bureau',
                 'name' => 'Bureau',
                 'description' => 'Membre du bureau',
+                'position' => 15,
                 'owned_by' => new Asso,
                 'parents' => [
                     'vice-president',
@@ -235,7 +236,7 @@ class RolesTableSeeder extends Seeder
                 'type' => 'developer',
                 'name' => 'Développeur',
                 'description' => 'Membre de l\'équipe informatique de l\'association',
-                'position' => 51,
+                'position' => 100,
                 'owned_by' => new Asso,
                 'parents' => [
                     'resp informatique',
@@ -262,7 +263,7 @@ class RolesTableSeeder extends Seeder
                 'type' => 'communication',
                 'name' => 'Chargé de communication',
                 'description' => 'Membre de l\'équipe communication de l\'association',
-                'position' => 56,
+                'position' => 105,
                 'owned_by' => new Asso,
                 'parents' => [
                     'resp communication',
@@ -286,7 +287,7 @@ class RolesTableSeeder extends Seeder
                 'type' => 'animation',
                 'name' => 'Chargé de l\'animation',
                 'description' => 'Membre de l\'équipe animation de l\'association',
-                'position' => 61,
+                'position' => 110,
                 'owned_by' => new Asso,
                 'parents' => [
                     'resp animation',
@@ -310,7 +311,7 @@ class RolesTableSeeder extends Seeder
                 'type' => 'partenariat',
                 'name' => 'Chargé du partenariat',
                 'description' => 'Membre de l\'équipe partenariat de l\'association',
-                'position' => 66,
+                'position' => 115,
                 'owned_by' => new Asso,
                 'parents' => [
                     'resp partenariat',
@@ -337,7 +338,7 @@ class RolesTableSeeder extends Seeder
                 'type' => 'logistique',
                 'name' => 'Chargé de la logistique',
                 'description' => 'Membre de l\'équipe logistique de l\'association',
-                'position' => 71,
+                'position' => 120,
                 'owned_by' => new Asso,
                 'parents' => [
                     'resp logistique',
