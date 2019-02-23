@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { Button } from 'reactstrap';
-import { findIndex } from 'lodash';
+import { findIndex, orderBy } from 'lodash';
 
 import Member from './Member';
 
@@ -14,16 +14,24 @@ class MemberList extends React.Component {
 	getMemberBlocks(members, roles) {
 		const { currentSemester, isMember, validateMember, leaveMember } = this.props;
 
-		return members.map(member => {
-			const props = {};
-
-			if (member.pivot) {
+		members = orderBy(
+			members.map(member => {
 				const index = findIndex(roles, ['id', member.pivot.role_id]);
 
 				if (index !== -1) {
-					props.description = roles[index].name;
+					member.description = roles[index].name;
+					member.position = roles[index].position;
 				}
-			}
+
+				return member;
+			}),
+			'position'
+		);
+
+		return members.map(member => {
+			const props = {
+				description: member.description,
+			};
 
 			if (member.pivot.semester_id === currentSemester.id) {
 				props.footer = (
