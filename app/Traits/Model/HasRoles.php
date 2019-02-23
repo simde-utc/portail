@@ -314,7 +314,11 @@ trait HasRoles
             $roles = $roles->wherePivot('validated_by', '!=', null);
         }
 
-        return $roles->withPivot(['validated_by', 'semester_id'])->get();
+        return $roles->where(function ($query) {
+                return $query->where('owned_by_id', $this->id)
+                    ->orWhereNull('owned_by_id');
+        })->where('owned_by_type', get_class($this))
+            ->withPivot(['validated_by', 'semester_id'])->get();
     }
 
     /**
@@ -334,13 +338,6 @@ trait HasRoles
 
             $roles = $roles->merge($role->allChildren());
             $role->makeHidden('children');
-        }
-
-        // On ajoute les rôles de l'utilisateur sur le système.
-        if ($this->getTable() !== 'users' && $user_id) {
-            foreach (User::find($user_id)->getUserRoles(null, $semester_id) as $userRole) {
-                $roles->push($userRole);
-            }
         }
 
         return $roles;
@@ -373,10 +370,8 @@ trait HasRoles
      */
     public function getUserPermissions(string $user_id=null, string $semester_id=null)
     {
-        $permissions = $this->getUserPermissionsFromHasPermissions($user_id, $semester_id);
-        $permissions = $permissions->merge($this->getUserPermissionsFromRoles($user_id, $semester_id));
-
-        return $permissions;
+        return $this->getUserPermissionsFromHasPermissions($user_id, $semester_id)
+            ->merge($this->getUserPermissionsFromRoles($user_id, $semester_id));
     }
 
     /**

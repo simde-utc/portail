@@ -513,6 +513,13 @@ class AssoScreen extends React.Component {
 							</NavLink>
 						</li>
 					)}
+					{this.user.isMember && (
+						<li className="nav-item">
+							<NavLink className="nav-link" activeClassName="active" to={`${match.url}/access`}>
+								ACCES
+							</NavLink>
+						</li>
+					)}
 					<li className="nav-item dropdown">
 						<Dropdown title="CRÉER">
 							<Link className="dropdown-item" to={`${match.url}/article`}>
@@ -567,6 +574,7 @@ class AssoScreen extends React.Component {
 							/>
 						)}
 					/>
+					<Route path={`${match.url}/access`} render={() => <div />} />
 					<Route
 						path={`${match.url}/article`}
 						render={() => (

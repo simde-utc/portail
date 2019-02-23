@@ -18,7 +18,8 @@ class CreateRolesTable extends Migration
             $table->string('type', 64);
             $table->string('name', 128);
             $table->string('description');
-            $table->string('limited_at')->nullable();
+            $table->integer('position')->nullable();
+            $table->integer('limited_at')->nullable();
             $table->uuid('owned_by_id')->nullable();
             $table->string('owned_by_type')->nullable();
 

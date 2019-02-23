@@ -266,15 +266,17 @@ trait HasPermissions
             $permissions = $permissions->wherePivot('user_id', $user_id);
         }
 
-        $relatedTable = $this->getPermissionRelationTable();
-
         $permissions = $permissions->wherePivotIn('semester_id', [0, $semester_id]);
 
         if ($needToBeValidated) {
             $permissions = $permissions->wherePivot('validated_by', '!=', null);
         }
 
-        return $permissions->withPivot(['validated_by', 'semester_id'])->get();
+        return $permissions->where(function ($query) {
+                return $query->where('owned_by_id', $this->id)
+                    ->orWhereNull('owned_by_id');
+        })->where('owned_by_type', get_class($this))
+            ->withPivot(['validated_by', 'semester_id'])->get();
     }
 
     /**

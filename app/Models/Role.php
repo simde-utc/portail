@@ -47,7 +47,7 @@ class Role extends Model implements OwnableContract
     ];
 
     protected $must = [
-        'type', 'name', 'description', 'owned_by',
+        'type', 'name', 'description', 'owned_by', 'position'
     ];
 
     protected $selection = [
