@@ -32,7 +32,7 @@ class MemberAccessValidation extends Notification
         $this->access = $access;
         $this->admin = $admin;
 
-        parent::__construct('admin');
+        parent::__construct('admin', null, $admin->getUser());
     }
 
     /**

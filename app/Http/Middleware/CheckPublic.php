@@ -28,7 +28,7 @@ class CheckPublic
         // Pas de token requis.
         try {
             if ($request->token()) {
-                throw new AuthenticationException('Client connecté mais non requis.');
+                throw new AuthenticationException('Client connecté mais n\'ayant pas les scopes nécessaires');
             }
         } catch (\BadMethodCallException $e) {
             return $next($request);

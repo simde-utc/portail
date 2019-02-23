@@ -1,215 +1,224 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import actions from '../../redux/actions';
 
 import SimpleMDE from 'simplemde';
 import Editor from 'react-simplemde-editor';
 import Select from 'react-select';
 import { map } from 'lodash';
-import "simplemde/dist/simplemde.min.css";
-
-import { getTime } from '../../utils.js';
+import 'simplemde/dist/simplemde.min.css';
 
 @connect(store => ({
-	visibilities: store.visibilities.data,
+	visibilities: store.getData('visibilities'),
 }))
 class ArticleForm extends React.Component {
-	constructor() {
-		super();
+	static mapSelectionOptions(options) {
+		return map(options, ({ id, name }) => ({
+			value: id,
+			label: name,
+		}));
+	}
+
+	constructor(props) {
+		super(props);
 
 		this.state = {
 			title: '',
 			description: '',
 			content: '',
-			event_filter: '',
+			eventFilter: '',
 		};
 	}
 
-	mapSelectionOptions(options) {
-		return map(options, (option => ({
-			value: option.id,
-			label: option.name
-		})));
-	}
-
-	handleVisibilityChange(value) {
-		this.setState(prevState => ({ ...prevState, visibility_id: value.value }));
-	}
-
 	getEvents(events) {
-		return this.mapSelectionOptions(events.filter(eventToFilter => {
-			return eventToFilter.name.indexOf(this.state.event_filter) >= 0;
-		}));
+		const { eventFilter } = this.state;
+
+		return this.mapSelectionOptions(
+			events.filter(eventToFilter => {
+				return eventToFilter.name.indexOf(eventFilter) >= 0;
+			})
+		);
+	}
+
+	handleVisibilityChange({ value }) {
+		this.setState({ visibility_id: value });
 	}
 
 	handleSearchEvent(value) {
-		this.setState(prevState => ({ ...prevState, event_filter: value }));
+		this.setState({ eventFilter: value });
 	}
 
 	handleEventChange(value) {
-		this.setState(prevState => ({ ...prevState, event_id: value.value }));
-	}
-
-	componentWillMount() {
-		this.props.dispatch(visibilitiesActions.getAll());
+		this.setState({ event_id: value.value });
 	}
 
 	handleEditorChange(value) {
-		this.setState(prevState => ({ ...prevState, content: value }));
+		this.setState({ content: value });
 	}
 
 	handleChange(e) {
 		e.persist();
 
-		this.setState(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
-  }
+		this.setState({ [e.target.name]: e.target.value });
+	}
 
-  handleSubmit(e) {
-    e.preventDefault();
+	handleSubmit(e) {
+		const { title, description, content, visibility_id, event_id } = this.state;
+		const { post } = this.props;
+		e.preventDefault();
 
-    this.props.post({
-			title: this.state.title,
-			description: this.state.description,
-			content: this.state.content,
-			visibility_id: this.state.visibility_id,
-			event_id: this.state.event_id,
+		post({
+			title,
+			description,
+			content,
+			visibility_id,
+			event_id,
 		});
-  }
+	}
 
 	render() {
+		const { visibilities, events } = this.props;
+		const { title, description } = this.state;
+
 		return (
 			<div>
 				<div className="container p-3">
-					<form className="form row" onSubmit={ (e) => this.handleSubmit(e) }>
+					<form className="form row" onSubmit={e => this.handleSubmit(e)}>
 						<div className="col-md-6">
 							<h2 className="mb-3">Créer un article</h2>
 							<div className="form-group">
-							    <label>Titre *</label>
-							    <input
-							    	type="text"
-							    	className="form-control"
-							    	name="title"
-							    	value={ this.state.title }
-							    	onChange={ (e) => this.handleChange(e) }
-							    	placeholder="Entrez le titre de votre article"
-							    	required
-							    />
+								<label htmlFor="title">
+									Titre *
+									<input
+										type="text"
+										className="form-control"
+										id="title"
+										name="title"
+										value={title}
+										onChange={e => this.handleChange(e)}
+										placeholder="Entrez le titre de votre article"
+										required
+									/>
+								</label>
 							</div>
 							<div className="form-group">
-							    <label>Description</label>
-							    <textarea
-							    	className="form-control"
-							    	name="description"
-							    	rows="3"
-							    	value={ this.state.description }
-							    	onChange={ (e) => this.handleChange(e) }
-							    	placeholder="Entrez une courte description de votre article"
-							    >
-							    </textarea>
+								<label htmlFor="description">
+									Description
+									<textarea
+										className="form-control"
+										id="description"
+										name="description"
+										rows="3"
+										value={description}
+										onChange={e => this.handleChange(e)}
+										placeholder="Entrez une courte description de votre article"
+									/>
+								</label>
 							</div>
 						</div>
 						<div className="col-md-12">
 							<div className="form-group">
-							    <label>Corps *</label>
-								<Editor
-									onChange={ (e) => this.handleEditorChange(e) }
-									options={{
-										spellChecker: false,
-										toolbar: [
-							                {
-							                    name: "bold",
-							                    action: SimpleMDE.toggleBold,
-							                    className: "fas fa-fw fa-bold",
-							                    title: "Gras",
-							                },
-							                {
-							                    name: "italic",
-							                    action: SimpleMDE.toggleItalic,
-							                    className: "fas fa-fw fa-italic",
-							                    title: "Italique",
-							                },
-							                {
-							                    name: "heading",
-							                    action: SimpleMDE.toggleHeadingSmaller,
-							                    className: "fas fa-fw fa-heading",
-							                    title: "Titre",
-							                },
-							                {
-							                    name: "quote",
-							                    action: SimpleMDE.toggleBlockquote,
-							                    className: "fas fa-fw fa-quote-left",
-							                    title: "Citation",
-							                },
-							                {
-							                    name: "unordered-list",
-							                    action: SimpleMDE.toggleUnorderedList,
-							                    className: "fas fa-fw fa-list-ul",
-							                    title: "Liste non-ordonnée",
-							                },
-							                {
-							                    name: "ordered-list",
-							                    action: SimpleMDE.toggleOrderedList,
-							                    className: "fas fa-fw fa-list-ol",
-							                    title: "Liste ordonnée",
-							                },
-							                {
-							                    name: "link",
-							                    action: SimpleMDE.drawLink,
-							                    className: "fas fa-fw fa-link",
-							                    title: "Insérer un lien",
-							                },
-							                {
-							                    name: "image",
-							                    action: SimpleMDE.drawImage,
-							                    className: "far fa-fw fa-image",
-							                    title: "Insérer une image",
-							                },
-							                {
-							                    name: "table",
-							                    action: SimpleMDE.drawTable,
-							                    className: "fas fa-fw fa-table",
-							                    title: "Insérer un tableau",
-							                },
-							                {
-							                    name: "preview",
-							                    action: SimpleMDE.togglePreview,
-							                    className: "fas fa-fw fa-eye no-disable",
-							                    title: "Aperçu",
-							                },
-							                {
-							                    name: "side-by-side",
-							                    action: SimpleMDE.toggleSideBySide,
-							                    className: "fas fa-fw fa-columns no-disable no-mobile",
-							                    title: "Cote à cote",
-							                },
-							                {
-							                    name: "fullscreen",
-							                    action: SimpleMDE.toggleFullScreen,
-							                    className: "fas fa-fw fa-arrows-alt no-disable no-mobile",
-							                    title: "Plein écran",
-							                }
-							            ]
-									}}
-								/>
+								<label htmlFor="corps">
+									Corps *
+									<Editor
+										onChange={e => this.handleEditorChange(e)}
+										id="corps"
+										options={{
+											spellChecker: false,
+											toolbar: [
+												{
+													name: 'bold',
+													action: SimpleMDE.toggleBold,
+													className: 'fas fa-fw fa-bold',
+													title: 'Gras',
+												},
+												{
+													name: 'italic',
+													action: SimpleMDE.toggleItalic,
+													className: 'fas fa-fw fa-italic',
+													title: 'Italique',
+												},
+												{
+													name: 'heading',
+													action: SimpleMDE.toggleHeadingSmaller,
+													className: 'fas fa-fw fa-heading',
+													title: 'Titre',
+												},
+												{
+													name: 'quote',
+													action: SimpleMDE.toggleBlockquote,
+													className: 'fas fa-fw fa-quote-left',
+													title: 'Citation',
+												},
+												{
+													name: 'unordered-list',
+													action: SimpleMDE.toggleUnorderedList,
+													className: 'fas fa-fw fa-list-ul',
+													title: 'Liste non-ordonnée',
+												},
+												{
+													name: 'ordered-list',
+													action: SimpleMDE.toggleOrderedList,
+													className: 'fas fa-fw fa-list-ol',
+													title: 'Liste ordonnée',
+												},
+												{
+													name: 'link',
+													action: SimpleMDE.drawLink,
+													className: 'fas fa-fw fa-link',
+													title: 'Insérer un lien',
+												},
+												{
+													name: 'image',
+													action: SimpleMDE.drawImage,
+													className: 'far fa-fw fa-image',
+													title: 'Insérer une image',
+												},
+												{
+													name: 'table',
+													action: SimpleMDE.drawTable,
+													className: 'fas fa-fw fa-table',
+													title: 'Insérer un tableau',
+												},
+												{
+													name: 'preview',
+													action: SimpleMDE.togglePreview,
+													className: 'fas fa-fw fa-eye no-disable',
+													title: 'Aperçu',
+												},
+												{
+													name: 'side-by-side',
+													action: SimpleMDE.toggleSideBySide,
+													className: 'fas fa-fw fa-columns no-disable no-mobile',
+													title: 'Cote à cote',
+												},
+												{
+													name: 'fullscreen',
+													action: SimpleMDE.toggleFullScreen,
+													className: 'fas fa-fw fa-arrows-alt no-disable no-mobile',
+													title: 'Plein écran',
+												},
+											],
+										}}
+									/>
+								</label>
 							</div>
 
 							<Select
-								onChange={ this.handleVisibilityChange.bind(this) }
+								onChange={this.handleVisibilityChange.bind(this)}
 								name="visibility_id"
 								placeholder="Visibilité de l'article"
-								options={ this.mapSelectionOptions(this.props.visibilities) }
+								options={ArticleForm.mapSelectionOptions(visibilities)}
 							/>
 
 							<br />
 
 							<Select
-								onChange={ this.handleEventChange.bind(this) }
+								onChange={this.handleEventChange.bind(this)}
 								name="event_id"
 								placeholder="Evènement attaché"
-								isSearchable={ true }
-								onInputChange={ this.handleSearchEvent.bind(this) }
-								options={ this.getEvents(this.props.events) }
+								isSearchable
+								onInputChange={this.handleSearchEvent.bind(this)}
+								options={this.getEvents(events)}
 							/>
 
 							<br />

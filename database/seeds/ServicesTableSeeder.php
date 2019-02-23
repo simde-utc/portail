@@ -34,14 +34,14 @@ class ServicesTableSeeder extends Seeder
                 'name' => 'Service de paiement Pay\'UT - Extérieur',
                 'description' => 'Besoin de recharger ta carte étudiante ?',
                 'url' => 'https://payutc.nemopay.net/login_int',
-                'visibility' => 'logged',
+                'visibility' => 'active',
             ], [
                 'login' => 'bdecotiz',
                 'shortname' => 'BDE Cotiz',
                 'name' => 'Cotisation BDE',
                 'description' => 'Pour cotiser rapidement au BDE UTC, c\'est par ici ;) Paiement en Pay\'Ut ou Cb',
                 'url' => url('/bde/bdecotiz'),
-                'visibility' => 'logged',
+                'visibility' => 'active',
             ], [
                 'login' => 'uvweb',
                 'shortname' => 'UVWeb',
@@ -66,7 +66,7 @@ class ServicesTableSeeder extends Seeder
                 'name' => $service['name'],
                 'description' => $service['description'],
                 'url' => $service['url'],
-                'visibility_id' => Visibility::where('type', $service['visibility'])->first()->id,
+                'visibility_id' => Visibility::findByType($service['visibility'])->id,
             ]);
         }
     }

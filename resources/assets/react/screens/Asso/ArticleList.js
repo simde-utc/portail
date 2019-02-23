@@ -1,38 +1,61 @@
+/**
+ * Affichage des membres d'une association.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
+
 import React from 'react';
 import { connect } from 'react-redux';
-import AspectRatio from 'react-aspect-ratio';
-import { Button } from 'reactstrap';
 
 import actions from '../../redux/actions';
 
 import ArticleList from '../../components/Article/List';
 
-@connect((store, props) => ({
+@connect((store, { asso: { id } }) => ({
 	user: store.getData('user', false),
-	articles: store.getData(['assos', props.asso.id, 'articles']),
-	fetched: store.isFetched(['assos', props.asso.id, 'articles']),
-	fetching: store.isFetching(['assos', props.asso.id, 'articles']),
+	articles: store.getData(['assos', id, 'articles']),
+	fetched: store.isFetched(['assos', id, 'articles']),
+	fetching: store.isFetching(['assos', id, 'articles']),
 }))
 class AssoArticleList extends React.Component {
-  componentWillMount() {
-    if (this.props.asso.id) {
-      this.loadAssosData(this.props.asso.id);
-    }
-  }
+	componentWillMount() {
+		const {
+			asso: { id },
+		} = this.props;
 
-  componentWillReceiveProps(props) {
-    if (this.props.asso.id !== props.asso.id) {
-      this.loadAssosData(props.asso.id);
-    }
-  }
+		if (id) {
+			this.loadAssosData(id);
+		}
+	}
 
-  loadAssosData(id) {
-		this.props.dispatch(actions.definePath(['assos', this.props.asso.id, 'articles']).addValidStatus(416).articles().all({ owner: 'asso,' + this.props.asso.id }));
+	componentWillReceiveProps({ asso: { id } }) {
+		const { asso } = this.props;
+
+		if (asso.id !== id) {
+			this.loadAssosData(id);
+		}
+	}
+
+	loadAssosData(id) {
+		const { dispatch } = this.props;
+
+		dispatch(
+			actions
+				.definePath(['assos', id, 'articles'])
+				.addValidStatus(416)
+				.articles()
+				.all({ owner: `asso,${id}` })
+		);
 	}
 
 	render() {
+		const { articles, fetched, fetching } = this.props;
+
 		return (
-			<ArticleList articles={ this.props.articles } fetched={ this.props.fetched } fetching={ this.props.fetching } { ...this.props } />
+			<ArticleList articles={articles} fetched={fetched} fetching={fetching} {...this.props} />
 		);
 	}
 }

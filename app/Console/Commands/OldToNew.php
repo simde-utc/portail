@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\{
     DB, Storage
 };
 use App\Models\{
-    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas, Event, Service
+    Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas, Event, Service,
+    Access
 };
 
 class OldToNew extends Command
@@ -26,7 +27,7 @@ class OldToNew extends Command
     /**
      * @var string
      */
-    protected $signature = 'portail:old-to-new';
+    protected $signature = 'portail:old-to-new {--quick}';
 
     /**
      * @var string
@@ -35,11 +36,14 @@ class OldToNew extends Command
 
     protected const CIMETIERE = 6;
 
+    protected const MAX_LOGICAL_MEMBERS = 8;
+
     protected $users = [];
     protected $assos = [];
     protected $semesters = [];
     protected $roles = [];
     protected $events = [];
+    protected $access = [];
     protected $resultedRoles = [];
 
     /**
@@ -73,12 +77,20 @@ class OldToNew extends Command
      */
     public function handle()
     {
-        if (!$this->confirm('Ceci va supprimer toutes les données actuelles en faveur de l\'ancien Portail. Confirmer ?')) {
+        if (!$this->confirm('Ceci va supprimer toutes les données actuelles en faveur de l\'ancien Portail.\
+Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
             return;
         }
 
-        $bar = $this->output->createProgressBar(7);
+        $bar = $this->output->createProgressBar(9);
         $errors = [];
+
+        $this->info('Migration et nettoyage de la base de données');
+
+        exec('APP_DEBUG=0 php artisan migrate:fresh --seed');
+
+        $bar->advance();
+        $this->info(PHP_EOL);
 
         $this->info('Préparation des données à récupérer');
 
@@ -86,8 +98,8 @@ class OldToNew extends Command
         $this->semesters = $this->getDB()->select('SELECT * FROM semestre');
         $this->roles = $this->getDB()->select('SELECT * FROM role');
         $this->events = $this->getDB()->select('SELECT * FROM event');
+        $this->access = $this->getDB()->select('SELECT * FROM charte_locaux_type');
 
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         $bar->advance();
         $this->info(PHP_EOL);
 
@@ -121,10 +133,16 @@ class OldToNew extends Command
             $this->info(PHP_EOL);
             $bar->advance();
             $this->info(PHP_EOL);
+
+            $errors['Accès'] = $this->addAssosAccess();
+            $this->info(PHP_EOL);
+            $bar->advance();
+            $this->info(PHP_EOL);
         } catch (\Exception $e) {
             throw $e;
         } finally {
-            DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+            DB::delete('DELETE FROM jobs;');
+            DB::delete('DELETE FROM failed_jobs;');
 
             $this->info(PHP_EOL);
             $this->info(PHP_EOL);
@@ -187,28 +205,6 @@ class OldToNew extends Command
         return $model->update([
             $input => url($path.$name),
         ]);
-    }
-
-    /**
-     * Supprime un dossier et tout son contenu.
-     *
-     * @param  string $path
-     * @return void
-     */
-    protected function removeDir(string $path): void
-    {
-        if (file_exists($path)) {
-            foreach (array_diff(scandir($path), ['..', '.']) as $file) {
-                $subPath = $path.DIRECTORY_SEPARATOR.$file;
-                if (is_dir($subPath)) {
-                    $this->removeDir($subPath);
-                } else {
-                    unlink($subPath);
-                }
-            }
-
-            rmdir($path);
-        }
     }
 
     /**
@@ -286,6 +282,19 @@ class OldToNew extends Command
     }
 
     /**
+     * Récupère l'accès.
+     *
+     * @param  integer $access_id
+     * @return mixed|null
+     */
+    protected function getAccess(int $access_id)
+    {
+        $oldAccess = $this->getModelFrom($this->access, $access_id);
+
+        return Access::where('utc_access', $oldAccess->correspondance)->first();
+    }
+
+    /**
      * Crée les associations depuis l'ancien Portail.
      *
      * @return mixed
@@ -293,11 +302,6 @@ class OldToNew extends Command
     protected function addAssos()
     {
         $this->info('Préparation des associations');
-
-        // Nettoyage avant création massive.
-        Client::getQuery()->delete();
-        Asso::getQuery()->delete();
-        $this->removeDir(public_path('/images/assos'));
 
         $assoTypes = $this->getDB()->select('SELECT * FROM type_asso');
         $poles = $this->getDB()->select('SELECT * FROM pole');
@@ -338,7 +342,7 @@ class OldToNew extends Command
                 $model->calendars()->create([
                     'name' => 'Evénements',
                     'description' => 'Calendrier regroupant les événements de l\'associations',
-                    'visibility_id' => Visibility::where('type', 'public')->first()->id,
+                    'visibility_id' => Visibility::findByType('public')->id,
                     'created_by_id' => $model->id,
                     'created_by_type' => Asso::class,
                 ]);
@@ -360,7 +364,7 @@ class OldToNew extends Command
                     $model->save();
                 }
 
-                if ($asso->logo) {
+                if ($asso->logo && !$this->option('quick')) {
                     try {
                         $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/assos/source/'.$asso->logo,
                             $model, 'assos/'.$model->id);
@@ -401,7 +405,7 @@ class OldToNew extends Command
                     'name' => 'Bureau',
                     'value' => $asso->salle,
                     'type_id' => ContactType::where('type', 'door')->first()->id,
-                    'visibility_id' => Visibility::findByType('logged')->id,
+                    'visibility_id' => Visibility::findByType('active')->id,
                 ]);
             } catch (\Exception $e) {
                 $errors[] = 'Salle incorrecte pour l\'association '.$asso->name;
@@ -444,10 +448,6 @@ class OldToNew extends Command
     {
         $this->info('Préparation des articles');
 
-        // Nettoyage avant création massive.
-        Article::getQuery()->delete();
-        $this->removeDir(public_path('/images/articles'));
-
         if (!($tag = Tag::where('name', 'old-portail')->first())) {
             $tag = Tag::create([
                 'name' => 'old-portail',
@@ -456,7 +456,7 @@ class OldToNew extends Command
         }
 
         $articles = $this->getDB()->select('SELECT * FROM article');
-        $visibility_id = Visibility::where('type', 'logged')->first()->id;
+        $visibility_id = Visibility::findByType('active')->id;
 
         $this->info('Création des '.count($articles).' articles');
 
@@ -487,7 +487,7 @@ class OldToNew extends Command
                 // On ajoute le tag de l'ancien Portail.
                 $model->tags()->save($tag);
 
-                if ($article->image) {
+                if ($article->image && !$this->option('quick')) {
                     try {
                         $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/articles/source/'.$article->image,
                             $model, 'articles/'.$model->id);
@@ -519,12 +519,6 @@ class OldToNew extends Command
     protected function addUsers()
     {
         $this->info('Préparation des utilisateurs');
-
-        // Nettoyage avant création massive.
-        User::getQuery()->delete();
-        AuthCas::getQuery()->delete();
-        $this->removeDir(public_path('/images/users'));
-
         $this->info('Création des '.count($this->users).' utilisateurs');
 
         $bar = $this->output->createProgressBar(count($this->users));
@@ -573,11 +567,13 @@ class OldToNew extends Command
      */
     protected function addMembers()
     {
+        $this->info('Préparation des membres');
+
         $members = $this->getDB()->select('SELECT * FROM asso_member');
 
         $this->info('Création des '.count($members).' membres');
 
-        $bar = $this->output->createProgressBar(count($members));
+        $bar = $this->output->createProgressBar(count($members) + 1);
         $errors = [];
 
         foreach ($members as $member) {
@@ -612,13 +608,9 @@ class OldToNew extends Command
                             'role_id' => $role->id,
                             'semester_id' => $semester->id,
                             'validated_by' => $user->id,
+                            'created_at' => $member->created_at ?: now(),
+                            'updated_at' => $member->updated_at ?: now(),
                         ], true);
-
-                        // Obliger de définir les dates après création.
-                        $model->timestamps = false;
-                        $model->created_at = $member->created_at ?: $model->created_at;
-                        $model->updated_at = $member->updated_at ?: $model->updated_at;
-                        $model->save();
                     } catch (\Exception $e) {
                         $errors[] = 'n°'.$member->id.': '.$e->getMessage();
                     }
@@ -638,7 +630,33 @@ class OldToNew extends Command
             }
         }
 
+        $this->fixMembers($errors);
+        $bar->advance();
+
         return $errors;
+    }
+
+    /**
+     * Corrige les membres non logiques (je vous hais).
+     * Exemple: Christina.
+     *
+     * @param array $errors
+     * @return void
+     */
+    protected function fixMembers(array &$errors)
+    {
+        $excededMembers = DB::select('SELECT user_id, semester_id, users.lastname, firstname, semesters.name,
+            count(asso_id) as assos FROM assos_members, semesters, users WHERE assos_members.semester_id = semesters.id and
+            user_id = users.id and role_id is not NULL GROUP BY user_id, semester_id HAVING assos >
+            '.self::MAX_LOGICAL_MEMBERS.' ORDER BY assos DESC');
+
+        foreach ($excededMembers as $member) {
+            $errors[] = 'Suppression du membre '.$member->lastname.' '.$member->firstname.' de '.$member->assos.'
+                associations au semestre '.$member->name;
+
+            DB::delete('DELETE FROM assos_members WHERE user_id = "'.$member->user_id.'" AND
+                semester_id = "'.$member->semester_id.'"');
+        }
     }
 
     /**
@@ -650,13 +668,9 @@ class OldToNew extends Command
     {
         $this->info('Préparation des événements');
 
-        // Nettoyage avant création massive.
-        Event::getQuery()->delete();
-        $this->removeDir(public_path('/images/events'));
-
         $events = $this->getDB()->select('SELECT * FROM event');
         $eventTypes = $this->getDB()->select('SELECT * FROM event_type');
-        $visibility_id = Visibility::where('type', 'logged')->first()->id;
+        $visibility_id = Visibility::findByType('active')->id;
 
         $this->info('Création des '.count($events).' événements');
 
@@ -696,7 +710,7 @@ class OldToNew extends Command
                     'value' => 'old-portail',
                 ]);
 
-                if ($event->affiche) {
+                if ($event->affiche && !$this->option('quick')) {
                     try {
                         $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/events/source/'.$event->affiche,
                             $model, 'events/'.$model->id);
@@ -729,12 +743,8 @@ class OldToNew extends Command
     {
         $this->info('Préparation des services');
 
-        // Nettoyage avant création massive.
-        Service::getQuery()->delete();
-        $this->removeDir(public_path('/images/services'));
-
         $services = $this->getDB()->select('SELECT * FROM service');
-        $visibility_id = Visibility::where('type', 'logged')->first()->id;
+        $visibility_id = Visibility::findByType('active')->id;
 
         $this->info('Création des '.count($services).' services');
 
@@ -758,7 +768,7 @@ class OldToNew extends Command
                 $model->updated_at = $service->updated_at ?: $model->updated_at;
                 $model->save();
 
-                if ($service->logo) {
+                if ($service->logo && !$this->option('quick')) {
                     try {
                         $image = $this->createImageFromUrl('https://assos.utc.fr/uploads/services/source/'.$service->logo,
                             $model, 'services/'.$model->id);
@@ -774,6 +784,78 @@ class OldToNew extends Command
                 throw $e;
             } catch (\Error $e) {
                 $this->output->error('Impossible de créer le service '.$service->nom);
+
+                throw $e;
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Crée les accès d'associations depuis l'ancien Portail.
+     *
+     * @return mixed
+     */
+    protected function addAssosAccess()
+    {
+        $this->info('Préparation des accès');
+
+        $accessList = $this->getDB()->select('SELECT * FROM charte_locaux');
+
+        $this->info('Création des '.count($accessList).' accès');
+
+        $bar = $this->output->createProgressBar(count($accessList));
+        $errors = [];
+
+        foreach ($accessList as $access) {
+            try {
+                try {
+                    $asso = $this->getAsso($access->asso_id);
+                    if (!$asso) {
+                        $this->output->error('Association non existante n°'.$access->asso_id);
+                        continue;
+                    }
+
+                    $type = $this->getAccess($access->type_id);
+                    if (!$type) {
+                        $this->output->error('Accès non existant n°'.$access->type_id);
+                        continue;
+                    }
+
+                    $user = $this->getUser($access->user_id);
+                    if (!$user) {
+                        $this->output->error('Utilisateur non existant n°'.$access->user_id);
+                        continue;
+                    }
+
+                    $semester = $this->getSemester($access->semestre_id);
+                    if (!$semester) {
+                        $this->output->error('Semestre non existant n°'.$access->semestre_id);
+                        continue;
+                    }
+
+                    try {
+                        $model = $asso->access()->create([
+                            'member_id' => $user->id,
+                            'access_id' => $type->id,
+                            'semester_id' => $semester->id,
+                            'description' => $access->motif,
+                        ]);
+                    } catch (\Exception $e) {
+                        $errors[] = 'n°'.$access->id.': '.$e->getMessage();
+                    }
+                } catch (\Exception $e) {
+                    $errors[] = 'Information manquante pour l\'accès n°'.$access->id;
+                }
+
+                $bar->advance();
+            } catch (\Exception $e) {
+                $this->output->error('Impossible de créer l\'accès n°'.$access->id);
+
+                throw $e;
+            } catch (\Error $e) {
+                $this->output->error('Impossible de créer l\'accès n°'.$access->id);
 
                 throw $e;
             }

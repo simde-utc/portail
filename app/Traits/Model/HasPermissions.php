@@ -75,8 +75,7 @@ trait HasPermissions
         foreach (Permission::getPermissions(stringToArray($permissions), $this) as $permission) {
             if (!$force) {
                 if (isset($data['validated_by']) || \Auth::id()) {
-                    if (!$manageablePerms->contains('id', $permission->id)
-                        && !$manageablePerms->contains('type', 'admin')) {
+                    if (!$manageablePerms->contains('id', $permission->id)) {
                         throw new PortailException('La personne demandant la validation n\'est pas habilitée à \
                             donner cette permission: '.$permission->name);
                     }
@@ -117,8 +116,7 @@ trait HasPermissions
 
         foreach (Permission::getPermissions(stringToArray($permissions), $this) as $permission) {
             if (!$force && (isset($updatedData['validated_by']) || \Auth::id())) {
-                if (!$manageablePerms->contains('id', $permission->id)
-                    && (!$manageablePerms->contains('type', 'admin'))) {
+                if (!$manageablePerms->contains('id', $permission->id)) {
                     throw new PortailException('La personne demandant la validation n\'est pas habilitée à \
                         modifier cette permission: '.$permission->name);
                 }
@@ -166,8 +164,7 @@ trait HasPermissions
 
         foreach (Permission::getPermissions(stringToArray($permissions), $this) as $permission) {
             if (!$force && $removed_by !== null) {
-                if (!$manageablePerms->contains('id', $permission->id)
-                    && (!$manageablePerms->contains('type', 'admin'))) {
+                if (!$manageablePerms->contains('id', $permission->id)) {
                     throw new PortailException('La personne demandant la suppression n\'est pas habilitée à \
                         retirer cette permission: '.$permission->name);
                 }
@@ -269,15 +266,17 @@ trait HasPermissions
             $permissions = $permissions->wherePivot('user_id', $user_id);
         }
 
-        $relatedTable = $this->getPermissionRelationTable();
-
         $permissions = $permissions->wherePivotIn('semester_id', [0, $semester_id]);
 
         if ($needToBeValidated) {
             $permissions = $permissions->wherePivot('validated_by', '!=', null);
         }
 
-        return $permissions->withPivot(['validated_by', 'semester_id'])->get();
+        return $permissions->where(function ($query) {
+                return $query->where('owned_by_id', $this->id)
+                    ->orWhereNull('owned_by_id');
+        })->where('owned_by_type', get_class($this))
+            ->withPivot(['validated_by', 'semester_id'])->get();
     }
 
     /**

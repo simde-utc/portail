@@ -6,22 +6,22 @@
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
-**/
+ */
 
 import produce from 'immer';
 import { applyMiddleware, createStore } from 'redux';
 
 // Import Middlewares
 import promise from 'redux-promise-middleware';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 
 // Suffixes des actions asynchrones
 export const ASYNC_SUFFIXES = {
-    loading: 'LOADING',
-    success: 'SUCCESS',
-    error: 'ERROR'
-}
+	loading: 'LOADING',
+	success: 'SUCCESS',
+	error: 'ERROR',
+};
 
 /**
  * ActionTypes Creator
@@ -29,322 +29,333 @@ export const ASYNC_SUFFIXES = {
  * @param      {string}   name    Le nom de la ressource au singulier en capital
  * @return     {Object}           Un set de types d'action CRUD pour la ressource name
  */
-export const createCrudTypes = (name) => ({
-    // _resource_name: name,
-    getAll: 'GET_ALL_' + name,
-    getOne: 'GET_ONE_' + name,
-    create: 'CREATE_' + name,
-    update: 'UPDATE_' + name,
-    delete: 'DELETE_' + name
+export const createCrudTypes = name => ({
+	// _resource_name: name,
+	getAll: `GET_ALL_${name}`,
+	getOne: `GET_ONE_${name}`,
+	create: `CREATE_${name}`,
+	update: `UPDATE_${name}`,
+	delete: `DELETE_${name}`,
 });
 
 // Configure Middlewares
 export const middlewares = applyMiddleware(
-    thunk,
-    promise({
-        promiseTypeSuffixes: Object.values(ASYNC_SUFFIXES)
-    }),
-    // createLogger({ collapse: true })
+	thunk,
+	promise({
+		promiseTypeSuffixes: Object.values(ASYNC_SUFFIXES),
+	})
+	// createLogger({ collapse: true })
 );
 
 // La racine du store
 export const store = {
-    // Converti tout simple une route uri (string) en array | ex: 'assos/calendars' => ['assos', 'calendars']
-    propsToArray: function (props) {
-        if (typeof props === 'string') {
-            props = props.split('/');
-        }
+	// Converti tout simple une route uri (string) en array | ex: 'assos/calendars' => ['assos', 'calendars']
+	propsToArray(_props) {
+		let props = _props;
 
-        if (!(props instanceof Array)) {
-            return [];
-        }
+		if (typeof props === 'string') {
+			props = props.split('/');
+		}
 
-        return props;
-    },
+		if (!(props instanceof Array)) {
+			return [];
+		}
 
-    // Permet de retouver facilement un élément du store (remplacement est par quoi on replace si on trouve pas, et on force si array vide par ex)
-    get: function (props, replacement = {}, forceReplacement = false) {
-        var data = this;
-        props = this.propsToArray(props)
+		return props;
+	},
 
-        for (let key in props) {
-            if (data[props[key]] !== undefined) {
-                data = data[props[key]]
-            }
-            else if (data.resources[props[key]] !== undefined) {
-                data = data.resources[props[key]]
-            }
-            else {
-                return replacement;
-            }
-        }
+	// Permet de retouver facilement un élément du store (remplacement est par quoi on replace si on trouve pas, et on force si array vide par ex)
+	get(_props, replacement = {}, forceReplacement = false) {
+		let data = this;
+		const props = this.propsToArray(_props);
 
-        if (forceReplacement && (data instanceof Object) && Object.keys(data).length === 0)
-            return replacement;
+		for (let key = 0; key < props.length; key++) {
+			if (data[props[key]] !== undefined) {
+				data = data[props[key]];
+			} else if (data.resources[props[key]] !== undefined) {
+				data = data.resources[props[key]];
+			} else {
+				return replacement;
+			}
+		}
 
-        return data;
-    },
+		if (forceReplacement && data instanceof Object && Object.keys(data).length === 0)
+			return replacement;
 
-    // Retrouver un élément précis
-    getData: function (props, replacement = [], forceReplacement = true) {
-        return this.get(this.propsToArray(props).concat(['data']), replacement, forceReplacement);
-    },
-    findData: function (props, value, key = 'id', replacement = {}, forceReplacement = true) {
-        // Les ressources sont rangées par id:
-        if (key === 'id') {
-            return this.getData(this.propsToArray(props).concat(['value']), replacement, forceReplacement);
-        }
-        else {
-            var data = this.getData(props, []);
+		return data;
+	},
 
-            for (let k in data) {
-                if (data[k][key] === value) {
-                    if (!forceReplacement || !(data[k] instanceof Object) || Object.keys(data[k]).length > 0) {
-                        return data[k];
-                    }
-                }
-            }
-        }
+	// Retrouver un élément précis
+	getData(props, replacement = [], forceReplacement = true) {
+		return this.get(this.propsToArray(props).concat(['data']), replacement, forceReplacement);
+	},
+	findData(props, value, key = 'id', replacement, forceReplacement = true) {
+		// Les ressources sont rangées par id:
+		if (key === 'id') {
+			return this.getData(
+				this.propsToArray(props).concat(['value']),
+				replacement,
+				forceReplacement
+			);
+		}
 
-        return replacement;
-    },
-    getError: function (props, replacement = null, forceReplacement = true) {
-        return this.get(this.propsToArray(props).concat(['error']), replacement, forceReplacement);
-    },
-    hasFailed: function (props, replacement = false, forceReplacement = true) {
-        return this.get(this.propsToArray(props).concat(['failed']), replacement, forceReplacement);
-    },
-    getStatus: function (props, replacement = null, forceReplacement = true) {
-        return this.get(this.propsToArray(props).concat(['status']), replacement, forceReplacement);
-    },
-    getLastUpdate: function (props, replacement = null, forceReplacement = true) {
-        return this.get(this.propsToArray(props).concat(['lastUpdate']), replacement, forceReplacement);
-    },
-    isFetching: function (props, replacement = false, forceReplacement = true) {
-        return this.get(this.propsToArray(props).concat(['fetching']), replacement, forceReplacement);
-    },
-    isFetched: function (props, replacement = false, forceReplacement = true) {
-        return this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement);
-    },
-    // Permet de savoir si une requête s'est terminée
-    hasFinished: function (props, replacement = false, forceReplacement = true) {
-        return this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement) ||
-            this.get(this.propsToArray(props).concat(['failed']), replacement, forceReplacement);
-    },
-    resources: {},
+		const data = this.getData(props, []);
+
+		for (const k in data) {
+			if (data[k][key] === value) {
+				if (!forceReplacement || !(data[k] instanceof Object) || Object.keys(data[k]).length > 0) {
+					return data[k];
+				}
+			}
+		}
+
+		return replacement;
+	},
+	getError(props, replacement = null, forceReplacement = true) {
+		return this.get(this.propsToArray(props).concat(['error']), replacement, forceReplacement);
+	},
+	hasFailed(props, replacement = false, forceReplacement = true) {
+		return this.get(this.propsToArray(props).concat(['failed']), replacement, forceReplacement);
+	},
+	getStatus(props, replacement = null, forceReplacement = true) {
+		return this.get(this.propsToArray(props).concat(['status']), replacement, forceReplacement);
+	},
+	getLastUpdate(props, replacement = null, forceReplacement = true) {
+		return this.get(this.propsToArray(props).concat(['lastUpdate']), replacement, forceReplacement);
+	},
+	isFetching(props, replacement = false, forceReplacement = true) {
+		return this.get(this.propsToArray(props).concat(['fetching']), replacement, forceReplacement);
+	},
+	isFetched(props, replacement = false, forceReplacement = true) {
+		return this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement);
+	},
+	// Permet de savoir si une requête s'est terminée
+	hasFinished(props, replacement = false, forceReplacement = true) {
+		return (
+			this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement) ||
+			this.get(this.propsToArray(props).concat(['failed']), replacement, forceReplacement)
+		);
+	},
+	resources: {},
 };
 
 // Racine de chaque catégorie CRUD
 export const initialCrudState = {
-    data: [],
-    error: null,
-    failed: false,
-    status: null,
-    fetching: false,
-    fetched: false,
-    lastUpdate: null,
-    resources: {},
+	data: [],
+	error: null,
+	failed: false,
+	status: null,
+	fetching: false,
+	fetched: false,
+	lastUpdate: null,
+	resources: {},
 };
 
 // Comme le JS ne fait pas deep copy avec Object.assign, on est obligé de le faire nous-même..
-export const initCrudState = (state, initialState = initialCrudState) => {
-    for (let key in initialState) {
-        if (initialState.hasOwnProperty(key)) {
-            if (initialState[key] instanceof Object) {
-                state[key] = Array.isArray(initialState[key]) ? [] : {};
-                initCrudState(state[key], initialState[key]);
-            }
-            else {
-                state[key] = initialState[key];
-            }
-        }
-    }
+export const initCrudState = (_state, initialState = initialCrudState) => {
+	const state = _state;
 
-    return state;
-}
+	for (const key in initialState) {
+		if (initialState.hasOwnProperty(key)) {
+			if (initialState[key] instanceof Object) {
+				state[key] = Array.isArray(initialState[key]) ? [] : {};
+				initCrudState(state[key], initialState[key]);
+			} else {
+				state[key] = initialState[key];
+			}
+		}
+	}
+
+	return state;
+};
 
 // Ici, toute la magie opère, on génère dynmaiquement et automatiquement la route api et l'emplacement dans le store
-export const buildStorePath = (store, path) => {
-    var place = store;
-    var part;
+export const buildStorePath = (_store, path) => {
+	let place = _store;
+	let part;
 
-    for (let key in path) {
-        part = path[key];
+	for (const key in path) {
+		part = path[key];
 
-        if (place.resources[part] === undefined) {
-            place.resources[part] = {};
-            initCrudState(place.resources[part]);
-        }
+		if (place.resources[part] === undefined) {
+			place.resources[part] = {};
+			initCrudState(place.resources[part]);
+		}
 
-        place = place.resources[part];
-    }
+		place = place.resources[part];
+	}
 
-    return place;
-}
+	return place;
+};
 
-export const makeResourceSuccessed = (place, timestamp, status) => {
-    place.fetching = false;
-    place.fetched = true;
-    place.error = null;
-    place.failed = false;
-    place.lastUpdate = timestamp;
-    place.status = status;
+export const makeResourceSuccessed = (_place, timestamp, status) => {
+	const place = _place;
+
+	place.fetching = false;
+	place.fetched = true;
+	place.error = null;
+	place.failed = false;
+	place.lastUpdate = timestamp;
+	place.status = status;
+
+	return place;
 };
 
 // Ici on crée le store et on modifie ses données via immer en fonction de la récup des données
 export default createStore((state = store, action) => {
-    console.debug(action.type);
-    if (action.meta && action.meta.path && action.meta.path.length > 0) {
-        return produce(state, draft => {
-            var path = action.meta.path;
-            var id;
+	console.debug(action.type);
+	if (action.meta && action.meta.path && action.meta.path.length > 0) {
+		return produce(state, draft => {
+			let { path } = action.meta;
+			let id;
 
-            // Si on ne modifie qu'une donnée précise, il faut qu'on change le statut pour la ressource
-            if (action.meta.action !== 'updateAll') {
-                path = path.slice();
-                id = path.pop();
-            }
+			// Si on ne modifie qu'une donnée précise, il faut qu'on change le statut pour la ressource
+			if (action.meta.action !== 'updateAll') {
+				path = path.slice();
+				id = path.pop();
+			}
 
-            var place = buildStorePath(draft, path);
+			let place = buildStorePath(draft, path);
 
-            if (action.type.endsWith('_' + ASYNC_SUFFIXES.loading)) {
-                place.fetching = true;
-                place.status = null;
-            }
-            // Si on a défini que la réponse HTTP était valide:
-            else if (action.meta.validStatus.includes(action.payload.status || action.payload.response.status)) {
-                if (action.type.endsWith('_' + ASYNC_SUFFIXES.success)) {
-                    const { timestamp, status, data } = action.payload;
-                    makeResourceSuccessed(place, timestamp, status);
+			if (action.type.endsWith(`_${ASYNC_SUFFIXES.loading}`)) {
+				place.fetching = true;
+				place.status = null;
+			}
+			// Si on a défini que la réponse HTTP était valide:
+			else if (
+				action.meta.validStatus.includes(action.payload.status || action.payload.response.status)
+			) {
+				if (action.type.endsWith(`_${ASYNC_SUFFIXES.success}`)) {
+					const { timestamp, status, data } = action.payload;
+					place = makeResourceSuccessed(place, timestamp, status);
 
-                    if (action.meta.action === 'updateAll') {
-                        place.data = data;
+					if (action.meta.action === 'updateAll') {
+						place.data = data;
 
-                        if (Array.isArray(data)) {
-                            for (let key in data) {
-                                var element = data[key];
-                                var placeForData = buildStorePath(draft, path.concat([element.id]));
+						if (Array.isArray(data)) {
+							for (const key in data) {
+								const element = data[key];
+								let placeForData = buildStorePath(draft, path.concat([element.id]));
 
-                                makeResourceSuccessed(placeForData, timestamp, status);
-                                placeForData.data = element;
-                            }
-                        }
-                        else if (data.id) {
-                            var placeForData = buildStorePath(draft, path.concat([data.id]));
+								placeForData = makeResourceSuccessed(placeForData, timestamp, status);
+								placeForData.data = element;
+							}
+						} else if (data.id) {
+							let placeForData = buildStorePath(draft, path.concat([data.id]));
 
-                            makeResourceSuccessed(placeForData, timestamp, status);
-                            placeForData.data = data;
-                        }
-                        else {
-                            var keys = Object.keys(data);
+							placeForData = makeResourceSuccessed(placeForData, timestamp, status);
+							placeForData.data = data;
+						} else {
+							const keys = Object.keys(data);
 
-                            for (let key in keys) {
-                                var element = data[keys[key]];
-                                var placeForData = buildStorePath(draft, path.concat([keys[key]]));
+							for (const key in keys) {
+								const element = data[keys[key]];
+								let placeForData = buildStorePath(draft, path.concat([keys[key]]));
 
-                                makeResourceSuccessed(placeForData, timestamp, status);
-                                placeForData.data = element;
-                            }
-                        }
-                    }
-                    else {
-                        // On stock la data dans la liste des données de la ressource
-                        switch (action.meta.action) {
-                            case 'update':
-                                var index = place.data.findIndex(dataFromPlace => dataFromPlace.id === data.id);
+								placeForData = makeResourceSuccessed(placeForData, timestamp, status);
+								placeForData.data = element;
+							}
+						}
+					} else {
+						let index;
 
-                                if (index > -1) {
-                                    place.data[index] = data;
+						// On stock la data dans la liste des données de la ressource
+						switch (action.meta.action) {
+							case 'update':
+								index = place.data.findIndex(dataFromPlace => dataFromPlace.id === data.id);
 
-                                    break;
-                                }
+								if (index > -1) {
+									place.data[index] = data;
 
-                            case 'create':
-                                place.data.push(data);
+									break;
+								}
 
-                                break;
+							case 'create':
+								place.data.push(data);
 
-                            case 'delete':
-                                var index = place.data.findIndex(dataFromPlace => dataFromPlace.id === data.id);
+								break;
 
-                                if (index > -1) {
-                                    place.data.splice(index, 1);
-                                }
+							default:
+								// 'delete'
+								index = place.data.findIndex(dataFromPlace => dataFromPlace.id === data.id);
 
-                                break;
-                        }
+								if (index > -1) {
+									place.data.splice(index, 1);
+								}
 
-                        // On stock la data par id pour la ressource
-                        switch (action.meta.action) {
-                            case 'update':
-                            case 'create':
-                                // On modifie/stock la donnée via l'id
-                                var placeForData = buildStorePath(draft, path.concat([id]));
+								break;
+						}
 
-                                makeResourceSuccessed(placeForData, timestamp, status);
-                                placeForData.data = data;
+						// On stock la data par id pour la ressource
+						switch (action.meta.action) {
+							case 'update':
+							case 'create':
+								// On modifie/stock la donnée via l'id
+								let placeForData = buildStorePath(draft, path.concat([id]));
 
-                                break;
+								placeForData = makeResourceSuccessed(placeForData, timestamp, status);
+								placeForData.data = data;
 
-                            case 'delete':
-                                delete place.resources[id];
+								break;
 
-                                break;
-                        }
+							default:
+								// 'delete'
+								delete place.resources[id];
 
-                        // Typiquement, si on a une asso et qu'on la recherche par login
-                        if (id !== data.id) {
-                            // On stock la data par id pour la ressource
-                            switch (action.meta.action) {
-                                case 'update':
-                                case 'create':
-                                    // On modifie/stock la donnée via l'id de la data
-                                    var placeForIdData = placeForData;
-                                    var placeForData = buildStorePath(draft, path.concat([data.id]));
+								break;
+						}
 
-                                    makeResourceSuccessed(placeForData, timestamp, status);
-                                    placeForData.data = data;
-                                    placeForIdData.resources = placeForData.resources;
+						// Typiquement, si on a une asso et qu'on la recherche par login
+						if (id !== data.id) {
+							// On stock la data par id pour la ressource
+							switch (action.meta.action) {
+								case 'update':
+								case 'create':
+									// On modifie/stock la donnée via l'id de la data
+									let placeForData = buildStorePath(draft, path.concat([data.id]));
+									const placeForIdData = placeForData;
 
-                                    break;
+									placeForData = makeResourceSuccessed(placeForData, timestamp, status);
+									placeForData.data = data;
+									placeForIdData.resources = placeForData.resources;
 
-                                case 'delete':
-                                    delete place.resources[data.id];
+									break;
 
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
+								default:
+									// 'delete'
+									delete place.resources[data.id];
+									break;
+							}
+						}
+					}
+				}
+			} else if (action.type.endsWith(`_${ASYNC_SUFFIXES.error}`)) {
+				if (id) {
+					place = buildStorePath(draft, path.concat([id]));
+				}
 
-            else if (action.type.endsWith('_' + ASYNC_SUFFIXES.error)) {
-                if (id) {
-                    place = buildStorePath(draft, path.concat([id]));
-                }
+				place.data = [];
+				place.fetching = false;
+				place.fetched = false;
+				place.error = action.payload;
+				place.failed = true;
+				place.status = action.payload.response.status;
+			}
+			// On a un success du côté de Redux mais on refuse de notre côté le code HTTP
+			else {
+				place = buildStorePath(draft, path);
 
-                place.data = [];
-                place.fetching = false;
-                place.fetched = false;
-                place.error = action.payload;
-                place.failed = true;
-                place.status = action.payload.response.status;
-            }
-            // On a un success du côté de Redux mais on refuse de notre côté le code HTTP
-            else {
-                var place = buildStorePath(draft, path);
+				place.data = [];
+				place.fetching = false;
+				place.fetched = false;
+				place.error = 'NOT ACCEPTED';
+				place.failed = true;
+				place.status = action.payload.status;
+			}
 
-                place.data = [];
-                place.fetching = false;
-                place.fetched = false;
-                place.error = 'NOT ACCEPTED';
-                place.failed = true;
-                place.status = action.payload.status;
-            }
+			return draft;
+		});
+	}
 
-            return draft;
-        });
-    }
-
-    return state;
+	return state;
 }, middlewares);

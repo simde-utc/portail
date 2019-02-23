@@ -27,7 +27,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     public $incrementing = false;
 
     protected $fillable = [
-        'user_id', 'asso_id', 'name', 'secret', 'redirect', 'targeted_types',
+        'user_id', 'asso_id', 'name', 'secret', 'redirect', 'targeted_types', 'policy_url',
         'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'scopes'
     ];
 

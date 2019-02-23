@@ -1,3 +1,14 @@
+/**
+ * Liste les services
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
+
 import React from 'react';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -12,19 +23,26 @@ import AssociativeCarreer from '../components/Profile/AssociativeCarreer';
 }))
 class ScreensProfile extends React.Component {
 	componentWillMount() {
-		this.props.dispatch(actions.user.get())
+		const { dispatch } = this.props;
+
+		dispatch(actions.user.get());
 	}
 
 	load(name) {
-		let action = null;
+		const { dispatch } = this.props;
+
 		switch (name) {
 			case 'info':
-				action = actions.user.get();
+				dispatch(actions.user.details.get());
+				break;
+
 			case 'details':
-				action = actions.user.details.get();
+				dispatch(actions.user.details.get());
+				break;
+
+			default:
+				break;
 		}
-		if (action != null)
-			this.props.dispatch(action)
 	}
 
 	render() {
@@ -34,20 +52,33 @@ class ScreensProfile extends React.Component {
 				<h1 className="title">Mon profil</h1>
 				<ul className="nav nav-tabs">
 					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" exact to={`${match.url}`}>Informations</NavLink>
+						<NavLink className="nav-link" activeClassName="active" exact to={`${match.url}`}>
+							Informations
+						</NavLink>
 					</li>
 					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/parcours_associatif`}>Parcours Associatif</NavLink>
+						<NavLink
+							className="nav-link"
+							activeClassName="active"
+							to={`${match.url}/parcours_associatif`}
+						>
+							Parcours Associatif
+						</NavLink>
 					</li>
 				</ul>
 				<div className="container">
 					<Switch>
-						<Route path={`${match.url}`} exact render={
-							() => <UserInfo info={ user.info } details={ user.details } missing={this.load.bind(this)} />
-						} />
-						<Route path={`${match.url}/parcours_associatif`} render={
-							() => <AssociativeCarreer />
-						} />
+						<Route
+							path={`${match.url}`}
+							exact
+							render={() => (
+								<UserInfo info={user.info} details={user.details} missing={this.load.bind(this)} />
+							)}
+						/>
+						<Route
+							path={`${match.url}/parcours_associatif`}
+							render={() => <AssociativeCarreer />}
+						/>
 					</Switch>
 				</div>
 			</div>

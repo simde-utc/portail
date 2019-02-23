@@ -91,7 +91,7 @@ trait HasReservations
      * @param  string  $verb
      * @return boolean
      */
-    protected function tokenCanSee(Request $request, Model $model, string $verb)
+    protected function tokenCanSee(Request $request, Model $model, string $verb='get')
     {
         if ($model instanceof Room) {
             return $this->tokenCanSeeRoom($request, $model, $verb);

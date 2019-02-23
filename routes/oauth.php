@@ -22,13 +22,13 @@ Route::get('scopes/categories', '\App\Services\Scopes@getAllByCategories');
  */
 
 Route::get('clients', '\App\Http\Controllers\Passport\ClientController@index')
-	->middleware(['forceJson', 'web', 'auth']);
+	->middleware(['forceJson', 'web', 'auth:web']);
 Route::post('clients', '\App\Http\Controllers\Passport\ClientController@store')
-	->middleware(['forceJson', 'web', 'auth', 'permission:client']);
+	->middleware(['forceJson', 'web', 'auth:web', 'permission:client']);
 Route::put('clients/{client_id}', '\App\Http\Controllers\Passport\ClientController@update')
-	->middleware(['forceJson', 'web', 'auth', 'permission:client']);
+	->middleware(['forceJson', 'web', 'auth:web', 'permission:client']);
 Route::delete('clients/{client_id}', '\App\Http\Controllers\Passport\ClientController@destroy')
-	->middleware(['forceJson', 'web', 'auth', 'permission:client']);
+	->middleware(['forceJson', 'web', 'auth:web', 'permission:client']);
 
 
 /*
@@ -36,7 +36,7 @@ Route::delete('clients/{client_id}', '\App\Http\Controllers\Passport\ClientContr
  */
 
 Route::get('authorize', '\Laravel\Passport\Http\Controllers\AuthorizationController@authorize')
-	->middleware(['web', 'auth', 'checkPassport']);
+	->middleware(['web', 'auth:web', 'checkPassport']);
 
 
 /*
@@ -46,4 +46,4 @@ Route::get('authorize', '\Laravel\Passport\Http\Controllers\AuthorizationControl
 Route::post('token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')
 	->middleware(['forceJson', 'throttle', 'checkPassport']);
 Route::post('personal-access-tokens', '\Laravel\Passport\Http\Controllers\PersonalAccessTokenController@store')
-	->middleware(['forceJson', 'web', 'auth', 'checkPassport']);
+	->middleware(['forceJson', 'web', 'auth:web', 'checkPassport']);

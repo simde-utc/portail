@@ -1,10 +1,10 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import CopyToClipboard from '../CopyToClipboard';
 
 class Contact extends React.Component {
-	getIcon(type) {
+	static getIcon(type) {
 		switch (type) {
 			case 'email':
 				return 'envelope';
@@ -21,15 +21,17 @@ class Contact extends React.Component {
 	}
 
 	render() {
+		const { className, type, name, value } = this.props;
+
 		return (
-			<div className={ this.props.className }>
-				<FontAwesomeIcon className="mr-2" icon={ this.getIcon(this.props.type) } />
-				<span className="font-weight-bold mr-2">{ this.props.name }:</span>
-					<CopyToClipboard value={ this.props.value }>
-						<span>{ this.props.value }</span>
-	        </CopyToClipboard>
+			<div className={className}>
+				<FontAwesomeIcon className="mr-2" icon={Contact.getIcon(type)} />
+				<span className="font-weight-bold mr-2">{name}:</span>
+				<CopyToClipboard value={value}>
+					<span>{value}</span>
+				</CopyToClipboard>
 			</div>
-		)
+		);
 	}
 }
 

@@ -17,7 +17,6 @@ use App\Models\User;
 use App\Models\AuthCas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Session;
 use App\Exceptions\PortailException;
 
 class Cas extends BaseAuth

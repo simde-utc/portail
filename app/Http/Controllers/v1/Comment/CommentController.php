@@ -78,18 +78,18 @@ class CommentController extends Controller
     {
         $creater = \ModelResolver::getModel($request->input('created_by_type'))->find($request->input('created_by_id'));
 
-        if (!$request->ressource->isCommentManageableBy($creater)
-            || (\Auth::id() && !$request->ressource->isCommentWritableBy($creater))) {
+        if (!$request->resource->isCommentManageableBy($creater)
+            || (\Auth::id() && !$creater->isCommentWritableBy(\Auth::id()))) {
             abort(403, 'Il ne vous est pas autorisé de créer un commentaire pour cette instance');
         }
 
         $comment = $request->resource->comments()->create([
             'body' => $request->input('body'),
-            'created_by_type' => $request->input('created_by_type'),
-            'created_by_id' => $request->input('created_by_id'),
+            'created_by_type' => get_class($creater),
+            'created_by_id' => $creater->id,
         ]);
 
-        $comment->changeOwnerTo($request->ressource)->save();
+        $comment->changeOwnerTo($request->resource)->save();
 
         return response()->json($comment->hideSubData(), 201);
     }

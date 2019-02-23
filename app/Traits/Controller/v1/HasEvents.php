@@ -136,7 +136,7 @@ trait HasEvents
 
         if ($calendar) {
             if (!$this->isCalendarFollowed($request, $calendar, $user->id)) {
-                if (!$this->tokenCanSee($request, $calendar, $verb)) {
+                if (!$this->tokenCanSee($request, $calendar, $verb, 'calendars')) {
                     abort(403, 'L\'application n\'a pas les droits sur ce calendrier');
                 }
 

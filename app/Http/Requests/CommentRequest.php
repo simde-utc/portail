@@ -45,13 +45,9 @@ class CommentRequest extends Request
                 ->post('required')
                 ->get(),
             'created_by_type' => Validation::type('string')
-                ->get(),
-            'created_by_id' => Validation::type('uuid')
-                ->get(),
-            'owned_by_type' => Validation::type('string')
                 ->post('required')
                 ->get(),
-            'owned_by_id' => Validation::type('uuid')
+            'created_by_id' => Validation::type('uuid')
                 ->post('required')
                 ->get(),
         ];

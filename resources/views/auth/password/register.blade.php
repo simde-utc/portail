@@ -89,7 +89,7 @@
                     </div>
 
                     <div class="form-group {{ $errors->has('captcha') ? ' has-error' : '' }} row">
-                        <label for="captcha" class="col-md-4 col-form-label">Captcha :</label>
+                        <label for="captcha" class="col-md-4 col-form-label">Résultat du Captcha :</label>
 
                         <div class="col-md-6">
                             <div class="captcha mb-2">

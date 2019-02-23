@@ -34,6 +34,7 @@
                                 </table>
                         </div>
                     @endif
+                    En poursuivant, vous acceptez et vous certifiez avoir lu la <a class="font-italic text-secondary" href="{{ $client->policy_url }}" target="_blank">politique de confidentialité</a> de <strong>{{ $client->name }}</strong>.
                 </div>
                 <div class="card-footer bg-transparent p-0">
                     <div class="row m-0">

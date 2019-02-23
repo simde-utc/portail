@@ -120,7 +120,6 @@ trait ScopesIdentification
 
         return [
             $middleware,
-            $this->getAuthMiddleware().'.check',
         ];
     }
 
@@ -133,7 +132,6 @@ trait ScopesIdentification
     {
         return [
             $this->getAuthMiddleware().'.user',
-            $this->getAuthMiddleware().'.check'
         ];
     }
 
@@ -146,7 +144,6 @@ trait ScopesIdentification
     {
         return [
             $this->getAuthMiddleware().'.client',
-            $this->getAuthMiddleware().'.check'
         ];
     }
 
@@ -159,7 +156,6 @@ trait ScopesIdentification
     {
         return [
             $this->getAuthMiddleware().'.any',
-            $this->getAuthMiddleware().'.check'
         ];
     }
 

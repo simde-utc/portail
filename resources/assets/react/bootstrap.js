@@ -1,58 +1,37 @@
-import store from './redux/store.js';
-window._ = require('lodash');
-
 /**
- * We'll load the axios HTTP library which allows us to easily issue requests
- * to our Laravel back-end. This library automatically handles sending the
- * CSRF token as a header based on the value of the "XSRF" token cookie.
+ * Préparation de l'application
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
  */
 
+window._ = require('lodash');
+
+// Permet d'exécuter des requêtes Ajax simplement vers le Portail
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-/**
- * Next we will register the CSRF Token as a common header with Axios so that
- * all outgoing HTTP requests automatically have it attached. This is just
- * a simple convenience so we don't have to attach every token manually.
- */
-
-let token = document.head.querySelector('meta[name="csrf-token"]');
-if (token)
+// Récupération du token CSRF
+const token = document.head.querySelector('meta[name="csrf-token"]');
+if (token) {
 	window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-else
+} else {
 	console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
 
-/**
- * Attach Axios Interceptors
- */
-
+// Ajout un intercepter de réponse.
 window.axios.interceptors.response.use(
 	response => response,
 	error => {
-		// Deal with Unauthenticated requests
-		if (error.response.status === 401 && store.resources) {
-			store.resources.user = {};
+		// Récupération des requêtes HTTP 401
+		if (error.response.status === 401 && window.isLogged) {
+			window.location.reload();
 		}
 
 		return Promise.reject(error);
 	}
 );
-
-
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
-
-// import Echo from 'laravel-echo'
-
-// window.Pusher = require('pusher-js');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     encrypted: true
-// });

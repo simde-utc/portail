@@ -1,25 +1,24 @@
+/**
+ * Affiche les associations de l'utlisateur.
+ *
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
+
 import React from 'react';
+import Article from './Article';
 
-import Article from './Article.js';
-
-class ArticleList extends React.Component {
-	render() {
-		return (
-			<div className="container ArticleList">
-				{ (this.props.fetched) ? (
-					(this.props.articles.length > 0) ? (
-						this.props.articles.map(article => (
-							<Article key={ article.id } article={article} />
-						))
-					) : (
-						<div>Aucun article n'est disponible pour le moment, revenez plus tard !.</div>
-					)
-				) : (
-					<div>Chargement</div>
-				)}
-			</div>
-		);
-	}
-}
+const ArticleList = ({ articles, fetched }) => (
+	<div className="container ArticleList">
+		{fetched ? (
+			articles.map(article => <Article key={article.id} article={article} />)
+		) : (
+			<div>Chargement</div>
+		)}
+	</div>
+);
 
 export default ArticleList;

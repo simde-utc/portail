@@ -20,3 +20,7 @@ public/css/bootstrap\.css
 public/js/index\.js
 public/docs/*
 public/mix-manifest\.json
+public/images/articles/*
+public/images/assos/*
+public/images/events/*
+public/images/services/*

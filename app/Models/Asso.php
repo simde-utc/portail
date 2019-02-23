@@ -15,25 +15,21 @@ namespace App\Models;
 
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Model\HasMembers;
-use App\Traits\Model\HasStages;
-use App\Interfaces\Model\CanHaveContacts;
-use App\Interfaces\Model\CanHaveEvents;
-use App\Interfaces\Model\CanHaveCalendars;
-use App\Interfaces\Model\CanHaveArticles;
-use App\Interfaces\Model\CanHaveRooms;
-use App\Interfaces\Model\CanHaveReservations;
-use App\Interfaces\Model\CanNotify;
-use App\Interfaces\Model\CanHaveRoles;
-use App\Interfaces\Model\CanHavePermissions;
-use App\Interfaces\Model\CanComment;
+use App\Traits\Model\{
+    HasMembers, HasStages, HasDeletedSelection
+};
+use Illuminate\Notifications\Notifiable;
+use App\Interfaces\Model\{
+    CanHaveContacts, CanHaveEvents, CanHaveCalendars, CanHaveArticles, CanHaveRooms,
+    CanHaveReservations, CanNotify, CanHaveRoles, CanHavePermissions, CanComment
+};
 use Illuminate\Support\Collection;
 use App\Exceptions\PortailException;
 
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles,
 	CanNotify, CanHaveRooms, CanHaveReservations, CanHaveRoles, CanHavePermissions, CanComment
 {
-    use HasStages, HasMembers, SoftDeletes {
+    use HasStages, HasMembers, SoftDeletes, HasDeletedSelection, Notifiable {
         HasMembers::members as membersAndFollowers;
         HasMembers::currentMembers as currentMembersAndFollowers;
         HasMembers::joiners as protected joinersFromHasMembers;
@@ -62,7 +58,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     ];
 
     protected $must = [
-        'name', 'shortname', 'login', 'image',
+        'name', 'shortname', 'login', 'image', 'deleted_at',
     ];
 
     // Children dans le cas où on affiche en mode étagé.
@@ -73,9 +69,10 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
                 'name' => 'shortname',
             ],
         ],
+        'deleted' => 'without',
+        'filter' => [],
         'stage' => null,
         'stages' => null,
-        'filter' => [],
     ];
 
     protected $roleRelationTable = 'assos_members';
@@ -217,6 +214,48 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     public function currentFollowers()
     {
         return $this->currentMembersAndFollowers()->wherePivot('role_id', null);
+    }
+
+    /**
+     * Notifie les membres de l'association.
+     *
+     * @param  mixed        $notification
+     * @param  string|array $restrictToRoleIds
+     * @return void
+     */
+    public function notifyMembers($notification, $restrictToRoleIds=null)
+    {
+        $members = $this->currentMembers();
+
+        if ($restrictToRoleIds) {
+            $members->wherePivotIn('role_id', (array) $restrictToRoleIds);
+        }
+
+        foreach ($members->get() as $member) {
+            $member->notify($notification);
+        }
+    }
+
+    /**
+     * Donne l'adresse email de notification.
+     *
+     * @param  mixed $notification
+     * @return string
+     */
+    public function routeNotificationForMail($notification)
+    {
+        return $this->contacts()->keyExistsInDB('CONTACT_EMAIL') ? $this->contacts()->valueOf('CONTACT_EMAIL') : null;
+    }
+
+    /**
+     * Donne l'icône de notification en tant que créateur.
+     *
+     * @param  Notification $notification
+     * @return string
+     */
+    public function getNotificationIcon(Notification $notification)
+    {
+        return $this->image;
     }
 
     /**

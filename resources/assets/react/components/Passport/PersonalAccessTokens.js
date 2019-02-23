@@ -1,11 +1,5 @@
-import React, { Component } from 'react';
-
-class PersonalAccessTokens extends Component { 
-	render() {
-		return (
-			null
-		);
-	}
+const PersonalAccessTokens = () => {
+	return null;
 };
 
 export default PersonalAccessTokens;
