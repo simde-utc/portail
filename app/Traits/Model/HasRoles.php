@@ -317,7 +317,7 @@ trait HasRoles
         return $roles->where(function ($query) {
                 return $query->where('owned_by_id', $this->id)
                     ->orWhereNull('owned_by_id');
-            })->where('owned_by_type', get_class($this))
+        })->where('owned_by_type', get_class($this))
             ->withPivot(['validated_by', 'semester_id'])->get();
     }
 
