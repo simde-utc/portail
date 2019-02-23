@@ -107,7 +107,7 @@ class AccessController extends Controller
     {
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);
-        $asso = $this->getAssoFromMember($request, $asso_id, \Auth::id(), $semester);
+        $asso = $this->getAsso($request, $asso_id, \Auth::user(), $semester);
         $access = $asso->access()->where('semester_id', $semester->id);
 
         if (\Auth::id() && !$asso->hasOnePermission('access', [ 'user_id' => \Auth::id() ])) {
@@ -136,7 +136,7 @@ class AccessController extends Controller
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);
         $user_id = (\Auth::id() ?? $request->input('user_id'));
-        $asso = $this->getAssoFromMember($request, $asso_id, \Auth::id(), $semester);
+        $asso = $this->getAsso($request, $asso_id, \Auth::user(), $semester);
         $countAccess = $asso->access()->where('semester_id', $semester->id)
         ->where('member_id', $user_id)
             ->where(function ($query) {
@@ -182,7 +182,7 @@ class AccessController extends Controller
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);
         $user_id = (\Auth::id() ?? $request->input('user_id'));
-        $asso = $this->getAssoFromMember($request, $asso_id, \Auth::id(), $semester);
+        $asso = $this->getAsso($request, $asso_id, \Auth::user(), $semester);
         $access = $this->getAccess($request, $access_id, $user_id, $asso, $semester->id);
 
         return response()->json($access->hideSubData(), 200);
@@ -201,7 +201,7 @@ class AccessController extends Controller
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);
         $user_id = (\Auth::id() ?? $request->input('user_id'));
-        $asso = $this->getAssoFromMember($request, $asso_id, \Auth::id(), $semester);
+        $asso = $this->getAsso($request, $asso_id, \Auth::user(), $semester);
         $access = $this->getAccess($request, $access_id, $user_id, $asso, $semester->id);
 
         // On doit valider au moins la demande d'accès.
@@ -242,7 +242,7 @@ class AccessController extends Controller
         $choices = $this->getChoices($request);
         $semester = $this->getSemester($request, $choices);
         $user_id = (\Auth::id() ?? $request->input('user_id'));
-        $asso = $this->getAssoFromMember($request, $asso_id, \Auth::id(), $semester);
+        $asso = $this->getAsso($request, $asso_id, \Auth::user(), $semester);
         $access = $this->getAccess($request, $access_id, $user_id, $asso, $semester->id);
 
         if ($access->member_id = $user_id && $access->validated_by_id === null) {

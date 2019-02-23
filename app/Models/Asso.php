@@ -113,7 +113,13 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      */
     public function scopeFindByLogin($query, string $login)
     {
-        return $query->where('login', $login)->first();
+        $asso = $query->where('login', $login)->first();
+
+        if ($asso) {
+            return $asso;
+        }
+
+        throw new PortailException('Association non existantce');
     }
 
     /**

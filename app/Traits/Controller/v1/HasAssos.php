@@ -140,31 +140,4 @@ trait HasAssos
             abort(404, 'L\'utilisateur ne fait pas parti de l\'association');
         }
     }
-
-    /**
-     * Récupère une association depuis un utilisateur.
-     *
-     * @param  Request  $request
-     * @param  string   $asso_id
-     * @param  string   $user_id
-     * @param  Semester $semester
-     * @return mixed
-     */
-    protected function getAssoFromMember(Request $request, string $asso_id, string $user_id=null, Semester $semester=null)
-    {
-        if ($user_id) {
-            $asso = User::find($user_id)->joinedAssos()
-                ->wherePivot('semester_id', $semester ? $semester->id : Semester::getThisSemester())
-                ->wherePivot('asso_id', $asso_id)
-                ->first();
-
-            if ($asso) {
-                return $asso;
-            } else {
-                abort(404, 'L\'utilisateur ne fait pas parti de l\'association');
-            }
-        } else {
-            return $this->getAsso($request, $asso_id);
-        }
-    }
 }
