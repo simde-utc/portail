@@ -25,12 +25,20 @@ class AccessRequest extends Request
     {
         return [
 			'access_id' => Validation::type('uuid')
-				->exists('access_id', 'id')
+				->exists('access', 'id')
                 ->post('required')
 				->get(),
+			'user_id' => Validation::type('uuid')
+				->exists('users', 'id')
+				->get(),
             'description' => Validation::type('string')
-                ->length('text')
+                ->length('description')
                 ->post('required')
+                ->get(),
+            'validate' => Validation::type('boolean')
+                ->get(),
+            'comment' => Validation::type('string')
+                ->length('description')
                 ->get(),
         ];
     }

@@ -153,9 +153,9 @@ class AccessController extends Controller
             throw new PortailException("Une demande d\'accès a déjà été validée ou est en cours pour ce semestre");
         }
 
-        $comment = $request->input('comment');
+        $description = $request->input('description');
 
-        if (!trim($comment)) {
+        if (!trim($description)) {
             throw new PortailException("Il est nécessaire de donner une raison précise de la demande");
         }
 
@@ -163,7 +163,7 @@ class AccessController extends Controller
             'member_id' => $user_id,
             'access_id' => $request->input('access_id'),
             'semester_id' => $semester->id,
-            'description' => $request->input('description'),
+            'description' => $description,
         ]);
 
         return response()->json(AssoAccess::find($access->id)->hideSubData(), 201);
@@ -206,19 +206,29 @@ class AccessController extends Controller
 
         // On doit valider au moins la demande d'accès.
         if (!$access->confirmed_by_id) {
-            if (!$asso->hasOnePermission('access', [ 'user_id' => $user_id ])) {
+            if ($asso->hasOnePermission('access', [ 'user_id' => $user_id ])) {
                 $access->confirmed_by_id = $user_id;
             } else {
                 abort(403, "Il ne vous est pas autorisé de confirmer la demande");
             }
         } else if (!$access->validated_by_id) {
-            if (!User::find($user_id)->hasOnePermission('access')) {
-                $access->validated_by_id = $user_id;
-                $access->validated_at = now();
-                $access->validated = $request->input('validate');
-                $access->comment = $request->input('comment');
+            if ($request->filled('validate') && $request->filled('comment')) {
+                $comment = $request->input('comment');
+
+                if (!trim($comment)) {
+                    throw new PortailException("Il est nécessaire de donner une raison précise de la validation ou du refus");
+                }
+
+                if (User::find($user_id)->hasOnePermission('access')) {
+                    $access->validated_by_id = $user_id;
+                    $access->validated_at = now();
+                    $access->validated = $request->input('validate');
+                    $access->comment = $comment;
+                } else {
+                    abort(403, "Il ne vous est pas autorisé de valider ou refuser cette demande");
+                }
             } else {
-                abort(403, "Il ne vous est pas autorisé de valider ou refuser cette demande");
+                abort(403, "Il est nécessaire d'indiquer si la demande est validée et de commenter");
             }
         } else {
             abort(400, "Aucune action n'est possible");
@@ -226,7 +236,7 @@ class AccessController extends Controller
 
         $access->save();
 
-        return response()->json($access->hideSubData(), 200);
+        return response()->json($access->refresh()->hideSubData());
     }
 
     /**
