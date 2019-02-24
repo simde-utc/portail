@@ -20,22 +20,26 @@ import actions from '../../redux/actions';
 import Dropdown from '../../components/Dropdown';
 import ArticleForm from '../../components/Article/Form';
 import LoggedRoute from '../../routes/Logged';
+import ConditionalRoute from '../../routes/Conditional';
 import Http404 from '../../routes/Http404';
 
 import AssoHomeScreen from './Home';
 import ArticleList from './ArticleList';
 import AssoMemberListScreen from './MemberList';
+import AccessScreen from './Access';
 
 import Calendar from '../../components/Calendar/index';
 
 @connect((store, { match: { params: { login } } }) => {
+	const user = store.getData('user', false);
 	const asso = store.getData(['assos', login]);
 
 	return {
-		user: store.getData('user', false),
+		user,
 		asso,
 		member: store.findData(['user', 'assos'], login, 'login', false),
 		roles: store.getData(['assos', asso.id, 'roles']),
+		memberPermissions: store.getData(['assos', asso.id, 'members', user.id, 'permissions']),
 		fetching: store.isFetching(['assos', login]),
 		fetched: store.isFetched(['assos', login]),
 		failed: store.hasFailed(['assos', login]),
@@ -103,10 +107,14 @@ class AssoScreen extends React.Component {
 		dispatch(action);
 
 		action.payload.then(() => {
-			const { asso } = this.props;
+			const { asso, user } = this.props;
 
 			dispatch(
 				actions.definePath(['assos', asso.id, 'roles']).roles.all({ owner: `asso,${asso.id}` })
+			);
+
+			dispatch(
+				actions.assos(asso.id).members(user.id).permissions.all()
 			);
 		});
 	}
@@ -452,7 +460,7 @@ class AssoScreen extends React.Component {
 
 			this.user = {
 				isFollowing: true,
-				isMember: pivot.role_id !== null,
+				isMember: pivot.role_id !== null && pivot.validated_by !== null,
 				isWaiting: pivot.validated_by === null,
 			};
 		} else {
@@ -574,7 +582,14 @@ class AssoScreen extends React.Component {
 							/>
 						)}
 					/>
-					<Route path={`${match.url}/access`} render={() => <div />} />
+					<ConditionalRoute
+						path={`${match.url}/access`}
+						redirect={`${match.url}`}
+						isAllowed={() => { return this.user.isMember }}
+						render={() => (
+							<AccessScreen asso={asso} />
+						)}
+					/>
 					<Route
 						path={`${match.url}/article`}
 						render={() => (

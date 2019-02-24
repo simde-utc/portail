@@ -27,8 +27,9 @@ import MemberList from '../../components/Member/DoubleList';
 class AssoMemberListScreen extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {};
-		const { asso, currentSemester } = this.props;
+		const { asso, currentSemester } = props;
 
 		if (asso.id) {
 			this.loadAssosData(asso.id);
