@@ -318,7 +318,10 @@ class Scopes
      */
     public function getDevScopes()
     {
-        $scopes = [];
+        $scopes = [
+            'user-get-access',
+        // Il n'y a pas de manage.
+        ];
 
         foreach (array_keys(self::all()) as $scope) {
             if (substr($scope, 0, 11) === 'user-manage') {

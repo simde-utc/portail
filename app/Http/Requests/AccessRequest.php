@@ -24,22 +24,21 @@ class AccessRequest extends Request
     public function rules()
     {
         return [
-            'type' => Validation::type('string')
-                ->length('name')
-                ->unique('access', 'type')
+            'access_id' => Validation::type('uuid')
+        ->exists('access', 'id')
                 ->post('required')
-                ->get(),
-            'name' => Validation::type('string')
-                ->length('name')
-                ->unique('access', 'name')
-                ->post('required')
-                ->get(),
+        ->get(),
+            'user_id' => Validation::type('uuid')
+        ->exists('users', 'id')
+        ->get(),
             'description' => Validation::type('string')
-                ->length('text')
+                ->length('description')
                 ->post('required')
                 ->get(),
-            'utc_access' => Validation::type('integer')
-                ->unique('access', 'utc_access')
+            'validate' => Validation::type('boolean')
+                ->get(),
+            'comment' => Validation::type('string')
+                ->length('description')
                 ->get(),
         ];
     }

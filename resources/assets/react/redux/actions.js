@@ -156,7 +156,7 @@ export class Actions {
 		this.path = [];
 		this.pathLocked = false;
 		this.actions = actionsData;
-		this.validStatus = [200, 201, 202, 203, 204];
+		this.validStatus = [200, 201, 202, 203, 204, 416];
 
 		return new Proxy(this, actionHandler);
 	}
