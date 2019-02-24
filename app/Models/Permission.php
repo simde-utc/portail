@@ -40,6 +40,10 @@ class Permission extends Model implements OwnableContract
         'owner' => [],
     ];
 
+    protected $must = [
+        'type', 'name', 'description', 'owned_by'
+    ];
+
     /**
      * Relation avec les rôles.
      *

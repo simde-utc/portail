@@ -33,7 +33,7 @@ class AssoAccess extends Model
     ];
 
     protected $must = [
-        'asso', 'member', 'confirmed_by', 'access', 'semester', 'validated',
+        'asso', 'member', 'confirmed_by', 'access', 'semester', 'validated', 'validated_at'
     ];
 
     protected $casts = [
