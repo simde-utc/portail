@@ -73,13 +73,11 @@ class AssoScreen extends React.Component {
 		this.loadAssosData(login);
 	}
 
-	componentWillReceiveProps({
-		match: {
-			params: { login },
-		},
-	}) {
+	componentDidUpdate({ match: { params } }) {
 		const {
-			match: { params },
+			match: {
+				params: { login },
+			},
 		} = this.props;
 
 		if (params.login !== login) {

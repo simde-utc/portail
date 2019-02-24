@@ -9,72 +9,60 @@ import Img from '../Image';
 	user: store.getData('user'),
 }))
 class Access extends React.Component {
-	getStateColor() {
+	getState() {
 		const { access } = this.props;
 
 		if (access.confirmed_by) {
 			if (access.validated_at) {
-				return access.validated ? 'success' : 'danger';
+				if (access.validated) {
+					return {
+						color: 'success',
+						text: 'Accès attribué',
+					};
+				}
+
+				return {
+					color: 'danger',
+					text: 'Accès refusé',
+				};
 			}
-			return 'primary';
-		}
-		return 'warning';
-	}
 
-	getStateText() {
-		const { access } = this.props;
-
-		if (access.confirmed_by) {
-			if (access.validated_at) {
-				return access.validated ? 'Accès attribué' : 'Accès refusé';
-			}
-			return 'En attente de validation';
-		}
-		return 'En attende de confirmation';
-	}
-
-	getValidationButton() {
-		const { access, canConfirm } = this.props;
-
-		if (!access.confirmed_by && canConfirm) {
-			return (
-				<Button className="float-right">
-					<FontAwesomeIcon icon="check" />
-				</Button>
-			);
+			return {
+				color: 'primary',
+				text: 'En attente de validation',
+			};
 		}
 
-		return null;
-	}
-
-	getRemoveButton() {
-		const { user, access, canConfirm } = this.props;
-
-		if (!access.validated_at && (canConfirm || user.id === access.member.id)) {
-			return (
-				<Button className="float-right">
-					<FontAwesomeIcon icon="times" />
-				</Button>
-			);
-		}
-		return null;
+		return {
+			color: 'warning',
+			text: 'En attente de confirmation',
+		};
 	}
 
 	render() {
-		const { access } = this.props;
+		const { user, access, canConfirm } = this.props;
+		const { text, color } = this.getState();
 
 		return (
-			<ListGroupItem color={this.getStateColor()}>
+			<ListGroupItem color={color}>
 				<div className="container row">
 					<div className="col-md-4">
 						<Img images={access.member.image} style={{ height: '30px', paddingRight: '10px' }} />
 						{access.member.name}
 					</div>
 					<div className="col-md-3">{access.access.name}</div>
-					<div className="col-md-3">{this.getStateText()}</div>
+					<div className="col-md-3">{text}</div>
 					<div className="col-md-2">
-						{this.getRemoveButton()}
-						{this.getValidationButton()}
+						{!access.validated_at && (canConfirm || user.id === access.member.id) && (
+							<Button className="float-right">
+								<FontAwesomeIcon icon="times" />
+							</Button>
+						)}
+						{!access.confirmed_by && canConfirm && (
+							<Button className="float-right">
+								<FontAwesomeIcon icon="check" />
+							</Button>
+						)}
 					</div>
 				</div>
 			</ListGroupItem>

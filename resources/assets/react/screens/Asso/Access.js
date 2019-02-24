@@ -41,8 +41,12 @@ class AccessScreen extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps({ asso: { id } }) {
-		const { asso, accessFetched, dispatch } = this.props;
+	componentDidUpdate({ asso }) {
+		const {
+			asso: { id },
+			accessFetched,
+			dispatch,
+		} = this.props;
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);

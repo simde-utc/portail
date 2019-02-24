@@ -26,7 +26,7 @@ const ConditionalRoute = props => {
 		);
 	}
 
-	window.location.href = `/login?redirect=${window.location.href}`;
+	window.location.replace(`/login?redirect=${window.location.href}`);
 
 	return null;
 };
