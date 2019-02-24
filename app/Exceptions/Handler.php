@@ -38,10 +38,10 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-	protected $exceptionToHttpCode = [
-		\Laravel\Passport\Exceptions\MissingScopeException::class => 412,
-		\Illuminate\Auth\AuthenticationException::class => 401,
-	];
+    protected $exceptionToHttpCode = [
+        \Laravel\Passport\Exceptions\MissingScopeException::class => 412,
+        \Illuminate\Auth\AuthenticationException::class => 401,
+    ];
 
     /**
      * Remonte les erreurs ici (via Sentry par ex).
@@ -84,7 +84,7 @@ class Handler extends ExceptionHandler
             if ($this->isHttpException($exception)) {
                 $status = $exception->getStatusCode();
             } else {
-                $status = $this->exceptionToHttpCode[get_class($exception)] ?? 400;
+                $status = ($this->exceptionToHttpCode[get_class($exception)] ?? 400);
             }
 
             return response()->json($response, $status);

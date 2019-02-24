@@ -10,7 +10,6 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Redirect } from 'react-router-dom';
 
 import ConditionalRoute from './Conditional';
 
@@ -38,7 +37,7 @@ class LoggedRoute extends React.Component {
 	}
 
 	render() {
-		return <ConditionalRoute isAllowed={ this.isAllowed.bind(this) } { ...this.props } />;
+		return <ConditionalRoute isAllowed={this.isAllowed.bind(this)} {...this.props} />;
 	}
 }
 

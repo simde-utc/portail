@@ -221,7 +221,7 @@ class Test extends Command
      */
     private function runEslint()
     {
-        return $this->process(" ./node_modules/.bin/eslint --ext .js resources/assets/react/**");
+        return $this->process("./node_modules/.bin/eslint --ext .js resources/assets/react/**");
     }
 
     /**

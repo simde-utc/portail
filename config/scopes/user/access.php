@@ -21,7 +21,7 @@
 // Toutes les routes commencant par user-{verbe}-access-
 return [
     'description' => 'Accès',
-	'icon' => 'door',
+    'icon' => 'door',
     'verbs' => [
         'get' => [
             'description' => 'Récupérer tous les access',

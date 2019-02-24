@@ -9,7 +9,6 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import Select from 'react-select';
 import { NotificationManager } from 'react-notifications';
 import { find } from 'lodash';
 
@@ -28,8 +27,9 @@ import actions from '../../redux/actions';
 		memberAccess: store.getData(['assos', props.asso.id, 'access']),
 		access: store.getData(['access']),
 		accessFetched: store.isFetched(['access']),
-		permissions: store.getData(['assos', props.asso.id, 'members', user.id, 'permissions'])
-}})
+		permissions: store.getData(['assos', props.asso.id, 'members', user.id, 'permissions']),
+	};
+})
 class AccessScreen extends React.Component {
 	constructor(props) {
 		super(props);
@@ -62,34 +62,43 @@ class AccessScreen extends React.Component {
 	sendDemand(data) {
 		const { asso, permissions, dispatch } = this.props;
 
-		actions.assos(asso.id).access.create(data).payload.then(({ data: { id: access_id }}) => {
-			dispatch(actions.assos(asso.id).access.all());
-			NotificationManager.success(
-				'La demande d\'accès a été envoyée. En attente de la confirmation d\'un responsable de l\'association',
-				'Demande d\'accès'
-			);
+		actions
+			.assos(asso.id)
+			.access.create(data)
+			.payload.then(({ data: { id: access_id } }) => {
+				dispatch(actions.assos(asso.id).access.all());
+				NotificationManager.success(
+					"La demande d'accès a été envoyée. En attente de la confirmation d'un responsable de l'association",
+					"Demande d'accès"
+				);
 
-			// L'utilisateur peut confirmer sa propre demande.
-			if (find(permissions, permission => permission.type === 'access')) {
-				actions.assos(asso.id).access(access_id).update().payload.then(() => {
-					dispatch(actions.assos(asso.id).access.all());
-					NotificationManager.success(
-						'La demande d\'accès a été automatiquement confirmée. En attente de validation de l\'accès',
-						'Demande d\'accès'
-					);
-				}).catch(() => {
-					NotificationManager.error(
-						'La demande d\'accès n\'a pas pu être automatiquement confirmée',
-						'Demande d\'accès'
-					);
-				});
-			}
-		}).catch(() => {
-			NotificationManager.error(
-				'La demande d\'accès n\'a pas pu être envoyée. Il se peut qu\'une demande soit déjà en cours',
-				'Demande d\'accès'
-			);
-		});
+				// L'utilisateur peut confirmer sa propre demande.
+				if (find(permissions, permission => permission.type === 'access')) {
+					actions
+						.assos(asso.id)
+						.access(access_id)
+						.update()
+						.payload.then(() => {
+							dispatch(actions.assos(asso.id).access.all());
+							NotificationManager.success(
+								"La demande d'accès a été automatiquement confirmée. En attente de validation de l'accès",
+								"Demande d'accès"
+							);
+						})
+						.catch(() => {
+							NotificationManager.error(
+								"La demande d'accès n'a pas pu être automatiquement confirmée",
+								"Demande d'accès"
+							);
+						});
+				}
+			})
+			.catch(() => {
+				NotificationManager.error(
+					"La demande d'accès n'a pas pu être envoyée. Il se peut qu'une demande soit déjà en cours",
+					"Demande d'accès"
+				);
+			});
 	}
 
 	render() {
@@ -100,10 +109,10 @@ class AccessScreen extends React.Component {
 		return (
 			<div>
 				{fetched && !userAccessDemand && (
-					<AccessForm access={ access } post={ this.sendDemand.bind(this) } />
+					<AccessForm access={access} post={this.sendDemand.bind(this)} />
 				)}
 				{fetched && memberAccess.length > 0 && (
-					<AccessList list={ memberAccess } members={ members } canConfirm={ userCanConfirm } />
+					<AccessList list={memberAccess} members={members} canConfirm={userCanConfirm} />
 				)}
 			</div>
 		);

@@ -10,29 +10,25 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
-class ConditionalRoute extends React.Component {
-	render() {
-		const { redirect, isAllowed } = this.props;
+const ConditionalRoute = props => {
+	const { redirect, isAllowed } = props;
 
-		if (isAllowed()) {
-			return <Route {...this.props} />;
-		}
-
-		if (redirect) {
-			return (
-				<Route
-					{...this.props}
-					render={props => (
-						<Redirect to={{ pathname: redirect, state: { from: props.location } }} />
-					)}
-				/>
-			);
-		}
-
-		window.location.href = `/login?redirect=${window.location.href}`;
-
-		return null;
+	if (isAllowed()) {
+		return <Route {...props} />;
 	}
-}
+
+	if (redirect) {
+		return (
+			<Route
+				{...props}
+				render={props => <Redirect to={{ pathname: redirect, state: { from: props.location } }} />}
+			/>
+		);
+	}
+
+	window.location.href = `/login?redirect=${window.location.href}`;
+
+	return null;
+};
 
 export default ConditionalRoute;

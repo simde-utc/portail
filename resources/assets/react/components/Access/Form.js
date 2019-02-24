@@ -18,7 +18,6 @@ class AccessForm extends React.Component {
 			value: id,
 			label: name,
 		}));
-
 	}
 
 	constructor(props) {
@@ -32,7 +31,7 @@ class AccessForm extends React.Component {
 		this.setState({ access_id: value });
 	}
 
-	handleDescriptionChange({ target: { value }}) {
+	handleDescriptionChange({ target: { value } }) {
 		this.setState({ description: value });
 	}
 

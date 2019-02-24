@@ -131,7 +131,7 @@ Route::group([], function () {
      */
 
     Route::apiResources([
-		'access' => 'Access\AccessController',
+        'access' => 'Access\AccessController',
         'assos' => 'Asso\AssoController',
         'services' => 'Service\ServiceController',
         'places' => 'Location\PlaceController',

@@ -114,7 +114,10 @@ class AssoScreen extends React.Component {
 			);
 
 			dispatch(
-				actions.assos(asso.id).members(user.id).permissions.all()
+				actions
+					.assos(asso.id)
+					.members(user.id)
+					.permissions.all()
 			);
 		});
 	}
@@ -585,10 +588,10 @@ class AssoScreen extends React.Component {
 					<ConditionalRoute
 						path={`${match.url}/access`}
 						redirect={`${match.url}`}
-						isAllowed={() => { return this.user.isMember }}
-						render={() => (
-							<AccessScreen asso={asso} />
-						)}
+						isAllowed={() => {
+							return this.user.isMember;
+						}}
+						render={() => <AccessScreen asso={asso} />}
 					/>
 					<Route
 						path={`${match.url}/article`}
