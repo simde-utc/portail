@@ -12,6 +12,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 
+import ConditionalRoute from './Conditional';
+
 @connect(store => ({
 	user: store.getData('user'),
 	isAuthenticated: store.isFetched('user'),
@@ -36,25 +38,7 @@ class LoggedRoute extends React.Component {
 	}
 
 	render() {
-		if (this.isAllowed()) {
-			return <Route {...this.props} />;
-		}
-
-		const { redirect } = this.props;
-		if (redirect) {
-			return (
-				<Route
-					{...this.props}
-					render={props => (
-						<Redirect to={{ pathname: redirect, state: { from: props.location } }} />
-					)}
-				/>
-			);
-		}
-
-		window.location.href = `/login?redirect=${window.location.href}`;
-
-		return null;
+		return <ConditionalRoute isAllowed={ this.isAllowed.bind(this) } { ...this.props } />;
 	}
 }
 
