@@ -328,6 +328,17 @@ export default createStore((state = store, action) => {
 							}
 						}
 					}
+				} else if (action.type.endsWith(`_${ASYNC_SUFFIXES.error}`)) {
+					if (id) {
+						place = buildStorePath(draft, path.concat([id]));
+					}
+
+					place.data = [];
+					place.fetching = false;
+					place.fetched = true;
+					place.error = action.payload;
+					place.failed = false;
+					place.status = action.payload.response.status;
 				}
 			} else if (action.type.endsWith(`_${ASYNC_SUFFIXES.error}`)) {
 				if (id) {
