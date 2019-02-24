@@ -119,7 +119,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
             return $asso;
         }
 
-        throw new PortailException('Association non existantce');
+        throw new PortailException('Association non existante');
     }
 
     /**

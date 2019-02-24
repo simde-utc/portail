@@ -46,7 +46,7 @@ class CheckPassport
 
         // Méthode magique pour simplifier le dev.
         if (isset($input['scope']) && $input['scope'] === '*' && config('app.debug')) {
-            $input['scope'] = implode(' ', \Scopes::getDevScopes()).' user-get-access';
+            $input['scope'] = implode(' ', \Scopes::getDevScopes());
 
             $request->replace($input);
         }
