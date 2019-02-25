@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 import Img from '../Image';
@@ -41,25 +40,30 @@ class Article extends React.Component {
 			<div className="Article row m-0 my-3 my-md-4 justify-content-start">
 				<div
 					className="col-12 col-md-3 col-xl-1 pt-1 pb-2 pb-md-0 pr-md-1 media"
-					style={{ maxWidth: '250px'}}
+					style={{ maxWidth: '250px' }}
 				>
 					<Img
 						className="align-self-start img-fluid"
 						images={[article.image, article.owned_by.image]}
 						style={{ maxWidth: 100, marginRight: 10 }}
 					/>
-	
 				</div>
 				<div className="col-12 col-md-9 body">
-					<h3 style={{marginBottom:0.5}}>{article.title}</h3>
+					<h3 style={{ marginBottom: 0.5 }}>{article.title}</h3>
 					<div>
-						<Link className="text-secondary" to={`/assos/${article.owned_by.login}`}><Img className="align-self-start img-fluid" image={article.owned_by.image} style={{ maxWidth: 20, marginRight: 5}}/>
-						{article.owned_by.shortname}</Link>
-						<span style={{marginLeft: 5}} className="text-muted small">{getTime(article.created_at)}</span>
+						<Link className="text-secondary" to={`/assos/${article.owned_by.login}`}>
+							<Img
+								className="align-self-start img-fluid"
+								image={article.owned_by.image}
+								style={{ maxWidth: 20, marginRight: 5 }}
+							/>
+							{article.owned_by.shortname}
+						</Link>
+						<span style={{ marginLeft: 5 }} className="text-muted small">
+							{getTime(article.created_at)}
+						</span>
 					</div>
-					<div style={{ whiteSpace: 'pre-line' }}>
-						{articleBody}
-					</div>
+					<div style={{ whiteSpace: 'pre-line' }}>{articleBody}</div>
 				</div>
 				{article.event ? 'Il y a un event associé !' : ''}
 			</div>
