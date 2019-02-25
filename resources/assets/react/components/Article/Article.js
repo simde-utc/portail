@@ -30,9 +30,9 @@ class Article extends React.Component {
 			articleBody = (
 				<p>
 					{article.content.substring(0, MAX_CONTENT_LENGTH)}...&nbsp;
-					<Button className="btn btn-link m-0 p-0 pb-1 blue" onClick={this.toggleExpand}>
+					<a onClick={this.toggleExpand}>
 						Lire la suite
-					</Button>
+					</a>
 				</p>
 			);
 		}
