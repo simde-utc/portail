@@ -59,11 +59,7 @@ class AssoHomeScreen extends React.Component {
 		}
 
 		if (isMember) {
-			return (
-				<Button className="m-1 btn btn-sm" outline disabled>
-					Suivre
-				</Button>
-			);
+			return null;
 		}
 
 		return (
