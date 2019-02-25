@@ -45,7 +45,7 @@ class Article extends React.Component {
 				>
 					<Img
 						className="align-self-start img-fluid"
-						image={[article.image, article.owned_by.image]}
+						images={[article.image, article.owned_by.image]}
 						style={{ maxWidth: 100, marginRight: 10 }}
 					/>
 	
