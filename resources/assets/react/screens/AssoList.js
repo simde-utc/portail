@@ -19,6 +19,7 @@ import actions from '../redux/actions';
 import AssoCard from '../components/AssoCard';
 
 @connect(store => ({
+	config: store.config,
 	assos: store.getData('assos'),
 	fetching: store.isFetching('assos'),
 	fetched: store.isFetched('assos'),
@@ -94,7 +95,8 @@ class AssoListScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, assos } = this.props;
+		const { fetching, assos, config } = this.props;
+		config.title = 'Liste des associations';
 
 		return (
 			<div className="container">

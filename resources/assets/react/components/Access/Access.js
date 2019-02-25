@@ -40,7 +40,7 @@ class Access extends React.Component {
 	}
 
 	render() {
-		const { user, access, canConfirm } = this.props;
+		const { user, access, canConfirm, cancel, confirm } = this.props;
 		const { text, color } = this.getState();
 
 		return (
@@ -54,13 +54,23 @@ class Access extends React.Component {
 					<div className="col-md-3">{text}</div>
 					<div className="col-md-2">
 						{!access.validated_at && (canConfirm || user.id === access.member.id) && (
-							<Button className="float-right">
+							<Button
+								className="float-right"
+								onClick={() => {
+									cancel(access);
+								}}
+							>
 								<FontAwesomeIcon icon="times" />
 							</Button>
 						)}
 						{!access.confirmed_by && canConfirm && (
 							<Button className="float-right">
-								<FontAwesomeIcon icon="check" />
+								<FontAwesomeIcon
+									icon="check"
+									onClick={() => {
+										confirm(access);
+									}}
+								/>
 							</Button>
 						)}
 					</div>

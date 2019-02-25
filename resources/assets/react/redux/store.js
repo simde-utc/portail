@@ -137,6 +137,7 @@ export const store = {
 		);
 	},
 	resources: {},
+	config: {},
 };
 
 // Racine de chaque catégorie CRUD
