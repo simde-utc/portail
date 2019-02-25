@@ -48,10 +48,7 @@ class Article extends React.Component {
 						image={[article.image, article.owned_by.image]}
 						style={{ maxWidth: 100, marginRight: 10 }}
 					/>
-					<div className="media-body">
-						
-						
-					</div>
+	
 				</div>
 				<div className="col-12 col-md-9 body">
 					<h3 style={{marginBottom:0.5}}>{article.title}</h3>
@@ -59,7 +56,9 @@ class Article extends React.Component {
 						<Link className="text-secondary" to={`/assos/${article.owned_by.login}`}>{article.owned_by.shortname}</Link>
 						<span style={{marginLeft: 5}} className="text-muted small">{getTime(article.created_at)}</span>
 					</div>
-					{articleBody}
+					<div style={{ whiteSpace: 'pre-line' }}>
+						{articleBody}
+					</div>
 				</div>
 				{article.event ? 'Il y a un event associé !' : ''}
 			</div>
