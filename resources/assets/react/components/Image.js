@@ -24,7 +24,14 @@ const Image = ({ image, images, unloader, ...props }) => {
 		src.push(bdeImage);
 	}
 
-	return <Img loader={<span className="loader large active" />} unloader={ unloader } {...props} src={src} />;
+	return (
+		<Img
+			loader={<span className="loader large active" />}
+			unloader={unloader}
+			{...props}
+			src={src}
+		/>
+	);
 };
 
 export default Image;

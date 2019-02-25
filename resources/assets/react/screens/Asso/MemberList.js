@@ -16,6 +16,7 @@ import actions from '../../redux/actions';
 import MemberList from '../../components/Member/DoubleList';
 
 @connect((store, props) => ({
+	config: store.config,
 	user: store.getData('user', false),
 	semesters: store.getData('semesters'),
 	currentSemester: store.getData(['semesters', 'current']),
@@ -76,9 +77,10 @@ class AssoMemberListScreen extends React.Component {
 	}
 
 	render() {
-		const { semesters, members, roles, fetched, fetching } = this.props;
+		const { semesters, members, roles, fetched, fetching, asso, config } = this.props;
 		const { semester } = this.state;
 		const selectSemesters = AssoMemberListScreen.getSemesters(semesters);
+		config.title = `${asso.shortname} - Membres`;
 
 		return (
 			<div>

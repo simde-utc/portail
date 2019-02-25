@@ -105,6 +105,44 @@ class AccessScreen extends React.Component {
 			});
 	}
 
+	confirm(acces) {
+		const { asso, dispatch } = this.props;
+
+		actions
+			.assos(asso.id)
+			.access(acces.id)
+			.update()
+			.payload.then(() => {
+				dispatch(actions.assos(asso.id).access.all());
+				NotificationManager.success(
+					"La demande d'accès a été confirmée. En attente de validation de l'accès",
+					"Demande d'accès"
+				);
+			})
+			.catch(() => {
+				NotificationManager.error(
+					"La demande d'accès n'a pas pu être confirmée",
+					"Demande d'accès"
+				);
+			});
+	}
+
+	cancel(acces) {
+		const { asso, dispatch } = this.props;
+
+		actions
+			.assos(asso.id)
+			.access(acces.id)
+			.delete()
+			.payload.then(() => {
+				dispatch(actions.assos(asso.id).access.all());
+				NotificationManager.success("La demande d'accès a été annulée", "Demande d'accès");
+			})
+			.catch(() => {
+				NotificationManager.error("La demande d'accès n'a pas pu être annulée", "Demande d'accès");
+			});
+	}
+
 	render() {
 		const { user, members, memberAccess, access, permissions, fetched } = this.props;
 		const userAccessDemand = find(memberAccess, memberAccess => memberAccess.member.id === user.id);
@@ -116,7 +154,13 @@ class AccessScreen extends React.Component {
 					<AccessForm access={access} post={this.sendDemand.bind(this)} />
 				)}
 				{fetched && memberAccess.length > 0 && (
-					<AccessList list={memberAccess} members={members} canConfirm={userCanConfirm} />
+					<AccessList
+						list={memberAccess}
+						members={members}
+						canConfirm={userCanConfirm}
+						confirm={this.confirm.bind(this)}
+						cancel={this.cancel.bind(this)}
+					/>
 				)}
 			</div>
 		);

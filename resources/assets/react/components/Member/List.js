@@ -12,7 +12,7 @@ import Member from './Member';
 }))
 class MemberList extends React.Component {
 	getMemberBlocks(members, roles) {
-		const { currentSemester, isMember, validateMember, leaveMember } = this.props;
+		const { currentSemester, isMember, isWaiting, validateMember, leaveMember } = this.props;
 
 		members = orderBy(
 			members.map(member => {
@@ -36,7 +36,7 @@ class MemberList extends React.Component {
 			if (member.pivot.semester_id === currentSemester.id) {
 				props.footer = (
 					<div>
-						{!(isMember && member.pivot.validated_by) && (
+						{(isMember || isWaiting) && !member.pivot.validated_by && (
 							<Button
 								color="success"
 								className="m-1"
