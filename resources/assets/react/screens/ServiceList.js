@@ -17,6 +17,7 @@ import actions from '../redux/actions';
 import Service from '../components/Service';
 
 @connect(store => ({
+	config: store.config,
 	userServices: store.getData('user/services'),
 	services: store.getData('services'),
 	fetching: store.isFetching('services'),
@@ -148,11 +149,12 @@ class ServiceListScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, services, userServices } = this.props;
+		const { fetching, services, userServices, config } = this.props;
 		const {
 			modal: { show, title, body, button },
 		} = this.state;
-
+		config.title = 'Listes des services';
+		console.log(config.title);
 		return (
 			<div className="container">
 				<Modal isOpen={show}>

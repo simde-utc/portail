@@ -37,6 +37,7 @@ import Calendar from '../../components/Calendar/index';
 	return {
 		user,
 		asso,
+		config: store.config,
 		member: store.findData(['user', 'assos'], login, 'login', false),
 		roles: store.getData(['assos', asso.id, 'roles']),
 		memberPermissions: store.getData(['assos', asso.id, 'members', user.id, 'permissions']),
@@ -449,8 +450,9 @@ class AssoScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, fetched, failed, user, asso, member, contacts, match } = this.props;
+		const { fetching, fetched, failed, user, asso, member, contacts, match, config } = this.props;
 		const { events, articlesFetched, modal } = this.state;
+		config.title = asso.shortname;
 
 		if (failed) return <Http404 />;
 
@@ -462,7 +464,7 @@ class AssoScreen extends React.Component {
 			this.user = {
 				isFollowing: true,
 				isMember: pivot.role_id !== null && pivot.validated_by !== null,
-				isWaiting: pivot.validated_by === null,
+				isWaiting: pivot.role_id !== null && pivot.validated_by === null,
 			};
 		} else {
 			this.user = {
@@ -560,7 +562,7 @@ class AssoScreen extends React.Component {
 						)}
 					/>
 					<Route
-						path={`${match.url}/evenements`}
+						path={`${match.url}/events`}
 						render={() => (
 							<Calendar events={AssoScreen.getAllEvents(events)} fetched={articlesFetched} />
 						)}
@@ -574,6 +576,7 @@ class AssoScreen extends React.Component {
 							<AssoMemberListScreen
 								asso={asso}
 								isMember={this.user.isMember}
+								isWaiting={this.user.isWaiting}
 								leaveMember={id => {
 									this.leaveMember(id);
 								}}

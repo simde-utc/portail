@@ -19,6 +19,7 @@ import UserInfo from '../components/Profile/UserInfo';
 import AssociativeCarreer from '../components/Profile/AssociativeCarreer';
 
 @connect(store => ({
+	config: store.config,
 	user: store.getData('user', false),
 }))
 class ScreensProfile extends React.Component {
@@ -46,7 +47,9 @@ class ScreensProfile extends React.Component {
 	}
 
 	render() {
-		const { match, user } = this.props;
+		const { match, user, config } = this.props;
+		config.title = `Profil - ${user.name}`;
+
 		return (
 			<div className="container">
 				<h1 className="title">Mon profil</h1>
