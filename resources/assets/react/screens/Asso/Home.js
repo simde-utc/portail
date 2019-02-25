@@ -154,7 +154,7 @@ class AssoHomeScreen extends React.Component {
 							{isAuthenticated &&
 								this.getMemberButton(userIsMember, userIsFollowing, userIsWaiting)}
 						</div>
-						<div className="col-md-8">
+						<div className="col-md-8" style={{ whiteSpace: 'pre-line' }}>
 							<h1 className={`title ${color}`}>
 								{asso.shortname} <small className="text-muted h4">{asso.name}</small>
 							</h1>

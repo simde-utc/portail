@@ -55,7 +55,9 @@ class Article extends React.Component {
 				</div>
 				<div className="col-12 col-md-9 body">
 					<h3>{article.title}</h3>
-					{articleBody}
+					<div style={{ whiteSpace: 'pre-line' }}>
+						{articleBody}
+					</div>
 				</div>
 				{article.event ? 'Il y a un event associé !' : ''}
 			</div>
