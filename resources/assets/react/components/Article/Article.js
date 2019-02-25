@@ -46,15 +46,19 @@ class Article extends React.Component {
 					<Img
 						className="align-self-start img-fluid"
 						image={[article.image, article.owned_by.image]}
-						style={{ maxWidth: 100 }}
+						style={{ maxWidth: 100, marginRight: 10 }}
 					/>
 					<div className="media-body">
-						<Link to={`/assos/${article.owned_by.login}`}>{article.owned_by.shortname}</Link>
-						<span className="d-block text-muted small">{getTime(article.created_at)}</span>
+						
+						
 					</div>
 				</div>
 				<div className="col-12 col-md-9 body">
-					<h3>{article.title}</h3>
+					<h3 style={{marginBottom:0.5}}>{article.title}</h3>
+					<div>
+						<Link className="text-secondary" to={`/assos/${article.owned_by.login}`}>{article.owned_by.shortname}</Link>
+						<span style={{marginLeft: 5}} className="text-muted small">{getTime(article.created_at)}</span>
+					</div>
 					{articleBody}
 				</div>
 				{article.event ? 'Il y a un event associé !' : ''}
