@@ -107,14 +107,14 @@ class AssoHomeScreen extends React.Component {
 
 		if (isFollowing) {
 			return (
-				<Button className="m-1 btn btn-sm" outline disabled>
+				<Button className="m-1 btn btn-sm font-weight-bold" outline disabled>
 					Rejoindre
 				</Button>
 			);
 		}
 
 		return (
-			<Button className="m-1 btn btn-sm" color="primary" outline onClick={join}>
+			<Button className="m-1 btn btn-sm font-weight-bold" color="primary" outline onClick={join}>
 				Rejoindre
 			</Button>
 		);
