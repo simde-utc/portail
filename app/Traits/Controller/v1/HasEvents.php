@@ -135,18 +135,26 @@ trait HasEvents
         $calendar = Calendar::find($calendar_id);
 
         if ($calendar) {
-            if (!$this->isCalendarFollowed($request, $calendar, $user->id)) {
-                if (!$this->tokenCanSee($request, $calendar, $verb, 'calendars')) {
-                    abort(403, 'L\'application n\'a pas les droits sur ce calendrier');
+            // On vérifie si l'accès est publique.
+            if (\Scopes::isOauthRequest($request)) {
+                if (!$this->isCalendarFollowed($request, $calendar, $user->id)) {
+                    if (!$this->tokenCanSee($request, $calendar, $verb, 'calendars')) {
+                        abort(403, 'L\'application n\'a pas les droits sur ce calendrier');
+                    }
+
+                    if ($user && !$this->isVisible($calendar, $user->id)) {
+                        abort(403, 'Vous n\'avez pas les droits sur ce calendrier');
+                    }
                 }
 
-                if ($user && !$this->isVisible($calendar, $user->id)) {
+                if ($verb !== 'get' && \Scopes::isUserToken($request)
+                    && !$calendar->owned_by->isCalendarManageableBy($user->id)) {
+                    abort(403, 'Vous n\'avez pas les droits suffisants');
+                }
+            } else {
+                if (!$this->isVisible($calendar)) {
                     abort(403, 'Vous n\'avez pas les droits sur ce calendrier');
                 }
-            }
-
-            if ($verb !== 'get' && \Scopes::isUserToken($request) && !$calendar->owned_by->isCalendarManageableBy($user->id)) {
-                abort(403, 'Vous n\'avez pas les droits suffisants');
             }
 
             return $calendar;

@@ -61,12 +61,18 @@ trait HasCalendars
         $event = $calendar->events()->find($event_id);
 
         if ($event) {
-            if (!$this->tokenCanSee($request, $event, $verb, 'events')) {
-                abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
-            }
+            if (\Scopes::isOauthRequest($request)) {
+                if (!$this->tokenCanSee($request, $event, $verb, 'events')) {
+                    abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
+                }
 
-            if ($user && !$this->isVisible($event, $user->id)) {
-                abort(403, 'Vous n\'avez pas les droits sur cet évènenement');
+                if ($user && !$this->isVisible($event, $user->id)) {
+                    abort(403, 'Vous n\'avez pas les droits sur cet évènenement');
+                }
+            } else {
+                if ($this->isVisible($event)) {
+                    abort(403, 'Vous n\'avez pas le droit de voir cet évènenement');
+                }
             }
 
             return $event;

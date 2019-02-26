@@ -36,7 +36,7 @@ class CalendarController extends Controller
     public function __construct()
     {
         $this->middleware(
-	        \Scopes::matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
+	        \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
 	        ['only' => ['index', 'show']]
         );
         $this->middleware(
@@ -61,15 +61,21 @@ class CalendarController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $calendars = Calendar::getSelection()->filter(function ($calendar) use ($request) {
-            return ($this->tokenCanSee($request, $calendar, 'get')
-                && (!\Auth::id() || $this->isVisible($calendar, \Auth::id())))
-                || $this->isCalendarFollowed($request, $calendar, \Auth::id());
-        })->values()->map(function ($calendar) {
-            return $calendar->hideData();
-        });
+        if (\Scopes::isOauthRequest($request)) {
+               $calendars = Calendar::getSelection()->filter(function ($calendar) use ($request) {
+                   return ($this->tokenCanSee($request, $calendar, 'get')
+	                && (!\Auth::id() || $this->isVisible($calendar, \Auth::id())))
+	                || $this->isCalendarFollowed($request, $calendar, \Auth::id());
+               });
+        } else {
+            $calendars = Calendar::getSelection()->filter(function ($calendar) {
+                return $this->isVisible($calendar);
+            });
+        }
 
-        return response()->json($calendars, 200);
+        return response()->json($calendars->values()->map(function ($calendar) {
+            return $calendar->hideData();
+        }), 200);
     }
 
     /**
