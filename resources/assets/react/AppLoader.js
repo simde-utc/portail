@@ -11,6 +11,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import LoadingScreen from 'react-loading-screen';
+import BigCalendar from 'react-big-calendar';
+import moment from 'moment';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -35,8 +37,6 @@ class AppLoader extends React.Component {
 	componentWillMount() {
 		const { dispatch } = this.props;
 
-		library.add(fas, far);
-
 		// Récupère les méthodes de connexion
 		dispatch(actions.login.all());
 		// Récupère les semestres
@@ -57,6 +57,9 @@ class AppLoader extends React.Component {
 		dispatch(actions.user.assos.all());
 		// Récupère les services de l'utilisateur
 		dispatch(actions.user.services.all());
+
+		library.add(fas, far);
+		BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 	}
 
 	// Permet d'afficher le chargement initial de la page
