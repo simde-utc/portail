@@ -8,15 +8,16 @@
  */
 
 import React from 'react';
+import { Form, FormGroup, Button, Label, Input } from 'reactstrap'
 
 import Select from 'react-select';
 import { map } from 'lodash';
 
 class AccessForm extends React.Component {
 	static mapSelectionOptions(options) {
-		return map(options, ({ id, name }) => ({
+		return map(options, ({ id, name, description }) => ({
 			value: id,
-			label: name,
+			label: `${name} (${description})`,
 		}));
 	}
 
@@ -53,43 +54,41 @@ class AccessForm extends React.Component {
 		return (
 			<div className="container AccessForm" style={{ overflow: 'visible' }}>
 				<h1 className="title">Formulaire de demande d'accès</h1>
-				<form className="form row" onSubmit={this.handleSubmit.bind(this)}>
-					<div className="col-md-6">
-						<div className="form-group">
-							<label htmlFor="access_id">
-								Description de la demande
-								<Select
-									onChange={this.handleAccessChange.bind(this)}
-									id="access_id"
-									name="access_id"
-									placeholder="Type d'accès"
-									options={AccessForm.mapSelectionOptions(access)}
-									required
-								/>
-							</label>
-						</div>
+				<Form>
+					<FormGroup>
+						<Label for="access_id">
+							Accès demandé
+						</Label>
+						<Select
+							onChange={this.handleAccessChange.bind(this)}
+							id="access_id"
+							name="access_id"
+							placeholder="Type d'accès"
+							options={AccessForm.mapSelectionOptions(access)}
+							required
+						/>
+					</FormGroup>
 
-						<div className="form-group">
-							<label htmlFor="description">
-								Description de la demande
-								<textarea
-									className="form-control"
-									id="description"
-									name="description"
-									rows="3"
-									value={description}
-									onChange={this.handleDescriptionChange.bind(this)}
-									placeholder="Entrez une courte description expliquant la raison de votre demande"
-									required
-								/>
-							</label>
-						</div>
+					<FormGroup>
+						<Label for="description">
+							Description de la demande
+						</Label>
+						<Input
+							type="textarea"
+							id="description"
+							name="description"
+							rows="3"
+							value={description}
+							onChange={this.handleDescriptionChange.bind(this)}
+							placeholder="Entrez une courte description expliquant la raison de votre demande"
+							required
+						/>
+					</FormGroup>
 
-						<button type="submit" className="btn btn-primary">
-							Réaliser la demande
-						</button>
-					</div>
-				</form>
+					<Button type="submit" color="primary" onClick={this.handleSubmit.bind(this)}>
+						Réaliser la demande
+					</Button>
+				</Form>
 			</div>
 		);
 	}

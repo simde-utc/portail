@@ -72,13 +72,13 @@ class ServiceListScreen extends React.Component {
 				title: 'Ajouter aux favoris',
 				body: (
 					<p>
-						Souhaitez-vous vraiment ajouter au favoris le service{' '}
+						Souhaitez-vous vraiment ajouter aux favoris le service{' '}
 						<span className="font-italic">{service.name}</span> ?
 					</p>
 				),
 				button: {
 					type: 'success',
-					text: 'Ajouter dans les favoris',
+					text: 'Ajouter aux favoris',
 					onClick: () => {
 						actions.user.services
 							.create(
