@@ -68,6 +68,22 @@ class PlacesAndLocationsTableSeeder extends Seeder
                         'position'	=> $locations['FE'],
                     ],
                     [
+                        'name'		=> 'Salle de réunion PAE',
+                        'position'	=> $locations['FE'],
+                    ],
+                    [
+                        'name'		=> 'Salle de réunion PSEC',
+                        'position'	=> $locations['FE'],
+                    ],
+                    [
+                        'name'		=> 'Salle de réunion PVDC (Réunion)',
+                        'position'	=> $locations['FE'],
+                    ],
+                    [
+                        'name'		=> 'Salle de réunion PVDC (Bureau)',
+                        'position'	=> $locations['FE'],
+                    ],
+                    [
                         'name'		=> 'Bâtiment A',
                         'position'	=> $locations['FA'],
                     ],
@@ -84,7 +100,7 @@ class PlacesAndLocationsTableSeeder extends Seeder
                         'position'	=> $locations['FD'],
                     ],
                     [
-                        'name'		=> 'Bâtiment E',
+                        'name'		=> 'Bâtiment E - MDE',
                         'position'	=> $locations['FE'],
                     ],
                     [

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\{
 };
 use App\Models\{
     Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas, Event, Service,
-    Access
+    Access, Room, Location
 };
 
 class OldToNew extends Command
@@ -82,7 +82,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
             return;
         }
 
-        $bar = $this->output->createProgressBar(9);
+        $bar = $this->output->createProgressBar(10);
         $errors = [];
 
         $this->info('Migration et nettoyage de la base de données');
@@ -135,6 +135,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
             $this->info(PHP_EOL);
 
             $errors['Accès'] = $this->addAssosAccess();
+            $errors['Salles'] = $this->addRooms();
             $this->info(PHP_EOL);
             $bar->advance();
             $this->info(PHP_EOL);
@@ -347,7 +348,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                     'created_by_type' => Asso::class,
                 ]);
 
-                // Obliger de définir les dates après création.
+                // Obligé de définir les dates après création.
                 $model->timestamps = false;
                 $model->created_at = $asso->created_at ?: $model->created_at;
                 $model->updated_at = $asso->updated_at ?: $model->updated_at;
@@ -478,7 +479,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                     'owned_by_type' => Asso::class,
                 ]);
 
-                // Obliger de définir les dates après création.
+                // Obligé de définir les dates après création.
                 $model->timestamps = false;
                 $model->created_at = $article->created_at ?: $model->created_at;
                 $model->updated_at = $article->updated_at ?: $model->updated_at;
@@ -532,7 +533,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                     'email' => $user->email_address,
                 ]);
 
-                // Obliger de définir les dates après création.
+                // Obligé de définir les dates après création.
                 $model->timestamps = false;
                 $model->created_at = $user->created_at ?: $model->created_at;
                 $model->updated_at = $user->updated_at ?: $model->updated_at;
@@ -692,7 +693,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                     'owned_by_type' => Asso::class,
                 ]);
 
-                // Obliger de définir les dates après création.
+                // Obligé de définir les dates après création.
                 $model->timestamps = false;
                 $model->created_at = $event->created_at ?: $model->created_at;
                 $model->updated_at = $event->updated_at ?: $model->updated_at;
@@ -762,7 +763,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                     'url' => $service->url,
                 ]);
 
-                // Obliger de définir les dates après création.
+                // Obligé de définir les dates après création.
                 $model->timestamps = false;
                 $model->created_at = $service->created_at ?: $model->created_at;
                 $model->updated_at = $service->updated_at ?: $model->updated_at;
@@ -842,6 +843,30 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                             'semester_id' => $semester->id,
                             'description' => $access->motif,
                         ]);
+
+                        switch ($access->statut) {
+                            case 1:
+                                // En attente de confirmation.
+                                $model->validated = false;
+                                break;
+
+                            case 3:
+                                // Accepté.
+                                $model->validated = true;
+                            case 0:
+                                // Refusé   => on met par défaut le même utilisateur.
+                                $model->validated = ($model->validated ?? false);
+                                $model->validated_by_id = $user->id;
+                            case 2:
+                                // Confirmé => on met par défaut le même utilisateur.
+                                $model->confirmed_by_id = $user->id;
+                        }
+
+                        // Obligé de définir les dates après création.
+                        $model->timestamps = false;
+                        $model->created_at = $access->created_at ?: $model->created_at;
+                        $model->updated_at = $access->updated_at ?: $model->updated_at;
+                        $model->save();
                     } catch (\Exception $e) {
                         $errors[] = 'n°'.$access->id.': '.$e->getMessage();
                     }
@@ -856,6 +881,85 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                 throw $e;
             } catch (\Error $e) {
                 $this->output->error('Impossible de créer l\'accès n°'.$access->id);
+
+                throw $e;
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Crée les salles depuis l'ancien Portail.
+     *
+     * @return mixed
+     */
+    protected function addRooms()
+    {
+        $this->info('Préparation des salles');
+
+        $rooms = $this->getDB()->select('SELECT * FROM salle');
+        $poles = $this->getDB()->select('SELECT * FROM pole');
+
+        $this->info('Création des '.count($rooms).' salles');
+
+        $bar = $this->output->createProgressBar(count($rooms));
+        $errors = [];
+
+        foreach ($rooms as $room) {
+            try {
+                $pole = $this->getModelFrom($poles, $room->id_pole);
+                if (!$pole) {
+                    $this->output->error('Pôle non existant n°'.$room->id_pole);
+                    continue;
+                }
+
+                $asso = $this->getAsso($pole->asso_id);
+                if (!$asso) {
+                    $this->output->error('Association non existante n°'.$pole->asso_id);
+                    continue;
+                }
+
+                switch ($room->id) {
+                    case 1:
+                        $location = Location::where('name', 'Salle de réunion 1 (1er étage)')->first();
+                        break;
+                    case 2:
+                        $location = Location::where('name', 'Salle de réunion 2 (2ème étage)')->first();
+                        break;
+                    case 3:
+                        $location = Location::where('name', 'Salle de réunion PAE')->first();
+                        break;
+                    case 4:
+                        $location = Location::where('name', 'Salle de réunion PVDC (Réunion)')->first();
+                        break;
+                    case 6:
+                        $location = Location::where('name', 'Salle de réunion PSEC')->first();
+                        break;
+                    case 7:
+                        $location = Location::where('name', 'Salle de réunion PVDC (Bureau)')->first();
+                        break;
+                    default:
+                        $location = Location::where('name', 'Bâtiment E - MDE')->first();
+                }
+
+                $model = Room::create([
+                    'location_id' => $location->id,
+                    'created_by_id' => $asso->id,
+                    'created_by_type' => Asso::class,
+                    'owned_by_id' => $asso->id,
+                    'owned_by_type' => Asso::class,
+                    'visibility_id' => Visibility::findByType('contributorBde')->id,
+                    'capacity' => $room->capacite,
+                ]);
+
+                $bar->advance();
+            } catch (\Exception $e) {
+                $this->output->error('Impossible de créer la salle '.$room->name);
+
+                throw $e;
+            } catch (\Error $e) {
+                $this->output->error('Impossible de créer la salle '.$room->name);
 
                 throw $e;
             }
