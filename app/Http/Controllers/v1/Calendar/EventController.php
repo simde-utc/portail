@@ -62,7 +62,7 @@ class EventController extends Controller
         $calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
         $events = $calendar->events()->getSelection();
 
-        if (\Scopes::isOauthToken($request)) {
+        if (\Scopes::isOauthRequest($request)) {
             $events = $events->filter(function ($event) use ($request) {
                 return ($this->tokenCanSee($request, $event, 'get')
                     && (!\Auth::id() || $this->isVisible($event, \Auth::id())))

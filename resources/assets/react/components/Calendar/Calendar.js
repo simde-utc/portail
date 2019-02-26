@@ -29,6 +29,7 @@ export default class CalendarCalendar extends React.Component {
 			style: {
 				backgroundColor: event.calendar.color,
 				color: colorFromBackground(event.calendar.color),
+				border: 'none',
 			},
 		};
 	}
