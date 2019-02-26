@@ -22,6 +22,7 @@ import actions from '../../redux/actions';
 
 	return {
 		user,
+		config: store.config,
 		fetched: store.isFetched(['assos', props.asso.id, 'access']),
 		fetching: store.isFetching(['assos', props.asso.id, 'access']),
 		memberAccess: store.getData(['assos', props.asso.id, 'access']),
@@ -144,9 +145,10 @@ class AccessScreen extends React.Component {
 	}
 
 	render() {
-		const { user, members, memberAccess, access, permissions, fetched } = this.props;
+		const { user, asso, members, memberAccess, access, permissions, fetched, config } = this.props;
 		const userAccessDemand = find(memberAccess, memberAccess => memberAccess.member.id === user.id);
 		const userCanConfirm = find(permissions, permission => permission.type === 'access');
+		config.title = `${asso.shortname} - Accès`;
 
 		return (
 			<div>

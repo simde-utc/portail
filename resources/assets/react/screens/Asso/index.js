@@ -36,7 +36,6 @@ import AccessScreen from './Access';
 	return {
 		user,
 		asso,
-		config: store.config,
 		member: store.findData(['user', 'assos'], login, 'login', false),
 		roles: store.getData(['assos', asso.id, 'roles']),
 		memberPermissions: store.getData(['assos', asso.id, 'members', user.id, 'permissions']),
@@ -451,9 +450,8 @@ class AssoScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, fetched, failed, user, asso, member, contacts, match, config } = this.props;
+		const { fetching, fetched, failed, user, asso, member, contacts, match } = this.props;
 		const { events, modal } = this.state;
-		config.title = asso.shortname;
 
 		if (failed) return <Http404 />;
 

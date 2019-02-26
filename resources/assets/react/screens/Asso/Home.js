@@ -21,6 +21,7 @@ import ContactList from '../../components/Contact/List';
 import Img from '../../components/Image';
 
 @connect((store, props) => ({
+	config: store.config,
 	isAuthenticated: store.isFetched('user'),
 	contacts: store.getData(['assos', props.asso.id, 'contacts']),
 	contactsFailed: store.hasFailed(['assos', props.asso.id, 'contacts']),
@@ -128,6 +129,7 @@ class AssoHomeScreen extends React.Component {
 	render() {
 		const {
 			asso,
+			config,
 			isAuthenticated,
 			userIsFollowing,
 			userIsMember,
@@ -135,6 +137,7 @@ class AssoHomeScreen extends React.Component {
 			contacts,
 			contactsFailed,
 		} = this.props;
+		config.title = asso.shortname;
 
 		let color = `color-${asso.login}`;
 
