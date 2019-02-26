@@ -72,6 +72,7 @@ class Navbar extends React.Component {
 
 				<span
 					style={{
+						position: 'absolute',
 						width: '100%',
 						textAlign: 'center',
 						fontSize: '20px',

@@ -513,7 +513,7 @@ class AssoScreen extends React.Component {
 						</NavLink>
 					</li>
 					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/evenements`}>
+						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/events`}>
 							ÉVÈNEMENTS
 						</NavLink>
 					</li>

@@ -32,7 +32,7 @@ class ArticleForm extends React.Component {
 	getEvents(events) {
 		const { eventFilter } = this.state;
 
-		return this.mapSelectionOptions(
+		return ArticleForm.mapSelectionOptions(
 			events.filter(eventToFilter => {
 				return eventToFilter.name.indexOf(eventFilter) >= 0;
 			})
@@ -78,7 +78,7 @@ class ArticleForm extends React.Component {
 	render() {
 		const { visibilities, events } = this.props;
 		const { title, description } = this.state;
-
+		console.log(visibilities)
 		return (
 			<div>
 				<div className="container p-3">
