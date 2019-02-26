@@ -31,7 +31,7 @@ class AssoHomeScreen extends React.Component {
 	componentWillMount() {
 		const {
 			asso: { id },
-			contactsFetched
+			contactsFetched,
 		} = this.props;
 
 		if (id && !contactsFetched) {

@@ -78,7 +78,7 @@ class ArticleForm extends React.Component {
 	render() {
 		const { visibilities, events } = this.props;
 		const { title, description } = this.state;
-		console.log(visibilities)
+
 		return (
 			<div>
 				<div className="container p-3">
