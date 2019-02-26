@@ -15,6 +15,13 @@ class Contact extends React.Component {
 			case 'url':
 				return 'globe';
 
+			case 'facebook':
+			case 'twitter':
+			case 'linkedin':
+			case 'snapchat':
+			case 'instagram':
+				return ['fab', type];
+
 			default:
 				return type;
 		}
