@@ -477,6 +477,11 @@ class AssoScreen extends React.Component {
 
 		if (asso.parent) bg += ` bg-${asso.parent.login}`;
 
+		let joinFromMemberList;
+		if (Object.values(this.user).every(value => !value)) {
+			joinFromMemberList = this.joinAsso.bind(this);
+		}
+
 		return (
 			<div className="asso w-100">
 				<Modal isOpen={modal.show}>
@@ -485,6 +490,7 @@ class AssoScreen extends React.Component {
 					<ModalFooter>
 						<Button
 							outline
+							className="font-weight-bold"
 							onClick={() => {
 								this.setState(prevState => ({
 									...prevState,
@@ -494,7 +500,7 @@ class AssoScreen extends React.Component {
 						>
 							Annuler
 						</Button>
-						<Button outline color={modal.button.type} onClick={modal.button.onClick}>
+						<Button className="font-weight-bold" outline color={modal.button.type} onClick={modal.button.onClick}>
 							{modal.button.text}
 						</Button>
 					</ModalFooter>
@@ -530,16 +536,18 @@ class AssoScreen extends React.Component {
 							</NavLink>
 						</li>
 					)}
-					<li className="nav-item dropdown">
-						<Dropdown title="CRÉER">
-							<Link className="dropdown-item" to={`${match.url}/article`}>
-								Article
-							</Link>
-							<Link className="dropdown-item" to={`${match.url}/evenement`}>
-								Évènement
-							</Link>
-						</Dropdown>
-					</li>
+					{this.user.isMember && (
+						<li className="nav-item dropdown">
+							<Dropdown title="CRÉER">
+								<Link className="dropdown-item" to={`${match.url}/article`}>
+									Article
+								</Link>
+								<Link className="dropdown-item" to={`${match.url}/evenement`}>
+									Évènement
+								</Link>
+							</Dropdown>
+						</li>
+					)}
 				</ul>
 
 				<Switch>
@@ -574,6 +582,7 @@ class AssoScreen extends React.Component {
 								leaveMember={id => {
 									this.leaveMember(id);
 								}}
+								join={joinFromMemberList}
 								validateMember={id => {
 									this.validateMember(id);
 								}}

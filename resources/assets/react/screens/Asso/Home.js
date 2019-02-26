@@ -55,7 +55,7 @@ class AssoHomeScreen extends React.Component {
 
 		if (isFollowing && !isMember) {
 			return (
-				<Button className="m-1 btn btn-sm" color="danger" outline onClick={unfollow}>
+				<Button className="m-1 btn btn-sm font-weight-bold" color="danger" outline onClick={unfollow}>
 					Ne plus suivre
 				</Button>
 			);
@@ -66,7 +66,7 @@ class AssoHomeScreen extends React.Component {
 		}
 
 		return (
-			<Button className="m-1 btn btn-sm" color="primary" outline onClick={follow}>
+			<Button className="m-1 btn btn-sm font-weight-bold" color="primary" outline onClick={follow}>
 				Suivre
 			</Button>
 		);
@@ -79,7 +79,7 @@ class AssoHomeScreen extends React.Component {
 			if (isWaiting) {
 				return (
 					<Button
-						className="m-1 btn btn-sm"
+						className="m-1 btn btn-sm font-weight-bold"
 						color="warning"
 						outline
 						onClick={() => {
@@ -93,7 +93,7 @@ class AssoHomeScreen extends React.Component {
 
 			return (
 				<Button
-					className="m-1 btn btn-sm"
+					className="m-1 btn btn-sm font-weight-bold"
 					color="danger"
 					outline
 					onClick={() => {
@@ -114,7 +114,7 @@ class AssoHomeScreen extends React.Component {
 		}
 
 		return (
-			<Button className="m-1 btn btn-sm btn" color="primary" outline onClick={join}>
+			<Button className="m-1 btn btn-sm" color="primary" outline onClick={join}>
 				Rejoindre
 			</Button>
 		);
@@ -156,8 +156,8 @@ class AssoHomeScreen extends React.Component {
 								this.getMemberButton(userIsMember, userIsFollowing, userIsWaiting)}
 						</div>
 						<div className="col-md-8" style={{ whiteSpace: 'pre-line' }}>
-							<h1 className={`title ${color}`}>
-								{asso.shortname} <small className="text-muted h4">{asso.name}</small>
+							<h1 className={`title ${color}`} style={{ fontWeight: 'bold' }}>
+								{asso.shortname} <small className="text-muted h4" style={{ fontStyle: 'italic' }}>{asso.name}</small>
 							</h1>
 							<span className="mt-4">{asso.type && asso.type.description}</span>
 							<ReactMarkdown className="my-3 text-justify" source={asso.description} />
