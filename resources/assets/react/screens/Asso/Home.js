@@ -21,18 +21,21 @@ import ContactList from '../../components/Contact/List';
 import Img from '../../components/Image';
 
 @connect((store, props) => ({
+	config: store.config,
 	isAuthenticated: store.isFetched('user'),
 	contacts: store.getData(['assos', props.asso.id, 'contacts']),
 	contactsFailed: store.hasFailed(['assos', props.asso.id, 'contacts']),
+	contactsFetched: store.isFetched(['assos', props.asso.id, 'contacts']),
 	roles: store.getData(['assos', props.asso.id, 'roles']),
 }))
 class AssoHomeScreen extends React.Component {
 	componentWillMount() {
 		const {
 			asso: { id },
+			contactsFetched,
 		} = this.props;
 
-		if (id) {
+		if (id && !contactsFetched) {
 			this.loadAssosData(id);
 		}
 	}
@@ -126,6 +129,7 @@ class AssoHomeScreen extends React.Component {
 	render() {
 		const {
 			asso,
+			config,
 			isAuthenticated,
 			userIsFollowing,
 			userIsMember,
@@ -133,6 +137,7 @@ class AssoHomeScreen extends React.Component {
 			contacts,
 			contactsFailed,
 		} = this.props;
+		config.title = asso.shortname;
 
 		let color = `color-${asso.login}`;
 

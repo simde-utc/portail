@@ -36,8 +36,8 @@ class EventController extends Controller
     {
         $this->middleware(
 	        array_merge(
-		        \Scopes::matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
-		        \Scopes::matchOneOfDeepestChildren('user-get-events', 'client-get-events')
+		        \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
+		        \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-events', 'client-get-events')
 	        ),
 	        ['only' => ['index', 'show']]
         );
@@ -60,16 +60,23 @@ class EventController extends Controller
     public function index(Request $request, string $calendar_id): JsonResponse
     {
         $calendar = $this->getCalendar($request, \Auth::user(), $calendar_id);
-        $events = $calendar->events()->getSelection()
-            ->filter(function ($event) use ($request) {
+        $events = $calendar->events()->getSelection();
+
+        if (\Scopes::isOauthRequest($request)) {
+            $events = $events->filter(function ($event) use ($request) {
                 return ($this->tokenCanSee($request, $event, 'get')
                     && (!\Auth::id() || $this->isVisible($event, \Auth::id())))
                     || $this->isEventFollowed($request, $event, \Auth::id());
-            })->values()->map(function ($event) {
-                return $event->hideData();
             });
+        } else {
+            $events = $events->filter(function ($event) {
+                return $this->isVisible($event);
+            });
+        }
 
-        return response()->json($events, 200);
+        return response()->json($events->values()->map(function ($event) {
+            return $event->hideData();
+        }), 200);
     }
 
     /**

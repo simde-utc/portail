@@ -26,9 +26,8 @@ import Http404 from '../../routes/Http404';
 import AssoHomeScreen from './Home';
 import ArticleList from './ArticleList';
 import AssoMemberListScreen from './MemberList';
+import AssoCalendar from './Calendar';
 import AccessScreen from './Access';
-
-import Calendar from '../../components/Calendar/index';
 
 @connect((store, { match: { params: { login } } }) => {
 	const user = store.getData('user', false);
@@ -37,7 +36,6 @@ import Calendar from '../../components/Calendar/index';
 	return {
 		user,
 		asso,
-		config: store.config,
 		member: store.findData(['user', 'assos'], login, 'login', false),
 		roles: store.getData(['assos', asso.id, 'roles']),
 		memberPermissions: store.getData(['assos', asso.id, 'members', user.id, 'permissions']),
@@ -108,16 +106,18 @@ class AssoScreen extends React.Component {
 		action.payload.then(() => {
 			const { asso, user } = this.props;
 
-			dispatch(
-				actions.definePath(['assos', asso.id, 'roles']).roles.all({ owner: `asso,${asso.id}` })
-			);
+			if (user) {
+				dispatch(
+					actions.definePath(['assos', asso.id, 'roles']).roles.all({ owner: `asso,${asso.id}` })
+				);
 
-			dispatch(
-				actions
-					.assos(asso.id)
-					.members(user.id)
-					.permissions.all()
-			);
+				dispatch(
+					actions
+						.assos(asso.id)
+						.members(user.id)
+						.permissions.all()
+				);
+			}
 		});
 	}
 
@@ -450,9 +450,8 @@ class AssoScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, fetched, failed, user, asso, member, contacts, match, config } = this.props;
-		const { events, articlesFetched, modal } = this.state;
-		config.title = asso.shortname;
+		const { fetching, fetched, failed, user, asso, member, contacts, match } = this.props;
+		const { events, modal } = this.state;
 
 		if (failed) return <Http404 />;
 
@@ -513,7 +512,7 @@ class AssoScreen extends React.Component {
 						</NavLink>
 					</li>
 					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/evenements`}>
+						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/events`}>
 							ÉVÈNEMENTS
 						</NavLink>
 					</li>
@@ -561,12 +560,7 @@ class AssoScreen extends React.Component {
 							/>
 						)}
 					/>
-					<Route
-						path={`${match.url}/events`}
-						render={() => (
-							<Calendar events={AssoScreen.getAllEvents(events)} fetched={articlesFetched} />
-						)}
-					/>
+					<Route path={`${match.url}/events`} render={() => <AssoCalendar asso={asso} />} />
 					<Route path={`${match.url}/articles`} render={() => <ArticleList asso={asso} />} />
 					<LoggedRoute
 						path={`${match.url}/members`}

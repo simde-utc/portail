@@ -32,7 +32,7 @@ class ArticleForm extends React.Component {
 	getEvents(events) {
 		const { eventFilter } = this.state;
 
-		return this.mapSelectionOptions(
+		return ArticleForm.mapSelectionOptions(
 			events.filter(eventToFilter => {
 				return eventToFilter.name.indexOf(eventFilter) >= 0;
 			})
