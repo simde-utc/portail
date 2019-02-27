@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRoomsReservationsTypesTable extends Migration
+class CreateRoomsBookingsTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRoomsReservationsTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('rooms_reservations_types', function (Blueprint $table) {
+        Schema::create('rooms_bookings_types', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('type', validation_max('name'))->unique();
             $table->string('name', validation_max('name'))->unique();
@@ -30,6 +30,6 @@ class CreateRoomsReservationsTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rooms_reservations_types');
+        Schema::dropIfExists('rooms_bookings_types');
     }
 }

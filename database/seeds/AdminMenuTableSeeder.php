@@ -169,8 +169,8 @@ class AdminMenuTableSeeder extends Seeder
                     ],
                     [
                         'title' => 'Réservations',
-                        'uri' => 'resources/reservations',
-                        'permission' => 'reservation',
+                        'uri' => 'resources/bookings',
+                        'permission' => 'booking',
                         'icon' => 'fa-plus-square-o',
                     ],
                     [
@@ -205,7 +205,7 @@ class AdminMenuTableSeeder extends Seeder
                     ],
                     [
                         'title' => 'Types',
-                        'permission' => 'asso-type|contact-type|reservation-type',
+                        'permission' => 'asso-type|contact-type|booking-type',
                         'icon' => 'fa-hashtag',
                         'elements' => [
                             [
@@ -222,8 +222,8 @@ class AdminMenuTableSeeder extends Seeder
                             ],
                             [
                                 'title' => 'Réservation',
-                                'uri' => 'resources/reservation-types',
-                                'permission' => 'reservation-type',
+                                'uri' => 'resources/booking-types',
+                                'permission' => 'booking-type',
                                 'icon' => 'fa-plus-square-o',
                             ],
                         ]

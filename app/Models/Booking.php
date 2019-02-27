@@ -19,11 +19,11 @@ use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use App\Traits\Model\HasCreatorSelection;
 use App\Traits\Model\HasOwnerSelection;
 
-class Reservation extends Model implements OwnableContract
+class Booking extends Model implements OwnableContract
 {
     use HasMorphOwner, HasCreatorSelection, HasOwnerSelection;
 
-    protected $table = 'rooms_reservations';
+    protected $table = 'rooms_bookings';
 
     protected $fillable = [
         'room_id', 'type_id', 'event_id', 'description', 'created_by_id', 'created_by_type', 'owned_by_id',
@@ -71,7 +71,7 @@ class Reservation extends Model implements OwnableContract
      */
     public function type()
     {
-        return $this->belongsTo(ReservationType::class, 'type_id');
+        return $this->belongsTo(BookingType::class, 'type_id');
     }
 
     /**

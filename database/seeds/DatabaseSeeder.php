@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             RolesTableSeeder::class,
             ContactsTypesTableSeeder::class,
             PlacesAndLocationsTableSeeder::class,
-            ReservationsTypesTableSeeder::class,
+            BookingsTypesTableSeeder::class,
             AccessTableSeeder::class,
             AdminMenuTableSeeder::class,
         ]);
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
                 CalendarsTableSeeder::class,
                 ClientsTableSeeder::class,
                 CommentsTableSeeder::class,
-                ReservationsTableSeeder::class,
+                BookingsTableSeeder::class,
             ]);
         }
     }

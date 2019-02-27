@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les ReservationType.
+ * Gère en admin les BookingType.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -10,11 +10,11 @@
 
 namespace App\Admin\Controllers\Resource;
 
-use App\Models\ReservationType;
+use App\Models\BookingType;
 
-class ReservationTypeController extends ResourceController
+class BookingTypeController extends ResourceController
 {
-    protected $model = ReservationType::class;
+    protected $model = BookingType::class;
 
     /**
      * Définition des champs à afficher.

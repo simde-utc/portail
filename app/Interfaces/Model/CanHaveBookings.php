@@ -14,14 +14,14 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-interface CanHaveReservations
+interface CanHaveBookings
 {
     /**
      * Renvoie la liste des réservations.
      *
      * @return MorphMany
      */
-    public function reservations();
+    public function bookings();
 
     /**
      * Permet d'indiquer si la personne à le droit de voir les réservations appartenant au modèle.
@@ -29,7 +29,7 @@ interface CanHaveReservations
      * @param string $user_id
      * @return boolean
      */
-    public function isReservationAccessibleBy(string $user_id): bool;
+    public function isBookingAccessibleBy(string $user_id): bool;
 
     /**
      * Permet d'indiquer si la personne à le droit de créer/modifier/supprimer les réservations appartenant au modèle.
@@ -37,7 +37,7 @@ interface CanHaveReservations
      * @param string $user_id
      * @return boolean
      */
-    public function isReservationManageableBy(string $user_id): bool;
+    public function isBookingManageableBy(string $user_id): bool;
 
     /**
      * Permet d'indiquer si le modèle à le droit de valider les réservations appartenant au modèle.
@@ -45,5 +45,5 @@ interface CanHaveReservations
      * @param Model $model
      * @return boolean
      */
-    public function isReservationValidableBy(Model $model): bool;
+    public function isBookingValidableBy(Model $model): bool;
 }
