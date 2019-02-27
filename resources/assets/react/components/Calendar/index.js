@@ -74,7 +74,7 @@ class Calendar extends React.Component {
 					onAddCalendar={this.addCalendar.bind(this)}
 					onRemoveCalendar={this.removeCalendar.bind(this)}
 				/>
-				<CalendarCalendar calendars={selectedCalendars} events={events} />
+				<CalendarCalendar {...this.props} calendars={selectedCalendars} events={events} />
 			</div>
 		);
 	}
