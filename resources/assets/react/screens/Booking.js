@@ -9,7 +9,6 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { NavLink, Route, Switch } from 'react-router-dom';
 import Calendar from '../components/Calendar';
 
 import actions from '../redux/actions';
@@ -29,7 +28,6 @@ import actions from '../redux/actions';
 		assos,
 		permissions,
 		rooms: store.getData('rooms'),
-		assos: store.getData(['user', 'assos']),
 		fetched: store.isFetched('rooms'),
 	};
 })
@@ -55,10 +53,6 @@ class BookingScreen extends React.Component {
 		}
 	}
 
-	onSelectingRange(data) {
-		console.log(data);
-	}
-
 	render() {
 		const { rooms, fetched, config } = this.props;
 		config.title = 'Planning des réservations';
@@ -69,14 +63,7 @@ class BookingScreen extends React.Component {
 
 		const calendars = rooms.map(room => room.calendar);
 
-		return (
-			<Calendar
-				calendars={calendars}
-				selectedCalendars={calendars}
-				selectable
-				onSelectSlot={this.onSelectingRange.bind(this)}
-			/>
-		);
+		return <Calendar calendars={calendars} selectedCalendars={calendars} selectable />;
 	}
 }
 
