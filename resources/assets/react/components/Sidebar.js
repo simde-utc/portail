@@ -53,7 +53,11 @@ class Sidebar extends React.Component {
 					<div className="sidebar-group">
 						<h6 className="sidebar-header d-hover-zone">
 							ACTUALITÉS{' '}
-							<NavLink className="float-right d-hover fas fa-cog" style={{ display: 'none' }} to="/settings/sidebar/news" />
+							<NavLink
+								className="float-right d-hover fas fa-cog"
+								style={{ display: 'none' }}
+								to="/settings/sidebar/news"
+							/>
 						</h6>
 						<NavLink exact className="sidebar-link" to="/">
 							<FontAwesomeIcon icon="newspaper" /> Flux
@@ -63,7 +67,11 @@ class Sidebar extends React.Component {
 					<div className="sidebar-group">
 						<h6 className="sidebar-header d-hover-zone">
 							LIENS UTILES{' '}
-							<NavLink className="float-right d-hover fas fa-cog" style={{ display: 'none' }} to="/settings/sidebar/utc" />
+							<NavLink
+								className="float-right d-hover fas fa-cog"
+								style={{ display: 'none' }}
+								to="/settings/sidebar/utc"
+							/>
 						</h6>
 						<a
 							className="sidebar-link"
@@ -103,7 +111,8 @@ class Sidebar extends React.Component {
 						<h6 className="sidebar-header d-hover-zone">
 							RACCOURCIS{' '}
 							<NavLink
-								className="float-right d-hover fas fa-cog" style={{ display: 'none' }}
+								className="float-right d-hover fas fa-cog"
+								style={{ display: 'none' }}
 								to="/settings/sidebar/shortcuts"
 							/>
 						</h6>
@@ -126,7 +135,8 @@ class Sidebar extends React.Component {
 							<h6 className="sidebar-header d-hover-zone">
 								MES SERVICES{' '}
 								<NavLink
-									className="float-right d-hover fas fa-cog" style={{ display: 'none' }}
+									className="float-right d-hover fas fa-cog"
+									style={{ display: 'none' }}
 									to="/settings/sidebar/services"
 								/>
 							</h6>
@@ -138,7 +148,11 @@ class Sidebar extends React.Component {
 						<div className="sidebar-group">
 							<h6 className="sidebar-header d-hover-zone">
 								MES ASSOCIATIONS{' '}
-								<NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/assos" style={{ display: 'none' }} />
+								<NavLink
+									className="float-right d-hover fas fa-cog"
+									to="/settings/sidebar/assos"
+									style={{ display: 'none' }}
+								/>
 							</h6>
 							{Sidebar.getAssos(assos)}
 						</div>

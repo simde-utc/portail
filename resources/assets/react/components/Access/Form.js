@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import { Form, FormGroup, Button, Label, Input } from 'reactstrap'
+import { Form, FormGroup, Button, Label, Input } from 'reactstrap';
 
 import Select from 'react-select';
 import { map } from 'lodash';
@@ -56,9 +56,7 @@ class AccessForm extends React.Component {
 				<h1 className="title">Formulaire de demande d'accès</h1>
 				<Form>
 					<FormGroup>
-						<Label for="access_id">
-							Accès demandé
-						</Label>
+						<Label for="access_id">Accès demandé</Label>
 						<Select
 							onChange={this.handleAccessChange.bind(this)}
 							id="access_id"
@@ -70,9 +68,7 @@ class AccessForm extends React.Component {
 					</FormGroup>
 
 					<FormGroup>
-						<Label for="description">
-							Description de la demande
-						</Label>
+						<Label for="description">Description de la demande</Label>
 						<Input
 							type="textarea"
 							id="description"

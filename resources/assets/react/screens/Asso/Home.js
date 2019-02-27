@@ -55,7 +55,12 @@ class AssoHomeScreen extends React.Component {
 
 		if (isFollowing && !isMember) {
 			return (
-				<Button className="m-1 btn btn-sm font-weight-bold" color="danger" outline onClick={unfollow}>
+				<Button
+					className="m-1 btn btn-sm font-weight-bold"
+					color="danger"
+					outline
+					onClick={unfollow}
+				>
 					Ne plus suivre
 				</Button>
 			);
@@ -157,7 +162,10 @@ class AssoHomeScreen extends React.Component {
 						</div>
 						<div className="col-md-8" style={{ whiteSpace: 'pre-line' }}>
 							<h1 className={`title ${color}`} style={{ fontWeight: 'bold' }}>
-								{asso.shortname} <small className="text-muted h4" style={{ fontStyle: 'italic' }}>{asso.name}</small>
+								{asso.shortname}{' '}
+								<small className="text-muted h4" style={{ fontStyle: 'italic' }}>
+									{asso.name}
+								</small>
 							</h1>
 							<span className="mt-4">{asso.type && asso.type.description}</span>
 							<ReactMarkdown className="my-3 text-justify" source={asso.description} />

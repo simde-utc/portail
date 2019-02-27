@@ -20,7 +20,12 @@ const Service = ({ service, isFollowing, unfollow, follow }) => (
 			{service.description}
 		</a>
 		{isFollowing ? (
-			<Button className="m-1 btn btn-sm font-weight-bold" color="warning" outline onClick={unfollow}>
+			<Button
+				className="m-1 btn btn-sm font-weight-bold"
+				color="warning"
+				outline
+				onClick={unfollow}
+			>
 				Retirer des favoris
 			</Button>
 		) : (

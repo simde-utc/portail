@@ -77,7 +77,16 @@ class AssoMemberListScreen extends React.Component {
 	}
 
 	render() {
-		const { currentSemester, semesters, members, roles, fetched, fetching, asso, config } = this.props;
+		const {
+			currentSemester,
+			semesters,
+			members,
+			roles,
+			fetched,
+			fetching,
+			asso,
+			config,
+		} = this.props;
 		const { semester_id } = this.state;
 		const selectSemesters = AssoMemberListScreen.getSemesters(semesters);
 		config.title = `${asso.shortname} - Membres`;

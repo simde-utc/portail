@@ -500,7 +500,12 @@ class AssoScreen extends React.Component {
 						>
 							Annuler
 						</Button>
-						<Button className="font-weight-bold" outline color={modal.button.type} onClick={modal.button.onClick}>
+						<Button
+							className="font-weight-bold"
+							outline
+							color={modal.button.type}
+							onClick={modal.button.onClick}
+						>
 							{modal.button.text}
 						</Button>
 					</ModalFooter>

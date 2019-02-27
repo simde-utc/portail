@@ -8,7 +8,6 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const Http500 = () => (
 	<div className="container">
