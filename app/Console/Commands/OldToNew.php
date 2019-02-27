@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\{
 };
 use App\Models\{
     Asso, AssoType, Article, Contact, ContactType, Client, Tag, Role, Semester, User, Visibility, AuthCas, Event, Service,
-    Access, Room, Location
+    Access, Room, Location, Booking, BookingType
 };
 
 class OldToNew extends Command
@@ -44,6 +44,7 @@ class OldToNew extends Command
     protected $roles = [];
     protected $events = [];
     protected $access = [];
+    protected $rooms = [];
     protected $resultedRoles = [];
 
     /**
@@ -82,12 +83,12 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
             return;
         }
 
-        $bar = $this->output->createProgressBar(10);
+        $bar = $this->output->createProgressBar(11);
         $errors = [];
 
         $this->info('Migration et nettoyage de la base de données');
 
-        exec('APP_DEBUG=0 php artisan migrate:fresh --seed');
+        // exec('APP_DEBUG=0 php artisan migrate:fresh --seed');
 
         $bar->advance();
         $this->info(PHP_EOL);
@@ -95,10 +96,13 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
         $this->info('Préparation des données à récupérer');
 
         $this->users = $this->getDB()->select('SELECT * FROM sf_guard_user');
+        $this->assos = $this->getDB()->select('SELECT * FROM asso');
+        $this->users = $this->getDB()->select('SELECT * FROM sf_guard_user');
         $this->semesters = $this->getDB()->select('SELECT * FROM semestre');
         $this->roles = $this->getDB()->select('SELECT * FROM role');
         $this->events = $this->getDB()->select('SELECT * FROM event');
         $this->access = $this->getDB()->select('SELECT * FROM charte_locaux_type');
+        $this->rooms = $this->getDB()->select('SELECT * FROM salle');
 
         $bar->advance();
         $this->info(PHP_EOL);
@@ -135,7 +139,16 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
             $this->info(PHP_EOL);
 
             $errors['Accès'] = $this->addAssosAccess();
+            $this->info(PHP_EOL);
+            $bar->advance();
+            $this->info(PHP_EOL);
+
             $errors['Salles'] = $this->addRooms();
+            $this->info(PHP_EOL);
+            $bar->advance();
+            $this->info(PHP_EOL);
+
+            $errors['Réservations'] = $this->addBookings();
             $this->info(PHP_EOL);
             $bar->advance();
             $this->info(PHP_EOL);
@@ -296,6 +309,20 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
     }
 
     /**
+     * Récupère la salle.
+     *
+     * @param  integer $room_id
+     * @return mixed|null
+     */
+    protected function getRoom(int $room_id)
+    {
+        $oldRoom = $this->getModelFrom($this->rooms, $room_id);
+        $names = explode(' ', $oldRoom->name);
+
+        return Room::where('location_id', Location::where('name', 'LIKE', '%'.end($names).'%')->first()->id)->first();
+    }
+
+    /**
      * Crée les associations depuis l'ancien Portail.
      *
      * @return mixed
@@ -306,7 +333,6 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
 
         $assoTypes = $this->getDB()->select('SELECT * FROM type_asso');
         $poles = $this->getDB()->select('SELECT * FROM pole');
-        $this->assos = $this->getDB()->select('SELECT * FROM asso');
 
         $this->info('Création des '.count($this->assos).' associations');
 
@@ -582,25 +608,29 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                 try {
                     $asso = $this->getAsso($member->asso_id);
                     if (!$asso) {
-                        $this->output->error('Association non existante n°'.$member->asso_id);
+                        $errors[] = 'Association non existante n°'.$member->asso_id;
+                        $bar->advance();
                         continue;
                     }
 
                     $role = $this->getRole($member->role_id);
                     if (!$role) {
-                        $this->output->error('Rôle non existant n°'.$member->role_id);
+                        $errors[] = 'Rôle non existant n°'.$member->role_id;
+                        $bar->advance();
                         continue;
                     }
 
                     $user = $this->getUser($member->user_id);
                     if (!$user) {
-                        $this->output->error('Utilisateur non existant n°'.$member->user_id);
+                        $errors[] = 'Utilisateur non existant n°'.$member->user_id;
+                        $bar->advance();
                         continue;
                     }
 
                     $semester = $this->getSemester($member->semestre_id);
                     if (!$semester) {
-                        $this->output->error('Semestre non existant n°'.$member->semestre_id);
+                        $errors[] = 'Semestre non existant n°'.$member->semestre_id;
+                        $bar->advance();
                         continue;
                     }
 
@@ -814,25 +844,29 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                 try {
                     $asso = $this->getAsso($access->asso_id);
                     if (!$asso) {
-                        $this->output->error('Association non existante n°'.$access->asso_id);
+                        $errors[] = 'Association non existante n°'.$access->asso_id;
+                        $bar->advance();
                         continue;
                     }
 
                     $type = $this->getAccess($access->type_id);
                     if (!$type) {
-                        $this->output->error('Accès non existant n°'.$access->type_id);
+                        $errors[] = 'Accès non existant n°'.$access->type_id;
+                        $bar->advance();
                         continue;
                     }
 
                     $user = $this->getUser($access->user_id);
                     if (!$user) {
-                        $this->output->error('Utilisateur non existant n°'.$access->user_id);
+                        $errors[] = 'Utilisateur non existant n°'.$access->user_id;
+                        $bar->advance();
                         continue;
                     }
 
                     $semester = $this->getSemester($access->semestre_id);
                     if (!$semester) {
-                        $this->output->error('Semestre non existant n°'.$access->semestre_id);
+                        $errors[] = 'Semestre non existant n°'.$access->semestre_id;
+                        $bar->advance();
                         continue;
                     }
 
@@ -898,25 +932,26 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
     {
         $this->info('Préparation des salles');
 
-        $rooms = $this->getDB()->select('SELECT * FROM salle');
         $poles = $this->getDB()->select('SELECT * FROM pole');
 
-        $this->info('Création des '.count($rooms).' salles');
+        $this->info('Création des '.count($this->rooms).' salles');
 
-        $bar = $this->output->createProgressBar(count($rooms));
+        $bar = $this->output->createProgressBar(count($this->rooms));
         $errors = [];
 
-        foreach ($rooms as $room) {
+        foreach ($this->rooms as $room) {
             try {
                 $pole = $this->getModelFrom($poles, $room->id_pole);
                 if (!$pole) {
-                    $this->output->error('Pôle non existant n°'.$room->id_pole);
+                    $errors[] = 'Pôle non existant n°'.$room->id_pole;
+                    $bar->advance();
                     continue;
                 }
 
                 $asso = $this->getAsso($pole->asso_id);
                 if (!$asso) {
-                    $this->output->error('Association non existante n°'.$pole->asso_id);
+                    $errors[] = 'Association non existante n°'.$pole->asso_id;
+                    $bar->advance();
                     continue;
                 }
 
@@ -960,6 +995,132 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                 throw $e;
             } catch (\Error $e) {
                 $this->output->error('Impossible de créer la salle '.$room->name);
+
+                throw $e;
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Crée les réservation depuis l'ancien Portail.
+     *
+     * @return array
+     */
+    protected function addBookings()
+    {
+        $this->info('Préparation des réservations');
+
+        $bookings = $this->getDB()->select('SELECT * FROM reservation');
+
+        $this->info('Création des '.count($bookings).' réservations');
+
+        $bar = $this->output->createProgressBar(count($bookings));
+        $errors = [];
+
+        foreach ($bookings as $booking) {
+            try {
+                try {
+                    $asso = $this->getAsso($booking->id_asso);
+                    if (!$asso) {
+                        $errors[] = 'Association non existante n°'.$booking->asso_id;
+                        $bar->advance();
+                        continue;
+                    }
+                } catch (\Error $e) {
+                    $errors[] = 'Association non donnée, réservation sautée n°'.$booking->id;
+                    $bar->advance();
+                    continue;
+                } catch (\Exception $e) {
+                    $errors[] = 'Association non existante';
+                    $bar->advance();
+                    continue;
+                }
+
+                try {
+                    if ($booking->id_user_valid) {
+                        $validated_by = $this->getUser($booking->id_user_valid);
+                        if (!$validated_by) {
+                            $errors[] = 'Utilisateur non existant n°'.$booking->id_user_valid;
+                            $bar->advance();
+                            continue;
+                        }
+                    }
+
+                    $user = $this->getUser($booking->id_user_reserve);
+                    if (!$user) {
+                        $errors[] = 'Utilisateur non existant n°'.$booking->id_user_reserve;
+                        $bar->advance();
+                        continue;
+                    }
+                } catch (\Exception $e) {
+                    $errors[] = 'Utilisateur non existant';
+                    $bar->advance();
+                    continue;
+                }
+
+                $room = $this->getRoom($booking->id_salle);
+                if (!$room) {
+                    $errors[] = 'Salle non existante n°'.$booking->id_salle;
+                    $bar->advance();
+                    continue;
+                }
+
+                # Ici si aucun type n'est trouvé, on considère que c'est un blocage de créneau.
+                $type = BookingType::where('name', $booking->activite)->first();
+
+                if ($booking->commentaire) {
+                    $name = $booking->commentaire;
+                } else if ($type) {
+                    $name = $type->name;
+                } else {
+                    $name = 'Blocage';
+                }
+
+                if ($booking->estvalide && !isset($validated_by)) {
+                    $validated_by = $user;
+                }
+
+                try {
+                    $event = Event::create([
+                        'name' => $name,
+                        'begin_at' => $booking->date.' '.$booking->heuredebut,
+                        'end_at' => $booking->date.' '.$booking->heurefin,
+                        'full_day' => ($booking->allDay ?? false),
+                        'location_id' => $room->location->id,
+                        'created_by_id' => $user->id,
+                        'created_by_type' => User::class,
+                        'owned_by_id' => $user->id,
+                        'owned_by_type' => User::class,
+                        'visibility_id' => $room->calendar->visibility_id,
+                    ]);
+                } catch (\Exception $e) {
+                    $errors[] = 'Evénement déjà créé pour la réservation n°'.$booking->id;
+                    $bar->advance();
+                    continue;
+                }
+
+                $room->calendar->events()->attach($event);
+                $model = $room->bookings()->create([
+                    'type_id' => ($type->id ?? null),
+                    'event_id' => $event->id,
+                    'description' => $booking->commentaire,
+                    'created_by_id' => $user->id,
+                    'created_by_type' => User::class,
+                    'owned_by_id' => $user->id,
+                    'owned_by_type' => User::class,
+                    'validated_by_id' => ($validated_by->id ?? null),
+                    'validated_by_type' => User::class,
+                ]);
+
+                $bar->advance();
+            } catch (\Exception $e) {
+                $this->output->error('Impossible de créer la réservation n°'.$booking->id);
+
+                throw $e;
+            } catch (\Error $e) {
+                $this->output->error('Impossible de créer la réservation n°'.$booking->id);
 
                 throw $e;
             }
