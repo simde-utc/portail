@@ -10,13 +10,13 @@
  */
 
 import React from 'react';
-import { NavLink, Route, Switch } from 'react-router-dom';
+// import { NavLink, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import actions from '../redux/actions';
 
 // Profile Components
-import UserInfo from '../components/Profile/UserInfo';
-import AssociativeCarreer from '../components/Profile/AssociativeCarreer';
+// import UserInfo from '../components/Profile/UserInfo';
+// import AssociativeCarreer from '../components/Profile/AssociativeCarreer';
 
 @connect(store => ({
 	config: store.config,

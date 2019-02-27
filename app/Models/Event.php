@@ -43,7 +43,7 @@ class Event extends Model implements OwnableContract
     ];
 
     protected $must = [
-        'begin_at', 'end_at', 'full_day', 'location'
+        'begin_at', 'end_at', 'full_day', 'location', 'owned_by'
     ];
 
     protected $selection = [
