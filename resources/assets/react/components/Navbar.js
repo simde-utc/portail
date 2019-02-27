@@ -55,7 +55,7 @@ class Navbar extends React.Component {
 			));
 
 		return (
-			<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle">
+			<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle d-flex">
 				<NavLink to="/" className="navbar-brand">
 					Portail des assos
 				</NavLink>
@@ -72,7 +72,6 @@ class Navbar extends React.Component {
 
 				<span
 					style={{
-						position: 'absolute',
 						width: '100%',
 						textAlign: 'center',
 						fontSize: '20px',
@@ -105,7 +104,7 @@ class Navbar extends React.Component {
 								</NavLink>
 							</li>
 						) : (
-							<li className="nav-item dropdown">
+							<li className="nav-item dropdown" style={{ width: '150px', textAlign: 'right' }}>
 								<a
 									className="nav-link dropdown-toggle"
 									onClick={() => this.toggle('loginDropdown')}
@@ -114,7 +113,7 @@ class Navbar extends React.Component {
 								</a>
 								<div className={`dropdown-menu${loginDropdown ? ' show' : ''}`}>
 									{loginMethods}
-									<a className="dropdown-item" href="/login">
+									<a className="dropdown-item" href="/login?see=all">
 										Tout voir
 									</a>
 								</div>
