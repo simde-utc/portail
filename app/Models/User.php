@@ -124,7 +124,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         'image'
     ];
 
-    protected $types = [
+    protected $possibleTypes = [
         'admin' => 'administrateur',
         'member' => 'membre d\'une association',
         'contributorBde' => 'cotisant BDE',
@@ -300,7 +300,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
      */
     public function getTypes()
     {
-        return array_keys($this->types);
+        return array_keys($this->possibleTypes);
     }
 
     /**
@@ -310,7 +310,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
      */
     public function getTypeDescriptions()
     {
-        return $this->types;
+        return $this->possibleTypes;
     }
 
     /**

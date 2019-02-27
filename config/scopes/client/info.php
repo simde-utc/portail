@@ -144,14 +144,23 @@ return [
                                 'active' => [
                                     'description' => 'Savoir si le compte est actif',
                                 ],
+                                'password' => [
+                                    'description' => 'Savoir si l\'utilisateur se connecte via email/mot de passe',
+                                ],
                                 'cas' => [
                                     'description' => 'Savoir si l\'utilisateur est un utilisateur CAS-UTC',
+                                ],
+                                'casConfirmed' => [
+                                    'description' => 'Savoir si l\'utilisateur est un utilisateur CAS-UTC et qu\'il peut s\'y connecter',
                                 ],
                                 'contributorBde' => [
                                     'description' => 'Savoir si l\'utilisateur est un cotisant BDE-UTC',
                                 ],
                                 'admin' => [
                                     'description' => 'Savoir si l\'utilisateur est un administrateur du système',
+                                ],
+                                'member' => [
+                                    'description' => 'Savoir si l\'utilisateur est membre d\'une association',
                                 ],
                             ]
                         ],

@@ -23,12 +23,6 @@ import AssociativeCarreer from '../components/Profile/AssociativeCarreer';
 	user: store.getData('user', false),
 }))
 class ScreensProfile extends React.Component {
-	componentWillMount() {
-		const { dispatch } = this.props;
-
-		dispatch(actions.user.get());
-	}
-
 	load(name) {
 		const { dispatch } = this.props;
 
@@ -47,45 +41,47 @@ class ScreensProfile extends React.Component {
 	}
 
 	render() {
-		const { match, user, config } = this.props;
+		const { user, config } = this.props;
 		config.title = `Profil - ${user.name}`;
 
-		return (
-			<div className="container">
-				<h1 className="title">Mon profil</h1>
-				<ul className="nav nav-tabs">
-					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" exact to={`${match.url}`}>
-							Informations
-						</NavLink>
-					</li>
-					<li className="nav-item">
-						<NavLink
-							className="nav-link"
-							activeClassName="active"
-							to={`${match.url}/parcours_associatif`}
-						>
-							Parcours Associatif
-						</NavLink>
-					</li>
-				</ul>
-				<div className="container">
-					<Switch>
-						<Route
-							path={`${match.url}`}
-							exact
-							render={() => (
-								<UserInfo info={user.info} details={user.details} missing={this.load.bind(this)} />
-							)}
-						/>
-						<Route
-							path={`${match.url}/parcours_associatif`}
-							render={() => <AssociativeCarreer />}
-						/>
-					</Switch>
-				</div>
-			</div>
-		);
+		return <div />;
+
+		// return (
+		// 	<div className="container">
+		// 		<h1 className="title">Mon profil</h1>
+		// 		<ul className="nav nav-tabs">
+		// 			<li className="nav-item">
+		// 				<NavLink className="nav-link" activeClassName="active" exact to={`${match.url}`}>
+		// 					Informations
+		// 				</NavLink>
+		// 			</li>
+		// 			<li className="nav-item">
+		// 				<NavLink
+		// 					className="nav-link"
+		// 					activeClassName="active"
+		// 					to={`${match.url}/parcours_associatif`}
+		// 				>
+		// 					Parcours Associatif
+		// 				</NavLink>
+		// 			</li>
+		// 		</ul>
+		// 		<div className="container">
+		// 			<Switch>
+		// 				<Route
+		// 					path={`${match.url}`}
+		// 					exact
+		// 					render={() => (
+		// 						<UserInfo info={user.info} details={user.details} missing={this.load.bind(this)} />
+		// 					)}
+		// 				/>
+		// 				<Route
+		// 					path={`${match.url}/parcours_associatif`}
+		// 					render={() => <AssociativeCarreer />}
+		// 				/>
+		// 			</Switch>
+		// 		</div>
+		// 	</div>
+		// );
 	}
 }
 

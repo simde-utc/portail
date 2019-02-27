@@ -164,40 +164,39 @@ class UserController extends Controller
                 $user->type = $user->type();
             }
 
-            if ($request->has('allTypes')) {
-                if (!\Scopes::has($request, 'user-get-info-identity-type')) {
-                    abort(403, 'Vous n\'avez pas le droit d\'avoir accès aux types de l\'utilisateur');
-                }
+            if ($request->has('types')) {
+                $possibleTypes = $request->input('types');
+				$types = [];
 
-                foreach ($user->getTypes() as $type) {
-                    $method = 'is'.ucfirst($type);
-                    $type = 'is_'.$type;
-
-                    if (method_exists($user, $method) && $user->$method()) {
-                        $user->$type = true;
-                    } else {
-                        $user->$type = false;
+                if ($possibleTypes === '*') {
+                    if (!\Scopes::has($request, 'user-get-info-identity-type')) {
+                        abort(403, 'Vous n\'avez pas le droit d\'avoir accès aux types de l\'utilisateur');
                     }
+
+                    $possibleTypes = $user->getTypes();
+                } else {
+                    $possibleTypes = explode(',', $possibleTypes);
                 }
-            } else if ($request->has('withTypes')) {
-                foreach (explode(',', $request->input('withTypes')) as $type) {
+
+                foreach ($possibleTypes as $type) {
                     try {
                         if (!\Scopes::has($request, 'user-get-info-identity-type-'.$type)) {
                             continue;
                         }
 
                         $method = 'is'.ucfirst($type);
-                        $type = 'is_'.$type;
 
                         if (method_exists($user, $method) && $user->$method()) {
-                            $user->$type = true;
+                            $types[$type] = true;
                         } else {
-                            $user->$type = false;
+                            $types[$type] = false;
                         }
                     } catch (PortailException $e) {
                         abort(400, 'Le type '.$type.' n\'existe pas !');
                     }
                 }
+
+                $user->types = $types;
             }
 
             if (!\Scopes::has($request, 'user-get-info-identity-timestamps')) {
