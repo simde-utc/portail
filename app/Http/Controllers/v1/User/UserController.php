@@ -166,7 +166,7 @@ class UserController extends Controller
 
             if ($request->has('types')) {
                 $possibleTypes = $request->input('types');
-				$types = [];
+                $types = [];
 
                 if ($possibleTypes === '*') {
                     if (!\Scopes::has($request, 'user-get-info-identity-type')) {

@@ -107,59 +107,45 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
         $bar->advance();
         $this->info(PHP_EOL);
 
+        $next = function() use ($bar) {
+            $this->info(PHP_EOL);
+            $bar->advance();
+            $this->info(PHP_EOL);
+        };
+
         try {
             $errors['Associations'] = $this->addAssos();
-            $this->info(PHP_EOL);
-            $bar->advance();
-            $this->info(PHP_EOL);
+            $next();
 
             $errors['Articles'] = $this->addArticles();
-            $this->info(PHP_EOL);
-            $bar->advance();
-            $this->info(PHP_EOL);
+            $next();
 
             $errors['Utilisateurs'] = $this->addUsers();
-            $this->info(PHP_EOL);
-            $bar->advance();
-            $this->info(PHP_EOL);
+            $next();
 
             $errors['Membres'] = $this->addMembers();
-            $this->info(PHP_EOL);
-            $bar->advance();
-            $this->info(PHP_EOL);
+            $next();
 
             $errors['Evénements'] = $this->addEvents();
-            $this->info(PHP_EOL);
-            $bar->advance();
-            $this->info(PHP_EOL);
+            $next();
 
             $errors['Services'] = $this->addServices();
-            $this->info(PHP_EOL);
-            $bar->advance();
-            $this->info(PHP_EOL);
+            $next();
 
             $errors['Accès'] = $this->addAssosAccess();
-            $this->info(PHP_EOL);
-            $bar->advance();
-            $this->info(PHP_EOL);
+            $next();
 
             $errors['Salles'] = $this->addRooms();
-            $this->info(PHP_EOL);
-            $bar->advance();
-            $this->info(PHP_EOL);
+            $next();
 
             $errors['Réservations'] = $this->addBookings();
-            $this->info(PHP_EOL);
-            $bar->advance();
-            $this->info(PHP_EOL);
+            $next();
         } catch (\Exception $e) {
             throw $e;
         } finally {
-            DB::delete('DELETE FROM jobs;');
-            DB::delete('DELETE FROM failed_jobs;');
+            DB::delete('DELETE FROM jobs; DELETE FROM failed_jobs;');
 
-            $this->info(PHP_EOL);
-            $this->info(PHP_EOL);
+            $this->info(PHP_EOL.PHP_EOL);
             $this->info('Rapport:');
             foreach ($errors as $name => $subErrors) {
                 $this->info(PHP_EOL);
@@ -1067,16 +1053,9 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     continue;
                 }
 
-                # Ici si aucun type n'est trouvé, on considère que c'est un blocage de créneau.
+                // Ici si aucun type n'est trouvé, on considère que c'est un blocage de créneau.
                 $type = BookingType::where('name', $booking->activite)->first();
-
-                if ($booking->commentaire) {
-                    $name = $booking->commentaire;
-                } else if ($type) {
-                    $name = $type->name;
-                } else {
-                    $name = 'Blocage';
-                }
+                $name = ($booking->commentaire ? $booking->commentaire : ($type ? $type->name : 'Blocage'));
 
                 if ($booking->estvalide && !isset($validated_by)) {
                     $validated_by = $user;

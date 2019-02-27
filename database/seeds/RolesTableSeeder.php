@@ -181,7 +181,7 @@ class RolesTableSeeder extends Seeder
                 ],
                 'permissions' => [
                     'event',
-					'treasury',
+                    'treasury',
                 ],
             ],
             [
@@ -213,7 +213,7 @@ class RolesTableSeeder extends Seeder
                     'vice-treasury',
                 ],
                 'permissions' => [
-					'booking',
+                    'booking',
                     'event',
                 ],
             ],
