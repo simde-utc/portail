@@ -18,7 +18,7 @@
  *       + remove:  supprimer une donnée
  */
 
-// Toutes les routes commencant par client-{verbe}-reservations-
+// Toutes les routes commencant par client-{verbe}-bookings-
 return [
     'description' => 'Réservations',
     'verbs' => [

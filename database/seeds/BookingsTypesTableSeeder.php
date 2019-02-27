@@ -3,9 +3,9 @@
 use Illuminate\Database\Seeder;
 use App\Models\Location;
 use App\Models\Asso;
-use App\Models\ReservationType;
+use App\Models\BookingType;
 
-class ReservationsTypesTableSeeder extends Seeder
+class BookingsTypesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -45,7 +45,7 @@ class ReservationsTypesTableSeeder extends Seeder
         ];
 
         foreach ($types as $type) {
-            ReservationType::create($type);
+            BookingType::create($type);
         }
     }
 }

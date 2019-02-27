@@ -12,7 +12,7 @@ namespace App\Http\Requests;
 
 use Validation;
 
-class ReservationRequest extends Request
+class BookingRequest extends Request
 {
     /**
      * Défini les règles de validation des champs.
@@ -36,7 +36,7 @@ class ReservationRequest extends Request
             'full_day' => Validation::type('boolean')
                 ->get(),
             'type_id' => Validation::type('uuid')
-                ->exists('reservations_types', 'id')
+                ->exists('bookings_types', 'id')
                 ->post('required')
                 ->get(),
             'location_id' => Validation::type('uuid')

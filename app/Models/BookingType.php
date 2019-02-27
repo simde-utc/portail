@@ -13,9 +13,9 @@
 
 namespace App\Models;
 
-class ReservationType extends Model
+class BookingType extends Model
 {
-    protected $table = 'rooms_reservations_types';
+    protected $table = 'rooms_bookings_types';
 
     protected $fillable = [
         'name', 'type', 'need_validation',
@@ -34,8 +34,8 @@ class ReservationType extends Model
      *
      * @return mixed
      */
-    protected function reservations()
+    protected function bookings()
     {
-        return $this->hasMany(Reservation::class);
+        return $this->hasMany(Booking::class);
     }
 }

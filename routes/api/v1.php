@@ -89,7 +89,7 @@ Route::group(['middleware' => 'user:active'], function () {
         'roles' => 'Role\RoleController',
         'permissions' => 'Permission\PermissionController',
         'rooms' => 'Room\RoomController',
-        'rooms/{room_id}/reservations' => 'Room\ReservationController',
+        'rooms/{room_id}/bookings' => 'Room\BookingController',
         'calendars/{calendar_id}/events' => 'Calendar\EventController',
     ]);
 });

@@ -10,7 +10,7 @@
 
 namespace App\Traits\Controller\v1;
 
-use App\Models\Reservation;
+use App\Models\Booking;
 use App\Models\Model;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -18,7 +18,7 @@ use App\Models\Asso;
 use App\Models\Room;
 use Carbon\Carbon;
 
-trait HasReservations
+trait HasBookings
 {
     use HasRooms {
         HasRooms::tokenCanSee as private tokenCanSeeRoom;
@@ -32,7 +32,7 @@ trait HasReservations
      * @param  string $end_at
      * @return boolean
      */
-    protected function checkReservationPeriod(string $room_id, string $begin_at, string $end_at)
+    protected function checkBookingPeriod(string $room_id, string $begin_at, string $end_at)
     {
         $eventsQuery = Room::find($room_id)->calendar->events()
             ->whereNotNull('validated_by_type')
@@ -46,7 +46,7 @@ trait HasReservations
         $begin = Carbon::parse($begin_at);
         $end = Carbon::parse($end_at);
 
-        return $end->diffInSeconds($begin) <= (config('portail.reservations.max_duration') * 60 * 60);
+        return $end->diffInSeconds($begin) <= (config('portail.bookings.max_duration') * 60 * 60);
     }
 
     /**
@@ -55,29 +55,29 @@ trait HasReservations
      * @param  Request $request
      * @param  Room    $room
      * @param  User    $user
-     * @param  string  $reservation_id
+     * @param  string  $booking_id
      * @param  string  $verb
-     * @return Reservation|null
+     * @return Booking|null
      */
-    protected function getReservationFromRoom(Request $request, Room $room, User $user, string $reservation_id,
+    protected function getBookingFromRoom(Request $request, Room $room, User $user, string $booking_id,
         string $verb='get')
     {
-        $reservation = $room->reservations()->find($reservation_id);
+        $booking = $room->bookings()->find($booking_id);
 
-        if ($reservation) {
-            if (!$this->tokenCanSee($request, $reservation, $verb)) {
+        if ($booking) {
+            if (!$this->tokenCanSee($request, $booking, $verb)) {
                 abort(403, 'L\'application n\'a pas les droits sur cet réservation');
             }
 
-            if (!$this->isVisible($reservation, $user->id)) {
+            if (!$this->isVisible($booking, $user->id)) {
                 abort(403, 'Vous n\'avez pas le droit de voir cette réservation');
             }
 
-            if ($verb !== 'get' && !$reservation->owned_by->isReservationManageableBy(\Auth::id())) {
+            if ($verb !== 'get' && !$booking->owned_by->isBookingManageableBy(\Auth::id())) {
                 abort(403, 'Vous n\'avez pas les droits suffisants');
             }
 
-            return $reservation;
+            return $booking;
         }
 
         abort(404, 'Impossible de trouver la réservation');
@@ -100,15 +100,15 @@ trait HasReservations
         $scopeHead = \Scopes::getTokenType($request);
         $type = \ModelResolver::getName($model->owned_by_type);
 
-        if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-reservations-'.$type.'s-owned')) {
+        if (\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-bookings-'.$type.'s-owned')) {
             return true;
         }
 
-        if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-reservations-'.$type.'s-owned-asso'))
+        if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-bookings-'.$type.'s-owned-asso'))
             && $model->created_by_type === Asso::class
             && $model->created_by_id === \Scopes::getClient($request)->asso->id)) {
             if (\Scopes::isUserToken($request)) {
-                $functionToCall = 'isReservation'.($verb === 'get' ? 'Accessible' : 'Manageable').'By';
+                $functionToCall = 'isBooking'.($verb === 'get' ? 'Accessible' : 'Manageable').'By';
 
                 if ($model->owned_by->$functionToCall(\Auth::id())) {
                     return true;
@@ -118,6 +118,6 @@ trait HasReservations
             }
         }
 
-        return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-reservations-'.$type.'s-created');
+        return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-bookings-'.$type.'s-created');
     }
 }

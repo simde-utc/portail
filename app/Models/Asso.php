@@ -21,13 +21,13 @@ use App\Traits\Model\{
 use Illuminate\Notifications\Notifiable;
 use App\Interfaces\Model\{
     CanHaveContacts, CanHaveEvents, CanHaveCalendars, CanHaveArticles, CanHaveRooms,
-    CanHaveReservations, CanNotify, CanHaveRoles, CanHavePermissions, CanComment
+    CanHaveBookings, CanNotify, CanHaveRoles, CanHavePermissions, CanComment
 };
 use Illuminate\Support\Collection;
 use App\Exceptions\PortailException;
 
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles,
-	CanNotify, CanHaveRooms, CanHaveReservations, CanHaveRoles, CanHavePermissions, CanComment
+	CanNotify, CanHaveRooms, CanHaveBookings, CanHaveRoles, CanHavePermissions, CanComment
 {
     use HasStages, HasMembers, SoftDeletes, HasDeletedSelection, Notifiable {
         HasMembers::members as membersAndFollowers;
@@ -566,7 +566,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
         }
 
         // Correspond aux assos parents.
-        return $this->isReservationValidableBy($model);
+        return $this->isBookingValidableBy($model);
     }
 
     /**
@@ -574,9 +574,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      *
      * @return mixed
      */
-    public function reservations()
+    public function bookings()
     {
-        return $this->morphMany(Reservation::class, 'owned_by');
+        return $this->morphMany(Booking::class, 'owned_by');
     }
 
     /**
@@ -586,7 +586,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      * @param  string $user_id
      * @return boolean
      */
-    public function isReservationAccessibleBy(string $user_id): bool
+    public function isBookingAccessibleBy(string $user_id): bool
     {
         return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
     }
@@ -598,9 +598,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      * @param  string $user_id
      * @return boolean
      */
-    public function isReservationManageableBy(string $user_id): bool
+    public function isBookingManageableBy(string $user_id): bool
     {
-        return $this->hasOnePermission('reservation', [
+        return $this->hasOnePermission('booking', [
             'user_id' => $user_id,
         ]);
     }
@@ -611,7 +611,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      * @param  \Illuminate\Database\Eloquent\Model $model
      * @return boolean
      */
-    public function isReservationValidableBy(\Illuminate\Database\Eloquent\Model $model): bool
+    public function isBookingValidableBy(\Illuminate\Database\Eloquent\Model $model): bool
     {
         if ($model instanceof Asso) {
             // On regarde si l'asso possédant la salle est un enfant de celle qui fait la demande (ex: BDE à le droit sur PAE).
@@ -626,7 +626,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
             return false;
         } else if ($model instanceof User) {
-            return $this->hasOnePermission('reservation', [
+            return $this->hasOnePermission('booking', [
                 'user_id' => $model->id,
             ]);
         } else if ($model instanceof Client) {
