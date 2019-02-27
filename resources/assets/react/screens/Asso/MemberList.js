@@ -73,7 +73,7 @@ class AssoMemberListScreen extends React.Component {
 		const { dispatch } = this.props;
 		const { semester_id } = this.state;
 
-		dispatch(actions.assos(id).members.all({ semester_id }));
+		dispatch(actions.assos(id).members.all({ semester: semester_id }));
 	}
 
 	render() {
