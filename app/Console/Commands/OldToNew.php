@@ -79,7 +79,7 @@ class OldToNew extends Command
     public function handle()
     {
         if (!$this->confirm('Ceci va supprimer toutes les données actuelles en faveur de l\'ancien Portail.\
-Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
+Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
             return;
         }
 
@@ -88,7 +88,7 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
 
         $this->info('Migration et nettoyage de la base de données');
 
-        // exec('APP_DEBUG=0 php artisan migrate:fresh --seed');
+        exec('APP_DEBUG=0 php artisan migrate:fresh --seed');
 
         $bar->advance();
         $this->info(PHP_EOL);
@@ -1091,8 +1091,8 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                         'location_id' => $room->location->id,
                         'created_by_id' => $user->id,
                         'created_by_type' => User::class,
-                        'owned_by_id' => $user->id,
-                        'owned_by_type' => User::class,
+                        'owned_by_id' => $asso->id,
+                        'owned_by_type' => Asso::class,
                         'visibility_id' => $room->calendar->visibility_id,
                     ]);
                 } catch (\Exception $e) {
@@ -1108,8 +1108,8 @@ Cela prend en moyenne 10 à 15 min. Confirmer ?')) {
                     'description' => $booking->commentaire,
                     'created_by_id' => $user->id,
                     'created_by_type' => User::class,
-                    'owned_by_id' => $user->id,
-                    'owned_by_type' => User::class,
+                    'owned_by_id' => $asso->id,
+                    'owned_by_type' => Asso::class,
                     'validated_by_id' => ($validated_by->id ?? null),
                     'validated_by_type' => User::class,
                 ]);

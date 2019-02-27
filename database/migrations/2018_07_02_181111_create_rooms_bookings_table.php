@@ -16,7 +16,7 @@ class CreateRoomsBookingsTable extends Migration
         Schema::create('rooms_bookings', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('room_id');
-            $table->uuid('type_id');
+            $table->uuid('type_id')->nullable();  # Aucun type si on bloque les réservations via l'admin par ex
             $table->uuid('event_id');
             $table->string('description')->nullable();
             $table->uuid('created_by_id')->nullable();
