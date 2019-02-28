@@ -14,7 +14,9 @@ const AssoCard = ({ image, login, name, shortname }) => {
 	return (
 		<div className="asso-card">
 			<div className="thumbnail" style={{ backgroundImage: `url('${!image ? bdeImage : image}')` }}>
-				<div className={`overlay ${login}`}>{name}</div>
+				<div className={`overlay ${login}`}>
+					<div>{name}</div>
+				</div>
 			</div>
 			<div className="name-container">
 				<div className="asso-shortname">{shortname}</div>
