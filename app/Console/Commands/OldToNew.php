@@ -60,7 +60,7 @@ class OldToNew extends Command
         'Trésorier' => 'Trésorier',
         'Vice-trésorier' => 'Vice-Trésorier',
         'Secrétaire Général' => 'Secrétaire Général',
-        'Secrétaire' => 'Vice-Secrétaire',
+        'Secrétaire' => 'Secrétaire Général',
         'Resp Communication' => 'Responsable Communication',
         'Resp Partenariat' => 'Responsable Partenariat',
         'Resp Anim\'' => 'Responsable Animation',
