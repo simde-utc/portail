@@ -257,7 +257,7 @@ class AssoScreen extends React.Component {
 									role_id,
 								}
 							)
-							.payload.then(({ data: { id: member_id }}) => {
+							.payload.then(({ data: { id: member_id } }) => {
 								const { user, asso } = this.props;
 
 								dispatch(actions.user.assos.all());
@@ -266,7 +266,6 @@ class AssoScreen extends React.Component {
 									`Vous avez demandé à rejoindre l'association: ${asso.name}`,
 									"Devenir membre d'une association"
 								);
-
 
 								actions
 									.assos(asso.id)

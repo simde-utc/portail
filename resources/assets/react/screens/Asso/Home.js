@@ -82,17 +82,18 @@ class AssoHomeScreen extends React.Component {
 		if (isWaiting) {
 			return (
 				<Button
-				className="m-1 btn btn-sm font-weight-bold"
-				color="warning"
-				outline
-				onClick={() => {
-					leave(true);
-				}}
+					className="m-1 btn btn-sm font-weight-bold"
+					color="warning"
+					outline
+					onClick={() => {
+						leave(true);
+					}}
 				>
-				En attente...
+					En attente...
 				</Button>
 			);
-		} else if (isMember) {
+		}
+		if (isMember) {
 			return (
 				<Button
 					className="m-1 btn btn-sm font-weight-bold"
@@ -105,7 +106,8 @@ class AssoHomeScreen extends React.Component {
 					Quitter
 				</Button>
 			);
-		} else if (isFollowing) {
+		}
+		if (isFollowing) {
 			return (
 				<Button className="m-1 btn btn-sm font-weight-bold" outline disabled>
 					Rejoindre

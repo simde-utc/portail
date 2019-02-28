@@ -274,19 +274,22 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     {
         $members = $this->members()->wherePivot('role_id', Role::getRole($role, $this)->id)->get();
 
-		$latestMember = null;
-		foreach ($members as $member) {
-			if (!$latestMember) {
-				$latestMember = $member;
-				continue;
-			}
+        $latestMember = null;
+        foreach ($members as $member) {
+            if (!$latestMember) {
+                $latestMember = $member;
+                continue;
+            }
 
-			if (Semester::find($member->pivot->semester_id)->end_at > Semester::find($latestMember->pivot->semester_id)->end_at) {
-				$latestMember = $member;
-			}
-		}
+            $date = Semester::find($member->pivot->semester_id)->end_at;
+            $lastDate = Semester::find($latestMember->pivot->semester_id)->end_at;
 
-		return $latestMember;
+            if ($date > $lastDate) {
+                $latestMember = $member;
+            }
+        }
+
+        return $latestMember;
     }
 
     /**
