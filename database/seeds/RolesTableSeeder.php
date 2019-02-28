@@ -180,8 +180,8 @@ class RolesTableSeeder extends Seeder
                     'vice-president',
                 ],
                 'permissions' => [
-                    'treasury',
                     'event',
+                    'treasury',
                 ],
             ],
             [
@@ -213,6 +213,7 @@ class RolesTableSeeder extends Seeder
                     'vice-treasury',
                 ],
                 'permissions' => [
+                    'booking',
                     'event',
                 ],
             ],
@@ -228,6 +229,7 @@ class RolesTableSeeder extends Seeder
                 ],
                 'permissions' => [
                     'calendar',
+                    'booking',
                     'event',
                     'article'
                 ],
@@ -256,6 +258,7 @@ class RolesTableSeeder extends Seeder
                     'event',
                     'article',
                     'comment',
+                    'booking',
                     'data',
                 ],
             ],
@@ -281,6 +284,7 @@ class RolesTableSeeder extends Seeder
                 ],
                 'permissions' => [
                     'event',
+                    'booking',
                 ],
             ],
             [
@@ -305,6 +309,7 @@ class RolesTableSeeder extends Seeder
                 ],
                 'permissions' => [
                     'event',
+                    'booking',
                 ],
             ],
             [
@@ -358,6 +363,7 @@ class RolesTableSeeder extends Seeder
                 ],
                 'permissions' => [
                     'event',
+                    'booking',
                 ],
             ],
             [

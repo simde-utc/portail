@@ -16,7 +16,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 @connect(store => ({
-	title: store.config.title,
+	config: store.config,
 	user: store.getData('user', false),
 	permissions: store.getData('user/permissions'),
 	login: store.getData('login', []),
@@ -37,7 +37,7 @@ class Navbar extends React.Component {
 	}
 
 	render() {
-		const { user, login, permissions, title } = this.props;
+		const { user, login, permissions, config } = this.props;
 		const { collapse, loginDropdown } = this.state;
 		const loginMethods = Object.entries(login)
 			.filter(([_, loginMethod]) => {
@@ -81,7 +81,7 @@ class Navbar extends React.Component {
 						textTransform: 'uppercase',
 					}}
 				>
-					{title}
+					{config.title}
 				</span>
 
 				<Button className="navbar-toggler" onClick={() => this.toggle('collapse')}>

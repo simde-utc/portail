@@ -209,6 +209,9 @@ return [
                         ],
                     ]
                 ],
+                'types' => [
+                    'description' => 'Récupérer les types de réservation',
+                ],
             ]
         ],
         'create' => [

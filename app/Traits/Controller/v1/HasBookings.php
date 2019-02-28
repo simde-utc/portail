@@ -34,12 +34,18 @@ trait HasBookings
      */
     protected function checkBookingPeriod(string $room_id, string $begin_at, string $end_at)
     {
-        $eventsQuery = Room::find($room_id)->calendar->events()
-            ->whereNotNull('validated_by_type')
+        $events = Room::find($room_id)->calendar->events()
             ->where('end_at', '>', $begin_at)
-            ->where('begin_at', '<', $end_at);
+            ->where('begin_at', '<', $end_at)
+        ->get();
 
-        if ($eventsQuery->exists()) {
+        $query = Booking::where('room_id', $room_id)
+        ->whereNotNull('validated_by_type')
+        ->whereIn('event_id', $events->map(function ($event) {
+            return $event->id;
+        }));
+
+        if ($query->exists()) {
             abort(409, 'Il existe une réservation qui se déroule pendant la même période');
         }
 

@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { orderBy } from 'lodash';
 
 @connect(store => ({
+	user: store.getData('user'),
 	isAuthenticated: store.isFetched('user'),
 	assos: store.getData('user/assos'),
 	services: store.getData('user/services'),
@@ -45,7 +46,7 @@ class Sidebar extends React.Component {
 	}
 
 	render() {
-		const { isAuthenticated, assos, services } = this.props;
+		const { isAuthenticated, user, assos, services } = this.props;
 
 		return (
 			<div className="sidebar col-md-3 col-xl-2 d-none d-md-flex flex-column justify-content-between">
@@ -116,9 +117,11 @@ class Sidebar extends React.Component {
 								to="/settings/sidebar/shortcuts"
 							/>
 						</h6>
-						<NavLink className="sidebar-link" to="/events" style={{ display: 'none' }}>
-							<FontAwesomeIcon icon="calendar-alt" /> Évènements
-						</NavLink>
+						{isAuthenticated && user.types.contributorBde && (
+							<NavLink className="sidebar-link" to="/bookings">
+								<FontAwesomeIcon icon="person-booth" /> Réservations
+							</NavLink>
+						)}
 						<NavLink className="sidebar-link" to="/services">
 							<FontAwesomeIcon icon="concierge-bell" /> Services
 						</NavLink>

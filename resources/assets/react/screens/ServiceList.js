@@ -95,7 +95,7 @@ class ServiceListScreen extends React.Component {
 								);
 							})
 							.catch(() => {
-								NotificationManager.error('Une erreur a été rencontré', 'Suivre un service');
+								NotificationManager.error('Une erreur a été rencontrée', 'Suivre un service');
 							})
 							.finally(() => {
 								this.setState(({ modal }) => ({
@@ -135,7 +135,7 @@ class ServiceListScreen extends React.Component {
 								);
 							})
 							.catch(() => {
-								NotificationManager.error('Une erreur a été rencontré', 'Retirer un service');
+								NotificationManager.error('Une erreur a été rencontrée', 'Retirer un service');
 							})
 							.finally(() => {
 								this.setState(({ modal }) => ({

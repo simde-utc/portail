@@ -39,8 +39,9 @@ export default class CalendarCalendar extends React.Component {
 			<div style={{ height: '700px' }}>
 				<BigCalendar
 					defaultView="week"
-					events={this.getEvents()}
 					eventPropGetter={CalendarCalendar.getEventProps.bind(this)}
+					{...this.props}
+					events={this.getEvents()}
 				/>
 			</div>
 		);

@@ -90,6 +90,7 @@ Route::group(['middleware' => 'user:active'], function () {
         'permissions' => 'Permission\PermissionController',
         'rooms' => 'Room\RoomController',
         'rooms/{room_id}/bookings' => 'Room\BookingController',
+        'bookings/types' => 'Booking\BookingTypeController',
         'calendars/{calendar_id}/events' => 'Calendar\EventController',
     ]);
 });

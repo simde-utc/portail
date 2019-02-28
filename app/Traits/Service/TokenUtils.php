@@ -78,6 +78,17 @@ trait TokenUtils
     }
 
     /**
+     * Retourne si le token est du type Transient.
+     *
+     * @param  Request $request
+     * @return boolean
+     */
+    public function isTransient(Request $request)
+    {
+        return $this->getToken($request)->transient();
+    }
+
+    /**
      * Retourne si le token est du type Client ou si le token est transient et de type client.
      *
      * @param  Request $request

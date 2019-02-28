@@ -45,7 +45,7 @@ class AppLoader extends React.Component {
 		// Récupère le semestre courant
 		dispatch(actions.semesters('current').get());
 		// Récupère les données utilisateurs
-		dispatch(actions.user.all({ allTypes: true }))
+		dispatch(actions.user.all({ types: '*' }))
 			.then(() => {
 				window.isLogged = true;
 			})

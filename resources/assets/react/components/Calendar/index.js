@@ -31,15 +31,25 @@ class Calendar extends React.Component {
 		const action = actions.calendars(calendar.id).events.all();
 
 		dispatch(action);
-		action.payload.then(({ data }) => {
-			this.setState(prevState => {
-				if (prevState.selectedCalendars[calendar.id]) {
-					prevState.events[calendar.id] = data;
-				}
+		action.payload
+			.then(({ data }) => {
+				this.setState(prevState => {
+					if (prevState.selectedCalendars[calendar.id]) {
+						prevState.events[calendar.id] = data;
+					}
 
-				return prevState;
+					return prevState;
+				});
+			})
+			.catch(() => {
+				this.setState(prevState => {
+					if (prevState.selectedCalendars[calendar.id]) {
+						prevState.events[calendar.id] = [];
+					}
+
+					return prevState;
+				});
 			});
-		});
 	}
 
 	addCalendar(calendar) {
@@ -65,6 +75,7 @@ class Calendar extends React.Component {
 	render() {
 		const { calendars } = this.props;
 		const { selectedCalendars, events } = this.state;
+		const fetching = Object.keys(selectedCalendars).length !== Object.keys(events).length;
 
 		return (
 			<div className="container Calendar">
@@ -74,7 +85,8 @@ class Calendar extends React.Component {
 					onAddCalendar={this.addCalendar.bind(this)}
 					onRemoveCalendar={this.removeCalendar.bind(this)}
 				/>
-				<CalendarCalendar calendars={selectedCalendars} events={events} />
+				<CalendarCalendar {...this.props} calendars={selectedCalendars} events={events} />
+				<span className={`loader large${fetching ? ' active' : ''}`} />
 			</div>
 		);
 	}

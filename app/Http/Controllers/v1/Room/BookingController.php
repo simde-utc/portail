@@ -152,7 +152,7 @@ class BookingController extends Controller
 
         // WARNING: L'événement appartient bien sûr à celui qui possède le calendrier (pour éviter en fait que les gens modifient eux-même l'event).
         $event = Event::create([
-            'name' => ($inputs['name'] ?? BookingType::find($inputs['type_id'])),
+            'name' => ($inputs['name'] ?? BookingType::find($inputs['type_id'])->name),
             'begin_at' => $inputs['begin_at'],
             'end_at' => $inputs['end_at'],
             'full_day' => ($inputs['full_day'] ?? false),

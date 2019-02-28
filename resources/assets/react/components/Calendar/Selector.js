@@ -30,7 +30,7 @@ export default class CalendarSelector extends React.Component {
 			};
 		}
 		return (
-			<Button key={calendar.id} className="ml-2" {...props}>
+			<Button key={calendar.id} className="btn-sm ml-2 mb-1" {...props}>
 				{calendar.name}
 			</Button>
 		);
