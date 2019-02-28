@@ -14,6 +14,8 @@ class CreatePlacesLocationsTable extends Migration
     public function up()
     {
         Schema::create('places_locations', function (Blueprint $table) {
+			$table->charset = 'utf8';
+            $table->collation = 'utf8_bin';
             $table->uuid('id')->primary();
             $table->string('name', 128);
             $table->uuid('place_id');

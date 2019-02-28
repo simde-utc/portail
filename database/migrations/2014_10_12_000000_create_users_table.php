@@ -14,6 +14,8 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
+			$table->charset = 'utf8';
+            $table->collation = 'utf8_bin';
             $table->uuid('id')->primary();
             $table->string('email', validation_max('email'))->unique();
             $table->string('firstname', validation_max('name'))->nullable();
