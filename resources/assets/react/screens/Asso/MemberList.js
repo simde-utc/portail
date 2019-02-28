@@ -69,10 +69,33 @@ class AssoMemberListScreen extends React.Component {
 		}
 	}
 
+	getBeforeTheCurrentSemester() {
+		const { semesters, currentSemester } = this.props;
+		let semester;
+
+		for (const key in semesters) {
+			const possibleSemester = semesters[key];
+
+			if (possibleSemester.id === currentSemester.id) {
+				return semester;
+			}
+
+			semester = possibleSemester;
+		}
+
+		return semester;
+	}
+
 	loadAssosData(id) {
-		const { dispatch } = this.props;
+		const { user, dispatch } = this.props;
 		const { semester_id } = this.state;
 
+		actions.assos(id).members(user.id).get({ semester: this.getBeforeTheCurrentSemester().id })
+		.payload.then(({data}) => {
+			this.setState({
+				lastRoleId: data.pivot.role_id
+			});
+		});
 		dispatch(actions.assos(id).members.all({ semester: semester_id }));
 	}
 
@@ -87,7 +110,7 @@ class AssoMemberListScreen extends React.Component {
 			asso,
 			config,
 		} = this.props;
-		const { semester_id } = this.state;
+		const { semester_id, lastRoleId } = this.state;
 		const selectSemesters = AssoMemberListScreen.getSemesters(semesters);
 		config.title = `${asso.shortname} - Membres`;
 
@@ -109,6 +132,7 @@ class AssoMemberListScreen extends React.Component {
 					fetched={fetched}
 					fetching={fetching}
 					isCurrentSemester={semester_id === currentSemester.id}
+					lastRoleId={lastRoleId}
 					{...this.props}
 				/>
 			</div>

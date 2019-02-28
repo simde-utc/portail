@@ -12,7 +12,7 @@ import Member from './Member';
 }))
 class MemberList extends React.Component {
 	getMemberBlocks(members, roles) {
-		const { currentSemester, user, isMember, validateMember, leaveMember } = this.props;
+		const { currentSemester, user, isMember, validateMember, leaveMember, lastRoleId } = this.props;
 
 		members = orderBy(
 			members.map(member => {
@@ -33,10 +33,10 @@ class MemberList extends React.Component {
 				description: member.description,
 			};
 
-			if (member.pivot.semester_id === currentSemester.id && (isMember || user.id === member.id)) {
+			if (member.pivot.semester_id === currentSemester.id && (isMember || user.id === member.id || (lastRoleId === member.pivot.role_id && !member.pivot.validated_by))) {
 				props.footer = (
 					<div>
-						{isMember && !member.pivot.validated_by && (
+						{(isMember || lastRoleId === member.pivot.role_id) && !member.pivot.validated_by && (
 							<Button
 								color="success"
 								className="m-1 font-weight-bold"
