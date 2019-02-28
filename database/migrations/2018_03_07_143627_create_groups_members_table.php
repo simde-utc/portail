@@ -14,7 +14,7 @@ class CreateGroupsMembersTable extends Migration
     public function up()
     {
         Schema::create('groups_members', function (Blueprint $table) {
-			$table->charset = 'utf8';
+            $table->charset = 'utf8';
             $table->collation = 'utf8_bin';
             $table->uuid('group_id');
             $table->uuid('user_id');
@@ -34,7 +34,7 @@ class CreateGroupsMembersTable extends Migration
         });
 
         Schema::create('groups_permissions', function (Blueprint $table) {
-			$table->charset = 'utf8';
+            $table->charset = 'utf8';
             $table->collation = 'utf8_bin';
             $table->uuid('group_id');
             $table->uuid('user_id');
@@ -52,7 +52,7 @@ class CreateGroupsMembersTable extends Migration
         // En fait Laravel fait dans l'ordre, du coup le primary plante..
         // https://github.com/laravel/framework/issues/25190
         Schema::table('groups_permissions', function (Blueprint $table) {
-			$table->charset = 'utf8';
+            $table->charset = 'utf8';
             $table->collation = 'utf8_bin';
             $table->foreign('group_id')->references('id')->on('groups');
             $table->foreign('user_id')->references('id')->on('users');

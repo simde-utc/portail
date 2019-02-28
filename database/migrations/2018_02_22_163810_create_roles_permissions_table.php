@@ -14,7 +14,7 @@ class CreateRolesPermissionsTable extends Migration
     public function up()
     {
         Schema::create('roles_permissions', function (Blueprint $table) {
-			$table->charset = 'utf8';
+            $table->charset = 'utf8';
             $table->collation = 'utf8_bin';
             $table->uuid('role_id');
             $table->uuid('permission_id');

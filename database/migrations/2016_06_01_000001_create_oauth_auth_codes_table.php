@@ -14,7 +14,7 @@ class CreateOauthAuthCodesTable extends Migration
     public function up()
     {
         Schema::create('oauth_auth_codes', function (Blueprint $table) {
-			$table->charset = 'utf8';
+            $table->charset = 'utf8';
             $table->collation = 'utf8_bin';
             $table->string('id', 100)->primary();
             $table->uuid('user_id')->nullable();

@@ -14,7 +14,7 @@ class CreateCalendarsFollowersTable extends Migration
     public function up()
     {
         Schema::create('calendars_followers', function (Blueprint $table) {
-			$table->charset = 'utf8';
+            $table->charset = 'utf8';
             $table->collation = 'utf8_bin';
             $table->uuid('user_id');
             $table->uuid('calendar_id');
