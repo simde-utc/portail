@@ -14,7 +14,7 @@ class CreateAssosMembersTable extends Migration
     public function up()
     {
         Schema::create('assos_members', function (Blueprint $table) {
-			$table->charset = 'utf8';
+            $table->charset = 'utf8';
             $table->collation = 'utf8_bin';
             $table->uuid('asso_id');
             $table->uuid('user_id');
@@ -34,7 +34,7 @@ class CreateAssosMembersTable extends Migration
         });
 
         Schema::create('assos_permissions', function (Blueprint $table) {
-			$table->charset = 'utf8';
+            $table->charset = 'utf8';
             $table->collation = 'utf8_bin';
             $table->uuid('asso_id');
             $table->uuid('user_id');
@@ -50,7 +50,7 @@ class CreateAssosMembersTable extends Migration
         // En fait Laravel fait dans l'ordre, du coup le primary plante..
         // https://github.com/laravel/framework/issues/25190
         Schema::table('assos_permissions', function (Blueprint $table) {
-			$table->charset = 'utf8';
+            $table->charset = 'utf8';
             $table->collation = 'utf8_bin';
             $table->foreign('asso_id')->references('id')->on('assos');
             $table->foreign('user_id')->references('id')->on('users');
