@@ -40,7 +40,7 @@ import actions from '../redux/actions';
 })
 class BookingScreen extends React.Component {
 	constructor(props) {
-		super(props)
+		super(props);
 
 		this.state = {
 			modal: {
@@ -123,7 +123,7 @@ class BookingScreen extends React.Component {
 			prevState.end_at = end;
 
 			modal.show = true;
-			modal.title = 'Réservation d\'un créneau';
+			modal.title = "Réservation d'un créneau";
 			modal.body = (
 				<div>
 					Name:
@@ -132,7 +132,7 @@ class BookingScreen extends React.Component {
 					<DatetimeRangePicker
 						startDate={begin}
 						endDate={end}
-						onStartDateChange={begin_at => console.log(begin_at) || his.setState({ begin_at: begin_at.Date })}
+						onStartDateChange={begin_at => this.setState({ begin_at: begin_at.Date })}
 						onEndDateChange={end_at => this.setState({ end_at: end_at.Date })}
 					/>
 					Association:
@@ -140,21 +140,21 @@ class BookingScreen extends React.Component {
 						placeholder=""
 						isSearchable
 						options={possibleAssos}
-						onChange={asso => this.setState({asso_id: asso.value})}
+						onChange={asso => this.setState({ asso_id: asso.value })}
 					/>
 					Salle:
 					<Select
 						placeholder=""
 						isSearchable
 						options={possibleRooms}
-						onChange={room => this.setState({room_id: room.value})}
+						onChange={room => this.setState({ room_id: room.value })}
 					/>
 					Type de réservation:
 					<Select
 						placeholder=""
 						isSearchable
 						options={possibleTypes}
-						onChange={type => this.setState({type_id: type.value})}
+						onChange={type => this.setState({ type_id: type.value })}
 					/>
 				</div>
 			);
@@ -162,27 +162,31 @@ class BookingScreen extends React.Component {
 			modal.button.text = 'Réserver';
 			modal.button.onClick = () => {
 				const { room_id, asso_id, type_id, name, begin_at, end_at } = this.state;
-				console.log(begin_at, end_at)
+				console.log(begin_at, end_at);
 				const action = actions.rooms(room_id).bookings.create({
-					room_id, name, type_id, begin_at: begin_at.toISOString(), end_at: end_at.toISOString(), owned_by_id: asso_id, owned_by_type: 'asso'
+					room_id,
+					name,
+					type_id,
+					begin_at: begin_at.toISOString(),
+					end_at: end_at.toISOString(),
+					owned_by_id: asso_id,
+					owned_by_type: 'asso',
 				});
 
 				dispatch(action);
 
-				action.payload.then(({ data }) => {
-					console.log(data);
-					NotificationManager.warning(
-						'Réservation réalisée avec succès',
-						'Réservation'
-					);
-				})
-				.catch(({ response: { data: { message }}}) => {
-					NotificationManager.error(message, 'Réservation');
-				})
+				action.payload
+					.then(({ data }) => {
+						console.log(data);
+						NotificationManager.warning('Réservation réalisée avec succès', 'Réservation');
+					})
+					.catch(({ response: { data: { message } } }) => {
+						NotificationManager.error(message, 'Réservation');
+					});
 			};
 
 			return prevState;
-		})
+		});
 	}
 
 	render() {
@@ -231,8 +235,13 @@ class BookingScreen extends React.Component {
 					onSelectSlot={this.onSelectingRange.bind(this)}
 				/>
 				{user.types.member && (
-					<Button className="m-1 btn btn-m font-style-bold col align-self-end mt-3" color="primary" outline onClick={() => this.askBooking()}>
-					Réserver un créneau
+					<Button
+						className="m-1 btn btn-m font-style-bold col align-self-end mt-3"
+						color="primary"
+						outline
+						onClick={() => this.askBooking()}
+					>
+						Réserver un créneau
 					</Button>
 				)}
 			</div>

@@ -30,9 +30,9 @@ trait HasCreatorsAndOwners
     protected function getCreatorFromOwner(Request $request, Model $owner, string $modelName, string $modelText,
         string $verb='create')
     {
-		if (\Scopes::isTransient($request)) {
-			return \Auth::user();
-		}
+        if (\Scopes::isTransient($request)) {
+            return \Auth::user();
+        }
 
         $tokenType = \Scopes::getTokenType($request);
         $client = \Scopes::getClient($request);
