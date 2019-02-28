@@ -53,7 +53,11 @@ class AssoHomeScreen extends React.Component {
 	getFollowButton(isFollowing, isMember) {
 		const { follow, unfollow } = this.props;
 
-		if (isFollowing && !isMember) {
+		if (isMember) {
+			return null;
+		}
+
+		if (isFollowing) {
 			return (
 				<Button
 					className="m-1 btn btn-sm font-weight-bold"
@@ -65,11 +69,6 @@ class AssoHomeScreen extends React.Component {
 				</Button>
 			);
 		}
-
-		if (isMember) {
-			return null;
-		}
-
 		return (
 			<Button className="m-1 btn btn-sm font-weight-bold" color="primary" outline onClick={follow}>
 				Suivre
@@ -80,22 +79,20 @@ class AssoHomeScreen extends React.Component {
 	getMemberButton(isMember, isFollowing, isWaiting) {
 		const { leave, join } = this.props;
 
-		if (isMember) {
-			if (isWaiting) {
-				return (
-					<Button
-						className="m-1 btn btn-sm font-weight-bold"
-						color="warning"
-						outline
-						onClick={() => {
-							leave(true);
-						}}
-					>
-						En attente...
-					</Button>
-				);
-			}
-
+		if (isWaiting) {
+			return (
+				<Button
+				className="m-1 btn btn-sm font-weight-bold"
+				color="warning"
+				outline
+				onClick={() => {
+					leave(true);
+				}}
+				>
+				En attente...
+				</Button>
+			);
+		} else if (isMember) {
 			return (
 				<Button
 					className="m-1 btn btn-sm font-weight-bold"
@@ -108,9 +105,7 @@ class AssoHomeScreen extends React.Component {
 					Quitter
 				</Button>
 			);
-		}
-
-		if (isFollowing) {
+		} else if (isFollowing) {
 			return (
 				<Button className="m-1 btn btn-sm font-weight-bold" outline disabled>
 					Rejoindre

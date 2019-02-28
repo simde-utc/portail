@@ -19,7 +19,7 @@ const DoubleList = props => {
 				/>
 			)}
 			{join && isCurrentSemester && (
-				<div className="d-flex justify-content-center col-md-12">
+				<div className="d-flex justify-content-center col-md-12 pb-4">
 					<Button className="m-1 btn btn-m font-style-bold" color="primary" outline onClick={join}>
 						Rejoindre l'association
 					</Button>
