@@ -14,6 +14,8 @@ class CreateAuthPasswordsResetsTable extends Migration
     public function up()
     {
         Schema::create('auth_passwords_resets', function (Blueprint $table) {
+			$table->charset = 'utf8';
+            $table->collation = 'utf8_bin';
             $table->string('email', validation_max('email'))->index();
             $table->string('token', 64);
 

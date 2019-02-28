@@ -14,6 +14,8 @@ class CreateAssosTable extends Migration
     public function up()
     {
         Schema::create('assos', function (Blueprint $table) {
+			$table->charset = 'utf8';
+            $table->collation = 'utf8_bin';
             $table->uuid('id')->primary();
             $table->uuid('type_id');
             $table->uuid('parent_id')->nullable();

@@ -14,6 +14,8 @@ class CreateGroupsTable extends Migration
     public function up()
     {
         Schema::create('groups', function (Blueprint $table) {
+			$table->charset = 'utf8';
+            $table->collation = 'utf8_bin';
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             // Correspond ici au créateur, pas à l'admin du groupe (qui peut changer)
