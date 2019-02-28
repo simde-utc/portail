@@ -82,8 +82,10 @@ class Cas extends BaseAuth
             ];
         }
 
-        if ($cas = AuthCas::findByEmail($email)) {
+        if (($cas = AuthCas::findByEmail($email)) || ($cas = AuthCas::find($login))) {
             $cas->update([
+				'email' => $email,
+				'login' => $login,
                 'is_confirmed' => $is_confirmed,
             ]);
 
