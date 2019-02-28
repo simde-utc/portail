@@ -58,17 +58,6 @@ class AssoMemberListScreen extends React.Component {
 		}));
 	}
 
-	handleSemesterChange(value) {
-		const {
-			asso: { id },
-		} = this.props;
-		if (value && value.value) {
-			this.setState({ semester_id: value.value }, () => {
-				this.loadAssosData(id);
-			});
-		}
-	}
-
 	getBeforeTheCurrentSemester() {
 		const { semesters, currentSemester } = this.props;
 		let semester;
@@ -86,16 +75,30 @@ class AssoMemberListScreen extends React.Component {
 		return semester;
 	}
 
+	handleSemesterChange(value) {
+		const {
+			asso: { id },
+		} = this.props;
+		if (value && value.value) {
+			this.setState({ semester_id: value.value }, () => {
+				this.loadAssosData(id);
+			});
+		}
+	}
+
 	loadAssosData(id) {
 		const { user, dispatch } = this.props;
 		const { semester_id } = this.state;
 
-		actions.assos(id).members(user.id).get({ semester: this.getBeforeTheCurrentSemester().id })
-		.payload.then(({data}) => {
-			this.setState({
-				lastRoleId: data.pivot.role_id
+		actions
+			.assos(id)
+			.members(user.id)
+			.get({ semester: this.getBeforeTheCurrentSemester().id })
+			.payload.then(({ data }) => {
+				this.setState({
+					lastRoleId: data.pivot.role_id,
+				});
 			});
-		});
 		dispatch(actions.assos(id).members.all({ semester: semester_id }));
 	}
 

@@ -33,7 +33,12 @@ class MemberList extends React.Component {
 				description: member.description,
 			};
 
-			if (member.pivot.semester_id === currentSemester.id && (isMember || user.id === member.id || (lastRoleId === member.pivot.role_id && !member.pivot.validated_by))) {
+			if (
+				member.pivot.semester_id === currentSemester.id &&
+				(isMember ||
+					user.id === member.id ||
+					(lastRoleId === member.pivot.role_id && !member.pivot.validated_by))
+			) {
 				props.footer = (
 					<div>
 						{(isMember || lastRoleId === member.pivot.role_id) && !member.pivot.validated_by && (
