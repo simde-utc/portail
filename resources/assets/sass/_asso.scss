@@ -89,31 +89,37 @@
 	box-shadow: 0 5px 48px -1px rgba(0,0,0,0.23);
 }
 
-.thumbnail{
-	background-size: cover;
-	background-position: center;
-	width: 100%;
-	height: 66%;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-	display: table;
+.thumbnail {
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 200px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  display: table;
 }
-.asso-card:hover > .thumbnail > .overlay{
-	visibility: visible;
+
+.asso-card:hover>.thumbnail>.overlay {
+  visibility: visible;
 }
-.asso-card .thumbnail .overlay{
-	visibility: hidden;
-	width:100%;
-	height:100%;
-	padding: 10%;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-	display: table-cell;
-	vertical-align: middle;
-	text-align: center;
-	word-wrap: break-word;
-	color: white;
-	font-size: 20px;
+
+.asso-card .thumbnail .overlay {
+  display: flex;
+  visibility: hidden;
+  width: 100%;
+  height: 200px;
+  padding: 10%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  vertical-align: middle;
+  text-align: center;
+  word-wrap: break-word;
+  color: white;
+  font-size: 20px;
+  overflow-y: auto;
+}
+.asso-card .thumbnail .overlay > div {
+	margin: auto;
 }
 .asso-card .thumbnail .overlay.bde{
 	background-color: rgba($bde, 0.8);
