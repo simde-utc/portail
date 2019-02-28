@@ -11,22 +11,22 @@
 namespace App\Http\Controllers\v1\Room;
 
 use App\Http\Controllers\v1\Controller;
-use App\Traits\Controller\v1\HasReservations;
+use App\Traits\Controller\v1\HasBookings;
 use App\Traits\Controller\v1\HasCreatorsAndOwnersAndValidators;
 use App\Traits\Controller\v1\HasValidators;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\ReservationRequest;
+use App\Http\Requests\BookingRequest;
 use App\Models\Room;
 use App\Models\Event;
-use App\Models\Reservation;
-use App\Models\ReservationType;
+use App\Models\Booking;
+use App\Models\BookingType;
 use Carbon\Carbon;
 
-class ReservationController extends Controller
+class BookingController extends Controller
 {
-    use HasReservations, HasCreatorsAndOwnersAndValidators;
+    use HasBookings, HasCreatorsAndOwnersAndValidators;
 
     /**
      * Nécessité de pouvoir voir les salles et de gérer les réservations.
@@ -36,28 +36,28 @@ class ReservationController extends Controller
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOneOfDeepestChildren('user-get-rooms', 'client-get-rooms'),
-		        \Scopes::matchOne('user-get-reservations', 'client-get-reservations')
+		        \Scopes::matchOne('user-get-bookings', 'client-get-bookings')
 	        ),
 	        ['only' => ['index', 'show']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOneOfDeepestChildren('user-get-rooms', 'client-get-rooms'),
-		        \Scopes::matchOne('user-create-reservations', 'client-create-reservations')
+		        \Scopes::matchOne('user-create-bookings', 'client-create-bookings')
 	        ),
 	        ['only' => ['store']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOneOfDeepestChildren('user-get-rooms', 'client-get-rooms'),
-		        \Scopes::matchOne('user-edit-reservations', 'client-edit-reservations')
+		        \Scopes::matchOne('user-edit-bookings', 'client-edit-bookings')
 	        ),
 	        ['only' => ['update']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOneOfDeepestChildren('user-get-rooms', 'client-get-rooms'),
-		        \Scopes::matchOne('user-remove-reservations', 'client-remove-reservations')
+		        \Scopes::matchOne('user-remove-bookings', 'client-remove-bookings')
 	        ),
 	        ['only' => ['destroy']]
         );
@@ -80,21 +80,21 @@ class ReservationController extends Controller
         }
 
         // On va maintenant voir si le type de réservation est auto-validée et que la durée n'est pas trop longue.
-        if (!$this->checkReservationPeriod($room_id, $inputs['begin_at'], $inputs['end_at'])) {
+        if (!$this->checkBookingPeriod($room_id, $inputs['begin_at'], $inputs['end_at'])) {
             $inputs['validated_by_id'] = null;
             $inputs['validated_by_type'] = null;
         } else if (isset($inputs['validated_by_type'])) {
             // Ici on vérifie si la valideur peu valider la demande de résa du demandeur.
-            $validator = $this->getValidatorFromOwner($request, $owner, 'reservation', 'réservation', 'create');
+            $validator = $this->getValidatorFromOwner($request, $owner, 'booking', 'réservation', 'create');
 
             // Maintenant on vérifie qu'on a le droit de valider pour une résa dans une salle appartenant à qq'un.
-            if (!Room::find($room_id)->owned_by->isReservationValidableBy($validator)) {
+            if (!Room::find($room_id)->owned_by->isBookingValidableBy($validator)) {
                 abort(403, 'Vous n\'avez pas le droit de valider cette réservation');
             }
 
             $inputs['validated_by_id'] = $validator->id;
             $inputs['validated_by_type'] = get_class($validator);
-        } else if (!ReservationType::find($inputs['type_id'])->need_validation) {
+        } else if (!BookingType::find($inputs['type_id'])->need_validation) {
             $inputs['validated_by_id'] = $inputs['owned_by_id'];
             $inputs['validated_by_type'] = $inputs['owned_by_type'];
         }
@@ -113,29 +113,29 @@ class ReservationController extends Controller
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
 
-        $reservations = $room->reservations()->getSelection()->filter(function ($reservation) {
-            return !\Auth::id() || $this->isVisible($reservation, \Auth::id());
-        })->values()->map(function ($reservation) {
-            return $reservation->hideData();
+        $bookings = $room->bookings()->getSelection()->filter(function ($booking) {
+            return !\Auth::id() || $this->isVisible($booking, \Auth::id());
+        })->values()->map(function ($booking) {
+            return $booking->hideData();
         });
 
-        return response()->json($reservations, 200);
+        return response()->json($bookings, 200);
     }
 
     /**
      * Crée une réservation réalisée pour la salle.
      *
-     * @param  ReservationRequest $request
-     * @param  string             $room_id
+     * @param  BookingRequest $request
+     * @param  string         $room_id
      * @return JsonResponse
      */
-    public function store(ReservationRequest $request, string $room_id): JsonResponse
+    public function store(BookingRequest $request, string $room_id): JsonResponse
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
         $inputs = $request->all();
 
-        $owner = $this->getOwner($request, 'reservation', 'réservation', 'create');
-        $creator = $this->getCreatorFromOwner($request, $owner, 'reservation', 'réservation', 'create');
+        $owner = $this->getOwner($request, 'booking', 'réservation', 'create');
+        $creator = $this->getCreatorFromOwner($request, $owner, 'booking', 'réservation', 'create');
         // On vérifie que celui qui veut faire la réservation à le droit dans cette salle.
         if (!$room->owned_by->isRoomReservableBy($owner)) {
             abort(403, 'Vous n\'être pas autorisé à réserver cette salle');
@@ -152,7 +152,7 @@ class ReservationController extends Controller
 
         // WARNING: L'événement appartient bien sûr à celui qui possède le calendrier (pour éviter en fait que les gens modifient eux-même l'event).
         $event = Event::create([
-            'name' => ($inputs['name'] ?? ReservationType::find($inputs['type_id'])),
+            'name' => ($inputs['name'] ?? BookingType::find($inputs['type_id'])->name),
             'begin_at' => $inputs['begin_at'],
             'end_at' => $inputs['end_at'],
             'full_day' => ($inputs['full_day'] ?? false),
@@ -167,12 +167,12 @@ class ReservationController extends Controller
         $calendar->events()->attach($event);
         $inputs['event_id'] = $event->id;
 
-        $reservation = $room->reservations()->create($inputs);
+        $booking = $room->bookings()->create($inputs);
 
-        if ($reservation) {
-            $reservation = $this->getReservationFromRoom($request, $room, \Auth::user(), $reservation->id);
+        if ($booking) {
+            $booking = $this->getBookingFromRoom($request, $room, \Auth::user(), $booking->id);
 
-            return response()->json($reservation->hideSubData(), 201);
+            return response()->json($booking->hideSubData(), 201);
         } else {
             abort(500, 'Impossible de créer la réservation');
         }
@@ -183,38 +183,38 @@ class ReservationController extends Controller
      *
      * @param  Request $request
      * @param  string  $room_id
-     * @param  string  $reservation_id
+     * @param  string  $booking_id
      * @return JsonResponse
      */
-    public function show(Request $request, string $room_id, string $reservation_id): JsonResponse
+    public function show(Request $request, string $room_id, string $booking_id): JsonResponse
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
-        $reservation = $this->getReservationFromRoom($request, $room, \Auth::user(), $reservation_id);
+        $booking = $this->getBookingFromRoom($request, $room, \Auth::user(), $booking_id);
 
-        return response()->json($reservation->hideSubData(), 200);
+        return response()->json($booking->hideSubData(), 200);
     }
 
     /**
      * Met à jour une réservation de la salle.
      *
-     * @param  ReservationRequest $request
-     * @param  string             $room_id
-     * @param  string             $reservation_id
+     * @param  BookingRequest $request
+     * @param  string         $room_id
+     * @param  string         $booking_id
      * @return JsonResponse
      */
-    public function update(ReservationRequest $request, string $room_id, string $reservation_id): JsonResponse
+    public function update(BookingRequest $request, string $room_id, string $booking_id): JsonResponse
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
-        $reservation = $this->getReservationFromRoom($request, $room, \Auth::user(), $reservation_id, 'edit');
+        $booking = $this->getBookingFromRoom($request, $room, \Auth::user(), $booking_id, 'edit');
         $inputs = $request->all();
 
-        $inputs['begin_at'] = ($inputs['begin_at'] ?? $reservation->begin_at);
-        $inputs['end_at'] = ($inputs['end_at'] ?? $reservation->end_at);
+        $inputs['begin_at'] = ($inputs['begin_at'] ?? $booking->begin_at);
+        $inputs['end_at'] = ($inputs['end_at'] ?? $booking->end_at);
 
-        $inputs = $this->checkValidations($request, $room_id, $reservation->owned_by, $inputs);
+        $inputs = $this->checkValidations($request, $room_id, $booking->owned_by, $inputs);
 
-        if ($reservation->event->update($inputs) && $reservation->update($inputs)) {
-            return response()->json($reservation->hideSubData(), 201);
+        if ($booking->event->update($inputs) && $booking->update($inputs)) {
+            return response()->json($booking->hideSubData(), 201);
         } else {
             abort(500, 'Impossible de modifier la réservation');
         }
@@ -225,15 +225,15 @@ class ReservationController extends Controller
      *
      * @param  Request $request
      * @param  string  $room_id
-     * @param  string  $reservation_id
+     * @param  string  $booking_id
      * @return void
      */
-    public function destroy(Request $request, string $room_id, string $reservation_id): void
+    public function destroy(Request $request, string $room_id, string $booking_id): void
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
-        $reservation = $this->getReservationFromRoom($request, $room, \Auth::user(), $reservation_id, 'manage');
+        $booking = $this->getBookingFromRoom($request, $room, \Auth::user(), $booking_id, 'manage');
 
-        if ($reservation->delete()) {
+        if ($booking->delete()) {
             abort(204);
         } else {
             abort(500, 'Impossible de supprimer la réservation');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Reservation.
+ * Gère en admin les Booking.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -11,12 +11,12 @@
 namespace App\Admin\Controllers\Resource;
 
 use App\Models\{
-    Reservation, Room, ReservationType, Event, User
+    Booking, Room, BookingType, Event, User
 };
 
-class ReservationController extends ResourceController
+class BookingController extends ResourceController
 {
-    protected $model = Reservation::class;
+    protected $model = Booking::class;
 
     /**
      * Définition des champs à afficher.
@@ -28,7 +28,7 @@ class ReservationController extends ResourceController
         return [
             'id' => 'display',
             'room' => Room::with('location')->get(['id', 'location_id']),
-            'type' => ReservationType::get(['id', 'name']),
+            'type' => BookingType::get(['id', 'name']),
             'event' => Event::get(['id', 'name']),
             'description' => 'textarea',
             'created_by' => 'display',

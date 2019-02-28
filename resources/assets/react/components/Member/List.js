@@ -12,7 +12,7 @@ import Member from './Member';
 }))
 class MemberList extends React.Component {
 	getMemberBlocks(members, roles) {
-		const { currentSemester, isMember, validateMember, leaveMember } = this.props;
+		const { currentSemester, isMember, isWaiting, validateMember, leaveMember } = this.props;
 
 		members = orderBy(
 			members.map(member => {
@@ -36,10 +36,10 @@ class MemberList extends React.Component {
 			if (member.pivot.semester_id === currentSemester.id) {
 				props.footer = (
 					<div>
-						{!(isMember && member.pivot.validated_by) && (
+						{(isMember || isWaiting) && !member.pivot.validated_by && (
 							<Button
 								color="success"
-								className="m-1"
+								className="m-1 font-weight-bold"
 								onClick={() => {
 									validateMember && validateMember(member.id);
 								}}
@@ -50,7 +50,7 @@ class MemberList extends React.Component {
 						)}
 						<Button
 							color="danger"
-							className="m-1"
+							className="m-1 font-weight-bold"
 							onClick={() => {
 								leaveMember && leaveMember(member.id);
 							}}
@@ -70,14 +70,16 @@ class MemberList extends React.Component {
 		const { title, members, roles } = this.props;
 
 		return (
-			<div className="container MemberList">
+			<div className="container MemberList pb-4">
 				<h1 className="title">{title}</h1>
 				{members.length > 0 ? (
 					<div className="d-flex justify-content-center flex-wrap mb-5">
 						{this.getMemberBlocks(members, roles)}
 					</div>
 				) : (
-					<p>Aucun membre</p>
+					<div className="justify-content-center col-md-12 pt-6">
+						<h5 style={{ textAlign: 'center' }}>Aucun membre</h5>
+					</div>
 				)}
 			</div>
 		);

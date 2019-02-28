@@ -21,24 +21,29 @@ import ContactList from '../../components/Contact/List';
 import Img from '../../components/Image';
 
 @connect((store, props) => ({
+	config: store.config,
 	isAuthenticated: store.isFetched('user'),
 	contacts: store.getData(['assos', props.asso.id, 'contacts']),
 	contactsFailed: store.hasFailed(['assos', props.asso.id, 'contacts']),
+	contactsFetched: store.isFetched(['assos', props.asso.id, 'contacts']),
 	roles: store.getData(['assos', props.asso.id, 'roles']),
 }))
 class AssoHomeScreen extends React.Component {
 	componentWillMount() {
 		const {
 			asso: { id },
+			contactsFetched,
 		} = this.props;
 
-		if (id) {
+		if (id && !contactsFetched) {
 			this.loadAssosData(id);
 		}
 	}
 
-	componentWillReceiveProps({ asso: { id } }) {
-		const { asso } = this.props;
+	componentDidUpdate({ asso }) {
+		const {
+			asso: { id },
+		} = this.props;
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);
@@ -50,22 +55,23 @@ class AssoHomeScreen extends React.Component {
 
 		if (isFollowing && !isMember) {
 			return (
-				<Button className="m-1 btn btn-sm" color="danger" outline onClick={unfollow}>
+				<Button
+					className="m-1 btn btn-sm font-weight-bold"
+					color="danger"
+					outline
+					onClick={unfollow}
+				>
 					Ne plus suivre
 				</Button>
 			);
 		}
 
 		if (isMember) {
-			return (
-				<Button className="m-1 btn btn-sm" outline disabled>
-					Suivre
-				</Button>
-			);
+			return null;
 		}
 
 		return (
-			<Button className="m-1 btn btn-sm" color="primary" outline onClick={follow}>
+			<Button className="m-1 btn btn-sm font-weight-bold" color="primary" outline onClick={follow}>
 				Suivre
 			</Button>
 		);
@@ -78,7 +84,7 @@ class AssoHomeScreen extends React.Component {
 			if (isWaiting) {
 				return (
 					<Button
-						className="m-1 btn btn-sm"
+						className="m-1 btn btn-sm font-weight-bold"
 						color="warning"
 						outline
 						onClick={() => {
@@ -92,7 +98,7 @@ class AssoHomeScreen extends React.Component {
 
 			return (
 				<Button
-					className="m-1 btn btn-sm"
+					className="m-1 btn btn-sm font-weight-bold"
 					color="danger"
 					outline
 					onClick={() => {
@@ -106,14 +112,14 @@ class AssoHomeScreen extends React.Component {
 
 		if (isFollowing) {
 			return (
-				<Button className="m-1 btn btn-sm" outline disabled>
+				<Button className="m-1 btn btn-sm font-weight-bold" outline disabled>
 					Rejoindre
 				</Button>
 			);
 		}
 
 		return (
-			<Button className="m-1 btn btn-sm btn" color="primary" outline onClick={join}>
+			<Button className="m-1 btn btn-sm font-weight-bold" color="primary" outline onClick={join}>
 				Rejoindre
 			</Button>
 		);
@@ -128,6 +134,7 @@ class AssoHomeScreen extends React.Component {
 	render() {
 		const {
 			asso,
+			config,
 			isAuthenticated,
 			userIsFollowing,
 			userIsMember,
@@ -135,6 +142,7 @@ class AssoHomeScreen extends React.Component {
 			contacts,
 			contactsFailed,
 		} = this.props;
+		config.title = asso.shortname;
 
 		let color = `color-${asso.login}`;
 
@@ -152,9 +160,12 @@ class AssoHomeScreen extends React.Component {
 							{isAuthenticated &&
 								this.getMemberButton(userIsMember, userIsFollowing, userIsWaiting)}
 						</div>
-						<div className="col-md-8">
-							<h1 className={`title ${color}`}>
-								{asso.shortname} <small className="text-muted h4">{asso.name}</small>
+						<div className="col-md-8" style={{ whiteSpace: 'pre-line' }}>
+							<h1 className={`title ${color}`} style={{ fontWeight: 'bold' }}>
+								{asso.shortname}{' '}
+								<small className="text-muted h4" style={{ fontStyle: 'italic' }}>
+									{asso.name}
+								</small>
 							</h1>
 							<span className="mt-4">{asso.type && asso.type.description}</span>
 							<ReactMarkdown className="my-3 text-justify" source={asso.description} />

@@ -28,7 +28,7 @@ return [
 
     'email' => [
         'min' => 7,
-        'max' => 127,
+        'max' => 255,
     ],
 
     'url' => [
@@ -39,13 +39,13 @@ return [
     // Nom et prénom de personnes.
     'name' => [
         'min' => 1,
-        'max' => 63,
+        'max' => 127,
     ],
 
     // Titre d'articles et d'évènements.
     'title' => [
         'min' => 1,
-        'max' => 127,
+        'max' => 255,
     ],
 
     // Description courte d'assos.

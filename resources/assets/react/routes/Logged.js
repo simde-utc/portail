@@ -10,20 +10,27 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Redirect } from 'react-router-dom';
+
+import ConditionalRoute from './Conditional';
 
 @connect(store => ({
 	user: store.getData('user'),
+	isLoading: store.isFetching('user'),
 	isAuthenticated: store.isFetched('user'),
 }))
 class LoggedRoute extends React.Component {
 	isAllowed() {
-		const { isAuthenticated, user, types } = this.props;
+		const { isAuthenticated, isLoading, user, types } = this.props;
+
+		// On ne redirige pas tant qu'on ne possède pas les données de l'utilisateur.
+		if (isLoading) {
+			return true;
+		}
 
 		if (isAuthenticated) {
 			if (types && types.length) {
 				for (let key = 0; key < types.length; key++) {
-					if (user[`is_${types[key]}`]) {
+					if (user.types[types[key]]) {
 						return true;
 					}
 				}
@@ -36,25 +43,7 @@ class LoggedRoute extends React.Component {
 	}
 
 	render() {
-		if (this.isAllowed()) {
-			return <Route {...this.props} />;
-		}
-
-		const { redirect } = this.props;
-		if (redirect) {
-			return (
-				<Route
-					{...this.props}
-					render={props => (
-						<Redirect to={{ pathname: redirect, state: { from: props.location } }} />
-					)}
-				/>
-			);
-		}
-
-		window.location.href = `/login?redirect=${window.location.href}`;
-
-		return null;
+		return <ConditionalRoute isAllowed={this.isAllowed.bind(this)} {...this.props} />;
 	}
 }
 

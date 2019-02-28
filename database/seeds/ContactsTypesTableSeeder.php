@@ -56,7 +56,7 @@ class ContactsTypesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Emplacement',
-                'type' => 'door',
+                'type' => 'map',
                 'pattern' => '^.*$',
             ],
             [

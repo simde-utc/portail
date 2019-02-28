@@ -138,8 +138,8 @@ class Room extends Model implements OwnableContract
      *
      * @return mixed
      */
-    public function reservations()
+    public function bookings()
     {
-        return $this->hasMany(Reservation::class);
+        return $this->hasMany(Booking::class);
     }
 }

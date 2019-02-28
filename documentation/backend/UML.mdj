@@ -3914,7 +3914,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "Reservation",
+											"text": "Booking",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -12310,7 +12310,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFh/FnQ79x0MJk="
 							},
-							"name": "Reservation",
+							"name": "Booking",
 							"ownedElements": [
 								{
 									"_type": "UMLAssociation",

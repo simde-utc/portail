@@ -17,6 +17,7 @@ import actions from '../redux/actions';
 import Service from '../components/Service';
 
 @connect(store => ({
+	config: store.config,
 	userServices: store.getData('user/services'),
 	services: store.getData('services'),
 	fetching: store.isFetching('services'),
@@ -71,13 +72,13 @@ class ServiceListScreen extends React.Component {
 				title: 'Ajouter aux favoris',
 				body: (
 					<p>
-						Souhaitez-vous vraiment ajouter au favoris le service{' '}
+						Souhaitez-vous vraiment ajouter aux favoris le service{' '}
 						<span className="font-italic">{service.name}</span> ?
 					</p>
 				),
 				button: {
 					type: 'success',
-					text: 'Ajouter dans les favoris',
+					text: 'Ajouter aux favoris',
 					onClick: () => {
 						actions.user.services
 							.create(
@@ -94,7 +95,7 @@ class ServiceListScreen extends React.Component {
 								);
 							})
 							.catch(() => {
-								NotificationManager.error('Une erreur a été rencontré', 'Suivre un service');
+								NotificationManager.error('Une erreur a été rencontrée', 'Suivre un service');
 							})
 							.finally(() => {
 								this.setState(({ modal }) => ({
@@ -134,7 +135,7 @@ class ServiceListScreen extends React.Component {
 								);
 							})
 							.catch(() => {
-								NotificationManager.error('Une erreur a été rencontré', 'Retirer un service');
+								NotificationManager.error('Une erreur a été rencontrée', 'Retirer un service');
 							})
 							.finally(() => {
 								this.setState(({ modal }) => ({
@@ -148,11 +149,12 @@ class ServiceListScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, services, userServices } = this.props;
+		const { fetching, services, userServices, config } = this.props;
 		const {
 			modal: { show, title, body, button },
 		} = this.state;
-
+		config.title = 'Listes des services';
+		console.log(config.title);
 		return (
 			<div className="container">
 				<Modal isOpen={show}>

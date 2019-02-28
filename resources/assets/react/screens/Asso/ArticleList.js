@@ -15,6 +15,7 @@ import actions from '../../redux/actions';
 import ArticleList from '../../components/Article/List';
 
 @connect((store, { asso: { id } }) => ({
+	config: store.config,
 	user: store.getData('user', false),
 	articles: store.getData(['assos', id, 'articles']),
 	fetched: store.isFetched(['assos', id, 'articles']),
@@ -31,8 +32,10 @@ class AssoArticleList extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps({ asso: { id } }) {
-		const { asso } = this.props;
+	componentDidUpdate({ asso }) {
+		const {
+			asso: { id },
+		} = this.props;
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);
@@ -52,7 +55,8 @@ class AssoArticleList extends React.Component {
 	}
 
 	render() {
-		const { articles, fetched, fetching } = this.props;
+		const { asso, articles, fetched, fetching, config } = this.props;
+		config.title = `${asso.shortname} - Articles`;
 
 		return (
 			<ArticleList articles={articles} fetched={fetched} fetching={fetching} {...this.props} />

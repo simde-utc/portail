@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { orderBy } from 'lodash';
 
 @connect(store => ({
+	user: store.getData('user'),
 	isAuthenticated: store.isFetched('user'),
 	assos: store.getData('user/assos'),
 	services: store.getData('user/services'),
@@ -45,7 +46,7 @@ class Sidebar extends React.Component {
 	}
 
 	render() {
-		const { isAuthenticated, assos, services } = this.props;
+		const { isAuthenticated, user, assos, services } = this.props;
 
 		return (
 			<div className="sidebar col-md-3 col-xl-2 d-none d-md-flex flex-column justify-content-between">
@@ -53,7 +54,11 @@ class Sidebar extends React.Component {
 					<div className="sidebar-group">
 						<h6 className="sidebar-header d-hover-zone">
 							ACTUALITÉS{' '}
-							<NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/news" />
+							<NavLink
+								className="float-right d-hover fas fa-cog"
+								style={{ display: 'none' }}
+								to="/settings/sidebar/news"
+							/>
 						</h6>
 						<NavLink exact className="sidebar-link" to="/">
 							<FontAwesomeIcon icon="newspaper" /> Flux
@@ -62,8 +67,12 @@ class Sidebar extends React.Component {
 
 					<div className="sidebar-group">
 						<h6 className="sidebar-header d-hover-zone">
-							LIENS UTC{' '}
-							<NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/utc" />
+							LIENS UTILES{' '}
+							<NavLink
+								className="float-right d-hover fas fa-cog"
+								style={{ display: 'none' }}
+								to="/settings/sidebar/utc"
+							/>
 						</h6>
 						<a
 							className="sidebar-link"
@@ -71,7 +80,7 @@ class Sidebar extends React.Component {
 							rel="noopener noreferrer"
 							href="https://ent.utc.fr"
 						>
-							<FontAwesomeIcon icon="school" /> ENT UTC
+							<FontAwesomeIcon icon="school" /> Ent UTC
 						</a>
 						<a
 							className="sidebar-link"
@@ -89,6 +98,14 @@ class Sidebar extends React.Component {
 						>
 							<FontAwesomeIcon icon="book" /> Moodle
 						</a>
+						<a
+							className="sidebar-link"
+							target="_blank"
+							rel="noopener noreferrer"
+							href="https://github.com/simde-utc/portail/issues"
+						>
+							<FontAwesomeIcon icon="bug" /> Signaler un bug
+						</a>
 					</div>
 
 					<div className="sidebar-group">
@@ -96,19 +113,22 @@ class Sidebar extends React.Component {
 							RACCOURCIS{' '}
 							<NavLink
 								className="float-right d-hover fas fa-cog"
+								style={{ display: 'none' }}
 								to="/settings/sidebar/shortcuts"
 							/>
 						</h6>
-						<NavLink className="sidebar-link" to="/evenements">
-							<FontAwesomeIcon icon="calendar-alt" /> Évènements
-						</NavLink>
+						{isAuthenticated && user.types.contributorBde && (
+							<NavLink className="sidebar-link" to="/bookings">
+								<FontAwesomeIcon icon="person-booth" /> Réservations
+							</NavLink>
+						)}
 						<NavLink className="sidebar-link" to="/services">
 							<FontAwesomeIcon icon="concierge-bell" /> Services
 						</NavLink>
 						<NavLink className="sidebar-link" to="/assos">
 							<FontAwesomeIcon icon="hands-helping" /> Associations
 						</NavLink>
-						<NavLink className="sidebar-link" to="/groupes">
+						<NavLink className="sidebar-link" to="/groupes" style={{ display: 'none' }}>
 							<FontAwesomeIcon icon="users" /> Groupes
 						</NavLink>
 					</div>
@@ -119,6 +139,7 @@ class Sidebar extends React.Component {
 								MES SERVICES{' '}
 								<NavLink
 									className="float-right d-hover fas fa-cog"
+									style={{ display: 'none' }}
 									to="/settings/sidebar/services"
 								/>
 							</h6>
@@ -130,12 +151,17 @@ class Sidebar extends React.Component {
 						<div className="sidebar-group">
 							<h6 className="sidebar-header d-hover-zone">
 								MES ASSOCIATIONS{' '}
-								<NavLink className="float-right d-hover fas fa-cog" to="/settings/sidebar/assos" />
+								<NavLink
+									className="float-right d-hover fas fa-cog"
+									to="/settings/sidebar/assos"
+									style={{ display: 'none' }}
+								/>
 							</h6>
 							{Sidebar.getAssos(assos)}
 						</div>
 					)}
 				</div>
+
 				<p className="sidebar-footer small">&lt;&#47;&gt; avec le sang par le SiMDE</p>
 			</div>
 		);

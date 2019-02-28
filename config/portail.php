@@ -62,7 +62,7 @@ return [
         ],
     ],
 
-    'reservations' => [
+    'bookings' => [
         'max_duration' => 2,
     ],
 

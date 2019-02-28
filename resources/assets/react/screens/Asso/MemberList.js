@@ -16,6 +16,7 @@ import actions from '../../redux/actions';
 import MemberList from '../../components/Member/DoubleList';
 
 @connect((store, props) => ({
+	config: store.config,
 	user: store.getData('user', false),
 	semesters: store.getData('semesters'),
 	currentSemester: store.getData(['semesters', 'current']),
@@ -27,20 +28,23 @@ import MemberList from '../../components/Member/DoubleList';
 class AssoMemberListScreen extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {};
-		const { asso, currentSemester } = this.props;
+		const { asso, currentSemester } = props;
 
 		if (asso.id) {
 			this.loadAssosData(asso.id);
 		}
 
 		if (currentSemester) {
-			this.state.semester = currentSemester.id;
+			this.state.semester_id = currentSemester.id;
 		}
 	}
 
-	componentWillReceiveProps({ asso: { id } }) {
-		const { asso } = this.props;
+	componentDidUpdate({ asso }) {
+		const {
+			asso: { id },
+		} = this.props;
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);
@@ -59,7 +63,7 @@ class AssoMemberListScreen extends React.Component {
 			asso: { id },
 		} = this.props;
 		if (value && value.value) {
-			this.setState({ semester: value.value }, () => {
+			this.setState({ semester_id: value.value }, () => {
 				this.loadAssosData(id);
 			});
 		}
@@ -67,15 +71,25 @@ class AssoMemberListScreen extends React.Component {
 
 	loadAssosData(id) {
 		const { dispatch } = this.props;
-		const { semester } = this.state;
+		const { semester_id } = this.state;
 
-		dispatch(actions.assos(id).members.all({ semester }));
+		dispatch(actions.assos(id).members.all({ semester: semester_id }));
 	}
 
 	render() {
-		const { semesters, members, roles, fetched, fetching } = this.props;
-		const { semester } = this.state;
+		const {
+			currentSemester,
+			semesters,
+			members,
+			roles,
+			fetched,
+			fetching,
+			asso,
+			config,
+		} = this.props;
+		const { semester_id } = this.state;
 		const selectSemesters = AssoMemberListScreen.getSemesters(semesters);
+		config.title = `${asso.shortname} - Membres`;
 
 		return (
 			<div>
@@ -86,7 +100,7 @@ class AssoMemberListScreen extends React.Component {
 						placeholder=""
 						isSearchable
 						options={selectSemesters}
-						value={selectSemesters.filter(selectSemester => selectSemester.value === semester)}
+						value={selectSemesters.filter(selectSemester => selectSemester.value === semester_id)}
 					/>
 				</div>
 				<MemberList
@@ -94,6 +108,7 @@ class AssoMemberListScreen extends React.Component {
 					roles={roles}
 					fetched={fetched}
 					fetching={fetching}
+					isCurrentSemester={semester_id === currentSemester.id}
 					{...this.props}
 				/>
 			</div>

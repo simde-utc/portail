@@ -65,7 +65,7 @@ class PermissionsTableSeeder extends Seeder
                 'owned_by' => new Asso,
             ],
             [
-                'type' => 'reservation',
+                'type' => 'booking',
                 'name' => 'Réservation',
                 'description' => 'Gestion des réservations',
                 'owned_by' => new Asso,
@@ -323,7 +323,7 @@ class PermissionsTableSeeder extends Seeder
                 'owned_by' => new User,
             ],
             [
-                'type' => 'reservation',
+                'type' => 'booking',
                 'name' => 'Réservation',
                 'description' => 'Gestion des réservations',
                 'owned_by' => new User,
@@ -341,7 +341,7 @@ class PermissionsTableSeeder extends Seeder
                 'owned_by' => new User,
             ],
             [
-                'type' => 'reservation-type',
+                'type' => 'booking-type',
                 'name' => 'Type de réservation',
                 'description' => 'Gestion des types des réservations',
                 'owned_by' => new User,

@@ -8,17 +8,15 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const Http500 = () => (
 	<div className="container">
 		<h1 className="title">
 			Une erreur a été rencontrée <span className="text-light">500</span>
 		</h1>
-		<img src="https://emoji.slack-edge.com/T0ME52X2Q/samy/c090ea5060c3e6a6.jpg" alt="Samy" />
-		<Link className="btn btn-primary" to="/">
+		<a className="btn btn-primary" href="/">
 			Retourner à l'accueil
-		</Link>
+		</a>
 	</div>
 );
 

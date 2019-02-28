@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.1"?>
 <ruleset name="Samy"
     xmlns="http://pmd.sf.net/ruleset/1.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -6,7 +6,6 @@
     xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd"
 >
     <description>Règles PHP MD pour le Portail</description>
-    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength" />
     <rule ref="rulesets/codesize.xml/ExcessiveParameterList" />
     <rule ref="rulesets/codesize.xml/ExcessivePublicCount" />
     <rule ref="rulesets/controversial.xml/Superglobals" />

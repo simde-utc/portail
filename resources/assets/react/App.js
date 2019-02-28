@@ -29,6 +29,7 @@ import AssoListScreen from './screens/AssoList';
 import ServiceListScreen from './screens/ServiceList';
 import AssoDetailScreen from './screens/Asso';
 import ProfileScreen from './screens/Profile';
+import BookingScreen from './screens/Booking';
 
 const App = () => (
 	<div className="h-100">
@@ -45,6 +46,7 @@ const App = () => (
 					<Route path="/assos/:login" component={AssoDetailScreen} />
 					<Route path="/services" exact component={ServiceListScreen} />
 					<LoggedRoute path="/profile" component={ProfileScreen} />
+					<LoggedRoute path="/bookings" types={['contributorBde']} component={BookingScreen} />
 					<Route component={Http404} />
 				</Switch>
 			</ErrorCatcher>

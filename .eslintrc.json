@@ -50,7 +50,7 @@
     "no-console": 0,
     "no-case-declarations": 1,
     "no-fallthrough": 0,
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "no-plusplus": 0,
     "no-unused-vars": [1,
       { "vars": "local",
         "argsIgnorePattern": "^_",
@@ -92,6 +92,7 @@
     "jsx-a11y/no-static-element-interactions": 0,
     "jsx-a11y/anchor-is-valid": 0,
     "jsx-a11y/label-has-associated-control": 0,
-    "jsx-a11y/label-has-for": 0
+    "jsx-a11y/label-has-for": 0,
+	"react/no-direct-mutation-state": 0
   }
 }

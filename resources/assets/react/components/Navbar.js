@@ -16,6 +16,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 @connect(store => ({
+	config: store.config,
 	user: store.getData('user', false),
 	permissions: store.getData('user/permissions'),
 	login: store.getData('login', []),
@@ -36,7 +37,7 @@ class Navbar extends React.Component {
 	}
 
 	render() {
-		const { user, login, permissions } = this.props;
+		const { user, login, permissions, config } = this.props;
 		const { collapse, loginDropdown } = this.state;
 		const loginMethods = Object.entries(login)
 			.filter(([_, loginMethod]) => {
@@ -54,30 +55,40 @@ class Navbar extends React.Component {
 			));
 
 		return (
-			<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle">
+			<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle d-flex">
 				<NavLink to="/" className="navbar-brand">
-					Portail des associations
+					Portail des assos
 				</NavLink>
+				<ul className="navbar-nav ml-auto" style={{ visibility: 'hidden' }}>
+					<li className="nav-item">
+						<NavLink className="nav-link d-flex" to="/search">
+							<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
+								<FontAwesomeIcon icon="circle" className="icon-background2" />
+								<FontAwesomeIcon icon="search" transform="shrink-8" />
+							</span>
+						</NavLink>
+					</li>
+				</ul>
+
+				<span
+					style={{
+						width: '100%',
+						textAlign: 'center',
+						fontSize: '20px',
+						color: 'white',
+						fontWeight: '700',
+						paddingTop: '5px',
+						textTransform: 'uppercase',
+					}}
+				>
+					{config.title}
+				</span>
 
 				<Button className="navbar-toggler" onClick={() => this.toggle('collapse')}>
 					<span className="fas fa-bars" />
 				</Button>
 
 				<div className={`collapse navbar-collapse${collapse ? ' show' : ''}`}>
-					<div className="input-group col-md-6">
-						<input
-							className="form-control py-2"
-							type="search"
-							placeholder="Rechercher ..."
-							id="example-search-input"
-						/>
-						<span className="input-group-append">
-							<Button className="btn btn-outline-secondary">
-								<FontAwesomeIcon icon="search" />
-							</Button>
-						</span>
-					</div>
-
 					<ul className="navbar-nav ml-auto">
 						{user ? (
 							<li className="nav-item no-gutters pl-2 pr-2">
@@ -93,7 +104,7 @@ class Navbar extends React.Component {
 								</NavLink>
 							</li>
 						) : (
-							<li className="nav-item dropdown">
+							<li className="nav-item dropdown" style={{ width: '150px', textAlign: 'right' }}>
 								<a
 									className="nav-link dropdown-toggle"
 									onClick={() => this.toggle('loginDropdown')}
@@ -102,7 +113,7 @@ class Navbar extends React.Component {
 								</a>
 								<div className={`dropdown-menu${loginDropdown ? ' show' : ''}`}>
 									{loginMethods}
-									<a className="dropdown-item" href="/login">
+									<a className="dropdown-item" href="/login?see=all">
 										Tout voir
 									</a>
 								</div>
@@ -120,7 +131,7 @@ class Navbar extends React.Component {
 							</li>
 						)}
 
-						{user && (
+						{user && false && (
 							<li className="nav-item">
 								<NavLink className="nav-link d-flex" to="/notifications">
 									<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>

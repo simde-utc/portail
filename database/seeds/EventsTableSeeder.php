@@ -44,7 +44,7 @@ class EventsTableSeeder extends Seeder
                 'end_at'	=> '2018-04-01 12:15',
                 'visibility' => 'cas',
                 'owner'		=> Asso::where('login', 'simde')->first(),
-            // Théoriquement ici, ça devrait être le client emploidutemps
+                // Théoriquement ici, ça devrait être le client emploidutemps
                 'details'	=> [
                     'semester' => 'P18',
                 ],
@@ -56,7 +56,7 @@ class EventsTableSeeder extends Seeder
                 'end_at'	=> '2018-04-01 10:00',
                 'visibility' => 'cas',
                 'owner'		=> Asso::where('login', 'simde')->first(),
-            // Théoriquement ici, ça devrait être le client emploidutemps
+                // Théoriquement ici, ça devrait être le client emploidutemps
                 'details'	=> [
                     'semester' => 'P18',
                 ],
@@ -79,8 +79,8 @@ class EventsTableSeeder extends Seeder
             [
                 'name'     	=> 'Seconde réunion - Portail',
                 'location'	=> 'Salle de réunion 1 (1er étage)',
-                'begin_at'	=> '2018-04-10 16:30',
-                'end_at'	=> '2018-04-10 18:30',
+                'begin_at'	=> date('Y-m-d 16:30'),
+                'end_at'	=> date('Y-m-d 18:30'),
                 'visibility' => 'private',
                 'created_by' => User::where('firstname', 'Rémy')->first(),
                 'owner'		=> Asso::where('login', 'simde')->first(),

@@ -20,22 +20,26 @@ import actions from '../../redux/actions';
 import Dropdown from '../../components/Dropdown';
 import ArticleForm from '../../components/Article/Form';
 import LoggedRoute from '../../routes/Logged';
+import ConditionalRoute from '../../routes/Conditional';
 import Http404 from '../../routes/Http404';
 
 import AssoHomeScreen from './Home';
 import ArticleList from './ArticleList';
 import AssoMemberListScreen from './MemberList';
-
-import Calendar from '../../components/Calendar/index';
+import AssoCalendar from './Calendar';
+import AccessScreen from './Access';
 
 @connect((store, { match: { params: { login } } }) => {
+	const user = store.getData('user', false);
 	const asso = store.getData(['assos', login]);
 
 	return {
-		user: store.getData('user', false),
+		user,
 		asso,
+		config: store.config,
 		member: store.findData(['user', 'assos'], login, 'login', false),
 		roles: store.getData(['assos', asso.id, 'roles']),
+		memberPermissions: store.getData(['assos', asso.id, 'members', user.id, 'permissions']),
 		fetching: store.isFetching(['assos', login]),
 		fetched: store.isFetched(['assos', login]),
 		failed: store.hasFailed(['assos', login]),
@@ -69,13 +73,11 @@ class AssoScreen extends React.Component {
 		this.loadAssosData(login);
 	}
 
-	componentWillReceiveProps({
-		match: {
-			params: { login },
-		},
-	}) {
+	componentDidUpdate({ match: { params } }) {
 		const {
-			match: { params },
+			match: {
+				params: { login },
+			},
 		} = this.props;
 
 		if (params.login !== login) {
@@ -103,11 +105,20 @@ class AssoScreen extends React.Component {
 		dispatch(action);
 
 		action.payload.then(() => {
-			const { asso } = this.props;
+			const { asso, user } = this.props;
 
-			dispatch(
-				actions.definePath(['assos', asso.id, 'roles']).roles.all({ owner: `asso,${asso.id}` })
-			);
+			if (user) {
+				dispatch(
+					actions.definePath(['assos', asso.id, 'roles']).roles.all({ owner: `asso,${asso.id}` })
+				);
+
+				dispatch(
+					actions
+						.assos(asso.id)
+						.members(user.id)
+						.permissions.all()
+				);
+			}
 		});
 	}
 
@@ -440,8 +451,8 @@ class AssoScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, fetched, failed, user, asso, member, contacts, match } = this.props;
-		const { events, articlesFetched, modal } = this.state;
+		const { fetching, fetched, failed, user, asso, member, contacts, match, config } = this.props;
+		const { events, modal } = this.state;
 
 		if (failed) return <Http404 />;
 
@@ -452,8 +463,8 @@ class AssoScreen extends React.Component {
 
 			this.user = {
 				isFollowing: true,
-				isMember: pivot.role_id !== null,
-				isWaiting: pivot.validated_by === null,
+				isMember: pivot.role_id !== null && pivot.validated_by !== null,
+				isWaiting: pivot.role_id !== null && pivot.validated_by === null,
 			};
 		} else {
 			this.user = {
@@ -462,10 +473,16 @@ class AssoScreen extends React.Component {
 				isWaiting: false,
 			};
 		}
+		config.title = asso.shortname;
 
 		let bg = `bg-${asso.login}`;
 
 		if (asso.parent) bg += ` bg-${asso.parent.login}`;
+
+		let joinFromMemberList;
+		if (Object.values(this.user).every(value => !value)) {
+			joinFromMemberList = this.joinAsso.bind(this);
+		}
 
 		return (
 			<div className="asso w-100">
@@ -475,6 +492,7 @@ class AssoScreen extends React.Component {
 					<ModalFooter>
 						<Button
 							outline
+							className="font-weight-bold"
 							onClick={() => {
 								this.setState(prevState => ({
 									...prevState,
@@ -484,7 +502,12 @@ class AssoScreen extends React.Component {
 						>
 							Annuler
 						</Button>
-						<Button outline color={modal.button.type} onClick={modal.button.onClick}>
+						<Button
+							className="font-weight-bold"
+							outline
+							color={modal.button.type}
+							onClick={modal.button.onClick}
+						>
 							{modal.button.text}
 						</Button>
 					</ModalFooter>
@@ -502,7 +525,7 @@ class AssoScreen extends React.Component {
 						</NavLink>
 					</li>
 					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/evenements`}>
+						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/events`}>
 							ÉVÈNEMENTS
 						</NavLink>
 					</li>
@@ -520,16 +543,18 @@ class AssoScreen extends React.Component {
 							</NavLink>
 						</li>
 					)}
-					<li className="nav-item dropdown">
-						<Dropdown title="CRÉER">
-							<Link className="dropdown-item" to={`${match.url}/article`}>
-								Article
-							</Link>
-							<Link className="dropdown-item" to={`${match.url}/evenement`}>
-								Évènement
-							</Link>
-						</Dropdown>
-					</li>
+					{this.user.isMember && (
+						<li className="nav-item dropdown">
+							<Dropdown title="CRÉER">
+								<Link className="dropdown-item" to={`${match.url}/article`}>
+									Article
+								</Link>
+								<Link className="dropdown-item" to={`${match.url}/evenement`}>
+									Évènement
+								</Link>
+							</Dropdown>
+						</li>
+					)}
 				</ul>
 
 				<Switch>
@@ -550,12 +575,7 @@ class AssoScreen extends React.Component {
 							/>
 						)}
 					/>
-					<Route
-						path={`${match.url}/evenements`}
-						render={() => (
-							<Calendar events={AssoScreen.getAllEvents(events)} fetched={articlesFetched} />
-						)}
-					/>
+					<Route path={`${match.url}/events`} render={() => <AssoCalendar asso={asso} />} />
 					<Route path={`${match.url}/articles`} render={() => <ArticleList asso={asso} />} />
 					<LoggedRoute
 						path={`${match.url}/members`}
@@ -565,16 +585,25 @@ class AssoScreen extends React.Component {
 							<AssoMemberListScreen
 								asso={asso}
 								isMember={this.user.isMember}
+								isWaiting={this.user.isWaiting}
 								leaveMember={id => {
 									this.leaveMember(id);
 								}}
+								join={joinFromMemberList}
 								validateMember={id => {
 									this.validateMember(id);
 								}}
 							/>
 						)}
 					/>
-					<Route path={`${match.url}/access`} render={() => <div />} />
+					<ConditionalRoute
+						path={`${match.url}/access`}
+						redirect={`${match.url}`}
+						isAllowed={() => {
+							return this.user.isMember;
+						}}
+						render={() => <AccessScreen asso={asso} />}
+					/>
 					<Route
 						path={`${match.url}/article`}
 						render={() => (

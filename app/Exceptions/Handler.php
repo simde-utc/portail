@@ -16,7 +16,6 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -37,6 +36,11 @@ class Handler extends ExceptionHandler
     protected $dontFlash = [
         'password',
         'password_confirmation',
+    ];
+
+    protected $exceptionToHttpCode = [
+        \Laravel\Passport\Exceptions\MissingScopeException::class => 412,
+        \Illuminate\Auth\AuthenticationException::class => 401,
     ];
 
     /**
@@ -79,15 +83,13 @@ class Handler extends ExceptionHandler
 
             if ($this->isHttpException($exception)) {
                 $status = $exception->getStatusCode();
-            } else if ($exception instanceof AuthenticationException) {
-                $status = 401;
             } else {
-                $status = 400;
+                $status = ($this->exceptionToHttpCode[get_class($exception)] ?? 400);
             }
 
             return response()->json($response, $status);
         } else if ($exception instanceof AuthorizationException) {
-            return redirect('/');
+            return redirect('/login');
         }
 
         return parent::render($request, $exception);
