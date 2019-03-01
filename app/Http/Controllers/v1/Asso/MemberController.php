@@ -211,9 +211,7 @@ class MemberController extends Controller
 
         $forceUpdate = (
 	        Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id
-	        && $user->pivot->validated_by
-        ) || (
-	        ($lastUser = $asso->getLastUserWithRole(config('portail.roles.admin.assos')))
+	        && ($lastUser = $asso->getLastUserWithRole(config('portail.roles.admin.assos')))
 	        && $lastUser->id === \Auth::id()
         );
 
