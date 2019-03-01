@@ -10,6 +10,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Select from 'react-select';
+import { find } from 'lodash';
 
 import actions from '../../redux/actions';
 
@@ -87,7 +88,7 @@ class AssoMemberListScreen extends React.Component {
 	}
 
 	loadAssosData(id) {
-		const { user, dispatch } = this.props;
+		const { user, roles, dispatch } = this.props;
 		const { semester_id } = this.state;
 
 		actions
@@ -95,9 +96,13 @@ class AssoMemberListScreen extends React.Component {
 			.members(user.id)
 			.get({ semester: this.getBeforeTheCurrentSemester().id })
 			.payload.then(({ data }) => {
-				this.setState({
-					lastRoleId: data.pivot.role_id,
-				});
+				const role = find(roles, role => role.id === data.pivot.role_id);
+
+				if (role && role.type === 'president') {
+					this.setState({
+						lastRoleId: data.pivot.role_id,
+					});
+				}
 			});
 		dispatch(actions.assos(id).members.all({ semester: semester_id }));
 	}
