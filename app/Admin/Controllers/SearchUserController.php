@@ -19,7 +19,7 @@ use App\Models\{
     User, AuthCas
 };
 
-class SearchController extends Controller
+class SearchUserController extends Controller
 {
     use HasUsers;
 
@@ -48,7 +48,7 @@ class SearchController extends Controller
         return $content
             ->header('Recherche d\'un utilisateur')
             ->description('Permet de rechercher un utilisateur (max. '.$this->limit.' en même temps)')
-            ->body(view('admin.search.index', ['fields' => $this->fields]));
+            ->body(view('admin.search.user.index', ['fields' => $this->fields]));
     }
 
     /**
