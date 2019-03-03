@@ -45,13 +45,15 @@ class AppLoader extends React.Component {
 		// Récupère le semestre courant
 		dispatch(actions.semesters('current').get());
 		// Récupère les données utilisateurs
-		dispatch(actions.user.all({ types: '*' }))
-			.then(() => {
-				window.isLogged = true;
-			})
-			.catch(() => {
-				window.isLogged = false;
-			});
+		setTimeout(() => {
+			dispatch(actions.user.all({ types: '*' }))
+				.then(() => {
+					window.isLogged = true;
+				})
+				.catch(() => {
+					window.isLogged = false;
+				});
+		}, 2000);
 		// Récupère les permissions de l'utilisateur
 		dispatch(actions.user.permissions.all());
 		// Récupère les associations de l'utilisateur
@@ -65,18 +67,25 @@ class AppLoader extends React.Component {
 
 	// Permet d'afficher le chargement initial de la page
 	render() {
-		const { dataLoaded } = this.props;
+		const { dataLoaded, generateChildren } = this.props;
+
+		const isLoading = dataLoaded.some(loading => !loading);
+
+		// Lorsque le chargement est terminé, on génère la page
+		if (!isLoading) {
+			generateChildren();
+		}
 
 		return (
 			<LoadingScreen
-				loading={dataLoaded.some(loading => !loading)}
+				loading={isLoading}
 				bgColor="#f1f1f1"
 				spinnerColor="#9ee5f8"
 				textColor="#676767"
 				logoSrc={bdeImage}
 				text="Portail des Associations"
 			>
-				<div id="loaded" />
+				<div></div>
 			</LoadingScreen>
 		);
 	}

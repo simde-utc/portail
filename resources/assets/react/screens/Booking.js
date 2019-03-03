@@ -38,7 +38,6 @@ import actions from '../redux/actions';
 		assos,
 		permissions,
 		fetchedPermissions,
-		assosFetched: store.isFetched(['user', 'assos']),
 		types: store.getData(['bookings', 'types']),
 		rooms: store.getData('rooms'),
 		fetched: store.isFetched('rooms'),
@@ -63,22 +62,18 @@ class BookingScreen extends React.Component {
 	}
 
 	componentWillMount() {
-		const { dispatch, assos, assosFetched } = this.props;
+		const { user, assos, dispatch } = this.props;
 
 		dispatch(actions.rooms.all());
 		dispatch(actions.bookings.types.all());
-
-		if (assosFetched) {
-			this.loadPermissions(assos);
-		}
-	}
-
-	componentDidUpdate({ assos: prevAssos }) {
-		const { assos } = this.props;
-
-		if (prevAssos !== assos) {
-			this.loadPermissions(assos);
-		}
+		assos.forEach(asso => {
+			dispatch(
+				actions
+					.assos(asso.id)
+					.members(user.id)
+					.permissions.all()
+			);
+		});
 	}
 
 	onSelectingRange(data) {
@@ -114,19 +109,6 @@ class BookingScreen extends React.Component {
 		}));
 	}
 
-	loadPermissions(assos) {
-		const { user, dispatch } = this.props;
-
-		assos.forEach(asso => {
-			dispatch(
-				actions
-					.assos(asso.id)
-					.members(user.id)
-					.permissions.all()
-			);
-		});
-	}
-
 	askBooking(begin = new Date(), end = new Date()) {
 		this.setState(prevState => {
 			const { rooms, fetchedPermissions, types } = this.props;
@@ -154,6 +136,7 @@ class BookingScreen extends React.Component {
 						endDate={end}
 						onStartDateChange={begin_at => this.setState({ begin_at: begin_at.Date })}
 						onEndDateChange={end_at => this.setState({ end_at: end_at.Date })}
+						className="d-flex"
 					/>
 					Association:
 					<Select
@@ -200,6 +183,10 @@ class BookingScreen extends React.Component {
 						this.setState({
 							reloadCalendar: data.room.calendar,
 						});
+
+						this.setState(({ modal }) => ({
+							modal: { ...modal, show: false },
+						}));
 					})
 					.catch(({ response: { data: { message } } }) => {
 						NotificationManager.error(message, 'Réservation');

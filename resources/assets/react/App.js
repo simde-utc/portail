@@ -31,29 +31,51 @@ import AssoDetailScreen from './screens/Asso';
 import ProfileScreen from './screens/Profile';
 import BookingScreen from './screens/Booking';
 
-const App = () => (
-	<div className="h-100">
-		<AppLoader />
-		<Navbar />
+class App extends React.Component {
+	constructor(props) {
+		super(props);
 
-		<div className="d-flex w-100 h-100">
-			<Sidebar />
-			<ErrorCatcher>
-				<Switch>
-					<Route path="/" exact component={HomeScreen} />
-					<Route path="/dashboard" component={DashboardScreen} />
-					<Route path="/assos" exact component={AssoListScreen} />
-					<Route path="/assos/:login" component={AssoDetailScreen} />
-					<Route path="/services" exact component={ServiceListScreen} />
-					<LoggedRoute path="/profile" component={ProfileScreen} />
-					<LoggedRoute path="/bookings" types={['contributorBde']} component={BookingScreen} />
-					<Route component={Http404} />
-				</Switch>
-			</ErrorCatcher>
-		</div>
+		this.state = {
+			children: <AppLoader generateChildren={this.generateChildren.bind(this)} />,
+		};
+	}
 
-		<NotificationContainer />
-	</div>
-);
+	generateChildren() {
+		setTimeout(() => {
+			this.setState({
+				children: (
+					<div className="h-100">
+						<div className="d-flex w-100 h-100">
+							<Navbar />
+							<div className="d-flex w-100 h-100">
+								<Sidebar />
+								<ErrorCatcher>
+									<Switch>
+										<Route path="/" exact component={HomeScreen} />
+										<Route path="/dashboard" component={DashboardScreen} />
+										<Route path="/assos" exact component={AssoListScreen} />
+										<Route path="/assos/:login" component={AssoDetailScreen} />
+										<Route path="/services" exact component={ServiceListScreen} />
+										<LoggedRoute path="/profile" component={ProfileScreen} />
+										<LoggedRoute path="/bookings" types={['contributorBde']} component={BookingScreen} />
+										<Route component={Http404} />
+									</Switch>
+								</ErrorCatcher>
+							</div>
+						</div>
+
+						<NotificationContainer />
+					</div>
+				),
+			});
+		}, 100);
+	}
+
+	render() {
+		const { children } = this.state;
+
+		return children;
+	}
+}
 
 export default App;
