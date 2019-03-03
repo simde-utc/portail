@@ -22,6 +22,8 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import actions from './redux/actions';
 import bdeImage from '../images/bde.jpg';
 
+import 'moment/locale/fr';
+
 require('./bootstrap');
 
 @connect(store => ({
@@ -60,7 +62,7 @@ class AppLoader extends React.Component {
 		dispatch(actions.user.services.all());
 
 		library.add(fas, far, fab);
-		BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
+		moment.locale('fr');
 	}
 
 	// Permet d'afficher le chargement initial de la page

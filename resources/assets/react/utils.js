@@ -9,11 +9,9 @@
  */
 
 import moment from 'moment';
-import 'moment/locale/fr';
 
 // Dates relatives
 export const getTime = time => {
-	moment.locale('fr');
 	return moment(time).calendar(null, {
 		sameDay: 'H:m',
 		nextDay: '[Demain]',
@@ -22,6 +20,10 @@ export const getTime = time => {
 		lastWeek: 'dddd',
 		sameElse: 'D/M/YYYY',
 	});
+};
+
+export const formatDate = date => {
+	return moment(date).format();
 };
 
 export const colorFromBackground = hex => {
