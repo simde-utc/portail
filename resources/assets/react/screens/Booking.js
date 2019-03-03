@@ -23,9 +23,13 @@ import actions from '../redux/actions';
 	const assos = store.getData(['user', 'assos']);
 	const user = store.getData('user', {});
 	const permissions = {};
+	const fetchedPermissions = [];
 
 	assos.forEach(asso => {
-		permissions[asso.id] = store.getData(['assos', asso.id, 'members', user.id, 'permissions']);
+		const path = ['assos', asso.id, 'members', user.id, 'permissions'];
+
+		permissions[asso.id] = store.getData(path);
+		fetchedPermissions.push(store.isFetched(path));
 	});
 
 	return {
@@ -33,6 +37,7 @@ import actions from '../redux/actions';
 		user,
 		assos,
 		permissions,
+		fetchedPermissions,
 		assosFetched: store.isFetched(['user', 'assos']),
 		types: store.getData(['bookings', 'types']),
 		rooms: store.getData('rooms'),
@@ -124,11 +129,15 @@ class BookingScreen extends React.Component {
 
 	askBooking(begin = new Date(), end = new Date()) {
 		this.setState(prevState => {
-			const { rooms, dispatch, types } = this.props;
+			const { rooms, fetchedPermissions, types } = this.props;
 			const { modal } = prevState;
 			const possibleAssos = BookingScreen.getAssos(this.getAllowedAssos());
 			const possibleRooms = BookingScreen.getRooms(rooms);
 			const possibleTypes = BookingScreen.getTypes(types);
+
+			if (fetchedPermissions.some(fetched => !fetched)) {
+				return;
+			}
 
 			prevState.begin_at = begin;
 			prevState.end_at = end;
@@ -248,6 +257,7 @@ class BookingScreen extends React.Component {
 					selectable
 					onSelectSlot={this.onSelectingRange.bind(this)}
 					reloadCalendar={reloadCalendar}
+					scrollToTime={new Date(null, null, null, 7)}
 				/>
 				{user.types.member && (
 					<Button
