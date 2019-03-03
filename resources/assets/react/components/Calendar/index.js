@@ -19,8 +19,9 @@ class Calendar extends React.Component {
 
 		if (props.selectedCalendars) {
 			props.selectedCalendars.forEach(calendar => {
-				const { selectedCalendars } = this.state;
+				const { selectedCalendars, loadingCalendars } = this.state;
 				selectedCalendars[calendar.id] = calendar;
+				loadingCalendars[calendar.id] = true;
 
 				this.loadEvents(calendar);
 			});
@@ -36,12 +37,6 @@ class Calendar extends React.Component {
 	loadEvents(calendar) {
 		const { dispatch } = this.props;
 		const action = actions.calendars(calendar.id).events.all();
-
-		this.setState(prevState => {
-			prevState.loadingCalendars[calendar.id] = true;
-
-			return prevState;
-		});
 
 		dispatch(action);
 		action.payload
@@ -73,6 +68,7 @@ class Calendar extends React.Component {
 		this.setState(
 			prevState => {
 				prevState.selectedCalendars[calendar.id] = calendar;
+				prevState.loadingCalendars[calendar.id] = true;
 
 				return prevState;
 			},

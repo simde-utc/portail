@@ -4,7 +4,6 @@ html {
 
 body {
 	padding-top: $navbar-min-height;
-	// padding-bottom: 33px;		/* dégeu */
     background: $white;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
@@ -24,10 +23,10 @@ main {
 }
 
 .content {
-  flex: 1 1 auto;
+  	flex: 1 1 auto;
 	overflow-y: auto;
-  overflow-x: hidden;
-  min-height: 0px;
+  	overflow-x: hidden;
+  	min-height: 0px;
 	max-width: auto;
 }
 
