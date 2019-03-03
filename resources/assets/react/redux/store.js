@@ -9,7 +9,7 @@
  */
 
 import produce from 'immer';
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, createStore, compose } from 'redux';
 
 // Import Middlewares
 import promise from 'redux-promise-middleware';
@@ -39,13 +39,19 @@ export const createCrudTypes = name => ({
 });
 
 // Configure Middlewares
-export const middlewares = applyMiddleware(
+let middlewares = applyMiddleware(
 	thunk,
 	promise({
 		promiseTypeSuffixes: Object.values(ASYNC_SUFFIXES),
 	})
 	// createLogger({ collapse: true })
 );
+
+/* eslint-disable no-underscore-dangle */
+if (process.env.NODE_ENV === 'development') {
+	middlewares = (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose)(middlewares);
+}
+/* eslint-enable */
 
 // La racine du store
 export const store = {
@@ -211,9 +217,15 @@ export default createStore((state = store, action) => {
 			let id;
 
 			// Si on ne modifie qu'une donnée précise, il faut qu'on change le statut pour la ressource
-			if (action.meta.action !== 'updateAll') {
-				path = path.slice();
-				id = path.pop();
+			switch (action.meta.action) {
+				case 'updateAll':
+				case 'create':
+				case 'insert':
+					break;
+
+				default:
+					path = path.slice();
+					id = path.pop();
 			}
 
 			let place = buildStorePath(draft, path);
@@ -271,6 +283,7 @@ export default createStore((state = store, action) => {
 									break;
 								}
 
+							case 'insert':
 							case 'create':
 								place.data.push(data);
 
@@ -288,22 +301,23 @@ export default createStore((state = store, action) => {
 						}
 
 						// On stock la data par id pour la ressource
-						switch (action.meta.action) {
-							case 'update':
-							case 'create':
-								// On modifie/stock la donnée via l'id
-								let placeForData = buildStorePath(draft, path.concat([id]));
+						if (id) {
+							switch (action.meta.action) {
+								case 'update':
+									// On modifie/stock la donnée via l'id
+									let placeForData = buildStorePath(draft, path.concat([id]));
 
-								placeForData = makeResourceSuccessed(placeForData, timestamp, status);
-								placeForData.data = data;
+									placeForData = makeResourceSuccessed(placeForData, timestamp, status);
+									placeForData.data = data;
 
-								break;
+									break;
 
-							default:
-								// 'delete'
-								delete place.resources[id];
+								default:
+									// 'delete'
+									delete place.resources[id];
 
-								break;
+									break;
+							}
 						}
 
 						// Typiquement, si on a une asso et qu'on la recherche par login
@@ -311,6 +325,7 @@ export default createStore((state = store, action) => {
 							// On stock la data par id pour la ressource
 							switch (action.meta.action) {
 								case 'update':
+								case 'insert':
 								case 'create':
 									// On modifie/stock la donnée via l'id de la data
 									let placeForData = buildStorePath(draft, path.concat([data.id]));
