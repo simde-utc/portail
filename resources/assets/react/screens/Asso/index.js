@@ -37,6 +37,7 @@ import AccessScreen from './Access';
 		user,
 		asso,
 		config: store.config,
+		isNotConnected: store.hasFailed('user'),
 		member: store.findData(['user', 'assos'], login, 'login', false),
 		roles: store.getData(['assos', asso.id, 'roles']),
 		memberPermissions: store.getData(['assos', asso.id, 'members', user.id, 'permissions']),
@@ -105,13 +106,15 @@ class AssoScreen extends React.Component {
 		dispatch(action);
 
 		action.payload.then(() => {
-			const { asso, user } = this.props;
+			const { asso, user, isNotConnected } = this.props;
 
-			if (user) {
+			if (!isNotConnected) {
 				dispatch(
 					actions.definePath(['assos', asso.id, 'roles']).roles.all({ owner: `asso,${asso.id}` })
 				);
+			}
 
+			if (user) {
 				dispatch(
 					actions
 						.assos(asso.id)
