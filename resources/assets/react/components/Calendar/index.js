@@ -13,6 +13,7 @@ class Calendar extends React.Component {
 
 		this.state = {
 			selectedCalendars: {},
+			loadingCalendars: {},
 			events: {},
 		};
 
@@ -36,10 +37,18 @@ class Calendar extends React.Component {
 		const { dispatch } = this.props;
 		const action = actions.calendars(calendar.id).events.all();
 
+		this.setState(prevState => {
+			prevState.loadingCalendars[calendar.id] = true;
+
+			return prevState;
+		});
+
 		dispatch(action);
 		action.payload
 			.then(({ data }) => {
 				this.setState(prevState => {
+					prevState.loadingCalendars[calendar.id] = false;
+
 					if (prevState.selectedCalendars[calendar.id]) {
 						prevState.events[calendar.id] = data;
 					}
@@ -49,6 +58,8 @@ class Calendar extends React.Component {
 			})
 			.catch(() => {
 				this.setState(prevState => {
+					prevState.loadingCalendars[calendar.id] = false;
+
 					if (prevState.selectedCalendars[calendar.id]) {
 						prevState.events[calendar.id] = [];
 					}
@@ -72,6 +83,7 @@ class Calendar extends React.Component {
 	removeCalendar(calendar) {
 		this.setState(prevState => {
 			delete prevState.selectedCalendars[calendar.id];
+			delete prevState.loadingCalendars[calendar.id];
 			delete prevState.events[calendar.id];
 
 			return prevState;
@@ -80,7 +92,7 @@ class Calendar extends React.Component {
 
 	render() {
 		const { calendars } = this.props;
-		const { selectedCalendars, events } = this.state;
+		const { selectedCalendars, loadingCalendars, events } = this.state;
 		const fetching = Object.keys(selectedCalendars).length !== Object.keys(events).length;
 
 		return (
@@ -88,6 +100,7 @@ class Calendar extends React.Component {
 				<CalendarSelector
 					calendars={calendars}
 					selectedCalendars={selectedCalendars}
+					loadingCalendars={loadingCalendars}
 					onAddCalendar={this.addCalendar.bind(this)}
 					onRemoveCalendar={this.removeCalendar.bind(this)}
 				/>

@@ -13,10 +13,18 @@ export default class CalendarSelector extends React.Component {
 	}
 
 	generateCalendar(calendar) {
+		const { loadingCalendars } = this.props;
 		const { selectedCalendars } = this.state;
 		let props;
 
-		if (Object.keys(selectedCalendars).includes(calendar.id)) {
+		if (loadingCalendars[calendar.id]) {
+			props = {
+				style: {
+					color: 'white',
+					backgroundColor: 'grey',
+				},
+			};
+		} else if (Object.keys(selectedCalendars).includes(calendar.id)) {
 			props = {
 				onClick: () => this.removeCalendar(calendar),
 				style: {
