@@ -21,9 +21,12 @@ Route::get('charts', 'ChartsController@index')->name('charts-index');
 Route::get('access', 'AccessController@index')->name('access-index');
 Route::post('access/{access_id}', 'AccessController@store')->name('access-store');
 
-Route::get('search', 'SearchController@index')->name('search-index');
-Route::post('search', 'SearchController@search')->name('search-search');
-Route::get('search/{user_id}', 'SearchController@show')->name('search-show');
+Route::get('search/user', 'SearchUserController@index')->name('search-user-index');
+Route::post('search/user', 'SearchUserController@search')->name('search-user-search');
+Route::get('search/user/{user_id}', 'SearchUserController@show')->name('search-user-show');
+
+Route::get('search/contributor', 'SearchContributorController@index')->name('search-contributor-index');
+Route::get('search/contributor/{login}', 'SearchContributorController@show')->name('search-contributor-show');
 
 Route::get('resources/users', 'Resource\\UserController@index')->name('users-index');
 Route::get('resources/users/{user_id}', 'Resource\\UserController@show')->name('users-show');

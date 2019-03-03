@@ -14,8 +14,23 @@ class AdminMenuTableSeeder extends Seeder
     {
         $menus = [
             [
-                'title' => 'Rechercher',
-                'uri' => 'search',
+                'title' => 'Ressources',
+                'permission' => '',
+                'icon' => 'fa-search',
+                'elements' => [
+                    [
+                        'title' => 'Un cotisant',
+                        'permission' => 'user-contributeBde',
+                        'icon' => 'fa-money',
+                        'uri' => 'search/contributor',
+                    ],
+                    [
+                        'title' => 'Un utilisateur',
+                        'permission' => 'user',
+                        'icon' => 'fa-user',
+                        'uri' => 'search/user',
+                    ]
+                ]
             ],
             [
                 'title' => 'Gestion des accès',
