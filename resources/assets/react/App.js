@@ -57,7 +57,11 @@ class App extends React.Component {
 										<Route path="/assos/:login" component={AssoDetailScreen} />
 										<Route path="/services" exact component={ServiceListScreen} />
 										<LoggedRoute path="/profile" component={ProfileScreen} />
-										<LoggedRoute path="/bookings" types={['contributorBde']} component={BookingScreen} />
+										<LoggedRoute
+											path="/bookings"
+											types={['contributorBde']}
+											component={BookingScreen}
+										/>
 										<Route component={Http404} />
 									</Switch>
 								</ErrorCatcher>

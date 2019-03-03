@@ -15,7 +15,7 @@ export default class CalendarSelector extends React.Component {
 	generateCalendar(calendar) {
 		const { loadingCalendars } = this.props;
 		const { selectedCalendars } = this.state;
-		let props = {
+		const props = {
 			style: {
 				color: colorFromBackground(calendar.color),
 				backgroundColor: calendar.color,

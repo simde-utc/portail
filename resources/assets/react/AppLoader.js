@@ -85,7 +85,7 @@ class AppLoader extends React.Component {
 				logoSrc={bdeImage}
 				text="Portail des Associations"
 			>
-				<div></div>
+				<div />
 			</LoadingScreen>
 		);
 	}
