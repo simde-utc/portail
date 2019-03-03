@@ -45,15 +45,13 @@ class AppLoader extends React.Component {
 		// Récupère le semestre courant
 		dispatch(actions.semesters('current').get());
 		// Récupère les données utilisateurs
-		setTimeout(() => {
-			dispatch(actions.user.all({ types: '*' }))
-				.then(() => {
-					window.isLogged = true;
-				})
-				.catch(() => {
-					window.isLogged = false;
-				});
-		}, 2000);
+		dispatch(actions.user.all({ types: '*' }))
+			.then(() => {
+				window.isLogged = true;
+			})
+			.catch(() => {
+				window.isLogged = false;
+			});
 		// Récupère les permissions de l'utilisateur
 		dispatch(actions.user.permissions.all());
 		// Récupère les associations de l'utilisateur
