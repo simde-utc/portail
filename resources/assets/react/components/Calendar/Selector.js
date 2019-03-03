@@ -15,28 +15,22 @@ export default class CalendarSelector extends React.Component {
 	generateCalendar(calendar) {
 		const { loadingCalendars } = this.props;
 		const { selectedCalendars } = this.state;
-		let props;
+		let props = {
+			style: {
+				color: colorFromBackground(calendar.color),
+				backgroundColor: calendar.color,
+			},
+		};
 
 		if (loadingCalendars[calendar.id]) {
-			props = {
-				style: {
-					color: 'white',
-					backgroundColor: 'grey',
-				},
-			};
+			props.disabled = true;
 		} else if (Object.keys(selectedCalendars).includes(calendar.id)) {
-			props = {
-				onClick: () => this.removeCalendar(calendar),
-				style: {
-					color: colorFromBackground(calendar.color),
-					backgroundColor: calendar.color,
-				},
-			};
+			props.onClick = () => this.removeCalendar(calendar);
 		} else {
-			props = {
-				onClick: () => this.addCalendar(calendar),
-			};
+			props.onClick = () => this.addCalendar(calendar);
+			delete props.style;
 		}
+
 		return (
 			<Button key={calendar.id} className="btn-sm ml-2 mb-1" {...props}>
 				{calendar.name}
