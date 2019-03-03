@@ -26,6 +26,12 @@ class Calendar extends React.Component {
 		}
 	}
 
+	componentDidUpdate({ reloadCalendar }) {
+		if (reloadCalendar) {
+			this.addCalendar(reloadCalendar);
+		}
+	}
+
 	loadEvents(calendar) {
 		const { dispatch } = this.props;
 		const action = actions.calendars(calendar.id).events.all();

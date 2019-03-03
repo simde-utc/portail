@@ -33,6 +33,7 @@ import actions from '../redux/actions';
 		user,
 		assos,
 		permissions,
+		assosFetched: store.isFetched(['user', 'assos']),
 		types: store.getData(['bookings', 'types']),
 		rooms: store.getData('rooms'),
 		fetched: store.isFetched('rooms'),
@@ -57,24 +58,21 @@ class BookingScreen extends React.Component {
 	}
 
 	componentWillMount() {
-		const { dispatch } = this.props;
+		const { dispatch, assos, assosFetched } = this.props;
 
 		dispatch(actions.rooms.all());
 		dispatch(actions.bookings.types.all());
+
+		if (assosFetched) {
+			this.loadPermissions(assos);
+		}
 	}
 
 	componentDidUpdate({ assos: prevAssos }) {
-		const { user, assos, dispatch } = this.props;
+		const { assos } = this.props;
 
 		if (prevAssos !== assos) {
-			assos.forEach(asso => {
-				dispatch(
-					actions
-						.assos(asso.id)
-						.members(user.id)
-						.permissions.all()
-				);
-			});
+			this.loadPermissions(assos);
 		}
 	}
 
@@ -109,6 +107,19 @@ class BookingScreen extends React.Component {
 			value: type.id,
 			label: type.name,
 		}));
+	}
+
+	loadPermissions(assos) {
+		const { user, dispatch } = this.props;
+
+		assos.forEach(asso => {
+			dispatch(
+				actions
+					.assos(asso.id)
+					.members(user.id)
+					.permissions.all()
+			);
+		});
 	}
 
 	askBooking(begin = new Date(), end = new Date()) {
@@ -162,7 +173,6 @@ class BookingScreen extends React.Component {
 			modal.button.text = 'Réserver';
 			modal.button.onClick = () => {
 				const { room_id, asso_id, type_id, name, begin_at, end_at } = this.state;
-				console.log(begin_at, end_at);
 				const action = actions.rooms(room_id).bookings.create({
 					room_id,
 					name,
@@ -173,12 +183,14 @@ class BookingScreen extends React.Component {
 					owned_by_type: 'asso',
 				});
 
-				dispatch(action);
-
 				action.payload
 					.then(({ data }) => {
-						console.log(data);
 						NotificationManager.warning('Réservation réalisée avec succès', 'Réservation');
+
+						// On recharge le calendrier
+						this.setState({
+							reloadCalendar: data.room.calendar,
+						});
 					})
 					.catch(({ response: { data: { message } } }) => {
 						NotificationManager.error(message, 'Réservation');
@@ -191,8 +203,10 @@ class BookingScreen extends React.Component {
 
 	render() {
 		const { user, rooms, fetched, config } = this.props;
-		const { modal } = this.state;
+		const { modal, reloadCalendar } = this.state;
 		config.title = 'Planning des réservations';
+
+		this.state.reloadCalendar = null;
 
 		if (!fetched) {
 			return <div />;
@@ -233,6 +247,7 @@ class BookingScreen extends React.Component {
 					selectedCalendars={calendars}
 					selectable
 					onSelectSlot={this.onSelectingRange.bind(this)}
+					reloadCalendar={reloadCalendar}
 				/>
 				{user.types.member && (
 					<Button
