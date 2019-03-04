@@ -21,7 +21,7 @@
           <p>La demande est confirmée par <b>{{ $access->confirmed_by['name'] }}</b> (id: {{ $access->asso['id'] }}).</p>
           <div class="col-md-offset-2" style="padding-right: 25%">
             <p>Commentaire:</p>
-            <textarea style="width: 100%" rows="2" name="comment" required></textarea>
+            <textarea style="width: 100%" rows="2" name="comment"></textarea>
           </div>
         </div>
 
