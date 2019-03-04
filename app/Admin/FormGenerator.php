@@ -10,7 +10,6 @@
 
 namespace App\Admin;
 
-use Encore\Admin\Form;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -63,13 +62,7 @@ class FormGenerator extends Generator
                 $options = [];
 
                 $name = ucfirst($field);
-                // Mauvais nommage: https://github.com/laravel/framework/issues/26866.
-                if (method_exists($relation, 'getForeignKey')) {
-                    $field = $relation->getForeignKey();
-                } else {
-                    $field = $relation->getForeignKeyName();
-                }
-
+                $field .= '_id';
                 $generatedField = $this->generated->select($field, $name);
 
                 foreach ($type as $instance) {
