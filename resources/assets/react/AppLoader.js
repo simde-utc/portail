@@ -11,7 +11,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import LoadingScreen from 'react-loading-screen';
-import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
 
 import { library } from '@fortawesome/fontawesome-svg-core';

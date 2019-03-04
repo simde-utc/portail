@@ -47,7 +47,11 @@ class Access extends React.Component {
 			<ListGroupItem color={color}>
 				<div className="container row">
 					<div className="col-md-4">
-						<Img images={access.member.image} style={{ height: '30px', paddingRight: '10px' }} />
+						<Img
+							image={access.member.image}
+							style={{ height: '30px', paddingRight: '10px' }}
+							unloader={<FontAwesomeIcon className="pr-2" size="2x" icon="user-alt" />}
+						/>
 						{access.member.name}
 					</div>
 					<div className="col-md-3">{access.access.name}</div>
@@ -64,13 +68,13 @@ class Access extends React.Component {
 							</Button>
 						)}
 						{!access.confirmed_by && canConfirm && (
-							<Button className="float-right">
-								<FontAwesomeIcon
-									icon="check"
-									onClick={() => {
-										confirm(access);
-									}}
-								/>
+							<Button
+								className="float-right"
+								onClick={() => {
+									confirm(access);
+								}}
+							>
+								<FontAwesomeIcon icon="check" />
 							</Button>
 						)}
 					</div>
