@@ -86,12 +86,7 @@ class GridGenerator extends Generator
                 && (($relation = $model->$field()) instanceof Relation)
                 && $data instanceof Collection) {
                 $name = ucfirst($field);
-                // Mauvais nommage: https://github.com/laravel/framework/issues/26866.
-                if (method_exists($relation, 'getForeignKey')) {
-                    $field = $relation->getForeignKey();
-                } else {
-                    $field = $relation->getForeignKeyName();
-                }
+                $field .= '_id';
             }
 
             $filter->equal($field, $name)->multipleSelect($options);

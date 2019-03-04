@@ -95,7 +95,13 @@ abstract class ResourceController extends Controller
      */
     public function show($model_id, Content $content)
     {
-        $show = new ShowGenerator($this->model::with($this->getWith())->findOrFail($model_id));
+        $model = $this->model::with($this->getWith());
+
+        if (method_exists(new $this->model, 'trashed')) {
+            $model = $model->withTrashed();
+        }
+
+        $show = new ShowGenerator($model->findOrFail($model_id));
 
         $show->addFields(array_keys($this->getFields()));
 
