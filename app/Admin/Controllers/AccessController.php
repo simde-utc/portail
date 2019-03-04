@@ -42,24 +42,24 @@ class AccessController extends Controller
         ]);
 
         $grid->get()->role()->sortable()->display(function () {
-			$asso = Asso::find($this->asso_id);
+            $asso = Asso::find($this->asso_id);
 
-			if ($asso) {
-				$user = $asso->currentMembers()->wherePivot('user_id', $this->member['id'])->first();
+            if ($asso) {
+                $user = $asso->currentMembers()->wherePivot('user_id', $this->member['id'])->first();
 
-				if ($user) {
-					$this->role = Role::find($user->pivot->role_id, $this->asso);
+                if ($user) {
+                    $this->role = Role::find($user->pivot->role_id, $this->asso);
 
-					return GridGenerator::modelToTable($this->role->toArray());
-				}
-			}
+                    return GridGenerator::modelToTable($this->role->toArray());
+                }
+            }
         });
 
-		$grid->get()->acces('Accès')->sortable()->display(function () {
-			$access = $this->access;
+        $grid->get()->acces('Accès')->sortable()->display(function () {
+            $access = $this->access;
 
-			return $access->name.' ('.$access->utc_access.')';
-		});
+            return $access->name.' ('.$access->utc_access.')';
+        });
 
         $grid->addFields([
             'semester' => Semester::get(['id', 'name']),
