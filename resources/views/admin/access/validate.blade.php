@@ -1,10 +1,10 @@
 <div class="btn-group">
-  <button class="btn btn-sm btn-twitter" data-toggle="modal" data-target="#accept-modal">
+  <button class="btn btn-sm btn-twitter" data-toggle="modal" data-target="#accept-modal-{{ $access->id }}">
     <i class="fa fa-check"></i><span class="hidden-xs"> Répondre</span>
   </button>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="accept-modal">
+<div class="modal fade" tabindex="-1" role="dialog" id="accept-modal-{{ $access->id }}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
