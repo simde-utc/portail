@@ -207,10 +207,6 @@ class RolesTableSeeder extends Seeder
                 'owned_by' => new Asso,
                 'parents' => [
                     'vice-president',
-                    'secretaire general',
-                    'vice-secretaire',
-                    'treasury',
-                    'vice-treasury',
                 ],
                 'permissions' => [
                     'booking',
