@@ -1,0 +1,37 @@
+version: '2'
+services:
+
+  # The Application
+  app:
+    build:
+      context: ./
+      dockerfile: docker/app.dockerfile
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+
+  # The Web Server
+  web:
+    build:
+      context: ./
+      dockerfile: docker/web.dockerfile
+    working_dir: /var/www
+    volumes_from:
+      - app
+    ports:
+      - 8080:80
+
+  # The Database
+  database:
+    image: mysql:5.6
+    volumes:
+      - dbdata:/var/lib/mysql
+    environment:
+      - "MYSQL_ROOT_PASSWORD=portail"
+      - "MYSQL_DATABASE=portail"
+      - "MYSQL_USERNAME=portail"
+    ports:
+        - "33061:3306"
+
+volumes:
+  dbdata:
