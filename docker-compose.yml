@@ -1,5 +1,12 @@
-version: '2'
+version: '3.7'
 services:
+  redis:
+    image: redis
+    container_name: cache
+    volumes:
+      - redisdata:/data
+    expose:
+      - 6379
 
   # The Application
   app:
@@ -7,6 +14,9 @@ services:
       context: ./
       dockerfile: docker/app.dockerfile
     working_dir: /var/www
+    depends_on:
+      - redis
+      - database
     volumes:
       - ./:/var/www
 
@@ -16,7 +26,10 @@ services:
       context: ./
       dockerfile: docker/web.dockerfile
     working_dir: /var/www
-    volumes_from:
+    depends_on:
+      - redis
+      - database
+    volumes:
       - app
     ports:
       - 8080:80
@@ -35,3 +48,4 @@ services:
 
 volumes:
   dbdata:
+  redisdata:

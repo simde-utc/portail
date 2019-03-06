@@ -14,5 +14,3 @@ RUN php -r "readfile('https://getcomposer.org/installer');" | php \
   && composer install --no-autoloader --no-scripts
 
 COPY . /var/www/html
-
-RUN composer install
