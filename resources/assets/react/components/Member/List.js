@@ -37,11 +37,11 @@ class MemberList extends React.Component {
 				member.pivot.semester_id === currentSemester.id &&
 				(isMember ||
 					user.id === member.id ||
-					(lastRoleId === member.pivot.role_id && !member.pivot.validated_by))
+					(lastRoleId === member.pivot.role_id && !member.pivot.validated_by_id))
 			) {
 				props.footer = (
 					<div>
-						{(isMember || lastRoleId === member.pivot.role_id) && !member.pivot.validated_by && (
+						{(isMember || lastRoleId === member.pivot.role_id) && !member.pivot.validated_by_id && (
 							<Button
 								color="success"
 								className="m-1 font-weight-bold"
