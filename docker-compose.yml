@@ -29,8 +29,6 @@ services:
     working_dir: /var/www
     depends_on:
       - app
-    ports:
-      - 8081:80
     volumes:
       - ./:/var/www
   # The Web Server
