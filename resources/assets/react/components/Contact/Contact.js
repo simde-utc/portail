@@ -27,16 +27,49 @@ class Contact extends React.Component {
 		}
 	}
 
+	static castValue(type, value) {
+		switch (type) {
+			case 'email':
+				return (
+					<a href={`mailto:${value}`} target="_blank" rel="noopener noreferrer">
+						{value}
+					</a>
+				);
+
+			case 'url':
+			case 'facebook':
+			case 'twitter':
+			case 'linkedin':
+			case 'snapchat':
+			case 'instagram':
+				return (
+					<a href={value} target="_blank" rel="noopener noreferrer">
+						{value}
+					</a>
+				);
+
+			case 'other':
+			default:
+				return (
+					<CopyToClipboard value={value}>
+						<span>{value}</span>
+					</CopyToClipboard>
+				);
+		}
+	}
+
 	render() {
 		const { className, type, name, value } = this.props;
 
 		return (
 			<div className={className}>
-				<FontAwesomeIcon className="mr-2" icon={Contact.getIcon(type)} />
-				<span className="font-weight-bold mr-2">{name}:</span>
 				<CopyToClipboard value={value}>
-					<span>{value}</span>
+					<span>
+						<FontAwesomeIcon className="mr-2" icon={Contact.getIcon(type)} />
+						<span className="font-weight-bold mr-2">{name}:</span>
+					</span>
 				</CopyToClipboard>
+				{Contact.castValue(type, value)}
 			</div>
 		);
 	}
