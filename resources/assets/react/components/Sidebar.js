@@ -74,6 +74,16 @@ class Sidebar extends React.Component {
 								to="/settings/sidebar/utc"
 							/>
 						</h6>
+						{isAuthenticated && !user.types.contributorBde && (
+							<a
+								className="sidebar-link"
+								target="_blank"
+								rel="noopener noreferrer"
+								href="https://assos.utc.fr/bde/bdecotiz"
+							>
+								<FontAwesomeIcon icon="money-bill" /> Cotiser au BDE-UTC
+							</a>
+						)}
 						<a
 							className="sidebar-link"
 							target="_blank"
