@@ -9,7 +9,6 @@
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
  */
-
 return [
     'name' => env('APP_NAME', 'Laravel'),
 
@@ -25,7 +24,7 @@ return [
 
     'fallback_locale' => 'en',
 
-    'key' => env('APP_KEY'),
+    'key' => "base64:yQXU/vmHEC8s0K4lakW19+8tDgoB/nGecpaC1ZPyABM=",//env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
 

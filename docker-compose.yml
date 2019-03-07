@@ -15,11 +15,24 @@ services:
       dockerfile: docker/app.dockerfile
     working_dir: /var/www
     depends_on:
-      - redis
       - database
+      - redis
     volumes:
       - ./:/var/www
+    env_file:
+      - ./docker/.env.docker
 
+  nodejs:
+    build:
+      context: ./
+      dockerfile: docker/node.dockerfile
+    working_dir: /var/www
+    depends_on:
+      - app
+    ports:
+      - 8081:80
+    volumes:
+      - ./:/var/www
   # The Web Server
   web:
     build:
@@ -27,10 +40,9 @@ services:
       dockerfile: docker/web.dockerfile
     working_dir: /var/www
     depends_on:
-      - redis
-      - database
-    volumes:
       - app
+    volumes:
+      - ./:/var/www
     ports:
       - 8080:80
 
@@ -40,9 +52,8 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
     environment:
-      - "MYSQL_ROOT_PASSWORD=portail"
-      - "MYSQL_DATABASE=portail"
-      - "MYSQL_USERNAME=portail"
+      - MYSQL_ROOT_PASSWORD=portail
+      - MYSQL_DATABASE=portail
     ports:
         - "33061:3306"
 
