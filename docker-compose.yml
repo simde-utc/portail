@@ -17,6 +17,7 @@ services:
     depends_on:
       - database
       - redis
+      - nodejs
     volumes:
       - ./:/var/www
     env_file:
@@ -27,8 +28,6 @@ services:
       context: ./
       dockerfile: docker/node.dockerfile
     working_dir: /var/www
-    depends_on:
-      - app
     volumes:
       - ./:/var/www
   # The Web Server
