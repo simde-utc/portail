@@ -24,7 +24,7 @@ return [
 
     'fallback_locale' => 'en',
 
-    'key' => "base64:yQXU/vmHEC8s0K4lakW19+8tDgoB/nGecpaC1ZPyABM=",//env('APP_KEY'),
+    'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
 
