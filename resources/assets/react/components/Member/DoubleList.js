@@ -5,8 +5,8 @@ import List from './List';
 
 const DoubleList = props => {
 	const { join, isCurrentSemester, members } = props;
-	const acceptedMembers = members.filter(member => member.pivot && member.pivot.validated_by);
-	const notAcceptedMembers = members.filter(member => member.pivot && !member.pivot.validated_by);
+	const acceptedMembers = members.filter(member => member.pivot && member.pivot.validated_by_id);
+	const notAcceptedMembers = members.filter(member => member.pivot && !member.pivot.validated_by_id);
 
 	return (
 		<div className="container DoubleList">
