@@ -243,19 +243,11 @@ class MemberController extends Controller
         $semester = $this->getSemester($request, $choices, 'remove');
         $asso = $this->getAsso($request, $asso_id);
         $user = $this->getUserFromAsso($request, $asso, $member_id, $semester);
-        $forceRemove = ($user->id === \Auth::id())
-	        || (
-		        Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id
-		        && $user->pivot->validated_by_id
-	        ) || (
-		        ($lastUser = $asso->getLastUserWithRole(config('portail.roles.admin.assos')))
-		        && $lastUser->id === \Auth::id()
-        	);
 
         if ($asso->removeMembers($user, [
             'role_id' => $user->pivot->role_id,
             'semester_id' => $user->pivot->semester_id,
-        ], \Auth::id(), $forceRemove)) {
+        ], \Auth::id())) {
             abort(204);
         } else {
             abort(500, 'Impossible de retirer la personne de l\'association');
