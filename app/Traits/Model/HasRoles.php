@@ -64,7 +64,7 @@ trait HasRoles
      * Permet d'assigner un ou plusieurs roles attribués en fonction des données fournis.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data  Possibilité d'affecter role_id, semester_id, validated_by, user_id.
+     * @param array                                                $data  Possibilité d'affecter role_id, semester_id, validated_by_id, user_id.
      * @param boolean                                              $force Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
      */
@@ -74,8 +74,8 @@ trait HasRoles
         $addRoles = [];
         $manageableRoles = collect();
 
-        if (isset($data['validated_by']) || \Auth::id()) {
-            $manageableRoles = $this->getUserRoles(($data['validated_by'] ?? \Auth::id()));
+        if (isset($data['validated_by_id']) || \Auth::id()) {
+            $manageableRoles = $this->getUserRoles(($data['validated_by_id'] ?? \Auth::id()));
         }
 
         $nbr = @(count($roles) ?? 1);
@@ -89,7 +89,7 @@ trait HasRoles
             if (!$force) {
                 if ($role->limited_at !== null) {
                     $users = $role->users()->wherePivotIn('semester_id', [0, $data['semester_id']])
-                        ->wherePivot('validated_by', '!=', null);
+                        ->wherePivot('validated_by_id', '!=', null);
 
                     if ($users->count() >= $role->limited_at) {
                         throw new PortailException('Le nombre de personnes ayant ce role a été dépassé. \
@@ -97,7 +97,7 @@ trait HasRoles
                     }
                 }
 
-                if (isset($data['validated_by']) || \Auth::id()) {
+                if (isset($data['validated_by_id']) || \Auth::id()) {
                     if (!$manageableRoles->contains('id', $role->id)) {
                         throw new PortailException('La personne demandant la validation n\'est pas habilitée à donner \
                             ce rôle: '.$role->name);
@@ -121,8 +121,8 @@ trait HasRoles
      * Permet de modifier un ou plusieurs roles attribués en fonction des données fournis.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data        Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
-     * @param array                                                $updatedData Possibilité d'affecter role_id, semester_id, validated_by, user_id.
+     * @param array                                                $data        Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
+     * @param array                                                $updatedData Possibilité d'affecter role_id, semester_id, validated_by_id, user_id.
      * @param boolean                                              $force       Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
      */
@@ -133,8 +133,8 @@ trait HasRoles
         $updatedRoles = [];
         $manageableRoles = collect();
 
-        if (isset($updatedData['validated_by']) || \Auth::id()) {
-            $manageableRoles = $this->getUserRoles(($updatedData['validated_by'] ?? \Auth::id()));
+        if (isset($updatedData['validated_by_id']) || \Auth::id()) {
+            $manageableRoles = $this->getUserRoles(($updatedData['validated_by_id'] ?? \Auth::id()));
         }
 
         $nbr = @(count($roles) ?? 1);
@@ -145,7 +145,7 @@ trait HasRoles
         }
 
         foreach ($roles as $role) {
-            if (!$force && (isset($updatedData['validated_by']) || \Auth::id())) {
+            if (!$force && (isset($updatedData['validated_by_id']) || \Auth::id())) {
                 if (!$manageableRoles->contains('id', $role->id)) {
                     throw new PortailException('La personne demandant la validation n\'est pas habilitée à modifier \
                         ce rôle: '.$role->name);
@@ -176,7 +176,7 @@ trait HasRoles
      * Permet de supprimer un ou plusieurs roles attribués en fonction des données fournis.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data       Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param array                                                $data       Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @param string                                               $removed_by Personne demandant la suppression.
      * @param boolean                                              $force      Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
@@ -229,7 +229,7 @@ trait HasRoles
      * Permet de synchroniser (tout supprimer et assigner de nouveaux) un ou plusieurs roles en fonction des données fournis.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data       Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param array                                                $data       Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @param string                                               $removed_by Personne demandant la suppression.
      * @param boolean                                              $force      Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
@@ -259,7 +259,7 @@ trait HasRoles
      * Regarde si un role parmi la liste a été donné ou non.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data  Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param array                                                $data  Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @return boolean
      */
     public function hasOneRole($roles, array $data=[])
@@ -273,7 +273,7 @@ trait HasRoles
      * Regarde si tous les roles parmi la liste existe ou non.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data  Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param array                                                $data  Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @return boolean
      */
     public function hasAllRoles($roles, array $data=[])
@@ -311,14 +311,14 @@ trait HasRoles
         $roles = $roles->wherePivotIn('semester_id', [0, $semester_id]);
 
         if ($needToBeValidated) {
-            $roles = $roles->wherePivot('validated_by', '!=', null);
+            $roles = $roles->wherePivot('validated_by_id', '!=', null);
         }
 
         return $roles->where(function ($query) {
                 return $query->where('owned_by_id', $this->id)
                     ->orWhereNull('owned_by_id');
         })->where('owned_by_type', get_class($this))
-            ->withPivot(['validated_by', 'semester_id'])->get();
+            ->withPivot(['validated_by_id', 'semester_id'])->get();
     }
 
     /**
@@ -340,7 +340,7 @@ trait HasRoles
             $role->makeHidden('children');
         }
 
-        return $roles;
+        return $roles->unique('id');
     }
 
     /**

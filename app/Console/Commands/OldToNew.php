@@ -624,7 +624,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                         $model = $asso->assignMembers($user->id, [
                             'role_id' => $role->id,
                             'semester_id' => $semester->id,
-                            'validated_by' => $user->id,
+                            'validated_by_id' => $user->id,
                             'created_at' => $member->created_at ?: now(),
                             'updated_at' => $member->updated_at ?: now(),
                         ], true);

@@ -87,13 +87,13 @@ class UsersTableSeeder extends Seeder
                 'firstname' => $user['firstname'],
                 'lastname'  => strtoupper($user['lastname']),
             ])->assignRoles($user['role'], [
-                'validated_by' => User::first()->id,
+                'validated_by_id' => User::first()->id,
             ], true);
 
             foreach (($user['assos'] ?? []) as $name => $role) {
                 Asso::where('login', $name)->first()->assignRoles($role, [
                     'user_id' => $model->id,
-                    'validated_by' => User::first()->id,
+                    'validated_by_id' => User::first()->id,
                 ], true);
             }
         }

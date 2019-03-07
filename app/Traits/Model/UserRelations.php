@@ -84,7 +84,7 @@ trait UserRelations
      */
     public function assos()
     {
-        return $this->belongsToMany(Asso::class, 'assos_members')->withPivot('semester_id', 'role_id', 'validated_by');
+        return $this->belongsToMany(Asso::class, 'assos_members')->withPivot('semester_id', 'role_id', 'validated_by_id');
     }
 
     /**
@@ -104,8 +104,8 @@ trait UserRelations
      */
     public function joinedAssos()
     {
-        return $this->belongsToMany(Asso::class, 'assos_members')->whereNotNull('validated_by')->whereNotNull('role_id')
-            ->withPivot('semester_id', 'role_id', 'validated_by');
+        return $this->belongsToMany(Asso::class, 'assos_members')->whereNotNull('validated_by_id')->whereNotNull('role_id')
+            ->withPivot('semester_id', 'role_id', 'validated_by_id');
     }
 
     /**
@@ -125,8 +125,8 @@ trait UserRelations
      */
     public function joiningAssos()
     {
-        return $this->belongsToMany(Asso::class, 'assos_members')->whereNull('validated_by')->whereNotNull('role_id')
-            ->withPivot('semester_id', 'role_id', 'validated_by');
+        return $this->belongsToMany(Asso::class, 'assos_members')->whereNull('validated_by_id')->whereNotNull('role_id')
+            ->withPivot('semester_id', 'role_id', 'validated_by_id');
     }
 
     /**
@@ -147,7 +147,7 @@ trait UserRelations
     public function followedAssos()
     {
         return $this->belongsToMany(Asso::class, 'assos_members')->whereNull('role_id')
-        ->withPivot('semester_id', 'role_id', 'validated_by');
+        ->withPivot('semester_id', 'role_id', 'validated_by_id');
     }
 
     /**

@@ -127,9 +127,9 @@ class AssoController extends Controller
 
         if (isset($request['validate'])) {
             $asso->updateRoles(config('portail.roles.admin.assos'), [
-                'validated_by' => null,
+                'validated_by_id' => null,
             ], [
-                'validated_by' => \Auth::id(),
+                'validated_by_id' => \Auth::id(),
             ], $asso->getLastUserWithRole(config('portail.roles.admin.assos'))->id === \Auth::id());
 
             return response()->json($asso, 200);
