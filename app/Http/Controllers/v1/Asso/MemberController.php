@@ -81,7 +81,7 @@ class MemberController extends Controller
     protected function addRolesAndPermissions(Asso $asso, User $member)
     {
         // Ici, on va auto-affecter les droits et permissions que l'utilisateur doit posséder.
-        if ($member->pivot->validated_by) {
+        if ($member->pivot->validated_by_id) {
             $role = Role::find($member->pivot->role_id, $asso);
 
             $roles = (array) config('portail.roles.assos.'.($asso->login).'.'.($role->type), []);
@@ -90,7 +90,7 @@ class MemberController extends Controller
                 try {
                     $member->assignRoles($roles, [
                         'semester_id' => $member->pivot->semester_id,
-                        'validated_by' => $member->id,
+                        'validated_by_id' => $member->id,
                     ], true);
                 } catch (\Exception $e) {
                     // On ignore l'erreur.
@@ -103,7 +103,7 @@ class MemberController extends Controller
                 try {
                     $member->assignPermissions($permissions, [
                         'semester_id' => $member->pivot->semester_id,
-                        'validated_by' => $member->id,
+                        'validated_by_id' => $member->id,
                     ], true);
                 } catch (\Exception $e) {
                     // On ignore l'erreur.
@@ -132,7 +132,7 @@ class MemberController extends Controller
             ->map(function ($member) {
                 $member->pivot = [
                     'role_id' => $member->role_id,
-                    'validated_by' => $member->validated_by,
+                    'validated_by_id' => $member->validated_by_id,
                     'semester_id' => $member->semester_id,
                 ];
 
@@ -219,7 +219,7 @@ class MemberController extends Controller
             'role_id' => $user->pivot->role_id,
             'semester_id' => $user->pivot->semester_id,
         ], [
-            'validated_by' => \Auth::id(),
+            'validated_by_id' => \Auth::id(),
         ], $forceUpdate);
         // Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité.
         $member = $this->getUserFromAsso($request, $asso, $member_id, $semester);
@@ -246,7 +246,7 @@ class MemberController extends Controller
         $forceRemove = ($user->id === \Auth::id())
 	        || (
 		        Role::getRole(config('portail.roles.admin.assos'), $asso)->id === $user->pivot->role_id
-		        && $user->pivot->validated_by
+		        && $user->pivot->validated_by_id
 	        ) || (
 		        ($lastUser = $asso->getLastUserWithRole(config('portail.roles.admin.assos')))
 		        && $lastUser->id === \Auth::id()

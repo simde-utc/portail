@@ -79,7 +79,7 @@ class AssignmentController extends Controller
 
         $request->resource->assignPermissions($request->input('permission_id'), [
             'user_id' => (\Auth::id() ?? $request->input('user_id')),
-            'validated_by' => (\Auth::id() ?? $request->input('validated_by')),
+            'validated_by_id' => (\Auth::id() ?? $request->input('validated_by_id')),
             'semester_id' => $semester_id
         ], \Scopes::isClientToken($request));
 
