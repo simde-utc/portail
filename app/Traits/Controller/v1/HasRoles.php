@@ -61,11 +61,11 @@ trait HasRoles
 
         $role = $user->roles()->wherePivot('role_id', $role_id)
         ->wherePivot('semester_id', $semester_id)
-        ->withPivot(['semester_id', 'validated_by'])->first();
+        ->withPivot(['semester_id', 'validated_by_id'])->first();
 
         if ($role) {
             $role->semester_id = $role->pivot->semester_id;
-            $role->validated_by = $role->pivot->validated_by;
+            $role->validated_by_id = $role->pivot->validated_by_id;
 
             return $role->makeHidden('pivot');
         } else {

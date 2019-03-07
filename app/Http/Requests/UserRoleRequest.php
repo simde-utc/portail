@@ -26,7 +26,7 @@ class UserRoleRequest extends Request
                 ->exists('roles', 'id')
                 ->post('required')
                 ->get(),
-            'validated_by' => Validation::type('uuid')
+            'validated_by_id' => Validation::type('uuid')
                 ->exists('users', 'id')
                 ->get(),
             'semester_id' => Validation::type('uuid')

@@ -58,7 +58,7 @@ trait HasPermissions
      * Permet d'assigner une ou plusieures permissions attribués en fonction des données fournis.
      *
      * @param  string|array|Collection $permissions
-     * @param  array                   $data        Possibilité d'affecter permission_id, semester_id, validated_by, user_id.
+     * @param  array                   $data        Possibilité d'affecter permission_id, semester_id, validated_by_id, user_id.
      * @param  boolean                 $force       Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
      */
@@ -68,13 +68,13 @@ trait HasPermissions
         $addPermissions = [];
         $manageablePerms = collect();
 
-        if (isset($data['validated_by']) || \Auth::id()) {
-            $manageablePerms = $this->getUserPermissions(($data['validated_by'] ?? \Auth::id()));
+        if (isset($data['validated_by_id']) || \Auth::id()) {
+            $manageablePerms = $this->getUserPermissions(($data['validated_by_id'] ?? \Auth::id()));
         }
 
         foreach (Permission::getPermissions(stringToArray($permissions), $this) as $permission) {
             if (!$force) {
-                if (isset($data['validated_by']) || \Auth::id()) {
+                if (isset($data['validated_by_id']) || \Auth::id()) {
                     if (!$manageablePerms->contains('id', $permission->id)) {
                         throw new PortailException('La personne demandant la validation n\'est pas habilitée à \
                             donner cette permission: '.$permission->name);
@@ -98,8 +98,8 @@ trait HasPermissions
      * Permet de modifier une ou plusieures permissions attribués en fonction des données fournis.
      *
      * @param  string|array|Collection $permissions
-     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
-     * @param  array                   $updatedData Possibilité d'affecter permission_id, semester_id, validated_by, user_id.
+     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $updatedData Possibilité d'affecter permission_id, semester_id, validated_by_id, user_id.
      * @param  boolean                 $force       Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
      */
@@ -110,12 +110,12 @@ trait HasPermissions
         $updatedPermissions = [];
         $manageablePerms = collect();
 
-        if (isset($updatedData['validated_by']) || \Auth::id()) {
-            $manageablePerms = $this->getUserPermissions(($updatedData['validated_by'] ?? \Auth::id()));
+        if (isset($updatedData['validated_by_id']) || \Auth::id()) {
+            $manageablePerms = $this->getUserPermissions(($updatedData['validated_by_id'] ?? \Auth::id()));
         }
 
         foreach (Permission::getPermissions(stringToArray($permissions), $this) as $permission) {
-            if (!$force && (isset($updatedData['validated_by']) || \Auth::id())) {
+            if (!$force && (isset($updatedData['validated_by_id']) || \Auth::id())) {
                 if (!$manageablePerms->contains('id', $permission->id)) {
                     throw new PortailException('La personne demandant la validation n\'est pas habilitée à \
                         modifier cette permission: '.$permission->name);
@@ -146,7 +146,7 @@ trait HasPermissions
      * Permet de supprimer une ou plusieures permissions attribués en fonction des données fournis.
      *
      * @param  string|array|Collection $permissions
-     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @param  string                  $removed_by  Personne demandant la suppression.
      * @param  boolean                 $force       Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
@@ -192,7 +192,7 @@ trait HasPermissions
      * Permet de synchroniser (tout supprimer et assigner de nouveaux) une ou plusieures permissions en fonction des données fournis.
      *
      * @param  string|array|Collection $permissions
-     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @param  string                  $removed_by  Personne demandant la suppression.
      * @param  boolean                 $force       Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
@@ -222,7 +222,7 @@ trait HasPermissions
      * Regarde si une permission parmi la liste a été donnée ou non.
      *
      * @param  string|array|Collection $permissions
-     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @return boolean
      */
     public function hasOnePermission($permissions, array $data=[])
@@ -235,7 +235,7 @@ trait HasPermissions
     /** Regarde si toutes les permissions parmi la liste existe ou non.
      *
      * @param  string|array|Collection $permissions
-     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @return boolean
      */
     public function hasAllPermissions($permissions, array $data=[])
@@ -269,14 +269,14 @@ trait HasPermissions
         $permissions = $permissions->wherePivotIn('semester_id', [0, $semester_id]);
 
         if ($needToBeValidated) {
-            $permissions = $permissions->wherePivot('validated_by', '!=', null);
+            $permissions = $permissions->wherePivot('validated_by_id', '!=', null);
         }
 
         return $permissions->where(function ($query) {
                 return $query->where('owned_by_id', $this->id)
                     ->orWhereNull('owned_by_id');
         })->where('owned_by_type', get_class($this))
-            ->withPivot(['validated_by', 'semester_id'])->get();
+            ->withPivot(['validated_by_id', 'semester_id'])->get();
     }
 
     /**

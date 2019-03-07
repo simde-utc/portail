@@ -19,7 +19,12 @@ Route::get('auth/logout', 'AuthController@getLogout');
 Route::get('charts', 'ChartsController@index')->name('charts-index');
 
 Route::get('access', 'AccessController@index')->name('access-index');
-Route::post('access/{access_id}', 'AccessController@store')->name('access-store');
+Route::put('access/{access_id}', 'AccessController@store')->name('access-store');
+
+Route::get('assos/members', 'AssoMemberController@index')->name('asso-member-index');
+Route::post('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@store')->name('asso-member-validate');
+Route::put('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@update')->name('asso-member-update');
+Route::delete('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@delete')->name('asso-member-delete');
 
 Route::get('search/user', 'SearchUserController@index')->name('search-user-index');
 Route::post('search/user', 'SearchUserController@search')->name('search-user-search');

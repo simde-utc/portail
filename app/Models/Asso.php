@@ -25,6 +25,7 @@ use App\Interfaces\Model\{
 };
 use Illuminate\Support\Collection;
 use App\Exceptions\PortailException;
+use App\Pivots\AssoMember;
 
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles,
 	CanNotify, CanHaveRooms, CanHaveBookings, CanHaveRoles, CanHavePermissions, CanComment
@@ -179,7 +180,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      */
     public function currentMembers()
     {
-        return $this->currentMembersAndFollowers()->wherePivot('role_id', '!=', null);
+        return $this->currentMembersAndFollowers()->wherePivot('role_id', '!=', null)->using(AssoMember::class);
     }
 
     /**

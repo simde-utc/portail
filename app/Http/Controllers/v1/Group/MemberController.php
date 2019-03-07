@@ -125,7 +125,7 @@ class MemberController extends Controller
                 $data = [
                     'semester_id'  => $request->input('semester_id', $member->pivot->semester_id),
                     'role_id'      => $request->input('role_id', $member->pivot->role_id),
-                    'validated_by' => $member_id,
+                    'validated_by_id' => $member_id,
                 ];
             } else {
                 $data = [

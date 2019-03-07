@@ -75,7 +75,7 @@ class RoleController extends Controller
         $semester_id = Semester::getSemester($request->input('semester'))->id;
 
         $roles = $user->roles()->wherePivot('semester_id', $semester_id)
-            ->withPivot('semester_id', 'validated_by')->getSelection()
+            ->withPivot('semester_id', 'validated_by_id')->getSelection()
             ->map(function ($role) {
                 return $role->hideData();
             });
@@ -96,7 +96,7 @@ class RoleController extends Controller
         $user = $this->getUser($request, $user_id, true);
 
         $user->assignRoles($request->input('role_id'), [
-            'validated_by' => (\Auth::id() ?? $request->input('validated_by')),
+            'validated_by_id' => (\Auth::id() ?? $request->input('validated_by_id')),
             'semester_id' => Semester::getSemester($request->input('semester_id'))->id
         ], \Scopes::isClientToken($request));
         $role = $this->getRoleFromUser($request, $user, $request->input('role_id'));
