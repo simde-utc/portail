@@ -12,7 +12,6 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { sortBy } from 'lodash';
 import { NavLink } from 'react-router-dom';
 import actions from '../redux/actions';
 
@@ -25,6 +24,11 @@ import AssoCard from '../components/AssoCard';
 	fetched: store.isFetched('assos'),
 }))
 class AssoListScreen extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = { searchQuery: '' };
+	}
+
 	componentWillMount() {
 		const { dispatch } = this.props;
 
@@ -35,65 +39,34 @@ class AssoListScreen extends React.Component {
 		);
 	}
 
-	static getStage(assos, parent) {
+	getGrid(assos, filter) {
+		const filteredList = assos.filter(function(asso) {
+			const assoName = asso.shortname.toLowerCase();
+			return assoName.indexOf(filter.toLowerCase()) !== -1;
+		});
+		console.log('r', filteredList);
 		return (
-			<div key={parent.id} className="pole-container">
-				<NavLink key={parent.id} to={`assos/${parent.login}`}>
-					<h2>{parent.shortname}</h2>
-					<small>{parent.name}</small>
-				</NavLink>
-				<div>
-					{assos.map(asso => {
-						return (
-							<NavLink key={asso.id} to={`assos/${asso.login}`}>
-								<AssoCard
-									onClick={() => window.history.push(`assos/${asso.login}`)}
-									key={asso.id}
-									name={asso.name}
-									shortname={asso.shortname}
-									image={asso.image}
-									login={parent.login}
-								/>
-							</NavLink>
-						);
-					})}
-				</div>
+			<div className="assosContainer">
+				{filteredList.map(asso => {
+					return (
+						<NavLink key={asso.id} to={`assos/${asso.login}`}>
+							<AssoCard
+								onClick={() => window.history.push(`assos/${asso.login}`)}
+								key={asso.id}
+								name={asso.name}
+								shortname={asso.shortname}
+								image={asso.image}
+								login={asso.parent ? asso.parent.login : asso.login}
+							/>
+						</NavLink>
+					);
+				})}
 			</div>
 		);
 	}
 
-	static getStages(assos) {
-		const categories = assos.reduce((acc, asso) => {
-			if (asso.parent) {
-				const { id } = asso.parent;
-
-				if (acc[id] === undefined) {
-					acc[id] = {
-						asso: asso.parent,
-						assos: [asso],
-					};
-				} else {
-					acc[id].assos.push(asso);
-				}
-			} else {
-				const { id } = asso;
-
-				if (acc[id]) {
-					acc[id].assos.push(asso);
-				} else {
-					acc[id] = {
-						asso,
-						assos: [asso],
-					};
-				}
-			}
-
-			return acc;
-		}, {});
-
-		return sortBy(categories, category => category.asso.shortname).map(({ assos, asso }) =>
-			AssoListScreen.getStage(assos, asso)
-		);
+	handleSearch(event) {
+		this.setState({ searchQuery: event.target.value });
 	}
 
 	render() {
@@ -104,8 +77,18 @@ class AssoListScreen extends React.Component {
 			<div className="container">
 				<h1 className="title">Liste des associations</h1>
 				<div className="content">
+					<div className="searchContainer">
+						<div className="searchBar">
+							<input
+								className="searchInput"
+								name="Recherche"
+								onChange={this.handleSearch.bind(this)}
+							/>
+							<i className="fa fa-search" />
+						</div>
+					</div>
 					<span className={`loader large${fetching ? ' active' : ''}`} />
-					{AssoListScreen.getStages(assos)}
+					{!fetching && this.getGrid(assos, this.state.searchQuery)}
 				</div>
 			</div>
 		);

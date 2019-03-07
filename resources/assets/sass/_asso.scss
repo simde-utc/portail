@@ -1,3 +1,43 @@
+.assosContainer {
+	margin: 10px 3px;
+	text-align: center;
+}
+.searchContainer {
+	text-align: center;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.searchContainer .searchBar {
+	display: inline-flex;
+	justify-content: flex-end;
+	border-radius: 10px;
+	box-shadow: 0 10px 48px -9px rgba(0,0,0,0.23);
+	height: 50px;
+	width: 80%;
+	max-width: 500px;
+	margin: 20px;
+}
+
+.searchContainer .searchBar .searchInput {
+	border: none;
+	padding: 10px;
+	border-radius: 10px;
+	display: block;
+	outline: none;
+	width: 100%;
+	max-width: 500px;
+}
+.searchContainer .searchBar .searchIcon {
+	border: none;
+	padding: 10px;
+	border-radius: 10px;
+	display: block;
+	outline: none;
+	width: 100%;
+	max-width: 500px;
+}
+
 .asso {
 	position: relative;
 	padding-top: 44px;
@@ -53,28 +93,7 @@
 	border-bottom: 1px solid $gray-light;
 }
 
-
-.pole-container{
-	vertical-align: top;
-	text-align: center;
-	border-radius: 10px;
-	border-color: black;
-	margin: 20px;
-	padding: 15px;
-	box-shadow: 0 10px 48px -10px rgba(0,0,0,0.23);
-}
-.pole-container h2{
-	font-size: 30px;
-}
-
-.pole-container > div {
-	overflow-x: auto;
-	white-space: nowrap;
-	border-radius: 10px;
-	padding: 15px;
-}
-
-.asso-card{
+.asso-card {
 	vertical-align: top;
 	width: 200px;
 	height: 300px;
@@ -90,33 +109,33 @@
 }
 
 .thumbnail {
-  background-size: cover;
-  background-position: center;
-  width: 100%;
-  height: 200px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  display: table;
+	background-size: cover;
+	background-position: center;
+	width: 100%;
+	height: 200px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	display: table;
 }
 
 .asso-card:hover>.thumbnail>.overlay {
-  visibility: visible;
+	visibility: visible;
 }
 
 .asso-card .thumbnail .overlay {
-  display: flex;
-  visibility: hidden;
-  width: 100%;
-  height: 200px;
-  padding: 10%;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  vertical-align: middle;
-  text-align: center;
-  word-wrap: break-word;
-  color: white;
-  font-size: 20px;
-  overflow-y: auto;
+	display: flex;
+	visibility: hidden;
+	width: 100%;
+	height: 200px;
+	padding: 10%;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	vertical-align: middle;
+	text-align: center;
+	word-wrap: break-word;
+	color: white;
+	font-size: 20px;
+	overflow-y: auto;
 }
 .asso-card .thumbnail .overlay > div {
 	margin: auto;
@@ -138,10 +157,10 @@
 }
 
 .name-container{
-	 height: 100px;
-	 width: 100%;
-	 display: table;
- }
+	height: 100px;
+	width: 100%;
+	display: table;
+}
 
 .name-container .asso-shortname{
 	display: table-cell;
