@@ -39,8 +39,8 @@ class AssoListScreen extends React.Component {
 		);
 	}
 
-	getGrid(assos, filter) {
-		const filteredList = assos.filter(function(asso) {
+	static getGrid(assos, filter) {
+		const filteredList = assos.filter(asso => {
 			const assoName = asso.shortname.toLowerCase();
 			return assoName.indexOf(filter.toLowerCase()) !== -1;
 		});
@@ -71,6 +71,7 @@ class AssoListScreen extends React.Component {
 
 	render() {
 		const { fetching, assos, config } = this.props;
+		const { searchQuery } = this.state;
 		config.title = 'Liste des associations';
 
 		return (
@@ -88,7 +89,7 @@ class AssoListScreen extends React.Component {
 						</div>
 					</div>
 					<span className={`loader large${fetching ? ' active' : ''}`} />
-					{!fetching && this.getGrid(assos, this.state.searchQuery)}
+					{!fetching && AssoListScreen.getGrid(assos, searchQuery)}
 				</div>
 			</div>
 		);
