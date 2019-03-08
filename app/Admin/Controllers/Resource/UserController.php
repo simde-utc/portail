@@ -329,15 +329,24 @@ class UserController extends Controller
 
         try {
             $user = $this->getUser($request, $user_id, true);
+            $ginger = \Ginger::userByEmail($user->email);
         } catch (\Exception $e) {
-            return redirect()->action(
+            $ginger = \Ginger::user($user_id);
+
+            if (!$ginger->exists()) {
+                return redirect()->action(
                 '\App\Admin\Controllers\Resource\UserController@index'
-            );
+                );
+            }
+
+            $user = new User([
+                'email' => $ginger->getEmail(),
+                'lastname' => $ginger->getLastname(),
+                'firstname' => $ginger->getFirstname(),
+            ]);
         }
 
-        $ginger = \Ginger::userByEmail($user->email);
-
-        if (!$ginger->exists() || $user->isContributorBde()) {
+        if (!$ginger->exists() || ($user->id && $user->isContributorBde())) {
             return redirect()->action(
                 '\App\Admin\Controllers\Resource\UserController@show', ['user_id' => $user_id]
             );
@@ -350,10 +359,10 @@ class UserController extends Controller
         $userNotification = new UserContributionBde($semesters, $money, \Auth::guard('admin')->user());
         $ginger->addContribution(now()->format('Y-m-d'), end($semesters)->end_at, $money);
 
-        $user->notify($userNotification);
+        if ($user->id) {
+            $user->notify($userNotification);
+        }
 
-        return redirect()->action(
-            '\App\Admin\Controllers\Resource\UserController@show', ['user_id' => $user_id]
-        );
+        return back();
     }
 }

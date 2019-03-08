@@ -82,12 +82,16 @@ class Cas extends BaseAuth
             ];
         }
 
-        if ($cas = AuthCas::findByEmail($email)) {
+        if (($cas = AuthCas::findByEmail($email)) || ($cas = AuthCas::where('login', $login)->first())) {
             $cas->update([
+                'email' => $email,
+                'login' => $login,
                 'is_confirmed' => $is_confirmed,
             ]);
 
             $user = $cas->user;
+            $user->email = $cas->email;
+            $user->save();
         } else {
             $user = $this->updateOrCreateUser(compact('email', 'firstname', 'lastname'));
             $cas = $this->createAuth($user->id, compact('login', 'email', 'is_confirmed'));

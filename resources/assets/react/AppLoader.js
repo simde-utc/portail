@@ -11,7 +11,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import LoadingScreen from 'react-loading-screen';
-import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -21,6 +20,8 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 
 import actions from './redux/actions';
 import bdeImage from '../images/bde.jpg';
+
+import 'moment/locale/fr';
 
 require('./bootstrap');
 
@@ -60,23 +61,30 @@ class AppLoader extends React.Component {
 		dispatch(actions.user.services.all());
 
 		library.add(fas, far, fab);
-		BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
+		moment.locale('fr');
 	}
 
 	// Permet d'afficher le chargement initial de la page
 	render() {
-		const { dataLoaded } = this.props;
+		const { dataLoaded, generateChildren } = this.props;
+
+		const isLoading = dataLoaded.some(loading => !loading);
+
+		// Lorsque le chargement est terminé, on génère la page
+		if (!isLoading) {
+			generateChildren();
+		}
 
 		return (
 			<LoadingScreen
-				loading={dataLoaded.some(loading => !loading)}
+				loading={isLoading}
 				bgColor="#f1f1f1"
 				spinnerColor="#9ee5f8"
 				textColor="#676767"
 				logoSrc={bdeImage}
 				text="Portail des Associations"
 			>
-				<div id="loaded" />
+				<div />
 			</LoadingScreen>
 		);
 	}

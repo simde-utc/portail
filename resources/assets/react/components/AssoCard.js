@@ -11,10 +11,18 @@ import React from 'react';
 import bdeImage from '../../images/bde.jpg';
 
 const AssoCard = ({ image, login, name, shortname }) => {
+	const style = {
+		backgroundImage: `url('${!image ? bdeImage : image}')`,
+		backgroundSize: 'contain',
+		backgroundRepeat: 'no-repeat',
+	};
+
 	return (
 		<div className="asso-card">
-			<div className="thumbnail" style={{ backgroundImage: `url('${!image ? bdeImage : image}')` }}>
-				<div className={`overlay ${login}`}>{name}</div>
+			<div className="thumbnail" style={style}>
+				<div className={`overlay ${login}`}>
+					<div>{name}</div>
+				</div>
 			</div>
 			<div className="name-container">
 				<div className="asso-shortname">{shortname}</div>

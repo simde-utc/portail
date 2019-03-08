@@ -14,6 +14,8 @@ class CreateArticlesActionsTable extends Migration
     public function up()
     {
         Schema::create('articles_actions', function (Blueprint $table) {
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_bin';
             $table->uuid('id')->primary();
             $table->uuid('article_id');
             $table->uuid('user_id');

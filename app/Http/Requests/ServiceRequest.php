@@ -29,7 +29,7 @@ class ServiceRequest extends Request
                 ->get(),
             'shortname' => Validation::type('string')
                 ->length('title')
-                ->unique('services', 'ivb  çol')
+                ->unique('services', 'id')
                 ->post('required')
                 ->get(),
             'login' => Validation::type('string')

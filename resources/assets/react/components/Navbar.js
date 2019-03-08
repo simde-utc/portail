@@ -91,7 +91,7 @@ class Navbar extends React.Component {
 				<div className={`collapse navbar-collapse${collapse ? ' show' : ''}`}>
 					<ul className="navbar-nav ml-auto">
 						{user ? (
-							<li className="nav-item no-gutters pl-2 pr-2">
+							<li className="nav-item no-gutters pl-2 pr-2" style={{ width: 'max-content' }}>
 								<NavLink className="nav-link d-flex profilepic bg-secondary" to="/profile">
 									<img
 										src={user.image}

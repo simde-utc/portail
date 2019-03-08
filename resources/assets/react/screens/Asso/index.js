@@ -37,6 +37,7 @@ import AccessScreen from './Access';
 		user,
 		asso,
 		config: store.config,
+		isNotConnected: store.hasFailed('user'),
 		member: store.findData(['user', 'assos'], login, 'login', false),
 		roles: store.getData(['assos', asso.id, 'roles']),
 		memberPermissions: store.getData(['assos', asso.id, 'members', user.id, 'permissions']),
@@ -105,13 +106,15 @@ class AssoScreen extends React.Component {
 		dispatch(action);
 
 		action.payload.then(() => {
-			const { asso, user } = this.props;
+			const { asso, user, isNotConnected } = this.props;
 
-			if (user) {
+			if (!isNotConnected) {
 				dispatch(
 					actions.definePath(['assos', asso.id, 'roles']).roles.all({ owner: `asso,${asso.id}` })
 				);
+			}
 
+			if (user) {
 				dispatch(
 					actions
 						.assos(asso.id)
@@ -257,13 +260,32 @@ class AssoScreen extends React.Component {
 									role_id,
 								}
 							)
-							.payload.then(() => {
+							.payload.then(({ data: { id: member_id } }) => {
+								const { user, asso } = this.props;
+
 								dispatch(actions.user.assos.all());
 								dispatch(actions.assos(asso.id).members.all());
 								NotificationManager.success(
 									`Vous avez demandé à rejoindre l'association: ${asso.name}`,
 									"Devenir membre d'une association"
 								);
+
+								actions
+									.assos(asso.id)
+									.members.update(member_id)
+									.payload.then(() => {
+										dispatch(actions.assos(asso.id).members.all());
+										NotificationManager.success(
+											`Vous avez automatiquement été validé dans l'association: ${asso.name}`,
+											"Valider un membre d'une association"
+										);
+
+										if (user.id === member_id) {
+											dispatch(actions.user.assos.all());
+											dispatch(actions.user.permissions.all());
+										}
+									})
+									.catch(() => {});
 							})
 							.catch(() => {
 								NotificationManager.error(
@@ -462,9 +484,9 @@ class AssoScreen extends React.Component {
 			const { pivot } = member;
 
 			this.user = {
-				isFollowing: true,
-				isMember: pivot.role_id !== null && pivot.validated_by !== null,
-				isWaiting: pivot.role_id !== null && pivot.validated_by === null,
+				isFollowing: pivot.role_id === null,
+				isMember: pivot.role_id !== null && pivot.validated_by_id !== null,
+				isWaiting: pivot.role_id !== null && pivot.validated_by_id === null,
 			};
 		} else {
 			this.user = {

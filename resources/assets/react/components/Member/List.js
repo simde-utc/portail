@@ -12,7 +12,7 @@ import Member from './Member';
 }))
 class MemberList extends React.Component {
 	getMemberBlocks(members, roles) {
-		const { currentSemester, isMember, isWaiting, validateMember, leaveMember } = this.props;
+		const { currentSemester, user, isMember, validateMember, leaveMember, lastRoleId } = this.props;
 
 		members = orderBy(
 			members.map(member => {
@@ -33,10 +33,15 @@ class MemberList extends React.Component {
 				description: member.description,
 			};
 
-			if (member.pivot.semester_id === currentSemester.id) {
+			if (
+				member.pivot.semester_id === currentSemester.id &&
+				(isMember ||
+					user.id === member.id ||
+					(lastRoleId === member.pivot.role_id && !member.pivot.validated_by_id))
+			) {
 				props.footer = (
 					<div>
-						{(isMember || isWaiting) && !member.pivot.validated_by && (
+						{(isMember || lastRoleId === member.pivot.role_id) && !member.pivot.validated_by_id && (
 							<Button
 								color="success"
 								className="m-1 font-weight-bold"
@@ -48,16 +53,18 @@ class MemberList extends React.Component {
 								Valider
 							</Button>
 						)}
-						<Button
-							color="danger"
-							className="m-1 font-weight-bold"
-							onClick={() => {
-								leaveMember && leaveMember(member.id);
-							}}
-							outline
-						>
-							Retirer
-						</Button>
+						{(isMember || user.id === member.id) && (
+							<Button
+								color="danger"
+								className="m-1 font-weight-bold"
+								onClick={() => {
+									leaveMember && leaveMember(member.id);
+								}}
+								outline
+							>
+								Retirer
+							</Button>
+						)}
 					</div>
 				);
 			}

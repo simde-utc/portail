@@ -14,6 +14,8 @@ class CreateCalendarsEventsTable extends Migration
     public function up()
     {
         Schema::create('calendars_events', function (Blueprint $table) {
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_bin';
             $table->uuid('calendar_id');
             $table->uuid('event_id');
 

@@ -5,8 +5,10 @@ import List from './List';
 
 const DoubleList = props => {
 	const { join, isCurrentSemester, members } = props;
-	const acceptedMembers = members.filter(member => member.pivot && member.pivot.validated_by);
-	const notAcceptedMembers = members.filter(member => member.pivot && !member.pivot.validated_by);
+	const acceptedMembers = members.filter(member => member.pivot && member.pivot.validated_by_id);
+	const notAcceptedMembers = members.filter(
+		member => member.pivot && !member.pivot.validated_by_id
+	);
 
 	return (
 		<div className="container DoubleList">
@@ -19,7 +21,7 @@ const DoubleList = props => {
 				/>
 			)}
 			{join && isCurrentSemester && (
-				<div className="d-flex justify-content-center col-md-12">
+				<div className="d-flex justify-content-center col-md-12 pb-4">
 					<Button className="m-1 btn btn-m font-style-bold" color="primary" outline onClick={join}>
 						Rejoindre l'association
 					</Button>

@@ -1,10 +1,10 @@
 <div class="btn-group">
-  <button class="btn btn-sm btn-twitter" data-toggle="modal" data-target="#accept-modal">
+  <button class="btn btn-sm btn-twitter" data-toggle="modal" data-target="#accept-modal-{{ $access->id }}">
     <i class="fa fa-check"></i><span class="hidden-xs"> Répondre</span>
   </button>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="accept-modal">
+<div class="modal fade" tabindex="-1" role="dialog" id="accept-modal-{{ $access->id }}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -12,6 +12,7 @@
         <h4 class="modal-title">Demande d'accès - <b>{{ $access->access['name'] }}</b> (n°{{ $access->access['utc_access'] }})</h4>
       </div>
       <form action="{{ url('/admin/access/'.$access->id) }}" method="post">
+		<input type="hidden" name="_method" value="put" />
         {{ csrf_field() }}
 
         <div class="modal-body">
@@ -21,7 +22,7 @@
           <p>La demande est confirmée par <b>{{ $access->confirmed_by['name'] }}</b> (id: {{ $access->asso['id'] }}).</p>
           <div class="col-md-offset-2" style="padding-right: 25%">
             <p>Commentaire:</p>
-            <textarea style="width: 100%" rows="2" name="comment" required></textarea>
+            <textarea style="width: 100%" rows="2" name="comment"></textarea>
           </div>
         </div>
 

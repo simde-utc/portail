@@ -59,6 +59,7 @@ class RolesTableSeeder extends Seeder
                     'article',
                     'article-action',
                     'handle-access',
+                    'handle-assos-members',
                     'asso-access',
                     'asso-type',
                     'semester',
@@ -207,10 +208,6 @@ class RolesTableSeeder extends Seeder
                 'owned_by' => new Asso,
                 'parents' => [
                     'vice-president',
-                    'secretaire general',
-                    'vice-secretaire',
-                    'treasury',
-                    'vice-treasury',
                 ],
                 'permissions' => [
                     'booking',

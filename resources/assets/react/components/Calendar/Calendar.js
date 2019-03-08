@@ -1,7 +1,10 @@
 import React from 'react';
 import BigCalendar from 'react-big-calendar';
+import moment from 'moment';
 
 import { colorFromBackground } from '../../utils';
+
+const localizer = BigCalendar.momentLocalizer(moment);
 
 export default class CalendarCalendar extends React.Component {
 	getEvents() {
@@ -30,6 +33,7 @@ export default class CalendarCalendar extends React.Component {
 				backgroundColor: event.calendar.color,
 				color: colorFromBackground(event.calendar.color),
 				border: 'none',
+				fontSize: '12px',
 			},
 		};
 	}
@@ -38,6 +42,7 @@ export default class CalendarCalendar extends React.Component {
 		return (
 			<div style={{ height: '700px' }}>
 				<BigCalendar
+					localizer={localizer}
 					defaultView="week"
 					eventPropGetter={CalendarCalendar.getEventProps.bind(this)}
 					{...this.props}

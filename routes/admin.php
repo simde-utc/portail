@@ -19,11 +19,19 @@ Route::get('auth/logout', 'AuthController@getLogout');
 Route::get('charts', 'ChartsController@index')->name('charts-index');
 
 Route::get('access', 'AccessController@index')->name('access-index');
-Route::post('access/{access_id}', 'AccessController@store')->name('access-store');
+Route::put('access/{access_id}', 'AccessController@store')->name('access-store');
 
-Route::get('search', 'SearchController@index')->name('search-index');
-Route::post('search', 'SearchController@search')->name('search-search');
-Route::get('search/{user_id}', 'SearchController@show')->name('search-show');
+Route::get('assos/members', 'AssoMemberController@index')->name('asso-member-index');
+Route::post('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@store')->name('asso-member-validate');
+Route::put('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@update')->name('asso-member-update');
+Route::delete('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@delete')->name('asso-member-delete');
+
+Route::get('search/user', 'SearchUserController@index')->name('search-user-index');
+Route::post('search/user', 'SearchUserController@search')->name('search-user-search');
+Route::get('search/user/{user_id}', 'SearchUserController@show')->name('search-user-show');
+
+Route::get('search/contributor', 'SearchContributorController@index')->name('search-contributor-index');
+Route::get('search/contributor/{login}', 'SearchContributorController@show')->name('search-contributor-show');
 
 Route::get('resources/users', 'Resource\\UserController@index')->name('users-index');
 Route::get('resources/users/{user_id}', 'Resource\\UserController@show')->name('users-show');

@@ -70,7 +70,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
         static::created(function ($model) {
             $model->assignRoles('group admin', [
                 'user_id' => $model->user_id,
-                'validated_by' => $model->user_id,
+                'validated_by_id' => $model->user_id,
                 'semester_id' => 0,
             ], true);
         });

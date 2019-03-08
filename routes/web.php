@@ -30,6 +30,19 @@ Route::match(['get', 'post'], 'register/{provider?}/process', 'Auth\RegisterCont
 
 
 /*
+ * Gestion des anciennes routes Portail.
+ */
+
+Route::any('asso', 'OldToNewPortailController@asso');
+Route::any('asso/{login}', 'OldToNewPortailController@assoLogin');
+Route::any('asso/articles/{login}', 'OldToNewPortailController@assoArticlesLogin');
+Route::any('article', 'OldToNewPortailController@article');
+Route::any('article/show/{whatever}', 'OldToNewPortailController@article')->where('whatever', '.*');
+Route::any('event', 'OldToNewPortailController@event');
+Route::any('event/calendar', 'OldToNewPortailController@event');
+Route::any('event/show/{whatever}', 'OldToNewPortailController@event')->where('whatever', '.*');
+
+/*
  * Redirige le reste du flux (HTTP 404) vers React.
  */
 

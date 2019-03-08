@@ -14,6 +14,8 @@ class CreateTableAssosAccess extends Migration
     public function up()
     {
         Schema::create('assos_access', function (Blueprint $table) {
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_bin';
             $table->uuid('id')->primary();
             $table->uuid('asso_id');
             $table->uuid('access_id');

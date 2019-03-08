@@ -18,14 +18,19 @@ import { NotificationManager } from 'react-notifications';
 import Calendar from '../components/Calendar';
 
 import actions from '../redux/actions';
+import { formatDate } from '../utils';
 
 @connect(store => {
 	const assos = store.getData(['user', 'assos']);
 	const user = store.getData('user', {});
 	const permissions = {};
+	const fetchedPermissions = [];
 
 	assos.forEach(asso => {
-		permissions[asso.id] = store.getData(['assos', asso.id, 'members', user.id, 'permissions']);
+		const path = ['assos', asso.id, 'members', user.id, 'permissions'];
+
+		permissions[asso.id] = store.getData(path);
+		fetchedPermissions.push(store.isFetched(path));
 	});
 
 	return {
@@ -33,6 +38,7 @@ import actions from '../redux/actions';
 		user,
 		assos,
 		permissions,
+		fetchedPermissions,
 		types: store.getData(['bookings', 'types']),
 		rooms: store.getData('rooms'),
 		fetched: store.isFetched('rooms'),
@@ -57,25 +63,19 @@ class BookingScreen extends React.Component {
 	}
 
 	componentWillMount() {
-		const { dispatch } = this.props;
+		const { user, assos, dispatch } = this.props;
 
 		dispatch(actions.rooms.all());
 		dispatch(actions.bookings.types.all());
-	}
 
-	componentDidUpdate({ assos: prevAssos }) {
-		const { user, assos, dispatch } = this.props;
-
-		if (prevAssos !== assos) {
-			assos.forEach(asso => {
-				dispatch(
-					actions
-						.assos(asso.id)
-						.members(user.id)
-						.permissions.all()
-				);
-			});
-		}
+		assos.forEach(asso => {
+			dispatch(
+				actions
+					.assos(asso.id)
+					.members(user.id)
+					.permissions.all()
+			);
+		});
 	}
 
 	onSelectingRange(data) {
@@ -113,7 +113,7 @@ class BookingScreen extends React.Component {
 
 	askBooking(begin = new Date(), end = new Date()) {
 		this.setState(prevState => {
-			const { rooms, dispatch, types } = this.props;
+			const { rooms, types } = this.props;
 			const { modal } = prevState;
 			const possibleAssos = BookingScreen.getAssos(this.getAllowedAssos());
 			const possibleRooms = BookingScreen.getRooms(rooms);
@@ -132,8 +132,9 @@ class BookingScreen extends React.Component {
 					<DatetimeRangePicker
 						startDate={begin}
 						endDate={end}
-						onStartDateChange={begin_at => this.setState({ begin_at: begin_at.Date })}
-						onEndDateChange={end_at => this.setState({ end_at: end_at.Date })}
+						onStartDateChange={date => this.setState({ begin_at: date })}
+						onEndDateChange={date => this.setState({ end_at: date })}
+						className="d-flex"
 					/>
 					Association:
 					<Select
@@ -162,23 +163,28 @@ class BookingScreen extends React.Component {
 			modal.button.text = 'Réserver';
 			modal.button.onClick = () => {
 				const { room_id, asso_id, type_id, name, begin_at, end_at } = this.state;
-				console.log(begin_at, end_at);
 				const action = actions.rooms(room_id).bookings.create({
 					room_id,
 					name,
 					type_id,
-					begin_at: begin_at.toISOString(),
-					end_at: end_at.toISOString(),
+					begin_at: formatDate(begin_at),
+					end_at: formatDate(end_at),
 					owned_by_id: asso_id,
 					owned_by_type: 'asso',
 				});
 
-				dispatch(action);
-
 				action.payload
 					.then(({ data }) => {
-						console.log(data);
 						NotificationManager.warning('Réservation réalisée avec succès', 'Réservation');
+
+						// On recharge le calendrier
+						this.setState({
+							reloadCalendar: data.room.calendar,
+						});
+
+						this.setState(({ modal }) => ({
+							modal: { ...modal, show: false },
+						}));
 					})
 					.catch(({ response: { data: { message } } }) => {
 						NotificationManager.error(message, 'Réservation');
@@ -190,9 +196,11 @@ class BookingScreen extends React.Component {
 	}
 
 	render() {
-		const { user, rooms, fetched, config } = this.props;
-		const { modal } = this.state;
+		const { user, rooms, fetched, fetchedPermissions, config } = this.props;
+		const { modal, reloadCalendar } = this.state;
 		config.title = 'Planning des réservations';
+
+		this.state.reloadCalendar = null;
 
 		if (!fetched) {
 			return <div />;
@@ -231,14 +239,17 @@ class BookingScreen extends React.Component {
 				<Calendar
 					calendars={calendars}
 					selectedCalendars={calendars}
-					selectable
+					selectable={fetchedPermissions.every(fetched => fetched)}
 					onSelectSlot={this.onSelectingRange.bind(this)}
+					reloadCalendar={reloadCalendar}
+					scrollToTime={new Date(null, null, null, 8)}
 				/>
 				{user.types.member && (
 					<Button
 						className="m-1 btn btn-m font-style-bold col align-self-end mt-3"
 						color="primary"
 						outline
+						disabled={fetchedPermissions.some(fetched => !fetched)}
 						onClick={() => this.askBooking()}
 					>
 						Réserver un créneau

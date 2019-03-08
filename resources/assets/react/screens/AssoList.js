@@ -38,8 +38,10 @@ class AssoListScreen extends React.Component {
 	static getStage(assos, parent) {
 		return (
 			<div key={parent.id} className="pole-container">
-				<h2>{parent.shortname}</h2>
-				<small>{parent.name}</small>
+				<NavLink key={parent.id} to={`assos/${parent.login}`}>
+					<h2>{parent.shortname}</h2>
+					<small>{parent.name}</small>
+				</NavLink>
 				<div>
 					{assos.map(asso => {
 						return (

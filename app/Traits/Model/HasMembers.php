@@ -59,7 +59,7 @@ trait HasMembers
     public function allMembers()
     {
         return $this->belongsToMany(User::class, $this->getMemberRelationTable())
-            ->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
+            ->withPivot('semester_id', 'role_id', 'validated_by_id', 'created_at', 'updated_at');
     }
 
     /**
@@ -71,7 +71,7 @@ trait HasMembers
     {
         return $this->belongsToMany(User::class, $this->getMemberRelationTable())
             ->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])
-            ->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
+            ->withPivot('semester_id', 'role_id', 'validated_by_id', 'created_at', 'updated_at');
     }
 
     /**
@@ -82,7 +82,8 @@ trait HasMembers
     public function members()
     {
         return $this->belongsToMany(User::class, $this->getMemberRelationTable())
-            ->whereNotNull('validated_by')->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
+            ->whereNotNull('validated_by_id')
+        ->withPivot('semester_id', 'role_id', 'validated_by_id', 'created_at', 'updated_at');
     }
 
     /**
@@ -93,8 +94,8 @@ trait HasMembers
     public function currentMembers()
     {
         return $this->belongsToMany(User::class, $this->getMemberRelationTable())
-            ->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')
-            ->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
+            ->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by_id')
+            ->withPivot('semester_id', 'role_id', 'validated_by_id', 'created_at', 'updated_at');
     }
 
     /**
@@ -104,8 +105,8 @@ trait HasMembers
      */
     public function joiners()
     {
-        return $this->belongsToMany(User::class, $this->getMemberRelationTable())->whereNull('validated_by')
-            ->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
+        return $this->belongsToMany(User::class, $this->getMemberRelationTable())->whereNull('validated_by_id')
+            ->withPivot('semester_id', 'role_id', 'validated_by_id', 'created_at', 'updated_at');
     }
 
     /**
@@ -116,15 +117,15 @@ trait HasMembers
     public function currentJoiners()
     {
         return $this->belongsToMany(User::class, $this->getMemberRelationTable())
-            ->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by')
-            ->withPivot('semester_id', 'role_id', 'validated_by', 'created_at', 'updated_at');
+            ->wherePivotIn('semester_id', [0, Semester::getThisSemester()->id])->whereNotNull('validated_by_id')
+            ->withPivot('semester_id', 'role_id', 'validated_by_id', 'created_at', 'updated_at');
     }
 
     /**
      * Permet d'assigner un ou plusieurs membres en fonction des données fournis.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data    Possibilité d'affecter role_id, semester_id, validated_by, user_id.
+     * @param  array                   $data    Possibilité d'affecter role_id, semester_id, validated_by_id, user_id.
      * @param  boolean                 $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      *
      * @return mixed
@@ -134,8 +135,8 @@ trait HasMembers
         $data['semester_id'] = ($data['semester_id'] ?? Semester::getThisSemester()->id);
 
         if (!$force && $this->visibility_id !== null && $this->visibility_id >= Visibility::findByType('private')->id) {
-            if (isset($data['validated_by'])) {
-                $manageablePerms = $this->getUserPermissions($data['validated_by']);
+            if (isset($data['validated_by_id'])) {
+                $manageablePerms = $this->getUserPermissions($data['validated_by_id']);
 
                 if (!$manageablePerms->contains('type', 'members')
                     && !$manageablePerms->contains('type', 'admin')) {
@@ -158,7 +159,7 @@ trait HasMembers
             }
 
             if (!$force) {
-                $manageableRoles = $this->getUserRoles(($data['validated_by'] ?? \Auth::id()));
+                $manageableRoles = $this->getUserRoles(($data['validated_by_id'] ?? \Auth::id()));
 
                 if (!$manageableRoles->contains('id', $data['role_id'])) {
                     throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à \
@@ -193,8 +194,8 @@ trait HasMembers
      * Permet de modifier un ou plusieurs membres en fonction des données fournis.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data        Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
-     * @param  array                   $updatedData Possibilité d'affecter role_id, semester_id, validated_by, user_id.
+     * @param  array                   $data        Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $updatedData Possibilité d'affecter role_id, semester_id, validated_by_id, user_id.
      * @param  boolean                 $force       Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
      */
@@ -212,8 +213,8 @@ trait HasMembers
                     throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
                 }
 
-                if (isset($updatedData['validated_by']) || \Auth::id()) {
-                    $manageableRoles = $this->getUserRoles(($updatedData['validated_by'] ?? \Auth::id()));
+                if (isset($updatedData['validated_by_id']) || \Auth::id()) {
+                    $manageableRoles = $this->getUserRoles(($updatedData['validated_by_id'] ?? \Auth::id()));
 
                     if (!$manageableRoles->contains('id', $role->id)) {
                         throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à \
@@ -229,9 +230,9 @@ trait HasMembers
                     throw new PortailException('Ce role ne peut-être assigné ou n\'existe pas');
                 }
 
-                if (isset($updatedData['validated_by']) || \Auth::id()) {
+                if (isset($updatedData['validated_by_id']) || \Auth::id()) {
                     $manageableRoles = (
-                        $manageableRoles ?? $this->getUserRoles(($updatedData['validated_by'] ?? \Auth::id()))
+                        $manageableRoles ?? $this->getUserRoles(($updatedData['validated_by_id'] ?? \Auth::id()))
                     );
 
                     if (!$manageableRoles->contains('id', $role->id)) {
@@ -276,7 +277,7 @@ trait HasMembers
      * Permet de supprimer un ou plusieurs membres en fonction des données fournis.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data       Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data       Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @param  string                  $removed_by Personne demandant la suppression.
      * @param  boolean                 $force      Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
@@ -299,7 +300,7 @@ trait HasMembers
 
             if (!$force && $removed_by !== null) {
                 if (!$manageableRoles->contains('id', $data['role_id'])) {
-                    throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée \
+                    throw new PortailException('La personne demandant la suppression du rôle n\'est pas habilitée \
                         à modifier ce rôle: '.$role->name);
                 }
             }
@@ -330,7 +331,7 @@ trait HasMembers
      * Permet de synchroniser (tout supprimer et assigner de nouveaux) un ou plusieurs membres en fonction des données fournis.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data       Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data       Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @param  string                  $removed_by Personne demandant la suppression.
      * @param  boolean                 $force      Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
      * @return mixed
@@ -360,7 +361,7 @@ trait HasMembers
      * Regarde si un membre parmi la liste existe ou non.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data    Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @return boolean
      */
     public function hasOneMember($members, array $data=[])
@@ -372,7 +373,7 @@ trait HasMembers
     /** Regarde si tous les membres parmi la liste existe ou non.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data    Possibilité d'utiliser role_id, semester_id, validated_by, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data    Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @return boolean
      */
     public function hasAllMembers($members, array $data=[])

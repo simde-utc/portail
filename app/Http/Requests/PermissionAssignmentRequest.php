@@ -48,7 +48,7 @@ class PermissionAssignmentRequest extends Request
             'user_id' => Validation::type('uuid')
                 ->exists('users', 'id')
                 ->get(),
-            'validated_by' => Validation::type('uuid')
+            'validated_by_id' => Validation::type('uuid')
                 ->exists('users', 'id')
                 ->get(),
             'permission_id' => Validation::type('uuid')

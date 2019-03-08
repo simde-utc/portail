@@ -48,6 +48,10 @@ abstract class Generator
         $this->model = $model;
         $this->generatedModel = new $model;
         $this->generated = new $generated($this->generatedModel);
+
+        if (method_exists($this->generatedModel, 'trashed')) {
+            $this->generated->model()->withTrashed();
+        }
     }
 
     /**

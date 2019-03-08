@@ -25,6 +25,7 @@ use App\Interfaces\Model\{
 };
 use Illuminate\Support\Collection;
 use App\Exceptions\PortailException;
+use App\Pivots\AssoMember;
 
 class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents, CanHaveArticles,
 	CanNotify, CanHaveRooms, CanHaveBookings, CanHaveRoles, CanHavePermissions, CanComment
@@ -179,7 +180,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      */
     public function currentMembers()
     {
-        return $this->currentMembersAndFollowers()->wherePivot('role_id', '!=', null);
+        return $this->currentMembersAndFollowers()->wherePivot('role_id', '!=', null)->using(AssoMember::class);
     }
 
     /**
@@ -265,34 +266,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Récupération des rôles dans l'association.
-     *
-     * @param  string $user_id
-     * @param  string $semester_id
-     * @return Collection
-     */
-    public function getUserRoles(string $user_id=null, string $semester_id=null)
-    {
-        $parent_id = $this->parent_id;
-        $roles = $this->getUsersRolesInThisAssociation($user_id, $semester_id);
-
-        while ($parent_id) {
-            $asso = static::find($parent_id);
-
-            foreach ($asso->getUsersRolesInThisAssociation($user_id, $semester_id) as $role) {
-                $roles->push($role);
-
-                $roles = $roles->merge($role->allChildren());
-                $role->makeHidden('children');
-            }
-
-            $parent_id = $asso->parent_id;
-        }
-
-        return $roles->unique('id');
-    }
-
-    /**
      * Donne le dernier utilisateur avec un rôle.
      *
      * @param  mixed $role
@@ -300,14 +273,29 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      */
     public function getLastUserWithRole($role)
     {
-        return $this->members()->wherePivot('role_id',
-        	Role::getRole($role, $this)->id)->orderBy('semester_id', 'DESC'
-        )->first();
+        $members = $this->members()->wherePivot('role_id', Role::getRole($role, $this)->id)->get();
+
+        $latestMember = null;
+        foreach ($members as $member) {
+            if (!$latestMember) {
+                $latestMember = $member;
+                continue;
+            }
+
+            $date = Semester::find($member->pivot->semester_id)->end_at;
+            $lastDate = Semester::find($latestMember->pivot->semester_id)->end_at;
+
+            if ($date > $lastDate) {
+                $latestMember = $member;
+            }
+        }
+
+        return $latestMember;
     }
 
     /**
      * Indique si un rôle est affichable ou non.
-     * On affiche toujours les rôles des membres, ce n'est pas un secret.
+     * On affiche toujours le rôle des membres, ce n'est pas un secret.
      *
      * @param  string $user_id
      * @return boolean

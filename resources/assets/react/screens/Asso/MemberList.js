@@ -10,6 +10,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Select from 'react-select';
+import { find } from 'lodash';
 
 import actions from '../../redux/actions';
 
@@ -58,6 +59,23 @@ class AssoMemberListScreen extends React.Component {
 		}));
 	}
 
+	getBeforeTheCurrentSemester() {
+		const { semesters, currentSemester } = this.props;
+		let semester;
+
+		for (const key in semesters) {
+			const possibleSemester = semesters[key];
+
+			if (possibleSemester.id === currentSemester.id) {
+				return semester;
+			}
+
+			semester = possibleSemester;
+		}
+
+		return semester;
+	}
+
 	handleSemesterChange(value) {
 		const {
 			asso: { id },
@@ -70,9 +88,22 @@ class AssoMemberListScreen extends React.Component {
 	}
 
 	loadAssosData(id) {
-		const { dispatch } = this.props;
+		const { user, roles, dispatch } = this.props;
 		const { semester_id } = this.state;
 
+		actions
+			.assos(id)
+			.members(user.id)
+			.get({ semester: this.getBeforeTheCurrentSemester().id })
+			.payload.then(({ data }) => {
+				const role = find(roles, role => role.id === data.pivot.role_id);
+
+				if (role && role.type === 'president') {
+					this.setState({
+						lastRoleId: data.pivot.role_id,
+					});
+				}
+			});
 		dispatch(actions.assos(id).members.all({ semester: semester_id }));
 	}
 
@@ -87,7 +118,7 @@ class AssoMemberListScreen extends React.Component {
 			asso,
 			config,
 		} = this.props;
-		const { semester_id } = this.state;
+		const { semester_id, lastRoleId } = this.state;
 		const selectSemesters = AssoMemberListScreen.getSemesters(semesters);
 		config.title = `${asso.shortname} - Membres`;
 
@@ -109,6 +140,7 @@ class AssoMemberListScreen extends React.Component {
 					fetched={fetched}
 					fetching={fetching}
 					isCurrentSemester={semester_id === currentSemester.id}
+					lastRoleId={lastRoleId}
 					{...this.props}
 				/>
 			</div>

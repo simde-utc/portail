@@ -15,6 +15,8 @@ class CreateAdminMenuTable extends Migration
         $connection = config('admin.database.connection') ?: config('database.default');
 
         Schema::connection($connection)->create(config('admin.database.menu_table'), function (Blueprint $table) {
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_bin';
             $table->increments('id');
             $table->integer('parent_id')->default(0);
             $table->integer('order');

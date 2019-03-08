@@ -14,6 +14,8 @@ class CreateRolesParentsTable extends Migration
     public function up()
     {
         Schema::create('roles_parents', function (Blueprint $table) {
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_bin';
             $table->uuid('role_id');
             $table->uuid('parent_id');
 

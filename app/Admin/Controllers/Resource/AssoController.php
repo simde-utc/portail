@@ -34,7 +34,8 @@ class AssoController extends ResourceController
             'type' => AssoType::get(['id', 'name']),
             'parent' => Asso::get(['id', 'name']),
             'created_at' => 'display',
-            'updated_at' => 'display'
+            'updated_at' => 'display',
+            'deleted_at' => 'date',
         ];
     }
 
