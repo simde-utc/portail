@@ -20,7 +20,7 @@ class RolesTableSeeder extends Seeder
             [
                 'type' => 'superadmin',
                 'name' => 'Super administrateur',
-                'description' => 'Personne ayant réellement tous les droits sur le service',
+                'description' => 'Personne ayant le niveau de droit le plus élevé possible, à n\'utiliser qu\'en cas de nécessité.',
                 'position' => 0,
                 'limited_at' => 2,
                 'owned_by' => new User,
@@ -36,7 +36,7 @@ class RolesTableSeeder extends Seeder
             [
                 'type' => config('portail.roles.admin.users'),
                 'name' => 'Administrateur',
-                'description' => 'Personne ayant tous les droits sur le serveur',
+                'description' => 'Personne ayant tous les droits sur le portail',
                 'position' => 1,
                 'owned_by' => new User,
                 'parents' => [
