@@ -9,7 +9,6 @@
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
  */
-
 return [
     'name' => env('APP_NAME', 'Laravel'),
 

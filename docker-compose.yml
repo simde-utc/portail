@@ -1,0 +1,59 @@
+version: '3.7'
+services:
+  redis:
+    image: redis
+    container_name: cache
+    volumes:
+      - redisdata:/data
+    expose:
+      - 6379
+
+  # The Application
+  app:
+    build:
+      context: ./
+      dockerfile: docker/app.dockerfile
+    working_dir: /var/www
+    depends_on:
+      - database
+      - redis
+      - nodejs
+    volumes:
+      - ./:/var/www
+    env_file:
+      - ./docker/.env.docker
+
+  nodejs:
+    build:
+      context: ./
+      dockerfile: docker/node.dockerfile
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+  # The Web Server
+  web:
+    build:
+      context: ./
+      dockerfile: docker/web.dockerfile
+    working_dir: /var/www
+    depends_on:
+      - app
+    volumes:
+      - ./:/var/www
+    ports:
+      - 8080:80
+
+  # The Database
+  database:
+    image: mysql:5.6
+    volumes:
+      - dbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=portail
+      - MYSQL_DATABASE=portail
+    ports:
+        - "33061:3306"
+
+volumes:
+  dbdata:
+  redisdata:
