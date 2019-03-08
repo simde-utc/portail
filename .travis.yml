@@ -16,7 +16,7 @@ before_script:
   - php artisan migrate:fresh --seed
   - npm -g i npm
   - npm i
-  - npm run prod
+  - npm run dev
   - php artisan portail:clear
 
 script:
