@@ -485,8 +485,8 @@ class AssoScreen extends React.Component {
 
 			this.user = {
 				isFollowing: pivot.role_id === null,
-				isMember: pivot.role_id !== null && pivot.validated_by !== null,
-				isWaiting: pivot.role_id !== null && pivot.validated_by === null,
+				isMember: pivot.role_id !== null && pivot.validated_by_id !== null,
+				isWaiting: pivot.role_id !== null && pivot.validated_by_id === null,
 			};
 		} else {
 			this.user = {

@@ -300,7 +300,7 @@ trait HasMembers
 
             if (!$force && $removed_by !== null) {
                 if (!$manageableRoles->contains('id', $data['role_id'])) {
-                    throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée \
+                    throw new PortailException('La personne demandant la suppression du rôle n\'est pas habilitée \
                         à modifier ce rôle: '.$role->name);
                 }
             }
