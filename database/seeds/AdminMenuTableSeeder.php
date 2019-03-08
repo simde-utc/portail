@@ -14,7 +14,7 @@ class AdminMenuTableSeeder extends Seeder
     {
         $menus = [
             [
-                'title' => 'Ressources',
+                'title' => 'Rechercher',
                 'permission' => '',
                 'icon' => 'fa-search',
                 'elements' => [
@@ -33,10 +33,23 @@ class AdminMenuTableSeeder extends Seeder
                 ]
             ],
             [
-                'title' => 'Gestion des accès',
-                'uri' => 'access',
-                'permission' => 'handle-access',
-                'icon' => 'fa-universal-access',
+                'title' => 'Gérer',
+                'permission' => '',
+                'icon' => 'fa-cogs',
+                'elements' => [
+                    [
+                        'title' => 'Les accès',
+                        'uri' => 'access',
+                        'permission' => 'handle-access',
+                        'icon' => 'fa-universal-access',
+                    ],
+                    [
+                        'title' => 'Les membres',
+                        'uri' => 'assos/members',
+                        'permission' => 'handle-assos-members',
+                        'icon' => 'fa-handshake-o',
+                    ],
+                ]
             ],
             [
                 'title' => 'Ressources',
