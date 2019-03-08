@@ -26,6 +26,11 @@ Route::post('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberCont
 Route::put('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@update')->name('asso-member-update');
 Route::delete('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@delete')->name('asso-member-delete');
 
+Route::get('management/users/roles', 'Management\\UserRoleController@index')->name('user-role-index');
+Route::post('management/users/roles/{user_id}/{semester_id}', 'Management\\UserRoleController@store')->name('user-role-validate');
+Route::put('management/users/roles/{user_id}/{semester_id}', 'Management\\UserRoleController@update')->name('user-role-update');
+Route::delete('management/users/roles/{user_id}/{semester_id}', 'Management\\UserRoleController@delete')->name('user-role-delete');
+
 Route::get('search/user', 'SearchUserController@index')->name('search-user-index');
 Route::post('search/user', 'SearchUserController@search')->name('search-user-search');
 Route::get('search/user/{user_id}', 'SearchUserController@show')->name('search-user-show');
