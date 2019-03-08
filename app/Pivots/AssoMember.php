@@ -11,7 +11,7 @@
 namespace App\Pivots;
 
 use App\Models\{
-	User, Asso, Semester, Role,
+	User, Asso, Semester, Role
 };
 
 class AssoMember extends Pivot
