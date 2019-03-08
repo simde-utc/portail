@@ -93,11 +93,7 @@ trait HasAssos
      */
     protected function getAsso(Request $request, string $asso_id, User $user=null, Semester $semester=null): Asso
     {
-        if (\Uuid::validate($asso_id)) {
-            $asso = Asso::with('parent')->find($asso_id);
-        } else {
-            $asso = Asso::with('parent')->findByLogin($asso_id);
-        }
+        $asso = Asso::with('parent')->where('id', $asso_id)->orWhere('login', $asso_id)->first();
 
         if ($asso) {
             if ($user) {
