@@ -158,7 +158,7 @@ abstract class Generator
         try {
             $date = Carbon::createFromFormat(Carbon::DEFAULT_TO_STRING_FORMAT, $value);
 
-            return $date->format('d/m/Y à H:m');
+            return $date->format('d/m/Y à H:i');
         } catch (\Exception $e) {
             // Ce champ n'est pas une date.
         }
