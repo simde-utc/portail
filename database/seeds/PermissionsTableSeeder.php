@@ -211,7 +211,19 @@ class PermissionsTableSeeder extends Seeder
             [
                 'type' => 'handle-assos-members',
                 'name' => 'Gestion des membres associatifs',
-                'description' => 'Gestion des des validations, rôles',
+                'description' => 'Gestion des validations, rôles',
+                'owned_by' => new User,
+            ],
+            [
+                'type' => 'handle-users-roles',
+                'name' => 'Gestion des rôles utilisateurs',
+                'description' => 'Gestion des rôles utilisateurs',
+                'owned_by' => new User,
+            ],
+            [
+                'type' => 'handle-users-permissions',
+                'name' => 'Gestion des permissions utilisateurs',
+                'description' => 'Gestion des permissions utilisateurs',
                 'owned_by' => new User,
             ],
             [
