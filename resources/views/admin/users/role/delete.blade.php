@@ -9,17 +9,17 @@
     <div class="modal-content">
       <div class="modal-header">
         <button class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Retrait d'un membre</h4>
+        <h4 class="modal-title">Suppression d'un rôle</h4>
       </div>
-      <form action="{{ url('/admin/management/assos/members/'.implode('/', $ids)) }}" method="post">
+      <form action="{{ url('/admin/management/users/roles/'.implode('/', $ids)) }}" method="post">
 		<input type="hidden" name="_method" value="delete" />
         {{ csrf_field() }}
 
         <div class="modal-body">
 		  <ul>
-			  <li>Membre: {{ $member->user->name }}</li>
-			  <li>Association: {{ $member->asso->name }}</li>
-			  <li>Validé par: {{ $member->validated_by->name ?? 'personne' }}</li>
+			  <li>Membre: {{ $data->user->name }}</li>
+			  <li>Rôle: {{ $data->role->name }}</li>
+			  <li>Validé par: {{ $data->validated_by->name ?? 'personne' }}</li>
 		  </ul>
           <p>Supprimer ?</p>
         </div>

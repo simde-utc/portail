@@ -40,9 +40,9 @@ class AssoMemberController extends Controller
         $grid->addFields([
             'id' => 'display',
             'user' => User::get(['id', 'firstname', 'lastname']),
+            'role' => Role::get(['id', 'name']),
             'asso' => Asso::get(['id', 'name']),
             'semester' => Semester::get(['id', 'name']),
-            'role' => Role::get(['id', 'name']),
             'validated_by' => User::get(['id', 'firstname', 'lastname']),
             'created_at' => 'display',
             'updated_at' => 'display'
@@ -84,8 +84,8 @@ class AssoMemberController extends Controller
         ->orderBy('created_at', 'DESC');
 
         return $content
-            ->header('Gestion des accès')
-            ->description('Permet de savoir ce qui est validé')
+            ->header('Gestion des membres associatifs')
+            ->description('Permet d\'accepter, modifier et supprimer les membres')
             ->body($grid->get());
     }
 

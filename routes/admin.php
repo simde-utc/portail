@@ -8,23 +8,26 @@
  * @license GNU GPL-3.0
  */
 
-Route::get('/', 'HomeController@index');
 
-Route::get('dashboard', 'DashboardController@index')->name('dashboard-index');
+/**
+ * Routes pour l'authentification admin.
+ */
 
 Route::get('auth/login', 'AuthController@getLogin');
 Route::post('auth/login', 'AuthController@postLogin');
 Route::get('auth/logout', 'AuthController@getLogout');
 
+/*
+ * Routes classiques d'affichage admin.
+ */
+
+Route::get('/', 'HomeController@index');
+Route::get('dashboard', 'DashboardController@index')->name('dashboard-index');
 Route::get('charts', 'ChartsController@index')->name('charts-index');
 
-Route::get('access', 'AccessController@index')->name('access-index');
-Route::put('access/{access_id}', 'AccessController@store')->name('access-store');
-
-Route::get('assos/members', 'AssoMemberController@index')->name('asso-member-index');
-Route::post('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@store')->name('asso-member-validate');
-Route::put('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@update')->name('asso-member-update');
-Route::delete('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@delete')->name('asso-member-delete');
+/*
+ * Routes de recherche.
+ */
 
 Route::get('search/user', 'SearchUserController@index')->name('search-user-index');
 Route::post('search/user', 'SearchUserController@search')->name('search-user-search');
@@ -32,6 +35,34 @@ Route::get('search/user/{user_id}', 'SearchUserController@show')->name('search-u
 
 Route::get('search/contributor', 'SearchContributorController@index')->name('search-contributor-index');
 Route::get('search/contributor/{login}', 'SearchContributorController@show')->name('search-contributor-show');
+
+/*
+ * Routes de gestion.
+ */
+
+Route::get('management/access', 'AccessController@index')->name('access-index');
+Route::put('management/access/{access_id}', 'AccessController@store')->name('access-store');
+
+Route::get('management/assos/members', 'AssoMemberController@index')->name('asso-member-index');
+Route::post('management/assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@store')->name('asso-member-validate');
+Route::put('management/assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@update')->name('asso-member-update');
+Route::delete('management/assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@delete')->name('asso-member-delete');
+
+Route::get('management/users/roles', 'Management\\UserRoleController@index')->name('user-role-index');
+Route::post('management/users/roles', 'Management\\UserRoleController@store')->name('user-role-store');
+Route::get('management/users/roles/create', 'Management\\UserRoleController@create')->name('user-role-create');
+Route::put('management/users/roles/{user_id}/{semester_id}', 'Management\\UserRoleController@update')->name('user-role-update');
+Route::delete('management/users/roles/{user_id}/{semester_id}', 'Management\\UserRoleController@delete')->name('user-role-delete');
+
+Route::get('management/users/permissions', 'Management\\UserPermissionController@index')->name('user-permission-index');
+Route::post('management/users/permissions', 'Management\\UserPermissionController@store')->name('user-permission-store');
+Route::get('management/users/permissions/create', 'Management\\UserPermissionController@create')->name('user-permission-create');
+Route::put('management/users/permissions/{user_id}/{semester_id}', 'Management\\UserPermissionController@update')->name('user-permission-update');
+Route::delete('management/users/permissions/{user_id}/{semester_id}', 'Management\\UserPermissionController@delete')->name('user-permission-delete');
+
+/*
+ * Routes de gestion des ressources.
+ */
 
 Route::get('resources/users', 'Resource\\UserController@index')->name('users-index');
 Route::get('resources/users/{user_id}', 'Resource\\UserController@show')->name('users-show');

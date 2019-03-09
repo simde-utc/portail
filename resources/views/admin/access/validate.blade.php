@@ -11,7 +11,7 @@
         <button class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Demande d'accès - <b>{{ $access->access['name'] }}</b> (n°{{ $access->access['utc_access'] }})</h4>
       </div>
-      <form action="{{ url('/admin/access/'.$access->id) }}" method="post">
+      <form action="{{ url('/admin/management/access/'.$access->id) }}" method="post">
 		<input type="hidden" name="_method" value="put" />
         {{ csrf_field() }}
 

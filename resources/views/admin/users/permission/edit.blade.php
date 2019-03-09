@@ -9,21 +9,21 @@
     <div class="modal-content">
       <div class="modal-header">
         <button class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<h4 class="modal-title">Modification d'un membre</h4>
+		<h4 class="modal-title">Modification d'une permission utilisateur</h4>
       </div>
-      <form action="{{ url('/admin/management/assos/members/'.implode('/', $ids)) }}" method="post">
+      <form action="{{ url('/admin/management/users/permissions/'.implode('/', $ids)) }}" method="post">
 	    <input type="hidden" name="_method" value="put" />
         {{ csrf_field() }}
 
         <div class="modal-body">
 		  <ul>
-			  <li>Membre: {{ $member->user->name }}</li>
-			  <li>Association: {{ $member->asso->name }}</li>
+			  <li>Membre: {{ $data->user->name }}</li>
+			  <li>Validé par: {{ $data->validated_by->name ?? 'personne' }}</li>
 			  <li>
 				  Role:
-				  <select name="role_id">
-				  @foreach ($roles as $role)
-				    <option value="{{ $role->id }}" {{ $role->id === $member->role_id ? 'selected' : ''}}>{{ $role->name }}</option>
+				  <select name="permission_id">
+				  @foreach ($permissions as $permission)
+				    <option value="{{ $permission->id }}" {{ $permission->id === $data->permission_id ? 'selected' : ''}}>{{ $permission->name }}</option>
 				  @endforeach
 				  </select>
 			  </li>
