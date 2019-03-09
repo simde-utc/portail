@@ -247,7 +247,7 @@ class MemberController extends Controller
         if ($asso->removeMembers($user, [
             'role_id' => $user->pivot->role_id,
             'semester_id' => $user->pivot->semester_id,
-        ], \Auth::id())) {
+        ], \Auth::id(), $user->id === \Auth::id())) {
             abort(204);
         } else {
             abort(500, 'Impossible de retirer la personne de l\'association');
