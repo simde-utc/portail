@@ -27,6 +27,12 @@ class UserPermissionController extends Controller
 {
     protected $model = UserPermission::class;
 
+    /**
+     * Récupération des champs pour l'admin.
+     *
+     * @param  boolean $withAll
+     * @return array
+     */
     public function getFields(bool $withAll=true)
     {
         $fields = [
@@ -44,7 +50,7 @@ class UserPermissionController extends Controller
             $fields,
             [
                 'created_at' => 'display',
-                'updated_at' => 'display'
+                'updated_at' => 'display',
             ]
         );
     }
@@ -150,7 +156,10 @@ class UserPermissionController extends Controller
         if ($request->input('permission_id')) {
             $member = UserPermission::where('user_id', $member_id)
                 ->where('semester_id', $semester_id)
-                ->update(['permission_id' => $request->input('permission_id'), 'validated_by_id' => \Auth::guard('admin')->id()]);
+                ->update([
+                    'permission_id' => $request->input('permission_id'),
+                    'validated_by_id' => \Auth::guard('admin')->id(),
+                ]);
         }
 
         return back();

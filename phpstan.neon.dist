@@ -34,3 +34,5 @@ parameters:
 		- '#Call to an undefined method App\\Admin\\ShowGenerator::#'
 		- '#.*does not call parent constructor from App\\Admin\\Generator#'
 		- '#Access to an undefined property App\\Admin\\Controllers\\AccessController::#'
+		- '#Call to an undefined method App\\Admin\\FormGenerator::disableViewCheck#'
+		- '#Call to an undefined method App\\Admin\\FormGenerator::disableEditingCheck#'

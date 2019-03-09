@@ -17,7 +17,7 @@ Route::get('auth/login', 'AuthController@getLogin');
 Route::post('auth/login', 'AuthController@postLogin');
 Route::get('auth/logout', 'AuthController@getLogout');
 
-/**
+/*
  * Routes classiques d'affichage admin.
  */
 
@@ -25,7 +25,7 @@ Route::get('/', 'HomeController@index');
 Route::get('dashboard', 'DashboardController@index')->name('dashboard-index');
 Route::get('charts', 'ChartsController@index')->name('charts-index');
 
-/**
+/*
  * Routes de recherche.
  */
 
@@ -36,7 +36,7 @@ Route::get('search/user/{user_id}', 'SearchUserController@show')->name('search-u
 Route::get('search/contributor', 'SearchContributorController@index')->name('search-contributor-index');
 Route::get('search/contributor/{login}', 'SearchContributorController@show')->name('search-contributor-show');
 
-/**
+/*
  * Routes de gestion.
  */
 
@@ -60,7 +60,7 @@ Route::get('management/users/permissions/create', 'Management\\UserPermissionCon
 Route::put('management/users/permissions/{user_id}/{semester_id}', 'Management\\UserPermissionController@update')->name('user-permission-update');
 Route::delete('management/users/permissions/{user_id}/{semester_id}', 'Management\\UserPermissionController@delete')->name('user-permission-delete');
 
-/**
+/*
  * Routes de gestion des ressources.
  */
 

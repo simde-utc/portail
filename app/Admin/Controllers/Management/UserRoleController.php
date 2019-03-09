@@ -27,6 +27,12 @@ class UserRoleController extends Controller
 {
     protected $model = UserRole::class;
 
+    /**
+     * Récupération des champs pour l'admin.
+     *
+     * @param  boolean $withAll
+     * @return array
+     */
     public function getFields(bool $withAll=true)
     {
         $fields = [
@@ -44,7 +50,7 @@ class UserRoleController extends Controller
             $fields,
             [
                 'created_at' => 'display',
-                'updated_at' => 'display'
+                'updated_at' => 'display',
             ]
         );
     }
