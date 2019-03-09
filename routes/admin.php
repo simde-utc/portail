@@ -27,7 +27,8 @@ Route::put('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberContr
 Route::delete('assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@delete')->name('asso-member-delete');
 
 Route::get('management/users/roles', 'Management\\UserRoleController@index')->name('user-role-index');
-Route::post('management/users/roles/{user_id}/{semester_id}', 'Management\\UserRoleController@store')->name('user-role-validate');
+Route::post('management/users/roles', 'Management\\UserRoleController@store')->name('user-role-store');
+Route::get('management/users/roles/create', 'Management\\UserRoleController@create')->name('user-role-create');
 Route::put('management/users/roles/{user_id}/{semester_id}', 'Management\\UserRoleController@update')->name('user-role-update');
 Route::delete('management/users/roles/{user_id}/{semester_id}', 'Management\\UserRoleController@delete')->name('user-role-delete');
 

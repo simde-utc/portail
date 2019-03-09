@@ -20,10 +20,34 @@ use App\Admin\GridGenerator;
 use Encore\Admin\Grid\Displayers\Actions;
 use Illuminate\Http\Request;
 use App\Notifications\Admin\MemberAccessValidation;
+use Encore\Admin\Form;
+use App\Admin\FormGenerator;
 
 class UserRoleController extends Controller
 {
     protected $model = UserRole::class;
+
+    public function getFields(bool $withAll=true)
+    {
+        $fields = [
+            'id' => 'display',
+            'user' => User::get(['id', 'firstname', 'lastname']),
+            'role' => Role::where('owned_by_type', User::class)->get(['id', 'name']),
+        ];
+
+        if ($withAll) {
+            $fields['validated_by'] = User::get(['id', 'firstname', 'lastname']);
+            $fields['semester'] = Semester::get(['id', 'name']);
+        }
+
+        return array_merge(
+            $fields,
+            [
+                'created_at' => 'display',
+                'updated_at' => 'display'
+            ]
+        );
+    }
 
     /**
      * Interface d'affichage global.
@@ -37,15 +61,7 @@ class UserRoleController extends Controller
         $userRoles = Role::where('owned_by_type', User::class)->get();
         $grid::$simplePrint = true;
 
-        $grid->addFields([
-            'id' => 'display',
-            'user' => User::get(['id', 'firstname', 'lastname']),
-            'role' => Role::get(['id', 'name']),
-            'semester' => Semester::get(['id', 'name']),
-            'validated_by' => User::get(['id', 'firstname', 'lastname']),
-            'created_at' => 'display',
-            'updated_at' => 'display'
-        ]);
+        $grid->addFields($this->getFields());
 
         $grid->tools(function ($tools) {
             $tools->disableBatchActions();
@@ -69,10 +85,6 @@ class UserRoleController extends Controller
                 ])->__toString());
             };
 
-            if ($row->validated_by === null) {
-                $generateAction('admin.users.role.validate');
-            }
-
             $generateAction('admin.users.role.edit');
             $generateAction('admin.users.role.delete');
         });
@@ -88,25 +100,45 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Valide le membre.
+     * Crée une nouvelle instance.
      *
-     * @param  Request $request
-     * @param  string  $member_id
-     * @param  string  $semester_id
-     * @return mixed
+     * @param Content $content
+     * @return Content
      */
-    public function store(Request $request, string $member_id, string $semester_id)
+    public function create(Content $content)
     {
-        UserRole::where('user_id', $member_id)
-            ->where('semester_id', $semester_id)
-            ->whereNull('validated_by_id')
-            ->update(['validated_by_id' => \Auth::guard('admin')->id()]);
+        $form = new FormGenerator($this->model);
 
-        return back();
+        $form->addFields($this->getFields(false));
+
+        $form->disableViewCheck();
+        $form->disableEditingCheck();
+
+        return $content
+            ->header('Gestion des rôles utilisateurs')
+            ->description('Création d\'un rôle utilisateur')
+            ->body($form->get());
     }
 
     /**
-     * Modifie les informations du membre.
+     * Crée un rôle utilisateur.
+     *
+     * @param  Request $request
+     * @return mixed
+     */
+    public function store(Request $request)
+    {
+        $user = User::find($request->input('user_id'));
+
+        if ($user) {
+            $user->assignRoles($request->input('role_id'), [
+                'validated_by_id' => \Auth::guard('admin')->id(),
+            ], true);
+        }
+    }
+
+    /**
+     * Modifie un rôle utilisateur.
      *
      * @param  Request $request
      * @param  string  $member_id
@@ -125,7 +157,7 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Supprime le membre.
+     * Supprime un rôle utilisateur.
      *
      * @param  Request $request
      * @param  string  $member_id
