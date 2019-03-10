@@ -22,6 +22,14 @@ use App\Models\{
 class ChartsController extends Controller
 {
     /**
+     * Donne l'accès uniquement si la personne possède la permission.
+     */
+    public function __construct()
+    {
+        $this->middleware('permission:admin');
+    }
+
+    /**
      * Affiche un tas de graphes.
      *
      * @param  Content $content

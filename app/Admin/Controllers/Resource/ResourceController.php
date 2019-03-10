@@ -32,6 +32,14 @@ abstract class ResourceController extends Controller
     protected $model;
 
     /**
+     * Donne l'accès uniquement si la personne possède la permission.
+     */
+    public function __construct()
+    {
+        $this->middleware('permission:'.\ModelResolver::getName($this->model, '-'));
+    }
+
+    /**
      * Définition des champs à afficher.
      *
      * @return array

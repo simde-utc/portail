@@ -10,7 +10,7 @@
 
 namespace App\Admin\Controllers\Management;
 
-use App\Http\Controllers\Controller;
+use App\Admin\Controllers\Controller;
 use App\Pivots\UserRole;
 use App\Models\{
 	User, Semester, Role
@@ -26,6 +26,14 @@ use App\Admin\FormGenerator;
 class UserRoleController extends Controller
 {
     protected $model = UserRole::class;
+
+    /**
+     * Donne l'accès uniquement si la personne possède la permission.
+     */
+    public function __construct()
+    {
+        $this->middleware('permission:handle-users-roles');
+    }
 
     /**
      * Récupération des champs pour l'admin.

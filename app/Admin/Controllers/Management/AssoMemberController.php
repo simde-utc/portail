@@ -8,9 +8,9 @@
  * @license GNU GPL-3.0
  */
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Management;
 
-use App\Http\Controllers\Controller;
+use App\Admin\Controllers\Controller;
 use App\Pivots\AssoMember;
 use App\Models\{
 	Asso, User, Semester, Role
@@ -24,6 +24,14 @@ use App\Notifications\Admin\MemberAccessValidation;
 class AssoMemberController extends Controller
 {
     protected $model = AssoMember::class;
+
+    /**
+     * Donne l'accès uniquement si la personne possède la permission.
+     */
+    public function __construct()
+    {
+        $this->middleware('permission:handle-assos-members');
+    }
 
     /**
      * Interface d'affichage global.

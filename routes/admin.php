@@ -40,13 +40,13 @@ Route::get('search/contributor/{login}', 'SearchContributorController@show')->na
  * Routes de gestion.
  */
 
-Route::get('management/access', 'AccessController@index')->name('access-index');
-Route::put('management/access/{access_id}', 'AccessController@store')->name('access-store');
+Route::get('management/access', 'Management\\AccessController@index')->name('access-index');
+Route::put('management/access/{access_id}', 'Management\\AccessController@store')->name('access-store');
 
-Route::get('management/assos/members', 'AssoMemberController@index')->name('asso-member-index');
-Route::post('management/assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@store')->name('asso-member-validate');
-Route::put('management/assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@update')->name('asso-member-update');
-Route::delete('management/assos/members/{asso_id}/{member_id}/{semester_id}', 'AssoMemberController@delete')->name('asso-member-delete');
+Route::get('management/assos/members', 'Management\\AssoMemberController@index')->name('asso-member-index');
+Route::post('management/assos/members/{asso_id}/{member_id}/{semester_id}', 'Management\\AssoMemberController@store')->name('asso-member-validate');
+Route::put('management/assos/members/{asso_id}/{member_id}/{semester_id}', 'Management\\AssoMemberController@update')->name('asso-member-update');
+Route::delete('management/assos/members/{asso_id}/{member_id}/{semester_id}', 'Management\\AssoMemberController@delete')->name('asso-member-delete');
 
 Route::get('management/users/roles', 'Management\\UserRoleController@index')->name('user-role-index');
 Route::post('management/users/roles', 'Management\\UserRoleController@store')->name('user-role-store');
