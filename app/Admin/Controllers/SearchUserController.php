@@ -30,10 +30,13 @@ class SearchUserController extends Controller
     protected $limit;
 
     /**
+     * Donne l'accès uniquement si la personne possède la permission.
      * Récupération de la limite.
      */
     public function __construct()
     {
+        $this->middleware('permission:user');
+
         $this->limit = config('admin.extensions.search.limit');
     }
 

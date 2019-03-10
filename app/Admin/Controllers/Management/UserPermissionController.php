@@ -10,7 +10,7 @@
 
 namespace App\Admin\Controllers\Management;
 
-use App\Http\Controllers\Controller;
+use App\Admin\Controllers\Controller;
 use App\Pivots\UserPermission;
 use App\Models\{
 	User, Semester, Permission
@@ -26,6 +26,13 @@ use App\Admin\FormGenerator;
 class UserPermissionController extends Controller
 {
     protected $model = UserPermission::class;
+
+    /**
+     * Donne l'accès uniquement si la personne possède la permission.
+     */
+    public function __construct() {
+        $this->middleware('permission:handle-users-permissions');
+    }
 
     /**
      * Récupération des champs pour l'admin.
