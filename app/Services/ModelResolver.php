@@ -122,7 +122,7 @@ class ModelResolver
     /**
      * Donne le nom court de la classe.
      *
-     * @param  mixed $object
+     * @param  mixed  $object
      * @param  string $delimiter
      * @return string
      */

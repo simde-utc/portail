@@ -21,10 +21,11 @@ class DashboardController extends Controller
     /**
      * Donne l'accès uniquement si la personne possède la permission.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('permission:admin');
     }
-    
+
     /**
      * Affichage du dashboard.
      *

@@ -17,7 +17,8 @@ class Controller extends BaseController
     /**
      * Par défaut l'accès est bloqué pour les superadmins.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('role:superadmin');
     }
 }
