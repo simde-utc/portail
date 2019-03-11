@@ -28,7 +28,6 @@ require('./bootstrap');
 @connect(store => ({
 	// Données importantes à charger
 	dataLoaded: [
-		store.hasFinished('login'),
 		store.hasFinished('user'),
 		store.hasFinished('user/permissions'),
 		store.hasFinished('semesters/current'),
@@ -39,8 +38,6 @@ class AppLoader extends React.Component {
 	componentWillMount() {
 		const { dispatch } = this.props;
 
-		// Récupère les méthodes de connexion
-		dispatch(actions.login.all());
 		// Récupère les semestres
 		dispatch(actions.semesters.all());
 		// Récupère le semestre courant

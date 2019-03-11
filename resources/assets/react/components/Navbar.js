@@ -39,20 +39,6 @@ class Navbar extends React.Component {
 	render() {
 		const { user, login, permissions, config } = this.props;
 		const { collapse, loginDropdown } = this.state;
-		const loginMethods = Object.entries(login)
-			.filter(([_, loginMethod]) => {
-				return loginMethod.login_url;
-			})
-			.map(([key, loginMethod]) => (
-				<a
-					key={key}
-					className="dropdown-item"
-					href={loginMethod.login_url}
-					title={loginMethod.description}
-				>
-					{loginMethod.name}
-				</a>
-			));
 
 		return (
 			<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle d-flex">
@@ -70,90 +56,97 @@ class Navbar extends React.Component {
 					</li>
 				</ul>
 
-				<span
-					style={{
-						width: '100%',
-						textAlign: 'center',
-						fontSize: '20px',
-						color: 'white',
-						fontWeight: '700',
-						paddingTop: '5px',
-						textTransform: 'uppercase',
-					}}
-				>
+				<span className="navbar-title fixed">
 					{config.title}
 				</span>
 
-				<Button className="navbar-toggler" onClick={() => this.toggle('collapse')}>
-					<span className="fas fa-bars" />
-				</Button>
+                <ul className="navbar-toggle navbar-nav ml-auto">
+                    {user ? (
+                        <li className="nav-item no-gutters pl-2 pr-2" style={{ width: 'max-content' }}>
+                            <NavLink className="nav-link d-flex profilepic bg-secondary" to="/profile">
+                                <img
+                                    src={user.image}
+                                    width="25"
+                                    height="25"
+                                    alt=""
+                                    className="rounded-circle mr-2"
+                                />
+                            </NavLink>
+                        </li>
+                    ): (
+                        <li className="nav-item no-gutters pl-2 pr-2" style={{ width: 'max-content' }}>
+                            <a className="nav-link d-flex" href="/login">
+    							<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
+    								<FontAwesomeIcon icon="circle" className="icon-background2" />
+    								<FontAwesomeIcon icon="sign-in-alt" transform="shrink-8" />
+    							</span>
+    						</a>
+                        </li>
+                    )}
+                </ul>
 
-				<div className={`collapse navbar-collapse${collapse ? ' show' : ''}`}>
-					<ul className="navbar-nav ml-auto">
-						{user ? (
-							<li className="nav-item no-gutters pl-2 pr-2" style={{ width: 'max-content' }}>
-								<NavLink className="nav-link d-flex profilepic bg-secondary" to="/profile">
-									<img
-										src={user.image}
-										width="25"
-										height="25"
-										alt=""
-										className="rounded-circle mr-2"
-									/>
-									{user.firstname}
-								</NavLink>
-							</li>
-						) : (
-							<li className="nav-item dropdown" style={{ width: '150px', textAlign: 'right' }}>
-								<a
-									className="nav-link dropdown-toggle"
-									onClick={() => this.toggle('loginDropdown')}
-								>
-									Se connecter <span className="caret" />
-								</a>
-								<div className={`dropdown-menu${loginDropdown ? ' show' : ''}`}>
-									{loginMethods}
-									<a className="dropdown-item" href="/login?see=all">
-										Tout voir
-									</a>
-								</div>
-							</li>
-						)}
+				<ul className="navbar-nav ml-auto">
+					{user ? (
+						<li className="nav-item no-gutters pl-2 pr-2" style={{ width: 'max-content' }}>
+							<NavLink className="nav-link d-flex profilepic bg-secondary" to="/profile">
+								<img
+									src={user.image}
+									width="25"
+									height="25"
+									alt=""
+									className="rounded-circle mr-2"
+								/>
+								{user.firstname}
+							</NavLink>
 
-						{user && permissions.length && (
-							<li className="nav-item">
-								<a className="nav-link d-flex" href="/admin">
-									<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
-										<FontAwesomeIcon icon="circle" className="icon-background2" />
-										<FontAwesomeIcon icon="screwdriver" transform="shrink-8" />
-									</span>
-								</a>
-							</li>
-						)}
+                            <Button onClick={() => this.toggle('collapse')}>
+                                <FontAwesomeIcon icon="lock" transform="shrink-8" />
+                            </Button>
+						</li>
+					) : (
+						<li className="nav-item">
+							<a
+								className="nav-link"
+								href="/login"
+							>
+								Se connecter
+							</a>
+						</li>
+					)}
 
-						{user && false && (
-							<li className="nav-item">
-								<NavLink className="nav-link d-flex" to="/notifications">
-									<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
-										<FontAwesomeIcon icon="circle" className="icon-background2" />
-										<FontAwesomeIcon icon="bell" transform="shrink-8" />
-									</span>
-								</NavLink>
-							</li>
-						)}
+					{user && permissions.length && (
+						<li className="nav-item">
+							<a className="nav-link d-flex" href="/admin">
+								<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
+									<FontAwesomeIcon icon="circle" className="icon-background2" />
+									<FontAwesomeIcon icon="screwdriver" transform="shrink-8" />
+								</span>
+							</a>
+						</li>
+					)}
 
-						{user && (
-							<li className="nav-item">
-								<a className="nav-link d-flex" href="/logout">
-									<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
-										<FontAwesomeIcon icon="circle" className="icon-background2" />
-										<FontAwesomeIcon icon="lock" transform="shrink-8" />
-									</span>
-								</a>
-							</li>
-						)}
-					</ul>
-				</div>
+					{user && false && (
+						<li className="nav-item">
+							<NavLink className="nav-link d-flex" to="/notifications">
+								<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
+									<FontAwesomeIcon icon="circle" className="icon-background2" />
+									<FontAwesomeIcon icon="bell" transform="shrink-8" />
+								</span>
+							</NavLink>
+						</li>
+					)}
+
+					{user && (
+						<li className="nav-item">
+							<a className="nav-link d-flex" href="/logout">
+								<span className="fa-layers fa-fw fa-lg" style={{ fontSize: 28 }}>
+									<FontAwesomeIcon icon="circle" className="icon-background2" />
+									<FontAwesomeIcon icon="lock" transform="shrink-8" />
+								</span>
+							</a>
+						</li>
+					)}
+				</ul>
 			</nav>
 		);
 	}
