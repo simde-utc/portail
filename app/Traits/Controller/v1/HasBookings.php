@@ -34,24 +34,33 @@ trait HasBookings
      */
     protected function checkBookingPeriod(string $room_id, string $begin_at, string $end_at)
     {
+        $begin = Carbon::parse($begin_at);
+        $end = Carbon::parse($end_at);
+
+        if ($begin->lessThanOrEqualTo(Carbon::now())) {
+            abort(400, 'La date de début d\'événement doit être postérieure à la date actuelle');
+        }
+
+        if ($begin->greaterThanOrEqualTo($end)) {
+            abort(400, 'L\'événement doit avoir une durée d\'au moins 1 min');
+        }
+
         $events = Room::find($room_id)->calendar->events()
             ->where('end_at', '>', $begin_at)
             ->where('begin_at', '<', $end_at)
-        ->get();
+            ->get();
 
         $query = Booking::where('room_id', $room_id)
-        ->whereNotNull('validated_by_type')
-        ->whereIn('event_id', $events->map(function ($event) {
-            return $event->id;
-        }));
+            ->whereNotNull('validated_by_type')
+            ->whereIn('event_id', $events->map(function ($event) {
+                return $event->id;
+            }));
 
         if ($query->exists()) {
             abort(409, 'Il existe une réservation qui se déroule pendant la même période');
         }
 
-        $begin = Carbon::parse($begin_at);
-        $end = Carbon::parse($end_at);
-
+        // Si on dépasse la durée de réservation max, la réservation doit être validée.
         return $end->diffInSeconds($begin) <= (config('portail.bookings.max_duration') * 60 * 60);
     }
 
