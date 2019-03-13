@@ -12,7 +12,7 @@ import produce from 'immer';
 import { applyMiddleware, createStore, compose } from 'redux';
 
 // Import Middlewares
-import promise from 'redux-promise-middleware';
+import { createPromise } from 'redux-promise-middleware';
 // import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 
@@ -38,12 +38,14 @@ export const createCrudTypes = name => ({
 	delete: `DELETE_${name}`,
 });
 
+const promise = createPromise({
+		promiseTypeSuffixes: Object.values(ASYNC_SUFFIXES),
+	});
+
 // Configure Middlewares
 let middlewares = applyMiddleware(
 	thunk,
-	promise({
-		promiseTypeSuffixes: Object.values(ASYNC_SUFFIXES),
-	})
+	promise,
 	// createLogger({ collapse: true })
 );
 
