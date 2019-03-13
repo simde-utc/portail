@@ -1,4 +1,5 @@
 let mix = require('laravel-mix');
+require('laravel-mix-polyfill');
 
 /*
  |--------------------------------------------------------------------------
@@ -50,5 +51,9 @@ let mix = require('laravel-mix');
 //   postCss: [] // Post-CSS options: https://github.com/postcss/postcss/blob/master/docs/plugins.md
 // });
 
-mix.react('resources/assets/react/index.js', 'public/js/index.js');
+mix.react('resources/assets/react/index.js', 'public/js/index.js').polyfill({
+      enabled: true,
+      useBuiltIns: "usage",
+      targets: "> 0.25%, not dead"
+   });
 
