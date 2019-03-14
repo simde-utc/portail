@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
+use Laravel\Passport\Exceptions\MissingScopeException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -85,6 +86,11 @@ class Handler extends ExceptionHandler
                 $status = $exception->getStatusCode();
             } else {
                 $status = ($this->exceptionToHttpCode[get_class($exception)] ?? 400);
+            }
+
+            if ($exception instanceof MissingScopeException) {
+                $scopes = implode(', ', $exception->scopes());
+                $response['message'] = 'Un ou plusieurs scopes sont manquants. Vous devez au moins en avoir un parmi: '.$scopes;
             }
 
             return response()->json($response, $status);
