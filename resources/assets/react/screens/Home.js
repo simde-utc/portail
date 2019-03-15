@@ -16,7 +16,6 @@ import actions from '../redux/actions';
 import ArticleList from '../components/Article/List';
 
 @connect(store => ({
-	config: store.config,
 	articles: store.getData('articles'),
 	fetching: store.isFetching('articles'),
 	fetched: store.isFetched('articles'),
@@ -26,11 +25,11 @@ class ScreensHome extends React.Component {
 		const { dispatch } = this.props;
 
 		dispatch(actions.articles().all());
+		dispatch(actions.config({ title: 'Flux' }));
 	}
 
 	render() {
-		const { articles, fetched, fetching, config } = this.props;
-		config.title = 'Flux';
+		const { articles, fetched, fetching } = this.props;
 
 		return (
 			<div className="container Home">

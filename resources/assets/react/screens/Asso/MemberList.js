@@ -44,11 +44,14 @@ class AssoMemberListScreen extends React.Component {
 
 	componentDidUpdate({ asso }) {
 		const {
-			asso: { id },
+			asso: { id, shortname },
+			dispatch,
 		} = this.props;
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);
+
+			dispatch(actions.config({ title: `${shortname} - Membres` }));
 		}
 	}
 
@@ -104,23 +107,14 @@ class AssoMemberListScreen extends React.Component {
 					});
 				}
 			});
+
 		dispatch(actions.assos(id).members.all({ semester: semester_id }));
 	}
 
 	render() {
-		const {
-			currentSemester,
-			semesters,
-			members,
-			roles,
-			fetched,
-			fetching,
-			asso,
-			config,
-		} = this.props;
+		const { currentSemester, semesters, members, roles, fetched, fetching } = this.props;
 		const { semester_id, lastRoleId } = this.state;
 		const selectSemesters = AssoMemberListScreen.getSemesters(semesters);
-		config.title = `${asso.shortname} - Membres`;
 
 		return (
 			<div>

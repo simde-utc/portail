@@ -76,6 +76,8 @@ class BookingScreen extends React.Component {
 					.permissions.all()
 			);
 		});
+
+		dispatch(actions.config({ title: 'Planning des réservations' }));
 	}
 
 	onSelectingRange(data) {
@@ -196,9 +198,8 @@ class BookingScreen extends React.Component {
 	}
 
 	render() {
-		const { user, rooms, fetched, fetchedPermissions, config } = this.props;
+		const { user, rooms, fetched, fetchedPermissions } = this.props;
 		const { modal, reloadCalendar } = this.state;
-		config.title = 'Planning des réservations';
 
 		this.state.reloadCalendar = null;
 

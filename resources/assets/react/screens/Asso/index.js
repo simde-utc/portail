@@ -114,6 +114,8 @@ class AssoScreen extends React.Component {
 				);
 			}
 
+			dispatch(actions.config({ title: asso.shortname }));
+
 			if (user) {
 				dispatch(
 					actions
@@ -473,7 +475,7 @@ class AssoScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, fetched, failed, user, asso, member, contacts, match, config } = this.props;
+		const { fetching, fetched, failed, user, asso, member, contacts, match } = this.props;
 		const { events, modal } = this.state;
 
 		if (failed) return <Http404 />;
@@ -495,7 +497,6 @@ class AssoScreen extends React.Component {
 				isWaiting: false,
 			};
 		}
-		config.title = asso.shortname;
 
 		let bg = `bg-${asso.login}`;
 

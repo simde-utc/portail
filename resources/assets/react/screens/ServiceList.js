@@ -45,6 +45,7 @@ class ServiceListScreen extends React.Component {
 		const { dispatch } = this.props;
 
 		dispatch(actions.services.all());
+		dispatch(actions.config({ title: 'Listes des services' }));
 	}
 
 	getServices(services, userServices) {
@@ -149,12 +150,11 @@ class ServiceListScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, services, userServices, config } = this.props;
+		const { fetching, services, userServices } = this.props;
 		const {
 			modal: { show, title, body, button },
 		} = this.state;
-		config.title = 'Listes des services';
-		console.log(config.title);
+
 		return (
 			<div className="container">
 				<Modal isOpen={show}>

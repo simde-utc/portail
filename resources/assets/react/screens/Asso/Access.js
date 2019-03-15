@@ -44,13 +44,15 @@ class AccessScreen extends React.Component {
 
 	componentDidUpdate({ asso }) {
 		const {
-			asso: { id },
+			asso: { id, shortname },
 			accessFetched,
 			dispatch,
 		} = this.props;
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);
+
+			dispatch(actions.config({ title: `${shortname} - Accès` }));
 		}
 
 		if (!accessFetched) {
@@ -145,10 +147,9 @@ class AccessScreen extends React.Component {
 	}
 
 	render() {
-		const { user, asso, members, memberAccess, access, permissions, fetched, config } = this.props;
+		const { user, members, memberAccess, access, permissions, fetched } = this.props;
 		const userAccessDemand = find(memberAccess, memberAccess => memberAccess.member.id === user.id);
 		const userCanConfirm = find(permissions, permission => permission.type === 'access');
-		config.title = `${asso.shortname} - Accès`;
 
 		return (
 			<div>

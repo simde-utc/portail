@@ -34,11 +34,14 @@ class AssoCalendar extends React.Component {
 
 	componentDidUpdate({ asso }) {
 		const {
-			asso: { id },
+			asso: { id, shortname },
+			dispatch,
 		} = this.props;
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);
+
+			dispatch(actions.config({ title: `${shortname} - événements` }));
 		}
 	}
 
@@ -49,8 +52,7 @@ class AssoCalendar extends React.Component {
 	}
 
 	render() {
-		const { calendars, fetched, asso, config } = this.props;
-		config.title = `${asso.shortname} - événements`;
+		const { calendars, fetched } = this.props;
 
 		if (!fetched) {
 			return <div />;
