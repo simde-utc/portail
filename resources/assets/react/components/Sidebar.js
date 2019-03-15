@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { orderBy } from 'lodash';
 
 @connect(store => ({
+	config: store.config,
 	user: store.getData('user'),
 	isAuthenticated: store.isFetched('user'),
 	assos: store.getData('user/assos'),
@@ -46,11 +47,22 @@ class Sidebar extends React.Component {
 	}
 
 	render() {
-		const { isAuthenticated, user, assos, services } = this.props;
+		const { isAuthenticated, config, user, assos, services } = this.props;
+		let classNames = 'sidebar col-md-3 col-xl-2 d-md-flex flex-column justify-content-between';
+
+		if (config.toggleSidebar) {
+			classNames += ' sidebar-active';
+		}
 
 		return (
-			<div className="sidebar col-md-3 col-xl-2 d-none d-md-flex flex-column justify-content-between">
+			<div className={classNames}>
 				<div className="sidebar-inner">
+					<div className="sidebar-group">
+						<NavLink to="/" className="sidebar-header d-hover-zone">
+							Portail des assos
+						</NavLink>
+					</div>
+
 					<div className="sidebar-group">
 						<h6 className="sidebar-header d-hover-zone">
 							ACTUALITÉS{' '}
@@ -172,7 +184,7 @@ class Sidebar extends React.Component {
 					)}
 				</div>
 
-				<p className="sidebar-footer small">&lt;&#47;&gt; avec le sang par le SiMDE</p>
+				<p className="sidebar-footer small pb-2">&lt;&#47;&gt; avec le sang par le SiMDE</p>
 			</div>
 		);
 	}

@@ -1,8 +1,11 @@
 .sidebar {
-	min-width: 250px;
-	overflow: auto; 
+    min-width: 250px;
+    width: 250px;
+    max-width: 250px;
+	overflow: auto;
 	padding: map-get($spacers, 3) 0;
 	background: $dark-gray;
+    transition: 0.5s;
 }
 
 .sidebar-inner {
@@ -49,4 +52,28 @@
 	margin-top: auto;
 	margin-bottom: 0;
 	text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+    .sidebar {
+        min-width: 0;
+        width: 0;
+        max-width: 0;
+    }
+
+    .sidebar-link {
+        font-size: 14px;
+    }
+
+    .sidebar-footer {
+        font-size: 12px;
+    }
+}
+
+.sidebar-active {
+    position: relative;
+    z-index: 1000;
+    min-width: 225px;
+    width: 225px;
+    max-width: 225px;
 }
