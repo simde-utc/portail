@@ -225,6 +225,13 @@ export class Actions {
 
 		return queries.join('&');
 	}
+
+	static config(modifications) {
+		return {
+			type: 'CONFIG',
+			config: modifications,
+		};
+	}
 }
 
 // On crée dynamiquement nos actions (chaque action est une nouvelle génération de la classe)
