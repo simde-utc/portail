@@ -89,7 +89,7 @@ class Handler extends ExceptionHandler
             }
 
             if ($exception instanceof MissingScopeException) {
-                $scopes = implode(', ', $exception->scopes());
+                $scopes = implode(', ', $exception->scopes()[0]);
                 $response['message'] = 'Un ou plusieurs scopes sont manquants. Vous devez au moins en avoir un parmi: '.$scopes;
             }
 
