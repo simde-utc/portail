@@ -33,6 +33,7 @@ class AssoListScreen extends React.Component {
 				order: 'a-z',
 			})
 		);
+		dispatch(actions.config({ title: 'Liste des associations' }));
 	}
 
 	static getStage(assos, parent) {
@@ -97,8 +98,7 @@ class AssoListScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, assos, config } = this.props;
-		config.title = 'Liste des associations';
+		const { fetching, assos } = this.props;
 
 		return (
 			<div className="container">
