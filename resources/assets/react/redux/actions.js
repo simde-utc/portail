@@ -225,19 +225,21 @@ export class Actions {
 
 		return queries.join('&');
 	}
-
-	static config(modifications) {
-		return {
-			type: 'CONFIG',
-			config: modifications,
-		};
-	}
 }
 
 // On crée dynamiquement nos actions (chaque action est une nouvelle génération de la classe)
 // Appelable: actions.category1 || actions('rootUri').category1
 const actions = new Proxy(rootUri => new Actions(rootUri), {
 	get: (target, prop) => {
+        if (prop === 'config') {
+            return (modifications) => {
+        		return {
+        			type: 'CONFIG',
+        			config: modifications,
+        		};
+        	}
+        }
+
 		return new Actions()[prop];
 	},
 });

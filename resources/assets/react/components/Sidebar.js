@@ -57,7 +57,7 @@ class Sidebar extends React.Component {
 		return (
 			<div className={classNames}>
 				<div className="sidebar-inner">
-					<div className="sidebar-group">
+					<div className="sidebar-group sidebar-title">
 						<NavLink to="/" className="sidebar-header d-hover-zone">
 							Portail des assos
 						</NavLink>

@@ -42,6 +42,12 @@ class AssoMemberListScreen extends React.Component {
 		}
 	}
 
+    componentWillMount() {
+        const {asso, dispatch } = this.props;
+
+        dispatch(actions.config({ title: `${asso.shortname} - Membres` }));
+    }
+
 	componentDidUpdate({ asso }) {
 		const {
 			asso: { id, shortname },
@@ -50,8 +56,6 @@ class AssoMemberListScreen extends React.Component {
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);
-
-			dispatch(actions.config({ title: `${shortname} - Membres` }));
 		}
 	}
 

@@ -117,6 +117,10 @@
   }
 }
 
+.navbar {
+    flex-wrap: nowrap !important;
+}
+
 .navbar-title {
     overflow: auto;
     flex-grow: 100;

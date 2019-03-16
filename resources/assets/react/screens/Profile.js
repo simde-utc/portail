@@ -25,7 +25,7 @@ class ScreensProfile extends React.Component {
 	componentWillMount() {
 		const { user, dispatch } = this.props;
 
-		dispatch(actions.config({ title: `Profil - ${user.name}` }));
+		dispatch(actions.config({ title: 'Mon profil' }));
 	}
 
 	load(name) {

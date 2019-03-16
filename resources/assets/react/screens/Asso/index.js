@@ -114,8 +114,6 @@ class AssoScreen extends React.Component {
 				);
 			}
 
-			dispatch(actions.config({ title: asso.shortname }));
-
 			if (user) {
 				dispatch(
 					actions
