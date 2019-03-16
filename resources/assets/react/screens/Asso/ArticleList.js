@@ -25,14 +25,14 @@ class AssoArticleList extends React.Component {
 	componentWillMount() {
 		const {
 			asso: { id, shortname },
-            dispatch,
+			dispatch,
 		} = this.props;
 
 		if (id) {
 			this.loadAssosData(id);
 		}
 
-        dispatch(actions.config({ title: `${shortname} - Articles` }));
+		dispatch(actions.config({ title: `${shortname} - Articles` }));
 	}
 
 	componentDidUpdate({ asso }) {

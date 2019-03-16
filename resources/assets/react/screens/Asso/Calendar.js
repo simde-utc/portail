@@ -31,7 +31,7 @@ class AssoCalendar extends React.Component {
 			this.loadAssosData(asso.id);
 		}
 
-        dispatch(actions.config({ title: `${asso.shortname} - événements` }));
+		dispatch(actions.config({ title: `${asso.shortname} - événements` }));
 	}
 
 	componentDidUpdate({ asso }) {

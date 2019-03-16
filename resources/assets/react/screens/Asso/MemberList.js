@@ -41,19 +41,18 @@ class AssoMemberListScreen extends React.Component {
 			this.state.semester_id = currentSemester.id;
 		}
 
-        dispatch(actions.config({ title: `${asso.shortname} - Membres` }));
+		dispatch(actions.config({ title: `${asso.shortname} - Membres` }));
 	}
 
-    componentWillMount() {
-        const {asso, dispatch } = this.props;
+	componentWillMount() {
+		const { asso, dispatch } = this.props;
 
-        dispatch(actions.config({ title: `${asso.shortname} - Membres` }));
-    }
+		dispatch(actions.config({ title: `${asso.shortname} - Membres` }));
+	}
 
 	componentDidUpdate({ asso }) {
 		const {
-			asso: { id, shortname },
-			dispatch,
+			asso: { id },
 		} = this.props;
 
 		if (asso.id !== id) {

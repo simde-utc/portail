@@ -41,7 +41,7 @@ class AccessScreen extends React.Component {
 			this.loadAssosData(asso.id);
 		}
 
-        dispatch(actions.config({ title: `${asso.shortname} - Accès` }));
+		dispatch(actions.config({ title: `${asso.shortname} - Accès` }));
 	}
 
 	componentDidUpdate({ asso }) {
@@ -53,14 +53,13 @@ class AccessScreen extends React.Component {
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);
-
 		}
 
 		if (!accessFetched) {
 			dispatch(actions.access.all());
 		}
 
-        dispatch(actions.config({ title: `${shortname} - Accès` }));
+		dispatch(actions.config({ title: `${shortname} - Accès` }));
 	}
 
 	loadAssosData(id) {

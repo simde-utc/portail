@@ -48,151 +48,158 @@ class Sidebar extends React.Component {
 		));
 	}
 
-	closeSidebar() {
-		const { dispatch } = this.props;
+	closeSidebar(event) {
+		if (
+			['A', 'SPAN'].includes(event.target.tagName) ||
+			event.target.classList.contains('sidebar-overlay')
+		) {
+			const { dispatch } = this.props;
 
-		dispatch(actions.config({ openSidebar: false }));
+			dispatch(actions.config({ openSidebar: false }));
+		}
 	}
 
 	render() {
 		const { isAuthenticated, config, user, assos, services } = this.props;
-		let classNames = 'sidebar col-md-3 col-xl-2 d-md-flex flex-column justify-content-between';
-
-		if (config.openSidebar) {
-			classNames += ' sidebar-active';
-		}
 
 		return (
-			<div className={classNames} onClick={this.closeSidebar.bind(this)}>
-				<div className="sidebar-inner">
-					<div className="sidebar-group sidebar-title">
-						<NavLink to="/" className="sidebar-header d-hover-zone">
-							Portail des assos
-						</NavLink>
-					</div>
+			<div
+				className={config.openSidebar ? 'sidebar-active' : ''}
+				onClick={this.closeSidebar.bind(this)}
+			>
+				<div className="sidebar-overlay" />
 
-					<div className="sidebar-group">
-						<h6 className="sidebar-header d-hover-zone">
-							ACTUALITÉS{' '}
-							<NavLink
-								className="float-right d-hover fas fa-cog"
-								style={{ display: 'none' }}
-								to="/settings/sidebar/news"
-							/>
-						</h6>
-						<NavLink exact className="sidebar-link" to="/">
-							<FontAwesomeIcon icon="newspaper" /> Flux
-						</NavLink>
-					</div>
+				<div className="sidebar col-md-3 col-xl-2 d-md-flex flex-column justify-content-between">
+					<div className="sidebar-inner">
+						<div className="sidebar-group sidebar-title">
+							<NavLink to="/" className="sidebar-header d-hover-zone">
+								Portail des assos
+							</NavLink>
+						</div>
 
-					<div className="sidebar-group">
-						<h6 className="sidebar-header d-hover-zone">
-							LIENS UTILES{' '}
-							<NavLink
-								className="float-right d-hover fas fa-cog"
-								style={{ display: 'none' }}
-								to="/settings/sidebar/utc"
-							/>
-						</h6>
-						{isAuthenticated && !user.types.contributorBde && (
+						<div className="sidebar-group">
+							<h6 className="sidebar-header d-hover-zone">
+								ACTUALITÉS{' '}
+								<NavLink
+									className="float-right d-hover fas fa-cog"
+									style={{ display: 'none' }}
+									to="/settings/sidebar/news"
+								/>
+							</h6>
+							<NavLink exact className="sidebar-link" to="/">
+								<FontAwesomeIcon icon="newspaper" /> Flux
+							</NavLink>
+						</div>
+
+						<div className="sidebar-group">
+							<h6 className="sidebar-header d-hover-zone">
+								LIENS UTILES{' '}
+								<NavLink
+									className="float-right d-hover fas fa-cog"
+									style={{ display: 'none' }}
+									to="/settings/sidebar/utc"
+								/>
+							</h6>
+							{isAuthenticated && !user.types.contributorBde && (
+								<a
+									className="sidebar-link"
+									target="_blank"
+									rel="noopener noreferrer"
+									href="https://assos.utc.fr/bde/bdecotiz"
+								>
+									<FontAwesomeIcon icon="money-bill" /> Cotiser au BDE-UTC
+								</a>
+							)}
 							<a
 								className="sidebar-link"
 								target="_blank"
 								rel="noopener noreferrer"
-								href="https://assos.utc.fr/bde/bdecotiz"
+								href="https://ent.utc.fr"
 							>
-								<FontAwesomeIcon icon="money-bill" /> Cotiser au BDE-UTC
+								<FontAwesomeIcon icon="school" /> Ent UTC
 							</a>
-						)}
-						<a
-							className="sidebar-link"
-							target="_blank"
-							rel="noopener noreferrer"
-							href="https://ent.utc.fr"
-						>
-							<FontAwesomeIcon icon="school" /> Ent UTC
-						</a>
-						<a
-							className="sidebar-link"
-							target="_blank"
-							rel="noopener noreferrer"
-							href="https://webmail.utc.fr"
-						>
-							<FontAwesomeIcon icon="paper-plane" /> Webmail
-						</a>
-						<a
-							className="sidebar-link"
-							target="_blank"
-							rel="noopener noreferrer"
-							href="https://moodle.utc.fr/login/index.php?authCAS=CAS"
-						>
-							<FontAwesomeIcon icon="book" /> Moodle
-						</a>
-						<a
-							className="sidebar-link"
-							target="_blank"
-							rel="noopener noreferrer"
-							href="https://github.com/simde-utc/portail/issues"
-						>
-							<FontAwesomeIcon icon="bug" /> Signaler un bug
-						</a>
-					</div>
+							<a
+								className="sidebar-link"
+								target="_blank"
+								rel="noopener noreferrer"
+								href="https://webmail.utc.fr"
+							>
+								<FontAwesomeIcon icon="paper-plane" /> Webmail
+							</a>
+							<a
+								className="sidebar-link"
+								target="_blank"
+								rel="noopener noreferrer"
+								href="https://moodle.utc.fr/login/index.php?authCAS=CAS"
+							>
+								<FontAwesomeIcon icon="book" /> Moodle
+							</a>
+							<a
+								className="sidebar-link"
+								target="_blank"
+								rel="noopener noreferrer"
+								href="https://github.com/simde-utc/portail/issues"
+							>
+								<FontAwesomeIcon icon="bug" /> Signaler un bug
+							</a>
+						</div>
 
-					<div className="sidebar-group">
-						<h6 className="sidebar-header d-hover-zone">
-							RACCOURCIS{' '}
-							<NavLink
-								className="float-right d-hover fas fa-cog"
-								style={{ display: 'none' }}
-								to="/settings/sidebar/shortcuts"
-							/>
-						</h6>
-						{isAuthenticated && user.types.contributorBde && (
-							<NavLink className="sidebar-link" to="/bookings">
-								<FontAwesomeIcon icon="person-booth" /> Réservations
+						<div className="sidebar-group">
+							<h6 className="sidebar-header d-hover-zone">
+								RACCOURCIS{' '}
+								<NavLink
+									className="float-right d-hover fas fa-cog"
+									style={{ display: 'none' }}
+									to="/settings/sidebar/shortcuts"
+								/>
+							</h6>
+							{isAuthenticated && user.types.contributorBde && (
+								<NavLink className="sidebar-link" to="/bookings">
+									<FontAwesomeIcon icon="person-booth" /> Réservations
+								</NavLink>
+							)}
+							<NavLink className="sidebar-link" to="/services">
+								<FontAwesomeIcon icon="concierge-bell" /> Services
 							</NavLink>
+							<NavLink className="sidebar-link" to="/assos">
+								<FontAwesomeIcon icon="hands-helping" /> Associations
+							</NavLink>
+							<NavLink className="sidebar-link" to="/groupes" style={{ display: 'none' }}>
+								<FontAwesomeIcon icon="users" /> Groupes
+							</NavLink>
+						</div>
+
+						{isAuthenticated && services.length > 0 && (
+							<div className="sidebar-group">
+								<h6 className="sidebar-header d-hover-zone">
+									MES SERVICES{' '}
+									<NavLink
+										className="float-right d-hover fas fa-cog"
+										style={{ display: 'none' }}
+										to="/settings/sidebar/services"
+									/>
+								</h6>
+								{Sidebar.getServices(services)}
+							</div>
 						)}
-						<NavLink className="sidebar-link" to="/services">
-							<FontAwesomeIcon icon="concierge-bell" /> Services
-						</NavLink>
-						<NavLink className="sidebar-link" to="/assos">
-							<FontAwesomeIcon icon="hands-helping" /> Associations
-						</NavLink>
-						<NavLink className="sidebar-link" to="/groupes" style={{ display: 'none' }}>
-							<FontAwesomeIcon icon="users" /> Groupes
-						</NavLink>
+
+						{isAuthenticated && assos.length > 0 && (
+							<div className="sidebar-group">
+								<h6 className="sidebar-header d-hover-zone">
+									MES ASSOCIATIONS{' '}
+									<NavLink
+										className="float-right d-hover fas fa-cog"
+										to="/settings/sidebar/assos"
+										style={{ display: 'none' }}
+									/>
+								</h6>
+								{Sidebar.getAssos(assos)}
+							</div>
+						)}
 					</div>
 
-					{isAuthenticated && services.length > 0 && (
-						<div className="sidebar-group">
-							<h6 className="sidebar-header d-hover-zone">
-								MES SERVICES{' '}
-								<NavLink
-									className="float-right d-hover fas fa-cog"
-									style={{ display: 'none' }}
-									to="/settings/sidebar/services"
-								/>
-							</h6>
-							{Sidebar.getServices(services)}
-						</div>
-					)}
-
-					{isAuthenticated && assos.length > 0 && (
-						<div className="sidebar-group">
-							<h6 className="sidebar-header d-hover-zone">
-								MES ASSOCIATIONS{' '}
-								<NavLink
-									className="float-right d-hover fas fa-cog"
-									to="/settings/sidebar/assos"
-									style={{ display: 'none' }}
-								/>
-							</h6>
-							{Sidebar.getAssos(assos)}
-						</div>
-					)}
+					<p className="sidebar-footer small pb-2">&lt;&#47;&gt; avec le sang par le SiMDE</p>
 				</div>
-
-				<p className="sidebar-footer small pb-2">&lt;&#47;&gt; avec le sang par le SiMDE</p>
 			</div>
 		);
 	}

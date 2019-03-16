@@ -59,10 +59,26 @@
 }
 
 @media screen and (max-width: 768px) {
+    .sidebar-overlay {
+        position: fixed;
+        display: none;
+        z-index: 1000;
+        top: 60px;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        transition: 0.5s;
+    }
+
     .sidebar {
+        position: absolute;
+        z-index: 1000;
+        top: 60px;
+        bottom: 0;
         min-width: 0;
         width: 0;
         max-width: 0;
+        border-right: SOLID 2px lightgrey;
     }
 
     .sidebar-link {
@@ -77,14 +93,14 @@
         display: block;
     }
 
-    .sidebar-active {
+    .sidebar-active .sidebar-overlay {
+        display: block;
+        background-color: #1115;
+    }
+
+    .sidebar-active .sidebar {
         min-width: 225px;
         width: 225px;
         max-width: 225px;
     }
-}
-
-.sidebar-active {
-    position: relative;
-    z-index: 1000;
 }

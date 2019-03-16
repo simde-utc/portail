@@ -33,14 +33,14 @@ class AssoHomeScreen extends React.Component {
 		const {
 			asso: { id, shortname },
 			contactsFetched,
-            dispatch,
+			dispatch,
 		} = this.props;
 
 		if (id && !contactsFetched) {
 			this.loadAssosData(id);
 		}
 
-        dispatch(actions.config({ title: shortname }));
+		dispatch(actions.config({ title: shortname }));
 	}
 
 	componentDidUpdate({ asso }) {
