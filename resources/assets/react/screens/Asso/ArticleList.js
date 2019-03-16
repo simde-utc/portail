@@ -24,12 +24,15 @@ import ArticleList from '../../components/Article/List';
 class AssoArticleList extends React.Component {
 	componentWillMount() {
 		const {
-			asso: { id },
+			asso: { id, shortname },
+            dispatch,
 		} = this.props;
 
 		if (id) {
 			this.loadAssosData(id);
 		}
+
+        dispatch(actions.config({ title: `${shortname} - Articles` }));
 	}
 
 	componentDidUpdate({ asso }) {

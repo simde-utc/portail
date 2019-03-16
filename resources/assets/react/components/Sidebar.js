@@ -15,6 +15,8 @@ import { withRouter, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { orderBy } from 'lodash';
 
+import actions from '../redux/actions';
+
 @connect(store => ({
 	config: store.config,
 	user: store.getData('user'),
@@ -46,16 +48,22 @@ class Sidebar extends React.Component {
 		));
 	}
 
+	closeSidebar() {
+		const { dispatch } = this.props;
+
+		dispatch(actions.config({ openSidebar: false }));
+	}
+
 	render() {
 		const { isAuthenticated, config, user, assos, services } = this.props;
 		let classNames = 'sidebar col-md-3 col-xl-2 d-md-flex flex-column justify-content-between';
 
-		if (config.toggleSidebar) {
+		if (config.openSidebar) {
 			classNames += ' sidebar-active';
 		}
 
 		return (
-			<div className={classNames}>
+			<div className={classNames} onClick={this.closeSidebar.bind(this)}>
 				<div className="sidebar-inner">
 					<div className="sidebar-group sidebar-title">
 						<NavLink to="/" className="sidebar-header d-hover-zone">

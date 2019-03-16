@@ -31,13 +31,16 @@ import Img from '../../components/Image';
 class AssoHomeScreen extends React.Component {
 	componentWillMount() {
 		const {
-			asso: { id },
+			asso: { id, shortname },
 			contactsFetched,
+            dispatch,
 		} = this.props;
 
 		if (id && !contactsFetched) {
 			this.loadAssosData(id);
 		}
+
+        dispatch(actions.config({ title: shortname }));
 	}
 
 	componentDidUpdate({ asso }) {

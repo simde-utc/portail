@@ -231,14 +231,14 @@ export class Actions {
 // Appelable: actions.category1 || actions('rootUri').category1
 const actions = new Proxy(rootUri => new Actions(rootUri), {
 	get: (target, prop) => {
-        if (prop === 'config') {
-            return (modifications) => {
-        		return {
-        			type: 'CONFIG',
-        			config: modifications,
-        		};
-        	}
-        }
+		if (prop === 'config') {
+			return modifications => {
+				return {
+					type: 'CONFIG',
+					config: modifications,
+				};
+			};
+		}
 
 		return new Actions()[prop];
 	},

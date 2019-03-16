@@ -25,10 +25,10 @@ import Img from './Image';
 	login: store.getData('login', []),
 }))
 class Navbar extends React.Component {
-	toggleSidebar() {
+	openSidebar() {
 		const { config, dispatch } = this.props;
 
-		dispatch(actions.config({ toggleSidebar: !config.toggleSidebar }));
+		dispatch(actions.config({ openSidebar: !config.openSidebar }));
 	}
 
 	render() {
@@ -55,7 +55,7 @@ class Navbar extends React.Component {
 						<a
 							className="nav-link d-flex"
 							onClick={() => {
-								this.toggleSidebar();
+								this.openSidebar();
 							}}
 						>
 							<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>

@@ -25,11 +25,13 @@ class AssoCalendar extends React.Component {
 	constructor(props) {
 		super(props);
 
-		const { asso } = props;
+		const { asso, dispatch } = props;
 
 		if (asso.id) {
 			this.loadAssosData(asso.id);
 		}
+
+        dispatch(actions.config({ title: `${asso.shortname} - événements` }));
 	}
 
 	componentDidUpdate({ asso }) {

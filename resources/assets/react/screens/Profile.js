@@ -23,7 +23,7 @@ import actions from '../redux/actions';
 }))
 class ScreensProfile extends React.Component {
 	componentWillMount() {
-		const { user, dispatch } = this.props;
+		const { dispatch } = this.props;
 
 		dispatch(actions.config({ title: 'Mon profil' }));
 	}

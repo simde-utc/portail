@@ -31,7 +31,7 @@ class AssoMemberListScreen extends React.Component {
 		super(props);
 
 		this.state = {};
-		const { asso, currentSemester } = props;
+		const { asso, currentSemester, dispatch } = props;
 
 		if (asso.id) {
 			this.loadAssosData(asso.id);
@@ -40,6 +40,8 @@ class AssoMemberListScreen extends React.Component {
 		if (currentSemester) {
 			this.state.semester_id = currentSemester.id;
 		}
+
+        dispatch(actions.config({ title: `${asso.shortname} - Membres` }));
 	}
 
     componentWillMount() {
