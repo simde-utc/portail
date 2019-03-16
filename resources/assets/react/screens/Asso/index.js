@@ -496,10 +496,6 @@ class AssoScreen extends React.Component {
 			};
 		}
 
-		let bg = `bg-${asso.login}`;
-
-		if (asso.parent) bg += ` bg-${asso.parent.login}`;
-
 		let joinFromMemberList;
 		if (Object.values(this.user).every(value => !value)) {
 			joinFromMemberList = this.joinAsso.bind(this);
@@ -534,7 +530,7 @@ class AssoScreen extends React.Component {
 					</ModalFooter>
 				</Modal>
 
-				<ul className={`nav nav-tabs asso ${bg}`}>
+				<ul className="nav nav-tabs asso">
 					<li className="nav-item">
 						<NavLink className="nav-link" activeClassName="active" exact to={`${match.url}`}>
 							DESCRIPTION

@@ -25,10 +25,16 @@ import Img from './Image';
 	login: store.getData('login', []),
 }))
 class Navbar extends React.Component {
-	openSidebar() {
+	toggleSidebar() {
 		const { config, dispatch } = this.props;
 
 		dispatch(actions.config({ openSidebar: !config.openSidebar }));
+	}
+
+	closeSidebar() {
+		const { dispatch } = this.props;
+
+		dispatch(actions.config({ openSidebar: false }));
 	}
 
 	render() {
@@ -52,12 +58,7 @@ class Navbar extends React.Component {
 
 				<ul className="navbar-toggle navbar-nav ml-auto">
 					<li className="nav-item no-gutters pl-2 pr-2" style={{ width: 'max-content' }}>
-						<a
-							className="nav-link d-flex"
-							onClick={() => {
-								this.openSidebar();
-							}}
-						>
+						<a className="nav-link d-flex" onClick={this.toggleSidebar.bind(this)}>
 							<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
 								<FontAwesomeIcon icon="circle" className="icon-background2" />
 								<FontAwesomeIcon icon="bars" transform="shrink-8" />
@@ -70,7 +71,13 @@ class Navbar extends React.Component {
 
 				<ul className="navbar-toggle navbar-nav ml-auto">
 					{user ? (
-						<li className="nav-item pl-2 pr-2" style={{ width: 'max-content' }}>
+						<li
+							className="nav-item pl-2 pr-2"
+							style={{ width: 'max-content' }}
+							onClick={() => {
+								this.closeSidebar();
+							}}
+						>
 							<NavLink className="nav-link" to="/profile">
 								<Img
 									image={user.image}
