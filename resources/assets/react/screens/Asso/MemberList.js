@@ -123,7 +123,7 @@ class AssoMemberListScreen extends React.Component {
 
 		return (
 			<div>
-				<div style={{ position: 'absolute', right: '5%', width: '85px' }}>
+				<div class="float-right" style={{ position: 'relative', right: '15%', width: '85px' }}>
 					Semestre:
 					<Select
 						onChange={this.handleSemesterChange.bind(this)}

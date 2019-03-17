@@ -502,7 +502,7 @@ class AssoScreen extends React.Component {
 		}
 
 		return (
-			<div className="asso w-100">
+			<div className="asso container w-100">
 				<Modal isOpen={modal.show}>
 					<ModalHeader>{modal.title}</ModalHeader>
 					<ModalBody>{modal.body}</ModalBody>
