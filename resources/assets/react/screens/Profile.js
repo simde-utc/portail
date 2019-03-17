@@ -28,7 +28,7 @@ class ScreenProfile extends React.Component {
 		const { user, permissions, match } = this.props;
 
 		return (
-			<div className="profile w-100">
+			<div className="profile container w-100">
 				<ul className="nav nav-tabs">
 					<li className="nav-item">
 						<NavLink className="nav-link" activeClassName="active" exact to={match.url}>
