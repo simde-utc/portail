@@ -20,48 +20,71 @@ trait HasVisibilitySelection
      * Scope spécifique concernant l'ordre dans lequel les articles peuvent être affichés.
      *
      * @param  Builder $query
-     * @param  string  $order
+     * @param  string  $types
      * @return Builder
      */
     public function scopeVisibilities(Builder $query, string ...$types)
     {
         if ($types === ['*']) {
-            $this->selection['visibilites'] = Visibility::all();
+            $this->selection['visibilities'] = Visibility::all();
         } else {
-            $this->selection['visibilites'] = Visibility::whereIn('type', $types)->get();
+            $this->selection['visibilities'] = Visibility::whereIn('type', $types)->get();
         }
 
-        $query = $query->whereNull('visibility_id');
+        return $query->where(function ($subQuery) {
+            $subQuery = $subQuery->whereNull('visibility_id');
 
-        foreach ($this->selection['visibilites'] as $visibility) {
-            $method = [$this, 'scope'.ucfirst($visibility->type).'Visibility'];
+            if (\Scopes::isClientToken(request())) {
+                foreach ($this->selection['visibilities'] as $visibility) {
+                    $subQuery = $subQuery->orWhere('visibility_id', $visibility->id);
+                }
+            } else {
+                $user = \Auth::user();
 
-            if (method_exists(...$method)) {  // Soit la visibilité est définié par une méthode
-                $query = $query->orWhere(function ($subQuery) use ($method) {
-                    return call_user_func($method, $subQuery);
-                });
-            } else if (\Auth::user()->{'is'.ucfirst($visibility->type)}()) {  // Soit on vérifie que le user est du type
-                $query = $query->orWhere(function ($subQuery) use ($visibility) {
-                    return $subQuery->where('visibility_id', $visibility->id);
-                });
+                foreach ($this->selection['visibilities'] as $visibility) {
+                    $method = [$this, 'scope'.ucfirst($visibility->type).'Visibility'];
+                    if (method_exists(...$method)) {
+                        // Soit la visibilité est définié par une méthode.
+                        $subQuery = $subQuery->orWhere(function ($subSubQuery) use ($method) {
+                            return call_user_func($method, $subSubQuery);
+                        });
+                    } else if ($user && $user->{'is'.ucfirst($visibility->type)}()) {
+                        // Soit on vérifie que le user est du type.
+                        $subQuery = $subQuery->orWhere('visibility_id', $visibility->id);
+                    }
+                }
             }
-        }
 
-        return $query;
+            return $subQuery;
+        });
     }
 
-    public function getSelectionVisibility(string $type) {
-        if (!isset($this->selection['visibilites']) || !is_array($this->selection['visibilites'])) {
+    public function getSelectionVisibility(string $type)
+    {
+        if (!isset($this->selection['visibilities']) || !is_array($this->selection['visibilities'])) {
             return Visibility::where('type', $type)->first();
         }
 
-        foreach ($this->selection['visibilites'] as $visibility) {
+        foreach ($this->selection['visibilities'] as $visibility) {
             if ($visibility->type === $type) {
                 return $visibility;
             }
         }
 
         throw new PortailException('Le type de visibilité '.$type.' n\'existe pas ou n\'est pas requis');
+    }
+
+    /**
+     * Scope spécifique pour n'avoir que les ressources publiques.
+     *
+     * @param  Builder $query
+     * @return Builder
+     */
+    public function scopePublicVisibility(Builder $query)
+    {
+        $visibility = $this->getSelectionVisibility('public');
+
+        return $query->where('visibility_id', $visibility->id);
     }
 
     /**
