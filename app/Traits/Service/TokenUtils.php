@@ -74,7 +74,7 @@ trait TokenUtils
      */
     public function isUserToken(Request $request)
     {
-        return $request->user() !== null || $this->getToken($request)->transient();
+        return $this->isOauthRequest($request) && ($request->user() !== null || $token->transient());
     }
 
     /**
@@ -85,7 +85,7 @@ trait TokenUtils
      */
     public function isTransient(Request $request)
     {
-        return $this->getToken($request)->transient();
+        return $this->isOauthRequest($request) && $this->getToken($request)->transient();
     }
 
     /**
@@ -96,7 +96,7 @@ trait TokenUtils
      */
     public function isClientToken(Request $request)
     {
-        return $request->user() === null;
+        return $this->isOauthRequest($request) && $request->user() === null;
     }
 
     /**
