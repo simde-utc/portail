@@ -22,28 +22,7 @@ use Illuminate\Http\Request;
 trait HasArticles
 {
     use HasEvents {
-        HasEvents::isPrivate as protected isEventPrivate;
         HasEvents::tokenCanSee as protected tokenCanSeeEvent;
-    }
-
-    /**
-     * Indique que l'utilisateur est membre de l'instance.
-     *
-     * @param  string $user_id
-     * @param  mixed  $model
-     * @return boolean
-     */
-    public function isPrivate(string $user_id, $model=null)
-    {
-        if ($model === null) {
-            return false;
-        }
-
-        if ($model instanceof Article) {
-            return $model->owned_by->isArticleAccessibleBy($user_id);
-        } else {
-            return $this->isEventPrivate($user_id, $model);
-        }
     }
 
     /**
@@ -75,15 +54,8 @@ trait HasArticles
                 || ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$modelType.'s-owned-asso'))
                 && $model->created_by_type === Asso::class
                 && $model->created_by_id === \Scopes::getClient($request)->asso->id)) {
-                if (\Scopes::isUserToken($request)) {
-                    $functionToCall = 'isArticle'.($verb === 'get' ? 'Accessible' : 'Manageable').'By';
 
-                    if ($model->owned_by->$functionToCall(\Auth::id())) {
-                        return true;
-                    }
-                } else {
-                    return true;
-                }
+                return true;
             }
 
             return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$modelType.'s-created');
@@ -103,17 +75,13 @@ trait HasArticles
      */
     protected function getArticle(Request $request, User $user=null, string $article_id, string $verb='get')
     {
-        $article = Article::find($article_id);
+        $article = Article::findSelection($article_id);
 
         if ($article) {
             // On vérifie si l'accès est publique.
             if (\Scopes::isOauthRequest($request)) {
                 if (!$this->tokenCanSee($request, $article, $verb, 'articles')) {
                     abort(403, 'L\'application n\'a pas les droits sur cet article');
-                }
-
-                if ($user && !$this->isVisible($article, $user->id)) {
-                    abort(403, 'Vous n\'avez pas les droits sur cet article');
                 }
 
                 if ($verb !== 'get' && \Scopes::isUserToken($request)

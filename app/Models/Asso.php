@@ -472,18 +472,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si un article est accessible.
-     * Seulement les membres peuvent voir les articles privés.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isArticleAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si un article est gérable.
      * Seulement les membres peuvent modifier les articles privés.
      *

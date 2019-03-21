@@ -139,18 +139,6 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indique si l'article est accessible.
-     * L'article privé est visible par tous les membres.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isArticleAccessibleBy(string $user_id): bool
-    {
-        return $this->asso()->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si l'évènement est gérable.
      * L'évènement privé est modifiable uniquement par les développeurs.
      *

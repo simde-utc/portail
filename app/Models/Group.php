@@ -307,18 +307,6 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si l'article privé est accessible.
-     * Uniquement par les membres du groupe.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isArticleAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si l'article privé est gérable.
      * Uniquement par les membres du groupe.
      *
