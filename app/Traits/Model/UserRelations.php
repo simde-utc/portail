@@ -171,26 +171,6 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les groupes encore actifs.
-     *
-     * @return mixed
-     */
-    public function currentGroups()
-    {
-        return $this->groups()->where('is_active', 1);
-    }
-
-    /**
-     * Relation avec les groupes créés par l'utilisateur.
-     *
-     * @return mixed
-     */
-    public function ownGroups()
-    {
-        return $this->hasMany(Group::class);
-    }
-
-    /**
      * Relation avec les calendriers suivits.
      *
      * @return mixed

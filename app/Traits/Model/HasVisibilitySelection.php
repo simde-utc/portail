@@ -93,12 +93,7 @@ trait HasVisibilitySelection
      * @param  Builder $query
      * @return Builder|null
      */
-    public function scopePrivateVisibility(Builder $query)
-    {
-        $visibility = $this->getSelectionVisibility('private');
-
-        return $query->where('visibility_id', $visibility->id);
-    }
+    abstract public function scopePrivateVisibility(Builder $query);
 
     /**
      * Scope spécifique pour n'avoir que les ressources internes.
