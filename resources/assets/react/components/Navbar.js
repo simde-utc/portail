@@ -41,7 +41,7 @@ class Navbar extends React.Component {
 		const { user, permissions, config } = this.props;
 
 		return (
-			<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle d-flex">
+			<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle d-flex container">
 				<NavLink to="/" className="navbar-brand">
 					Portail des assos
 				</NavLink>
@@ -116,9 +116,9 @@ class Navbar extends React.Component {
 									image={user.image}
 									width="25"
 									height="25"
-									className="rounded-circle mr-2"
+									className="rounded-circle p-0"
 									unloader={
-										<a className="nav-link d-flex" href="/login">
+										<a className="nav-link d-flex p-0 mr-2" href="/login">
 											<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
 												<FontAwesomeIcon icon="circle" className="icon-background2" />
 												<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
@@ -126,7 +126,7 @@ class Navbar extends React.Component {
 										</a>
 									}
 								/>
-								{user.firstname}
+								<span className="mx-2">{user.firstname}</span>
 							</NavLink>
 						</li>
 					) : (
