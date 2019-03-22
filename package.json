@@ -26,6 +26,7 @@
 		"sass-loader": "7.*"
 	},
 	"dependencies": {
+		"@babel/plugin-proposal-decorators": "^7.4.0",
 		"@fortawesome/fontawesome-svg-core": "^1.2.8",
 		"@fortawesome/free-brands-svg-icons": "^5.8.1",
 		"@fortawesome/free-regular-svg-icons": "^5.5.0",
@@ -34,7 +35,6 @@
 		"axios": "^0.18.0",
 		"babel-cli": "^6.26.0",
 		"babel-eslint": "^10.0.1",
-		"babel-plugin-transform-decorators-legacy": "^1.3.5",
 		"babel-preset-es2015": "^6.24.1",
 		"babel-preset-react": "^6.23.0",
 		"browser-sync": "^2.26.3",
