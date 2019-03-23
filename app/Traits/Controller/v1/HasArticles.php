@@ -54,7 +54,6 @@ trait HasArticles
                 || ((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$modelType.'s-owned-asso'))
                 && $model->created_by_type === Asso::class
                 && $model->created_by_id === \Scopes::getClient($request)->asso->id)) {
-
                 return true;
             }
 

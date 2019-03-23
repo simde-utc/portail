@@ -146,16 +146,20 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
      */
     public function scopePrivateVisibility(Builder $query)
     {
-        $visibility = $this->getSelectionVisibility('private');
-        $user = \Auth::user();
+        $visibility = $this->getSelectionForVisibility('private');
+        $user = $this->getUserForVisibility();
 
         if ($user) {
-            return $query->where('visibility_id', $visibility->id)->where(function ($subQuery) use ($user) {
+            $asso_ids = $user->currentJoinedAssos()->pluck('id')->toArray();
+
+            return $query->where('visibility_id', $visibility->id)->where(function ($subQuery) use ($user, $asso_ids) {
                 return $subQuery->where(function ($subSubQuery) use ($user) {
                     return $subSubQuery->where('owned_by_type', User::class)->where('owned_by_id', $user->id);
-                })->orWhere(function ($subSubQuery) use ($user) {
-                    return $subSubQuery->where('owned_by_type', Asso::class)
-                        ->whereIn('owned_by_id', $user->currentJoinedAssos()->pluck('id')->toArray());
+                })->orWhere(function ($subSubQuery) use ($user, $asso_ids) {
+                    return $subSubQuery->where('owned_by_type', Asso::class)->whereIn('owned_by_id', $asso_ids);
+                })->orWhere(function ($subSubQuery) use ($user, $asso_ids) {
+                    return $subSubQuery->where('owned_by_type', Client::class)
+                        ->whereIn('owned_by_id', Client::whereIn('asso_id', $asso_ids)->pluck('id')->toArray());
                 })->orWhere(function ($subSubQuery) use ($user) {
                     return $subSubQuery->where('owned_by_type', Group::class)
                         ->whereIn('owned_by_id', $user->groups()->pluck('id')->toArray());
