@@ -49,22 +49,24 @@ class App extends React.Component {
 							<Navbar />
 							<div className="d-flex w-100 h-100">
 								<Sidebar />
-								<ErrorCatcher>
-									<Switch>
-										<Route path="/" exact component={HomeScreen} />
-										<Route path="/dashboard" component={DashboardScreen} />
-										<Route path="/assos" exact component={AssoListScreen} />
-										<Route path="/assos/:login" component={AssoDetailScreen} />
-										<Route path="/services" exact component={ServiceListScreen} />
-										<LoggedRoute path="/profile" component={ProfileScreen} />
-										<LoggedRoute
-											path="/bookings"
-											types={['contributorBde']}
-											component={BookingScreen}
-										/>
-										<Route component={Http404} />
-									</Switch>
-								</ErrorCatcher>
+								<div style={{ padding: 0, overflow: 'scroll', flex: 1 }}>
+									<ErrorCatcher>
+										<Switch>
+											<Route path="/" exact component={HomeScreen} />
+											<Route path="/dashboard" component={DashboardScreen} />
+											<Route path="/assos" exact component={AssoListScreen} />
+											<Route path="/assos/:login" component={AssoDetailScreen} />
+											<Route path="/services" exact component={ServiceListScreen} />
+											<LoggedRoute path="/profile" component={ProfileScreen} />
+											<LoggedRoute
+												path="/bookings"
+												types={['contributorBde']}
+												component={BookingScreen}
+											/>
+											<Route component={Http404} />
+										</Switch>
+									</ErrorCatcher>
+								</div>
 							</div>
 						</div>
 

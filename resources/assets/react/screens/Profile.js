@@ -28,21 +28,21 @@ class ScreenProfile extends React.Component {
 		const { user, permissions, match } = this.props;
 
 		return (
-			<div className="profile container w-100">
-				<ul className="nav nav-tabs">
+			<div className="profile w-100">
+				<ul className="nav nav-tabs nav-tabs-spread">
 					<li className="nav-item">
 						<NavLink className="nav-link" activeClassName="active" exact to={match.url}>
-							MES INFORMATIONS
+							MES&nbsp;INFORMATIONS
 						</NavLink>
 					</li>
 					<li className="nav-item">
 						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/assos`}>
-							MON PARCOURS
+							MON&nbsp;PARCOURS
 						</NavLink>
 					</li>
 					<li className="nav-item">
 						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/apps`}>
-							MES APPLICATIONS
+							MES&nbsp;APPLICATIONS
 						</NavLink>
 					</li>
 					<li className="nav-item">
@@ -51,24 +51,24 @@ class ScreenProfile extends React.Component {
 							activeClassName="active"
 							to={`${match.url}/contributions`}
 						>
-							MES COTISATIONS
+							MES&nbsp;COTISATIONS
 						</NavLink>
 					</li>
 					{user && permissions.length && (
 						<li className="nav-item">
 							<a className="nav-link admin" href="/admin">
-								INTERFACE ADMIN
+								INTERFACE&nbsp;ADMIN
 							</a>
 						</li>
 					)}
 					<li className="nav-item">
 						<a className="nav-link admin" href="/logout">
-							ME DECONNECTER
+							ME&nbsp;DECONNECTER
 						</a>
 					</li>
 				</ul>
 
-				<div className="p-3">
+				<div className="container p-3">
 					Le profil est en cours de développement. Il sera possible de consulter et modifier:
 					<ul>
 						<li>Vos informations personnelles</li>

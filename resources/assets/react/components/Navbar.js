@@ -41,7 +41,7 @@ class Navbar extends React.Component {
 		const { user, permissions, config } = this.props;
 
 		return (
-			<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle d-flex container">
+			<nav className="navbar navbar-expand-md navbar-dark bg fixed-top align-middle d-flex">
 				<NavLink to="/" className="navbar-brand">
 					Portail des assos
 				</NavLink>
@@ -72,13 +72,11 @@ class Navbar extends React.Component {
 				<ul className="navbar-toggle navbar-nav ml-auto">
 					{user ? (
 						<li
-							className="nav-item pl-2 pr-2"
+							className="nav-item px-2 mx-2"
 							style={{ width: 'max-content' }}
-							onClick={() => {
-								this.closeSidebar();
-							}}
+							onClick={this.closeSidebar.bind(this)}
 						>
-							<NavLink className="nav-link" to="/profile">
+							<NavLink className="nav-link d-flex" to="/profile">
 								<Img
 									image={user.image}
 									width="28"
@@ -86,12 +84,10 @@ class Navbar extends React.Component {
 									className="rounded-circle"
 									style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
 									unloader={
-										<a className="nav-link d-flex" href="/login">
-											<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
-												<FontAwesomeIcon icon="circle" className="icon-background2" />
-												<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
-											</span>
-										</a>
+										<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
+											<FontAwesomeIcon icon="circle" className="icon-background2" />
+											<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
+										</span>
 									}
 								/>
 							</NavLink>
@@ -118,12 +114,10 @@ class Navbar extends React.Component {
 									height="25"
 									className="rounded-circle p-0"
 									unloader={
-										<a className="nav-link d-flex p-0 mr-2" href="/login">
-											<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
-												<FontAwesomeIcon icon="circle" className="icon-background2" />
-												<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
-											</span>
-										</a>
+										<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
+											<FontAwesomeIcon icon="circle" className="icon-background2" />
+											<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
+										</span>
 									}
 								/>
 								<span className="mx-2">{user.firstname}</span>

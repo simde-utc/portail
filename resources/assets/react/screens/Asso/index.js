@@ -502,7 +502,7 @@ class AssoScreen extends React.Component {
 		}
 
 		return (
-			<div className="asso container w-100">
+			<div className="asso w-100">
 				<Modal isOpen={modal.show}>
 					<ModalHeader>{modal.title}</ModalHeader>
 					<ModalBody>{modal.body}</ModalBody>
@@ -530,7 +530,7 @@ class AssoScreen extends React.Component {
 					</ModalFooter>
 				</Modal>
 
-				<ul className="nav nav-tabs asso">
+				<ul className="nav nav-tabs nav-tabs-spread asso">
 					<li className="nav-item">
 						<NavLink className="nav-link" activeClassName="active" exact to={`${match.url}`}>
 							DESCRIPTION
@@ -574,63 +574,65 @@ class AssoScreen extends React.Component {
 					)}
 				</ul>
 
-				<Switch>
-					<Route
-						path={`${match.url}`}
-						exact
-						render={() => (
-							<AssoHomeScreen
-								asso={asso}
-								contacts={contacts}
-								userIsFollowing={this.user.isFollowing}
-								userIsMember={this.user.isMember}
-								userIsWaiting={this.user.isWaiting}
-								follow={this.followAsso.bind(this)}
-								unfollow={this.unfollowAsso.bind(this)}
-								join={this.joinAsso.bind(this)}
-								leave={this.leaveAsso.bind(this)}
-							/>
-						)}
-					/>
-					<Route path={`${match.url}/events`} render={() => <AssoCalendar asso={asso} />} />
-					<Route path={`${match.url}/articles`} render={() => <ArticleList asso={asso} />} />
-					<LoggedRoute
-						path={`${match.url}/members`}
-						redirect={`${match.url}`}
-						types={['casConfirmed', 'contributorBde']}
-						render={() => (
-							<AssoMemberListScreen
-								asso={asso}
-								isMember={this.user.isMember}
-								isWaiting={this.user.isWaiting}
-								leaveMember={id => {
-									this.leaveMember(id);
-								}}
-								join={joinFromMemberList}
-								validateMember={id => {
-									this.validateMember(id);
-								}}
-							/>
-						)}
-					/>
-					<ConditionalRoute
-						path={`${match.url}/access`}
-						redirect={`${match.url}`}
-						isAllowed={() => {
-							return this.user.isMember;
-						}}
-						render={() => <AccessScreen asso={asso} />}
-					/>
-					<Route
-						path={`${match.url}/article`}
-						render={() => (
-							<ArticleForm
-								post={this.postArticle.bind(this)}
-								events={AssoScreen.getAllEvents(events)}
-							/>
-						)}
-					/>
-				</Switch>
+				<div className="container">
+					<Switch>
+						<Route
+							path={`${match.url}`}
+							exact
+							render={() => (
+								<AssoHomeScreen
+									asso={asso}
+									contacts={contacts}
+									userIsFollowing={this.user.isFollowing}
+									userIsMember={this.user.isMember}
+									userIsWaiting={this.user.isWaiting}
+									follow={this.followAsso.bind(this)}
+									unfollow={this.unfollowAsso.bind(this)}
+									join={this.joinAsso.bind(this)}
+									leave={this.leaveAsso.bind(this)}
+								/>
+							)}
+						/>
+						<Route path={`${match.url}/events`} render={() => <AssoCalendar asso={asso} />} />
+						<Route path={`${match.url}/articles`} render={() => <ArticleList asso={asso} />} />
+						<LoggedRoute
+							path={`${match.url}/members`}
+							redirect={`${match.url}`}
+							types={['casConfirmed', 'contributorBde']}
+							render={() => (
+								<AssoMemberListScreen
+									asso={asso}
+									isMember={this.user.isMember}
+									isWaiting={this.user.isWaiting}
+									leaveMember={id => {
+										this.leaveMember(id);
+									}}
+									join={joinFromMemberList}
+									validateMember={id => {
+										this.validateMember(id);
+									}}
+								/>
+							)}
+						/>
+						<ConditionalRoute
+							path={`${match.url}/access`}
+							redirect={`${match.url}`}
+							isAllowed={() => {
+								return this.user.isMember;
+							}}
+							render={() => <AccessScreen asso={asso} />}
+						/>
+						<Route
+							path={`${match.url}/article`}
+							render={() => (
+								<ArticleForm
+									post={this.postArticle.bind(this)}
+									events={AssoScreen.getAllEvents(events)}
+								/>
+							)}
+						/>
+					</Switch>
+				</div>
 			</div>
 		);
 	}
