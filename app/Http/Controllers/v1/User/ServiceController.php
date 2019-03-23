@@ -60,6 +60,7 @@ class ServiceController extends Controller
     public function index(Request $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id);
+        Service::setUserForVisibility($user);
 
         $services = $user->followedServices()->getSelection()->map(function ($service) {
             return $service->hideData();

@@ -15,23 +15,10 @@ use App\Models\User;
 use App\Models\Service;
 use App\Models\Model;
 use Illuminate\Http\Request;
-use App\Traits\HasVisibility;
 
 trait HasServices
 {
-    use HasUsers, HasVisibility;
-
-    /**
-     * Indique que l'utilisateur est membre de l'instance.
-     *
-     * @param  string $user_id
-     * @param  mixed  $model
-     * @return boolean
-     */
-    protected function isPrivate(string $user_id=null, $model=null)
-    {
-        return User::find($user_id)->permissions()->count() > 0;
-    }
+    use HasUsers;
 
     /**
      * Récupère un service.
@@ -42,13 +29,9 @@ trait HasServices
      */
     protected function getService(User $user=null, string $service_id)
     {
-        $service = Service::find($service_id);
+        $service = Service::setUserForVisibility($user)::findSelection($service_id);
 
         if ($service) {
-            if (!$this->isVisible($service, $user->id)) {
-                abort(403, 'Vous n\'avez pas le droit de voir ce service');
-            }
-
             return $service;
         }
 
@@ -64,7 +47,8 @@ trait HasServices
      */
     protected function getFollowedService(User $user=null, string $service_id)
     {
-        $service = $user->followedServices()->find($service_id);
+        Service::setUserForVisibility($user);
+        $service = $user->followedServices()->findSelection($service_id);
 
         if ($service) {
             return $service;
