@@ -21,7 +21,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserServiceRequest;
 use App\Interfaces\CanHaveServices;
-use App\Traits\HasVisibility;
 
 class ServiceController extends Controller
 {
