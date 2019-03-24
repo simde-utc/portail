@@ -24,7 +24,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\EventRequest;
 use App\Interfaces\Model\CanHaveEvents;
-use App\Traits\HasVisibility;
 
 class EventController extends Controller
 {
@@ -62,15 +61,11 @@ class EventController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $events = Event::getSelection();
+
         if (\Scopes::isOauthRequest($request)) {
-            $events = Event::getSelection()->filter(function ($event) use ($request) {
-                return $this->tokenCanSee($request, $event, 'get', 'events')
-                && (!\Auth::id() || $this->isVisible($event, \Auth::id())
-                || $this->isEventFollowed($request, $event, \Auth::id()));
-            });
-        } else {
-            $events = Event::getSelection()->filter(function ($event) {
-                return $this->isVisible($event);
+            $events = $events->filter(function ($event) use ($request) {
+                return $this->tokenCanSee($request, $event, 'get', 'events');
             });
         }
 

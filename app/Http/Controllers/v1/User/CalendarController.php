@@ -21,7 +21,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserCalendarRequest;
 use App\Interfaces\CanHaveCalendars;
-use App\Traits\HasVisibility;
 
 class CalendarController extends Controller
 {
@@ -34,8 +33,8 @@ class CalendarController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren(
-                ['user-get-calendars-users-owned', 'user-get-calendars-users-followed'],
-                ['client-get-calendars-users-owned', 'client-get-calendars-users-followed']
+                'user-get-calendars-users-followed',
+                'client-get-calendars-users-followed'
             ),
             ['only' => ['index', 'show']]
         );
@@ -71,38 +70,19 @@ class CalendarController extends Controller
      */
     public function index(Request $request, string $user_id=null): JsonResponse
     {
-        $scopeHead = \Scopes::isUserToken($request) ? 'user' : 'client';
         $user = $this->getUser($request, $user_id);
-        $calendars = collect();
-        $choices = [];
+        Calendar::setUserForVisibility($user);
+        $calendars = $user->followedCalendars()->getSelection();
 
-        if (\Scopes::hasOne($request, array_keys(\Scopes::getRelatives($scopeHead.'-get-calendars-users-owned')))) {
-            $choices[] = 'owned';
+        if (\Scopes::isOauthRequest($request)) {
+            $calendars = $calendars->filter(function ($calendar) use ($request) {
+                return $this->tokenCanSee($request, $calendar, 'get');
+            });
         }
 
-        if (\Scopes::hasOne($request, array_keys(\Scopes::getRelatives($scopeHead.'-get-calendars-users-followed')))) {
-            $choices[] = 'followed';
-        }
-
-        $choices = $this->getChoices($request, $choices);
-
-        if (in_array('owned', $choices)) {
-            $calendars = $user->calendars()->getSelection();
-        }
-
-        if (in_array('followed', $choices)) {
-            $calendars = $calendars->merge($user->followedCalendars()->getSelection());
-        }
-
-        $calendars = $calendars->filter(function ($calendar) use ($request) {
-            return ($this->tokenCanSee($request, $calendar, 'get')
-                && (!\Auth::id() || $this->isVisible($calendar, (string) \Auth::id())))
-                || $this->isCalendarFollowed($request, $calendar, (string) \Auth::id());
-        })->values()->map(function ($calendar) {
+        return response()->json($calendars->values()->map(function ($calendar) {
             return $calendar->hideData();
-        });
-
-        return response()->json($calendars, 200);
+        }), 200);
     }
 
     /**

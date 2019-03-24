@@ -2,8 +2,6 @@
 /**
  * Gère les événements des calendriers.
  *
- * TODO: En scopes
- *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
@@ -23,7 +21,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use App\Interfaces\CanHaveCalendars;
-use App\Traits\HasVisibility;
 
 class EventController extends Controller
 {
@@ -64,13 +61,7 @@ class EventController extends Controller
 
         if (\Scopes::isOauthRequest($request)) {
             $events = $events->filter(function ($event) use ($request) {
-                return ($this->tokenCanSee($request, $event, 'get')
-                    && (!\Auth::id() || $this->isVisible($event, \Auth::id())))
-                    || $this->isEventFollowed($request, $event, \Auth::id());
-            });
-        } else {
-            $events = $events->filter(function ($event) {
-                return $this->isVisible($event);
+                return $this->tokenCanSee($request, $event, 'get');
             });
         }
 
@@ -88,9 +79,7 @@ class EventController extends Controller
      */
     public function store(CalendarEventRequest $request, string $calendar_id): JsonResponse
     {
-        $user = \Auth::user();
-        $calendar = $this->getCalendar($request, $user, $calendar_id);
-
+        $calendar = $this->getCalendar($request, $user = \Auth::user(), $calendar_id);
         $events = [];
 
         if ($request->filled('event_ids')) {
