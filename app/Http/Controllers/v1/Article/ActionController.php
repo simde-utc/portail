@@ -18,7 +18,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
-use App\Traits\HasVisibility;
 use App\Traits\Controller\v1\HasArticles;
 use App\Exception\PortailException;
 
@@ -32,34 +31,34 @@ class ActionController extends Controller
     public function __construct()
     {
         $this->middleware(
-        array_merge(
+            array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-		        \Scopes::matchOne('user-get-articles-actions', 'client-get-articles-actions')
+            \Scopes::matchOne('user-get-articles-actions', 'client-get-articles-actions')
 	        ),
 	        ['only' => ['index', 'show']]
         );
-        $this->middleware
-        (array_merge(
+        $this->middleware(
+            array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-		        \Scopes::matchOne('user-create-articles-actions', 'client-create-articles-actions')
+            \Scopes::matchOne('user-create-articles-actions', 'client-create-articles-actions')
 	        ),
 	        ['only' => ['store']]
         );
         $this->middleware(
-        array_merge(
+            array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-		        \Scopes::matchOne('user-edit-articles-actions', 'client-edit-articles-actions')
+            \Scopes::matchOne('user-edit-articles-actions', 'client-edit-articles-actions')
 	        ),
 	        ['only' => ['update']]
         );
         $this->middleware(
-        array_merge(
+            array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-		        \Scopes::matchOne('user-manage-articles-actions', 'client-manage-articles-actions')
+            \Scopes::matchOne('user-manage-articles-actions', 'client-manage-articles-actions')
 	        ),
 	        ['only' => ['destroy']]
         );

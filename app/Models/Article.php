@@ -42,7 +42,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     ];
 
     protected $must = [
-        'title', 'description', 'content', 'image', 'owned_by', 'created_at', 'event', 'visibility'
+        'title', 'description', 'content', 'image', 'owned_by', 'created_at', 'event'
     ];
 
     protected $hidden = [

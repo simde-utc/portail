@@ -74,6 +74,7 @@ trait HasArticles
      */
     protected function getArticle(Request $request, User $user=null, string $article_id, string $verb='get')
     {
+        Article::setUserForVisibility($user);
         $article = Article::findSelection($article_id);
 
         if ($article) {
@@ -84,12 +85,8 @@ trait HasArticles
                 }
 
                 if ($verb !== 'get' && \Scopes::isUserToken($request)
-                    && !$article->owned_by->isArticleManageableBy(\Auth::id())) {
+                    && !$article->owned_by->isArticleManageableBy($user->id)) {
                     abort(403, 'Vous n\'avez pas les droits suffisants');
-                }
-            } else {
-                if (!$this->isVisible($article)) {
-                       abort(403, 'Vous n\'avez pas les droits sur cet article');
                 }
             }
 
