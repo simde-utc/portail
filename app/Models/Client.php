@@ -91,18 +91,6 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indique si le calendrier est accessible.
-     * Le calendrier privé est visible par tous les membres.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isCalendarAccessibleBy(string $user_id): bool
-    {
-        return $this->asso()->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si le calendrier est gérable.
      * Le calendrier privé est modifiable uniquement par les développeurs.
      *
@@ -112,18 +100,6 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     public function isCalendarManageableBy(string $user_id): bool
     {
         return $this->asso()->hasOneRole('developer', ['user_id' => $user_id]);
-    }
-
-    /**
-     * Indique si l'évènement est accessible.
-     * L'évènement privé est visible par tous les membres.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isEventAccessibleBy(string $user_id): bool
-    {
-        return $this->asso()->currentMembers()->wherePivot('user_id', $user_id)->exists();
     }
 
     /**

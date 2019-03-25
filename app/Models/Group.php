@@ -235,18 +235,6 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si le calendrier privé est accessible.
-     * Uniquement par les membres du groupe.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isCalendarAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si le calendrier privé est gérable.
      * Uniquement par les membres du groupe.
      *
@@ -268,18 +256,6 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     public function events()
     {
         return $this->morphMany(Event::class, 'owned_by');
-    }
-
-    /**
-     * Indique si l'événement privé est accessible.
-     * Uniquement par les membres du groupe.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isEventAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
     }
 
     /**

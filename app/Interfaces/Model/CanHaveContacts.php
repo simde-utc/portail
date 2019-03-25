@@ -22,14 +22,6 @@ interface CanHaveContacts
     public function contacts();
 
     /**
-     * Permet d'indiquer si la personne à le droit de voir les contacts appartenant au modèle.
-     *
-     * @param string $user_id
-     * @return boolean
-     */
-    public function isContactAccessibleBy(string $user_id): bool;
-
-    /**
      * Permet d'indiquer si la personne à le droit de créer/modifier/supprimer les contacts appartenant au modèle.
      *
      * @param string $user_id

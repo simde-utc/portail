@@ -74,7 +74,7 @@ trait TokenUtils
      */
     public function isUserToken(Request $request)
     {
-        return $this->isOauthRequest($request) && ($request->user() !== null || $token->transient());
+        return $this->isOauthRequest($request) && ($request->user() !== null || $this->getToken($request)->transient());
     }
 
     /**

@@ -10,6 +10,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use App\Traits\Model\{
@@ -104,9 +105,9 @@ class Calendar extends Model implements OwnableContract
             return $query->where('visibility_id', $visibility->id)->where(function ($subQuery) use ($user, $asso_ids) {
                 return $subQuery->where(function ($subSubQuery) use ($user) {
                     return $subSubQuery->where('owned_by_type', User::class)->where('owned_by_id', $user->id);
-                })->orWhere(function ($subSubQuery) use ($user, $asso_ids) {
+                })->orWhere(function ($subSubQuery) use ($asso_ids) {
                     return $subSubQuery->where('owned_by_type', Asso::class)->whereIn('owned_by_id', $asso_ids);
-                })->orWhere(function ($subSubQuery) use ($user, $asso_ids) {
+                })->orWhere(function ($subSubQuery) use ($asso_ids) {
                     return $subSubQuery->where('owned_by_type', Client::class)
                         ->whereIn('owned_by_id', Client::whereIn('asso_id', $asso_ids)->pluck('id')->toArray());
                 })->orWhere(function ($subSubQuery) use ($user) {
@@ -185,18 +186,6 @@ class Calendar extends Model implements OwnableContract
     public function group()
     {
         return $this->morphTo(Group::class, 'owned_by');
-    }
-
-    /**
-     * Indique si le calendrier est accessible.
-     * Seule la personne qui possède le calendrier peut le voir.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isCalendarAccessibleBy(string $user_id): bool
-    {
-        return $this->owned_by->isCalendarAccessibleBy($user_id);
     }
 
     /**
