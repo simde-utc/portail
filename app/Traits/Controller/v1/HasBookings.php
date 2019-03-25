@@ -84,10 +84,6 @@ trait HasBookings
                 abort(403, 'L\'application n\'a pas les droits sur cet réservation');
             }
 
-            if (!$this->isVisible($booking, $user->id)) {
-                abort(403, 'Vous n\'avez pas le droit de voir cette réservation');
-            }
-
             if ($verb !== 'get' && !$booking->owned_by->isBookingManageableBy(\Auth::id())) {
                 abort(403, 'Vous n\'avez pas les droits suffisants');
             }
@@ -108,7 +104,7 @@ trait HasBookings
      */
     protected function tokenCanSee(Request $request, Model $model, string $verb='get')
     {
-        if ($model instanceof Room) {
+        if (!($model instanceof Booking)) {
             return $this->tokenCanSeeRoom($request, $model, $verb);
         }
 
@@ -122,15 +118,7 @@ trait HasBookings
         if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-bookings-'.$type.'s-owned-asso'))
             && $model->created_by_type === Asso::class
             && $model->created_by_id === \Scopes::getClient($request)->asso->id)) {
-            if (\Scopes::isUserToken($request)) {
-                $functionToCall = 'isBooking'.($verb === 'get' ? 'Accessible' : 'Manageable').'By';
-
-                if ($model->owned_by->$functionToCall(\Auth::id())) {
-                    return true;
-                }
-            } else {
-                return true;
-            }
+            return true;
         }
 
         return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-bookings-'.$type.'s-created');

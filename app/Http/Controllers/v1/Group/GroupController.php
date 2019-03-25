@@ -19,7 +19,9 @@ namespace App\Http\Controllers\v1\Group;
 use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\Group;
+use App\Models\{
+    Group, Visibility
+};
 use App\Http\Requests\GroupRequest;
 use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasGroups;
@@ -150,7 +152,7 @@ class GroupController extends Controller
                 }
             }
 
-            $group = Group::with(['owner', 'visibility',])->find($group_id);
+            $group = Group::with(['owner', 'visibility'])->find($group_id);
 
             return response()->json($group->hideSubData(), 200);
         } else {

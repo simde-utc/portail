@@ -472,18 +472,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si une salle est accessible.
-     * Seulement les membres peuvent voir les salles privées.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isRoomAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si une salle est gérable.
      * Seulement les membres peuvent modifier les salles privées.
      *

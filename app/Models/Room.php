@@ -15,14 +15,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
-use App\Traits\Model\HasCreatorSelection;
-use App\Traits\Model\HasOwnerSelection;
+use App\Traits\Model\{
+    HasCreatorSelection, HasOwnerSelection, HasVisibilitySelection
+};
 
 class Room extends Model implements OwnableContract
 {
-    use HasMorphOwner, HasCreatorSelection, HasOwnerSelection;
+    use HasMorphOwner, HasCreatorSelection, HasOwnerSelection, HasVisibilitySelection;
 
     protected $fillable = [
         'location_id', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type', 'visibility_id', 'calendar_id',
@@ -39,6 +41,15 @@ class Room extends Model implements OwnableContract
 
     protected $must = [
         'location', 'owned_by', 'calendar', 'capacity',
+    ];
+
+    protected $selection = [
+        'visibilities' => '*',
+        'paginate' => null,
+        'order' => null,
+        'creator' => null,
+        'owner' => null,
+        'filter' => [],
     ];
 
     /**
@@ -71,6 +82,36 @@ class Room extends Model implements OwnableContract
                 'owned_by_type' => $model->owned_by_type,
             ]);
         });
+    }
+
+    /**
+     * Scope spécifique pour n'avoir que les ressources privées.
+     *
+     * @param  Builder $query
+     * @return Builder
+     */
+    public function scopePrivateVisibility(Builder $query)
+    {
+        $visibility = $this->getSelectionForVisibility('private');
+        $user = $this->getUserForVisibility();
+
+        if ($user) {
+            $asso_ids = $user->currentJoinedAssos()->pluck('id')->toArray();
+
+            return $query->where('visibility_id', $visibility->id)->where(function ($subQuery) use ($user, $asso_ids) {
+                return $subQuery->where(function ($subSubQuery) use ($user) {
+                    return $subSubQuery->where('owned_by_type', User::class)->where('owned_by_id', $user->id);
+                })->orWhere(function ($subSubQuery) use ($asso_ids) {
+                    return $subSubQuery->where('owned_by_type', Asso::class)->whereIn('owned_by_id', $asso_ids);
+                })->orWhere(function ($subSubQuery) use ($asso_ids) {
+                    return $subSubQuery->where('owned_by_type', Client::class)
+                        ->whereIn('owned_by_id', Client::whereIn('asso_id', $asso_ids)->pluck('id')->toArray());
+                })->orWhere(function ($subSubQuery) use ($user) {
+                    return $subSubQuery->where('owned_by_type', Group::class)
+                        ->whereIn('owned_by_id', $user->groups()->pluck('id')->toArray());
+                });
+            });
+        }
     }
 
     /**

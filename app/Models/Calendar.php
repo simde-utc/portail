@@ -44,6 +44,7 @@ class Calendar extends Model implements OwnableContract
     ];
 
     protected $selection = [
+        'visibilities' => '*',
         'paginate' => null,
         'order' => null,
         'owner' => null,
