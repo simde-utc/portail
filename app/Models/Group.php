@@ -13,21 +13,20 @@ namespace App\Models;
 
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Model\HasMembers;
-use App\Traits\Model\HasDeletedSelection;
-use App\Interfaces\Model\CanHaveEvents;
-use App\Interfaces\Model\CanHaveCalendars;
-use App\Interfaces\Model\CanHaveContacts;
-use App\Interfaces\Model\CanHaveArticles;
-use App\Interfaces\Model\CanHaveRoles;
-use App\Interfaces\Model\CanHavePermissions;
-use App\Models\User;
-use App\Models\Role;
+use App\Traits\Model\{
+    HasMembers, HasDeletedSelection, HasVisibilitySelection
+};
+use App\Interfaces\Model\{
+    CanHaveEvents, CanHaveCalendars, CanHaveContacts, CanHaveArticles, CanHaveRoles, CanHavePermissions
+};
+use App\Models\{
+    User, Role
+};
 
 class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles,
     CanHaveRoles, CanHavePermissions
 {
-    use SoftDeletes, HasMembers, HasDeletedSelection;
+    use SoftDeletes, HasMembers, HasDeletedSelection, HasVisibilitySelection;
 
     protected $roleRelationTable = 'groups_members';
 
@@ -48,6 +47,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     ];
 
     protected $selection = [
+        'visibilities' => '*',
         'order' => 'latest',
         'paginate' => 50,
         'day' => null,
@@ -74,6 +74,24 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
                 'semester_id' => 0,
             ], true);
         });
+    }
+
+    /**
+     * Scope spécifique pour n'avoir que les ressources privées.
+     *
+     * @param  Builder $query
+     * @return Builder
+     */
+    public function scopePrivateVisibility(Builder $query)
+    {
+        $visibility = $this->getSelectionForVisibility('private');
+        $user = $this->getUserForVisibility();
+
+        if ($user) {
+            $group_ids = $user->groups()->pluck('id')->toArray();
+
+            return $query->where('visibility_id', $visibility->id)->whereIn('id', $group_ids);
+        }
     }
 
     /**
