@@ -58,9 +58,9 @@ trait HasArticles
             }
 
             return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-'.$type.'-'.$modelType.'s-created');
-        } else {
-            return $this->tokenCanSeeEvent($request, $model, $verb);
         }
+
+        return $this->tokenCanSeeEvent($request, $model, $verb);
     }
 
     /**

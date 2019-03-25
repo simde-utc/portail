@@ -40,7 +40,7 @@ class Calendar extends Model implements OwnableContract
     ];
 
     protected $must = [
-        'description', 'color', 'owned_by',
+        'description', 'color', 'owned_by', 'visibility'
     ];
 
     protected $selection = [

@@ -40,7 +40,7 @@ trait HasContacts
     public function getContact(Request $request, string $verb='get')
     {
         $this->checkTokenRights($request, $verb);
-        $contact = $request->resource->contacts()->where('id', $request->contact)->first();
+        $contact = $request->resource->contacts()->where('id', $request->contact)->firstSelection();
 
         if ($contact) {
             if (\Auth::id()) {

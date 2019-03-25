@@ -29,7 +29,7 @@ trait HasPlaces
      */
     protected function getPlace(Request $request, string $place_id)
     {
-        $place = Place::find($place_id);
+        $place = Place::findSelection($place_id);
 
         if ($place) {
             return $place;

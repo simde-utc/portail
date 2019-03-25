@@ -40,7 +40,7 @@ trait HasComments
     public function getComment(Request $request, string $verb='get')
     {
         $this->checkTokenRights($request, $verb);
-        $comment = $request->resource->comments()->where('id', $request->comment)->first();
+        $comment = $request->resource->comments()->where('id', $request->comment)->firstSelection();
 
         if ($comment) {
             if (\Auth::id()) {

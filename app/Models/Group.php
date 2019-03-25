@@ -44,7 +44,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     ];
 
     protected $must = [
-        'icon'
+        'icon', 'visibility'
     ];
 
     protected $selection = [

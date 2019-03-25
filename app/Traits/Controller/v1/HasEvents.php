@@ -24,30 +24,6 @@ trait HasEvents
     use HasUsers;
 
     /**
-     * Uniquement les followers et ceux qui possèdent le droit peuvent le voir.
-     *
-     * @param  Request $request
-     * @param  Event   $event
-     * @param  string  $user_id
-     * @return boolean
-     */
-    protected function isEventFollowed(Request $request, Event $event, string $user_id)
-    {
-        $user = User::find($user_id);
-        $calendar_ids = $user->calendars()->get(['calendars.id'])->pluck('id')->merge(
-            $user->followedCalendars()->get(['calendars.id'])->pluck('id')
-        );
-        $event_calendar_ids = $event->calendars()->get(['calendars.id'])->pluck('id');
-
-        $type = \ModelResolver::getName($event->owned_by_type);
-
-        return (
-            count($calendar_ids->intersect($event_calendar_ids)) !== 0
-            && \Scopes::hasOne($request, \Scopes::getTokenType($request).'-get-events-users-followed-'.$type)
-        );
-    }
-
-    /**
      * Récupère l'événement.
      *
      * @param  Request $request

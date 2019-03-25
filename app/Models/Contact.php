@@ -35,7 +35,7 @@ class Contact extends Model implements OwnableContract
     ];
 
     protected $must = [
-        'value', 'type'
+        'value', 'type', 'visibility'
     ];
 
     protected $selection = [

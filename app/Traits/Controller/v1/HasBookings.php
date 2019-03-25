@@ -77,7 +77,7 @@ trait HasBookings
     protected function getBookingFromRoom(Request $request, Room $room, User $user, string $booking_id,
         string $verb='get')
     {
-        $booking = $room->bookings()->find($booking_id);
+        $booking = $room->bookings()->findSelection($booking_id);
 
         if ($booking) {
             if (!$this->tokenCanSee($request, $booking, $verb)) {

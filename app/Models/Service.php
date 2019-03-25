@@ -34,7 +34,7 @@ class Service extends Model
     ];
 
     protected $must = [
-        'name', 'shortname', 'login', 'image', 'description', 'url'
+        'name', 'shortname', 'login', 'image', 'description', 'url', 'visibility'
     ];
 
     protected $selection = [

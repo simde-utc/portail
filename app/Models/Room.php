@@ -40,7 +40,7 @@ class Room extends Model implements OwnableContract
     ];
 
     protected $must = [
-        'location', 'owned_by', 'calendar', 'capacity',
+        'location', 'owned_by', 'calendar', 'capacity', 'visibility'
     ];
 
     protected $selection = [
