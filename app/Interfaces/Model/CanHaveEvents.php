@@ -22,14 +22,6 @@ interface CanHaveEvents
     public function events();
 
     /**
-     * Permet d'indiquer si la personne à le droit de voir les événements appartenant au modèle.
-     *
-     * @param string $user_id
-     * @return boolean
-     */
-    public function isEventAccessibleBy(string $user_id): bool;
-
-    /**
      * Permet d'indiquer si la personne à le droit de créer/modifier/supprimer les événements appartenant au modèle.
      *
      * @param string $user_id

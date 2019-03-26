@@ -64,20 +64,11 @@ class ServiceController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        if (\Scopes::isOauthRequest($request)) {
-            $services = Service::getSelection()->filter(function ($service) {
-                return !\Auth::id() || $this->isVisible($service, \Auth::id());
-            })->map(function ($service) {
-                return $service->hideData();
-            });
-        } else {
-            $services = Service::where('visibility_id', Visibility::public()->id)->getSelection()
-                ->map(function ($service) {
-                    return $service->hideData();
-                });
-        }
+        $services = Service::getSelection();
 
-        return response()->json($services->values(), 200);
+        return response()->json($services->map(function ($service) {
+            return $service->hideData();
+        }), 200);
     }
 
     /**

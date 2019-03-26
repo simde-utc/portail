@@ -21,7 +21,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserServiceRequest;
 use App\Interfaces\CanHaveServices;
-use App\Traits\HasVisibility;
 
 class ServiceController extends Controller
 {
@@ -60,6 +59,7 @@ class ServiceController extends Controller
     public function index(Request $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id);
+        Service::setUserForVisibility($user);
 
         $services = $user->followedServices()->getSelection()->map(function ($service) {
             return $service->hideData();

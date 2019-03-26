@@ -24,7 +24,6 @@ use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Interfaces\Model\CanHaveCalendars;
-use App\Traits\HasVisibility;
 
 class CalendarController extends Controller
 {
@@ -61,15 +60,11 @@ class CalendarController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $calendars = Calendar::getSelection();
+
         if (\Scopes::isOauthRequest($request)) {
-               $calendars = Calendar::getSelection()->filter(function ($calendar) use ($request) {
-                   return ($this->tokenCanSee($request, $calendar, 'get')
-	                && (!\Auth::id() || $this->isVisible($calendar, \Auth::id())))
-	                || $this->isCalendarFollowed($request, $calendar, \Auth::id());
-               });
-        } else {
-            $calendars = Calendar::getSelection()->filter(function ($calendar) {
-                return $this->isVisible($calendar);
+            $calendars = $calendars->filter(function ($calendar) use ($request) {
+                return $this->tokenCanSee($request, $calendar, 'get');
             });
         }
 

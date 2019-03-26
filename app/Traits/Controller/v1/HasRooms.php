@@ -10,7 +10,6 @@
 
 namespace App\Traits\Controller\v1;
 
-use App\Traits\HasVisibility;
 use App\Models\Asso;
 use App\Models\Room;
 use App\Models\Model;
@@ -19,24 +18,6 @@ use Illuminate\Http\Request;
 
 trait HasRooms
 {
-    use HasVisibility;
-
-    /**
-     * Indique que l'utilisateur est membre de l'instance.
-     *
-     * @param  string $user_id
-     * @param  mixed  $room
-     * @return boolean
-     */
-    public function isPrivate(string $user_id, $room=null)
-    {
-        if ($room === null) {
-            return false;
-        }
-
-        return $room->owned_by->isRoomAccessibleBy($user_id);
-    }
-
     /**
      * Récupère une salle.
      *
@@ -48,15 +29,11 @@ trait HasRooms
      */
     protected function getRoom(Request $request, User $user, string $room_id, string $verb='get')
     {
-        $room = Room::find($room_id);
+        $room = Room::setUserForVisibility($user)::findSelection($room_id);
 
         if ($room) {
             if (!$this->tokenCanSee($request, $room, $verb)) {
-                abort(403, 'L\'application n\'a pas les droits sur cet salle');
-            }
-
-            if (!$this->isVisible($room, $user->id)) {
-                abort(403, 'Vous n\'avez pas le droit de voir cette salle');
+                abort(403, 'L\'application n\'a pas les droits sur cette salle');
             }
 
             if ($verb !== 'get' && !$room->owned_by->isRoomManageableBy(\Auth::id())) {
@@ -89,15 +66,7 @@ trait HasRooms
         if (((\Scopes::hasOne($request, $scopeHead.'-'.$verb.'-rooms-'.$type.'s-owned-asso'))
             && $room->created_by_type === Asso::class
             && $room->created_by_id === \Scopes::getClient($request)->asso->id)) {
-            if (\Scopes::isUserToken($request)) {
-                $functionToCall = 'isRoom'.($verb === 'get' ? 'Accessible' : 'Manageable').'By';
-
-                if ($room->owned_by->$functionToCall(\Auth::id())) {
-                    return true;
-                }
-            } else {
-                return true;
-            }
+            return true;
         }
 
         return \Scopes::hasOne($request, $scopeHead.'-'.$verb.'-rooms-'.$type.'s-created');

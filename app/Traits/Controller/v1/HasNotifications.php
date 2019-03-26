@@ -29,7 +29,7 @@ trait HasNotifications
     public function getUserNotification(Request $request, string $user_id=null, string $notification_id)
     {
         $user = $this->getUser($request, $user_id);
-        $notification = $user->notifications()->find($notification_id);
+        $notification = $user->notifications()->findSelection($notification_id);
 
         if ($notification) {
             return $notification;

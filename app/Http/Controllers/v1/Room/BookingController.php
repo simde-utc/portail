@@ -113,13 +113,11 @@ class BookingController extends Controller
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
 
-        $bookings = $room->bookings()->getSelection()->filter(function ($booking) {
-            return !\Auth::id() || $this->isVisible($booking, \Auth::id());
-        })->values()->map(function ($booking) {
-            return $booking->hideData();
-        });
+        $bookings = $room->bookings()->getSelection();
 
-        return response()->json($bookings, 200);
+        return response()->json($bookings->map(function ($booking) {
+            return $booking->hideData();
+        }), 200);
     }
 
     /**

@@ -30,7 +30,7 @@ trait HasRoles
      */
     protected function getRole(Request $request, string $role_id, string $verb='get')
     {
-        $role = Role::where('id', $role_id)->first();
+        $role = Role::where('id', $role_id)->firstSelection();
 
         if ($role) {
             if (!$this->tokenCanSee($request, $role, $verb)) {
@@ -61,7 +61,7 @@ trait HasRoles
 
         $role = $user->roles()->wherePivot('role_id', $role_id)
         ->wherePivot('semester_id', $semester_id)
-        ->withPivot(['semester_id', 'validated_by_id'])->first();
+        ->withPivot(['semester_id', 'validated_by_id'])->firstSelection();
 
         if ($role) {
             $role->semester_id = $role->pivot->semester_id;

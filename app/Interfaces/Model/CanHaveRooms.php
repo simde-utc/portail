@@ -23,14 +23,6 @@ interface CanHaveRooms
     public function rooms();
 
     /**
-     * Permet d'indiquer si la personne à le droit de voir les salles appartenant au modèle.
-     *
-     * @param string $user_id
-     * @return boolean
-     */
-    public function isRoomAccessibleBy(string $user_id): bool;
-
-    /**
      * Permet d'indiquer si la personne à le droit de créer/modifier/supprimer les salles appartenant au modèle.
      *
      * @param string $user_id

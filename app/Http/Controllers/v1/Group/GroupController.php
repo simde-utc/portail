@@ -19,9 +19,10 @@ namespace App\Http\Controllers\v1\Group;
 use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\Group;
+use App\Models\{
+    Group, Visibility
+};
 use App\Http\Requests\GroupRequest;
-use App\Models\Visibility;
 use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasGroups;
 
@@ -55,15 +56,9 @@ class GroupController extends Controller
         // On inclue les relations et on les formattent.
         $groups = Group::getSelection();
 
-        if (\Auth::id()) {
-            $groups = $this->hide($groups, true);
-        }
-
-        $groups = $groups->map(function ($group) {
+        return response()->json($groups->map(function ($group) {
             return $group->hideData();
-        });
-
-        return response()->json($groups, 200);
+        }), 200);
     }
 
     /**
@@ -113,20 +108,9 @@ class GroupController extends Controller
      */
     public function show(GroupRequest $request, string $group_id): JsonResponse
     {
-        // On inclue les relations et on les formattent.
-        $group = Group::find($group_id);
+        $group = $this->getGroup($request, $group_id);
 
-        if (\Auth::id()) {
-            $group = $this->hide($group, false, function ($group) {
-                return $group->hideData();
-            });
-        }
-
-        if ($group) {
-            return response()->json($group, 200);
-        } else {
-            abort(404, "Groupe non trouvé");
-        }
+        return response()->json($group->hideSubData(), 200);
     }
 
     /**
@@ -138,11 +122,7 @@ class GroupController extends Controller
      */
     public function update(GroupRequest $request, string $group_id): JsonResponse
     {
-        $group = Group::find($group_id);
-
-        if (!$group) {
-            abort(404, "Groupe non trouvé");
-        }
+        $group = $this->getGroup($request, $group_id);
 
         if ($request->filled('user_id')) {
             $group->user_id = $request->input('user_id');
@@ -172,9 +152,9 @@ class GroupController extends Controller
                 }
             }
 
-            $group = Group::with(['owner', 'visibility',])->find($group_id);
+            $group = Group::with(['owner', 'visibility'])->find($group_id);
 
-            return response()->json($group->hideData(), 200);
+            return response()->json($group->hideSubData(), 200);
         } else {
             abort(500, 'Impossible de modifier le groupe');
         }
@@ -189,12 +169,9 @@ class GroupController extends Controller
      */
     public function destroy(GroupRequest $request, string $group_id): void
     {
-        $group = Group::find($group_id);
+        $group = $this->getGroup($request, $group_id);
+        $group->delete();
 
-        if (!$group || !$group->delete()) {
-            abort(404, "Groupe non trouvé");
-        } else {
-            abort(204);
-        }
+        abort(204);
     }
 }

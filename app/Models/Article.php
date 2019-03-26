@@ -17,15 +17,16 @@ use Illuminate\Database\Eloquent\Builder;
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
-use App\Traits\Model\HasCreatorSelection;
-use App\Traits\Model\HasOwnerSelection;
+use App\Traits\Model\{
+    HasCreatorSelection, HasOwnerSelection, HasVisibilitySelection
+};
 use App\Models\ArticleAction;
 use App\Interfaces\Model\CanHaveComments;
 use App\Interfaces\Model\CanComment;
 
 class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComments
 {
-    use HasMorphOwner, HasCreatorSelection, HasOwnerSelection;
+    use HasMorphOwner, HasCreatorSelection, HasOwnerSelection, HasVisibilitySelection;
 
     protected $fillable = [
         'title', 'description', 'content', 'image', 'event_id', 'visibility_id',
@@ -41,7 +42,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     ];
 
     protected $must = [
-        'title', 'description', 'content', 'image', 'owned_by', 'created_at', 'event',
+        'title', 'description', 'content', 'image', 'owned_by', 'created_at', 'event', 'visibility'
     ];
 
     protected $hidden = [
@@ -49,6 +50,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     ];
 
     protected $selection = [
+        'visibilities' => '*',
         'paginate' 	=> 10,
         'order'		=> [
             'default' 	=> 'latest',
@@ -113,20 +115,20 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
                 }
 
                 return $query->selectRaw('NULL')
-                 ->from($actionTable)
-                 ->where($actionTable.'.key', strtoupper($action))
-                 ->whereRaw($actionTable.'.article_id = '.$this->getTable().'.id');
+                     ->from($actionTable)
+                     ->where($actionTable.'.key', strtoupper($action))
+                     ->whereRaw($actionTable.'.article_id = '.$this->getTable().'.id');
             });
         } else if (substr($action, 0, 2) === 'un' || substr($action, 0, 3) === 'dis') {
             $action = substr($action, 0, 2) === 'un' ? substr($action, 2) : substr($action, 3);
 
             $query = $query->where($actionTable.'.key', strtoupper($action))
-            ->where($actionTable.'.value', '<', 1)
-            ->join($actionTable, $actionTable.'.article_id', '=', $this->getTable().'.id');
+                ->where($actionTable.'.value', '<', 1)
+                ->join($actionTable, $actionTable.'.article_id', '=', $this->getTable().'.id');
         } else {
             $query = $query->where($actionTable.'.key', strtoupper($action))
-            ->where($actionTable.'.value', '>', 0)
-            ->join($actionTable, $actionTable.'.article_id', '=', $this->getTable().'.id');
+                ->where($actionTable.'.value', '>', 0)
+                ->join($actionTable, $actionTable.'.article_id', '=', $this->getTable().'.id');
         }
 
         if (\Auth::id()) {
@@ -134,6 +136,36 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
         }
 
         return $query;
+    }
+
+    /**
+     * Scope spécifique pour n'avoir que les ressources privées.
+     *
+     * @param  Builder $query
+     * @return Builder
+     */
+    public function scopePrivateVisibility(Builder $query)
+    {
+        $visibility = $this->getSelectionForVisibility('private');
+        $user = $this->getUserForVisibility();
+
+        if ($user) {
+            $asso_ids = $user->currentJoinedAssos()->pluck('id')->toArray();
+
+            return $query->where('visibility_id', $visibility->id)->where(function ($subQuery) use ($user, $asso_ids) {
+                return $subQuery->where(function ($subSubQuery) use ($user) {
+                    return $subSubQuery->where('owned_by_type', User::class)->where('owned_by_id', $user->id);
+                })->orWhere(function ($subSubQuery) use ($asso_ids) {
+                    return $subSubQuery->where('owned_by_type', Asso::class)->whereIn('owned_by_id', $asso_ids);
+                })->orWhere(function ($subSubQuery) use ($asso_ids) {
+                    return $subSubQuery->where('owned_by_type', Client::class)
+                        ->whereIn('owned_by_id', Client::whereIn('asso_id', $asso_ids)->pluck('id')->toArray());
+                })->orWhere(function ($subSubQuery) use ($user) {
+                    return $subSubQuery->where('owned_by_type', Group::class)
+                        ->whereIn('owned_by_id', $user->groups()->pluck('id')->toArray());
+                });
+            });
+        }
     }
 
     /**
