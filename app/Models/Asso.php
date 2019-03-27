@@ -400,18 +400,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si le calendrier est accessible.
-     * Seulement les membres peuvent voir les calendriers privées.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isCalendarAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si le calendrier est gérable.
      * Seulement les membres ayant la permission peuvent modifier les calendriers privées.
      *
@@ -433,18 +421,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     public function events()
     {
         return $this->morphMany(Event::class, 'owned_by');
-    }
-
-    /**
-     * Indique si un évènement est accessible.
-     * Seulement les membres peuvent voir les évènements privés.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isEventAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
     }
 
     /**
@@ -472,18 +448,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si un article est accessible.
-     * Seulement les membres peuvent voir les articles privés.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isArticleAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si un article est gérable.
      * Seulement les membres peuvent modifier les articles privés.
      *
@@ -505,18 +469,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     public function rooms()
     {
         return $this->morphMany(Room::class, 'owned_by');
-    }
-
-    /**
-     * Indique si une salle est accessible.
-     * Seulement les membres peuvent voir les salles privées.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isRoomAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
     }
 
     /**

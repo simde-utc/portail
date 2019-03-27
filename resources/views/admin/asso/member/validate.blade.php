@@ -11,7 +11,7 @@
         <button class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		<h4 class="modal-title">Validation d'un membre</h4>
       </div>
-      <form action="{{ url('/admin/assos/members/'.implode('/', $ids)) }}" method="post">
+      <form action="{{ url('/admin/management/assos/members/'.implode('/', $ids)) }}" method="post">
         {{ csrf_field() }}
 
         <div class="modal-body">

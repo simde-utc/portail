@@ -15,8 +15,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Cog\Contracts\Ownership\CanBeOwner;
 use App\Interfaces\Model\{
-    CanBeNotifiable, CanHaveCalendars, CanHaveContacts, CanHaveEvents, CanHaveArticles,
-    CanHaveRoles, CanHavePermissions, CanComment
+    CanBeNotifiable, CanHaveCalendars, CanHaveContacts, CanHaveEvents, CanHaveRoles, CanHavePermissions, CanComment
 };
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;

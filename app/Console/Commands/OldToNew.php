@@ -925,6 +925,8 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
         $bar = $this->output->createProgressBar(count($this->rooms));
         $errors = [];
 
+        $visibility_id = Visibility::findByType('contributorBde')->id;
+
         foreach ($this->rooms as $room) {
             try {
                 $pole = $this->getModelFrom($poles, $room->id_pole);
@@ -970,7 +972,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     'created_by_type' => Asso::class,
                     'owned_by_id' => $asso->id,
                     'owned_by_type' => Asso::class,
-                    'visibility_id' => Visibility::findByType('contributorBde')->id,
+                    'visibility_id' => $visibility_id,
                     'capacity' => $room->capacite,
                 ]);
 

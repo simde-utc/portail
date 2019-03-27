@@ -11,38 +11,15 @@
 namespace App\Traits\Controller\v1;
 
 use App\Exceptions\PortailException;
-use App\Models\User;
-use App\Models\Calendar;
-use App\Models\Event;
-use App\Facades\Ginger;
-use App\Models\Model;
+use App\Models\{
+    User, Calendar, Event, Model
+};
 use Illuminate\Http\Request;
 
 trait HasCalendars
 {
     use HasEvents {
-        HasEvents::isPrivate as isEventPrivate;
         HasEvents::tokenCanSee as tokenCanSeeEvent;
-    }
-
-    /**
-     * Indique que l'utilisateur est membre de l'instance.
-     *
-     * @param  string $user_id
-     * @param  mixed  $model
-     * @return boolean
-     */
-    public function isPrivate(string $user_id, $model=null)
-    {
-        if ($model === null) {
-            return false;
-        }
-
-        if ($model instanceof Event) {
-            return $this->isEventPrivate($user_id, $model);
-        }
-
-        return $model->owned_by->isCalendarAccessibleBy($user_id);
     }
 
     /**
@@ -58,20 +35,12 @@ trait HasCalendars
     protected function getEventFromCalendar(Request $request, User $user=null, Calendar $calendar, string $event_id,
         string $verb='get')
     {
-        $event = $calendar->events()->find($event_id);
+        $event = $calendar->events()->findSelection($event_id);
 
         if ($event) {
             if (\Scopes::isOauthRequest($request)) {
                 if (!$this->tokenCanSee($request, $event, $verb, 'events')) {
                     abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
-                }
-
-                if ($user && !$this->isVisible($event, $user->id)) {
-                    abort(403, 'Vous n\'avez pas les droits sur cet évènenement');
-                }
-            } else {
-                if ($this->isVisible($event)) {
-                    abort(403, 'Vous n\'avez pas le droit de voir cet évènenement');
                 }
             }
 

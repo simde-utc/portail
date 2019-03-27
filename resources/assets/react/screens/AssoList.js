@@ -43,6 +43,7 @@ class AssoListScreen extends React.Component {
 				order: 'a-z',
 			})
 		);
+		dispatch(actions.config({ title: 'Liste des associations' }));
 	}
 
 	static getGrid(assos, filter) {

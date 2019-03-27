@@ -15,36 +15,9 @@ use App\Models\Asso;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasVisibility;
 
 trait HasGroups
 {
-    use HasVisibility;
-
-    /**
-     * Indique que l'utilisateur est membre de l'instance.
-     *
-     * @param  string $user_id
-     * @param  mixed  $model
-     * @return boolean
-     */
-    public function isPrivate(string $user_id, $model=null)
-    {
-        if ($model === null) {
-            return false;
-        }
-
-        if ($model->user_id && $model->user_id == $user_id) {
-            return true;
-        }
-
-        try {
-            return $model->hasOneMember(\Auth::id());
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     /**
      * Renvoie le groupe demandé.
      *
@@ -54,14 +27,10 @@ trait HasGroups
      */
     protected function getGroup(Request $request, string $group_id): Group
     {
-        $group = Group::find($group_id);
+        $group = Group::findSelection($group_id);
 
         if ($group) {
-            if ($this->isVisible($group)) {
-                return $group;
-            } else {
-                abort(403, 'Vous n\'avez pas le droit de voir le groupe');
-            }
+            return $group;
         }
 
         abort(404, 'Groupe non trouvé');

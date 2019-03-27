@@ -33,4 +33,7 @@ parameters:
 		- '#Call to an undefined method App\\Admin\\GridGenerator::#'
 		- '#Call to an undefined method App\\Admin\\ShowGenerator::#'
 		- '#.*does not call parent constructor from App\\Admin\\Generator#'
-		- '#Access to an undefined property App\\Admin\\Controllers\\AccessController::#'
+		- '#Access to an undefined property App\\Admin\\Controllers\\Management\\AccessController::#'
+		- '#Call to an undefined method App\\Admin\\FormGenerator::disableViewCheck#'
+		- '#Call to an undefined method App\\Admin\\FormGenerator::disableEditingCheck#'
+		- '#App\\Admin\\Controllers\\Management\\.*::__construct.* does not call parent constructor from App\\Admin\\Controllers\\Controller#'

@@ -473,7 +473,7 @@ class AssoScreen extends React.Component {
 	}
 
 	render() {
-		const { fetching, fetched, failed, user, asso, member, contacts, match, config } = this.props;
+		const { fetching, fetched, failed, user, asso, member, contacts, match } = this.props;
 		const { events, modal } = this.state;
 
 		if (failed) return <Http404 />;
@@ -495,11 +495,6 @@ class AssoScreen extends React.Component {
 				isWaiting: false,
 			};
 		}
-		config.title = asso.shortname;
-
-		let bg = `bg-${asso.login}`;
-
-		if (asso.parent) bg += ` bg-${asso.parent.login}`;
 
 		let joinFromMemberList;
 		if (Object.values(this.user).every(value => !value)) {
@@ -507,7 +502,7 @@ class AssoScreen extends React.Component {
 		}
 
 		return (
-			<div className="asso w-100">
+			<div className="asso container w-100">
 				<Modal isOpen={modal.show}>
 					<ModalHeader>{modal.title}</ModalHeader>
 					<ModalBody>{modal.body}</ModalBody>
@@ -535,7 +530,7 @@ class AssoScreen extends React.Component {
 					</ModalFooter>
 				</Modal>
 
-				<ul className={`nav nav-tabs asso ${bg}`}>
+				<ul className="nav nav-tabs asso">
 					<li className="nav-item">
 						<NavLink className="nav-link" activeClassName="active" exact to={`${match.url}`}>
 							DESCRIPTION

@@ -11,23 +11,23 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Cog\Contracts\Ownership\CanBeOwner;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Model\HasMembers;
-use App\Traits\Model\HasDeletedSelection;
-use App\Interfaces\Model\CanHaveEvents;
-use App\Interfaces\Model\CanHaveCalendars;
-use App\Interfaces\Model\CanHaveContacts;
-use App\Interfaces\Model\CanHaveArticles;
-use App\Interfaces\Model\CanHaveRoles;
-use App\Interfaces\Model\CanHavePermissions;
-use App\Models\User;
-use App\Models\Role;
+use App\Traits\Model\{
+    HasMembers, HasDeletedSelection, HasVisibilitySelection
+};
+use App\Interfaces\Model\{
+    CanHaveEvents, CanHaveCalendars, CanHaveContacts, CanHaveArticles, CanHaveRoles, CanHavePermissions
+};
+use App\Models\{
+    User, Role
+};
 
 class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents, CanHaveContacts, CanHaveArticles,
     CanHaveRoles, CanHavePermissions
 {
-    use SoftDeletes, HasMembers, HasDeletedSelection;
+    use SoftDeletes, HasMembers, HasDeletedSelection, HasVisibilitySelection;
 
     protected $roleRelationTable = 'groups_members';
 
@@ -44,10 +44,11 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     ];
 
     protected $must = [
-        'icon'
+        'icon', 'visibility'
     ];
 
     protected $selection = [
+        'visibilities' => '*',
         'order' => 'latest',
         'paginate' => 50,
         'day' => null,
@@ -74,6 +75,24 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
                 'semester_id' => 0,
             ], true);
         });
+    }
+
+    /**
+     * Scope spécifique pour n'avoir que les ressources privées.
+     *
+     * @param  Builder $query
+     * @return Builder
+     */
+    public function scopePrivateVisibility(Builder $query)
+    {
+        $visibility = $this->getSelectionForVisibility('private');
+        $user = $this->getUserForVisibility();
+
+        if ($user) {
+            $group_ids = $user->groups()->pluck('id')->toArray();
+
+            return $query->where('visibility_id', $visibility->id)->whereIn('id', $group_ids);
+        }
     }
 
     /**
@@ -235,18 +254,6 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si le calendrier privé est accessible.
-     * Uniquement par les membres du groupe.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isCalendarAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si le calendrier privé est gérable.
      * Uniquement par les membres du groupe.
      *
@@ -271,18 +278,6 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si l'événement privé est accessible.
-     * Uniquement par les membres du groupe.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isEventAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si l'événement privé est gérable.
      * Uniquement par les membres du groupe.
      *
@@ -304,18 +299,6 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     public function articles()
     {
         return $this->morphMany(Article::class, 'owned_by');
-    }
-
-    /**
-     * Indique si l'article privé est accessible.
-     * Uniquement par les membres du groupe.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isArticleAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
     }
 
     /**

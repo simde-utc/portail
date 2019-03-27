@@ -171,26 +171,6 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les groupes encore actifs.
-     *
-     * @return mixed
-     */
-    public function currentGroups()
-    {
-        return $this->groups()->where('is_active', 1);
-    }
-
-    /**
-     * Relation avec les groupes créés par l'utilisateur.
-     *
-     * @return mixed
-     */
-    public function ownGroups()
-    {
-        return $this->hasMany(Group::class);
-    }
-
-    /**
      * Relation avec les calendriers suivits.
      *
      * @return mixed
@@ -386,17 +366,6 @@ trait UserRelations
     }
 
     /**
-     * Indique si un calendrier est accessible.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isCalendarAccessibleBy(string $user_id): bool
-    {
-        return $this->id === $user_id;
-    }
-
-    /**
      * Indique si un calendrier est gérable.
      *
      * @param  string $user_id
@@ -415,17 +384,6 @@ trait UserRelations
     public function events()
     {
         return $this->morphMany(Event::class, 'owned_by');
-    }
-
-    /**
-     * Indique si un événement est accessible.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isEventAccessibleBy(string $user_id): bool
-    {
-        return $this->id === $user_id;
     }
 
     /**

@@ -18,7 +18,6 @@ use App\Http\Requests\ContactRequest;
 use App\Models\Contact;
 use App\Models\ContactType;
 use App\Models\Visibility;
-use App\Traits\HasVisibility;
 use App\Interfaces\CanHaveCalendars;
 use App\Traits\Controller\v1\HasContacts;
 use Illuminate\Http\JsonResponse;

@@ -1,8 +1,12 @@
 .sidebar {
-	min-width: 250px;
-	overflow: auto; 
+    height: 100%;
+    min-width: 250px;
+    width: 250px;
+    max-width: 250px;
+	overflow: auto;
 	padding: map-get($spacers, 3) 0;
 	background: $dark-gray;
+    transition: 0.5s;
 }
 
 .sidebar-inner {
@@ -11,6 +15,10 @@
 
 .sidebar-group {
 	margin-bottom: map-get($spacers, 3);
+}
+
+.sidebar-title {
+    display: none;
 }
 
 .sidebar-header {
@@ -49,4 +57,52 @@
 	margin-top: auto;
 	margin-bottom: 0;
 	text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+    .sidebar-overlay {
+        position: fixed;
+        display: none;
+        z-index: 1000;
+        top: 60px;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        transition: 0.5s;
+    }
+
+    .sidebar {
+        position: absolute;
+        height: auto;
+        z-index: 1000;
+        top: 60px;
+        bottom: 0;
+        min-width: 0;
+        width: 0;
+        max-width: 0;
+    }
+
+    .sidebar-link {
+        font-size: 14px;
+    }
+
+    .sidebar-footer {
+        font-size: 12px;
+    }
+
+    .sidebar-title {
+        display: block;
+    }
+
+    .sidebar-active .sidebar-overlay {
+        display: block;
+        background-color: #1115;
+    }
+
+    .sidebar-active .sidebar {
+        min-width: 225px;
+        width: 225px;
+        max-width: 225px;
+        border-right: SOLID 2px grey;
+    }
 }

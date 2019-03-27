@@ -24,21 +24,27 @@ import ArticleList from '../../components/Article/List';
 class AssoArticleList extends React.Component {
 	componentWillMount() {
 		const {
-			asso: { id },
+			asso: { id, shortname },
+			dispatch,
 		} = this.props;
 
 		if (id) {
 			this.loadAssosData(id);
 		}
+
+		dispatch(actions.config({ title: `${shortname} - Articles` }));
 	}
 
 	componentDidUpdate({ asso }) {
 		const {
-			asso: { id },
+			asso: { id, shortname },
+			dispatch,
 		} = this.props;
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);
+
+			dispatch(actions.config({ title: `${shortname} - Articles` }));
 		}
 	}
 
@@ -55,8 +61,7 @@ class AssoArticleList extends React.Component {
 	}
 
 	render() {
-		const { asso, articles, fetched, fetching, config } = this.props;
-		config.title = `${asso.shortname} - Articles`;
+		const { articles, fetched, fetching } = this.props;
 
 		return (
 			<ArticleList articles={articles} fetched={fetched} fetching={fetching} {...this.props} />

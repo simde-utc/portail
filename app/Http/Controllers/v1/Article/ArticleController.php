@@ -22,7 +22,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
 use App\Models\Tag;
-use App\Traits\HasVisibility;
 use App\Interfaces\Model\CanHaveArticles;
 use App\Traits\Controller\v1\HasArticles;
 use App\Traits\Controller\v1\HasImages;
@@ -130,14 +129,11 @@ class ArticleController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $articles = Article::getSelection();
+
         if (\Scopes::isOauthRequest($request)) {
-            $articles = Article::getSelection()->filter(function ($article) use ($request) {
-                return $this->tokenCanSee($request, $article, 'get')
-                && (!\Auth::id() || $this->isVisible($article, \Auth::id()));
-            });
-        } else {
-            $articles = Article::getSelection()->filter(function ($article) {
-                return $this->isVisible($article);
+            $articles = $articles->filter(function ($article) use ($request) {
+                return $this->tokenCanSee($request, $article, 'get');
             });
         }
 

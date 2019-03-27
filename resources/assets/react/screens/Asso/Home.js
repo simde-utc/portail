@@ -31,22 +31,28 @@ import Img from '../../components/Image';
 class AssoHomeScreen extends React.Component {
 	componentWillMount() {
 		const {
-			asso: { id },
+			asso: { id, shortname },
 			contactsFetched,
+			dispatch,
 		} = this.props;
 
 		if (id && !contactsFetched) {
 			this.loadAssosData(id);
 		}
+
+		dispatch(actions.config({ title: shortname }));
 	}
 
 	componentDidUpdate({ asso }) {
 		const {
-			asso: { id },
+			asso: { id, shortname },
+			dispatch,
 		} = this.props;
 
 		if (asso.id !== id) {
 			this.loadAssosData(id);
+
+			dispatch(actions.config({ title: shortname }));
 		}
 	}
 
@@ -131,7 +137,6 @@ class AssoHomeScreen extends React.Component {
 	render() {
 		const {
 			asso,
-			config,
 			isAuthenticated,
 			userIsFollowing,
 			userIsMember,
@@ -139,7 +144,6 @@ class AssoHomeScreen extends React.Component {
 			contacts,
 			contactsFailed,
 		} = this.props;
-		config.title = asso.shortname;
 
 		let color = `color-${asso.login}`;
 
