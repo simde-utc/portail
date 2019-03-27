@@ -314,13 +314,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      */
     public function isRoleManageableBy(string $user_id): bool
     {
-        if ($this->id) {
-            return $this->hasOnePermission('role', [
-                'user_id' => $user_id,
-            ]);
-        } else {
-            return User::find($user_id)->hasOnePermission('role');
-        }
+        return User::find($user_id)->hasOnePermission('role');
     }
 
     /**
