@@ -19,6 +19,12 @@
 	margin: 20px;
 }
 
+.searchContainer .filterBar {
+    overflow-y: auto;
+    max-width: 80%;
+    margin: auto;
+}
+
 .searchContainer .searchBar .searchInput {
 	border: none;
 	padding: 10px;
@@ -180,18 +186,27 @@
 	width: 100%;
 	bottom: 10px;
 }
-.asso-card .card-line.bde{
-	background-color: rgba($bde, 0.7);
+
+.bg-black {
+    background-color: rgba(0, 0, 0, 0.7) !important;
 }
-.asso-card .card-line.poleae{
-	background-color: rgba($poleae, 0.7);
+
+.bg-bde {
+	background-color: rgba($bde, 0.7) !important;
 }
-.asso-card .card-line.polesec{
-	background-color: rgba($polesec, 0.7);
+
+.bg-poleae {
+	background-color: rgba($poleae, 0.7) !important;
 }
-.asso-card .card-line.polete{
-	background-color: rgba($polete, 0.7);
+
+.bg-polesec {
+	background-color: rgba($polesec, 0.7) !important;
 }
-.asso-card .card-line.polevdc{
-	background-color: rgba($polevdc, 0.7);
+
+.bg-polete {
+	background-color: rgba($polete, 0.7) !important;
+}
+
+.bg-polevdc {
+	background-color: rgba($polevdc, 0.7) !important;
 }

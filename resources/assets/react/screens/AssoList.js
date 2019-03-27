@@ -11,8 +11,11 @@
  */
 
 import React from 'react';
+import { Button, ButtonGroup, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import actions from '../redux/actions';
 
 import AssoCard from '../components/AssoCard';
@@ -26,7 +29,10 @@ import AssoCard from '../components/AssoCard';
 class AssoListScreen extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { searchQuery: '' };
+
+		this.state = {
+			searchQuery: '',
+		};
 	}
 
 	componentWillMount() {
@@ -71,6 +77,52 @@ class AssoListScreen extends React.Component {
 		);
 	}
 
+	populateGroupButtons() {
+		const { assos } = this.props;
+		const { asso_id } = this.state;
+		const groups = {};
+
+		assos.forEach(({ parent }) => {
+			if (parent) {
+				groups[parent.id] = parent;
+			}
+		});
+
+		const buttons = Object.values(groups).sort((group1, group2) => {
+			return group1.shortname > group2.shortname;
+		});
+
+		buttons.unshift({
+			login: 'black',
+			shortname: 'Tous',
+		});
+
+		return buttons.map(({ id, login, shortname }) => (
+			<Button
+				className={`bg-${login}`}
+				key={id || 0}
+				active={asso_id === id}
+				onClick={() => this.setState({ asso_id: id })}
+			>
+				{shortname}
+			</Button>
+		));
+	}
+
+	isAssoInGroup({ id, parent }) {
+		const { asso_id } = this.state;
+
+		if (asso_id) {
+			if (parent) {
+				return parent.id === asso_id;
+			}
+
+			return asso_id === id;
+		}
+
+		return true;
+	}
+
 	handleSearch(event) {
 		this.setState({ searchQuery: event.target.value });
 	}
@@ -86,16 +138,26 @@ class AssoListScreen extends React.Component {
 				<div className="content">
 					<div className="searchContainer">
 						<div className="searchBar">
-							<input
-								className="searchInput"
-								name="Recherche"
-								onChange={this.handleSearch.bind(this)}
-							/>
-							<i className="fa fa-search" />
+							<InputGroup>
+								<InputGroupAddon addonType="prepend">
+									<span style={{ margin: 'auto 10px', border: 'none' }}>
+										<FontAwesomeIcon size="2x" icon="search" />
+									</span>
+								</InputGroupAddon>
+								<Input
+									name="Recherche"
+									onChange={this.handleSearch.bind(this)}
+									style={{ border: 'none' }}
+								/>
+							</InputGroup>
+						</div>
+						<div className="filterBar">
+							<ButtonGroup>{this.populateGroupButtons()}</ButtonGroup>
 						</div>
 					</div>
 					<span className={`loader large${fetching ? ' active' : ''}`} />
-					{!fetching && AssoListScreen.getGrid(assos, searchQuery)}
+					{!fetching &&
+						AssoListScreen.getGrid(assos.filter(this.isAssoInGroup.bind(this)), searchQuery)}
 				</div>
 			</div>
 		);
