@@ -11,9 +11,11 @@
  */
 
 import React from 'react';
+import { Button, ButtonGroup, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import { connect } from 'react-redux';
-import { sortBy } from 'lodash';
 import { NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import actions from '../redux/actions';
 
 import AssoCard from '../components/AssoCard';
@@ -25,6 +27,14 @@ import AssoCard from '../components/AssoCard';
 	fetched: store.isFetched('assos'),
 }))
 class AssoListScreen extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			searchQuery: '',
+		};
+	}
+
 	componentWillMount() {
 		const { dispatch } = this.props;
 
@@ -36,76 +46,119 @@ class AssoListScreen extends React.Component {
 		dispatch(actions.config({ title: 'Liste des associations' }));
 	}
 
-	static getStage(assos, parent) {
+	static getGrid(assos, filter) {
+		const regex = RegExp(
+			filter
+				.toLowerCase()
+				.split('')
+				.join('.*')
+		);
+
+		const filteredList = assos.filter(({ shortname, name }) => {
+			return regex.test(shortname.toLowerCase()) || regex.test(name.toLowerCase());
+		});
+
 		return (
-			<div key={parent.id} className="pole-container">
-				<NavLink key={parent.id} to={`assos/${parent.login}`}>
-					<h2>{parent.shortname}</h2>
-					<small>{parent.name}</small>
-				</NavLink>
-				<div>
-					{assos.map(asso => {
-						return (
-							<NavLink key={asso.id} to={`assos/${asso.login}`}>
-								<AssoCard
-									onClick={() => window.history.push(`assos/${asso.login}`)}
-									key={asso.id}
-									name={asso.name}
-									shortname={asso.shortname}
-									image={asso.image}
-									login={parent.login}
-								/>
-							</NavLink>
-						);
-					})}
-				</div>
+			<div className="assosContainer">
+				{filteredList.map(asso => {
+					return (
+						<NavLink key={asso.id} to={`assos/${asso.login}`}>
+							<AssoCard
+								onClick={() => window.history.push(`assos/${asso.login}`)}
+								key={asso.id}
+								name={asso.name}
+								shortname={asso.shortname}
+								image={asso.image}
+								login={asso.parent ? asso.parent.login : asso.login}
+							/>
+						</NavLink>
+					);
+				})}
 			</div>
 		);
 	}
 
-	static getStages(assos) {
-		const categories = assos.reduce((acc, asso) => {
-			if (asso.parent) {
-				const { id } = asso.parent;
+	populateGroupButtons() {
+		const { assos } = this.props;
+		const { asso_id } = this.state;
+		const groups = {};
 
-				if (acc[id] === undefined) {
-					acc[id] = {
-						asso: asso.parent,
-						assos: [asso],
-					};
-				} else {
-					acc[id].assos.push(asso);
-				}
-			} else {
-				const { id } = asso;
+		assos.forEach(({ parent }) => {
+			if (parent) {
+				groups[parent.id] = parent;
+			}
+		});
 
-				if (acc[id]) {
-					acc[id].assos.push(asso);
-				} else {
-					acc[id] = {
-						asso,
-						assos: [asso],
-					};
-				}
+		const buttons = Object.values(groups).sort((group1, group2) => {
+			return group1.shortname > group2.shortname;
+		});
+
+		buttons.unshift({
+			login: 'black',
+			shortname: 'Tous',
+		});
+
+		return buttons.map(({ id, login, shortname }) => (
+			<Button
+				className={`bg-${login}`}
+				key={id || 0}
+				active={asso_id === id}
+				onClick={() => this.setState({ asso_id: id })}
+			>
+				{shortname}
+			</Button>
+		));
+	}
+
+	isAssoInGroup({ id, parent }) {
+		const { asso_id } = this.state;
+
+		if (asso_id) {
+			if (parent) {
+				return parent.id === asso_id;
 			}
 
-			return acc;
-		}, {});
+			return asso_id === id;
+		}
 
-		return sortBy(categories, category => category.asso.shortname).map(({ assos, asso }) =>
-			AssoListScreen.getStage(assos, asso)
-		);
+		return true;
+	}
+
+	handleSearch(event) {
+		this.setState({ searchQuery: event.target.value });
 	}
 
 	render() {
-		const { fetching, assos } = this.props;
+		const { fetching, assos, config } = this.props;
+		const { searchQuery } = this.state;
+		config.title = 'Liste des associations';
 
 		return (
 			<div className="container">
 				<h1 className="title">Liste des associations</h1>
 				<div className="content">
+					<div className="searchContainer">
+						<div className="searchBar">
+							<InputGroup>
+								<InputGroupAddon addonType="prepend">
+									<span style={{ margin: 'auto 10px', border: 'none' }}>
+										<FontAwesomeIcon size="2x" icon="search" />
+									</span>
+								</InputGroupAddon>
+								<Input
+									name="Recherche"
+									onChange={this.handleSearch.bind(this)}
+									style={{ border: 'none' }}
+								/>
+							</InputGroup>
+						</div>
+						<div className="filterBar">
+							<ButtonGroup>{this.populateGroupButtons()}</ButtonGroup>
+						</div>
+					</div>
 					<span className={`loader large${fetching ? ' active' : ''}`} />
-					{AssoListScreen.getStages(assos)}
+					{!fetching &&
+						AssoListScreen.getGrid(assos.filter(this.isAssoInGroup.bind(this)), searchQuery)}
 				</div>
 			</div>
 		);
