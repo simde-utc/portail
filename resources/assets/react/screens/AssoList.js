@@ -40,11 +40,17 @@ class AssoListScreen extends React.Component {
 	}
 
 	static getGrid(assos, filter) {
-		const filteredList = assos.filter(asso => {
-			const assoName = asso.shortname.toLowerCase();
-			return assoName.indexOf(filter.toLowerCase()) !== -1;
+		const regex = RegExp(
+			filter
+				.toLowerCase()
+				.split('')
+				.join('.*')
+		);
+
+		const filteredList = assos.filter(({ shortname, name }) => {
+			return regex.test(shortname.toLowerCase()) || regex.test(name.toLowerCase());
 		});
-		console.log('r', filteredList);
+
 		return (
 			<div className="assosContainer">
 				{filteredList.map(asso => {
