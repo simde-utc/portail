@@ -338,13 +338,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      */
     public function isPermissionManageableBy(string $user_id): bool
     {
-        if ($this->id) {
-            return $this->hasOnePermission('permission', [
-                'user_id' => $user_id,
-            ]);
-        } else {
-            return User::find($user_id)->hasOnePermission('permission');
-        }
+        return User::find($user_id)->hasOnePermission('permission');
     }
 
     /**
