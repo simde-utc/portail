@@ -114,7 +114,7 @@ class AssoListScreen extends React.Component {
 
 		if (asso_id) {
 			if (parent) {
-				return parent.id === asso_id;
+				return parent.id === asso_id || asso_id === id;
 			}
 
 			return asso_id === id;
