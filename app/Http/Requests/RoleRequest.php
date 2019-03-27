@@ -33,7 +33,7 @@ class RoleRequest extends Request
                 ->post('required')
                 ->get(),
             'description' => Validation::type('string')
-                ->length('text')
+                ->length('description')
                 ->get(),
             'limited_at' => Validation::type('integer')
                 ->get(),
