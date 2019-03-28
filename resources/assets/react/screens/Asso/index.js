@@ -563,10 +563,10 @@ class AssoScreen extends React.Component {
 					{this.user.isMember && (
 						<li className="nav-item dropdown">
 							<Dropdown title="CRÉER">
-								<Link className="dropdown-item" to={`${match.url}/article`}>
+								<Link className="dropdown-item" to={`${match.url}/articles/create`}>
 									Article
 								</Link>
-								<Link className="dropdown-item" to={`${match.url}/evenement`}>
+								<Link className="dropdown-item" to={`${match.url}/events/create`}>
 									Évènement
 								</Link>
 							</Dropdown>
@@ -622,7 +622,7 @@ class AssoScreen extends React.Component {
 						render={() => <AccessScreen asso={asso} />}
 					/>
 					<Route
-						path={`${match.url}/article`}
+						path={`${match.url}/articles/create`}
 						render={() => (
 							<ArticleForm
 								post={this.postArticle.bind(this)}

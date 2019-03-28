@@ -47,6 +47,14 @@ class UserController extends Controller
     ];
 
     /**
+     * Donne l'accès uniquement si la personne possède la permission.
+     */
+    public function __construct()
+    {
+        $this->middleware('permission:user');
+    }
+
+    /**
      * Retourne le formulaire de recherche.
      *
      * @param Content $content
