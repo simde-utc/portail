@@ -97,7 +97,6 @@ Route::resource('resources/roles', 'Resource\\RoleController');
 Route::resource('resources/rooms', 'Resource\\RoomController');
 Route::resource('resources/semesters', 'Resource\\SemesterController');
 Route::resource('resources/services', 'Resource\\ServiceController');
-Route::resource('resources/sessions', 'Resource\\SessionController');
 Route::resource('resources/tags', 'Resource\\TagController');
 Route::resource('resources/users', 'Resource\\UserController');
 Route::resource('resources/user-details', 'Resource\\UserDetailController');

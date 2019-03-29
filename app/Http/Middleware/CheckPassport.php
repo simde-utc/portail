@@ -58,23 +58,39 @@ class CheckPassport
             \Scopes::checkScopesForGrantType($input['scopes'], ($input['grant_type'] ?? null));
         }
 
-        // On vérifie si l'application n'est pas réduite à un certain public.
-        if ($client->targeted_types) {
-            $targets = json_decode($client->targeted_types, true);
-            try {
-                return (new UserIs)->handle($request, $next, ...$targets);
-            } catch (AuthorizationException $e) {
-                $types = array_intersect_key((new User)->getTypeDescriptions(), array_flip($targets));
-
-                return response(view('auth.passport.denied', [
-                    'types' => array_values($types),
-                    'client' => $client,
-                    'request' => $request,
-                ]));
+        if (\Auth::id()) {
+            // On vérifie si l'application n'est pas restreinte à du développement et à l'association en elle-même.
+            if ($client->restricted) {
+                if ($client->asso) {
+                    if (!$client->asso->hasOneMember(\Auth::id())) {
+                        return response(view('auth.passport.denied', [
+                            'types' => ['Il est nécessaire d\'être de l\'association pour accéder à cette application'],
+                            'client' => $client,
+                            'request' => $request,
+                        ]), 403);
+                    }
+                }
             }
-        } else {
-            return $next($request);
+
+            // On vérifie si l'application n'est pas réduite à un certain public.
+            if ($client->targeted_types) {
+                $targets = json_decode($client->targeted_types, true);
+
+                try {
+                    return (new UserIs)->handle($request, $next, ...$targets);
+                } catch (AuthorizationException $e) {
+                    $types = array_intersect_key((new User)->getTypeDescriptions(), array_flip($targets));
+
+                    return response(view('auth.passport.denied', [
+                        'types' => array_values($types),
+                        'client' => $client,
+                        'request' => $request,
+                    ]), 403);
+                }
+            }
         }
+
+        return $next($request);
     }
 
     /**
