@@ -14,7 +14,6 @@ use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Semester;
 use App\Http\Requests\PermissionAssignmentRequest;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
@@ -74,8 +73,7 @@ class AssignmentController extends Controller
     public function store(PermissionAssignmentRequest $request): JsonResponse
     {
         $this->checkTokenRights($request, 'create');
-
-        $semester_id = Semester::getSemester($request->input('semester_id'))->id;
+        $semester_id = $this->getSemester($request->input('semester_id'))->id;
 
         $request->resource->assignPermissions($request->input('permission_id'), [
             'user_id' => (\Auth::id() ?? $request->input('user_id')),

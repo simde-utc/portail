@@ -38,7 +38,11 @@ class Semester extends Model
      */
     public static function getSemester(string $semester_id=null)
     {
-        return static::where('id', $semester_id)->orWhere('name', $semester_id)->firstOrFail();
+        if ($semester_id) {
+            return static::where('id', $semester_id)->orWhere('name', $semester_id)->first();
+        }
+
+        return Semester::getThisSemester();
     }
 
     /**
