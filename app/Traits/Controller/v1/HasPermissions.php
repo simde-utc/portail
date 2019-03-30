@@ -79,7 +79,7 @@ trait HasPermissions
      */
     protected function getPermissionFromModel(Request $request, string $permission_id, string $verb='get')
     {
-        $permission = $this->getPermissionsFromModel($request)->findSelection($permission_id);
+        $permission = $this->getPermissionsFromModel($request)->find($permission_id);
 
         if ($permission) {
             if (!$this->tokenCanSee($request, $permission, $verb)) {

@@ -57,17 +57,14 @@ trait HasRoles
      */
     protected function getRoleFromUser(Request $request, User $user, string $role_id)
     {
-        $semester_id = $this->getSemester($request->input('semester'))->id;
+        $semester_id = $this->getSemester($request->input('semester_id'))->id;
 
-        $role = $user->roles()->wherePivot('role_id', $role_id)
-        ->wherePivot('semester_id', $semester_id)
-        ->withPivot(['semester_id', 'validated_by_id'])->firstSelection();
+        $role = $user->getUserRoles(null, $semester_id)->first(function ($role) use ($role_id) {
+            return $role->id === $role_id;
+        });
 
         if ($role) {
-            $role->semester_id = $role->pivot->semester_id;
-            $role->validated_by_id = $role->pivot->validated_by_id;
-
-            return $role->makeHidden('pivot');
+            return $role;
         } else {
             abort(404, 'Cette personne ne possède pas ce rôle');
         }

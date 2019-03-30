@@ -72,14 +72,11 @@ class RoleController extends Controller
     {
         $user = $this->getUser($request, $user_id, true);
         $semester_id = $this->getSemester($request->input('semester_id'))->id;
+        $roles = $user->getUserRoles(null, $semester_id);
 
-        $roles = $user->roles()->wherePivot('semester_id', $semester_id)
-            ->withPivot('semester_id', 'validated_by_id')->getSelection()
-            ->map(function ($role) {
-                return $role->hideData();
-            });
-
-        return response()->json($roles, 200);
+        return response()->json($roles->map(function ($role) {
+            return $role->hideData();
+        }), 200);
     }
 
     /**
