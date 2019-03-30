@@ -71,7 +71,12 @@ class RoleController extends Controller
     public function index(Request $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id, true);
-        $semester_id = $this->getSemester($request->input('semester_id'))->id;
+        if ($request->has('semester')) {
+            $semester_id = Semester::getSemester($request->input('semester'))->id;
+        } else {
+            $semester_id = Semester::getThisSemester()->id;
+        }
+
         $roles = $user->getUserRoles(null, $semester_id);
 
         return response()->json($roles->map(function ($role) {
