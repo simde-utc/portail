@@ -12,6 +12,7 @@
 namespace App\Http\Controllers\v1\User;
 
 use App\Http\Controllers\v1\Controller;
+use App\Models\Semester;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRoleRequest;
