@@ -1,31 +1,26 @@
-html {
-	overflow: hidden;
-}
-
 body {
-	padding-top: $navbar-min-height;
+	margin-top: $navbar-min-height;
     background: $white;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-}
-
-html, body, main, #root {
-	height: 100%;
+    overflow-x: auto;
 }
 
 main {
 	background-color: $white;
-	overflow: auto;
+}
+
+@media screen and (min-width: 768px) {
+    main {
+        margin-left: 250px;
+    }
 }
 
 .container {
-	min-width: 75%;
 	overflow-x: hidden;
 }
 
 .content {
   	flex: 1 1 auto;
-	overflow-y: auto;
-  	overflow-x: hidden;
   	min-height: 0px;
 	max-width: auto;
 }
