@@ -2,11 +2,12 @@ body {
 	margin-top: $navbar-min-height;
     background: $white;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    overflow-x: auto;
+    overflow-y: auto;
 }
 
 main {
 	background-color: $white;
+    overflow: hidden;
 }
 
 @media screen and (min-width: 768px) {
@@ -69,4 +70,8 @@ h1, h2, h3, h4, h5, h6 {
 	padding: 15px !important;
 	top: auto !important;
 	bottom: 0 !important;
+}
+
+.rbc-toolbar {
+    overflow-y: auto;
 }
