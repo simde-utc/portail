@@ -592,8 +592,8 @@ class AssoScreen extends React.Component {
 							/>
 						)}
 					/>
-					<Route path={`${match.url}/events`} render={() => <AssoCalendar asso={asso} />} />
-					<Route path={`${match.url}/articles`} render={() => <ArticleList asso={asso} />} />
+					<Route exact path={`${match.url}/events`} render={() => <AssoCalendar asso={asso} />} />
+					<Route exact path={`${match.url}/articles`} render={() => <ArticleList asso={asso} />} />
 					<LoggedRoute
 						path={`${match.url}/members`}
 						redirect={`${match.url}`}
@@ -614,6 +614,7 @@ class AssoScreen extends React.Component {
 						)}
 					/>
 					<ConditionalRoute
+						exact
 						path={`${match.url}/access`}
 						redirect={`${match.url}`}
 						isAllowed={() => {
