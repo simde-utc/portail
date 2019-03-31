@@ -10,9 +10,11 @@
 
 namespace App\Admin;
 
+use Encore\Admin\Form;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use App\Facades\ModelResolver;
 
 class FormGenerator extends Generator
 {
@@ -76,8 +78,18 @@ class FormGenerator extends Generator
                     $generatedField->options($type);
                 } else {
                     $generatedField = $this->generated->$type($field);
+                    if ($type === 'image') {
+                        $this->get()->submitted(function (Form $form) {
+                            $form->model()->id = ($form->model()->id ?? \Uuid::generate()->string);
+                        });
 
-                    if ($type === 'display') {
+                        $generatedField->name(function ($file) {
+                            $path = ModelResolver::getCategory(get_class($this->form->model())).'/'.$this->form->model()->id;
+                            $name = time().'.'.$file->getClientOriginalExtension();
+
+                            return $path.'/'.$name;
+                        });
+                    } else if ($type === 'display') {
                         $this->callCustomMethods($generatedField)->{$this->valueMethod}(function ($value) use ($field, $model) {
                             return FormGenerator::adminValue($value, $field, $model);
                         });

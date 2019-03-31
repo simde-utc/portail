@@ -23,7 +23,9 @@ return [
 
         'admin' => [
             'driver' => 'local',
-            'root' => storage_path('app/admin'),
+            'root' => public_path(),
+            'visibility' => 'public',
+            'url' => env('APP_URL'),
         ],
 
         'public' => [
