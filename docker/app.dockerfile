@@ -1,11 +1,13 @@
-FROM php:7.1.3-fpm
+FROM bitnami/php-fpm
 MAINTAINER Cesar Richard <cesar.richard2@gmail.com>
 
-RUN apt-get update && apt-get install --no-install-recommends -y libmcrypt-dev gnupg git unzip \
-    mysql-client libmagickwand-dev \
-    && pecl install imagick \
-    && docker-php-ext-enable imagick \
-    && docker-php-ext-install mcrypt pdo_mysql gd zip
+RUN apt-get update
+RUN apt-get install --no-install-recommends -y libmcrypt-dev gnupg git unzip \
+    mysql-client libmagickwand-dev
+RUN pecl channel-update pecl.php.net
+RUN pecl install imagick
+RUN docker-php-ext-enable imagick
+RUN docker-php-ext-install mcrypt pdo_mysql gd zip
 
 COPY composer.json /var/www/html
 RUN php -r "readfile('https://getcomposer.org/installer');" | php \
