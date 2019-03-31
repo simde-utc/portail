@@ -40,6 +40,10 @@ class CheckClient
         }
 
         if (count($args) > 0) {
+            if (empty($args[1])) {
+                throw new AuthenticationException('Route uniquement utilisable par un client connecté via un utilisateur');
+            }
+
             if ($args[0] == 0) {
                  $scopes = [];
 

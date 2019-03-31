@@ -28,7 +28,11 @@ class CheckUser
      */
     public function handle(Request $request, Closure $next, string ...$args)
     {
-        if (count($args) > 0) {
+        if (count($args) > 1) {
+            if (empty($args[1])) {
+                throw new AuthenticationException('Route uniquement utilisable par un client OAuth2');
+            }
+
             if ($args[0] == 0) {
                 $scopes = [];
 
