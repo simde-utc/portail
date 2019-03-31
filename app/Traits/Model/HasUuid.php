@@ -20,13 +20,7 @@ trait HasUuid
     protected static function bootHasUuid()
     {
         static::creating(function ($model) {
-            $keys = $model->getKeyName();
-
-            if (!is_array($keys)) {
-                $keys = [$model->getKeyName()];
-            }
-
-            foreach ($keys as $key) {
+            foreach ((array) $model->getKeyName() as $key) {
                 $model->$key = $model->$key ?: \Uuid::generate()->string;
             }
         });
