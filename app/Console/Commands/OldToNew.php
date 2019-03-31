@@ -351,15 +351,6 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     'parent_id' => ($parent_id ?? null),
                 ]);
 
-                // On crée un calendrier pour chaque association.
-                $model->calendars()->create([
-                    'name' => 'Evénements',
-                    'description' => 'Calendrier regroupant les événements de l\'associations',
-                    'visibility_id' => Visibility::findByType('public')->id,
-                    'created_by_id' => $model->id,
-                    'created_by_type' => Asso::class,
-                ]);
-
                 // Obligé de définir les dates après création.
                 $model->timestamps = false;
                 $model->created_at = $asso->created_at ?: $model->created_at;

@@ -102,6 +102,15 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
                 'type_id' => ContactType::where('name', 'Url')->first()->id,
                 'visibility_id' => Visibility::findByType('public')->id,
             ]);
+
+            // On crée un calendrier pour chaque association.
+            $model->calendars()->create([
+                'name' => 'Evénements',
+                'description' => 'Calendrier regroupant les événements de l\'associations',
+                'visibility_id' => Visibility::findByType('public')->id,
+                'created_by_id' => $model->id,
+                'created_by_type' => Asso::class,
+            ]);
         });
     }
 
