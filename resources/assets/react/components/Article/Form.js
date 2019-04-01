@@ -5,7 +5,88 @@ import SimpleMDE from 'simplemde';
 import Editor from 'react-simplemde-editor';
 import Select from 'react-select';
 import { map } from 'lodash';
-import 'simplemde/dist/simplemde.min.css';
+
+import actions from '../../redux/actions';
+
+import 'easymde/dist/easymde.min.css';
+
+const options = {
+	spellChecker: false,
+	toolbar: [
+		{
+			name: 'bold',
+			action: SimpleMDE.toggleBold,
+			className: 'fa fa-fw fa-bold',
+			title: 'Gras',
+		},
+		{
+			name: 'italic',
+			action: SimpleMDE.toggleItalic,
+			className: 'fa fa-fw fa-italic',
+			title: 'Italique',
+		},
+		{
+			name: 'heading',
+			action: SimpleMDE.toggleHeadingSmaller,
+			className: 'fa fa-fw fa-heading',
+			title: 'Titre',
+		},
+		{
+			name: 'quote',
+			action: SimpleMDE.toggleBlockquote,
+			className: 'fa fa-fw fa-quote-left',
+			title: 'Citation',
+		},
+		{
+			name: 'unordered-list',
+			action: SimpleMDE.toggleUnorderedList,
+			className: 'fa fa-fw fa-list-ul',
+			title: 'Liste non-ordonnée',
+		},
+		{
+			name: 'ordered-list',
+			action: SimpleMDE.toggleOrderedList,
+			className: 'fa fa-fw fa-list-ol',
+			title: 'Liste ordonnée',
+		},
+		{
+			name: 'link',
+			action: SimpleMDE.drawLink,
+			className: 'fa fa-fw fa-link',
+			title: 'Insérer un lien',
+		},
+		{
+			name: 'image',
+			action: SimpleMDE.drawImage,
+			className: 'fa fa-fw fa-image',
+			title: 'Insérer une image',
+		},
+		{
+			name: 'table',
+			action: SimpleMDE.drawTable,
+			className: 'fa fa-fw fa-table',
+			title: 'Insérer un tableau',
+		},
+		{
+			name: 'preview',
+			action: SimpleMDE.togglePreview,
+			className: 'fa fa-fw fa-eye no-disable',
+			title: 'Aperçu',
+		},
+		{
+			name: 'side-by-side',
+			action: SimpleMDE.toggleSideBySide,
+			className: 'fa fa-fw fa-columns no-disable no-mobile',
+			title: 'Cote à cote',
+		},
+		{
+			name: 'fullscreen',
+			action: SimpleMDE.toggleFullScreen,
+			className: 'fa fa-fw fa-arrows-alt no-disable no-mobile',
+			title: 'Plein écran',
+		},
+	],
+};
 
 @connect(store => ({
 	visibilities: store.getData('visibilities'),
@@ -25,8 +106,17 @@ class ArticleForm extends React.Component {
 			title: '',
 			description: '',
 			content: '',
-			eventFilter: '',
 		};
+
+		if (props.visibilities.length === 0) {
+			props.dispatch(actions.visibilities.get());
+		}
+	}
+
+	componentWillMount() {
+		const { dispatch } = this.props;
+
+		dispatch(actions.config({ title: 'Créer un article' }));
 	}
 
 	getEvents(events) {
@@ -76,7 +166,7 @@ class ArticleForm extends React.Component {
 	}
 
 	render() {
-		const { visibilities, events } = this.props;
+		const { visibilities } = this.props;
 		const { title, description } = this.state;
 
 		return (
@@ -117,111 +207,19 @@ class ArticleForm extends React.Component {
 						</div>
 						<div className="col-md-12">
 							<div className="form-group">
-								<label htmlFor="corps">
-									Corps *
-									<Editor
-										onChange={e => this.handleEditorChange(e)}
-										id="corps"
-										options={{
-											spellChecker: false,
-											toolbar: [
-												{
-													name: 'bold',
-													action: SimpleMDE.toggleBold,
-													className: 'fas fa-fw fa-bold',
-													title: 'Gras',
-												},
-												{
-													name: 'italic',
-													action: SimpleMDE.toggleItalic,
-													className: 'fas fa-fw fa-italic',
-													title: 'Italique',
-												},
-												{
-													name: 'heading',
-													action: SimpleMDE.toggleHeadingSmaller,
-													className: 'fas fa-fw fa-heading',
-													title: 'Titre',
-												},
-												{
-													name: 'quote',
-													action: SimpleMDE.toggleBlockquote,
-													className: 'fas fa-fw fa-quote-left',
-													title: 'Citation',
-												},
-												{
-													name: 'unordered-list',
-													action: SimpleMDE.toggleUnorderedList,
-													className: 'fas fa-fw fa-list-ul',
-													title: 'Liste non-ordonnée',
-												},
-												{
-													name: 'ordered-list',
-													action: SimpleMDE.toggleOrderedList,
-													className: 'fas fa-fw fa-list-ol',
-													title: 'Liste ordonnée',
-												},
-												{
-													name: 'link',
-													action: SimpleMDE.drawLink,
-													className: 'fas fa-fw fa-link',
-													title: 'Insérer un lien',
-												},
-												{
-													name: 'image',
-													action: SimpleMDE.drawImage,
-													className: 'far fa-fw fa-image',
-													title: 'Insérer une image',
-												},
-												{
-													name: 'table',
-													action: SimpleMDE.drawTable,
-													className: 'fas fa-fw fa-table',
-													title: 'Insérer un tableau',
-												},
-												{
-													name: 'preview',
-													action: SimpleMDE.togglePreview,
-													className: 'fas fa-fw fa-eye no-disable',
-													title: 'Aperçu',
-												},
-												{
-													name: 'side-by-side',
-													action: SimpleMDE.toggleSideBySide,
-													className: 'fas fa-fw fa-columns no-disable no-mobile',
-													title: 'Cote à cote',
-												},
-												{
-													name: 'fullscreen',
-													action: SimpleMDE.toggleFullScreen,
-													className: 'fas fa-fw fa-arrows-alt no-disable no-mobile',
-													title: 'Plein écran',
-												},
-											],
-										}}
-									/>
-								</label>
+								<label htmlFor="corps">Corps *</label>
+
+								<Editor onChange={e => this.handleEditorChange(e)} id="corps" options={options} />
 							</div>
 
-							<Select
-								onChange={this.handleVisibilityChange.bind(this)}
-								name="visibility_id"
-								placeholder="Visibilité de l'article"
-								options={ArticleForm.mapSelectionOptions(visibilities)}
-							/>
-
-							<br />
-
-							<Select
-								onChange={this.handleEventChange.bind(this)}
-								name="event_id"
-								placeholder="Evènement attaché"
-								isSearchable
-								onInputChange={this.handleSearchEvent.bind(this)}
-								options={this.getEvents(events)}
-							/>
-
-							<br />
+							<div className="form-group">
+								<Select
+									onChange={this.handleVisibilityChange.bind(this)}
+									name="visibility_id"
+									placeholder="Visibilité de l'article"
+									options={ArticleForm.mapSelectionOptions(visibilities)}
+								/>
+							</div>
 
 							<button type="submit" className="btn btn-primary">
 								Publier
@@ -233,5 +231,16 @@ class ArticleForm extends React.Component {
 		);
 	}
 }
+
+// <div className="form-group">
+//     <AsyncSelect
+//         onChange={this.handleEventChange.bind(this)}
+//         name="event_id"
+//         placeholder="Evènement attaché"
+//         isSearchable
+//         onInputChange={this.handleSearchEvent.bind(this)}
+//         options={this.getEvents(events)}
+//     />
+// </div>
 
 export default ArticleForm;

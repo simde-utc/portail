@@ -26,7 +26,7 @@ const Image = ({ image, images, unloader, ...props }) => {
 
 	return (
 		<Img
-			loader={<span className="loader large active" />}
+			loader={<span className="loader small active" />}
 			unloader={unloader}
 			{...props}
 			src={src}

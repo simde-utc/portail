@@ -153,7 +153,7 @@ class AssoHomeScreen extends React.Component {
 			<div className="container">
 				{asso ? (
 					<div className="row">
-						<div className="col-md-2 mt-3 px-1 d-flex flex-md-column">
+						<div className="col-md-2 px-1 d-flex flex-md-column">
 							<AspectRatio className="mb-2" ratio="1">
 								<Img image={asso.image} style={{ width: '100%' }} />
 							</AspectRatio>
@@ -161,7 +161,7 @@ class AssoHomeScreen extends React.Component {
 							{isAuthenticated &&
 								this.getMemberButton(userIsMember, userIsFollowing, userIsWaiting)}
 						</div>
-						<div className="col-md-8" style={{ whiteSpace: 'pre-line' }}>
+						<div className="col-md-10" style={{ whiteSpace: 'pre-line' }}>
 							<h1 className={`title ${color}`} style={{ fontWeight: 'bold' }}>
 								{asso.shortname}{' '}
 								<small className="text-muted h4" style={{ fontStyle: 'italic' }}>
