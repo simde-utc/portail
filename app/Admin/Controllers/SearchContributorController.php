@@ -29,6 +29,14 @@ class SearchContributorController extends Controller
     use HasUsers;
 
     /**
+     * Donne l'accès uniquement si la personne possède la permission.
+     */
+    public function __construct()
+    {
+        $this->middleware('permission:user-contributeBde');
+    }
+
+    /**
      * Retourne le formulaire de recherche.
      *
      * @param Content $content

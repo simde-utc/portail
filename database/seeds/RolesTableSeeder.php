@@ -30,6 +30,8 @@ class RolesTableSeeder extends Seeder
                     'auth',
                     'user-preference',
                     'user-detail',
+                    'handle-users-roles',
+                    'handle-users-permissions',
                     'session',
                 ],
             ],

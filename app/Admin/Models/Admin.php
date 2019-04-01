@@ -113,21 +113,22 @@ class Admin extends Administrator
     /**
      * Check if user has permission.
      *
-     * @param string $permission
+     * @param mixed $ability
+     * @param mixed $arguments
      *
      * @return boolean
      */
-    public function can(string $permission): bool
+    public function can($ability, $arguments=[]): bool
     {
         if ($this->isAdministrator()) {
             return true;
         }
 
-        if (isset(static::$permissions[$this->id][$permission])) {
-            return static::$permissions[$this->id][$permission];
+        if (isset(static::$permissions[$this->id][$ability])) {
+            return static::$permissions[$this->id][$ability];
         }
 
-        return static::$permissions[$this->id][$permission] = $this->getUser()->hasOnePermission($permission);
+        return static::$permissions[$this->id][$ability] = $this->getUser()->hasOnePermission($ability);
     }
 
     /**

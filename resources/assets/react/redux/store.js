@@ -21,6 +21,7 @@ export const ASYNC_SUFFIXES = {
 	loading: 'LOADING',
 	success: 'SUCCESS',
 	error: 'ERROR',
+	config: 'CONFIG',
 };
 
 /**
@@ -210,7 +211,21 @@ export const makeResourceSuccessed = (_place, timestamp, status) => {
 
 // Ici on crée le store et on modifie ses données via immer en fonction de la récup des données
 export default createStore((state = store, action) => {
+	if (action.type === ASYNC_SUFFIXES.config) {
+		return produce(state, draft => {
+			const keys = Object.keys(action.config);
+			for (let i = 0; i < keys.length; i++) {
+				const key = keys[i];
+
+				draft.config[key] = action.config[key];
+			}
+
+			return draft;
+		});
+	}
+
 	console.debug(action.type);
+
 	if (action.meta && action.meta.path && action.meta.path.length > 0) {
 		return produce(state, draft => {
 			let { path } = action.meta;

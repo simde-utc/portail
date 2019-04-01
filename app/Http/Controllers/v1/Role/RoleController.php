@@ -80,8 +80,8 @@ class RoleController extends Controller
 
         $role = Role::create($inputs);
 
-        if ($request->filled('parent_ids')) {
-            $role->assignParentRole($request->parent_ids);
+        if ($request->filled('parent_ids') || $request->filled('parent_id')) {
+            $role->assignParentRole(($request->parent_ids ?? [$request->parent_id]));
         }
 
         return response()->json($role->hideSubData(), 201);
@@ -114,9 +114,9 @@ class RoleController extends Controller
         $role = $this->getRole($request, $role_id, 'edit');
 
         if ($role->update($request->input())) {
-            if ($request->filled('parent_ids')) {
+            if ($request->filled('parent_ids') || $request->filled('parent_id')) {
                 // WARNING: Ici on change tous ses parents.
-                $role->syncParentRole($request->parent_ids);
+                $role->syncParentRole(($request->parent_ids ?? [$request->parent_id]));
             }
 
             $role->nbr_assigned = $role->users()->where('semester_id', Semester::getThisSemester()->id)->count();

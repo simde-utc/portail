@@ -36,6 +36,7 @@ class ClientController extends ResourceController
             'policy_url' => 'text',
             'personal_access_client' => 'switch',
             'password_client' => 'switch',
+            'restricted' => 'switch',
             'created_at' => 'display',
             'updated_at' => 'display'
         ];

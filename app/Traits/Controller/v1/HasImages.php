@@ -20,16 +20,16 @@ trait HasImages
      * @param Request $request
      * @param mixed   $model
      * @param string  $path
-     * @param string  $name
+     * @param string  $model_id
      * @param string  $input
      * @return mixed
      */
-    protected function setImage(Request $request, $model, string $path, string $name=null, string $input='image')
+    protected function setImage(Request $request, $model, string $path, string $model_id=null, string $input='image')
     {
         if ($request->hasFile($input)) {
             $image = $request->file($input);
-            $path = '/images/'.$path.'/';
-            $name = ($name ?: time()).'.'.$image->getClientOriginalExtension();
+            $path = '/images/'.$path.'/'.($model_id ? $model_id.'/' : '');
+            $name = time().'.'.$image->getClientOriginalExtension();
 
             $image->move(public_path($path), $name);
 

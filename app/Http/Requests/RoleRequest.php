@@ -32,8 +32,13 @@ class RoleRequest extends Request
                 ->unique('roles', 'name')
                 ->post('required')
                 ->get(),
+            'parent_id' => Validation::type('string')
+                ->exists('roles', 'id')
+                ->get(),
+            'parent_ids' => Validation::type('array')
+                ->get(),
             'description' => Validation::type('string')
-                ->length('text')
+                ->length('description')
                 ->get(),
             'limited_at' => Validation::type('integer')
                 ->get(),

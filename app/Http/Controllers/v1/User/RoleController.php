@@ -16,7 +16,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRoleRequest;
 use App\Models\User;
-use App\Models\Semester;
 use App\Http\Requests\UserRequest;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
@@ -72,15 +71,12 @@ class RoleController extends Controller
     public function index(Request $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id, true);
-        $semester_id = Semester::getSemester($request->input('semester'))->id;
+        $semester_id = $this->getSemester($request->input('semester_id'))->id;
+        $roles = $user->getUserRoles(null, $semester_id);
 
-        $roles = $user->roles()->wherePivot('semester_id', $semester_id)
-            ->withPivot('semester_id', 'validated_by_id')->getSelection()
-            ->map(function ($role) {
-                return $role->hideData();
-            });
-
-        return response()->json($roles, 200);
+        return response()->json($roles->map(function ($role) {
+            return $role->hideData();
+        }), 200);
     }
 
     /**
@@ -97,7 +93,7 @@ class RoleController extends Controller
 
         $user->assignRoles($request->input('role_id'), [
             'validated_by_id' => (\Auth::id() ?? $request->input('validated_by_id')),
-            'semester_id' => Semester::getSemester($request->input('semester_id'))->id
+            'semester_id' => $this->getSemester($request->input('semester_id'))->id
         ], \Scopes::isClientToken($request));
         $role = $this->getRoleFromUser($request, $user, $request->input('role_id'));
 

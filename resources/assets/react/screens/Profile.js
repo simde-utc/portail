@@ -1,88 +1,88 @@
 /**
- * Liste les services
+ * Affichage du profile d'une personne.
  *
- * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
- * @author Natan Danous <natous.danous@hotmail.fr>
  *
- * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @copyright Copyright (c) 2019, SiMDE-UTC
  * @license GNU GPL-3.0
  */
 
 import React from 'react';
-// import { NavLink, Route, Switch } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
+
 import actions from '../redux/actions';
 
-// Profile Components
-// import UserInfo from '../components/Profile/UserInfo';
-// import AssociativeCarreer from '../components/Profile/AssociativeCarreer';
-
 @connect(store => ({
-	config: store.config,
 	user: store.getData('user', false),
+	permissions: store.getData('user/permissions'),
 }))
-class ScreensProfile extends React.Component {
-	load(name) {
+class ScreenProfile extends React.Component {
+	componentWillMount() {
 		const { dispatch } = this.props;
 
-		switch (name) {
-			case 'info':
-				dispatch(actions.user.details.get());
-				break;
-
-			case 'details':
-				dispatch(actions.user.details.get());
-				break;
-
-			default:
-				break;
-		}
+		dispatch(actions.config({ title: 'Mon profil' }));
 	}
 
 	render() {
-		const { user, config } = this.props;
-		config.title = `Profil - ${user.name}`;
+		const { user, permissions, match } = this.props;
 
-		return <div />;
+		return (
+			<div className="nav-container w-100">
+				<ul className="nav nav-tabs">
+					<li className="nav-item">
+						<NavLink className="nav-link" activeClassName="active" exact to={match.url}>
+							MES INFORMATIONS
+						</NavLink>
+					</li>
+					<li className="nav-item">
+						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/assos`}>
+							MON PARCOURS
+						</NavLink>
+					</li>
+					<li className="nav-item">
+						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/apps`}>
+							MES APPLICATIONS
+						</NavLink>
+					</li>
+					<li className="nav-item">
+						<NavLink
+							className="nav-link"
+							activeClassName="active"
+							to={`${match.url}/contributions`}
+						>
+							MES COTISATIONS
+						</NavLink>
+					</li>
+					{user && permissions.length && (
+						<li className="nav-item">
+							<a className="nav-link admin" href="/admin">
+								INTERFACE ADMIN
+							</a>
+						</li>
+					)}
+					<li className="nav-item">
+						<a className="nav-link admin" href="/logout">
+							ME DECONNECTER
+						</a>
+					</li>
+				</ul>
 
-		// return (
-		// 	<div className="container">
-		// 		<h1 className="title">Mon profil</h1>
-		// 		<ul className="nav nav-tabs">
-		// 			<li className="nav-item">
-		// 				<NavLink className="nav-link" activeClassName="active" exact to={`${match.url}`}>
-		// 					Informations
-		// 				</NavLink>
-		// 			</li>
-		// 			<li className="nav-item">
-		// 				<NavLink
-		// 					className="nav-link"
-		// 					activeClassName="active"
-		// 					to={`${match.url}/parcours_associatif`}
-		// 				>
-		// 					Parcours Associatif
-		// 				</NavLink>
-		// 			</li>
-		// 		</ul>
-		// 		<div className="container">
-		// 			<Switch>
-		// 				<Route
-		// 					path={`${match.url}`}
-		// 					exact
-		// 					render={() => (
-		// 						<UserInfo info={user.info} details={user.details} missing={this.load.bind(this)} />
-		// 					)}
-		// 				/>
-		// 				<Route
-		// 					path={`${match.url}/parcours_associatif`}
-		// 					render={() => <AssociativeCarreer />}
-		// 				/>
-		// 			</Switch>
-		// 		</div>
-		// 	</div>
-		// );
+				<div className="container pr-3 pl-3">
+					Le profil est en cours de développement. Il sera possible de consulter et modifier:
+					<ul>
+						<li>Vos informations personnelles</li>
+						<li>Votre parcours associatif et étudiant</li>
+						<li>Les applications/sites associatifs qui ont accès à vos données (et lequelles)</li>
+						<li>Vos cotisations</li>
+					</ul>
+					{
+						'Seul le bouton de déconnexion fonctionne. Nous vous invitons à glisser la onglets jusque cliquer sur "Me déconnecter" pour vous déconnecter :)'
+					}
+				</div>
+			</div>
+		);
 	}
 }
 
-export default ScreensProfile;
+export default ScreenProfile;

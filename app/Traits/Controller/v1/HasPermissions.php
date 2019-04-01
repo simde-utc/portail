@@ -30,7 +30,7 @@ trait HasPermissions
      */
     protected function getPermission(Request $request, string $permission_id, string $verb='get')
     {
-        $permission = Permission::where('id', $permission_id)->first();
+        $permission = Permission::where('id', $permission_id)->firstSelection();
 
         if ($permission) {
             if (!$this->tokenCanSee($request, $permission, $verb)) {

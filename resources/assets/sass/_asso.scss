@@ -1,80 +1,54 @@
-.asso {
-	position: relative;
-	padding-top: 44px;
-	overflow-y: auto;
+.assosContainer {
+	margin: 10px 3px;
+	text-align: center;
+}
+.searchContainer {
+	text-align: center;
+	width: 100%;
+	margin-bottom: 20px;
+}
 
-	.nav.nav-tabs.asso {
-		overflow-y: visible;
-		border: none;
-		position: fixed;
-		margin-top: 0;
-		transform: translateY(-100%);
-		z-index: 100;
-		width: 100%;
+.searchContainer .searchBar {
+	display: inline-flex;
+	justify-content: flex-end;
+	border-radius: 10px;
+	box-shadow: 0 10px 48px -9px rgba(0,0,0,0.23);
+	height: 50px;
+	width: 80%;
+	max-width: 500px;
+	margin: 20px;
+}
 
-		.nav-item {
-			border: none;
-			margin-bottom: 0;
+.searchContainer .filterBar {
+    overflow-y: auto;
+    max-width: 80%;
+    margin: auto;
+}
 
-			&.dropdown {
-				.dropdown-menu {
-					z-index: 9999 !important;
-					width: 200px;
-				}
-			}
-
-			.nav-link {
-				border: none;
-				border-radius: 0;
-				color: white;
-				font-size: .85rem;
-				font-weight: bold;
-				padding: 12px 40px;
-				transition: background-color .1s;
-
-				&:hover {
-					background-color: rgba(0, 0, 0, .2);
-				}
-
-				&.admin {
-					background-color: $red;
-				}
-
-				&.active {
-					color: black;
-					background-color: white;
-				}
-			}
-		}
-	}
+.searchContainer .searchBar .searchInput {
+	border: none;
+	padding: 10px;
+	border-radius: 10px;
+	display: block;
+	outline: none;
+	width: 100%;
+	max-width: 500px;
+}
+.searchContainer .searchBar .searchIcon {
+	border: none;
+	padding: 10px;
+	border-radius: 10px;
+	display: block;
+	outline: none;
+	width: 100%;
+	max-width: 500px;
 }
 
 .ArticleList .Article:not(:last-child) {
 	border-bottom: 1px solid $gray-light;
 }
 
-
-.pole-container{
-	vertical-align: top;
-	text-align: center;
-	border-radius: 10px;
-	border-color: black;
-	margin: 20px;
-	padding: 15px;
-	box-shadow: 0 10px 48px -10px rgba(0,0,0,0.23);
-}
-.pole-container h2{
-	font-size: 30px;
-}
-
-.pole-container > div {
-	overflow-x: auto;
-	white-space: nowrap;
-	border-radius: 10px;
-	padding: 15px;
-}
-
-.asso-card{
+.asso-card {
 	vertical-align: top;
 	width: 200px;
 	height: 300px;
@@ -90,33 +64,33 @@
 }
 
 .thumbnail {
-  background-size: cover;
-  background-position: center;
-  width: 100%;
-  height: 200px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  display: table;
+	background-size: cover;
+	background-position: center;
+	width: 100%;
+	height: 200px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	display: table;
 }
 
 .asso-card:hover>.thumbnail>.overlay {
-  visibility: visible;
+	visibility: visible;
 }
 
 .asso-card .thumbnail .overlay {
-  display: flex;
-  visibility: hidden;
-  width: 100%;
-  height: 200px;
-  padding: 10%;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  vertical-align: middle;
-  text-align: center;
-  word-wrap: break-word;
-  color: white;
-  font-size: 20px;
-  overflow-y: auto;
+	display: flex;
+	visibility: hidden;
+	width: 100%;
+	height: 200px;
+	padding: 10%;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	vertical-align: middle;
+	text-align: center;
+	word-wrap: break-word;
+	color: white;
+	font-size: 20px;
+	overflow-y: auto;
 }
 .asso-card .thumbnail .overlay > div {
 	margin: auto;
@@ -138,10 +112,10 @@
 }
 
 .name-container{
-	 height: 100px;
-	 width: 100%;
-	 display: table;
- }
+	height: 100px;
+	width: 100%;
+	display: table;
+}
 
 .name-container .asso-shortname{
 	display: table-cell;
@@ -161,18 +135,27 @@
 	width: 100%;
 	bottom: 10px;
 }
-.asso-card .card-line.bde{
-	background-color: rgba($bde, 0.7);
+
+.bg-black {
+    background-color: rgba(0, 0, 0, 0.7) !important;
 }
-.asso-card .card-line.poleae{
-	background-color: rgba($poleae, 0.7);
+
+.bg-bde {
+	background-color: rgba($bde, 0.7) !important;
 }
-.asso-card .card-line.polesec{
-	background-color: rgba($polesec, 0.7);
+
+.bg-poleae {
+	background-color: rgba($poleae, 0.7) !important;
 }
-.asso-card .card-line.polete{
-	background-color: rgba($polete, 0.7);
+
+.bg-polesec {
+	background-color: rgba($polesec, 0.7) !important;
 }
-.asso-card .card-line.polevdc{
-	background-color: rgba($polevdc, 0.7);
+
+.bg-polete {
+	background-color: rgba($polete, 0.7) !important;
+}
+
+.bg-polevdc {
+	background-color: rgba($polevdc, 0.7) !important;
 }

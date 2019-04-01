@@ -27,12 +27,16 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     public $incrementing = false;
 
     protected $fillable = [
-        'user_id', 'asso_id', 'name', 'secret', 'redirect', 'targeted_types', 'policy_url',
+        'user_id', 'asso_id', 'name', 'secret', 'redirect', 'targeted_types', 'policy_url', 'restricted',
         'personal_access_client', 'password_client', 'revoked', 'created_at', 'updated_at', 'scopes'
     ];
 
     protected $casts = [
         'scopes' => 'array',
+        'restricted' => 'boolean',
+        'personal_access_client' => 'boolean',
+        'password_client' => 'boolean',
+        'revoked' => 'boolean',
     ];
 
     protected $selection = [
@@ -91,18 +95,6 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indique si le calendrier est accessible.
-     * Le calendrier privé est visible par tous les membres.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isCalendarAccessibleBy(string $user_id): bool
-    {
-        return $this->asso()->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si le calendrier est gérable.
      * Le calendrier privé est modifiable uniquement par les développeurs.
      *
@@ -115,18 +107,6 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indique si l'évènement est accessible.
-     * L'évènement privé est visible par tous les membres.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isEventAccessibleBy(string $user_id): bool
-    {
-        return $this->asso()->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si l'évènement est gérable.
      * L'évènement privé est modifiable uniquement par les développeurs.
      *
@@ -136,18 +116,6 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     public function isEventManageableBy(string $user_id): bool
     {
         return $this->asso()->hasOneRole('developer', ['user_id' => $user_id]);
-    }
-
-    /**
-     * Indique si l'article est accessible.
-     * L'article privé est visible par tous les membres.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isArticleAccessibleBy(string $user_id): bool
-    {
-        return $this->asso()->currentMembers()->wherePivot('user_id', $user_id)->exists();
     }
 
     /**

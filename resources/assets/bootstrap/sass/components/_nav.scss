@@ -4,25 +4,25 @@
 // `<nav>`s or `<ul>`s.
 
 .nav {
-  display: flex;
-  flex-wrap: wrap;
-  padding-left: 0;
-  margin-bottom: 0;
-  list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
 }
 
 .nav-link {
-  display: block;
-  padding: $nav-link-padding-y $nav-link-padding-x;
+    display: block;
+    padding: $nav-link-padding-y $nav-link-padding-x;
 
-  @include hover-focus {
-    text-decoration: none;
-  }
+    @include hover-focus {
+        text-decoration: none;
+    }
 
-  // Disabled state lightens text
-  &.disabled {
-    color: $nav-link-disabled-color;
-  }
+    // Disabled state lightens text
+    &.disabled {
+        color: $nav-link-disabled-color;
+    }
 }
 
 //
@@ -30,40 +30,42 @@
 //
 
 .nav-tabs {
-  border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
+    flex-wrap: nowrap;
+    overflow-y: auto;
+    border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
 
-  .nav-item {
-    margin-bottom: -$nav-tabs-border-width;
-  }
-
-  .nav-link {
-    border: $nav-tabs-border-width solid transparent;
-    @include border-top-radius($nav-tabs-border-radius);
-
-    @include hover-focus {
-      border-color: $nav-tabs-link-hover-border-color;
+    .nav-item {
+        margin-bottom: -$nav-tabs-border-width;
     }
 
-    &.disabled {
-      color: $nav-link-disabled-color;
-      background-color: transparent;
-      border-color: transparent;
+    .nav-link {
+        border: $nav-tabs-border-width solid transparent;
+        @include border-top-radius($nav-tabs-border-radius);
+
+        @include hover-focus {
+            border-color: $nav-tabs-link-hover-border-color;
+        }
+
+        &.disabled {
+            color: $nav-link-disabled-color;
+            background-color: transparent;
+            border-color: transparent;
+        }
     }
-  }
 
-  .nav-link.active,
-  .nav-item.show .nav-link {
-    color: $nav-tabs-link-active-color;
-    background-color: $nav-tabs-link-active-bg;
-    border-color: $nav-tabs-link-active-border-color;
-  }
+    .nav-link.active,
+    .nav-item.show .nav-link {
+        color: $nav-tabs-link-active-color;
+        background-color: $nav-tabs-link-active-bg;
+        border-color: $nav-tabs-link-active-border-color;
+    }
 
-  .dropdown-menu {
-    // Make dropdown border overlap tab border
-    margin-top: -$nav-tabs-border-width;
-    // Remove the top rounded corners here since there is a hard edge above the menu
-    @include border-top-radius(0);
-  }
+    .dropdown-menu {
+        // Make dropdown border overlap tab border
+        margin-top: -$nav-tabs-border-width;
+        // Remove the top rounded corners here since there is a hard edge above the menu
+        @include border-top-radius(0);
+    }
 }
 
 
@@ -72,15 +74,15 @@
 //
 
 .nav-pills {
-  .nav-link {
-    @include border-radius($nav-pills-border-radius);
-  }
+    .nav-link {
+        @include border-radius($nav-pills-border-radius);
+    }
 
-  .nav-link.active,
-  .show > .nav-link {
-    color: $nav-pills-link-active-color;
-    background-color: $nav-pills-link-active-bg;
-  }
+    .nav-link.active,
+    .show > .nav-link {
+        color: $nav-pills-link-active-color;
+        background-color: $nav-pills-link-active-bg;
+    }
 }
 
 
@@ -89,18 +91,18 @@
 //
 
 .nav-fill {
-  .nav-item {
-    flex: 1 1 auto;
-    text-align: center;
-  }
+    .nav-item {
+        flex: 1 1 auto;
+        text-align: center;
+    }
 }
 
 .nav-justified {
-  .nav-item {
-    flex-basis: 0;
-    flex-grow: 1;
-    text-align: center;
-  }
+    .nav-item {
+        flex-basis: 0;
+        flex-grow: 1;
+        text-align: center;
+    }
 }
 
 
@@ -109,10 +111,97 @@
 // Hide tabbable panes to start, show them when `.active`
 
 .tab-content {
-  > .tab-pane {
-    display: none;
-  }
-  > .active {
-    display: block;
-  }
+    > .tab-pane {
+        display: none;
+    }
+
+    > .active {
+        display: block;
+    }
+}
+
+.navbar {
+    flex-wrap: nowrap !important;
+}
+
+.navbar-title {
+    overflow: auto;
+    flex-grow: 100;
+    text-align: center;
+    font-size: 20px;
+    color: white;
+    font-weight: 700;
+    padding-top: 5px;
+    text-transform: uppercase;
+}
+
+.navbar-toggle {
+    display: none !important;
+}
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        padding: 0 !important;
+    }
+
+    .navbar-brand {
+        display: none !important;
+    }
+
+    .navbar-nav {
+        display: none !important;
+    }
+
+    .navbar-toggle {
+        display: inline !important;
+    }
+
+    .navbar-title {
+        font-size: 16px;
+    }
+}
+
+.nav.nav-tabs {
+	position: relative;
+	overflow-y: auto;
+    border: none;
+    margin-top: 0;
+    z-index: 100;
+    width: 100%;
+
+    .nav-item {
+        display: inline-table;
+        border: none;
+        margin-bottom: 0;
+        background-color: #ebecf0;
+
+        &.dropdown {
+            .dropdown-menu {
+                z-index: 9999 !important;
+                width: 200px;
+            }
+        }
+
+        .nav-link {
+            border: none;
+            border-radius: 0;
+            font-size: .85rem;
+            font-weight: bold;
+            padding: 12px 40px;
+            transition: background-color .1s;
+
+            &:hover {
+                background-color: whitesmoke;
+            }
+
+            &.admin {
+                color: white;
+                background-color: $red;
+            }
+
+            &.active {
+                background-color: white;
+            }
+        }
+    }
 }

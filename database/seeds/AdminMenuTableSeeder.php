@@ -39,15 +39,27 @@ class AdminMenuTableSeeder extends Seeder
                 'elements' => [
                     [
                         'title' => 'Les accès',
-                        'uri' => 'access',
+                        'uri' => 'management/access',
                         'permission' => 'handle-access',
                         'icon' => 'fa-universal-access',
                     ],
                     [
                         'title' => 'Les membres',
-                        'uri' => 'assos/members',
+                        'uri' => 'management/assos/members',
                         'permission' => 'handle-assos-members',
                         'icon' => 'fa-handshake-o',
+                    ],
+                    [
+                        'title' => 'Les rôles',
+                        'uri' => 'management/users/roles',
+                        'permission' => 'handle-users-roles',
+                        'icon' => 'fa-user-secret',
+                    ],
+                    [
+                        'title' => 'Les permissions',
+                        'uri' => 'management/users/permissions',
+                        'permission' => 'handle-users-permissions',
+                        'icon' => 'fa-certificate',
                     ],
                 ]
             ],

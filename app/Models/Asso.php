@@ -102,6 +102,15 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
                 'type_id' => ContactType::where('name', 'Url')->first()->id,
                 'visibility_id' => Visibility::findByType('public')->id,
             ]);
+
+            // On crée un calendrier pour chaque association.
+            $model->calendars()->create([
+                'name' => 'Evénements',
+                'description' => 'Calendrier regroupant les événements de l\'associations',
+                'visibility_id' => Visibility::findByType('public')->id,
+                'created_by_id' => $model->id,
+                'created_by_type' => Asso::class,
+            ]);
         });
     }
 
@@ -314,13 +323,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      */
     public function isRoleManageableBy(string $user_id): bool
     {
-        if ($this->id) {
-            return $this->hasOnePermission('role', [
-                'user_id' => $user_id,
-            ]);
-        } else {
-            return User::find($user_id)->hasOnePermission('role');
-        }
+        return User::find($user_id)->hasOnePermission('role');
     }
 
     /**
@@ -344,13 +347,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
      */
     public function isPermissionManageableBy(string $user_id): bool
     {
-        if ($this->id) {
-            return $this->hasOnePermission('permission', [
-                'user_id' => $user_id,
-            ]);
-        } else {
-            return User::find($user_id)->hasOnePermission('permission');
-        }
+        return User::find($user_id)->hasOnePermission('permission');
     }
 
     /**
@@ -400,18 +397,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si le calendrier est accessible.
-     * Seulement les membres peuvent voir les calendriers privées.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isCalendarAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si le calendrier est gérable.
      * Seulement les membres ayant la permission peuvent modifier les calendriers privées.
      *
@@ -433,18 +418,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     public function events()
     {
         return $this->morphMany(Event::class, 'owned_by');
-    }
-
-    /**
-     * Indique si un évènement est accessible.
-     * Seulement les membres peuvent voir les évènements privés.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isEventAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
     }
 
     /**
@@ -472,18 +445,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si un article est accessible.
-     * Seulement les membres peuvent voir les articles privés.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isArticleAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
-    }
-
-    /**
      * Indique si un article est gérable.
      * Seulement les membres peuvent modifier les articles privés.
      *
@@ -505,18 +466,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     public function rooms()
     {
         return $this->morphMany(Room::class, 'owned_by');
-    }
-
-    /**
-     * Indique si une salle est accessible.
-     * Seulement les membres peuvent voir les salles privées.
-     *
-     * @param  string $user_id
-     * @return boolean
-     */
-    public function isRoomAccessibleBy(string $user_id): bool
-    {
-        return $this->currentMembers()->wherePivot('user_id', $user_id)->exists();
     }
 
     /**

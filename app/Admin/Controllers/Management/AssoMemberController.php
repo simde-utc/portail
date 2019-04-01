@@ -8,9 +8,9 @@
  * @license GNU GPL-3.0
  */
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Management;
 
-use App\Http\Controllers\Controller;
+use App\Admin\Controllers\Controller;
 use App\Pivots\AssoMember;
 use App\Models\{
 	Asso, User, Semester, Role
@@ -24,6 +24,14 @@ use App\Notifications\Admin\MemberAccessValidation;
 class AssoMemberController extends Controller
 {
     protected $model = AssoMember::class;
+
+    /**
+     * Donne l'accès uniquement si la personne possède la permission.
+     */
+    public function __construct()
+    {
+        $this->middleware('permission:handle-assos-members');
+    }
 
     /**
      * Interface d'affichage global.
@@ -40,9 +48,9 @@ class AssoMemberController extends Controller
         $grid->addFields([
             'id' => 'display',
             'user' => User::get(['id', 'firstname', 'lastname']),
+            'role' => Role::get(['id', 'name']),
             'asso' => Asso::get(['id', 'name']),
             'semester' => Semester::get(['id', 'name']),
-            'role' => Role::get(['id', 'name']),
             'validated_by' => User::get(['id', 'firstname', 'lastname']),
             'created_at' => 'display',
             'updated_at' => 'display'
@@ -84,8 +92,8 @@ class AssoMemberController extends Controller
         ->orderBy('created_at', 'DESC');
 
         return $content
-            ->header('Gestion des accès')
-            ->description('Permet de savoir ce qui est validé')
+            ->header('Gestion des membres associatifs')
+            ->description('Permet d\'accepter, modifier et supprimer les membres')
             ->body($grid->get());
     }
 

@@ -35,16 +35,18 @@ class AccessScreen extends React.Component {
 	constructor(props) {
 		super(props);
 
-		const { asso } = props;
+		const { asso, dispatch } = props;
 
 		if (asso.id) {
 			this.loadAssosData(asso.id);
 		}
+
+		dispatch(actions.config({ title: `${asso.shortname} - Accès` }));
 	}
 
 	componentDidUpdate({ asso }) {
 		const {
-			asso: { id },
+			asso: { id, shortname },
 			accessFetched,
 			dispatch,
 		} = this.props;
@@ -56,6 +58,8 @@ class AccessScreen extends React.Component {
 		if (!accessFetched) {
 			dispatch(actions.access.all());
 		}
+
+		dispatch(actions.config({ title: `${shortname} - Accès` }));
 	}
 
 	loadAssosData(id) {
@@ -145,13 +149,12 @@ class AccessScreen extends React.Component {
 	}
 
 	render() {
-		const { user, asso, members, memberAccess, access, permissions, fetched, config } = this.props;
+		const { user, members, memberAccess, access, permissions, fetched } = this.props;
 		const userAccessDemand = find(memberAccess, memberAccess => memberAccess.member.id === user.id);
 		const userCanConfirm = find(permissions, permission => permission.type === 'access');
-		config.title = `${asso.shortname} - Accès`;
 
 		return (
-			<div>
+			<div className="container">
 				{fetched && !userAccessDemand && (
 					<AccessForm access={access} post={this.sendDemand.bind(this)} />
 				)}

@@ -111,33 +111,36 @@ class ModelResolver
      * Donne le nom court du modèle.
      *
      * @param  string $modelName
+     * @param  string $delimiter
      * @return string
      */
-    public function getName(string $modelName)
+    public function getName(string $modelName, string $delimiter='_')
     {
-        return $this->toSnakeCase((new \ReflectionClass($modelName))->getShortName(), '_');
+        return $this->toSnakeCase((new \ReflectionClass($modelName))->getShortName(), $delimiter);
     }
 
     /**
      * Donne le nom court de la classe.
      *
-     * @param  mixed $object
+     * @param  mixed  $object
+     * @param  string $delimiter
      * @return string
      */
-    public function getNameFromObject($object)
+    public function getNameFromObject($object, string $delimiter='_')
     {
-        return $this->getName(get_class($object));
+        return $this->getName(get_class($object), $delimiter);
     }
 
     /**
      * Donne la catégorie du modèle.
      *
      * @param  string $modelName
+     * @param  string $delimiter
      * @return string
      */
-    public function getCategory(string $modelName)
+    public function getCategory(string $modelName, string $delimiter='_')
     {
-        $name = $this->getName($modelName);
+        $name = $this->getName($modelName, $delimiter);
 
         if (substr($name, 0, -1) === 'y') {
             return substr($name, 0, -1).'ies';
