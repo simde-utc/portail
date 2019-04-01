@@ -1,4 +1,15 @@
 import React from 'react';
+import {
+	Modal,
+	ModalBody,
+	ModalHeader,
+	ModalFooter,
+	Form,
+	FormGroup,
+	Button,
+	Label,
+	Input,
+} from 'reactstrap';
 import { connect } from 'react-redux';
 
 import SimpleMDE from 'simplemde';
@@ -66,24 +77,6 @@ const options = {
 			action: SimpleMDE.drawTable,
 			className: 'fa fa-fw fa-table',
 			title: 'Insérer un tableau',
-		},
-		{
-			name: 'preview',
-			action: SimpleMDE.togglePreview,
-			className: 'fa fa-fw fa-eye no-disable',
-			title: 'Aperçu',
-		},
-		{
-			name: 'side-by-side',
-			action: SimpleMDE.toggleSideBySide,
-			className: 'fa fa-fw fa-columns no-disable no-mobile',
-			title: 'Cote à cote',
-		},
-		{
-			name: 'fullscreen',
-			action: SimpleMDE.toggleFullScreen,
-			className: 'fa fa-fw fa-arrows-alt no-disable no-mobile',
-			title: 'Plein écran',
 		},
 	],
 };
@@ -166,68 +159,72 @@ class ArticleForm extends React.Component {
 	}
 
 	render() {
-		const { visibilities } = this.props;
+		const { opened, visibilities, closeModal } = this.props;
 		const { title, description } = this.state;
 
 		return (
-			<div>
-				<div className="container p-3">
-					<form className="form row" onSubmit={e => this.handleSubmit(e)}>
-						<div className="col-md-6">
-							<h2 className="mb-3">Créer un article</h2>
-							<div className="form-group">
-								<label htmlFor="title">
-									Titre *
-									<input
-										type="text"
-										className="form-control"
-										id="title"
-										name="title"
-										value={title}
-										onChange={e => this.handleChange(e)}
-										placeholder="Entrez le titre de votre article"
-										required
-									/>
-								</label>
-							</div>
-							<div className="form-group">
-								<label htmlFor="description">
-									Description
-									<textarea
-										className="form-control"
-										id="description"
-										name="description"
-										rows="3"
-										value={description}
-										onChange={e => this.handleChange(e)}
-										placeholder="Entrez une courte description de votre article"
-									/>
-								</label>
-							</div>
-						</div>
-						<div className="col-md-12">
-							<div className="form-group">
-								<label htmlFor="corps">Corps *</label>
+			<Modal isOpen={opened}>
+				<Form onSubmit={this.handleSubmit.bind(this)}>
+					<ModalHeader>Créer un article</ModalHeader>
+					<ModalBody>
+						<FormGroup>
+							<Label for="access_id">Titre *</Label>
+							<Input
+								type="text"
+								className="form-control"
+								id="title"
+								name="title"
+								value={title}
+								onChange={e => this.handleChange(e)}
+								placeholder="Titre de l'article"
+								required
+							/>
+						</FormGroup>
 
-								<Editor onChange={e => this.handleEditorChange(e)} id="corps" options={options} />
-							</div>
+						<FormGroup>
+							<Label for="description">Contenu *</Label>
+							<Editor
+								onChange={e => this.handleEditorChange(e)}
+								id="corps"
+								options={options}
+								required
+							/>
+						</FormGroup>
 
-							<div className="form-group">
-								<Select
-									onChange={this.handleVisibilityChange.bind(this)}
-									name="visibility_id"
-									placeholder="Visibilité de l'article"
-									options={ArticleForm.mapSelectionOptions(visibilities)}
-								/>
-							</div>
+						<FormGroup>
+							<Label for="description">Description</Label>
+							<Input
+								type="textarea"
+								className="form-control"
+								id="description"
+								name="description"
+								rows="3"
+								value={description}
+								onChange={e => this.handleChange(e)}
+								placeholder="Courte description de l'article"
+							/>
+						</FormGroup>
 
-							<button type="submit" className="btn btn-primary">
-								Publier
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
+						<FormGroup>
+							<Label for="description">Visibilité *</Label>
+							<Select
+								onChange={this.handleVisibilityChange.bind(this)}
+								name="visibility_id"
+								placeholder="Visibilité de l'article"
+								options={ArticleForm.mapSelectionOptions(visibilities)}
+							/>
+						</FormGroup>
+					</ModalBody>
+					<ModalFooter>
+						<Button outline className="font-weight-bold" onClick={() => closeModal()}>
+							Annuler
+						</Button>
+						<Button type="submit" className="font-weight-bold" outline color="primary">
+							Publier l'article
+						</Button>
+					</ModalFooter>
+				</Form>
+			</Modal>
 		);
 	}
 }

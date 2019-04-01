@@ -62,7 +62,7 @@ class AccessForm extends React.Component {
 	}
 
 	render() {
-		const { access, opened } = this.props;
+		const { access, opened, closeModal } = this.props;
 		const { description } = this.state;
 
 		return (
@@ -71,7 +71,7 @@ class AccessForm extends React.Component {
 					<ModalHeader>Formulaire de demande d'accès</ModalHeader>
 					<ModalBody>
 						<FormGroup>
-							<Label for="access_id">Accès demandé</Label>
+							<Label for="access_id">Accès demandé *</Label>
 							<Select
 								onChange={this.handleAccessChange.bind(this)}
 								id="access_id"
@@ -83,7 +83,7 @@ class AccessForm extends React.Component {
 						</FormGroup>
 
 						<FormGroup>
-							<Label for="description">Description de la demande</Label>
+							<Label for="description">Description de la demande *</Label>
 							<Input
 								type="textarea"
 								id="description"
@@ -97,16 +97,10 @@ class AccessForm extends React.Component {
 						</FormGroup>
 					</ModalBody>
 					<ModalFooter>
-						<Button outline className="font-weight-bold" onClick={() => this.props.closeModal()}>
+						<Button outline className="font-weight-bold" onClick={() => closeModal()}>
 							Annuler
 						</Button>
-						<Button
-							type="submit"
-							className="font-weight-bold"
-							outline
-							color="primary"
-							// onClick={this.handleSubmit.bind(this)}
-						>
+						<Button type="submit" className="font-weight-bold" outline color="primary">
 							Réaliser la demande
 						</Button>
 					</ModalFooter>

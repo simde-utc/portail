@@ -163,13 +163,13 @@ class AccessScreen extends React.Component {
 
 		return (
 			<div className="container">
-                <div className="top-right-button">
-                    {fetched && !userAccessDemand && (
-                        <Button color="primary" outline onClick={() => this.setState({ openModal: true })}>
-                        Réaliser une demande
-                        </Button>
-                    )}
-                </div>
+				<div className="top-right-button">
+					{fetched && !userAccessDemand && (
+						<Button color="primary" outline onClick={() => this.setState({ openModal: true })}>
+							Réaliser une demande
+						</Button>
+					)}
+				</div>
 				<AccessForm
 					access={access}
 					post={this.sendDemand.bind(this)}
