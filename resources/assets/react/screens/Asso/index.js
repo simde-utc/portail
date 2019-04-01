@@ -11,13 +11,12 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { NavLink, Link, Route, Switch } from 'react-router-dom';
+import { NavLink, Route, Switch } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import Select from 'react-select';
 import actions from '../../redux/actions';
 
-import Dropdown from '../../components/Dropdown';
 import ArticleForm from '../../components/Article/Form';
 import LoggedRoute from '../../routes/Logged';
 import ConditionalRoute from '../../routes/Conditional';
@@ -502,7 +501,7 @@ class AssoScreen extends React.Component {
 		}
 
 		return (
-			<div className="asso container w-100">
+			<div className="nav-container w-100">
 				<Modal isOpen={modal.show}>
 					<ModalHeader>{modal.title}</ModalHeader>
 					<ModalBody>{modal.body}</ModalBody>
@@ -560,18 +559,6 @@ class AssoScreen extends React.Component {
 							</NavLink>
 						</li>
 					)}
-					{this.user.isMember && (
-						<li className="nav-item dropdown">
-							<Dropdown title="CRÉER">
-								<Link className="dropdown-item" to={`${match.url}/articles/create`}>
-									Article
-								</Link>
-								<Link className="dropdown-item" to={`${match.url}/events/create`}>
-									Évènement
-								</Link>
-							</Dropdown>
-						</li>
-					)}
 				</ul>
 
 				<Switch>
@@ -592,8 +579,8 @@ class AssoScreen extends React.Component {
 							/>
 						)}
 					/>
-					<Route path={`${match.url}/events`} render={() => <AssoCalendar asso={asso} />} />
-					<Route path={`${match.url}/articles`} render={() => <ArticleList asso={asso} />} />
+					<Route exact path={`${match.url}/events`} render={() => <AssoCalendar asso={asso} />} />
+					<Route exact path={`${match.url}/articles`} render={() => <ArticleList asso={asso} />} />
 					<LoggedRoute
 						path={`${match.url}/members`}
 						redirect={`${match.url}`}
@@ -614,6 +601,7 @@ class AssoScreen extends React.Component {
 						)}
 					/>
 					<ConditionalRoute
+						exact
 						path={`${match.url}/access`}
 						redirect={`${match.url}`}
 						isAllowed={() => {
