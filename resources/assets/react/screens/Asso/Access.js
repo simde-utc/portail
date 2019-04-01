@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import { find } from 'lodash';
@@ -34,6 +35,10 @@ import actions from '../../redux/actions';
 class AccessScreen extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			openModal: false,
+		};
 
 		const { asso, dispatch } = props;
 
@@ -80,6 +85,8 @@ class AccessScreen extends React.Component {
 					"La demande d'accès a été envoyée. En attente de la confirmation d'un responsable de l'association",
 					"Demande d'accès"
 				);
+
+				this.setState({ openModal: false });
 
 				// L'utilisateur peut confirmer sa propre demande.
 				if (find(permissions, permission => permission.type === 'access')) {
@@ -150,15 +157,26 @@ class AccessScreen extends React.Component {
 
 	render() {
 		const { user, members, memberAccess, access, permissions, fetched } = this.props;
+		const { openModal } = this.state;
 		const userAccessDemand = find(memberAccess, memberAccess => memberAccess.member.id === user.id);
 		const userCanConfirm = find(permissions, permission => permission.type === 'access');
 
 		return (
 			<div className="container">
-				{fetched && !userAccessDemand && (
-					<AccessForm access={access} post={this.sendDemand.bind(this)} />
-				)}
-				{fetched && memberAccess.length > 0 && (
+                <div className="top-right-button">
+                    {fetched && !userAccessDemand && (
+                        <Button color="primary" outline onClick={() => this.setState({ openModal: true })}>
+                        Réaliser une demande
+                        </Button>
+                    )}
+                </div>
+				<AccessForm
+					access={access}
+					post={this.sendDemand.bind(this)}
+					opened={openModal}
+					closeModal={() => this.setState({ openModal: false })}
+				/>
+				{fetched && (
 					<AccessList
 						list={memberAccess}
 						members={members}

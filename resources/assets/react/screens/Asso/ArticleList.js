@@ -9,6 +9,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+import { Button } from 'reactstrap';
 
 import actions from '../../redux/actions';
 
@@ -65,6 +66,14 @@ class AssoArticleList extends React.Component {
 
 		return (
 			<div className="container">
+				<div className="top-right-button">
+					{
+						<Button color="primary" outline>
+							Rédiger un article
+						</Button>
+					}
+				</div>
+				<h1 className="title">Derniers articles</h1>
 				<ArticleList articles={articles} fetched={fetched} fetching={fetching} {...this.props} />
 			</div>
 		);

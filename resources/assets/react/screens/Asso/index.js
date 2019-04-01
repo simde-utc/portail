@@ -609,15 +609,6 @@ class AssoScreen extends React.Component {
 						}}
 						render={() => <AccessScreen asso={asso} />}
 					/>
-					<Route
-						path={`${match.url}/articles/create`}
-						render={() => (
-							<ArticleForm
-								post={this.postArticle.bind(this)}
-								events={AssoScreen.getAllEvents(events)}
-							/>
-						)}
-					/>
 				</Switch>
 			</div>
 		);

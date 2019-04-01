@@ -8,7 +8,17 @@
  */
 
 import React from 'react';
-import { Form, FormGroup, Button, Label, Input } from 'reactstrap';
+import {
+	Modal,
+	ModalBody,
+	ModalHeader,
+	ModalFooter,
+	Form,
+	FormGroup,
+	Button,
+	Label,
+	Input,
+} from 'reactstrap';
 
 import Select from 'react-select';
 import { map } from 'lodash';
@@ -41,6 +51,10 @@ class AccessForm extends React.Component {
 		const { description, access_id } = this.state;
 		e.preventDefault();
 
+		if (!description || !access_id) {
+			return;
+		}
+
 		post({
 			description,
 			access_id,
@@ -48,44 +62,56 @@ class AccessForm extends React.Component {
 	}
 
 	render() {
-		const { access } = this.props;
+		const { access, opened } = this.props;
 		const { description } = this.state;
 
 		return (
-			<div className="container AccessForm" style={{ overflow: 'visible' }}>
-				<h1 className="title">Formulaire de demande d'accès</h1>
-				<Form>
-					<FormGroup>
-						<Label for="access_id">Accès demandé</Label>
-						<Select
-							onChange={this.handleAccessChange.bind(this)}
-							id="access_id"
-							name="access_id"
-							placeholder="Type d'accès"
-							options={AccessForm.mapSelectionOptions(access)}
-							required
-						/>
-					</FormGroup>
+			<Modal isOpen={opened}>
+				<Form onSubmit={this.handleSubmit.bind(this)}>
+					<ModalHeader>Formulaire de demande d'accès</ModalHeader>
+					<ModalBody>
+						<FormGroup>
+							<Label for="access_id">Accès demandé</Label>
+							<Select
+								onChange={this.handleAccessChange.bind(this)}
+								id="access_id"
+								name="access_id"
+								placeholder="Type d'accès"
+								options={AccessForm.mapSelectionOptions(access)}
+								required
+							/>
+						</FormGroup>
 
-					<FormGroup>
-						<Label for="description">Description de la demande</Label>
-						<Input
-							type="textarea"
-							id="description"
-							name="description"
-							rows="3"
-							value={description}
-							onChange={this.handleDescriptionChange.bind(this)}
-							placeholder="Entrez une courte description expliquant la raison de votre demande"
-							required
-						/>
-					</FormGroup>
-
-					<Button type="submit" color="primary" onClick={this.handleSubmit.bind(this)}>
-						Réaliser la demande
-					</Button>
+						<FormGroup>
+							<Label for="description">Description de la demande</Label>
+							<Input
+								type="textarea"
+								id="description"
+								name="description"
+								rows="3"
+								value={description}
+								onChange={this.handleDescriptionChange.bind(this)}
+								placeholder="Entrez une courte description expliquant la raison de votre demande"
+								required
+							/>
+						</FormGroup>
+					</ModalBody>
+					<ModalFooter>
+						<Button outline className="font-weight-bold" onClick={() => this.props.closeModal()}>
+							Annuler
+						</Button>
+						<Button
+							type="submit"
+							className="font-weight-bold"
+							outline
+							color="primary"
+							// onClick={this.handleSubmit.bind(this)}
+						>
+							Réaliser la demande
+						</Button>
+					</ModalFooter>
 				</Form>
-			</div>
+			</Modal>
 		);
 	}
 }
