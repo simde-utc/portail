@@ -6,6 +6,7 @@ body {
 }
 
 main {
+    flex: auto;
 	background-color: $white;
     overflow: hidden;
 }
@@ -74,4 +75,60 @@ h1, h2, h3, h4, h5, h6 {
 
 .rbc-toolbar {
     overflow-y: auto;
+}
+
+.nav-container {
+	position: relative;
+	margin-top: 55px;
+
+	.nav.nav-tabs {
+        overflow-y: visible;
+        overflow-x: auto;
+		border: none;
+		position: fixed;
+		margin-top: -55px;
+        height: 45px;
+		z-index: 100;
+        background-color: rgba(0, 0, 0, .3);
+		width: 100%;
+
+		.nav-item {
+			border: none;
+            height: 45px;
+			margin-bottom: 0;
+
+			&.dropdown {
+				.dropdown-menu {
+					z-index: 9999 !important;
+					width: 200px;
+				}
+			}
+
+			.nav-link {
+				border: none;
+				border-radius: 0;
+				color: white;
+				font-size: .85rem;
+				font-weight: bold;
+                height: 45px;
+				padding: auto !important;
+                white-space: nowrap;
+				transition: background-color .1s;
+                background-color: rgba(0, 0, 0, .3);
+
+				&:hover {
+					background-color: rgba(0, 0, 0, .5);
+				}
+
+				&.admin {
+					background-color: $red;
+				}
+
+				&.active {
+					color: black;
+					background-color: white;
+				}
+			}
+		}
+	}
 }

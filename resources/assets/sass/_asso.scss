@@ -44,56 +44,6 @@
 	max-width: 500px;
 }
 
-.asso {
-	position: relative;
-	padding-top: 44px;
-
-	.nav.nav-tabs.asso {
-		overflow-y: visible;
-		border: none;
-		position: fixed;
-		margin-top: 0;
-		transform: translateY(-100%);
-		z-index: 100;
-		width: 100%;
-
-		.nav-item {
-			border: none;
-			margin-bottom: 0;
-
-			&.dropdown {
-				.dropdown-menu {
-					z-index: 9999 !important;
-					width: 200px;
-				}
-			}
-
-			.nav-link {
-				border: none;
-				border-radius: 0;
-				color: white;
-				font-size: .85rem;
-				font-weight: bold;
-				padding: 12px 40px;
-				transition: background-color .1s;
-
-				&:hover {
-					background-color: rgba(0, 0, 0, .2);
-				}
-
-				&.admin {
-					background-color: $red;
-				}
-
-				&.active {
-					color: black;
-					background-color: white;
-				}
-			}
-		}
-	}
-}
-
 .ArticleList .Article:not(:last-child) {
 	border-bottom: 1px solid $gray-light;
 }

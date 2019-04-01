@@ -4,13 +4,11 @@ import { connect } from 'react-redux';
 import SimpleMDE from 'simplemde';
 import Editor from 'react-simplemde-editor';
 import Select from 'react-select';
-import AsyncSelect from 'react-select/lib/Async';
 import { map } from 'lodash';
 
 import actions from '../../redux/actions';
 
 import 'easymde/dist/easymde.min.css';
-
 
 const options = {
 	spellChecker: false,
@@ -110,16 +108,16 @@ class ArticleForm extends React.Component {
 			content: '',
 		};
 
-        if (props.visibilities.length === 0) {
-            props.dispatch(actions.visibilities.get());
-        }
+		if (props.visibilities.length === 0) {
+			props.dispatch(actions.visibilities.get());
+		}
 	}
 
-    componentWillMount() {
-        const { dispatch } = this.props;
+	componentWillMount() {
+		const { dispatch } = this.props;
 
-        dispatch(actions.config({ title: 'Créer un article' }));
-    }
+		dispatch(actions.config({ title: 'Créer un article' }));
+	}
 
 	getEvents(events) {
 		const { eventFilter } = this.state;
@@ -209,21 +207,19 @@ class ArticleForm extends React.Component {
 						</div>
 						<div className="col-md-12">
 							<div className="form-group">
-								<label htmlFor="corps">
-									Corps *
-								</label>
+								<label htmlFor="corps">Corps *</label>
 
-                                <Editor onChange={e => this.handleEditorChange(e)} id="corps" options={options} />
+								<Editor onChange={e => this.handleEditorChange(e)} id="corps" options={options} />
 							</div>
 
-                            <div className="form-group">
-    							<Select
-    								onChange={this.handleVisibilityChange.bind(this)}
-    								name="visibility_id"
-    								placeholder="Visibilité de l'article"
-    								options={ArticleForm.mapSelectionOptions(visibilities)}
-    							/>
-                            </div>
+							<div className="form-group">
+								<Select
+									onChange={this.handleVisibilityChange.bind(this)}
+									name="visibility_id"
+									placeholder="Visibilité de l'article"
+									options={ArticleForm.mapSelectionOptions(visibilities)}
+								/>
+							</div>
 
 							<button type="submit" className="btn btn-primary">
 								Publier

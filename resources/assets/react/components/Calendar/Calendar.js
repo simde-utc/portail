@@ -27,9 +27,9 @@ export default class CalendarCalendar extends React.Component {
 		return generatedEvents;
 	}
 
-    static getDefaultView() {
-        return window.innerWidth > 500 ? 'week' : 'day';
-    }
+	static getDefaultView() {
+		return window.innerWidth > 500 ? 'week' : 'day';
+	}
 
 	static getEventProps(event) {
 		return {

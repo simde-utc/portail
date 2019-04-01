@@ -28,7 +28,7 @@ class ScreenProfile extends React.Component {
 		const { user, permissions, match } = this.props;
 
 		return (
-			<div className="profile container w-100">
+			<div className="nav-container w-100">
 				<ul className="nav nav-tabs">
 					<li className="nav-item">
 						<NavLink className="nav-link" activeClassName="active" exact to={match.url}>
@@ -68,7 +68,7 @@ class ScreenProfile extends React.Component {
 					</li>
 				</ul>
 
-				<div className="p-3">
+				<div className="container pr-3 pl-3">
 					Le profil est en cours de développement. Il sera possible de consulter et modifier:
 					<ul>
 						<li>Vos informations personnelles</li>
