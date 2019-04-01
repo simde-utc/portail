@@ -65,12 +65,12 @@ class Sidebar extends React.Component {
 
 		return (
 			<div
-				className={config.openSidebar ? 'sidebar-active' : ''}
+				className={config.openSidebar ? 'sidebar-container sidebar-active' : 'sidebar-container'}
 				onClick={this.closeSidebar.bind(this)}
 			>
 				<div className="sidebar-overlay" />
 
-				<div className="sidebar col-md-3 col-xl-2 d-md-flex flex-column justify-content-between">
+				<div className="sidebar">
 					<div className="sidebar-inner">
 						<div className="sidebar-group sidebar-title">
 							<NavLink to="/" className="sidebar-header d-hover-zone">

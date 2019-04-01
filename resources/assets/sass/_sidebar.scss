@@ -1,11 +1,17 @@
-.sidebar {
-    height: 100%;
-    min-width: 250px;
+.sidebar-container {
+    position: fixed;
     width: 250px;
-    max-width: 250px;
-	overflow: auto;
+    background: $dark-gray;
+}
+
+.sidebar {
+    position: fixed;
+    top: $navbar-min-height;
+    bottom: 0;
+    width: 250px !important;
+    overflow: auto;
+    background: $dark-gray;
 	padding: map-get($spacers, 3) 0;
-	background: $dark-gray;
     transition: 0.5s;
 }
 
@@ -60,10 +66,15 @@
 }
 
 @media screen and (max-width: 768px) {
+    .sidebar-container {
+        z-index: 100001;
+        width: 0;
+    }
+
     .sidebar-overlay {
         position: fixed;
         display: none;
-        z-index: 1000;
+        z-index: 100000;
         top: 60px;
         bottom: 0;
         right: 0;
@@ -72,9 +83,9 @@
     }
 
     .sidebar {
-        position: absolute;
+        position: fixed;
         height: auto;
-        z-index: 1000;
+        z-index: 100001;
         top: 60px;
         bottom: 0;
         min-width: 0;

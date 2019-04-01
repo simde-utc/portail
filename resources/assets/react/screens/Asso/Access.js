@@ -154,7 +154,7 @@ class AccessScreen extends React.Component {
 		const userCanConfirm = find(permissions, permission => permission.type === 'access');
 
 		return (
-			<div>
+			<div className="container">
 				{fetched && !userAccessDemand && (
 					<AccessForm access={access} post={this.sendDemand.bind(this)} />
 				)}

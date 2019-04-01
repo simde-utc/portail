@@ -61,7 +61,7 @@ class AssoCalendar extends React.Component {
 		}
 
 		return (
-			<div>
+			<div className="container">
 				<Calendar calendars={calendars} selectedCalendars={calendars} />
 			</div>
 		);

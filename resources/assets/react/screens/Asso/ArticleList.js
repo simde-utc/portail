@@ -64,7 +64,9 @@ class AssoArticleList extends React.Component {
 		const { articles, fetched, fetching } = this.props;
 
 		return (
-			<ArticleList articles={articles} fetched={fetched} fetching={fetching} {...this.props} />
+			<div className="container">
+				<ArticleList articles={articles} fetched={fetched} fetching={fetching} {...this.props} />
+			</div>
 		);
 	}
 }

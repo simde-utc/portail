@@ -27,6 +27,10 @@ export default class CalendarCalendar extends React.Component {
 		return generatedEvents;
 	}
 
+	static getDefaultView() {
+		return window.innerWidth > 500 ? 'week' : 'day';
+	}
+
 	static getEventProps(event) {
 		return {
 			style: {
@@ -43,8 +47,8 @@ export default class CalendarCalendar extends React.Component {
 			<div style={{ height: '700px' }}>
 				<BigCalendar
 					localizer={localizer}
-					defaultView="week"
-					eventPropGetter={CalendarCalendar.getEventProps.bind(this)}
+					defaultView={CalendarCalendar.getDefaultView()}
+					eventPropGetter={CalendarCalendar.getEventProps}
 					{...this.props}
 					events={this.getEvents()}
 				/>
