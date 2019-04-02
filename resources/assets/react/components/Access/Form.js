@@ -49,12 +49,23 @@ class AccessForm extends React.Component {
 		}
 	}
 
-	handleAccessChange({ value, label }) {
-		this.setState({ access_id: value, access_name: label });
+	setDefaultAccess(access) {
+		const defaultAccess = access.find(element => element.type === 'asso');
+
+		this.setState({
+			access_id: defaultAccess.id,
+			access_name: defaultAccess.name,
+		});
 	}
 
-	handleDescriptionChange({ target: { value } }) {
-		this.setState({ description: value });
+	cleanInputs() {
+		const { access } = this.props;
+
+		this.setState({
+			description: '',
+		});
+
+		this.setDefaultAccess(access);
 	}
 
 	handleSubmit(e) {
@@ -74,23 +85,12 @@ class AccessForm extends React.Component {
 		});
 	}
 
-	cleanInputs() {
-		const { access } = this.props;
-
-		this.setState({
-			description: '',
-		});
-
-		this.setDefaultAccess(access);
+	handleAccessChange({ value, label }) {
+		this.setState({ access_id: value, access_name: label });
 	}
 
-	setDefaultAccess(access) {
-		const defaultAccess = access.find(element => element.type === 'asso');
-
-		this.setState({
-			access_id: defaultAccess.id,
-			access_name: defaultAccess.name,
-		});
+	handleDescriptionChange({ target: { value } }) {
+		this.setState({ description: value });
 	}
 
 	render() {

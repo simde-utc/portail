@@ -96,8 +96,8 @@ class ArticleForm extends React.Component {
 		super(props);
 
 		this.state = {
-            visibility_id: null,
-            visibility_name: null,
+			visibility_id: null,
+			visibility_name: null,
 			title: '',
 			description: '',
 			content: '',
@@ -126,8 +126,41 @@ class ArticleForm extends React.Component {
 		);
 	}
 
-	handleVisibilityChange({ value, label }) {
-		this.setState({ visibility_id: value, visibility_name: label });
+	setDefaultVisibility(visibilities) {
+		const defaultVisibility = visibilities.find(visibility => visibility.type === 'public');
+
+		this.setState({
+			visibility_id: defaultVisibility.id,
+			visibility_name: defaultVisibility.name,
+		});
+	}
+
+	cleanInputs() {
+		const { visibilities } = this.props;
+
+		this.setState({
+			title: '',
+			description: '',
+			content: '',
+		});
+
+		this.setDefaultVisibility(visibilities);
+	}
+
+	handleSubmit(e) {
+		const { post } = this.props;
+		const { title, description, content, visibility_id, event_id } = this.state;
+		e.preventDefault();
+
+		post({
+			title,
+			description,
+			content,
+			visibility_id,
+			event_id,
+		}).then(() => {
+			this.cleanInputs();
+		});
 	}
 
 	handleSearchEvent(value) {
@@ -152,41 +185,8 @@ class ArticleForm extends React.Component {
 		this.setState({ [e.target.name]: e.target.value });
 	}
 
-	handleSubmit(e) {
-        const { post } = this.props;
-		const { title, description, content, visibility_id, visibility_name, event_id } = this.state;
-		e.preventDefault();
-
-		post({
-			title,
-			description,
-			content,
-			visibility_id,
-			event_id,
-		}).then(() => {
-			this.cleanInputs();
-		});
-	}
-
-	cleanInputs() {
-		const { visibilities } = this.props;
-
-		this.setState({
-			title: '',
-			description: '',
-			content: '',
-		});
-
-		this.setDefaultVisibility(visibilities);
-	}
-
-	setDefaultVisibility(visibilities) {
-		const defaultVisibility = visibilities.find(visibility => visibility.type === 'public');
-
-		this.setState({
-			visibility_id: defaultVisibility.id,
-			visibility_name: defaultVisibility.name,
-		});
+	handleVisibilityChange({ value, label }) {
+		this.setState({ visibility_id: value, visibility_name: label });
 	}
 
 	render() {
@@ -218,7 +218,7 @@ class ArticleForm extends React.Component {
 								onChange={e => this.handleContentChange(e)}
 								id="corps"
 								options={options}
-                                value={content}
+								value={content}
 								required
 							/>
 						</FormGroup>
@@ -229,7 +229,7 @@ class ArticleForm extends React.Component {
 								onChange={e => this.handleDescriptionChange(e)}
 								id="description"
 								options={options}
-                                value={description}
+								value={description}
 								required
 							/>
 						</FormGroup>
@@ -241,7 +241,7 @@ class ArticleForm extends React.Component {
 								name="visibility_id"
 								placeholder="Visibilité de l'article"
 								options={ArticleForm.mapSelectionOptions(visibilities)}
-                                value={{ value: visibility_id, label: visibility_name }}
+								value={{ value: visibility_id, label: visibility_name }}
 							/>
 						</FormGroup>
 					</ModalBody>
