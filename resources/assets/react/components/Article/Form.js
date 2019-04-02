@@ -210,10 +210,10 @@ class ArticleForm extends React.Component {
 						</FormGroup>
 					</ModalBody>
 					<ModalFooter>
-						<Button outline className="font-weight-bold" onClick={() => closeModal()}>
+						<Button outline onClick={() => closeModal()}>
 							Annuler
 						</Button>
-						<Button type="submit" className="font-weight-bold" outline color="primary">
+						<Button type="submit" outline color="primary">
 							Publier l'article
 						</Button>
 					</ModalFooter>

@@ -130,10 +130,13 @@ class AccessForm extends React.Component {
 						</FormGroup>
 					</ModalBody>
 					<ModalFooter>
-						<Button outline className="font-weight-bold" onClick={() => closeModal()}>
+						<Button outline color="danger" onClick={() => this.cleanInputs()}>
+							Réinitialiser
+						</Button>
+						<Button outline onClick={() => closeModal()}>
 							Annuler
 						</Button>
-						<Button type="submit" className="font-weight-bold" outline color="primary">
+						<Button type="submit" outline color="primary">
 							Réaliser la demande
 						</Button>
 					</ModalFooter>
