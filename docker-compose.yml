@@ -2,7 +2,6 @@ version: '3.7'
 services:
   redis:
     image: redis
-    container_name: cache
     volumes:
       - redisdata:/data
     expose:
@@ -13,15 +12,16 @@ services:
     build:
       context: ./
       dockerfile: docker/app.dockerfile
-    working_dir: /var/www
+    working_dir: /var/www/html
     depends_on:
       - database
       - redis
       - nodejs
     volumes:
-      - ./:/var/www
+      - ./vendor:/var/www/html/vendor
+      - ./:/var/www/html
     env_file:
-      - ./docker/.env.docker
+      - docker/.env.docker
 
   nodejs:
     build:
@@ -30,6 +30,7 @@ services:
     working_dir: /var/www
     volumes:
       - ./:/var/www
+      - ./node_modules:/var/www/node_modules
   # The Web Server
   web:
     build:
