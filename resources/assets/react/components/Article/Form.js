@@ -106,12 +106,6 @@ class ArticleForm extends React.Component {
 		}
 	}
 
-	componentWillMount() {
-		const { dispatch } = this.props;
-
-		dispatch(actions.config({ title: 'Créer un article' }));
-	}
-
 	getEvents(events) {
 		const { eventFilter } = this.state;
 
@@ -163,7 +157,7 @@ class ArticleForm extends React.Component {
 		const { title, description } = this.state;
 
 		return (
-			<Modal isOpen={opened}>
+			<Modal className="modal-dialog-extended" isOpen={opened}>
 				<Form onSubmit={this.handleSubmit.bind(this)}>
 					<ModalHeader>Créer un article</ModalHeader>
 					<ModalBody>

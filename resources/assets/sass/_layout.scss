@@ -140,3 +140,9 @@ h1, h2, h3, h4, h5, h6 {
     width: 85px;
     top: 12px;
 }
+
+@media (min-width: 800px) {
+    .modal-dialog-extended {
+        max-width: 750px;
+    }
+}
