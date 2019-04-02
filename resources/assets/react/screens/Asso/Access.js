@@ -76,7 +76,7 @@ class AccessScreen extends React.Component {
 	sendDemand(data) {
 		const { asso, permissions, dispatch } = this.props;
 
-		actions
+		return actions
 			.assos(asso.id)
 			.access.create(data)
 			.payload.then(({ data: { id: access_id } }) => {

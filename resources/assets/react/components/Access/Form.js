@@ -33,13 +33,24 @@ class AccessForm extends React.Component {
 
 	constructor(props) {
 		super(props);
+
 		this.state = {
+			access_id: null,
+			access_name: null,
 			description: '',
 		};
 	}
 
-	handleAccessChange({ value }) {
-		this.setState({ access_id: value });
+	componentDidUpdate(lastProps) {
+		const { access } = this.props;
+
+		if (lastProps.access.length !== access.length) {
+			this.setDefaultAccess(access);
+		}
+	}
+
+	handleAccessChange({ value, label }) {
+		this.setState({ access_id: value, access_name: label });
 	}
 
 	handleDescriptionChange({ target: { value } }) {
@@ -58,12 +69,33 @@ class AccessForm extends React.Component {
 		post({
 			description,
 			access_id,
+		}).then(() => {
+			this.cleanInputs();
+		});
+	}
+
+	cleanInputs() {
+		const { access } = this.props;
+
+		this.setState({
+			description: '',
+		});
+
+		this.setDefaultAccess(access);
+	}
+
+	setDefaultAccess(access) {
+		const defaultAccess = access.find(element => element.type === 'asso');
+
+		this.setState({
+			access_id: defaultAccess.id,
+			access_name: defaultAccess.name,
 		});
 	}
 
 	render() {
 		const { access, opened, closeModal } = this.props;
-		const { description } = this.state;
+		const { description, access_id, access_name } = this.state;
 
 		return (
 			<Modal isOpen={opened}>
@@ -78,6 +110,7 @@ class AccessForm extends React.Component {
 								name="access_id"
 								placeholder="Type d'accès"
 								options={AccessForm.mapSelectionOptions(access)}
+								value={{ value: access_id, label: access_name }}
 								required
 							/>
 						</FormGroup>
