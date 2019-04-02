@@ -1,4 +1,15 @@
 import React from 'react';
+import {
+	Modal,
+	ModalBody,
+	ModalHeader,
+	ModalFooter,
+	Form,
+	FormGroup,
+	Button,
+	Label,
+	Input,
+} from 'reactstrap';
 import { connect } from 'react-redux';
 
 import SimpleMDE from 'simplemde';
@@ -67,24 +78,6 @@ const options = {
 			className: 'fa fa-fw fa-table',
 			title: 'Insérer un tableau',
 		},
-		{
-			name: 'preview',
-			action: SimpleMDE.togglePreview,
-			className: 'fa fa-fw fa-eye no-disable',
-			title: 'Aperçu',
-		},
-		{
-			name: 'side-by-side',
-			action: SimpleMDE.toggleSideBySide,
-			className: 'fa fa-fw fa-columns no-disable no-mobile',
-			title: 'Cote à cote',
-		},
-		{
-			name: 'fullscreen',
-			action: SimpleMDE.toggleFullScreen,
-			className: 'fa fa-fw fa-arrows-alt no-disable no-mobile',
-			title: 'Plein écran',
-		},
 	],
 };
 
@@ -103,6 +96,8 @@ class ArticleForm extends React.Component {
 		super(props);
 
 		this.state = {
+			visibility_id: null,
+			visibility_name: null,
 			title: '',
 			description: '',
 			content: '',
@@ -113,10 +108,12 @@ class ArticleForm extends React.Component {
 		}
 	}
 
-	componentWillMount() {
-		const { dispatch } = this.props;
+	componentDidUpdate(lastProps) {
+		const { visibilities } = this.props;
 
-		dispatch(actions.config({ title: 'Créer un article' }));
+		if (lastProps.visibilities.length !== visibilities.length) {
+			this.setDefaultVisibility(visibilities);
+		}
 	}
 
 	getEvents(events) {
@@ -129,8 +126,41 @@ class ArticleForm extends React.Component {
 		);
 	}
 
-	handleVisibilityChange({ value }) {
-		this.setState({ visibility_id: value });
+	setDefaultVisibility(visibilities) {
+		const defaultVisibility = visibilities.find(visibility => visibility.type === 'public');
+
+		this.setState({
+			visibility_id: defaultVisibility.id,
+			visibility_name: defaultVisibility.name,
+		});
+	}
+
+	cleanInputs() {
+		const { visibilities } = this.props;
+
+		this.setState({
+			title: '',
+			description: '',
+			content: '',
+		});
+
+		this.setDefaultVisibility(visibilities);
+	}
+
+	handleSubmit(e) {
+		const { post } = this.props;
+		const { title, description, content, visibility_id, event_id } = this.state;
+		e.preventDefault();
+
+		post({
+			title,
+			description,
+			content,
+			visibility_id,
+			event_id,
+		}).then(() => {
+			this.cleanInputs();
+		});
 	}
 
 	handleSearchEvent(value) {
@@ -141,8 +171,12 @@ class ArticleForm extends React.Component {
 		this.setState({ event_id: value.value });
 	}
 
-	handleEditorChange(value) {
-		this.setState({ content: value });
+	handleContentChange(content) {
+		this.setState({ content });
+	}
+
+	handleDescriptionChange(description) {
+		this.setState({ description });
 	}
 
 	handleChange(e) {
@@ -151,96 +185,81 @@ class ArticleForm extends React.Component {
 		this.setState({ [e.target.name]: e.target.value });
 	}
 
-	handleSubmit(e) {
-		const { title, description, content, visibility_id, event_id } = this.state;
-		const { post } = this.props;
-		e.preventDefault();
-
-		post({
-			title,
-			description,
-			content,
-			visibility_id,
-			event_id,
-		});
+	handleVisibilityChange({ value, label }) {
+		this.setState({ visibility_id: value, visibility_name: label });
 	}
 
 	render() {
-		const { visibilities } = this.props;
-		const { title, description } = this.state;
+		const { opened, visibilities, closeModal } = this.props;
+		const { title, description, content, visibility_id, visibility_name } = this.state;
 
 		return (
-			<div>
-				<div className="container p-3">
-					<form className="form row" onSubmit={e => this.handleSubmit(e)}>
-						<div className="col-md-6">
-							<h2 className="mb-3">Créer un article</h2>
-							<div className="form-group">
-								<label htmlFor="title">
-									Titre *
-									<input
-										type="text"
-										className="form-control"
-										id="title"
-										name="title"
-										value={title}
-										onChange={e => this.handleChange(e)}
-										placeholder="Entrez le titre de votre article"
-										required
-									/>
-								</label>
-							</div>
-							<div className="form-group">
-								<label htmlFor="description">
-									Description
-									<textarea
-										className="form-control"
-										id="description"
-										name="description"
-										rows="3"
-										value={description}
-										onChange={e => this.handleChange(e)}
-										placeholder="Entrez une courte description de votre article"
-									/>
-								</label>
-							</div>
-						</div>
-						<div className="col-md-12">
-							<div className="form-group">
-								<label htmlFor="corps">Corps *</label>
+			<Modal className="modal-dialog-extended" isOpen={opened}>
+				<Form onSubmit={this.handleSubmit.bind(this)}>
+					<ModalHeader toggle={closeModal.bind(this)}>Créer un article</ModalHeader>
+					<ModalBody>
+						<FormGroup>
+							<Label for="access_id">Titre *</Label>
+							<Input
+								type="text"
+								className="form-control"
+								id="title"
+								name="title"
+								value={title}
+								onChange={e => this.handleChange(e)}
+								placeholder="Titre de l'article"
+								required
+							/>
+						</FormGroup>
 
-								<Editor onChange={e => this.handleEditorChange(e)} id="corps" options={options} />
-							</div>
+						<FormGroup>
+							<Label for="description">Contenu *</Label>
+							<Editor
+								onChange={e => this.handleContentChange(e)}
+								id="corps"
+								options={options}
+								value={content}
+								required
+							/>
+						</FormGroup>
 
-							<div className="form-group">
-								<Select
-									onChange={this.handleVisibilityChange.bind(this)}
-									name="visibility_id"
-									placeholder="Visibilité de l'article"
-									options={ArticleForm.mapSelectionOptions(visibilities)}
-								/>
-							</div>
+						<FormGroup>
+							<Label for="description">Description (courte description de l'article)</Label>
+							<Editor
+								onChange={e => this.handleDescriptionChange(e)}
+								id="description"
+								options={options}
+								value={description}
+								required
+							/>
+						</FormGroup>
 
-							<button type="submit" className="btn btn-primary">
-								Publier
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
+						<FormGroup>
+							<Label for="description">Visibilité *</Label>
+							<Select
+								onChange={this.handleVisibilityChange.bind(this)}
+								name="visibility_id"
+								placeholder="Visibilité de l'article"
+								options={ArticleForm.mapSelectionOptions(visibilities)}
+								value={{ value: visibility_id, label: visibility_name }}
+							/>
+						</FormGroup>
+					</ModalBody>
+					<ModalFooter>
+						<Button outline color="danger" onClick={() => this.cleanInputs()}>
+							Réinitialiser
+						</Button>
+						<Button outline onClick={() => closeModal()}>
+							Annuler
+						</Button>
+						<Button type="submit" outline color="primary">
+							Publier l'article
+						</Button>
+					</ModalFooter>
+				</Form>
+			</Modal>
 		);
 	}
 }
-
-// <div className="form-group">
-//     <AsyncSelect
-//         onChange={this.handleEventChange.bind(this)}
-//         name="event_id"
-//         placeholder="Evènement attaché"
-//         isSearchable
-//         onInputChange={this.handleSearchEvent.bind(this)}
-//         options={this.getEvents(events)}
-//     />
-// </div>
 
 export default ArticleForm;

@@ -9,9 +9,12 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+import { Button } from 'reactstrap';
+import { NotificationManager } from 'react-notifications';
 
 import actions from '../../redux/actions';
 
+import ArticleForm from '../../components/Article/Form';
 import ArticleList from '../../components/Article/List';
 
 @connect((store, { asso: { id } }) => ({
@@ -22,6 +25,14 @@ import ArticleList from '../../components/Article/List';
 	fetching: store.isFetching(['assos', id, 'articles']),
 }))
 class AssoArticleList extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			openModal: false,
+		};
+	}
+
 	componentWillMount() {
 		const {
 			asso: { id, shortname },
@@ -60,11 +71,56 @@ class AssoArticleList extends React.Component {
 		);
 	}
 
+	createArticle(data) {
+		const { asso, dispatch } = this.props;
+
+		data.owned_by_type = 'asso';
+		data.owned_by_id = asso.id;
+
+		const action = actions.articles.create(data);
+
+		dispatch(action);
+
+		return action.payload
+			.then(() => {
+				const { asso, dispatch } = this.props;
+
+				dispatch(
+					actions
+						.definePath(['assos', asso.id, 'articles'])
+						.addValidStatus(416)
+						.articles()
+						.all({ owner: `asso,${asso.id}` })
+				);
+				NotificationManager.success(
+					"L'article a été publié avec succès",
+					"Publication d'un article"
+				);
+
+				this.setState({ openModal: false });
+			})
+			.catch(() => {
+				NotificationManager.error("L'article n'a pas pu être créé", "Publication d'un article");
+			});
+	}
+
 	render() {
 		const { articles, fetched, fetching } = this.props;
+		const { openModal } = this.state;
 
 		return (
 			<div className="container">
+				<ArticleForm
+					post={this.createArticle.bind(this)}
+					opened={openModal}
+					closeModal={() => this.setState({ openModal: false })}
+				/>
+				<div className="top-right-button">
+					<Button color="primary" outline onClick={() => this.setState({ openModal: true })}>
+						Rédiger un article
+					</Button>
+				</div>
+				<h1 className="title">Derniers articles</h1>
 				<ArticleList articles={articles} fetched={fetched} fetching={fetching} {...this.props} />
 			</div>
 		);
