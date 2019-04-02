@@ -80,7 +80,8 @@ class AssoArticleList extends React.Component {
 		const action = actions.articles.create(data);
 
 		dispatch(action);
-		action.payload
+
+		return action.payload
 			.then(() => {
 				const { asso, dispatch } = this.props;
 

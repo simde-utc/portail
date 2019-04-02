@@ -100,7 +100,7 @@ class AccessForm extends React.Component {
 		return (
 			<Modal isOpen={opened}>
 				<Form onSubmit={this.handleSubmit.bind(this)}>
-					<ModalHeader>Formulaire de demande d'accès</ModalHeader>
+					<ModalHeader toggle={closeModal.bind(this)}>Formulaire de demande d'accès</ModalHeader>
 					<ModalBody>
 						<FormGroup>
 							<Label for="access_id">Accès demandé *</Label>

@@ -96,6 +96,8 @@ class ArticleForm extends React.Component {
 		super(props);
 
 		this.state = {
+            visibility_id: null,
+            visibility_name: null,
 			title: '',
 			description: '',
 			content: '',
@@ -103,6 +105,14 @@ class ArticleForm extends React.Component {
 
 		if (props.visibilities.length === 0) {
 			props.dispatch(actions.visibilities.get());
+		}
+	}
+
+	componentDidUpdate(lastProps) {
+		const { visibilities } = this.props;
+
+		if (lastProps.visibilities.length !== visibilities.length) {
+			this.setDefaultVisibility(visibilities);
 		}
 	}
 
@@ -116,8 +126,8 @@ class ArticleForm extends React.Component {
 		);
 	}
 
-	handleVisibilityChange({ value }) {
-		this.setState({ visibility_id: value });
+	handleVisibilityChange({ value, label }) {
+		this.setState({ visibility_id: value, visibility_name: label });
 	}
 
 	handleSearchEvent(value) {
@@ -128,8 +138,12 @@ class ArticleForm extends React.Component {
 		this.setState({ event_id: value.value });
 	}
 
-	handleEditorChange(value) {
-		this.setState({ content: value });
+	handleContentChange(content) {
+		this.setState({ content });
+	}
+
+	handleDescriptionChange(description) {
+		this.setState({ description });
 	}
 
 	handleChange(e) {
@@ -139,8 +153,8 @@ class ArticleForm extends React.Component {
 	}
 
 	handleSubmit(e) {
-		const { title, description, content, visibility_id, event_id } = this.state;
-		const { post } = this.props;
+        const { post } = this.props;
+		const { title, description, content, visibility_id, visibility_name, event_id } = this.state;
 		e.preventDefault();
 
 		post({
@@ -149,17 +163,40 @@ class ArticleForm extends React.Component {
 			content,
 			visibility_id,
 			event_id,
+		}).then(() => {
+			this.cleanInputs();
+		});
+	}
+
+	cleanInputs() {
+		const { visibilities } = this.props;
+
+		this.setState({
+			title: '',
+			description: '',
+			content: '',
+		});
+
+		this.setDefaultVisibility(visibilities);
+	}
+
+	setDefaultVisibility(visibilities) {
+		const defaultVisibility = visibilities.find(visibility => visibility.type === 'public');
+
+		this.setState({
+			visibility_id: defaultVisibility.id,
+			visibility_name: defaultVisibility.name,
 		});
 	}
 
 	render() {
 		const { opened, visibilities, closeModal } = this.props;
-		const { title, description } = this.state;
+		const { title, description, content, visibility_id, visibility_name } = this.state;
 
 		return (
 			<Modal className="modal-dialog-extended" isOpen={opened}>
 				<Form onSubmit={this.handleSubmit.bind(this)}>
-					<ModalHeader>Créer un article</ModalHeader>
+					<ModalHeader toggle={closeModal.bind(this)}>Créer un article</ModalHeader>
 					<ModalBody>
 						<FormGroup>
 							<Label for="access_id">Titre *</Label>
@@ -178,24 +215,22 @@ class ArticleForm extends React.Component {
 						<FormGroup>
 							<Label for="description">Contenu *</Label>
 							<Editor
-								onChange={e => this.handleEditorChange(e)}
+								onChange={e => this.handleContentChange(e)}
 								id="corps"
 								options={options}
+                                value={content}
 								required
 							/>
 						</FormGroup>
 
 						<FormGroup>
-							<Label for="description">Description</Label>
-							<Input
-								type="textarea"
-								className="form-control"
+							<Label for="description">Description (courte description de l'article)</Label>
+							<Editor
+								onChange={e => this.handleDescriptionChange(e)}
 								id="description"
-								name="description"
-								rows="3"
-								value={description}
-								onChange={e => this.handleChange(e)}
-								placeholder="Courte description de l'article"
+								options={options}
+                                value={description}
+								required
 							/>
 						</FormGroup>
 
@@ -206,10 +241,14 @@ class ArticleForm extends React.Component {
 								name="visibility_id"
 								placeholder="Visibilité de l'article"
 								options={ArticleForm.mapSelectionOptions(visibilities)}
+                                value={{ value: visibility_id, label: visibility_name }}
 							/>
 						</FormGroup>
 					</ModalBody>
 					<ModalFooter>
+						<Button outline color="danger" onClick={() => this.cleanInputs()}>
+							Réinitialiser
+						</Button>
 						<Button outline onClick={() => closeModal()}>
 							Annuler
 						</Button>
@@ -222,16 +261,5 @@ class ArticleForm extends React.Component {
 		);
 	}
 }
-
-// <div className="form-group">
-//     <AsyncSelect
-//         onChange={this.handleEventChange.bind(this)}
-//         name="event_id"
-//         placeholder="Evènement attaché"
-//         isSearchable
-//         onInputChange={this.handleSearchEvent.bind(this)}
-//         options={this.getEvents(events)}
-//     />
-// </div>
 
 export default ArticleForm;
