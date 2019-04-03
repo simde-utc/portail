@@ -1,3 +1,12 @@
+/**
+ * Formulaire de création d'article.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ *
+ * @copyright Copyright (c) 2019, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
+
 import React from 'react';
 import {
 	Modal,
@@ -105,6 +114,8 @@ class ArticleForm extends React.Component {
 
 		if (props.visibilities.length === 0) {
 			props.dispatch(actions.visibilities.get());
+		} else {
+			this.setDefaultVisibility(props.visibilities);
 		}
 	}
 
@@ -213,7 +224,7 @@ class ArticleForm extends React.Component {
 						</FormGroup>
 
 						<FormGroup>
-							<Label for="description">Contenu *</Label>
+							<Label for="corps">Contenu *</Label>
 							<Editor
 								onChange={e => this.handleContentChange(e)}
 								id="corps"
@@ -235,7 +246,7 @@ class ArticleForm extends React.Component {
 						</FormGroup>
 
 						<FormGroup>
-							<Label for="description">Visibilité *</Label>
+							<Label for="visibility_id">Visibilité *</Label>
 							<Select
 								onChange={this.handleVisibilityChange.bind(this)}
 								name="visibility_id"
@@ -246,7 +257,12 @@ class ArticleForm extends React.Component {
 						</FormGroup>
 					</ModalBody>
 					<ModalFooter>
-						<Button className="btn-reinit" outline color="danger" onClick={() => this.cleanInputs()}>
+						<Button
+							className="btn-reinit"
+							outline
+							color="danger"
+							onClick={() => this.cleanInputs()}
+						>
 							Réinitialiser
 						</Button>
 						<Button outline onClick={() => closeModal()}>

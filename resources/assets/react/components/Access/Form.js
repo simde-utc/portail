@@ -130,7 +130,12 @@ class AccessForm extends React.Component {
 						</FormGroup>
 					</ModalBody>
 					<ModalFooter>
-						<Button className="btn-reinit" outline color="danger" onClick={() => this.cleanInputs()}>
+						<Button
+							className="btn-reinit"
+							outline
+							color="danger"
+							onClick={() => this.cleanInputs()}
+						>
 							Réinitialiser
 						</Button>
 						<Button outline onClick={() => closeModal()}>
