@@ -1,11 +1,85 @@
 import React from 'react';
+import {
+	Modal,
+	ModalBody,
+	ModalHeader,
+	ModalFooter,
+	Form,
+	FormGroup,
+	Button,
+	Label,
+	Input,
+} from 'reactstrap';
 import { connect } from 'react-redux';
 
 import SimpleMDE from 'simplemde';
 import Editor from 'react-simplemde-editor';
 import Select from 'react-select';
 import { map } from 'lodash';
-import 'simplemde/dist/simplemde.min.css';
+
+import actions from '../../redux/actions';
+
+import 'easymde/dist/easymde.min.css';
+
+const options = {
+	spellChecker: false,
+	toolbar: [
+		{
+			name: 'bold',
+			action: SimpleMDE.toggleBold,
+			className: 'fa fa-fw fa-bold',
+			title: 'Gras',
+		},
+		{
+			name: 'italic',
+			action: SimpleMDE.toggleItalic,
+			className: 'fa fa-fw fa-italic',
+			title: 'Italique',
+		},
+		{
+			name: 'heading',
+			action: SimpleMDE.toggleHeadingSmaller,
+			className: 'fa fa-fw fa-heading',
+			title: 'Titre',
+		},
+		{
+			name: 'quote',
+			action: SimpleMDE.toggleBlockquote,
+			className: 'fa fa-fw fa-quote-left',
+			title: 'Citation',
+		},
+		{
+			name: 'unordered-list',
+			action: SimpleMDE.toggleUnorderedList,
+			className: 'fa fa-fw fa-list-ul',
+			title: 'Liste non-ordonnée',
+		},
+		{
+			name: 'ordered-list',
+			action: SimpleMDE.toggleOrderedList,
+			className: 'fa fa-fw fa-list-ol',
+			title: 'Liste ordonnée',
+		},
+		{
+			name: 'link',
+			action: SimpleMDE.drawLink,
+			className: 'fa fa-fw fa-link',
+			title: 'Insérer un lien',
+		},
+		{
+			name: 'image',
+			action: SimpleMDE.drawImage,
+			className: 'fa fa-fw fa-image',
+			title: 'Insérer une image',
+		},
+		{
+			name: 'table',
+			action: SimpleMDE.drawTable,
+			className: 'fa fa-fw fa-table',
+			title: 'Insérer un tableau',
+		},
+	],
+};
 
 @connect(store => ({
 	visibilities: store.getData('visibilities'),
@@ -22,11 +96,24 @@ class ArticleForm extends React.Component {
 		super(props);
 
 		this.state = {
+			visibility_id: null,
+			visibility_name: null,
 			title: '',
 			description: '',
 			content: '',
-			eventFilter: '',
 		};
+
+		if (props.visibilities.length === 0) {
+			props.dispatch(actions.visibilities.get());
+		}
+	}
+
+	componentDidUpdate(lastProps) {
+		const { visibilities } = this.props;
+
+		if (lastProps.visibilities.length !== visibilities.length) {
+			this.setDefaultVisibility(visibilities);
+		}
 	}
 
 	getEvents(events) {
@@ -39,8 +126,41 @@ class ArticleForm extends React.Component {
 		);
 	}
 
-	handleVisibilityChange({ value }) {
-		this.setState({ visibility_id: value });
+	setDefaultVisibility(visibilities) {
+		const defaultVisibility = visibilities.find(visibility => visibility.type === 'public');
+
+		this.setState({
+			visibility_id: defaultVisibility.id,
+			visibility_name: defaultVisibility.name,
+		});
+	}
+
+	cleanInputs() {
+		const { visibilities } = this.props;
+
+		this.setState({
+			title: '',
+			description: '',
+			content: '',
+		});
+
+		this.setDefaultVisibility(visibilities);
+	}
+
+	handleSubmit(e) {
+		const { post } = this.props;
+		const { title, description, content, visibility_id, event_id } = this.state;
+		e.preventDefault();
+
+		post({
+			title,
+			description,
+			content,
+			visibility_id,
+			event_id,
+		}).then(() => {
+			this.cleanInputs();
+		});
 	}
 
 	handleSearchEvent(value) {
@@ -51,8 +171,12 @@ class ArticleForm extends React.Component {
 		this.setState({ event_id: value.value });
 	}
 
-	handleEditorChange(value) {
-		this.setState({ content: value });
+	handleContentChange(content) {
+		this.setState({ content });
+	}
+
+	handleDescriptionChange(description) {
+		this.setState({ description });
 	}
 
 	handleChange(e) {
@@ -61,175 +185,79 @@ class ArticleForm extends React.Component {
 		this.setState({ [e.target.name]: e.target.value });
 	}
 
-	handleSubmit(e) {
-		const { title, description, content, visibility_id, event_id } = this.state;
-		const { post } = this.props;
-		e.preventDefault();
-
-		post({
-			title,
-			description,
-			content,
-			visibility_id,
-			event_id,
-		});
+	handleVisibilityChange({ value, label }) {
+		this.setState({ visibility_id: value, visibility_name: label });
 	}
 
 	render() {
-		const { visibilities, events } = this.props;
-		const { title, description } = this.state;
+		const { opened, visibilities, closeModal } = this.props;
+		const { title, description, content, visibility_id, visibility_name } = this.state;
 
 		return (
-			<div>
-				<div className="container p-3">
-					<form className="form row" onSubmit={e => this.handleSubmit(e)}>
-						<div className="col-md-6">
-							<h2 className="mb-3">Créer un article</h2>
-							<div className="form-group">
-								<label htmlFor="title">
-									Titre *
-									<input
-										type="text"
-										className="form-control"
-										id="title"
-										name="title"
-										value={title}
-										onChange={e => this.handleChange(e)}
-										placeholder="Entrez le titre de votre article"
-										required
-									/>
-								</label>
-							</div>
-							<div className="form-group">
-								<label htmlFor="description">
-									Description
-									<textarea
-										className="form-control"
-										id="description"
-										name="description"
-										rows="3"
-										value={description}
-										onChange={e => this.handleChange(e)}
-										placeholder="Entrez une courte description de votre article"
-									/>
-								</label>
-							</div>
-						</div>
-						<div className="col-md-12">
-							<div className="form-group">
-								<label htmlFor="corps">
-									Corps *
-									<Editor
-										onChange={e => this.handleEditorChange(e)}
-										id="corps"
-										options={{
-											spellChecker: false,
-											toolbar: [
-												{
-													name: 'bold',
-													action: SimpleMDE.toggleBold,
-													className: 'fas fa-fw fa-bold',
-													title: 'Gras',
-												},
-												{
-													name: 'italic',
-													action: SimpleMDE.toggleItalic,
-													className: 'fas fa-fw fa-italic',
-													title: 'Italique',
-												},
-												{
-													name: 'heading',
-													action: SimpleMDE.toggleHeadingSmaller,
-													className: 'fas fa-fw fa-heading',
-													title: 'Titre',
-												},
-												{
-													name: 'quote',
-													action: SimpleMDE.toggleBlockquote,
-													className: 'fas fa-fw fa-quote-left',
-													title: 'Citation',
-												},
-												{
-													name: 'unordered-list',
-													action: SimpleMDE.toggleUnorderedList,
-													className: 'fas fa-fw fa-list-ul',
-													title: 'Liste non-ordonnée',
-												},
-												{
-													name: 'ordered-list',
-													action: SimpleMDE.toggleOrderedList,
-													className: 'fas fa-fw fa-list-ol',
-													title: 'Liste ordonnée',
-												},
-												{
-													name: 'link',
-													action: SimpleMDE.drawLink,
-													className: 'fas fa-fw fa-link',
-													title: 'Insérer un lien',
-												},
-												{
-													name: 'image',
-													action: SimpleMDE.drawImage,
-													className: 'far fa-fw fa-image',
-													title: 'Insérer une image',
-												},
-												{
-													name: 'table',
-													action: SimpleMDE.drawTable,
-													className: 'fas fa-fw fa-table',
-													title: 'Insérer un tableau',
-												},
-												{
-													name: 'preview',
-													action: SimpleMDE.togglePreview,
-													className: 'fas fa-fw fa-eye no-disable',
-													title: 'Aperçu',
-												},
-												{
-													name: 'side-by-side',
-													action: SimpleMDE.toggleSideBySide,
-													className: 'fas fa-fw fa-columns no-disable no-mobile',
-													title: 'Cote à cote',
-												},
-												{
-													name: 'fullscreen',
-													action: SimpleMDE.toggleFullScreen,
-													className: 'fas fa-fw fa-arrows-alt no-disable no-mobile',
-													title: 'Plein écran',
-												},
-											],
-										}}
-									/>
-								</label>
-							</div>
+			<Modal className="modal-dialog-extended" isOpen={opened}>
+				<Form onSubmit={this.handleSubmit.bind(this)}>
+					<ModalHeader toggle={closeModal.bind(this)}>Créer un article</ModalHeader>
+					<ModalBody>
+						<FormGroup>
+							<Label for="access_id">Titre *</Label>
+							<Input
+								type="text"
+								className="form-control"
+								id="title"
+								name="title"
+								value={title}
+								onChange={e => this.handleChange(e)}
+								placeholder="Titre de l'article"
+								required
+							/>
+						</FormGroup>
 
+						<FormGroup>
+							<Label for="description">Contenu *</Label>
+							<Editor
+								onChange={e => this.handleContentChange(e)}
+								id="corps"
+								options={options}
+								value={content}
+								required
+							/>
+						</FormGroup>
+
+						<FormGroup>
+							<Label for="description">Description (courte description de l'article)</Label>
+							<Editor
+								onChange={e => this.handleDescriptionChange(e)}
+								id="description"
+								options={options}
+								value={description}
+								required
+							/>
+						</FormGroup>
+
+						<FormGroup>
+							<Label for="description">Visibilité *</Label>
 							<Select
 								onChange={this.handleVisibilityChange.bind(this)}
 								name="visibility_id"
 								placeholder="Visibilité de l'article"
 								options={ArticleForm.mapSelectionOptions(visibilities)}
+								value={{ value: visibility_id, label: visibility_name }}
 							/>
-
-							<br />
-
-							<Select
-								onChange={this.handleEventChange.bind(this)}
-								name="event_id"
-								placeholder="Evènement attaché"
-								isSearchable
-								onInputChange={this.handleSearchEvent.bind(this)}
-								options={this.getEvents(events)}
-							/>
-
-							<br />
-
-							<button type="submit" className="btn btn-primary">
-								Publier
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
+						</FormGroup>
+					</ModalBody>
+					<ModalFooter>
+						<Button outline color="danger" onClick={() => this.cleanInputs()}>
+							Réinitialiser
+						</Button>
+						<Button outline onClick={() => closeModal()}>
+							Annuler
+						</Button>
+						<Button type="submit" outline color="primary">
+							Publier l'article
+						</Button>
+					</ModalFooter>
+				</Form>
+			</Modal>
 		);
 	}
 }
