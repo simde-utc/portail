@@ -19,6 +19,11 @@ RUN apt-get update && \
     libxml2 \
     libxml2-dev \
     && docker-php-source extract \
+    && docker-php-ext-configure gd \
+        --enable-gd-native-ttf \
+        --with-freetype-dir=/usr/include/freetype2 \
+        --with-png-dir=/usr/include \
+        --with-jpeg-dir=/usr/include \
     && docker-php-ext-install -j$(nproc) mysqli pdo_mysql zip gd \
     && docker-php-source delete \
 RUN pecl channel-update pecl.php.net \
