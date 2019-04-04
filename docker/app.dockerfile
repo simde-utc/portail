@@ -1,4 +1,4 @@
-FROM php:7.2-apache
+FROM php:7.2-fpm
 MAINTAINER Cesar Richard <cesar.richard2@gmail.com>
 
 RUN apt-get update && \
@@ -31,5 +31,4 @@ RUN php -r "readfile('https://getcomposer.org/installer');" | php \
   && mv composer.phar /usr/local/bin/composer \
   && composer install --no-autoloader --no-scripts
 
-COPY . /var/www/html
 COPY docker/.env.docker .env
