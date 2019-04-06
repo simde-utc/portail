@@ -17,9 +17,9 @@ services:
     build:
       context: ./
       dockerfile: docker/node.dockerfile
-    working_dir: /var/www
+    working_dir: /var/www/html
     volumes:
-      - ./:/var/www
+      - ./:/var/www/html
       - ./node_modules:/var/www/node_modules
   web:
     image: nginx:latest
