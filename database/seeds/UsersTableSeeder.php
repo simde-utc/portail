@@ -61,10 +61,10 @@ class UsersTableSeeder extends Seeder
                 ]
             ],
             [
-                'email'     => 'licorne@utc.fr',
+                'email'     => 'cesar.richard@hds.utc.fr',
                 'firstname' => 'Cesar',
                 'lastname'  => 'Richard',
-                'role'		=> 'admin',
+                'role'		=> 'superadmin',
                 'assos'		=> [
                     'simde'	=> 'secretaire general',
                 ]

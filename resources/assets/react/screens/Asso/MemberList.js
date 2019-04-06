@@ -122,8 +122,8 @@ class AssoMemberListScreen extends React.Component {
 		const selectSemesters = AssoMemberListScreen.getSemesters(semesters);
 
 		return (
-			<div>
-				<div className="float-right" style={{ position: 'relative', right: '15%', width: '85px' }}>
+			<div className="container">
+				<div className="top-right-button">
 					Semestre:
 					<Select
 						onChange={this.handleSemesterChange.bind(this)}
