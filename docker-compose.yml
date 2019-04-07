@@ -1,12 +1,5 @@
 version: '3.7'
 services:
-  redis:
-    image: redis
-    volumes:
-      - redisdata:/data
-    expose:
-      - 6379
-
   # The Application
   app:
     build:
@@ -50,4 +43,3 @@ services:
 
 volumes:
   dbdata:
-  redisdata:
