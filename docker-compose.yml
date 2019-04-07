@@ -12,7 +12,7 @@ services:
     build:
       context: ./
       dockerfile: docker/app.dockerfile
-    working_dir: /var/www
+    working_dir: /var/www/html
     depends_on:
       - database
       - nodejs
