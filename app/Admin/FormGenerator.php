@@ -89,6 +89,13 @@ class FormGenerator extends Generator
 
                             return $path.'/'.$name;
                         });
+
+                        $this->get()->saved(function (Form $form) use ($field) {
+                            $model = $form->model();
+
+                            $model->$field = url($model->$field);
+                            $model->save();
+                        });
                     } else if ($type === 'display') {
                         $this->callCustomMethods($generatedField)->{$this->valueMethod}(function ($value) use ($field, $model) {
                             return FormGenerator::adminValue($value, $field, $model);
