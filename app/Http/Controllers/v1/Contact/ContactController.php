@@ -32,7 +32,7 @@ class ContactController extends Controller
     public function __construct()
     {
         $this->middleware(
-	        \Scopes::matchOne(
+	        \Scopes::allowPublic()->matchOne(
 		        \Scopes::getDeepestChildren('user-get-contacts'),
 		        \Scopes::getDeepestChildren('client-get-contacts')
 	        ),
@@ -69,12 +69,15 @@ class ContactController extends Controller
      */
     public function index(ContactRequest $request): JsonResponse
     {
-        $this->checkTokenRights($request);
-        $contacts = $request->resource->contacts()->getSelection()->map(function ($contact) {
-            return $contact->hideData();
-        });
+        if (\Scopes::isOauthRequest($request)) {
+            $this->checkTokenRights($request);
+        }
 
-        return response()->json($contacts, 200);
+        $contacts = $request->resource->contacts()->getSelection();
+
+        return response()->json($contacts->map(function ($contact) {
+            return $contact->hideData();
+        }), 200);
     }
 
     /**
