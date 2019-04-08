@@ -17,7 +17,6 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import Select from 'react-select';
 import actions from '../../redux/actions';
 
-import ArticleForm from '../../components/Article/Form';
 import LoggedRoute from '../../routes/Logged';
 import ConditionalRoute from '../../routes/Conditional';
 import Http404 from '../../routes/Http404';
@@ -473,7 +472,7 @@ class AssoScreen extends React.Component {
 
 	render() {
 		const { fetching, fetched, failed, user, asso, member, contacts, match } = this.props;
-		const { events, modal } = this.state;
+		const { modal } = this.state;
 
 		if (failed) return <Http404 />;
 
@@ -608,15 +607,6 @@ class AssoScreen extends React.Component {
 							return this.user.isMember;
 						}}
 						render={() => <AccessScreen asso={asso} />}
-					/>
-					<Route
-						path={`${match.url}/articles/create`}
-						render={() => (
-							<ArticleForm
-								post={this.postArticle.bind(this)}
-								events={AssoScreen.getAllEvents(events)}
-							/>
-						)}
 					/>
 				</Switch>
 			</div>

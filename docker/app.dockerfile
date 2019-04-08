@@ -1,11 +1,33 @@
-FROM php:7.1.3-fpm
-MAINTAINER Cesar Richard <cesar.richard2@gmail.com>
-
-RUN apt-get update && apt-get install --no-install-recommends -y libmcrypt-dev gnupg git unzip \
-    mysql-client libmagickwand-dev \
-    && pecl install imagick \
-    && docker-php-ext-enable imagick \
-    && docker-php-ext-install mcrypt pdo_mysql gd zip
+FROM php:7.2-fpm
+LABEL maintainer="Cesar Richard <cesar.richard2@gmail.com>"
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
+    libmcrypt-dev \
+    gnupg \
+    git \
+    unzip \
+    mysql-client \
+    libmagickwand-dev  \
+    zlib1g-dev \
+    libzip-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    libicu-dev \
+    libfontconfig1 \
+    libxrender1 \
+    libxml2 \
+    libxml2-dev \
+    g++ \
+    && docker-php-source extract \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-configure zip --with-libzip \
+    && docker-php-ext-install -j$(nproc) mysqli pdo_mysql zip gd intl \
+    && docker-php-source delete \
+    && pecl channel-update pecl.php.net \
+    && pecl install \
+     imagick \
+     mcrypt
 
 COPY composer.json /var/www/html
 RUN php -r "readfile('https://getcomposer.org/installer');" | php \
@@ -13,3 +35,4 @@ RUN php -r "readfile('https://getcomposer.org/installer');" | php \
   && composer install --no-autoloader --no-scripts
 
 COPY . /var/www/html
+COPY docker/.env.docker .env
