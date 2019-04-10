@@ -54,6 +54,20 @@ class AssoCalendar extends React.Component {
 		}
 	}
 
+	onSelectingRange(data) {
+		this.setState({
+			modalData: {
+				begin_at: data.start,
+				end_at: data.end,
+			},
+			openModal: true,
+		});
+	}
+
+	openModal() {
+		this.setState({ modalData: {}, openModal: true });
+	}
+
 	loadAssosData(id) {
 		const { dispatch } = this.props;
 
@@ -89,7 +103,7 @@ class AssoCalendar extends React.Component {
 
 	render() {
 		const { calendars, fetched } = this.props;
-		const { openModal, reloadCalendar } = this.state;
+		const { openModal, modalData, reloadCalendar } = this.state;
 
 		this.state.reloadCalendar = null;
 
@@ -102,11 +116,12 @@ class AssoCalendar extends React.Component {
 				<EventForm
 					post={this.createEvent.bind(this)}
 					opened={openModal}
+					defaultData={modalData}
 					closeModal={() => this.setState({ openModal: false })}
 					calendars={calendars}
 				/>
 				<div className="top-right-button">
-					<Button color="primary" outline onClick={() => this.setState({ openModal: true })}>
+					<Button color="primary" outline onClick={this.openModal.bind(this)}>
 						Créer un événement
 					</Button>
 				</div>
@@ -114,7 +129,10 @@ class AssoCalendar extends React.Component {
 				<Calendar
 					calendars={calendars}
 					selectedCalendars={calendars}
+					onSelectSlot={this.onSelectingRange.bind(this)}
 					reloadCalendar={reloadCalendar}
+					scrollToTime={new Date(null, null, null, 8)}
+					selectable
 				/>
 			</div>
 		);

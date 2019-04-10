@@ -72,7 +72,7 @@ class EventForm extends React.Component {
 	}
 
 	componentDidUpdate(lastProps) {
-		const { visibilities, calendars } = this.props;
+		const { visibilities, calendars, opened, defaultData } = this.props;
 
 		if (lastProps.visibilities.length !== visibilities.length) {
 			this.setDefaultVisibility(visibilities);
@@ -80,6 +80,11 @@ class EventForm extends React.Component {
 
 		if (lastProps.calendars.length !== calendars.length) {
 			this.setDefaultCalendar(calendars);
+		}
+
+		// Indique que l'on souhaite ouvrir le formulaire.
+		if (!lastProps.opened && opened) {
+			setTimeout(() => this.setState(defaultData), 10);
 		}
 	}
 
