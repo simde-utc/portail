@@ -81,7 +81,7 @@ trait HasVisibilitySelection
      * @param User $user
      * @return string
      */
-    public static function setUserForVisibility(User $user)
+    public static function setUserForVisibility(User $user=null)
     {
         static::$userForVisibility = $user;
 
