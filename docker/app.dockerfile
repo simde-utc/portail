@@ -1,6 +1,5 @@
-FROM php:7.2-apache
-MAINTAINER Cesar Richard <cesar.richard2@gmail.com>
-
+FROM php:7.2-fpm
+LABEL maintainer="Cesar Richard <cesar.richard2@gmail.com>"
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
     libmcrypt-dev \
@@ -10,6 +9,7 @@ RUN apt-get update && \
     mysql-client \
     libmagickwand-dev  \
     zlib1g-dev \
+    libzip-dev \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libmcrypt-dev \
@@ -18,11 +18,14 @@ RUN apt-get update && \
     libxrender1 \
     libxml2 \
     libxml2-dev \
+    g++ \
     && docker-php-source extract \
-    && docker-php-ext-install -j$(nproc) mysqli pdo_mysql zip gd \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-configure zip --with-libzip \
+    && docker-php-ext-install -j$(nproc) mysqli pdo_mysql zip gd intl \
     && docker-php-source delete \
-RUN pecl channel-update pecl.php.net \
-  && pecl install \
+    && pecl channel-update pecl.php.net \
+    && pecl install \
      imagick \
      mcrypt
 

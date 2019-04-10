@@ -20,6 +20,7 @@ import actions from '../redux/actions';
 @connect(store => ({
 	config: store.config,
 	user: store.getData('user'),
+	permissions: store.getData('user/permissions'),
 	isAuthenticated: store.isFetched('user'),
 	assos: store.getData('user/assos'),
 	services: store.getData('user/services'),
@@ -60,7 +61,7 @@ class Sidebar extends React.Component {
 	}
 
 	render() {
-		const { isAuthenticated, config, user, assos, services } = this.props;
+		const { isAuthenticated, config, user, permissions, assos, services } = this.props;
 
 		return (
 			<div
@@ -134,6 +135,13 @@ class Sidebar extends React.Component {
 							>
 								<FontAwesomeIcon icon="book" /> Moodle
 							</a>
+
+							{user && permissions.length && (
+								<a className="sidebar-link" href="/admin">
+									<FontAwesomeIcon icon="screwdriver" /> Interface admin
+								</a>
+							)}
+
 							<a
 								className="sidebar-link"
 								target="_blank"
