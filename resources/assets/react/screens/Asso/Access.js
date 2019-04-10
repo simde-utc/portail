@@ -114,6 +114,8 @@ class AccessScreen extends React.Component {
 					"La demande d'accès n'a pas pu être envoyée. Il se peut qu'une demande soit déjà en cours",
 					"Demande d'accès"
 				);
+
+				return Promise.reject();
 			});
 	}
 
