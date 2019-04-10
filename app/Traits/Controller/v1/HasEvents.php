@@ -10,6 +10,7 @@
 
 namespace App\Traits\Controller\v1;
 
+use Carbon\Carbon;
 use App\Exceptions\PortailException;
 use App\Models\Event;
 use App\Models\User;
@@ -22,6 +23,27 @@ use App\Models\Model;
 trait HasEvents
 {
     use HasUsers;
+
+    /**
+     * Vérifie qu'il n'y ait pas de problème au niveau des horaires.
+     *
+     * @param  string $begin_at
+     * @param  string $end_at
+     * @return void
+     */
+    protected function checkPeriod(string $begin_at, string $end_at)
+    {
+        $begin = Carbon::parse($begin_at);
+        $end = Carbon::parse($end_at);
+
+        if ($begin->lessThanOrEqualTo(Carbon::now())) {
+            abort(400, 'La date de début d\'événement doit être postérieure à la date actuelle');
+        }
+
+        if ($begin->addMinutes(5)->greaterThan($end)) {
+            abort(400, 'L\'événement doit avoir une durée d\'au moins 5 min');
+        }
+    }
 
     /**
      * Récupère l'événement.
