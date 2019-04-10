@@ -9,7 +9,7 @@
 
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Input } from 'reactstrap';
-import DatetimeRangePicker from '@nastuzzisamy/react-datetime-range-picker';
+import DatetimeRangePicker from 'react-datetime-range-picker';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import { find } from 'lodash';
@@ -137,8 +137,8 @@ class BookingScreen extends React.Component {
 						onStartDateChange={date => console.log(date) || this.setState({ begin_at: date })}
 						onEndDateChange={date => this.setState({ end_at: date })}
 						className="d-flex"
-                        input={true}
-                        inputProps={{required: true}}
+						input
+						inputProps={{ required: true }}
 					/>
 					Association:
 					<Select
