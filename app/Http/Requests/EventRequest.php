@@ -35,10 +35,10 @@ class EventRequest extends Request
                 ->exists('visibilities', 'id')
                 ->post('required')
                 ->get(),
-            'begin_at' => Validation::type('datetime')
+            'begin_at' => Validation::type('date')
                 ->post('required')
                 ->get(),
-            'end_at' => Validation::type('datetime')
+            'end_at' => Validation::type('date')
                 ->post('required')
                 ->get(),
             'full_day' => Validation::type('bool')

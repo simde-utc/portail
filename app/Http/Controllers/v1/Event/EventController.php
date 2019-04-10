@@ -84,7 +84,7 @@ class EventController extends Controller
     {
         $inputs = $request->all();
 
-        $calendar = $this->getCalendar($request, \Auth::user(), Calendar::find($inputs['calendar_id']), 'edit');
+        $calendar = $this->getCalendar($request, \Auth::user(), $inputs['calendar_id'], 'edit');
 
         if (!$calendar->owned_by->isCalendarManageableBy(\Auth::id())) {
             abort(403, 'Vous n\'avez pas les droits suffisants pour ajouter cet évènenement à ce calendrier');
@@ -98,7 +98,9 @@ class EventController extends Controller
         $inputs['owned_by_id'] = $owner->id;
         $inputs['owned_by_type'] = get_class($owner);
 
+        $this->checkPeriod($inputs['begin_at'], $inputs['end_at']);
         $event = Event::create($inputs);
+        $event->calendars()->attach($calendar->id);
 
         $event = $this->getEvent($request, \Auth::user(), $event->id);
 
@@ -130,6 +132,7 @@ class EventController extends Controller
     {
         $event = $this->getEvent($request, \Auth::user(), $event_id, 'set');
         $inputs = $request->all();
+        $this->checkPeriod($inputs['begin_at'], $inputs['end_at']);
 
         if ($request->filled('owned_by_type')) {
             $owner = $this->getOwner($request, 'event', 'événement', 'edit');

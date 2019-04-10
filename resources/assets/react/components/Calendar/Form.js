@@ -1,5 +1,5 @@
 /**
- * Formulaire de création d'article.
+ * Formulaire de création d'un événement.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,81 +19,19 @@ import {
 	Label,
 	Input,
 } from 'reactstrap';
+import DatetimeRangePicker from 'react-datetime-range-picker';
 import { connect } from 'react-redux';
 
-import SimpleMDE from 'simplemde';
-import Editor from 'react-simplemde-editor';
 import Select from 'react-select';
 import { map } from 'lodash';
 
 import actions from '../../redux/actions';
-
-import 'easymde/dist/easymde.min.css';
-
-const options = {
-	spellChecker: false,
-	toolbar: [
-		{
-			name: 'bold',
-			action: SimpleMDE.toggleBold,
-			className: 'fa fa-fw fa-bold',
-			title: 'Gras',
-		},
-		{
-			name: 'italic',
-			action: SimpleMDE.toggleItalic,
-			className: 'fa fa-fw fa-italic',
-			title: 'Italique',
-		},
-		{
-			name: 'heading',
-			action: SimpleMDE.toggleHeadingSmaller,
-			className: 'fa fa-fw fa-heading',
-			title: 'Titre',
-		},
-		{
-			name: 'quote',
-			action: SimpleMDE.toggleBlockquote,
-			className: 'fa fa-fw fa-quote-left',
-			title: 'Citation',
-		},
-		{
-			name: 'unordered-list',
-			action: SimpleMDE.toggleUnorderedList,
-			className: 'fa fa-fw fa-list-ul',
-			title: 'Liste non-ordonnée',
-		},
-		{
-			name: 'ordered-list',
-			action: SimpleMDE.toggleOrderedList,
-			className: 'fa fa-fw fa-list-ol',
-			title: 'Liste ordonnée',
-		},
-		{
-			name: 'link',
-			action: SimpleMDE.drawLink,
-			className: 'fa fa-fw fa-link',
-			title: 'Insérer un lien',
-		},
-		{
-			name: 'image',
-			action: SimpleMDE.drawImage,
-			className: 'fa fa-fw fa-image',
-			title: 'Insérer une image',
-		},
-		{
-			name: 'table',
-			action: SimpleMDE.drawTable,
-			className: 'fa fa-fw fa-table',
-			title: 'Insérer un tableau',
-		},
-	],
-};
+import { formatDate } from '../../utils';
 
 @connect(store => ({
 	visibilities: store.getData('visibilities'),
 }))
-class ArticleForm extends React.Component {
+class EventForm extends React.Component {
 	static mapSelectionOptions(options) {
 		return map(options, ({ id, name }) => ({
 			value: id,
@@ -103,34 +41,57 @@ class ArticleForm extends React.Component {
 
 	constructor(props) {
 		super(props);
+		const end_at = new Date();
+		end_at.setMinutes(end_at.getMinutes() + 5);
 
 		this.state = {
+			name: '',
+			begin_at: new Date(),
+			end_at,
+			calendar_id: null,
+			calendar_name: null,
 			visibility_id: null,
 			visibility_name: null,
-			title: '',
-			description: '',
-			content: '',
 		};
 
 		if (props.visibilities.length === 0) {
 			props.dispatch(actions.visibilities.get());
-		} else {
-			this.setDefaultVisibility(props.visibilities);
+		}
+	}
+
+	componentWillMount() {
+		const { calendars, visibilities } = this.props;
+
+		if (calendars.length !== 0) {
+			this.setDefaultCalendar(calendars);
+		}
+
+		if (visibilities.length !== 0) {
+			this.setDefaultVisibility(visibilities);
 		}
 	}
 
 	componentDidUpdate(lastProps) {
-		const { visibilities } = this.props;
+		const { visibilities, calendars, opened, defaultData } = this.props;
 
 		if (lastProps.visibilities.length !== visibilities.length) {
 			this.setDefaultVisibility(visibilities);
+		}
+
+		if (lastProps.calendars.length !== calendars.length) {
+			this.setDefaultCalendar(calendars);
+		}
+
+		// Indique que l'on souhaite ouvrir le formulaire.
+		if (!lastProps.opened && opened) {
+			setTimeout(() => this.setState(defaultData), 10);
 		}
 	}
 
 	getEvents(events) {
 		const { eventFilter } = this.state;
 
-		return ArticleForm.mapSelectionOptions(
+		return EventForm.mapSelectionOptions(
 			events.filter(eventToFilter => {
 				return eventToFilter.name.indexOf(eventFilter) >= 0;
 			})
@@ -146,29 +107,41 @@ class ArticleForm extends React.Component {
 		});
 	}
 
-	cleanInputs() {
-		const { visibilities } = this.props;
+	setDefaultCalendar(calendars) {
+		const defaultCalendar = calendars[0] || {};
 
 		this.setState({
-			title: '',
-			description: '',
-			content: '',
+			calendar_id: defaultCalendar.id,
+			calendar_name: defaultCalendar.name,
+		});
+	}
+
+	cleanInputs() {
+		const { visibilities, calendars } = this.props;
+		const end_at = new Date();
+		end_at.setMinutes(end_at.getMinutes() + 5);
+
+		this.setState({
+			name: '',
+			begin_at: new Date(),
+			end_at,
 		});
 
 		this.setDefaultVisibility(visibilities);
+		this.setDefaultCalendar(calendars);
 	}
 
 	handleSubmit(e) {
 		const { post } = this.props;
-		const { title, description, content, visibility_id, event_id } = this.state;
+		const { name, begin_at, end_at, calendar_id, visibility_id } = this.state;
 		e.preventDefault();
 
 		post({
-			title,
-			description,
-			content,
+			name,
+			begin_at: formatDate(begin_at),
+			end_at: formatDate(end_at),
+			calendar_id,
 			visibility_id,
-			event_id,
 		}).then(() => {
 			this.cleanInputs();
 		});
@@ -176,18 +149,6 @@ class ArticleForm extends React.Component {
 
 	handleSearchEvent(value) {
 		this.setState({ eventFilter: value });
-	}
-
-	handleEventChange(value) {
-		this.setState({ event_id: value.value });
-	}
-
-	handleContentChange(content) {
-		this.setState({ content });
-	}
-
-	handleDescriptionChange(description) {
-		this.setState({ description });
 	}
 
 	handleChange(e) {
@@ -200,48 +161,62 @@ class ArticleForm extends React.Component {
 		this.setState({ visibility_id: value, visibility_name: label });
 	}
 
+	handleCalendarChange({ value, label }) {
+		this.setState({ calendar_id: value, calendar_name: label });
+	}
+
 	render() {
-		const { opened, visibilities, closeModal } = this.props;
-		const { title, description, content, visibility_id, visibility_name } = this.state;
+		const { opened, visibilities, calendars, closeModal } = this.props;
+		const {
+			name,
+			begin_at,
+			end_at,
+			calendar_id,
+			calendar_name,
+			visibility_id,
+			visibility_name,
+		} = this.state;
 
 		return (
 			<Modal className="modal-dialog-extended" isOpen={opened}>
 				<Form onSubmit={this.handleSubmit.bind(this)}>
-					<ModalHeader toggle={closeModal.bind(this)}>Créer un article</ModalHeader>
+					<ModalHeader toggle={closeModal.bind(this)}>Créer un événement</ModalHeader>
 					<ModalBody>
 						<FormGroup>
 							<Label for="access_id">Titre *</Label>
 							<Input
 								type="text"
 								className="form-control"
-								id="title"
-								name="title"
-								value={title}
+								id="name"
+								name="name"
+								value={name}
 								onChange={e => this.handleChange(e)}
-								placeholder="Titre de l'article"
+								placeholder="Titre de l'événément"
 								required
 							/>
 						</FormGroup>
 
 						<FormGroup>
-							<Label for="corps">Contenu *</Label>
-							<Editor
-								onChange={e => this.handleContentChange(e)}
-								id="corps"
-								options={options}
-								value={content}
+							<Label for="access_id">Créneau *</Label>
+							<DatetimeRangePicker
+								startDate={begin_at}
+								endDate={end_at}
+								onStartDateChange={date => this.setState({ begin_at: date })}
+								onEndDateChange={date => this.setState({ end_at: date })}
+								input
+								className="d-flex"
 								required
 							/>
 						</FormGroup>
 
 						<FormGroup>
-							<Label for="description">Description (courte description de l'article)</Label>
-							<Editor
-								onChange={e => this.handleDescriptionChange(e)}
-								id="description"
-								options={options}
-								value={description}
-								required
+							<Label for="calendar_id">Calendrier *</Label>
+							<Select
+								onChange={this.handleCalendarChange.bind(this)}
+								name="calendar_id"
+								placeholder="Calendrier associé"
+								options={EventForm.mapSelectionOptions(calendars)}
+								value={{ value: calendar_id, label: calendar_name }}
 							/>
 						</FormGroup>
 
@@ -250,8 +225,8 @@ class ArticleForm extends React.Component {
 							<Select
 								onChange={this.handleVisibilityChange.bind(this)}
 								name="visibility_id"
-								placeholder="Visibilité de l'article"
-								options={ArticleForm.mapSelectionOptions(visibilities)}
+								placeholder="Visibilité de l'événement"
+								options={EventForm.mapSelectionOptions(visibilities)}
 								value={{ value: visibility_id, label: visibility_name }}
 							/>
 						</FormGroup>
@@ -269,7 +244,7 @@ class ArticleForm extends React.Component {
 							Annuler
 						</Button>
 						<Button type="submit" outline color="primary">
-							Publier l'article
+							Créer l'événement
 						</Button>
 					</ModalFooter>
 				</Form>
@@ -278,4 +253,4 @@ class ArticleForm extends React.Component {
 	}
 }
 
-export default ArticleForm;
+export default EventForm;
