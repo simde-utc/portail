@@ -10,7 +10,7 @@
 
 namespace App\Admin;
 
-use Encore\Admin\Form;
+use App\Admin\Form;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -88,6 +88,13 @@ class FormGenerator extends Generator
                             $name = time().'.'.$file->getClientOriginalExtension();
 
                             return $path.'/'.$name;
+                        });
+
+                        $this->get()->saved(function (Form $form) use ($field) {
+                            $model = $form->model();
+
+                            $model->$field = url($model->$field);
+                            $model->save();
                         });
                     } else if ($type === 'display') {
                         $this->callCustomMethods($generatedField)->{$this->valueMethod}(function ($value) use ($field, $model) {

@@ -25,7 +25,7 @@ trait HasBookings
     }
 
     /**
-     * Vérifie qu'il n'y a pas de réservation au même moment.
+     * Vérifie qu'il n'y ait pas de réservation au même moment.
      *
      * @param  string $room_id
      * @param  string $begin_at
@@ -41,9 +41,11 @@ trait HasBookings
             abort(400, 'La date de début d\'événement doit être postérieure à la date actuelle');
         }
 
-        if ($begin->greaterThanOrEqualTo($end)) {
+        if ($begin->addMinutes(5)->greaterThan($end)) {
             abort(400, 'L\'événement doit avoir une durée d\'au moins 1 min');
         }
+
+        $begin->subMinutes(5);
 
         $events = Room::find($room_id)->calendar->events()
             ->where('end_at', '>', $begin_at)
