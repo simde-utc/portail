@@ -77,7 +77,7 @@ class AssoArticleList extends React.Component {
 		data.owned_by_type = 'asso';
 		data.owned_by_id = asso.id;
 
-		const action = actions.articles.create(data);
+		const action = actions.articles.create({}, data);
 
 		dispatch(action);
 
@@ -101,6 +101,8 @@ class AssoArticleList extends React.Component {
 			})
 			.catch(() => {
 				NotificationManager.error("L'article n'a pas pu être créé", "Publication d'un article");
+
+				return Promise.reject();
 			});
 	}
 

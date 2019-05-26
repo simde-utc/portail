@@ -36,7 +36,7 @@ trait HasCreatorsAndOwners
 
         $tokenType = \Scopes::getTokenType($request);
         $client = \Scopes::getClient($request);
-        $type = \ModelResolver::getName($owner);
+        $type = \ModelResolver::getNameFromObject($owner);
         $scopeBegin = $tokenType.'-'.$verb.'-'.$modelName;
 
         if ($request->input('created_by_type', 'user') === 'user'

@@ -11,6 +11,7 @@
 namespace App\Traits\Controller\v1;
 
 use Illuminate\Http\Request;
+use App\Models\Contact;
 
 trait HasContacts
 {
@@ -39,7 +40,11 @@ trait HasContacts
      */
     public function getContact(Request $request, string $verb='get')
     {
-        $this->checkTokenRights($request, $verb);
+        if (\Scopes::isOauthRequest($request)) {
+            $this->checkTokenRights($request, $verb);
+        }
+
+        Contact::setUserForVisibility(\Auth::id());
         $contact = $request->resource->contacts()->where('id', $request->contact)->firstSelection();
 
         if ($contact) {

@@ -21,6 +21,7 @@ services:
     volumes:
       - ./:/var/www/html
       - ./node_modules:/var/www/node_modules
+  # The Web Server
   web:
     image: nginx:latest
     ports:
