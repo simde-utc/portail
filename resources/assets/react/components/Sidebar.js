@@ -136,11 +136,11 @@ class Sidebar extends React.Component {
 								<FontAwesomeIcon icon="book" /> Moodle
 							</a>
 
-							{user && permissions.length && (
+							{user && permissions.length ? (
 								<a className="sidebar-link" href="/admin">
 									<FontAwesomeIcon icon="screwdriver" /> Interface admin
 								</a>
-							)}
+							) : null}
 
 							<a
 								className="sidebar-link"
