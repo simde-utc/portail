@@ -54,13 +54,13 @@ class ScreenProfile extends React.Component {
 							MES COTISATIONS
 						</NavLink>
 					</li>
-					{user && permissions.length && (
+					{user && permissions.length ? (
 						<li className="nav-item">
 							<a className="nav-link admin" href="/admin">
 								INTERFACE ADMIN
 							</a>
 						</li>
-					)}
+					) : null}
 					<li className="nav-item">
 						<a className="nav-link admin" href="/logout">
 							ME DECONNECTER
