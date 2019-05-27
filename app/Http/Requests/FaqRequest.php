@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les catégories FAQs.
+ * Gestion de la requête pour les questions FAQs.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -12,7 +12,7 @@ namespace App\Http\Requests;
 
 use Validation;
 
-class FaqCategoryRequest extends Request
+class FaqRequest extends Request
 {
     /**
      * Défini les règles de validation des champs.
@@ -22,16 +22,16 @@ class FaqCategoryRequest extends Request
     public function rules()
     {
         return [
-            'name' => Validation::type('string')
-                ->length('name')
-                ->unique('faqs_categories', 'name')
+            'question' => Validation::type('string')
+                ->length('title')
+                ->unique('faqs', 'question')
                 ->post('required')
                 ->get(),
-            'description' => Validation::type('string')
+            'answer' => Validation::type('string')
                 ->length('description')
                 ->post('required')
                 ->get(),
-            'parent_id' => Validation::type('uuid')
+            'category_id' => Validation::type('uuid')
                 ->exists('faqs_categories', 'id')
                 ->get(),
             'visibility_id' => Validation::type('uuid')

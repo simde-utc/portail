@@ -14,6 +14,7 @@ use App\Http\Controllers\v1\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\FaqCategory;
+use App\Http\Requests\FaqCategoryRequest;
 use App\Exceptions\PortailException;
 use App\Traits\Controller\v1\HasFaqs;
 
@@ -27,26 +28,26 @@ class CategoryController extends Controller
     public function __construct()
     {
         // $this->middleware(
-	    //     \Scopes::allowPublic()->matchOne('user-get-categories', 'client-get-categories'),
-	    //     ['only' => ['index', 'show']]
+        // \Scopes::allowPublic()->matchOne('user-get-categories', 'client-get-categories'),
+        // ['only' => ['index', 'show']]
         // );
         // $this->middleware(
-	    //     array_merge(
-		//         \Scopes::matchOne('user-create-categories', 'client-create-categories'),
-	    //     ),
-	    //     ['only' => ['store']]
+        // array_merge(
+        // \Scopes::matchOne('user-create-categories', 'client-create-categories'),
+        // ),
+        // ['only' => ['store']]
         // );
         // $this->middleware(
-	    //     array_merge(
-		//         \Scopes::matchOne('user-edit-categories', 'client-edit-categories'),
-	    //     ),
-	    //     ['only' => ['update']]
+        // array_merge(
+        // \Scopes::matchOne('user-edit-categories', 'client-edit-categories'),
+        // ),
+        // ['only' => ['update']]
         // );
         // $this->middleware(
-	    //     array_merge(
-		//         \Scopes::matchOne('user-remove-categories', 'client-remove-categories'),
-	    //     ),
-        // 	['only' => ['destroy']]
+        // array_merge(
+        // \Scopes::matchOne('user-remove-categories', 'client-remove-categories'),
+        // ),
+        // ['only' => ['destroy']]
         // );
     }
 
@@ -96,7 +97,7 @@ class CategoryController extends Controller
      * Met à jour une catégorie FAQ.
      *
      * @param FaqCategoryRequest $request
-     * @param string      $category_id
+     * @param string             $category_id
      * @return JsonResponse
      */
     public function update(FaqCategoryRequest $request, string $category_id): JsonResponse

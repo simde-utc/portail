@@ -21,11 +21,15 @@ class Faq extends Model
     ];
 
     protected $with = [
-        'category', 'visibility'
+        'visibility'
     ];
 
     protected $must = [
-        'question', 'answer', 'category',
+        'question', 'answer', 'visibility',
+    ];
+
+    protected $selection = [
+        'visibilities' => [],
     ];
 
     /**
