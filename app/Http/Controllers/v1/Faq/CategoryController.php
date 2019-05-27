@@ -23,32 +23,26 @@ class CategoryController extends Controller
     use HasFaqs;
 
     /**
-     * Nécessité de gérer les catégories FAQs.
+     * Nécessité de gérer les questions FAQs.
      */
     public function __construct()
     {
-        // $this->middleware(
-        // \Scopes::allowPublic()->matchOne('user-get-categories', 'client-get-categories'),
-        // ['only' => ['index', 'show']]
-        // );
-        // $this->middleware(
-        // array_merge(
-        // \Scopes::matchOne('user-create-categories', 'client-create-categories'),
-        // ),
-        // ['only' => ['store']]
-        // );
-        // $this->middleware(
-        // array_merge(
-        // \Scopes::matchOne('user-edit-categories', 'client-edit-categories'),
-        // ),
-        // ['only' => ['update']]
-        // );
-        // $this->middleware(
-        // array_merge(
-        // \Scopes::matchOne('user-remove-categories', 'client-remove-categories'),
-        // ),
-        // ['only' => ['destroy']]
-        // );
+        $this->middleware(
+            \Scopes::matchOne('user-get-faqs-categories', 'client-get-faqs-categories'),
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+            \Scopes::matchOne('user-create-faqs-categories', 'client-create-faqs-categories'),
+            ['only' => ['store']]
+        );
+        $this->middleware(
+            \Scopes::matchOne('user-edit-faqs-categories', 'client-edit-faqs-categories'),
+            ['only' => ['update']]
+        );
+        $this->middleware(
+            \Scopes::matchOne('user-remove-faqs-categories', 'client-remove-faqs-categories'),
+            ['only' => ['destroy']]
+        );
     }
 
     /**

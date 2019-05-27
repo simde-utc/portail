@@ -29,28 +29,22 @@ class FaqController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware(
-        // \Scopes::allowPublic()->matchOne('user-get-faqs', 'client-get-faqs'),
-        // ['only' => ['index', 'show']]
-        // );
-        // $this->middleware(
-        // array_merge(
-        // \Scopes::matchOne('user-create-faqs', 'client-create-faqs'),
-        // ),
-        // ['only' => ['store']]
-        // );
-        // $this->middleware(
-        // array_merge(
-        // \Scopes::matchOne('user-edit-faqs', 'client-edit-faqs'),
-        // ),
-        // ['only' => ['update']]
-        // );
-        // $this->middleware(
-        // array_merge(
-        // \Scopes::matchOne('user-remove-faqs', 'client-remove-faqs'),
-        // ),
-        // ['only' => ['destroy']]
-        // );
+        $this->middleware(
+            \Scopes::matchOne('user-get-faqs-questions', 'client-get-faqs-questions'),
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware(
+            \Scopes::matchOne('user-create-faqs-questions', 'client-create-faqs-questions'),
+            ['only' => ['store']]
+        );
+        $this->middleware(
+            \Scopes::matchOne('user-edit-faqs-questions', 'client-edit-faqs-questions'),
+            ['only' => ['update']]
+        );
+        $this->middleware(
+            \Scopes::matchOne('user-remove-faqs-questions', 'client-remove-faqs-questions'),
+            ['only' => ['destroy']]
+        );
     }
 
     /**
@@ -124,6 +118,7 @@ class FaqController extends Controller
      * Supprime une question FAQ.
      *
      * @param Request $request
+     * @param string  $category_id
      * @param string  $faq_id
      * @return void
      */
