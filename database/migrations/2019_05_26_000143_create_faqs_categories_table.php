@@ -19,7 +19,7 @@ class CreateFaqsCategoriesTable extends Migration
             $table->uuid('id')->primary();
             $table->string('name', validation_max('name'))->unique();
             $table->string('description', validation_max('description'));
-            $table->uuid('parent_id');
+            $table->uuid('parent_id')->nullable();
             $table->uuid('visibility_id');
         });
 
