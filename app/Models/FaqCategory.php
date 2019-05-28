@@ -42,11 +42,11 @@ class FaqCategory extends Model
 
     // Children dans le cas où on affiche en mode étagé.
     protected $selection = [
+        'visibilities' => '*',
+        'lang' => '*',
         'filter' => [],
         'stage' => null,
         'stages' => null,
-        'visibilities' => [],
-        'lang' => 'fr',
     ];
 
     /**

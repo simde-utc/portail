@@ -23,6 +23,10 @@ trait HasLang
      */
     public function scopeLang(Builder $query, string $lang)
     {
+        if ($lang === '*') {
+            $lang = \Auth::user()->getLang();
+        }
+
         return $query->where('lang', $lang);
     }
 }

@@ -29,7 +29,7 @@ class Faq extends Model
     ];
 
     protected $selection = [
-        'visibilities' => [],
+        'visibilities' => '*',
     ];
 
     /**

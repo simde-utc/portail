@@ -441,4 +441,18 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     {
         return $this->hasOneRole(config('portail.roles.admin.users'));
     }
+
+    /**
+     * Retourne la langue de l'utilisateur.
+     *
+     * @return string
+     */
+    public function getLang()
+    {
+		try {
+            return $this->preferences()->valueOf('lang');
+        } catch (PortailException $e) {
+            return 'fr';
+        }
+    }
 }
