@@ -389,7 +389,7 @@ class PermissionsTableSeeder extends Seeder
                 'owned_by' => new User,
             ],
             [
-                'type' => 'faq-cateogry',
+                'type' => 'faq-category',
                 'name' => 'Catégorie FAQ',
                 'description' => 'Gestion des catégories FAQs',
                 'owned_by' => new User,

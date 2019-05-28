@@ -28,7 +28,7 @@ class FaqController extends ResourceController
         return [
             'id' => 'display',
             'question' => 'text',
-            'anwser' => 'textarea',
+            'answer' => 'textarea',
             'category' => FaqCategory::get(['id', 'name']),
             'visibility' => Visibility::get(['id', 'name']),
             'created_at' => 'display',
@@ -44,7 +44,7 @@ class FaqController extends ResourceController
     protected function getDefaults(): array
     {
         return [
-            'category_id' => FaqCategory::last()->id,
+            'category_id' => FaqCategory::orderBy('created_at', 'DESC')->first()->id,
             'visibility_id' => Visibility::first()->id,
         ];
     }

@@ -16,7 +16,7 @@ use App\Models\{
 
 class FaqCategoryController extends ResourceController
 {
-    protected $model = Faq::class;
+    protected $model = FaqCategory::class;
 
     /**
      * Définition des champs à afficher.
@@ -43,8 +43,10 @@ class FaqCategoryController extends ResourceController
      */
     protected function getDefaults(): array
     {
+        $category = FaqCategory::orderBy('created_at', 'DESC')->first();
+
         return [
-            'parent_id' => FaqCategory::last()->id,
+            'parent_id' => is_null($category) ? null : $category->id,
             'visibility_id' => Visibility::first()->id,
         ];
     }

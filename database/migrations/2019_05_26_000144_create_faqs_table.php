@@ -24,6 +24,8 @@ class CreateFaqsTable extends Migration
 
             $table->foreign('category_id')->references('id')->on('faqs_categories');
             $table->foreign('visibility_id')->references('id')->on('visibilities');
+
+            $table->timestamps();
         });
     }
 

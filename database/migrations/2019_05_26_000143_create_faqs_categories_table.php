@@ -21,6 +21,8 @@ class CreateFaqsCategoriesTable extends Migration
             $table->string('description', validation_max('description'));
             $table->uuid('parent_id')->nullable();
             $table->uuid('visibility_id');
+
+            $table->timestamps();
         });
 
         Schema::table('faqs_categories', function(Blueprint $table) {
