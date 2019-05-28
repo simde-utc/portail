@@ -27,7 +27,7 @@ trait HasFaqs
      */
     protected function getFaqCategory(Request $request, string $category_id): FaqCategory
     {
-        $category = FaqCategory::with('parent')->find($category_id);
+        $category = FaqCategory::with(['parent', 'children'])->find($category_id);
 
         if ($category) {
             return $category->makeHidden('parent_id');
