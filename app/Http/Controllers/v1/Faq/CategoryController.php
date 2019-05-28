@@ -28,7 +28,7 @@ class CategoryController extends Controller
     public function __construct()
     {
         $this->middleware(
-            \Scopes::matchOne('user-get-faqs-categories', 'client-get-faqs-categories'),
+            \Scopes::allowPublic()->matchOne('user-get-faqs-categories', 'client-get-faqs-categories'),
             ['only' => ['index', 'show']]
         );
         $this->middleware(
