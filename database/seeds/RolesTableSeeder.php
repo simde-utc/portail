@@ -80,6 +80,8 @@ class RolesTableSeeder extends Seeder
                     'location',
                     'event-detail',
                     'notification',
+                    'faq',
+                    'faq-category',
                 ],
             ],
             [
