@@ -382,6 +382,18 @@ class PermissionsTableSeeder extends Seeder
                 'description' => 'Gestion des notifications',
                 'owned_by' => new User,
             ],
+            [
+                'type' => 'faq',
+                'name' => 'FAQ',
+                'description' => 'Gestion des questions FAQs',
+                'owned_by' => new User,
+            ],
+            [
+                'type' => 'faq-category',
+                'name' => 'Catégorie FAQ',
+                'description' => 'Gestion des catégories FAQs',
+                'owned_by' => new User,
+            ],
         ];
 
         foreach ($permissions as $permission) {
