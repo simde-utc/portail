@@ -449,7 +449,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
      */
     public function getLang()
     {
-		try {
+        try {
             return $this->preferences()->valueOf('lang');
         } catch (PortailException $e) {
             return 'fr';

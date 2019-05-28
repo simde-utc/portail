@@ -37,13 +37,13 @@ class FaqCategory extends Model
     ];
 
     protected $must = [
-        'name', 'description', 'lang', 'visibility',
+        'name', 'description', 'visibility',
     ];
 
     // Children dans le cas où on affiche en mode étagé.
     protected $selection = [
         'visibilities' => '*',
-        'lang' => '*',
+        'lang' => '~',
         'filter' => [],
         'stage' => null,
         'stages' => null,

@@ -24,6 +24,8 @@ trait HasLang
     public function scopeLang(Builder $query, string $lang)
     {
         if ($lang === '*') {
+            return $lang;
+        } else if ($lang === '~') {
             $lang = \Auth::user()->getLang();
         }
 
