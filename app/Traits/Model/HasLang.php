@@ -26,7 +26,11 @@ trait HasLang
         if ($lang === '*') {
             return $lang;
         } else if ($lang === '~') {
-            $lang = \Auth::user()->getLang();
+            if ($user = \Auth::user()) {
+                $lang = $user->getLang();
+            } else {
+                $lang = 'fr';
+            }
         }
 
         return $query->where('lang', $lang);
