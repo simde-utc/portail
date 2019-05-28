@@ -10,16 +10,18 @@
 
 namespace App\Models;
 
-use App\Traits\Model\HasStages;
+use App\Traits\Model\{
+    HasStages, HasLang
+};
 
 class FaqCategory extends Model
 {
-    use HasStages;
+    use HasStages, HasLang;
 
     protected $table = 'faqs_categories';
 
     protected $fillable = [
-        'name', 'description', 'parent_id', 'visibility_id',
+        'name', 'description', 'lang', 'parent_id', 'visibility_id',
     ];
 
     protected $hidden = [
@@ -35,7 +37,7 @@ class FaqCategory extends Model
     ];
 
     protected $must = [
-        'name', 'description', 'visibility',
+        'name', 'description', 'lang', 'visibility',
     ];
 
     // Children dans le cas où on affiche en mode étagé.
@@ -44,6 +46,7 @@ class FaqCategory extends Model
         'stage' => null,
         'stages' => null,
         'visibilities' => [],
+        'lang' => 'fr',
     ];
 
     /**

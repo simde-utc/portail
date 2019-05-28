@@ -29,6 +29,7 @@ class FaqCategoryController extends ResourceController
             'id' => 'display',
             'name' => 'text',
             'description' => 'textarea',
+            'lang' => 'text',
             'parent' => FaqCategory::get(['id', 'name']),
             'visibility' => Visibility::get(['id', 'name']),
             'created_at' => 'display',
@@ -46,6 +47,7 @@ class FaqCategoryController extends ResourceController
         $category = FaqCategory::orderBy('created_at', 'DESC')->first();
 
         return [
+            'lang' => 'fr',
             'parent_id' => is_null($category) ? null : $category->id,
             'visibility_id' => Visibility::first()->id,
         ];
