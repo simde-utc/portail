@@ -85,6 +85,8 @@ Route::resource('resources/contacts', 'Resource\\ContactController');
 Route::resource('resources/contact-types', 'Resource\\ContactTypeController');
 Route::resource('resources/events', 'Resource\\EventController');
 Route::resource('resources/event-details', 'Resource\\EventDetailController');
+Route::resource('resources/faqs', 'Resource\\FaqController');
+Route::resource('resources/faqs-categories', 'Resource\\FaqCategoryController');
 Route::resource('resources/groups', 'Resource\\GroupController');
 Route::resource('resources/locations', 'Resource\\LocationController');
 Route::resource('resources/notifications', 'Resource\\NotificationController');

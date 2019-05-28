@@ -166,6 +166,18 @@ class AdminMenuTableSeeder extends Seeder
                         'icon' => 'fa-clock-o',
                     ],
                     [
+                        'title' => 'Catégories FAQs',
+                        'uri' => 'resources/faqs-categories',
+                        'permission' => 'faq-category',
+                        'icon' => 'fa-question',
+                    ],
+                    [
+                        'title' => 'FAQs',
+                        'uri' => 'resources/faqs',
+                        'permission' => 'faq',
+                        'icon' => 'fa-question',
+                    ],
+                    [
                         'title' => 'Groupes',
                         'uri' => 'resources/groups',
                         'permission' => 'group',
