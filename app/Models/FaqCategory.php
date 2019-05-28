@@ -10,13 +10,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use App\Traits\Model\{
-    HasStages, HasLang
+    HasStages, HasLang, HasVisibilitySelection
 };
 
 class FaqCategory extends Model
 {
-    use HasStages, HasLang;
+    use HasStages, HasLang, HasVisibilitySelection;
 
     protected $table = 'faqs_categories';
 
@@ -87,5 +88,21 @@ class FaqCategory extends Model
     public function questions()
     {
         return $this->hasMany(Faq::class, 'category_id');
+    }
+
+    /**
+     * Scope spécifique pour avoir les ressources privées.
+     *
+     * @param  Builder $query
+     * @return Builder
+     */
+    public function scopePrivateVisibility(Builder $query)
+    {
+        $visibility = $this->getSelectionForVisibility('private');
+
+        // Les faqs privés sont affiché uniquement aux personnes ayant la permission 'faq-question'.
+        if (($user = \Auth::user()) && $user->hasOnePermission('faq-question')) {
+            return $query->where('visibility_id', $visibility->id);
+        }
     }
 }
