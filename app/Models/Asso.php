@@ -613,9 +613,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * @return string
+     * @return stringLnull
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

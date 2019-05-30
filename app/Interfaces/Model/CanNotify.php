@@ -13,7 +13,7 @@ namespace App\Interfaces\Model;
 interface CanNotify
 {
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string;
+    public function getName(): ?string;
 }
