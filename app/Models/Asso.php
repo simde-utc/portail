@@ -613,7 +613,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * @return stringLnull
+     * @return string|null
      */
     public function getName(): ?string
     {
