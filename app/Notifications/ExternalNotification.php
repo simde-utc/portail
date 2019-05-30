@@ -13,7 +13,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use App\Interfaces\Model\CanBeNotifiable;
 use App\Interfaces\Model\CanNotify;
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class ExternalNotification extends Notification
 {

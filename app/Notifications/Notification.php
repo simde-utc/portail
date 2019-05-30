@@ -12,7 +12,7 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use App\Interfaces\Model\CanBeNotifiable;
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notification as BaseNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
