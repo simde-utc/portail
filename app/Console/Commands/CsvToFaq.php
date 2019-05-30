@@ -42,12 +42,12 @@ class CsvToFaq extends Command
         // On ignore l'index.
         fgetcsv($file);
 
-        while (($columns = fgetcsv($file)) != false) {
+        while (($columns = fgetcsv($file, null, ';')) != false) {
             $answer = array_shift($columns);
             $question = array_shift($columns);
             $category = null;
 
-            foreach (array_reverse($columns) as $categoryName) {
+            foreach ($columns as $categoryName) {
                 if (!empty($categoryName)) {
                     $category = FaqCategory::firstOrCreate([
                         'name' => $categoryName,
