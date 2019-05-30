@@ -611,4 +611,12 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     {
         return $this->isCommentEditableBy($user_id);
     }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }

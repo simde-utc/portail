@@ -129,4 +129,12 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     {
         return $this->asso()->hasOneRole('developer', ['user_id' => $user_id]);
     }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }
