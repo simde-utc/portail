@@ -12,6 +12,7 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use App\Interfaces\Model\CanBeNotifiable;
+use App\Models\Model;
 use Illuminate\Notifications\Notification as BaseNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -31,9 +32,9 @@ abstract class Notification extends BaseNotification implements ShouldQueue
      *
      * @param string $type
      * @param string $icon
-     * @param mixed  $creator
+     * @param Model  $creator
      */
-    public function __construct(string $type, string $icon=null, $creator=null)
+    public function __construct(string $type, string $icon=null, Model $creator=null)
     {
         $this->type = $type;
         $this->icon = $icon;
@@ -126,10 +127,10 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     /**
      * Récupération du créateur.
      *
-     * @param  mixed $notifiable
-     * @return mixed
+     * @param  Model $notifiable
+     * @return Model
      */
-    public function getCreator($notifiable)
+    public function getCreator(Model $notifiable): Model
     {
         return ($this->creator ?? $notifiable);
     }
@@ -169,12 +170,12 @@ abstract class Notification extends BaseNotification implements ShouldQueue
      */
     public function toDatabase($notifiable)
     {
-        $created_by = $this->getCreator($notifiable);
+        $createdBy = $this->getCreator($notifiable);
 
         return array_merge($this->toArray($notifiable), [
             'created_by' => [
-                'id' => $created_by->id,
-                'type' => get_class($created_by),
+                'id' => $createdBy->getKey(),
+                'type' => get_class($createdBy),
             ],
         ]);
     }

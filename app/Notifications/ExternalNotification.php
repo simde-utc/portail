@@ -14,7 +14,6 @@ use Illuminate\Bus\Queueable;
 use App\Interfaces\Model\CanBeNotifiable;
 use App\Interfaces\Model\CanNotify;
 use App\Models\Model;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class ExternalNotification extends Notification
 {
@@ -30,9 +29,9 @@ class ExternalNotification extends Notification
      * @param CanNotify $model
      * @param string    $content
      * @param array     $action
-     * @param mixed    $creator
+     * @param Model     $creator
      */
-    public function __construct(CanNotify $model, string $content, array $action=[], $creator=null)
+    public function __construct(CanNotify $model, string $content, array $action=[], Model $creator=null)
     {
         parent::__construct('external_'.\ModelResolver::getNameFromObject($model), null, $creator);
 
@@ -46,7 +45,7 @@ class ExternalNotification extends Notification
      * @param  CanBeNotifiable $notifiable
      * @return array
      */
-    protected function getAction(CanBeNotifiable $notifiable)
+    protected function getAction(CanBeNotifiable $notifiable): array
     {
         return $this->action;
     }
