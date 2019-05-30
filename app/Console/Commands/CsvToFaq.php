@@ -62,7 +62,7 @@ class CsvToFaq extends Command
 
             Faq::create([
                 'question' => $question,
-                'answser' => $answer,
+                'answer' => $answer,
                 'category_id' => $category->id,
                 'visibility_id' => $defaultVisibility->id,
             ]);
