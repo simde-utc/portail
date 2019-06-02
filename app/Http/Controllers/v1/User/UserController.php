@@ -76,7 +76,7 @@ class UserController extends Controller
         if (count($choices) === 2) {
             $users = new User;
         } else {
-            $users = User::where('active', \Scopes::hasOne($request, 'client-get-users-active'));
+            $users = User::where('is_active', \Scopes::hasOne($request, 'client-get-users-active'));
         }
 
         $users = $users->getSelection()->map(function ($user) {
