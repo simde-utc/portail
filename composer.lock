@@ -2411,16 +2411,16 @@
         },
         {
             "name": "nastuzzi-samy/laravel-query-selection",
-            "version": "2.3.3",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/NastuzziSamy/laravel-query-selector.git",
-                "reference": "95bfaf96cf644ab93c2cfa269ec1f82f42ed6411"
+                "reference": "f6ce27c7720854a9903a75d6f87b220c20906e31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NastuzziSamy/laravel-query-selector/zipball/95bfaf96cf644ab93c2cfa269ec1f82f42ed6411",
-                "reference": "95bfaf96cf644ab93c2cfa269ec1f82f42ed6411",
+                "url": "https://api.github.com/repos/NastuzziSamy/laravel-query-selector/zipball/f6ce27c7720854a9903a75d6f87b220c20906e31",
+                "reference": "f6ce27c7720854a9903a75d6f87b220c20906e31",
                 "shasum": ""
             },
             "require": {
@@ -2458,7 +2458,7 @@
                 "selection",
                 "week"
             ],
-            "time": "2019-03-25T11:12:38+00:00"
+            "time": "2019-06-25T23:07:31+00:00"
         },
         {
             "name": "nesbot/carbon",
