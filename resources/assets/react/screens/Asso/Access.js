@@ -165,9 +165,10 @@ class AccessScreen extends React.Component {
 
 		return (
 			<div className="container">
-				<div className="top-right-button">
+				<div className="d-flex flex-wrap-reverse align-items-center">
+					<h1 className="title">Demandes d'accès</h1>
 					{fetched && !userAccessDemand && (
-						<Button color="primary" outline onClick={() => this.setState({ openModal: true })}>
+						<Button color="primary" outline onClick={() => this.setState({ openModal: true })} className="ml-auto">
 							Réaliser une demande
 						</Button>
 					)}

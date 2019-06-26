@@ -120,12 +120,12 @@ class AssoCalendar extends React.Component {
 					closeModal={() => this.setState({ openModal: false })}
 					calendars={calendars}
 				/>
-				<div className="top-right-button">
-					<Button color="primary" outline onClick={this.openModal.bind(this)}>
+				<div className="d-flex flex-wrap-reverse align-items-center">
+					<h1 className="title">Calendriers</h1>
+					<Button color="primary" outline onClick={this.openModal.bind(this)} className="ml-auto">
 						Créer un événement
 					</Button>
 				</div>
-				<h1 className="title">Calendriers</h1>
 				<Calendar
 					calendars={calendars}
 					selectedCalendars={calendars}
