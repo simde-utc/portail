@@ -119,7 +119,12 @@ class AssoArticleList extends React.Component {
 				/>
 				<div className="d-flex flex-wrap-reverse align-items-center">
 					<h1 className="title">Derniers articles</h1>
-					<Button color="primary" outline onClick={() => this.setState({ openModal: true })} className="ml-auto">
+					<Button
+						className="ml-auto"
+						color="primary"
+						outline
+						onClick={() => this.setState({ openModal: true })}
+					>
 						Rédiger un article
 					</Button>
 				</div>
