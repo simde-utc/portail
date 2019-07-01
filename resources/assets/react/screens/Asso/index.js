@@ -214,40 +214,34 @@ class AssoScreen extends React.Component {
 	joinAsso(isCotisant) {
 		const { asso, dispatch, roles, user } = this.props;
 
-		var modal = {
+		const modal = {
 			show: true,
 			title: 'Rejoindre une association',
-		}
+		};
 
-		if(!isCotisant){
+		if (!isCotisant) {
 			modal.body = (
 				<div>
 					<p>
-						Souhaitez-vous rejoindre l'association{' '}
-						<span className="font-italic">{asso.name}</span> ?
+						Souhaitez-vous rejoindre l'association <span className="font-italic">{asso.name}</span>?
 					</p>
-					<p>
-						Pour cela, il faut que vous cotisiez au BDE-UTC.
-					</p>
+					<p>Pour cela, il faut que vous cotisiez au BDE-UTC.</p>
 				</div>
-			)
+			);
 			modal.button = {
 				type: 'success',
-				text: "Cotiser au BDE-UTC",
+				text: 'Cotiser au BDE-UTC',
 				onClick: () => {
 					window.location.href = 'https://assos.utc.fr/bde/bdecotiz/';
 				},
-			}
-		}else{
+			};
+		} else {
 			modal.body = (
 				<div>
 					<p>
-						Souhaitez-vous rejoindre l'association{' '}
-						<span className="font-italic">{asso.name}</span> ?
+						Souhaitez-vous rejoindre l'association <span className="font-italic">{asso.name}</span>?
 					</p>
-					<p>
-						Pour cela, il faut que vous renseignez votre rôle et qu'un membre autorisé valide.
-					</p>
+					<p>Pour cela, il faut que vous renseignez votre rôle et qu'un membre autorisé valide.</p>
 					<Select
 						onChange={role => {
 							this.setState({ role_id: role.value });
@@ -260,7 +254,7 @@ class AssoScreen extends React.Component {
 						}))}
 					/>
 				</div>
-			)
+			);
 			modal.button = {
 				type: 'success',
 				text: "Rejoindre l'association",
@@ -317,13 +311,12 @@ class AssoScreen extends React.Component {
 							}));
 						});
 				},
-			}
+			};
 		}
-
 		this.setState(prevState => ({
 			...prevState,
 			role_id: undefined,
-			modal: modal,
+			modal,
 		}));
 	}
 
@@ -517,8 +510,7 @@ class AssoScreen extends React.Component {
 			};
 		}
 
-		this.user.isCotisant = (user.types.contributorBde == true) ? true : false;
-		
+		this.user.isCotisant = user.types.contributorBde === true;
 		let joinFromMemberList;
 		if (Object.values(this.user).every(value => !value)) {
 			joinFromMemberList = this.joinAsso.bind(this);
