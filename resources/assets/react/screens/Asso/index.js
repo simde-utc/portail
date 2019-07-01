@@ -232,7 +232,7 @@ class AssoScreen extends React.Component {
 				type: 'success',
 				text: 'Cotiser au BDE-UTC',
 				onClick: () => {
-					window.location.href = 'https://assos.utc.fr/bde/bdecotiz/';
+					window.open('https://assos.utc.fr/bde/bdecotiz/', '_blank');
 				},
 			};
 		} else {
