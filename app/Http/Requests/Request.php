@@ -35,4 +35,14 @@ class Request extends FormRequest
     {
         return true;
     }
+
+    /**
+     * Retourne la liste des règles de validation.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [];
+    }
 }
