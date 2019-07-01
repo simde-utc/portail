@@ -82,9 +82,23 @@ class AssoHomeScreen extends React.Component {
 		);
 	}
 
-	getMemberButton(isMember, isFollowing, isWaiting) {
+	getMemberButton(isMember, isFollowing, isWaiting, isCotisant) {
 		const { leave, join } = this.props;
 
+		if (!isCotisant) {
+			return (
+				<Button
+					className="m-1 btn btn-sm font-weight-bold"
+					color="primary"
+					outline
+					onClick={() => {
+						join(false);
+					}}
+				>
+					Rejoindre
+				</Button>
+			);
+		}
 		if (isWaiting) {
 			return (
 				<Button
@@ -122,8 +136,15 @@ class AssoHomeScreen extends React.Component {
 		}
 
 		return (
-			<Button className="m-1 btn btn-sm font-weight-bold" color="primary" outline onClick={join}>
-				Rejoindre
+			<Button 
+				className="m-1 btn btn-sm font-weight-bold"
+				color="primary"
+				outline
+				onClick={() => {
+					join(true);
+				}}
+				>
+					Rejoindre
 			</Button>
 		);
 	}
@@ -141,6 +162,7 @@ class AssoHomeScreen extends React.Component {
 			userIsFollowing,
 			userIsMember,
 			userIsWaiting,
+			userIsCotisant,
 			contacts,
 			contactsFailed,
 		} = this.props;
@@ -159,7 +181,7 @@ class AssoHomeScreen extends React.Component {
 							</AspectRatio>
 							{isAuthenticated && this.getFollowButton(userIsFollowing, userIsMember)}
 							{isAuthenticated &&
-								this.getMemberButton(userIsMember, userIsFollowing, userIsWaiting)}
+								this.getMemberButton(userIsMember, userIsFollowing, userIsWaiting, userIsCotisant)}
 						</div>
 						<div className="col-md-10" style={{ whiteSpace: 'pre-line' }}>
 							<h1 className={`title ${color}`} style={{ fontWeight: 'bold' }}>

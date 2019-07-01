@@ -4,6 +4,7 @@
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -497,14 +498,12 @@ class AssoScreen extends React.Component {
 	render() {
 		const { fetching, fetched, failed, user, asso, member, contacts, match } = this.props;
 		const { modal } = this.state;
-
 		if (failed) return <Http404 />;
 
 		if (fetching || !fetched || !asso) return <span className="loader huge active" />;
 
 		if (member) {
 			const { pivot } = member;
-
 			this.user = {
 				isFollowing: pivot.role_id === null,
 				isMember: pivot.role_id !== null && pivot.validated_by_id !== null,
@@ -518,6 +517,8 @@ class AssoScreen extends React.Component {
 			};
 		}
 
+		this.user.isCotisant = (user.types.contributorBde == true) ? true : false;
+		
 		let joinFromMemberList;
 		if (Object.values(this.user).every(value => !value)) {
 			joinFromMemberList = this.joinAsso.bind(this);
@@ -595,6 +596,7 @@ class AssoScreen extends React.Component {
 								userIsFollowing={this.user.isFollowing}
 								userIsMember={this.user.isMember}
 								userIsWaiting={this.user.isWaiting}
+								userIsCotisant={this.user.isCotisant}
 								follow={this.followAsso.bind(this)}
 								unfollow={this.unfollowAsso.bind(this)}
 								join={this.joinAsso.bind(this)}
