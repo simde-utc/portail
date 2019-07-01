@@ -210,95 +210,119 @@ class AssoScreen extends React.Component {
 		});
 	}
 
-	joinAsso() {
+	joinAsso(isCotisant) {
 		const { asso, dispatch, roles, user } = this.props;
+
+		var modal = {
+			show: true,
+			title: 'Rejoindre une association',
+		}
+
+		if(!isCotisant){
+			modal.body = (
+				<div>
+					<p>
+						Souhaitez-vous rejoindre l'association{' '}
+						<span className="font-italic">{asso.name}</span> ?
+					</p>
+					<p>
+						Pour cela, il faut que vous cotisiez au BDE-UTC.
+					</p>
+				</div>
+			)
+			modal.button = {
+				type: 'success',
+				text: "Cotiser au BDE-UTC",
+				onClick: () => {
+					window.location.href = 'https://assos.utc.fr/bde/bdecotiz/';
+				},
+			}
+		}else{
+			modal.body = (
+				<div>
+					<p>
+						Souhaitez-vous rejoindre l'association{' '}
+						<span className="font-italic">{asso.name}</span> ?
+					</p>
+					<p>
+						Pour cela, il faut que vous renseignez votre rôle et qu'un membre autorisé valide.
+					</p>
+					<Select
+						onChange={role => {
+							this.setState({ role_id: role.value });
+						}}
+						name="role_id"
+						placeholder="Rôle dans cette association"
+						options={roles.map(role => ({
+							value: role.id,
+							label: `${role.name} - ${role.description}`,
+						}))}
+					/>
+				</div>
+			)
+			modal.button = {
+				type: 'success',
+				text: "Rejoindre l'association",
+				onClick: () => {
+					const { role_id } = this.state;
+
+					if (!role_id) return;
+
+					actions
+						.assos(asso.id)
+						.members.create(
+							{},
+							{
+								user_id: user.id,
+								role_id,
+							}
+						)
+						.payload.then(({ data: { id: member_id } }) => {
+							const { user, asso } = this.props;
+
+							dispatch(actions.user.assos.all());
+							dispatch(actions.assos(asso.id).members.all());
+							NotificationManager.success(
+								`Vous avez demandé à rejoindre l'association: ${asso.name}`,
+								"Devenir membre d'une association"
+							);
+
+							actions
+								.assos(asso.id)
+								.members.update(member_id)
+								.payload.then(() => {
+									dispatch(actions.assos(asso.id).members.all());
+									NotificationManager.success(
+										`Vous avez automatiquement été validé dans l'association: ${asso.name}`,
+										"Valider un membre d'une association"
+									);
+
+									if (user.id === member_id) {
+										dispatch(actions.user.assos.all());
+										dispatch(actions.user.permissions.all());
+									}
+								})
+								.catch(() => {});
+						})
+						.catch(() => {
+							NotificationManager.error(
+								`Vous ne pouvez pas devenir membre de cette association: ${asso.name}`,
+								"Devenir membre d'une association"
+							);
+						})
+						.finally(() => {
+							this.setState(({ modal }) => ({
+								modal: { ...modal, show: false },
+							}));
+						});
+				},
+			}
+		}
 
 		this.setState(prevState => ({
 			...prevState,
 			role_id: undefined,
-			modal: {
-				show: true,
-				title: 'Rejoindre une association',
-				body: (
-					<div>
-						<p>
-							Souhaitez-vous rejoindre l'association{' '}
-							<span className="font-italic">{asso.name}</span> ?
-						</p>
-						<p>
-							Pour cela, il faut que vous renseignez votre rôle et qu'un membre autorisé valide.
-						</p>
-						<Select
-							onChange={role => {
-								this.setState({ role_id: role.value });
-							}}
-							name="role_id"
-							placeholder="Rôle dans cette association"
-							options={roles.map(role => ({
-								value: role.id,
-								label: `${role.name} - ${role.description}`,
-							}))}
-						/>
-					</div>
-				),
-				button: {
-					type: 'success',
-					text: "Rejoindre l'association",
-					onClick: () => {
-						const { role_id } = this.state;
-
-						if (!role_id) return;
-
-						actions
-							.assos(asso.id)
-							.members.create(
-								{},
-								{
-									user_id: user.id,
-									role_id,
-								}
-							)
-							.payload.then(({ data: { id: member_id } }) => {
-								const { user, asso } = this.props;
-
-								dispatch(actions.user.assos.all());
-								dispatch(actions.assos(asso.id).members.all());
-								NotificationManager.success(
-									`Vous avez demandé à rejoindre l'association: ${asso.name}`,
-									"Devenir membre d'une association"
-								);
-
-								actions
-									.assos(asso.id)
-									.members.update(member_id)
-									.payload.then(() => {
-										dispatch(actions.assos(asso.id).members.all());
-										NotificationManager.success(
-											`Vous avez automatiquement été validé dans l'association: ${asso.name}`,
-											"Valider un membre d'une association"
-										);
-
-										if (user.id === member_id) {
-											dispatch(actions.user.assos.all());
-											dispatch(actions.user.permissions.all());
-										}
-									})
-									.catch(() => {});
-							})
-							.catch(() => {
-								NotificationManager.error(
-									`Vous ne pouvez pas devenir membre de cette association: ${asso.name}`,
-									"Devenir membre d'une association"
-								);
-							})
-							.finally(() => {
-								this.setState(({ modal }) => ({
-									modal: { ...modal, show: false },
-								}));
-							});
-					},
-				},
-			},
+			modal: modal,
 		}));
 	}
 
