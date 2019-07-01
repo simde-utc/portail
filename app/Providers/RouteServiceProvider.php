@@ -12,6 +12,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -25,22 +26,15 @@ class RouteServiceProvider extends ServiceProvider
     protected $namespace = 'App\Http\Controllers';
 
     /**
-     * Définition des routes.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        parent::boot();
-    }
-
-    /**
      * Définition des routes de l'applications.
      *
      * @return void
      */
     public function map()
     {
+        Route::macro('apiBulkResources', [$this, 'apiBulkResources']);
+        Route::macro('apiBulkResource', [$this, 'apiBulkResource']);
+
         $this->mapAdminRoutes();
 
         $this->mapPassportRoutes();
@@ -49,6 +43,47 @@ class RouteServiceProvider extends ServiceProvider
 
         // A définir en dernier car récupère les HTTP 404.
         $this->mapWebRoutes();
+    }
+
+    /**
+     * Register an array of API bulk resource controllers.
+     *
+     * @param  array $resources
+     * @param  array $options
+     * @return void
+     */
+    public function apiBulkResources(array $resources, array $options=[])
+    {
+        foreach ($resources as $name => $controller) {
+            Route::apiBulkResource($name, $controller, $options);
+        }
+    }
+
+    /**
+     * Route an API bulk resource to a controller.
+     *
+     * @param  string $name
+     * @param  string $controller
+     * @param  array  $options
+     * @return void
+     */
+    public function apiBulkResource(string $name, string $controller, array $options=[])
+    {
+        $bulks = [
+            'bulkShow' => 'get',
+            'bulkStore' => 'post',
+            'bulkUpdate' => 'put',
+            'bulkDestroy' => 'delete',
+        ];
+
+        $except = (array) ($options['except'] ?? []);
+        $uri = \str_replace('{', '[{', \str_replace('}', '}]', $name)).'/[{ids}]';
+
+        foreach ($bulks as $action => $method) {
+            if (!in_array($action, $except)) {
+                Route::$method($uri, $controller.'@'.$action);
+            }
+        }
     }
 
     /**
