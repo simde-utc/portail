@@ -1,2 +1,8 @@
+# Règle pour tous les robots
+
 User-agent: *
-Disallow:
+Disallow: /admin*
+Disallow: /api*
+Disallow: /oauth*
+Disallow: /captcha*
+Disallow: /password/reset*
