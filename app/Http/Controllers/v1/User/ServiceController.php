@@ -33,19 +33,19 @@ class ServiceController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-services-followed', 'client-get-services-followed'),
-            ['only' => ['index', 'show']]
+            ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-services-followed', 'client-create-services-followed'),
-            ['only' => ['store']]
+            ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-edit-services-followed', 'client-edit-services-followed'),
-            ['only' => ['update']]
+            ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-services-followed', 'client-manage-services-followed'),
-            ['only' => ['destroy']]
+            ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

@@ -28,19 +28,19 @@ class LocationController extends Controller
     {
         $this->middleware(
             \Scopes::matchOne(['client-get-locations']),
-            ['only' => ['index', 'show']]
+            ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOne(['client-create-locations']),
-            ['only' => ['store']]
+            ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
             \Scopes::matchOne(['client-set-locations']),
-            ['only' => ['update']]
+            ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
             \Scopes::matchOne(['client-manage-locations']),
-            ['only' => ['destroy']]
+            ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

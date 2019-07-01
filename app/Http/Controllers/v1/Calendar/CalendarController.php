@@ -36,19 +36,19 @@ class CalendarController extends Controller
     {
         $this->middleware(
 	        \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-create-calendars', 'client-create-calendars'),
-	        ['only' => ['store']]
+	        ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-edit-calendars', 'client-edit-calendars'),
-	        ['only' => ['update']]
+	        ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-manage-calendars', 'client-manage-calendars'),
-	        ['only' => ['destroy']]
+	        ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

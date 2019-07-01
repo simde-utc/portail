@@ -36,28 +36,28 @@ class ContactController extends Controller
 		        \Scopes::getDeepestChildren('user-get-contacts'),
 		        \Scopes::getDeepestChildren('client-get-contacts')
 	        ),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
 	        \Scopes::matchOne(
 		        \Scopes::getDeepestChildren('user-create-contacts'),
 		        \Scopes::getDeepestChildren('client-create-contacts')
 	        ),
-	        ['only' => ['store']]
+	        ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
 	        \Scopes::matchOne(
 		        \Scopes::getDeepestChildren('user-set-contacts'),
 		        \Scopes::getDeepestChildren('client-set-contacts')
 	        ),
-	        ['only' => ['update']]
+	        ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
 	        \Scopes::matchOne(
 		        \Scopes::getDeepestChildren('user-manage-contacts'),
 		        \Scopes::getDeepestChildren('client-manage-contacts')
 	        ),
-	        ['only' => ['destroy']]
+	        ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

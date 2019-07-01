@@ -31,19 +31,19 @@ class RoleController extends Controller
     {
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-get-roles', 'client-get-roles'),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-create-roles', 'client-create-roles'),
-	        ['only' => ['store']]
+	        ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-edit-roles', 'client-edit-roles'),
-	        ['only' => ['update']]
+	        ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-remove-roles', 'client-remove-roles'),
-	        ['only' => ['destroy']]
+	        ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

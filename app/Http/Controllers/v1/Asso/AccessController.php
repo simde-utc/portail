@@ -40,28 +40,28 @@ class AccessController extends Controller
                 \Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos')
                 // Pouvoir voir les assos.
             ),
-            ['only' => ['index', 'show']]
+            ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos')
                 // Pouvoir voir les assos.
             ),
-            ['only' => ['store']]
+            ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos')
                 // Pouvoir voir les assos.
             ),
-            ['only' => ['update']]
+            ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos')
                 // Pouvoir voir les assos.
             ),
-            ['only' => ['destroy']]
+            ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

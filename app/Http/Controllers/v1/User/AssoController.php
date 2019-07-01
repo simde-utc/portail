@@ -32,19 +32,19 @@ class AssoController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-assos-members', 'client-get-assos-members'),
-            ['only' => ['index', 'show']]
+            ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-assos-members', 'client-create-assos-members'),
-            ['only' => ['store']]
+            ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-edit-assos-members', 'client-edit-assos-members'),
-            ['only' => ['update']]
+            ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-remove-assos-members', 'client-remove-assos-members'),
-            ['only' => ['destroy']]
+            ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

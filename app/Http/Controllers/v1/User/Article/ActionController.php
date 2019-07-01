@@ -37,7 +37,7 @@ class ActionController extends Controller
                     ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-get-articles-actions-user', 'client-get-articles-actions-user')
             ),
-            ['only' => ['index', 'show']]
+            ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
             array_merge(
@@ -45,7 +45,7 @@ class ActionController extends Controller
                     ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-create-articles-actions-user', 'client-create-articles-actions-user')
             ),
-            ['only' => ['store']]
+            ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
             array_merge(
@@ -53,7 +53,7 @@ class ActionController extends Controller
                     ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-edit-articles-actions-user', 'client-edit-articles-actions-user')
             ),
-            ['only' => ['update']]
+            ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
             array_merge(
@@ -61,7 +61,7 @@ class ActionController extends Controller
                     ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-manage-articles-actions-user', 'client-manage-articles-actions-user')
             ),
-            ['only' => ['destroy']]
+            ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

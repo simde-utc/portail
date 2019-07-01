@@ -32,19 +32,19 @@ class DetailController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-info-details'),
-            ['only' => ['index', 'show']]
+            ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-info-details'),
-            ['only' => ['store']]
+            ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-edit-info-details'),
-            ['only' => ['update']]
+            ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-info-details'),
-            ['only' => ['destroy']]
+            ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

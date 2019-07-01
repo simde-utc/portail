@@ -31,28 +31,28 @@ class ServiceController extends Controller
     {
         $this->middleware(
             \Scopes::allowPublic()->matchOne('user-get-services-created', 'client-get-services-created'),
-            ['only' => ['index', 'show']]
+            ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOne('user-create-services-created', 'client-create-services-created'),
                 ['permission:asso']
             ),
-            ['only' => ['store']]
+            ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOne('user-edit-services-created', 'client-edit-services-created'),
                 ['permission:service']
             ),
-            ['only' => ['update']]
+            ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOne('user-remove-services-created', 'client-remove-services-created'),
                 ['permission:service']
             ),
-            ['only' => ['destroy']]
+            ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

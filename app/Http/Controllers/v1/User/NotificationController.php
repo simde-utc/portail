@@ -30,19 +30,19 @@ class NotificationController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-notifications', 'client-get-notifications'),
-            ['only' => ['index', 'show']]
+            ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-notifications', 'client-create-notifications'),
-            ['only' => ['store']]
+            ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-edit-notifications', 'client-edit-notifications'),
-            ['only' => ['update']]
+            ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-notifications', 'client-manage-notifications'),
-            ['only' => ['destroy']]
+            ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

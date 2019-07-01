@@ -36,28 +36,28 @@ class RoleController extends Controller
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-assigned', 'client-get-roles-users-assigned'),
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
             ),
-            ['only' => ['index', 'show']]
+            ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-create-roles-users-assigned', 'client-create-roles-users-assigned'),
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
             ),
-            ['only' => ['store']]
+            ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-edit-roles-users-assigned', 'client-edit-roles-users-assigned'),
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
             ),
-            ['only' => ['update']]
+            ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-remove-roles-users-assigned', 'client-remove-roles-users-assigned'),
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
             ),
-            ['only' => ['destroy']]
+            ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 

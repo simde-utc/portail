@@ -40,7 +40,7 @@ class MemberController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-get-roles-assos-assigned', 'client-get-assos-members-followed'),
 		        ['user:cas,contributorBde']
 	        ),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['index', 'show', 'bulkShow']]
         );
         $this->middleware(
 	        array_merge(
@@ -49,7 +49,7 @@ class MemberController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-create-roles-assos-assigned', 'client-create-assos-members-followed'),
 		        ['user:cas,contributorBde']
 	        ),
-	        ['only' => ['store']]
+	        ['only' => ['store', 'bulkStore']]
         );
         $this->middleware(
 	        array_merge(
@@ -58,7 +58,7 @@ class MemberController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-edit-roles-assos-assigned', 'client-edit-assos-members-followed'),
 		        ['user:cas,contributorBde']
 	        ),
-	        ['only' => ['update']]
+	        ['only' => ['update', 'bulkUpdate']]
         );
         $this->middleware(
 	        array_merge(
@@ -67,7 +67,7 @@ class MemberController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-remove-roles-assos-assigned', 'client-remove-assos-members-followed'),
 		        ['user:cas,contributorBde']
 	        ),
-	        ['only' => ['destroy']]
+	        ['only' => ['destroy', 'bulkDestroy']]
         );
     }
 
