@@ -510,7 +510,6 @@ class AssoScreen extends React.Component {
 			};
 		}
 
-		this.user.isContributorBde = user.types.contributorBde === true;
 		let joinFromMemberList;
 		if (Object.values(this.user).every(value => !value)) {
 			joinFromMemberList = this.joinAsso.bind(this);
@@ -588,7 +587,7 @@ class AssoScreen extends React.Component {
 								userIsFollowing={this.user.isFollowing}
 								userIsMember={this.user.isMember}
 								userIsWaiting={this.user.isWaiting}
-								userIsContributorBde={this.user.isContributorBde}
+								userIsContributorBde={user.types.contributorBde}
 								follow={this.followAsso.bind(this)}
 								unfollow={this.unfollowAsso.bind(this)}
 								join={this.joinAsso.bind(this)}
