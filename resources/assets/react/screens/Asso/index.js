@@ -491,12 +491,14 @@ class AssoScreen extends React.Component {
 	render() {
 		const { fetching, fetched, failed, user, asso, member, contacts, match } = this.props;
 		const { modal } = this.state;
+
 		if (failed) return <Http404 />;
 
 		if (fetching || !fetched || !asso) return <span className="loader huge active" />;
 
 		if (member) {
 			const { pivot } = member;
+
 			this.user = {
 				isFollowing: pivot.role_id === null,
 				isMember: pivot.role_id !== null && pivot.validated_by_id !== null,

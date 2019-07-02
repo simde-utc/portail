@@ -182,7 +182,12 @@ class AssoHomeScreen extends React.Component {
 							</AspectRatio>
 							{isAuthenticated && this.getFollowButton(userIsFollowing, userIsMember)}
 							{isAuthenticated &&
-								this.getMemberButton(userIsMember, userIsFollowing, userIsWaiting, userIsContributorBde)}
+								this.getMemberButton(
+									userIsMember,
+									userIsFollowing,
+									userIsWaiting,
+									userIsContributorBde
+								)}
 						</div>
 						<div className="col-md-10" style={{ whiteSpace: 'pre-line' }}>
 							<h1 className={`title ${color}`} style={{ fontWeight: 'bold' }}>
