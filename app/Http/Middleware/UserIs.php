@@ -42,7 +42,7 @@ class UserIs
                     throw new \Exception('Le type '.$type.' n\'existe pas !');
                 }
 
-                if (\Auth::user()->$method() !== $wrongIfEqual) {
+                if ((bool) \Auth::user()->$method() !== $wrongIfEqual) {
                     return $next($request);
                 }
             }
