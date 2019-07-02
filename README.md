@@ -66,6 +66,14 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
 - Commenter en français
 - Lancer `php artisan portail:test` pour vérifier que tout est bon avant de push son code
 
+### Issues
+- Ouvrir des issues le plus possible
+- Les tagguer, en précisant s'il s'agit d'un bug ou d'une feature, si c'est important, éventuellement à quel domaine ça touche
+
+### Contribuer
+- Prendre en priorité les issues urgentes
+- Prendre en priorité les bugs
+- Proposer des issues avant de commencer à bosser
 
 ## Documentation
 
