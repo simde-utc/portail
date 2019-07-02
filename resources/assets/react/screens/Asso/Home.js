@@ -83,10 +83,10 @@ class AssoHomeScreen extends React.Component {
 		);
 	}
 
-	getMemberButton(isMember, isFollowing, isWaiting, isCotisant) {
+	getMemberButton(isMember, isFollowing, isWaiting, isContributorBde) {
 		const { leave, join } = this.props;
 
-		if (!isCotisant) {
+		if (!isContributorBde) {
 			return (
 				<Button
 					className="m-1 btn btn-sm font-weight-bold"
@@ -163,7 +163,7 @@ class AssoHomeScreen extends React.Component {
 			userIsFollowing,
 			userIsMember,
 			userIsWaiting,
-			userIsCotisant,
+			userIsContributorBde,
 			contacts,
 			contactsFailed,
 		} = this.props;
@@ -182,7 +182,7 @@ class AssoHomeScreen extends React.Component {
 							</AspectRatio>
 							{isAuthenticated && this.getFollowButton(userIsFollowing, userIsMember)}
 							{isAuthenticated &&
-								this.getMemberButton(userIsMember, userIsFollowing, userIsWaiting, userIsCotisant)}
+								this.getMemberButton(userIsMember, userIsFollowing, userIsWaiting, userIsContributorBde)}
 						</div>
 						<div className="col-md-10" style={{ whiteSpace: 'pre-line' }}>
 							<h1 className={`title ${color}`} style={{ fontWeight: 'bold' }}>

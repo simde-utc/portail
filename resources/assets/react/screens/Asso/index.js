@@ -211,7 +211,7 @@ class AssoScreen extends React.Component {
 		});
 	}
 
-	joinAsso(isCotisant) {
+	joinAsso(isContributorBde) {
 		const { asso, dispatch, roles, user } = this.props;
 
 		const modal = {
@@ -219,7 +219,7 @@ class AssoScreen extends React.Component {
 			title: 'Rejoindre une association',
 		};
 
-		if (!isCotisant) {
+		if (!isContributorBde) {
 			modal.body = (
 				<div>
 					<p>
@@ -510,7 +510,7 @@ class AssoScreen extends React.Component {
 			};
 		}
 
-		this.user.isCotisant = user.types.contributorBde === true;
+		this.user.isContributorBde = user.types.contributorBde === true;
 		let joinFromMemberList;
 		if (Object.values(this.user).every(value => !value)) {
 			joinFromMemberList = this.joinAsso.bind(this);
@@ -588,7 +588,7 @@ class AssoScreen extends React.Component {
 								userIsFollowing={this.user.isFollowing}
 								userIsMember={this.user.isMember}
 								userIsWaiting={this.user.isWaiting}
-								userIsCotisant={this.user.isCotisant}
+								userIsContributorBde={this.user.isContributorBde}
 								follow={this.followAsso.bind(this)}
 								unfollow={this.unfollowAsso.bind(this)}
 								join={this.joinAsso.bind(this)}
