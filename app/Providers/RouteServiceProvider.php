@@ -24,6 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     protected $namespace = 'App\Http\Controllers';
+    protected $paramRegex = '/{.*?}/';
 
     /**
      * Définition des routes de l'applications.
@@ -49,13 +50,12 @@ class RouteServiceProvider extends ServiceProvider
      * Register an array of API bulk resource controllers.
      *
      * @param  array $resources
-     * @param  array $options
      * @return void
      */
-    public function apiBulkResources(array $resources, array $options=[])
+    public function apiBulkResources(array $resources)
     {
         foreach ($resources as $name => $controller) {
-            Route::apiBulkResource($name, $controller, $options);
+            Route::apiBulkResource($name, $controller);
         }
     }
 
@@ -64,26 +64,30 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @param  string $name
      * @param  string $controller
-     * @param  array  $options
      * @return void
      */
-    public function apiBulkResource(string $name, string $controller, array $options=[])
+    public function apiBulkResource(string $name, string $controller)
     {
-        $bulks = [
-            'bulkShow' => 'get',
-            'bulkStore' => 'post',
-            'bulkUpdate' => 'put',
-            'bulkDestroy' => 'delete',
-        ];
+        $wheres = [];
+        $uri = $name.'/{ids}';
+        preg_match_all($this->paramRegex, $uri, $matches, PREG_PATTERN_ORDER);
 
-        $except = (array) ($options['except'] ?? []);
-        $uri = \str_replace('{', '[{', \str_replace('}', '}]', $name)).'/[{ids}]';
-
-        foreach ($bulks as $action => $method) {
-            if (!in_array($action, $except)) {
-                Route::$method($uri, $controller.'@'.$action);
-            }
+        foreach ($matches[0] as $match) {
+            $wheres[substr($match, 1, -1)] = '[^\[]*';
         }
+
+        Route::get($name, $controller.'@index')->where($wheres);
+        Route::post($uri, $controller.'@store')->where($wheres);
+        Route::get($uri, $controller.'@show')->where($wheres);
+        Route::put($uri, $controller.'@update')->where($wheres);
+        Route::patch($uri, $controller.'@update')->where($wheres);
+        Route::delete($uri, $controller.'@destroy')->where($wheres);
+
+        Route::post($uri, $controller.'@bulkStore');
+        Route::get($uri, $controller.'@bulkShow');
+        Route::put($uri, $controller.'@bulkUpdate');
+        Route::patch($uri, $controller.'@bulkUpdate');
+        Route::delete($uri, $controller.'@bulkDestroy');
     }
 
     /**

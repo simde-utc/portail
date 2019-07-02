@@ -43,6 +43,12 @@ Route::delete('client/{user_id}', 'Client\ClientController@destroy')->middleware
 /*
  * Ressouces:
  *
+ *  index:   /{ressource}      en GET
+ *  store:   /{ressource}      en POST
+ *  show:    /{ressource}/{id} en GET
+ *  update:  /{ressource}/{id} en PUT
+ *  destroy: /{ressource}/{id} en DELETE
+ *
  *  bulkShow:    /{ressource}/{id1,id2} en GET
  *  bulkStore:   /{ressource}/{id1,id2} en POST
  *  bulkUpdate:  /{ressource}/{id1,id2} en PUT
@@ -135,118 +141,6 @@ Route::group([], function () {
      */
 
     Route::apiBulkResources([
-        'access' => 'Access\AccessController',
-        'assos' => 'Asso\AssoController',
-        'services' => 'Service\ServiceController',
-        'places' => 'Location\PlaceController',
-        'locations' => 'Location\LocationController',
-        'events' => 'Event\EventController',
-        'calendars' => 'Calendar\CalendarController',
-        'partners' => 'Partner\PartnerController',
-        'articles' => 'Article\ArticleController',
-        'articles/{article_id}/actions'	=> 'Article\ActionController',
-        'visibilities' => 'Visibility\VisibilityController',
-        'semesters' => 'Semester\SemesterController',
-    ]);
-});
-
-
-
-/*
- * Ressouces:
- *
- *  index:   /{ressource}      en GET
- *  store:   /{ressource}      en POST
- *  show:    /{ressource}/{id} en GET
- *  update:  /{ressource}/{id} en PUT
- *  destroy: /{ressource}/{id} en DELETE
- */
-
-/*
- * Routes uniquement pour les clients/connectés.
- */
-
-Route::group(['middleware' => 'user:active'], function () {
-    /*
-     * Routes définies pour l'utilisateur.
-     */
-
-    Route::apiResources([
-        'users'	=> 'User\UserController',
-        'users/{user_id}/roles'	=> 'User\RoleController',
-        'users/{user_id}/calendars' => 'User\CalendarController',
-        'users/{user_id}/permissions' => 'Permission\AssignmentController',
-
-        /*
-         * Routes `user` identiques à `users/{Auth::id()`}.
-         */
-
-        'user/roles' => 'User\RoleController',
-        'user/calendars' => 'User\CalendarController',
-        'user/contacts'	=> 'Contact\ContactController',
-        'user/permissions' => 'Permission\AssignmentController',
-    ]);
-
-    /*
-     * Routes définies pour toutes ressources.
-     */
-
-    Route::apiResources([
-        '{resource_type}/{resource_id}/contacts' => 'Contact\ContactController',
-        '{resource_type}/{resource_id}/comments' => 'Comment\CommentController',
-        '{resource_type}/{resource_id}/members/{user_id}/permissions' => 'Permission\AssignmentController',
-        'groups/{group_id}/members'	=> 'Group\MemberController',
-        'groups' => 'Group\GroupController',
-        'assos/{asso_id}/members' => 'Asso\MemberController',
-        'assos/{asso_id}/access' => 'Asso\AccessController',
-        'roles' => 'Role\RoleController',
-        'permissions' => 'Permission\PermissionController',
-        'rooms' => 'Room\RoomController',
-        'rooms/{room_id}/bookings' => 'Room\BookingController',
-        'bookings/types' => 'Booking\BookingTypeController',
-        'calendars/{calendar_id}/events' => 'Calendar\EventController',
-        'faqs' => 'Faq\CategoryController',
-        'faqs/{category_id}/questions' => 'Faq\FaqController',
-    ]);
-});
-
-
-/*
- * Routes pour tous.
- */
-
-Route::group([], function () {
-    /*
-     * Routes définies pour l'utilisateur.
-     */
-
-    Route::apiResources([
-        'users/{user_id}/notifications' => 'User\NotificationController',
-        'users/{user_id}/articles/{article_id}/actions'	=> 'User\Article\ActionController',
-        'users/{user_id}/auths' => 'User\AuthController',
-        'users/{user_id}/details' => 'User\DetailController',
-        'users/{user_id}/preferences' => 'User\PreferenceController',
-        'users/{user_id}/assos' => 'User\AssoController',
-        'users/{user_id}/services' => 'User\ServiceController',
-
-    /*
-     * Routes `user` identiques à `users/{Auth::id()}`.
-     */
-
-        'user/auths' => 'User\AuthController',
-        'user/details' => 'User\DetailController',
-        'user/preferences' => 'User\PreferenceController',
-        'user/assos' => 'User\AssoController',
-        'user/services' => 'User\ServiceController',
-        'user/articles/{article_id}/actions' => 'User\Article\ActionController',
-        'user/notifications' => 'User\NotificationController',
-    ]);
-
-    /*
-     * Routes définies pour toutes ressources.
-     */
-
-    Route::apiResources([
         'access' => 'Access\AccessController',
         'assos' => 'Asso\AssoController',
         'services' => 'Service\ServiceController',

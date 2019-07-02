@@ -77,7 +77,18 @@ trait HasBulkMethods
         $majorStatus = null;
 
         foreach ($args as $arg) {
-            $bulkArgs[] = \explode(',', $arg);
+            if ($arg[0] === '[' && $arg[(strlen($arg) - 1)] === ']') {
+                $arg = substr($arg, 1, -1);
+                $parts = \explode(',', $arg);
+
+                if (count($parts) === 1) {
+                    $bulkArgs[] = $request->input($arg, []);
+                } else {
+                    $bulkArgs[] = $parts;
+                }
+            } else {
+                $bulkArgs[] = [$arg];
+            }
         }
 
         $responses = $this->callForEachBulkArg($bulkArgs, function ($stack) use ($request, $method, &$majorStatus) {
