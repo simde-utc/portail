@@ -33,7 +33,7 @@ class UserController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-get-users'),
-            ['only' => 'index']
+            ['only' => 'index', 'bulkIndex']
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-create-users'),

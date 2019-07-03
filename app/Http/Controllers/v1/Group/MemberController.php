@@ -34,7 +34,7 @@ class MemberController extends Controller
     {
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-get-groups', 'client-get-groups'),
-	        ['only' => ['index', 'show', 'bulkShow']]
+	        ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
         	\Scopes::matchOneOfDeepestChildren('user-manage-groups', 'client-manage-groups'),

@@ -31,7 +31,7 @@ class FaqController extends Controller
     {
         $this->middleware(
             \Scopes::allowPublic()->matchOne('user-get-faqs-questions', 'client-get-faqs-questions'),
-            ['only' => ['index', 'show', 'bulkShow']]
+            ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOne('user-create-faqs-questions', 'client-create-faqs-questions'),

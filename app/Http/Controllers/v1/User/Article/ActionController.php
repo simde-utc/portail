@@ -37,7 +37,7 @@ class ActionController extends Controller
                     ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-get-articles-actions-user', 'client-get-articles-actions-user')
             ),
-            ['only' => ['index', 'show', 'bulkShow']]
+            ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
             array_merge(

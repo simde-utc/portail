@@ -40,7 +40,7 @@ class AccessController extends Controller
                 \Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos')
                 // Pouvoir voir les assos.
             ),
-            ['only' => ['index', 'show', 'bulkShow']]
+            ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
             array_merge(

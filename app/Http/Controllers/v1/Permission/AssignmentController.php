@@ -30,7 +30,7 @@ class AssignmentController extends Controller
     {
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-get-permissions', 'client-get-permissions'),
-	        ['only' => ['index', 'show', 'bulkShow']]
+	        ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-create-permissions', 'client-create-permissions'),

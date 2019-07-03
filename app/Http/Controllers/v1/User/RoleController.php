@@ -36,7 +36,7 @@ class RoleController extends Controller
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-assigned', 'client-get-roles-users-assigned'),
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
             ),
-            ['only' => ['index', 'show', 'bulkShow']]
+            ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
             array_merge(

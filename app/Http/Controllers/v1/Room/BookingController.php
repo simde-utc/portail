@@ -38,7 +38,7 @@ class BookingController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-get-rooms', 'client-get-rooms'),
 		        \Scopes::matchOne('user-get-bookings', 'client-get-bookings')
 	        ),
-	        ['only' => ['index', 'show', 'bulkShow']]
+	        ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
 	        array_merge(

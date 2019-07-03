@@ -33,7 +33,7 @@ class ServiceController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-services-followed', 'client-get-services-followed'),
-            ['only' => ['index', 'show', 'bulkShow']]
+            ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-services-followed', 'client-create-services-followed'),

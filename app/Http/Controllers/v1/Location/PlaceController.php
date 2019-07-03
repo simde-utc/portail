@@ -28,7 +28,7 @@ class PlaceController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-get-locations-places'),
-            ['only' => ['index', 'show', 'bulkShow']]
+            ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-create-locations-places'),

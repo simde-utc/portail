@@ -30,7 +30,7 @@ class NotificationController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-notifications', 'client-get-notifications'),
-            ['only' => ['index', 'show', 'bulkShow']]
+            ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-notifications', 'client-create-notifications'),

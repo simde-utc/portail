@@ -36,7 +36,7 @@ class EventController extends Controller
 		        \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
 		        \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-events', 'client-get-events')
 	        ),
-	        ['only' => ['index', 'show', 'bulkShow']]
+	        ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
 	        array_merge(

@@ -36,7 +36,7 @@ class ContactController extends Controller
 		        \Scopes::getDeepestChildren('user-get-contacts'),
 		        \Scopes::getDeepestChildren('client-get-contacts')
 	        ),
-	        ['only' => ['index', 'show', 'bulkShow']]
+	        ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
 	        \Scopes::matchOne(

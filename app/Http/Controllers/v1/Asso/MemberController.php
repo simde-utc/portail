@@ -40,7 +40,7 @@ class MemberController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-get-roles-assos-assigned', 'client-get-assos-members-followed'),
 		        ['user:cas,contributorBde']
 	        ),
-	        ['only' => ['index', 'show', 'bulkShow']]
+	        ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
 	        array_merge(

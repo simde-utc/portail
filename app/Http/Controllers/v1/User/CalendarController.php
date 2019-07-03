@@ -36,7 +36,7 @@ class CalendarController extends Controller
                 'user-get-calendars-users-followed',
                 'client-get-calendars-users-followed'
             ),
-            ['only' => ['index', 'show', 'bulkShow']]
+            ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren(
