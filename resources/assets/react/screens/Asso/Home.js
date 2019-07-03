@@ -4,6 +4,7 @@
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -82,9 +83,23 @@ class AssoHomeScreen extends React.Component {
 		);
 	}
 
-	getMemberButton(isMember, isFollowing, isWaiting) {
+	getMemberButton(isMember, isFollowing, isWaiting, isContributorBde) {
 		const { leave, join } = this.props;
 
+		if (!isContributorBde) {
+			return (
+				<Button
+					className="m-1 btn btn-sm font-weight-bold"
+					color="primary"
+					outline
+					onClick={() => {
+						join(false);
+					}}
+				>
+					Rejoindre
+				</Button>
+			);
+		}
 		if (isWaiting) {
 			return (
 				<Button
@@ -122,7 +137,14 @@ class AssoHomeScreen extends React.Component {
 		}
 
 		return (
-			<Button className="m-1 btn btn-sm font-weight-bold" color="primary" outline onClick={join}>
+			<Button
+				className="m-1 btn btn-sm font-weight-bold"
+				color="primary"
+				outline
+				onClick={() => {
+					join(true);
+				}}
+			>
 				Rejoindre
 			</Button>
 		);
@@ -141,6 +163,7 @@ class AssoHomeScreen extends React.Component {
 			userIsFollowing,
 			userIsMember,
 			userIsWaiting,
+			userIsContributorBde,
 			contacts,
 			contactsFailed,
 		} = this.props;
@@ -159,7 +182,12 @@ class AssoHomeScreen extends React.Component {
 							</AspectRatio>
 							{isAuthenticated && this.getFollowButton(userIsFollowing, userIsMember)}
 							{isAuthenticated &&
-								this.getMemberButton(userIsMember, userIsFollowing, userIsWaiting)}
+								this.getMemberButton(
+									userIsMember,
+									userIsFollowing,
+									userIsWaiting,
+									userIsContributorBde
+								)}
 						</div>
 						<div className="col-md-10" style={{ whiteSpace: 'pre-line' }}>
 							<h1 className={`title ${color}`} style={{ fontWeight: 'bold' }}>
