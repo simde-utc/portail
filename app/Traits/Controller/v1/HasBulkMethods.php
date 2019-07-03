@@ -22,6 +22,18 @@ trait HasBulkMethods
      * @param  mixed   ...$args
      * @return mixed
      */
+    public function bulkIndex(Request $request, ...$args)
+    {
+        return $this->callBulk($request, $args, 'index');
+    }
+
+    /**
+     * Affiche plusieurs ressources en même temps.
+     *
+     * @param  Request $request
+     * @param  mixed   ...$args
+     * @return mixed
+     */
     public function bulkShow(Request $request, ...$args)
     {
         return $this->callBulk($request, $args, 'show');

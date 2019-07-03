@@ -83,6 +83,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::patch($uri, $controller.'@update')->where($wheres);
         Route::delete($uri, $controller.'@destroy')->where($wheres);
 
+        // Here, some routes define a sub-category.
+        // ex: /assos/[id1,id2,id3]/members.
+        if (count($matches[0])) {
+            Route::get($name, $controller.'@bulkIndex');
+        }
+
         Route::post($uri, $controller.'@bulkStore');
         Route::get($uri, $controller.'@bulkShow');
         Route::put($uri, $controller.'@bulkUpdate');
