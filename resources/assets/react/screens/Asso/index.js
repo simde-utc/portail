@@ -589,7 +589,7 @@ class AssoScreen extends React.Component {
 								userIsFollowing={this.user.isFollowing}
 								userIsMember={this.user.isMember}
 								userIsWaiting={this.user.isWaiting}
-								userIsContributorBde={user.types.contributorBde}
+								userIsContributorBde={user ? user.types.contributorBde : false}
 								follow={this.followAsso.bind(this)}
 								unfollow={this.unfollowAsso.bind(this)}
 								join={this.joinAsso.bind(this)}
