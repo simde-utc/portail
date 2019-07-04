@@ -12,6 +12,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
@@ -69,31 +70,15 @@ class RouteServiceProvider extends ServiceProvider
     public function apiBulkResource(string $name, string $controller)
     {
         $wheres = [];
-        $uri = $name.'/{ids}';
-        preg_match_all($this->paramRegex, $uri, $matches, PREG_PATTERN_ORDER);
+        $parts = explode('/', $name);
+        $uri = $name.'/{'.Str::singular(end($parts)).'}';
 
-        foreach ($matches[0] as $match) {
-            $wheres[substr($match, 1, -1)] = '[^\[]*';
-        }
-
-        Route::get($name, $controller.'@index')->where($wheres);
-        Route::post($uri, $controller.'@store')->where($wheres);
-        Route::get($uri, $controller.'@show')->where($wheres);
-        Route::put($uri, $controller.'@update')->where($wheres);
-        Route::patch($uri, $controller.'@update')->where($wheres);
-        Route::delete($uri, $controller.'@destroy')->where($wheres);
-
-        // Here, some routes define a sub-category.
-        // ex: /assos/[id1,id2,id3]/members.
-        if (count($matches[0])) {
-            Route::get($name, $controller.'@bulkIndex');
-        }
-
-        Route::post($uri, $controller.'@bulkStore');
-        Route::get($uri, $controller.'@bulkShow');
-        Route::put($uri, $controller.'@bulkUpdate');
-        Route::patch($uri, $controller.'@bulkUpdate');
-        Route::delete($uri, $controller.'@bulkDestroy');
+        Route::get($name, $controller.'@all');
+        Route::post($uri, $controller.'@create');
+        Route::get($uri, $controller.'@get');
+        Route::put($uri, $controller.'@edit');
+        Route::patch($uri, $controller.'@edit');
+        Route::delete($uri, $controller.'@remove');
     }
 
     /**
