@@ -75,5 +75,6 @@ class Kernel extends HttpKernel
         'forceJson' => \App\Http\Middleware\ForceJson::class,
         'deprecatedVersion' => \App\Http\Middleware\DeprecatedVersion::class,
         'betaVersion' => \App\Http\Middleware\BetaVersion::class,
+        'bulk' => \App\Http\Middleware\Bulk::class,
     ];
 }
