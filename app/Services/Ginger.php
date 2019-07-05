@@ -238,7 +238,7 @@ class Ginger
     /**
      * Permet de récupérer auprès de Ginger le code de réponse pour un login précis.
      *
-     * @return integer
+     * @return integer|null
      */
     public function getResponseCode()
     {
@@ -248,7 +248,7 @@ class Ginger
     /**
      * Renvoie l'utlisateur si existance de celui-ci.
      *
-     * @return array
+     * @return array|null
      */
     public function get()
     {
@@ -258,7 +258,7 @@ class Ginger
     /**
      * Renvoie le login de l'utilisateur si existant.
      *
-     * @return string
+     * @return string|null
      */
     public function getLogin()
     {
@@ -268,7 +268,7 @@ class Ginger
     /**
      * Renvoie le nom de l'utilisateur si existant.
      *
-     * @return string
+     * @return string|null
      */
     public function getLastname()
     {
@@ -278,7 +278,7 @@ class Ginger
     /**
      * Renvoie le prenom de l'utilisateur si existant.
      *
-     * @return string
+     * @return string|null
      */
     public function getFirstname()
     {
@@ -288,7 +288,7 @@ class Ginger
     /**
      * Renvoie le mail de l'utilisateur si existant.
      *
-     * @return string
+     * @return string|null
      */
     public function getEmail()
     {
@@ -298,7 +298,7 @@ class Ginger
     /**
      * Renvoie le type de l'utilisateur si existant.
      *
-     * @return string
+     * @return string|null
      */
     public function getType()
     {
@@ -308,7 +308,7 @@ class Ginger
     /**
      * Renvoie le badge de l'utilisateur si existant.
      *
-     * @return string
+     * @return string|null
      */
     public function getBadge()
     {
@@ -318,7 +318,7 @@ class Ginger
     /**
      * Indique si l'utilisateur est adulte si existant.
      *
-     * @return boolean
+     * @return boolean|null
      */
     public function isAdult()
     {
@@ -328,7 +328,7 @@ class Ginger
     /**
      * Indique si l'utilisateur est contisant si existant.
      *
-     * @return boolean
+     * @return boolean|null
      */
     public function isContributor()
     {
