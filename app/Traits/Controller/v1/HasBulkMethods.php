@@ -162,7 +162,6 @@ trait HasBulkMethods
     {
         $params = $this->cleanRouteParams($request->route()->parameters());
         $bulkArgs = [];
-        $majorStatus = null;
 
         foreach ($params as $param) {
             if ($param[0] === '[' && $param[(strlen($param) - 1)] === ']') {
@@ -179,7 +178,21 @@ trait HasBulkMethods
             }
         }
 
-        $responses = $this->callForEachBulk($bulkArgs, function ($stack) use ($request, $method, &$majorStatus) {
+        return $this->callForBulk($request, $method, $bulkArgs);
+    }
+
+    /**
+     * Gère les différents appels pour chaque élément bulk.
+     *
+     * @param  Request $request
+     * @param  string  $method
+     * @param  array   $args
+     * @return mixed
+     */
+    protected function callForBulk(Request $request, string $method, array $args)
+    {
+        $majorStatus = null;
+        $responses = $this->callForEachBulk($args, function ($stack) use ($request, $method, &$majorStatus) {
             try {
                 $response = $this->getResponseForBulk($method, $request, $stack);
             } catch (\Exception $e) {
