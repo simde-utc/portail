@@ -11,6 +11,7 @@
 namespace App\Traits\Controller\v1;
 
 use App\Exceptions\PortailException;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
@@ -18,6 +19,83 @@ use Illuminate\Http\Request;
 
 trait HasBulkMethods
 {
+    /**
+     * Retourne tous les éléménts d'une ou plusieurs ressources.
+     *
+     * @param  Request $request
+     * @return mixed
+     */
+    public function all(Request $request)
+    {
+        return $this->callOneOrBulk($request, 'index');
+    }
+
+    /**
+     * Crée un ou plusieurs élément d'une ressource.
+     *
+     * @param  Request $request
+     * @return mixed
+     */
+    public function create(Request $request)
+    {
+        return $this->callOneOrBulk($request, 'store');
+    }
+
+    /**
+     * Récupère un ou plusieurs élément d'une ressource.
+     *
+     * @param  Request $request
+     * @return mixed
+     */
+    public function get(Request $request)
+    {
+        return $this->callOneOrBulk($request, 'show');
+    }
+
+    /**
+     * Récupère un ou plusieurs élément d'une ressource.
+     *
+     * @param  Request $request
+     * @return mixed
+     */
+    public function edit(Request $request)
+    {
+        return $this->callOneOrBulk($request, 'update');
+    }
+
+    /**
+     * Supprime un ou plusieurs élément d'une ressource.
+     *
+     * @param  Request $request
+     * @return mixed
+     */
+    public function remove(Request $request)
+    {
+        return $this->callOneOrBulk($request, 'destroy');
+    }
+
+    /**
+     * Retourne la réponse pour un ou plusieurs éléments.
+     *
+     * @param  Request $request
+     * @param  string  $method
+     * @return mixed
+     */
+    public function callOneOrBulk(Request $request, string $method)
+    {
+        $route = $request->route();
+
+        foreach ($route->parameters() as $paramValue) {
+            if (\substr($paramValue, 0, 1) === '[' && \substr($paramValue, -1) === ']') {
+                return $this->{'bulk'.ucfirst($method)}($request);
+            }
+        }
+
+        $route->uses(static::class.'@'.$method);
+
+        return Route::dispatch($request);
+    }
+
     /**
      * Affiche plusieurs ressources en même temps.
      *
@@ -235,7 +313,7 @@ trait HasBulkMethods
         if (\method_exists($request, 'rules')) {
             $validator = \Validator::make($request->all(), $request->rules());
             if ($validator->fails()) {
-                throw new ValidationException($validator->errors());
+                throw new ValidationException($validator);
             }
         }
     }

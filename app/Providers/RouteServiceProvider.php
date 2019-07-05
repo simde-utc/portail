@@ -73,12 +73,14 @@ class RouteServiceProvider extends ServiceProvider
         $parts = explode('/', $name);
         $uri = $name.'/{'.Str::singular(end($parts)).'}';
 
-        Route::get($name, $controller.'@all');
-        Route::post($uri, $controller.'@create');
-        Route::get($uri, $controller.'@get');
-        Route::put($uri, $controller.'@edit');
-        Route::patch($uri, $controller.'@edit');
-        Route::delete($uri, $controller.'@remove');
+        Route::middleware('bulk')->group(function () use ($name, $controller, $uri) {
+            Route::get($name, $controller.'@all');
+            Route::post($uri, $controller.'@create');
+            Route::get($uri, $controller.'@get');
+            Route::put($uri, $controller.'@edit');
+            Route::patch($uri, $controller.'@edit');
+            Route::delete($uri, $controller.'@remove');
+        });
     }
 
     /**
