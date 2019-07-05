@@ -31,19 +31,19 @@ class CommentController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-comments', 'client-get-comments'),
-            ['only' => ['index', 'show', 'bulkShow']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-comments', 'client-create-comments'),
-            ['only' => ['store', 'bulkStore']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-edit-comments', 'client-edit-comments'),
-            ['only' => ['update', 'bulkUpdate']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-remove-comments', 'client-remove-comments'),
-            ['only' => ['destroy', 'bulkDestroy']]
+            ['only' => ['remove']]
         );
     }
 

@@ -36,28 +36,28 @@ class AssoController extends Controller
     {
         $this->middleware(
 	        \Scopes::allowPublic()->matchOne('user-get-assos', 'client-get-assos'),
-	        ['only' => ['index', 'show', 'bulkShow']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-create-assos', 'client-create-assos'),
 		        ['permission:asso']
 	        ),
-	        ['only' => ['store', 'bulkStore']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-edit-assos', 'client-edit-assos'),
 		        ['permission:asso']
 	        ),
-	        ['only' => ['update', 'bulkUpdate']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-remove-assos', 'client-remove-assos'),
 		        ['permission:asso']
 	        ),
-        	['only' => ['destroy', 'bulkDestroy']]
+        	['only' => ['remove']]
         );
     }
 

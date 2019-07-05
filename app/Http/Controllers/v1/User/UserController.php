@@ -34,27 +34,27 @@ class UserController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-get-users'),
-            ['only' => 'index', 'bulkIndex']
+            ['only' => ['all']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-create-users'),
-            ['only' => 'store', 'bulkStore']
+            ['only' => ['create']]
         );
         $this->middleware(
         \Scopes::matchOneOfDeepestChildren('client-get-users'),
-            ['only' => 'show']
+            ['only' => ['show']]
         );
         $this->middleware(
         \Scopes::matchAnyClient(),
-            ['only' => 'bulkShow']
+            ['only' => ['bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-set-info', 'client-edit-users'),
-            ['only' => 'update', 'bulkUpdate']
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-manage-users'),
-            ['only' => 'destroy', 'bulkDestroy']
+            ['only' => ['remove']]
         );
     }
 

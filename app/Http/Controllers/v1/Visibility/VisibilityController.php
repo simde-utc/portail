@@ -30,11 +30,11 @@ class VisibilityController extends Controller
         // La récupération des visibilités est publique.
         $this->middleware(
             \Scopes::allowPublic()->matchAnyUserOrClient(),
-            ['only' => ['index', 'show', 'bulkShow']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOne('user-manage-portail-visibility', 'client-manage-portail-visibility'),
-            ['only' => ['store', 'update', 'destroy', 'bulkStore', 'bulkUpdate', 'bulkDestroy']]
+            ['only' => ['create', 'edit', 'remove']]
         );
     }
 

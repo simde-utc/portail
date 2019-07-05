@@ -41,28 +41,28 @@ class ArticleController extends Controller
                 ['user-get-articles-assos', 'user-get-articles-groups'],
                 ['client-get-articles-assos', 'client-get-articles-groups']
             ),
-	        ['only' => ['index', 'show', 'bulkShow']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren(
                 ['user-create-articles-assos', 'user-create-articles-groups'],
                 ['client-create-articles-assos', 'client-create-articles-groups']
             ),
-	        ['only' => ['store', 'bulkStore']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren(
                 ['user-edit-articles-assos', 'user-edit-articles-groups'],
                 ['client-edit-articles-assos', 'client-edit-articles-groups']
             ),
-	        ['only' => ['update', 'bulkUpdate']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren(
                 ['user-manage-articles-assos', 'user-manage-articles-groups'],
                 ['client-manage-articles-assos', 'client-manage-articles-groups']
             ),
-	        ['only' => ['destroy', 'bulkDestroy']]
+	        ['only' => ['remove']]
         );
     }
 

@@ -33,19 +33,19 @@ class AuthController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-info-identity-auth', 'client-get-info-identity-auth'),
-            ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-info-identity-auth', 'client-create-info-identity-auth'),
-            ['only' => ['store', 'bulkStore']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-set-info-identity-auth', 'client-set-info-identity-auth'),
-            ['only' => ['update', 'bulkUpdate']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-info-identity-auth', 'client-manage-info-identity-auth'),
-            ['only' => ['destroy', 'bulkDestroy']]
+            ['only' => ['remove']]
         );
     }
 

@@ -34,11 +34,11 @@ class MemberController extends Controller
     {
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-get-groups', 'client-get-groups'),
-	        ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
         	\Scopes::matchOneOfDeepestChildren('user-manage-groups', 'client-manage-groups'),
-        	['only' => ['store', 'update', 'destroy', 'bulkStore', 'bulkUpdate', 'bulkDestroy']]
+        	['only' => ['create', 'edit', 'remove']]
         );
     }
 

@@ -38,28 +38,28 @@ class BookingController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-get-rooms', 'client-get-rooms'),
 		        \Scopes::matchOne('user-get-bookings', 'client-get-bookings')
 	        ),
-	        ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOneOfDeepestChildren('user-get-rooms', 'client-get-rooms'),
 		        \Scopes::matchOne('user-create-bookings', 'client-create-bookings')
 	        ),
-	        ['only' => ['store', 'bulkStore']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOneOfDeepestChildren('user-get-rooms', 'client-get-rooms'),
 		        \Scopes::matchOne('user-edit-bookings', 'client-edit-bookings')
 	        ),
-	        ['only' => ['update', 'bulkUpdate']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOneOfDeepestChildren('user-get-rooms', 'client-get-rooms'),
 		        \Scopes::matchOne('user-remove-bookings', 'client-remove-bookings')
 	        ),
-	        ['only' => ['destroy', 'bulkDestroy']]
+	        ['only' => ['remove']]
         );
     }
 

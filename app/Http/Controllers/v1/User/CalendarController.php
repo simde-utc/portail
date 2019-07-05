@@ -36,28 +36,28 @@ class CalendarController extends Controller
                 'user-get-calendars-users-followed',
                 'client-get-calendars-users-followed'
             ),
-            ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren(
                 'user-create-calendars-users-followed',
                 'client-create-calendars-users-followed'
             ),
-            ['only' => ['store', 'bulkStore']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren(
                 'user-edit-calendars-users-followed',
                 'client-edit-calendars-users-followed'
             ),
-            ['only' => ['update', 'bulkUpdate']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren(
                 'user-manage-calendars-users-followed',
                 'client-manage-calendars-users-followed'
             ),
-            ['only' => ['destroy', 'bulkDestroy']]
+            ['only' => ['remove']]
         );
     }
 

@@ -30,19 +30,19 @@ class AssignmentController extends Controller
     {
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-get-permissions', 'client-get-permissions'),
-	        ['only' => ['index', 'show', 'bulkIndex', 'bulkShow']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-create-permissions', 'client-create-permissions'),
-	        ['only' => ['store', 'bulkStore']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-edit-permissions', 'client-edit-permissions'),
-	        ['only' => ['update', 'bulkUpdate']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-remove-permissions', 'client-remove-permissions'),
-	        ['only' => ['destroy', 'bulkDestroy']]
+	        ['only' => ['remove']]
         );
     }
 
