@@ -62,7 +62,13 @@ class CheckUser
                 return $next($request);
             }, 'api');
         } else {
-            return app(Authenticate::class)->handle($request, $next, 'api');
+            return app(Authenticate::class)->handle($request, function ($request) use ($next) {
+                if (!$request->user() || !$request->user()->token()) {
+                    throw new AuthenticationException;
+                }
+
+                return $next($request);
+            }, 'api');
         }
     }
 }
