@@ -25,7 +25,6 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     protected $namespace = 'App\Http\Controllers';
-    protected $paramRegex = '/{.*?}/';
 
     /**
      * Définition des routes de l'applications.
