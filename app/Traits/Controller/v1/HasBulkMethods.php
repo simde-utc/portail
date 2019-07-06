@@ -203,7 +203,7 @@ trait HasBulkMethods
 
             $status = $response->status();
 
-            // Si on a différents status, on l'indique.
+            // Indicate if we have different status.
             if ($majorStatus !== $status) {
                 $majorStatus = is_null($majorStatus) ? $status : 207;
             }
@@ -280,7 +280,11 @@ trait HasBulkMethods
 
         $request->setUserResolver($baseRequest->getUserResolver());
         $request->setRouteResolver($baseRequest->getRouteResolver());
-        $request->merge($request->input(\implode('.', $args), []));
+
+        // Define the inputs for a specific request.
+        if ($inputs = $request->input(\implode('.', $args))) {
+            $request->merge($inputs);
+        }
 
         $params = $this->cleanRouteParams($request->route()->parameters());
 
