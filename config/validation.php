@@ -35,7 +35,7 @@ return [
         'min' => 7,
         'max' => 255,
     ],
-    
+
     // First and last name
     'name' => [
         'min' => 1,
