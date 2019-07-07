@@ -1,6 +1,6 @@
 <?php
 /**
- * Services configuration file
+ * Services configuration file.
  * Not used.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>

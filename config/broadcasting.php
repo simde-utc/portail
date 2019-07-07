@@ -1,6 +1,6 @@
 <?php
 /**
- * Broadcast configuration file
+ * Broadcast configuration file.
  * Not used
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>

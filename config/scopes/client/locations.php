@@ -1,6 +1,6 @@
 <?php
 /**
- * List of scopes depending on routes
+ * List of scopes depending on routes.
  *   - Scopes definition:
  *      range + "-" + verb + "-" + category + (for each subcategory: '-' + subcategory)
  *      ex: user-get-user user-get-user-assos user-get-user-assos-collaborated
@@ -12,13 +12,13 @@
  *   - Définition du verbe:
  *     + manage:  Entire ressource management.
  *       + set :  Possibility of writing/updating data.
- *         + get :  Read-only data retrievement
- *         + create:  New data creation
- *         + edit:    Update data
- *       + remove:  Delete data
+ *         + get :  Read-only data retrievement.
+ *         + create:  New data creation.
+ *         + edit:    Update data.
+ *       + remove:  Delete data.
  */
 
-// All routes starting with client-{verbe}-locations-
+// All routes starting with client-{verbe}-locations-.
 return [
     'description' => 'Emplacements et lieux',
     'verbs' => [

@@ -1,6 +1,6 @@
 <?php
 /**
- * UUIDs configuration file
+ * UUIDs configuration file.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
