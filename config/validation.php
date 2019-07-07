@@ -2,9 +2,9 @@
 /**
  * Validation configuration file.
  * Helper for requests:
- *  validation_between('login') => returns `between:1,15`
+ *  validation_between('login') => returns `between:1,15`.
  * Helper for migrations :
- *  validation_max('login') => returns `15`
+ *  validation_max('login') => returns `15`.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -15,7 +15,7 @@
  */
 
 return [
-	// Login for associations ad students.
+	// Login for associations and students.
     'login' => [
         'min' => 1,
         'max' => 31,
@@ -35,26 +35,26 @@ return [
         'min' => 7,
         'max' => 255,
     ],
-    
-    // First and last name
+
+    // First and last name.
     'name' => [
         'min' => 1,
         'max' => 127,
     ],
 
-    // Event and article title
+    // Event and article title.
     'title' => [
         'min' => 1,
         'max' => 255,
     ],
 
-    // Short association description
+    // Short association description.
     'description' => [
         'min' => 0,
         'max' => 8191,
     ],
 
-    // Short basic string
+    // Short basic string.
     'string' => [
         'min' => 0,
         'max' => 255,

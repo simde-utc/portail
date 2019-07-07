@@ -1,6 +1,6 @@
 <?php
 /**
- * Application configuration file 
+ * Application configuration file.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
