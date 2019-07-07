@@ -57,8 +57,7 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
   - `fix/<issue shortname>` for bug fixes.
   - `hot/<issue shortname>` for hotfixes.
 - Follow the linter for PHP and JS
-- Commenter en français
-- Run `php artisan portail:test` to test your code before pushing it
+- Comments, Commits and Pull Request must be in English
 
 ## Documentation
 
