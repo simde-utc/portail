@@ -15,7 +15,7 @@
  */
 
 return [
-	// Login for associations ad students.
+	// Login for associations and students.
     'login' => [
         'min' => 1,
         'max' => 31,

@@ -39,7 +39,7 @@ return [
     'name' => [
         // A for Autumn (French: Automne)
         'A',
-        // P for spring (French: Printemps)
+        // P for Spring (French: Printemps)
         'P',
     ]
 ];

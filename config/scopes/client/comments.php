@@ -14,8 +14,8 @@
  *       + set :  Possibility of writing/updating data.
  *         + get :  Read-only data retrievement
  *         + create:  New data creation
- *         + edit:    update data
- *       + remove:  delete data
+ *         + edit:    Update data
+ *       + remove:  Delete data
  */
 
 // All routes starting with client-{verbe}-comments-
