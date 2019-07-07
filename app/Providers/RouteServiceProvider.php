@@ -74,7 +74,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::middleware('bulk')->group(function () use ($name, $controller, $uri) {
             Route::get($name, $controller.'@all');
-            Route::post($uri, $controller.'@create');
+            Route::post($name, $controller.'@create');
             Route::get($uri, $controller.'@get');
             Route::put($uri, $controller.'@edit');
             Route::patch($uri, $controller.'@edit');
