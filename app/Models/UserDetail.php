@@ -154,7 +154,9 @@ class UserDetail extends Model
 
         if ($login) {
             try {
-                return \Ginger::user($login)->isContributor();
+                if (!is_null($response = \Ginger::user($login)->isContributor())) {
+                    return $response;
+                }
             } catch (\Exception $e) {
                 // Dans le cas où on est pas contributeur, on renvoie une exception custom.
             }
