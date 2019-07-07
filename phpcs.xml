@@ -2,7 +2,7 @@
 <ruleset name="Samy">
     <description>Standard défini pour le Portail</description>
 
-    <!-- Liste des fichiers/dossiers à inspecter -->
+    <!-- Files/Folders list to inspect -->
     <file>app</file>
     <file>bootstrap/app.php</file>
     <file>bootstrap/helpers.php</file>
@@ -11,13 +11,13 @@
     <file>routes</file>
     <file>tests</file>
 
-    <!-- Paramètres custom -->
+    <!-- Customized parameters -->
     <arg name="basepath" value="."/>
     <arg name="colors" />
     <arg name="parallel" value="25" />
     <arg value="sp"/>
 
-    <!-- Inclusion du standard Zend à l'exception de quelques règles -->
+    <!-- Zend's standard include except some rules -->
     <rule ref="Zend">
         <exclude name="Generic.WhiteSpace.DisallowTabIndent" />
         <exclude name="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore" />
@@ -25,7 +25,7 @@
         <exclude name="PEAR.Functions.FunctionCallSignature" />
     </rule>
 
-    <!-- Un espace entre chaque fonction -->
+    <!-- Space between each function -->
     <rule ref="Squiz.WhiteSpace.FunctionSpacing">
         <properties>
             <property name="spacing" value="1" />
@@ -37,7 +37,7 @@
         <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace.SpacingBeforeClose" />
     </rule>
 
-    <!-- Contraintes sur les longueurs -->
+    <!-- Lenght constraint -->
     <rule ref="Generic.Files.LineLength">
         <properties>
             <property name="lineLimit" value="128" />
@@ -46,7 +46,7 @@
         </properties>
     </rule>
 
-    <!-- Contraintes sur les commentaires -->
+    <!-- Constraint on comments -->
     <rule ref="Squiz.Commenting.FileComment">
         <type>warning</type>
         <exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
@@ -65,10 +65,10 @@
     </rule>
     <rule ref="Squiz.Arrays.ArrayDeclaration.NoComma" />
 
-    <!-- Pour une bonne indentation des arrays -->
+    <!-- Arrays indentation check -->
     <rule ref="Generic.Arrays.ArrayIndent" />
 
-    <!-- Suppression de méthodes -->
+    <!-- Avoid use of old functions -->
     <rule ref="Generic.PHP.ForbiddenFunctions">
         <properties>
             <property name="forbiddenFunctions" type="array">
@@ -81,24 +81,24 @@
         </properties>
     </rule>
 
-    <!-- Ligne de fin forcée -->
+    <!-- PHP files should end with one newline -->
     <rule ref="PSR2.Files.EndFileNewline"/>
 
-    <!-- Obligation de commenter -->
+    <!-- Obligation to comment -->
     <rule ref="Squiz.Commenting.BlockComment" />
     <rule ref="Squiz.Commenting.DocCommentAlignment" />
     <rule ref="Squiz.Commenting.EmptyCatchComment" />
     <rule ref="Squiz.Commenting.InlineComment" />
     <rule ref="Squiz.Commenting.PostStatementComment" />
 
-    <!-- Pas de tag de fin PHP -->
+    <!-- No PHP closing tag -->
     <rule ref="Zend.Files.ClosingTag"/>
 
     <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
         <exclude name="Squiz.Functions.GlobalFunction" />
     </rule>
 
-    <!-- Règles à tester -->
+    <!-- Rules -->
     <rule ref="Squiz.Arrays.ArrayBracketSpacing" />
     <rule ref="Squiz.ControlStructures.ControlSignature" />
     <rule ref="Squiz.ControlStructures.ElseIfDeclaration" />
