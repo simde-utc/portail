@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par client-{verbe}-groups-
+// All routes starting with client-{verbe}-groups-
 return [
     'description' => 'Groupes',
     'verbs' => [

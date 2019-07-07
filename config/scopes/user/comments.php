@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-comments-
+// All routes starting with user-{verbe}-comments-
 return [
     'description' => 'Commentaires',
     'icon' => 'newspaper',

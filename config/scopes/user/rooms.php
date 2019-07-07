@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-rooms-
+// All routes starting with user-{verbe}-rooms-
 return [
     'description' => 'Salles',
     'icon' => 'door-open',

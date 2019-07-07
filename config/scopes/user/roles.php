@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-roles-
+// All routes starting with user-{verbe}-roles-
 return [
     'description' => 'Roles',
     'icon' => 'gavel',

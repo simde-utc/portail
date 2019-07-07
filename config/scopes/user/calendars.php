@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-calendar-
+// All routes starting with user-{verbe}-calendar-
 return [
     'description' => 'Calendriers',
     'icon' => 'calendar-alt',

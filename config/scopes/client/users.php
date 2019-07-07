@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par client-{verbe}-users-
+// All routes starting with client-{verbe}-users-
 return [
     'description' => 'Utilisateurs',
     'verbs' => [

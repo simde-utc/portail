@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-notifications-
+// All routes starting with user-{verbe}-notifications-
 return [
     'description' => 'Notifications',
     'icon' => 'bell',

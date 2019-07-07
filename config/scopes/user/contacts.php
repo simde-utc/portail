@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-contacts-
+// All routes starting with user-{verbe}-contacts-
 return [
     'description' => 'Contacts',
     'icon' => 'address-card',

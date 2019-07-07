@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-info-
+// All routes starting with user-{verbe}-info-
 return [
     'description' => 'Informations personnelles',
     'icon' => 'user-circle',

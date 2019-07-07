@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-bookings-
+// All routes starting with user-{verbe}-bookings-
 return [
     'description' => 'Réservations',
     'icon' => 'chalkboard',

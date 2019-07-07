@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-faqs-
+// All routes starting with user-{verbe}-faqs-
 return [
     'description' => 'FAQs',
     'icon' => 'question',

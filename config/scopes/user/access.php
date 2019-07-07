@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-access-
+// All routes starting with user-{verbe}-access-
 return [
     'description' => 'Accès',
     'icon' => 'door',

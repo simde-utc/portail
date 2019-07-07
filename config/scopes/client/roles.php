@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par client-{verbe}-roles-
+// All routes starting with client-{verbe}-roles-
 return [
     'description' => 'Roles',
     'verbs' => [

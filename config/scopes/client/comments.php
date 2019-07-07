@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par client-{verbe}-comments-
+// All routes starting with client-{verbe}-comments-
 return [
     'description' => 'Commentaires',
     'icon' => 'newspaper',

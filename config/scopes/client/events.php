@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par client-{verbe}-events-
+// All routes starting with client-{verbe}-events-
 return [
     'description' => 'Evènements',
     'verbs' => [

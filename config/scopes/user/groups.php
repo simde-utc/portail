@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-groups-
+// All routes starting with user-{verbe}-groups-
 return [
     'description' => 'Groupes',
     'icon' => 'users',

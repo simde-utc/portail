@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-events-
+// All routes starting with user-{verbe}-events-
 return [
     'description' => 'Evènements',
     'icon' => 'calendar',

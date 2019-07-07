@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par client-{verbe}-info-
+// All routes starting with client-{verbe}-info-
 return [
     'description' => 'Informations personnelles',
     'verbs' => [

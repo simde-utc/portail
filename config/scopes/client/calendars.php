@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par client-{verbe}-calendar-
+// All routes starting with client-{verbe}-calendar-
 return [
     'description' => 'Calendrier',
     'verbs' => [

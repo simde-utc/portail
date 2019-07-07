@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par client-{verbe}-portail-
+// All routes starting with client-{verbe}-portail-
 return [
     'description' => 'Données du portail',
     'verbs' => [

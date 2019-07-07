@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-portail-
+// All routes starting with user-{verbe}-portail-
 return [
     'description' => 'Données du portail',
     'icon' => 'gear',

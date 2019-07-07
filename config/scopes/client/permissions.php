@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par client-{verbe}-permissions-
+// All routes starting with client-{verbe}-permissions-
 return [
     'description' => 'Permissions',
     'verbs' => [

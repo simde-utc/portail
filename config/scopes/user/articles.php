@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-articles-
+// All routes starting with user-{verbe}-articles-
 return [
     'description' => 'Articles',
     'icon' => 'newspaper',

@@ -18,7 +18,7 @@
  *       + remove:  delete data
  */
 
-// Toutes les routes commencant par user-{verbe}-assos-
+// All routes starting with user-{verbe}-assos-
 return [
     'description' => 'Associations',
     'icon' => 'handshake',
