@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier de configuration du broadcast.
- * Non utilisé.
+ * Broadcast configuration file
+ * Not used
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

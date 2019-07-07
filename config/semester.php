@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de configuration des semestres.
+ * Semesters configuration file
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -35,8 +35,11 @@ return [
         ],
     ],
 
+    // Semester names
     'name' => [
+        // A for Autumn (French: Automne)
         'A',
+        // P for spring (French: Printemps)
         'P',
     ]
 ];

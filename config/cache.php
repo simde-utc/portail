@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de configuration du cache.
+ * Cache configuration file
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
