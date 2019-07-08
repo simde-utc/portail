@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe formulaire admin avec les corrections de bugs...
+ * Admin form class with bugs correction.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -33,14 +33,14 @@ class Form extends BaseForm
         $builder = $this->model();
 
         if ($this->isSoftDeletes) {
-            // Le pointeur du builder n'est pas actualisé ce qui ne sert à rien...
+            // Builder pointer not updated wich is not really useful.
             $builder = $builder->withTrashed();
         }
 
         $this->model = $builder->with($relations)->findOrFail($model_id);
         $this->callEditing();
 
-        // Ici on récupère les attributes, plus les données "visibles", on est en admin quand même...
+        // Attributes and "visible" data retrievement. 
         $data = $this->model->getAttributes();
 
         $this->builder->fields()->each(function (Field $field) use ($data) {
@@ -77,7 +77,7 @@ class Form extends BaseForm
 
         $builder = $this->model();
 
-        // Ici, on ne testait même pas le soft delete...
+        // Here soft delete wasn't tested.
         if ($this->isSoftDeletes) {
             $builder = $builder->withTrashed();
         }

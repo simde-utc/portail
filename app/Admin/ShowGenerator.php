@@ -1,6 +1,6 @@
 <?php
 /**
- * Génère une présentation admin.
+ * Generates an admin presentation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,16 +17,16 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 class ShowGenerator extends Generator
 {
     /**
-     * Méthode correspondante à l'admin (qui change en fonction du type de formulaire...).
+     * Method corresponding to the admin (which changes according to the type of form...).
      *
      * @var string
      */
     protected $valueMethod = 'as';
 
     /**
-     * Crée la présentation avec notre model
+     * Creates the presentation according to a model
      *
-     * @param mixed $model Modèle de la ressource à manipuler.
+     * @param mixed $model (Model of the resource to handle).
      */
     public function __construct($model)
     {
@@ -36,7 +36,7 @@ class ShowGenerator extends Generator
     }
 
     /**
-     * Indique qu'on peut afficher en html nos infos.
+     * Indicates that html rendering is possible.
      *
      * @param  mixed $field
      * @return mixed
@@ -47,7 +47,7 @@ class ShowGenerator extends Generator
     }
 
     /**
-     * Génère un nouveau champ et les champs liés.
+     * Generates a new field and linked field.
      *
      * @param  string $field
      * @return void

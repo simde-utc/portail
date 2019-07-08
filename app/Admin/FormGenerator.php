@@ -1,6 +1,6 @@
 <?php
 /**
- * Génère un formulaire admin.
+ * Generate admin form
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,14 +19,14 @@ use App\Facades\ModelResolver;
 class FormGenerator extends Generator
 {
     /**
-     * Méthode correspondante à l'admin (qui change en fonction du type de formulaire...).
+     * Method corresponding to the admin (which changes according to the type of form...).
      *
      * @var string
      */
     protected $valueMethod = 'with';
 
     /**
-     * Prépare le formulaire.
+     * Preparing form
      *
      * @param string $model
      */
@@ -36,7 +36,7 @@ class FormGenerator extends Generator
     }
 
     /**
-     * Indique rien de spécial.
+     * Indicates nothing special
      *
      * @param  mixed $field
      * @return mixed
@@ -47,7 +47,7 @@ class FormGenerator extends Generator
     }
 
     /**
-     * Permet d'ajouter plusieurs champs.
+     * Allows us to add several fields
      *
      * @param array $fields
      * @param array $defaults
