@@ -63,7 +63,8 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
   - `fix/<issue shortname>` pour les fix de bug.
   - `hot/<issue shortname>` pour les fix urgents.
 - Respecter le linter imposé pour le PHP mais aussi pour le JS
-- Commenter en français
+- Commenter et documenter en anglais. (Traduction de tout le projet à venir)
+- Faire ses commits et PRs en anglais.
 - Lancer `php artisan portail:test` pour vérifier que tout est bon avant de push son code
 
 
