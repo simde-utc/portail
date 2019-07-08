@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de configuration du Portail.
+ * Portal configuration file.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -19,23 +19,23 @@ $roleToPermission = [
 ];
 
 return [
-	// Gestion des versions du Portail.
+	// Portal version management.
     'versions' => [
         'v1'
     ],
 
-    // Version actuelle du serveur (en dessous: déprécié, au dessus: en beta).
+    // Current servers's version (lower: deprecated, higher: beta).
     'version' => 'v0',
 
-    // Les headers spécifiques au Portail (commençant par X-Portail).
+    // Specific headers (starting with X-Portail).
     'headers' => [
         'warn'			=> 'X-Portail-Warn',
         'version'		=> 'X-Portail-Version',
     ],
 
-    // Définition des rôles.
+    // Roles definition.
     'roles' => [
-    // Roles admins.
+    // Admin Roles.
         'admin' => [
             'users' => 'admin',
             'assos' => 'president',

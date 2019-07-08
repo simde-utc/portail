@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de configuration de l'application.
+ * Application configuration file.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -124,7 +124,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         /*
-         * Alias personnalisés.
+         * Customized aliases.
          */
 
         'Ginger' => App\Facades\Ginger::class,
