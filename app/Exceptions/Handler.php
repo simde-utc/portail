@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier générant les exceptions.
- * Gère les exceptions et renvoie un message HTTP
+ * File generating exceptions.
+ * Handles exception and returns a HTTP message. 
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -23,14 +23,14 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class Handler extends ExceptionHandler
 {
     /**
-     * Exceptions à ne pas reporter.
+     * Exceptions not to be reported.
      *
      * @var array
      */
     protected $dontReport = [];
 
     /**
-     * Données à ne pas afficher en cas de retour de données formulaires.
+     * Data not to be displayed in case of form data return.
      *
      * @var array
      */
@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Remonte les erreurs ici (via Sentry par ex).
+     * Report errors here (via Sentry for example).
      *
      * @param \Exception $exception
      * @return void
@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Génère l'erreur gérée.
+     * Generate handled error.
      *
      * @param  mixed      $request
      * @param  \Exception $exception
@@ -75,7 +75,7 @@ class Handler extends ExceptionHandler
                 ];
             }
 
-            // Tout montrer en debug.
+            // Show all in debug.
             if (config('app.debug') && !$this->isHttpException($exception)) {
                 $response['message'] = $exception->getMessage();
                 $response['exception'] = get_class($exception);

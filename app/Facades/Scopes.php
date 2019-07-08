@@ -1,6 +1,6 @@
 <?php
 /**
- * Façade gérant les scopes et le système de token
+ * Facade handling scopes and token system.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Facade;
 class Scopes extends Facade
 {
     /**
-     * Enregistre le nom de l'accesseur.
+     * Saves the accessor name.
      *
      * @return string
      */

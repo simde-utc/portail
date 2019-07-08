@@ -1,6 +1,6 @@
 <?php
 /**
- * Façade permettant de communiquer avec Ginger
+ * Facade to communicate with Ginger.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Facade;
 class Ginger extends Facade
 {
     /**
-     * Enregistre le nom de l'accesseur.
+     * Saves the accessor name.
      *
      * @return string
      */
