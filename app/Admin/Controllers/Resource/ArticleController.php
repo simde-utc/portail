@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les articles.
+ * Manages Articles as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -20,7 +20,7 @@ class ArticleController extends ResourceController
     protected $model = Article::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -43,7 +43,7 @@ class ArticleController extends ResourceController
     }
 
     /**
-     * Définition des valeurs par défaut champs à afficher.
+     * Default values definition of the fields to display.
      *
      * @return array
      */
@@ -58,7 +58,7 @@ class ArticleController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

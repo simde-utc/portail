@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les AssoAccess.
+ * Manages AssosAccesses as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -21,7 +21,7 @@ class AssoAccessController extends ResourceController
     protected $model = AssoAccess::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -45,7 +45,7 @@ class AssoAccessController extends ResourceController
     }
 
     /**
-     * Définition des valeurs par défaut champs à afficher.
+     * Default values definition of the fields to display.
      *
      * @return array
      */
@@ -57,7 +57,7 @@ class AssoAccessController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les authentifications CAS.
+ * Manages CAS authentifications as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ class AuthCasController extends ResourceController
     protected $model = AuthCas::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -38,7 +38,7 @@ class AuthCasController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

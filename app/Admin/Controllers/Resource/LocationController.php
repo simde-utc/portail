@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Location.
+ * Manages Locations as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class LocationController extends ResourceController
     protected $model = Location::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -36,7 +36,7 @@ class LocationController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

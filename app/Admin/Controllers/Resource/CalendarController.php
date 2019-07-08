@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Calendar.
+ * Manages Calendars as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class CalendarController extends ResourceController
     protected $model = Calendar::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -39,7 +39,7 @@ class CalendarController extends ResourceController
     }
 
     /**
-     * Définition des valeurs par défaut champs à afficher.
+     * Default values definition of the fields to display.
      *
      * @return array
      */
@@ -53,7 +53,7 @@ class CalendarController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

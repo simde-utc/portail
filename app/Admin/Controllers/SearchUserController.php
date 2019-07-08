@@ -1,6 +1,6 @@
 <?php
 /**
- * Permet de chercher un utilisateur.
+ * Allows to search for a user. 
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -30,8 +30,8 @@ class SearchUserController extends Controller
     protected $limit;
 
     /**
-     * Donne l'accès uniquement si la personne possède la permission.
-     * Récupération de la limite.
+     * Gives access only if the user has the right permission.
+     * Limit retrievement.
      */
     public function __construct()
     {
@@ -41,7 +41,7 @@ class SearchUserController extends Controller
     }
 
     /**
-     * Retourne le formulaire de recherche.
+     * Returns search form.
      *
      * @param Content $content
      * @return Content
@@ -55,7 +55,7 @@ class SearchUserController extends Controller
     }
 
     /**
-     * Affiche la liste des utilisateurs retrouvés.
+     * Displays found user list.
      *
      * @param Request $request
      * @param Content $content
@@ -139,7 +139,7 @@ class SearchUserController extends Controller
     }
 
     /**
-     * Retourne l'affichage de l'utlisateur.
+     * Returns user display.
      *
      * @param  Content $content
      * @param  string  $user_id

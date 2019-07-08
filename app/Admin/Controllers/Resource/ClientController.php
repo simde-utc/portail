@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les clients.
+ * Manages Clients as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class ClientController extends ResourceController
     protected $model = Client::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -43,7 +43,7 @@ class ClientController extends ResourceController
     }
 
     /**
-     * Définition des valeurs par défaut champs à afficher.
+     * Default values definition of the fields to display.
      *
      * @return array
      */
@@ -55,7 +55,7 @@ class ClientController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

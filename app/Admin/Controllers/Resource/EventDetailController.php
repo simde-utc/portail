@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les EventDetail.
+ * Manages EventDetails as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class EventDetailController extends ResourceController
     protected $model = EventDetail::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -37,7 +37,7 @@ class EventDetailController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

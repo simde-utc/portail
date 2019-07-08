@@ -1,6 +1,6 @@
 <?php
 /**
- * Permet de gérer les accès.
+ * Manages accesses.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,7 +25,7 @@ class AccessController extends Controller
     protected $model = AssoAccess::class;
 
     /**
-     * Donne l'accès uniquement si la personne possède la permission.
+     * Gives access only if user has the right permissions.
      */
     public function __construct()
     {
@@ -33,7 +33,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Interface d'affichage global.
+     * Global display interface.
      *
      * @param Content $content
      * @return Content
@@ -122,7 +122,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Sauvegarde du changement de la demande d'accès.
+     * Saves access request change.
      *
      * @param  Request $request
      * @param  string  $accessId

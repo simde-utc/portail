@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Notification.
+ * Manages Notifications as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class NotificationController extends ResourceController
     protected $model = Notification::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -35,7 +35,7 @@ class NotificationController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

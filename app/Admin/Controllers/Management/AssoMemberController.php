@@ -1,6 +1,6 @@
 <?php
 /**
- * Permet de gérer les membres associatifs.
+ * Manages Associations Members.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,7 +26,7 @@ class AssoMemberController extends Controller
     protected $model = AssoMember::class;
 
     /**
-     * Donne l'accès uniquement si la personne possède la permission.
+     * Gives access only if user has the right permissions.
      */
     public function __construct()
     {
@@ -34,7 +34,7 @@ class AssoMemberController extends Controller
     }
 
     /**
-     * Interface d'affichage global.
+     * Global display interface.
      *
      * @param Content $content
      * @return Content
@@ -98,7 +98,7 @@ class AssoMemberController extends Controller
     }
 
     /**
-     * Valide le membre.
+     * Cofirms member.
      *
      * @param  Request $request
      * @param  string  $asso_id
@@ -118,7 +118,7 @@ class AssoMemberController extends Controller
     }
 
     /**
-     * Modifie les informations du membre.
+     * Modifies a member information.
      *
      * @param  Request $request
      * @param  string  $asso_id
@@ -139,7 +139,7 @@ class AssoMemberController extends Controller
     }
 
     /**
-     * Supprime le membre.
+     * Deletes membership.
      *
      * @param  Request $request
      * @param  string  $asso_id

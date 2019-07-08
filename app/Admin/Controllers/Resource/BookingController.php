@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Booking.
+ * Manages Bookings as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class BookingController extends ResourceController
     protected $model = Booking::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -40,7 +40,7 @@ class BookingController extends ResourceController
     }
 
     /**
-     * Définition des valeurs par défaut champs à afficher.
+     * Default values definition of the fields to display.
      *
      * @return array
      */
@@ -53,7 +53,7 @@ class BookingController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

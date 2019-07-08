@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les types d'association.
+ * Manages Association Types as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class AssoTypeController extends ResourceController
     protected $model = AssoType::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */

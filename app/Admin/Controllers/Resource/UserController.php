@@ -1,6 +1,6 @@
 <?php
 /**
- * Affiche les utilisateurs en admin.
+ * Displays Users as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -47,7 +47,7 @@ class UserController extends Controller
     ];
 
     /**
-     * Donne l'accès uniquement si la personne possède la permission.
+     * Gives access only if user has the right permission.
      */
     public function __construct()
     {
@@ -55,7 +55,7 @@ class UserController extends Controller
     }
 
     /**
-     * Retourne le formulaire de recherche.
+     * Returns search form.
      *
      * @param Content $content
      * @return Content
@@ -104,7 +104,7 @@ class UserController extends Controller
     }
 
     /**
-     * Montre un utilisateur.
+     * Shows a User.
      *
      * @param  Content $content
      * @param  string  $user_id
@@ -156,8 +156,8 @@ class UserController extends Controller
     }
 
     /**
-     * Génère la partie gauche de l'affichage d'un utlisateur.
-     *
+     * Generates the left side of the display a user.
+     *s
      * @param  Column $column
      * @param  User   $user
      * @param  mixed  $image
@@ -231,7 +231,7 @@ class UserController extends Controller
     }
 
     /**
-     * Génère la partie droite de l'affichage d'un utlisateur.
+     * Generates right side of the display a user.
      *
      * @param  Column $column
      * @param  User   $user
@@ -275,7 +275,7 @@ class UserController extends Controller
     }
 
     /**
-     * Permet de devenir quelqu'un d'autre.
+     * Allows to become someone else (In this system of course :p ) 
      *
      * @param Request $request
      * @param string  $user_id
@@ -305,7 +305,7 @@ class UserController extends Controller
             );
         }
 
-        // Création de la notification pour confirmer le changement.
+        // Notification creation to confirm changement.
         $userNotification = new UserImpersonation($admin, $request->input('description'), (bool) $request->input('admin'));
 
         if (config('app.debug') && $request->input('admin')) {
@@ -320,7 +320,7 @@ class UserController extends Controller
     }
 
     /**
-     * Permet de faire cotiser.
+     * Allows to make someone contribute.
      *
      * @param Request $request
      * @param string  $user_id
@@ -363,7 +363,7 @@ class UserController extends Controller
         $semesters = Semester::getThisYear();
         $money = $request->input('money') ?: $request->input('custom');
 
-        // Création de la notification de confirmation de cotisation.
+        // Notification creation for contributing confirmation.
         $userNotification = new UserContributionBde($semesters, $money, \Auth::guard('admin')->user());
         $ginger->addContribution(now()->format('Y-m-d'), end($semesters)->end_at, $money);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Page admin d'accueil.
+ * Admin homepage.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ use Encore\Admin\Widgets\Box;
 class HomeController extends Controller
 {
     /**
-     * Affichage de la page de bienvenue.
+     * Display of the welcome page.
      *
      * @param  Content $content
      * @return mixed

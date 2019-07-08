@@ -1,6 +1,6 @@
 <?php
 /**
- * Dashboard pour les admins.
+ * Dashboard for admins.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ use Encore\Admin\Layout\Row;
 class DashboardController extends Controller
 {
     /**
-     * Donne l'accès uniquement si la personne possède la permission.
+     * Gives access only if the user has the right permission.
      */
     public function __construct()
     {

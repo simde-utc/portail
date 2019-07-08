@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les authentifications applications.
+ * Manages Applications Authentification as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ class AuthAppController extends ResourceController
     protected $model = AuthApp::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -36,7 +36,7 @@ class AuthAppController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

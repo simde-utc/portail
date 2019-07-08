@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les associations.
+ * Manages Associations as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ class AssoController extends ResourceController
     protected $model = Asso::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -40,7 +40,7 @@ class AssoController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Returns dependencies.
      *
      * @return array
      */

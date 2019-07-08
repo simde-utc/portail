@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Partner.
+ * Manages Partners as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class PartnerController extends ResourceController
     protected $model = Partner::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */

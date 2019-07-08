@@ -1,6 +1,6 @@
 <?php
 /**
- * Permet de gérer les rôles utilisateurs.
+ * Manages User roles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,7 +28,7 @@ class UserRoleController extends Controller
     protected $model = UserRole::class;
 
     /**
-     * Donne l'accès uniquement si la personne possède la permission.
+     * Gives access only if user has the right permissions.
      */
     public function __construct()
     {
@@ -36,7 +36,7 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Récupération des champs pour l'admin.
+     * Retrieves fields for admin.
      *
      * @param  boolean $withAll
      * @return array
@@ -64,7 +64,7 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Interface d'affichage global.
+     * Global display interface.
      *
      * @param Content $content
      * @return Content
@@ -114,7 +114,7 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Crée une nouvelle instance.
+     * Creates a new instance.
      *
      * @param Content $content
      * @return Content
@@ -135,7 +135,7 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Crée un rôle utilisateur.
+     * Creates a user role.
      *
      * @param  Request $request
      * @return mixed
@@ -152,7 +152,7 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Modifie un rôle utilisateur.
+     * Modifies a user role.
      *
      * @param  Request $request
      * @param  string  $member_id
@@ -171,7 +171,7 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Supprime un rôle utilisateur.
+     * Removes a user role.
      *
      * @param  Request $request
      * @param  string  $member_id
