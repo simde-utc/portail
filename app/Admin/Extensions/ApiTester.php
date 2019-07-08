@@ -1,6 +1,6 @@
 <?php
 /**
- * Founi un api-tester.
+ * Provides an API tester.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use Laravel\Passport\Passport;
 class ApiTester extends BaseApiTester
 {
     /**
-     * Retrouve l'utilisateur pour l'api-tester.
+     * Gets the user for the API-tester.
      *
      * @param  mixed $auth
      * @param  mixed $user_id

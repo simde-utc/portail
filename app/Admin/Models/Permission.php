@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux permisisons admins.
+ * Administrator permissions model.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -30,7 +30,7 @@ class Permission extends BasePermission
     ];
 
     /**
-     * Retrouve une permission.
+     * Finds a permission.
      *
      * @param  string             $permission_id
      * @param  CanHavePermissions $owner
@@ -53,8 +53,8 @@ class Permission extends BasePermission
     }
 
     /**
-     * Retrouve une permission par son type.
-     * TODO: Transformer en scope.
+     * Finds a permision by type.
+     * TODO: Transform it into scope.
      *
      * @param  string             $type
      * @param  CanHavePermissions $owner
@@ -77,7 +77,7 @@ class Permission extends BasePermission
     }
 
     /**
-     * Adaptation à l'interface admin.
+     * Adaptation the the admin interface.
      *
      * @return string
      */
