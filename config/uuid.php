@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de configuration des uuids.
+ * UUIDs configuration file.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
