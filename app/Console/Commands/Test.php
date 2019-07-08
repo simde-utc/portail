@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier générant la commande portail:test.
- * Lance les tests suffisants pour pouvoir merge dans develop.
+ * File generating the command: portail:test.
+ * Run sufficient tests to be able to merge in develop.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,7 +28,7 @@ class Test extends Command
     protected $description = 'Teste le code avant de pouvoir push le code';
 
     /**
-     * Tous les dossiers à vérifier.
+     * All folders to check.
      *
      * @var array
      */
@@ -37,7 +37,7 @@ class Test extends Command
     ];
 
     /**
-     * Tous les dossiers à vérifier d'une manière particulière.
+     * All folder to check in a particular way.
      *
      * @var array
      */
@@ -46,7 +46,7 @@ class Test extends Command
     ];
 
     /**
-     * Tous les fichiers à tester.
+     * All file to test.
      *
      * @var array
      */
@@ -61,7 +61,7 @@ class Test extends Command
     }
 
     /**
-     * Exécution de la commande.
+     * Command execution.
      *
      * @return mixed
      */
@@ -158,7 +158,7 @@ class Test extends Command
     }
 
     /**
-     * Lance php -l pour vérifier la syntaxe.
+     * Run php -l to check syntax.
      *
      * @return integer
      */
@@ -215,7 +215,7 @@ class Test extends Command
     }
 
     /**
-     * Lance le linter JS.
+     * Runs JS linter.
      *
      * @return integer
      */
@@ -225,7 +225,7 @@ class Test extends Command
     }
 
     /**
-     * Lance le PHP Code Sniffer pour vérifier le style PHP.
+     * Runs PHP Code Sniffer to check PHP style.
      *
      * @return integer
      */
@@ -243,7 +243,7 @@ class Test extends Command
             $dirs = $this->files;
         }
 
-        // Les fichiers sont du type "spécial" (possèdent des règles en moins).
+        // Special files have less rules.
         if ($this->option('special')) {
             $specialFiles = $dirs;
         } else {
@@ -269,7 +269,7 @@ class Test extends Command
     }
 
     /**
-     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles.
+     * Runs PHP Code Beautifier and Fixer to correct style problems on the fly.
      *
      * @return integer
      */
@@ -281,7 +281,7 @@ class Test extends Command
     }
 
     /**
-     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles.
+     * Runs PHPStan to find static errors.
      *
      * @return integer
      */
@@ -307,7 +307,11 @@ class Test extends Command
     }
 
     /**
-     * Lance le PHP Code Beautifer and Fixer pour corriger à la volée les problèmes de styles.
+     * Runs PHP Mess Detector to find:
+     * - Possible bugs
+     * - Suboptimal code
+     * - Overcomplicated expressions
+     * - Unused parameters, methods, properties
      *
      * @return integer
      */
@@ -333,7 +337,7 @@ class Test extends Command
     }
 
     /**
-     * Lance le PHP Unit pour tester que le code n'a pas cassé.
+     * Runs PHP Unit for regression testing.
      *
      * @return integer
      */
@@ -345,9 +349,9 @@ class Test extends Command
     }
 
     /**
-     * Lance une commande bash.
+     * Runs a bash command.
      *
-     * @param string $command Commande à lancer.
+     * @param string $command (Command to run).
      * @return integer
      */
     private function process(string $command)

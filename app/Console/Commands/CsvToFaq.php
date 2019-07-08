@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier générant la commande portail:csv-to-faq.
- * Ajout aux FAQs les questions et catégories du CSV.
+ * File generating the command: portail:csv-to-faq.
+ * Adds CSV's categories and questions to FAQ.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -29,7 +29,7 @@ class CsvToFaq extends Command
     protected $description = 'Download all FAQs from a csv file';
 
     /**
-     * Exécution de la commande.
+     * Command execution.
      *
      * @return mixed
      */
@@ -39,7 +39,7 @@ class CsvToFaq extends Command
         $lang = $this->option('lang');
         $defaultVisibility = Visibility::findByType('active');
 
-        // On ignore l'index.
+        // Ignoring index.
         fgetcsv($file);
 
         while (($columns = fgetcsv($file, null, ';')) != false) {

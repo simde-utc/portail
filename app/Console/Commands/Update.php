@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier générant la commande portail:update.
- * Met à jour l'application vers la version suivante après un git pull.
+ * Files generating the command: portail:update.
+ * Updates the application to the next version after a git pull.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -34,7 +34,7 @@ class Update extends Command
     }
 
     /**
-     * Exécution de la commande.
+     * Command execution.
      *
      * @return mixed
      */
@@ -43,12 +43,12 @@ class Update extends Command
         $bar = $this->output->createProgressBar(7);
         $bar->advance();
 
-        // Nettoyage du cache.
+        // Clear cache.
         $this->info(' [Portail Update] Préparation');
         $this->call('portail:clear');
         $bar->advance();
 
-        // Mise à jour.
+        // Updating.
         $this->info(' [Portail Update] Mise à jour des dépendances Composer');
         shell_exec('composer update');
         $bar->advance();
@@ -58,7 +58,7 @@ class Update extends Command
         shell_exec('npm run dev');
         $bar->advance();
 
-        // Nettoyage du cache.
+        // Clear cache.
         $this->info(' [Portail Update] Nettoyage');
         $this->call('portail:clear');
         $bar->advance();
@@ -82,7 +82,7 @@ class Update extends Command
         $this->call('portail:optimize');
         $bar->advance();
 
-        // Fin.
+        // End.
         $bar->finish();
         $this->info(' [Portail Update] Installation finie !');
     }

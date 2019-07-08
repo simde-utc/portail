@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier générant la commande portail:install.
- * Installe l'application.
+ * File generating the command: portail:install.
+ * Install the application.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -36,9 +36,9 @@ class Install extends Command
     }
 
     /**
-     * Changement automatique du fichier .env
-     * @param  string $param Paramètre clé à changer.
-     * @param  string $value Valeur à assigner.
+     * Automatic change of the .env file.
+     * @param  string $param Parameter key to change.
+     * @param  string $value Value to assign.
      * @return void
      */
     protected function changeEnv(string $param, string $value)
@@ -50,7 +50,7 @@ class Install extends Command
     }
 
     /**
-     * Exécution de la commande.
+     * Command execution.
      *
      * @return mixed
      */
@@ -116,23 +116,23 @@ class Install extends Command
 
         $bar->advance();
 
-        // Effacement.
+        // Cache clear.
         $this->info(' [Portail Install] Nettoyage');
         $this->call('portail:clear');
         $bar->advance();
 
-        // Optimisation.
+        // Optimization.
         $this->info(' [Portail Install] Optimisation');
         $this->call('portail:optimize');
         $bar->advance();
 
-        // Fin.
+        // End.
         $bar->finish();
         $this->info(' [Portail Install] Installation finie !');
     }
 
     /**
-     * Permet des changements de le fichier env
+     * Allows changes within .env file.
      *
      * @param ProgressBar $bar
      * @param ProgressBar $subBar

@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier générant la console et ses commandes.
- * Permet le lancement de la console et de ses commandes.
+ * Files generating console and its commands.
+ * Enables console and its commands start. 
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     /**
-     * Liste des commandes.
+     * Command list.
      *
      * @var array
      */
@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
     ];
 
     /**
-     * Cron de l'application.
+     * Application's Cron.
      *
      * @param \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel
     }
 
     /**
-     * Enregistre les commandes de l'applications.
+     * Saves application commands. 
      *
      * @return void
      */
