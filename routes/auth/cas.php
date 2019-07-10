@@ -1,6 +1,6 @@
 <?php
 /**
- * Route de gestion du CAS-UTC.
+ * Cas Auth management routes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,7 +1,7 @@
 <?php
 /**
- * Défini les routes de l'api v1.
- * /!\ Les routes sont préfixées avec 'api/v1'.
+ * Defines first version API routes.
+ * /!\ All Routes are prefixed with 'api/v1'.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -11,7 +11,7 @@
  */
 
 /**
- * Connexions.
+ * Connections.
  */
 
 Route::get('login', 'Client\LoginController@index')->middleware('guest')->name('api/login');
@@ -19,7 +19,7 @@ Route::get('logout', 'Client\LoginController@destroy')->middleware(Scopes::match
 
 
 /*
- * Informations relatives à l'utlisateur.
+ * User related informations.
  */
 
 Route::get('user', 'User\UserController@show')->middleware(Scopes::matchAnyUser())->name('api/user');
@@ -27,7 +27,7 @@ Route::patch('user', 'User\UserController@update')->middleware(Scopes::matchAnyU
 
 
 /*
- * Gestions des authorisations données au client.
+ * Management of client given authorization.
  */
 
 Route::get('client', 'Client\ClientController@index')->middleware(Scopes::matchAnyUserOrClient())->name('api/client');
@@ -42,20 +42,20 @@ Route::delete('client/{user_id}', 'Client\ClientController@destroy')->middleware
 /*
  * Ressouces:
  *
- *  index:   /{ressource}      en GET
- *  store:   /{ressource}      en POST
- *  show:    /{ressource}/{id} en GET
- *  update:  /{ressource}/{id} en PUT
- *  destroy: /{ressource}/{id} en DELETE
+ *  index:   /{ressource}      in GET
+ *  store:   /{ressource}      in POST
+ *  show:    /{ressource}/{id} in GET
+ *  update:  /{ressource}/{id} in PUT
+ *  destroy: /{ressource}/{id} in DELETE
  */
 
 /*
- * Routes uniquement pour les clients/connectés.
+ * Routes only for clients/connected users.
  */
 
 Route::group(['middleware' => 'user:active'], function () {
     /*
-     * Routes définies pour l'utilisateur.
+     * Routes defined for the user.
      */
 
     Route::apiResources([
@@ -65,7 +65,7 @@ Route::group(['middleware' => 'user:active'], function () {
         'users/{user_id}/permissions' => 'Permission\AssignmentController',
 
         /*
-         * Routes `user` identiques à `users/{Auth::id()`}.
+         * Routes `user` identical to `users/{Auth::id()`}.
          */
 
         'user/roles' => 'User\RoleController',
@@ -75,7 +75,7 @@ Route::group(['middleware' => 'user:active'], function () {
     ]);
 
     /*
-     * Routes définies pour toutes ressources.
+     * Routes for all resources.
      */
 
     Route::apiResources([
@@ -99,12 +99,12 @@ Route::group(['middleware' => 'user:active'], function () {
 
 
 /*
- * Routes pour tous.
+ * Routes for all.
  */
 
 Route::group([], function () {
     /*
-     * Routes définies pour l'utilisateur.
+     * Routes for user.
      */
 
     Route::apiResources([
@@ -117,7 +117,7 @@ Route::group([], function () {
         'users/{user_id}/services' => 'User\ServiceController',
 
     /*
-     * Routes `user` identiques à `users/{Auth::id()}`.
+     * Routes `user`identical to `users/{Auth::id()}`.
      */
 
         'user/auths' => 'User\AuthController',
@@ -130,7 +130,7 @@ Route::group([], function () {
     ]);
 
     /*
-     * Routes définies pour toutes ressources.
+     * Routes for all ressources.
      */
 
     Route::apiResources([
