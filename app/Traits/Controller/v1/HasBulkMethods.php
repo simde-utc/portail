@@ -194,7 +194,7 @@ trait HasBulkMethods
         $majorStatus = null;
         $responses = $this->callForEachBulk($args, function ($stack) use ($request, $method, &$majorStatus) {
             try {
-                $response = $this->getResponseForBulk($method, $request, $stack);
+                $response = $this->getResponseForBulk($request, $method, $stack);
             } catch (\Exception $e) {
                 app(ExceptionHandler::class)->report($e);
 
@@ -243,12 +243,12 @@ trait HasBulkMethods
     /**
      * Retourne la réponse pour un élément du bulk.
      *
-     * @param  string  $method
      * @param  Request $request
+     * @param  string  $method
      * @param  array   $args
      * @return mixed
      */
-    protected function getResponseForBulk(string $method, Request $request, array $args)
+    protected function getResponseForBulk(Request $request, string $method, array $args)
     {
         $reflection = new \ReflectionMethod(static::class, $method);
         $params = [];
@@ -263,7 +263,20 @@ trait HasBulkMethods
             }
         }
 
-        return $this->$method(...$params);
+        return $this->executeMethodForBulk($request, $method, $params);
+    }
+
+    /**
+     * Execute la méthode pour un élément de bulk en passant les bons middlewares avant.
+     *
+     * @param  Request $request
+     * @param  string  $method
+     * @param  array   $args
+     * @return mixed
+     */
+    protected function executeMethodForBulk(Request $request, string $method, array $args)
+    {
+        return $this->$method(...$args);
     }
 
     /**
