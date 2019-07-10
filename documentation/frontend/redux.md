@@ -1,6 +1,6 @@
 # Redux
 
-Redux is used in order to manage datas in an single store.
+Redux is used in order to manage data in a unique store.
 All Redux's implementation is done in the `redux/` folder.
 
 For more information on Redux, [have a look at this playlist](https://www.youtube.com/watch?v=1w-oQ-i1XB8&index=15&list=PLoYCgNOIyGABj2GQSlDRjgvXtqfDxKm5b).
@@ -11,18 +11,18 @@ For more information on Redux, [have a look at this playlist](https://www.youtub
 
 ### Action types
 
-First, we have to define **action types**. They are constant charcaters strings which unable to identify actions to perform in the different reducers. It is recommanded to define in the `types.js` file. In order to define CRUD actions sets more easily, use [`createCrudTypes`](#créateur-de-types-dactions).
+First, we have to define **action types**. They are constant strings which unable to identify actions to perform in the different reducers. It is recommanded to define them in the `types.js` file. In order to define CRUD actions sets more easily, use [`createCrudTypes`](#Action-types-creaters).
 
 ### Actions
 
-Actions are objects that are qui sont scattered in the reducers. they generally content in a `type` and in a `payload`. They are defined in the `actions.js` file.
+Actions are objects that are scattered in the reducers. they generally content in a `type` and in a `payload`. They are defined in the `actions.js` file.
 
 
 ### Reducers
 
-Reducers are prototype's fonctions : `function(prevState, action)`.
+Reducers are fonctions with the following prototype: `function(prevState, action)`.
 
-From the current status of the store `prevState` and of the scattered actions `action`, ils retournent un nouvel état (possibly `prevState` if the reducer has no to do modifications).
+From the current status of the store `prevState` and of the dispatched action `action`, they return a new state (possibly `prevState` if the reducer doesn't have to do any modifications).
 
 Do not directly modify `prevState`, make a copy of it. They are defined in the `reducers.js` file.
 
@@ -31,15 +31,15 @@ Do not directly modify `prevState`, make a copy of it. They are defined in the `
 
 ## CRUD creaters
 
-As th portal's api mainly follows CRUD (Create Read Update Delete) design, most part of the Redux actions also follows. That is why we have created creaters of action types, of actions and of CRUD reducers. These functions are in `react/utils.js`.
+As th portal's api mainly follows CRUD (Create Read Update Delete) design, most part of the Redux actions also follows it. That is why we have created creaters of action types, of actions and of CRUD reducers. These functions are in `react/utils.js`.
 
-Ressources names are conjugated in the singular by convention.
+Ressources names are put in the singular by convention.
 
-### Creater of action types
+### Action types creaters
 
 `createCrudTypes(name)` creates a set of types that follows the following scheme from a resources name `name` : 
 
-This set of types is used by the following fuctions.
+This set of types is used by the following functions.
 
 
 ### Creater of actions
@@ -127,7 +127,7 @@ function(state = customInitialState, action) {
 			if (action.meta.affectsAll) {
 				return { ...state, data: action.payload.data }
 			} else {
-				// Modifies, adds ou deletes the element
+				// Modifies, adds or deletes the element
 				// and returns the modification of the copied state
 			}
 		// If the action is not taken in charge by the reducer,

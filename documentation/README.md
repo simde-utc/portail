@@ -60,9 +60,9 @@ We are also going to show how to intercact with the api in differents languages.
 
 ### Backend documentation
 
-Le but étant de documenter l'architecture, les services crées, les controllers, les modèles et autres afin que le projet soit repris par d'autres. Le but n'est pas de refaire la documentation de Laravel, **il faut se concentrer sur ce qui est spécifique à notre projet.**
+Its goal is to document thearchitecture, the created services, the controllers, the models and so on in order to give this project some durability. It doesn't aim to recreate Laravel's documentation. **We need to focus on what's specific to our project** 
 
-Quelques exemples :
-- Implémentation de Oauth 2.
-- Template de controller.
-- Système de visibilité.
+Some examples :
+- Oauth2 Implementation.
+- Controller template.
+- Visibility system.
