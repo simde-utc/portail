@@ -43,13 +43,14 @@ class CheckUser
                 $scopes = [\Scopes::getMatchingScopes(explode('|', $args[1]), 'user')];
             }
 
-            return app(Authenticate::class)->handle($request, function ($request) use ($next, $scopes) {
+            $callbackAfterConnection = function ($request) use ($next, $scopes) {
                 if (!$request->user() || !$request->user()->token()) {
                     throw new AuthenticationException;
                 }
 
                 if (!$request->user()->token()->transient()) {
                     $tokenScopes = $request->user()->token()->scopes;
+
                     // On vérifie pour chaque ensemble de scopes.
                     foreach ($scopes as $scopeList) {
                         // Qu'on en possède au moins un parmi la liste.
@@ -60,15 +61,22 @@ class CheckUser
                 }
 
                 return $next($request);
-            }, 'api');
+            };
         } else {
-            return app(Authenticate::class)->handle($request, function ($request) use ($next) {
+            $callbackAfterConnection = function ($request) use ($next) {
                 if (!$request->user() || !$request->user()->token()) {
                     throw new AuthenticationException;
                 }
 
                 return $next($request);
-            }, 'api');
+            };
         }
+
+        // Useless to reconnect the user if it is already connected.
+        if (!$request->user()) {
+            return app(Authenticate::class)->handle($request, $callbackAfterConnection, 'api');
+        }
+
+        return $callbackAfterConnection($request);
     }
 }
