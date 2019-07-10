@@ -23,7 +23,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserCalendarRequest;
 use App\Interfaces\CanHaveCalendars;
 
-class CalendarController extends ontroller
+class CalendarController extends Controller
 {
     use HasUserBulkMethods, HasCalendars;
 
@@ -60,7 +60,7 @@ class CalendarController extends ontroller
             ),
             ['only' => ['destroy']]
         );
-		// Can index, show and (un)follow and edit calendars for multiple users in a raw.
+        // Can index, show and (un)follow and edit calendars for multiple users in a raw.
         $this->middleware(
             \Scopes::matchAnyClient(),
             ['only' => ['bulkIndex', 'bulkStore', 'bulkShow', 'bulkUpdate', 'bulkDestroy']]

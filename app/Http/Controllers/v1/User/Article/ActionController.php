@@ -65,7 +65,7 @@ class ActionController extends Controller
             ),
             ['only' => ['remove']]
         );
-		// Can index, show and create, edit and remove actions for multiple users in a raw.
+        // Can index, show and create, edit and remove actions for multiple users in a raw.
         $this->middleware(
             \Scopes::matchAnyClient(),
             ['only' => ['bulkIndex', 'bulkStore', 'bulkShow', 'bulkUpdate', 'bulkDestroy']]
