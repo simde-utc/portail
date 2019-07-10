@@ -18,7 +18,7 @@ class CreateGroupsTable extends Migration
             $table->collation = 'utf8_bin';
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
-            // Corresponds here to the page creator, not to the group administrator (who can change) 
+            // Corresponds here to the page creator, not to the group administrator (who can change)
             $table->string('name', validation_max('name'));
             $table->string('icon')->nullable();
             $table->uuid('visibility_id');
