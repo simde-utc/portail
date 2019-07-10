@@ -20,11 +20,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserAuthRequest;
 use App\Exceptions\PortailException;
-use App\Traits\Controller\v1\HasUsers;
+use App\Traits\Controller\v1\{
+    HasUserBulkMethods, HasUsers
+};
 
 class AuthController extends Controller
 {
-    use HasUsers;
+    use HasUserBulkMethods, HasUsers;
 
     /**
      * Nécessité de pouvoir gérer les systèmes d'authentification de l'utlisateur.
@@ -33,15 +35,20 @@ class AuthController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-info-identity-auth', 'client-get-info-identity-auth'),
-            ['only' => ['all', 'get']]
+            ['only' => ['index', 'show']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-info-identity-auth', 'client-create-info-identity-auth'),
-            ['only' => ['create']]
+            ['only' => ['store']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-set-info-identity-auth', 'client-set-info-identity-auth'),
             ['only' => ['edit']]
+        );
+        // Can index, show and create auths for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-info-identity-auth', 'client-manage-info-identity-auth'),

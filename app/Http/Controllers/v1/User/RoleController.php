@@ -19,12 +19,13 @@ use App\Models\User;
 use App\Http\Requests\UserRequest;
 use App\Models\Visibility;
 use App\Exceptions\PortailException;
-use App\Traits\Controller\v1\HasUsers;
-use App\Traits\Controller\v1\HasRoles;
+use App\Traits\Controller\v1\{
+    HasUsers, HasRoles, HasUserBulkMethods
+};
 
 class RoleController extends Controller
 {
-    use HasUsers, HasRoles;
+    use HasUserBulkMethods, HasUsers, HasRoles;
 
     /**
      * Nécessite de pouvoir voir les rôles utilisateur et gérer les rôles de l'utilisateur.
@@ -36,28 +37,33 @@ class RoleController extends Controller
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-assigned', 'client-get-roles-users-assigned'),
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
             ),
-            ['only' => ['all', 'get']]
+            ['only' => ['index', 'show']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-create-roles-users-assigned', 'client-create-roles-users-assigned'),
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
             ),
-            ['only' => ['create']]
+            ['only' => ['store']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-edit-roles-users-assigned', 'client-edit-roles-users-assigned'),
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
             ),
-            ['only' => ['edit']]
+            ['only' => ['update']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-remove-roles-users-assigned', 'client-remove-roles-users-assigned'),
                 \Scopes::matchOneOfDeepestChildren('user-get-roles-users-owned', 'client-get-roles-users-owned')
             ),
-            ['only' => ['remove']]
+            ['only' => ['destroy']]
+        );
+        // Can index, show, add, remove and edit roles for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow', 'bulkUpdate', 'bulkDestroy']]
         );
     }
 

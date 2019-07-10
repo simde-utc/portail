@@ -10,9 +10,10 @@
  */
 
 namespace App\Http\Controllers\v1\User;
-
 use App\Http\Controllers\v1\Controller;
-use App\Traits\Controller\v1\HasCalendars;
+use App\Traits\Controller\v1\{
+    HasUserBulkMethods, HasCalendars
+};
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Calendar;
@@ -22,9 +23,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserCalendarRequest;
 use App\Interfaces\CanHaveCalendars;
 
-class CalendarController extends Controller
+class CalendarController extends ontroller
 {
-    use HasCalendars;
+    use HasUserBulkMethods, HasCalendars;
 
     /**
      * Nécessite de pouvoir gérer les calendriers de l'utilisateur.
@@ -36,28 +37,33 @@ class CalendarController extends Controller
                 'user-get-calendars-users-followed',
                 'client-get-calendars-users-followed'
             ),
-            ['only' => ['all', 'get']]
+            ['only' => ['index', 'show']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren(
                 'user-create-calendars-users-followed',
                 'client-create-calendars-users-followed'
             ),
-            ['only' => ['create']]
+            ['only' => ['store']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren(
                 'user-edit-calendars-users-followed',
                 'client-edit-calendars-users-followed'
             ),
-            ['only' => ['edit']]
+            ['only' => ['update']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren(
                 'user-manage-calendars-users-followed',
                 'client-manage-calendars-users-followed'
             ),
-            ['only' => ['remove']]
+            ['only' => ['destroy']]
+        );
+		// Can index, show and (un)follow and edit calendars for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow', 'bulkUpdate', 'bulkDestroy']]
         );
     }
 

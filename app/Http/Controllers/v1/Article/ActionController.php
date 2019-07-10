@@ -34,7 +34,7 @@ class ActionController extends Controller
             array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-            \Scopes::matchOne('user-get-articles-actions', 'client-get-articles-actions')
+            	\Scopes::matchOne('user-get-articles-actions', 'client-get-articles-actions')
 	        ),
 	        ['only' => ['all', 'get']]
         );
@@ -42,7 +42,7 @@ class ActionController extends Controller
             array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-            \Scopes::matchOne('user-create-articles-actions', 'client-create-articles-actions')
+            	\Scopes::matchOne('user-create-articles-actions', 'client-create-articles-actions')
 	        ),
 	        ['only' => ['create']]
         );
@@ -50,7 +50,7 @@ class ActionController extends Controller
             array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-            \Scopes::matchOne('user-edit-articles-actions', 'client-edit-articles-actions')
+            	\Scopes::matchOne('user-edit-articles-actions', 'client-edit-articles-actions')
 	        ),
 	        ['only' => ['edit']]
         );
@@ -58,7 +58,7 @@ class ActionController extends Controller
             array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-            \Scopes::matchOne('user-manage-articles-actions', 'client-manage-articles-actions')
+            	\Scopes::matchOne('user-manage-articles-actions', 'client-manage-articles-actions')
 	        ),
 	        ['only' => ['remove']]
         );
