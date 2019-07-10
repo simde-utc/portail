@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de configuration des logs.
+ * Logs configuration file.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -24,7 +24,7 @@ return [
             'level' => 'debug',
         ],
 
-        // Crée dynamiquement un fichier par semaine.
+        // Creates dynamically one file a week.
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/errors/errors.log'),
