@@ -24,7 +24,7 @@ class CreateVisibilitiesTable extends Migration
             $table->timestamps();
         });
 
-        // Obligé d'ajouter la contrainte après création... #LaravelBug
+        // Forced to add constraint after creation... #LaravelBug.
         // https://github.com/laravel/framework/issues/25190
         Schema::table('visibilities', function (Blueprint $table) {
             $table->foreign('parent_id')->references('id')->on('visibilities');

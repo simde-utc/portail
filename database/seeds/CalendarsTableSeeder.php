@@ -141,7 +141,7 @@ class CalendarsTableSeeder extends Seeder
                 'description'	=> 'Calendrier des réunions du BDE-UTC',
                 'color'			=> '#FF0000',
                 'visibility'	=> 'private',
-            // Visible que par les membres
+            // Only visible by members.
                 'created_by'	=> Asso::where('login', 'bde')->first(),
                 'owner'			=> Asso::where('login', 'bde')->first(),
                 'followers'		=> [
@@ -165,7 +165,7 @@ class CalendarsTableSeeder extends Seeder
                 'description'	=> 'Calendrier des réunions du SiMDE',
                 'color'			=> '#FF0000',
                 'visibility'	=> 'private',
-            // Visible que par les membres
+            // Only visible by members.
                 'created_by'	=> Asso::where('login', 'simde')->first(),
                 'owner'			=> Asso::where('login', 'simde')->first(),
                 'events'		=> [

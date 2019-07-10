@@ -20,7 +20,7 @@ class CreateGroupsMembersTable extends Migration
             $table->uuid('user_id');
             $table->uuid('role_id')->nullable();
             $table->uuid('semester_id');
-            // On permet ici que le semestre soit égal à 0 pour ne convenir à aucun semestre
+            // We allow here the semester to be equal to 0 (Between two semesters for example).
             $table->uuid('validated_by')->nullable();
 
             $table->timestamps();
@@ -40,7 +40,7 @@ class CreateGroupsMembersTable extends Migration
             $table->uuid('user_id');
             $table->uuid('permission_id')->nullable();
             $table->uuid('semester_id');
-            // On permet ici que le semestre soit égal à 0 pour ne convenir à aucun semestre
+            // We allow here the semester to be equal to 0 (Between two semesters for example).
             $table->uuid('validated_by')->nullable();
 
             $table->timestamps();
@@ -49,7 +49,7 @@ class CreateGroupsMembersTable extends Migration
             // Unique pour permettre semester_id d'être nulle
         });
 
-        // En fait Laravel fait dans l'ordre, du coup le primary plante..
+        // Laravel does it in the order so the primary key set crashes.
         // https://github.com/laravel/framework/issues/25190
         Schema::table('groups_permissions', function (Blueprint $table) {
             $table->charset = 'utf8';

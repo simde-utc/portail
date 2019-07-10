@@ -16,7 +16,7 @@ class Clear extends Migration
     }
 
     /**
-     * Supprime un dossier et tout son contenu.
+     * Deletes a folder and all its content.
      *
      * @param  string $path
      * @return void
