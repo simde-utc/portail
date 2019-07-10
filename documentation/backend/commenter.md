@@ -1,14 +1,14 @@
-# Commenter
+# Comment
 
-Il est important de commenter le code écrit. Au minimum toutes les fonctions.
+It is really important to comment the written code. At least for each function.
 
-Le SiMDE utilise la notation [DocBlock](http://docs.phpdoc.org/guides/docblocks.html#anatomy-of-a-docblock).
+The SiiMDE uses the convention [DocBlock](http://docs.phpdoc.org/guides/docblocks.html#anatomy-of-a-docblock).
 
-Exemple sur une fonction :
+Example on a function :
 
 ```php
     /**
-     * Ici un résumé de ce que fait la fonction.
+     * Describe here what this function does.
      *
      * @param string $astring
      * @param array $anArray
@@ -19,8 +19,7 @@ Exemple sur une fonction :
         
         ...
 
-        return $bar; // $bar est une collection
+        return $bar; // $bar is a collection
     } 
 ```
-
-**Remarque :** la ligne vide entre le résumé et la liste des paramètres.
+**Note :** The line between the description and the parameter list must be emtpy.

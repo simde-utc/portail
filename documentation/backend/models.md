@@ -1,9 +1,9 @@
 # Models
 
-Il s'agit des modèles de données, avec lesquelles on peut intéragir via Eloquent.
+They are data models, with wich it is possible to interract trough Eloquent. 
 
-Namespace : `\App\Models\...`
-Dossier :   `app/Models`
+Namespace : `\App\Models\...` <br>
+Folder :   `app/Models`
 
 ## User
 ```
@@ -14,7 +14,7 @@ firstname: varchar(128) nullable
 last_login_at: timestamp
 ```
 
-Laravel gère ensuite automatiquement le token et les timestamps de création et de modification
+Laravel manages the token, create timestamps and update timestamps itself.
 
 
 ## UserPreferences
@@ -22,8 +22,7 @@ Laravel gère ensuite automatiquement le token et les timestamps de création et
 user_id: int() fk -> user.id
 email: varchar(128) unique nullable
 ```
-
-Laravel gère ensuite automatiquement les timestamps de création et de modification
+Laravel manages create and update timestamps itself.
 
 
 ## AuthCas
@@ -35,8 +34,8 @@ active: boolean() default(1)
 last_login_at: timestamp
 ```
 
-Le bool active indique si la connexion CAS est toujours possible pour l'utilisateur
-Laravel gère ensuite automatiquement les timestamps de création et de modification
+The `active` boolean indicates if the CAS connexion is still possible for the user.
+Laravel manages create and update timestamps itself.
 
 
 ## AuthPassword
@@ -46,4 +45,4 @@ password: varchar(512) unique
 last_login_at: timestamp
 ```
 
-Laravel gère ensuite automatiquement les timestamps de création et de modification
+Laravel manages create and update timestamps itself.

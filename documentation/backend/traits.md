@@ -1,9 +1,10 @@
 # Traits
 
-Fonctionnalité php permettant de palier les problèmes dus à l'héritage simple.
-Documentation php mieux expliquée : http://php.net/manual/fr/language.oop5.traits.php
+PHP functionnality to reduce some limitations of single inheritance.
+Official Trait documentation : http://php.net/manual/en/language.oop5.traits.php
 
-Les traits que nous avons définis sont à **utiliser uniquement** dans les modèles. Conceptuellement parlant, ceux-ci doivent s'appliquer à une instance de modèle (et non une collection ou un query builder).
+The traits we defined **must only be used** within models.
+Conceptually speaking, they must apply to a model instance and not to a collection or a query builder. 
 
 ## HasMembers
 
@@ -13,11 +14,11 @@ Les traits que nous avons définis sont à **utiliser uniquement** dans les mod�
 
 ## HasVisibility
 
-Permet de spécifier si les attributs d'un modèle doivent être cachés en fonction de l'utilisateur qui y accède.
+Specifies if some of the model attributes are to be hidden depending on wich user wants to access it.
 
 ### hide()
 
-La méthode principale de ce trait. Exemple d'utilisation et de réponse :
+The main methode of this trait. Example of usage and answer:
 
 ```php
 $group = Group::find(1)->hide();
@@ -35,8 +36,7 @@ return response()->json($group, 200);
     }
 }
 ```
-
-On peut également appliquer la méthode à une collection grâce à la fonction map() :
+We can also apply that method to a collection with the `map()` function:
 
 ```php
 $groups = Group::all()->map(function ($group) {
@@ -46,8 +46,8 @@ $groups = Group::all()->map(function ($group) {
 
 ### getVisibilityType()
 
-Permet de renvoyer le type de la visibilité actuelle de l'utilisateur.
+Return a user current visibility type.
 
 ### isVisible()
 
-Renvoie vrai si l'utilisateur actuel peut voir le modèle.
+Returns true if current user is allowed to see the current model

@@ -15,6 +15,6 @@ Reusable components are in `components.`. They are used by several views.
 
 ## Redux
 
-Redux is used to hangle the data in a store.
+Redux is used to manage the data in a store.
 The Redux implementation is done in the folder `redux/`.
 For more information, [read the Redux documentation.](./redux.md)

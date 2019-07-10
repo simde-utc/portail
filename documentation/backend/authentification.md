@@ -1,12 +1,13 @@
 # Authentification
 
-Le système d'authentification est modulaire.
-Chaque type d'authentification est décrit dans `config/auth.php`, dans le tableau `services`.
+The authentification system is a modular one.
+Each authentification type is described in `config/auth.php`, in the array `services`.
 
 
-## Déclaration du système
+## System Declaration
 
-Chaque système d'authentification est déclaré dans `config/auth.php => services` de la façon suivante :
+Each authentification system is declared in `config/auth.php => services` this way:
+
 ```php
 'services' => [
 	'nom_du_système' => [
@@ -17,39 +18,35 @@ Chaque système d'authentification est déclaré dans `config/auth.php => servic
 ],
 ```
 
-`class` correspond au service d'authentification et `model` au modèle.
+`class` corresponds to the authentification service and `model` to the model.
 
 
 ## LoginController
 
-Situé dans `app/Http/Controllers/Auth/LoginController.php`, il permet de gérer les routes de base de dé/connexion.
+Located in `app/Http/Controllers/Auth/LoginController.php`, it manages basic login and logout routes.
 
 
 
-## Service d'authentification parent
+## Parent authentification service
 
-Situé dans `app/Services/Auth/AuthService.php`, il s'agit d'une classe abstraite dont doivent hériter chaque service d'authentification.
+Located in `app/Services/Auth/AuthService.php`, it is an abstract class that each authentication service must implements.
 
-Les méthodes `abstract` doivent être héritées et modifiées par le service fils, elles sont décrites dans la section suivante.
+`abstract` methods must be inherited and implemented by the child service. They are described in the following section.
 Ses méthodes sont :
-- `public function logout(Request $request)` permet de 
+- `public function logout(Request $request)` disconnects a user. 
 
+## Specific authentification service
 
-## Service d'authentification spécifique
+It must inherits from the `App\Services\Auth\AuthService` parent authentification service.
 
-Il doit hériter du service d'authentification parent `App\Services\Auth\AuthService`.
+Methods and attributes that it must inherits and that must be implemented are:
+- `public function showLoginForm()` : Returns the link to the login form.
+- `abstract function login(Request $request)` : connects the user from the request data (query, input, ...).
 
-Les méthodes et attributs qu'il faut hériter et ré-implémenter sont :
-- `public function showLoginForm()` : envoie le lien du formulaire de login
-- `abstract function login(Request $request)` : login l'utilisateur à partir des informations de requêtes (query, input...)
+The other `AuthService` methods can also be overrided. Especially logout to disconnect a user.
 
-Les autres méthodes de `AuthService` peuvent aussi être ré-implémentée, notamment `logout()` pour déconnecter l'utilisateur sur l'API externe aussi.
+## Table and Model
 
+In `app/Models/Auth`.
 
-
-
-## Table et Model
-
-Dans `app/Models/Auth`
-
-Doit contenir les informations nécessaires à la connexion via le système spécifique, une clé étrangère vers l'utilisateur lié et un timestamp `last_login_at`
+Must contain the necessary data for the connection trough the specific system, a foreign key the the linked user and a `last_login_at` timestamp.

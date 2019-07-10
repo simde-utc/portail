@@ -1,9 +1,10 @@
-# Installation et Mise à jour
+# Installation and Update
 
-- [Installation](#installation)
-- [Mise à jour](#mise-à-jour)
-- [En cas de problèmes](#en-cas-de-problèmes)
-- [Commandes](#commandes)
+- [Installation and Update](#Installation-and-Update)
+  - [Installation](#Installation)
+  - [Update](#Update)
+  - [In case of a problem](#In-case-of-a-problem)
+  - [Commands](#Commands)
 
 ## Installation
 
@@ -23,22 +24,22 @@
 - Ça part !
 
 
-## Mise à jour
+## Update
 
-- Mettre à jour les packages php avec `composer update`
-- Mettre à jour les packages npm avec `npm install`
-- Relancer les migrations avec `php artisan migrate:fresh --seed`
+- Update all php packages with `composer update`
+- Update all npm packages with `npm install`
+- Reload migrations with `php artisan migrate:fresh --seed`
 
 
-## En cas de problèmes
+## In case of a problem
 
 - `composer dump-autoload`
 - `php config:clear`
 
 
-## Commandes
+## Commands
 
-Des commandes artisan ont été développées pour simplifier l'installation et la maintenance de l'application :
-- `php artisan portail:install` pour installer ou mettre à jour toute l'application
-- `php artisan portail:clear` pour supprimer les ressources mise en cache
-- `php artisan portail:optimize` pour mettre en cache les ressources
+Some `artisan` command were developed to simplify the application installation an maintenance.
+- `php artisan portail:install` to install or update the whole application.
+- `php artisan portail:clear` to delete all cached data.
+- `php artisan portail:optimize` to cache resources.

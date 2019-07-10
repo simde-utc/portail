@@ -1,33 +1,33 @@
-# Documentation de l'API
+# API documentation
 
-Une documentation automatique de l'API a été mise en place grâce au package [laravel-apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator).
-Elle doit ne pas être suivie par git, et donc être générée à chaque fois.
+An automatic API documentation was implemented with the [laravel-apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator) package.
+The documentation is not to be tracked by git and must be generated each time.
 
+## Access the documentation
 
-## Accéder à la documentation
-
-La documentation est disponible dans le répertoire `/public/docs/` ; on peut y accéder directement via le navigateur à l'addresse https://assos.utc.fr/docs/ .
-Un fichier `collection.json` est également disponible pour importer les routes dans postman ou insomnia.
+The documentation is available in the folder `/public/docs/` and can be accessed directly from a browser with the adress: [https://assos.utc.fr/docs/](https://assos.utc.fr/docs/).
+A file `collection.json` is also available to import routes in postman or insomnia.
 
 ## Documenter le code
 
-Il est important de documenter le code de la façon suivante pour les Controllers :
+It is important to document your code the following way for the controllers:
+
 ```php
 <?php
 
 namespace App\Http\Controllers;
 
 /**
- * @resource <Nom De La Ressource>
+ * @resource <Ressource Name>
  *
- * <Gestion de ... Description de la ressource>
+ * <Manages ... Ressource descrption>
  */
 class RessourceController extends Controller
 {
     /**
      * List|Create|Update|Show|Delete <Ressource>
      *
-     * <Description de la fonction>
+     * <Function decription>
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
@@ -39,19 +39,18 @@ class RessourceController extends Controller
 ```
 
 
-## Générer la documentation
+## Generate documentation
 
-Veillez à avoir installé tous les paquets nécessaires via `composer update`.
-Ensuite, il faut demander à artisan de générer la documentation :
+make sure you've installed all necessary packages trough `composer update`.
+Then let artisan generate the documentation :
 ```
 php artisan api:generate --routePrefix="api/*"
 ```
-Il faut compléter le préfixe de route en fonction de la documentation que l'on souhaite générer (ex : api/* pour toutes les routes, api/v1/* pour toutes les routes de la v1 de l'API).
+The `routePrefix` must be changed depending on the wanted generated documentation (ex : `api/*` for all routes, `api/v1/*` for all the API's V1 version routes).
 
+## Update documentation
 
-## Mettre la documentation à jour
-
-La commande pour mettre à jour la documentation est :
+The command tu update the documentation is:
 ```
 php artisan api:update
 ```
