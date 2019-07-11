@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute un sélecteur étagé et améliore la méthode pour cacher les données.
+ * Adds a staged selector and improves the caching method. 
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,8 +17,8 @@ trait HasStages
     use BaseHasStages;
 
     /**
-     * Cette méthode permet de cacher automatiquement des données du modèle pour le retour json.
-     * Override de la méthode du trait HasHiddenData.
+     * This method automatically caches model's data for the JSON response.
+     * Overides HasHiddenData trait's method.
      *
      * @param boolean $addModelName
      * @return mixed
@@ -27,7 +27,7 @@ trait HasStages
     {
         $model = parent::hideData($addModelName);
 
-        // Si on affiche par étage mais que le parent_id manque.
+        // If we display by stage but the prant_id is missing.
         if ((\Request::filled('stage') || \Request::filled('stages')) && !in_array('children', array_keys($model->toArray()))) {
             $model = $model->makeVisible('parent_id');
         }

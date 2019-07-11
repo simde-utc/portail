@@ -1,6 +1,6 @@
 <?php
 /**
- * Cache des données par défaut pour les exporter.
+ * Hides data by default to exporte it.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 trait HasHiddenData
 {
     /**
-     * Retourne le type de modèle que c'est.
+     * Returns the model type.
      *
      * @return string
      */
@@ -25,7 +25,7 @@ trait HasHiddenData
     }
 
     /**
-     * Retourne la liste des champs obligatoires.
+     * Retuns all required fields.
      *
      * @return array
      */
@@ -39,7 +39,7 @@ trait HasHiddenData
     }
 
     /**
-     * Cette méthode permet de cacher automatiquement des données des sous-modèles pour le retour json.
+     * This method hides automatically data from the sub-model for the JSOn response.
      *
      * @param boolean $addSubModelName
      * @return mixed
@@ -74,7 +74,7 @@ trait HasHiddenData
     }
 
     /**
-     * Cette méthode permet de cacher automatiquement des données du modèle pour le retour json.
+     * This method hides automatically data from the model for the JSOn response.
      *
      * @param boolean $addModelName
      * @return mixed
@@ -84,10 +84,10 @@ trait HasHiddenData
         $this->makeHidden(array_diff(
             array_keys($this->toArray()),
             $this->getMustFields()
-            // On affiche au moins l'id, le nom et le modèle !
+            // At least the ID, the name and the Model are displayed.
         ));
 
-        // On fait définir l'attibut modèle si on le demande.
+        // Model attribute definition if asked.
         if ($addModelName) {
             $this->model = $this->model;
         }

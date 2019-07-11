@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux rôles.
+ * Adds the controller an access to aux rôles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -21,7 +21,7 @@ trait HasRoles
     use HasSemesters;
 
     /**
-     * Récupère un rôle.
+     * Retrieves un rôle.
      *
      * @param  Request $request
      * @param  string  $role_id
@@ -48,7 +48,7 @@ trait HasRoles
     }
 
     /**
-     * Récupère un rôle depuis un utlisateur
+     * Retrieves un rôle depuis un utlisateur
      *
      * @param  Request $request
      * @param  User    $user

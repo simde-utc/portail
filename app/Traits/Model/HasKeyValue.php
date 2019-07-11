@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute une association clé/valeur.
+ * Adds a key/value association.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,7 +16,7 @@ use App\Exceptions\PortailException;
 trait HasKeyValue
 {
     /**
-     * Sélecteur de clé.
+     * Key selector.
      *
      * @param  Builder $query
      * @param  string  $key
@@ -38,7 +38,7 @@ trait HasKeyValue
     }
 
     /**
-     * Sélecteur de clé.
+     * Key selector.
      *
      * @param  Builder $query
      * @param  string  $key
@@ -56,7 +56,7 @@ trait HasKeyValue
     }
 
     /**
-     * Sélecteur de valeur via la clé.
+     * Value selector through the key.
      *
      * @param  Builder $query
      * @param  string  $key
@@ -74,7 +74,7 @@ trait HasKeyValue
     }
 
     /**
-     * Sélecteur indiquant si la clé est une méthode.
+     * Returns if the key is a method or not.
      *
      * @param  Builder $query
      * @param  string  $key
@@ -86,7 +86,7 @@ trait HasKeyValue
     }
 
     /**
-     * Sélecteur indiquant si la clé est dans la base de donnée.
+     * Returns if the key exists in the Database.
      *
      * @param  Builder $query
      * @param  string  $key
@@ -98,7 +98,7 @@ trait HasKeyValue
     }
 
     /**
-     * Sélecteur indiquant si la clé existe.
+     * Returns if the key exists.
      *
      * @param  Builder $query
      * @param  string  $key
@@ -110,7 +110,7 @@ trait HasKeyValue
     }
 
     /**
-     * Sélecteur indiquant si la clé existe.
+     * Transform a scope to an array.
      *
      * @param  Builder $query
      * @param  string  $key
@@ -134,7 +134,7 @@ trait HasKeyValue
     }
 
     /**
-     * Sélecteur permettant de retourner tout en tableau.
+     * Returns everything in an array.
      *
      * @param  Builder $query
      * @return array
@@ -159,7 +159,8 @@ trait HasKeyValue
     }
 
     /**
-     * Sélecteur permettant de retourner à partir des groupes tout en tableau.
+     * From a group, returns all into an array.
+     * 
      *
      * @param  Builder $query
      * @return array
@@ -181,7 +182,7 @@ trait HasKeyValue
     }
 
     /**
-     * Casting automatique des données.
+     * Auto data casting.
      *
      * @param  mixed $key
      * @return mixed
@@ -219,7 +220,7 @@ trait HasKeyValue
     }
 
     /**
-     * Casting automatique des données.
+     * Auto data casting.
      *
      * @param  mixed $key
      * @param  mixed $value
@@ -276,7 +277,7 @@ trait HasKeyValue
     }
 
     /**
-     * Conversion en array.
+     * Array type cast.
      *
      * @param  mixed $one
      * @return array
@@ -307,7 +308,7 @@ trait HasKeyValue
     }
 
     /**
-     * Relation avec l'utilisateur.
+     * Relation with users.
      *
      * @return mixed
      */

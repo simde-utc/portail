@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute un sélecteur concernant la langue.
+ * Adds a selector concerning language.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 trait HasLang
 {
     /**
-     * Sélecteur de langue.
+     * Lang selector.
      *
      * @param  Builder $query
      * @param  string  $lang

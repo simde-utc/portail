@@ -1,6 +1,7 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux utilisateurs.
+ * Adds to the controller an access to the users.
+ * Adds the controller an access to aux utilisateurs.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 trait HasUsers
 {
     /**
-     * Renvoie les informations sur un utilisateur via son id ou sur l'utilisateur actuellement connecté.
+     * Returns information about a given user or the currently connected user.
      *
      * @param Request     $request
      * @param string|null $user_id

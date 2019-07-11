@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux emplacements.
+ * Adds the controller an access to aux emplacements.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -21,7 +21,7 @@ trait HasPlaces
     use HasPosition;
 
     /**
-     * Récupère un emplacement.
+     * Retrieves un emplacement.
      *
      * @param  Request $request
      * @param  string  $place_id

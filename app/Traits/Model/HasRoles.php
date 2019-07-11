@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute la gestion des rôles.
+ * Adds roles management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -26,14 +26,14 @@ trait HasRoles
     }
 
     /**
-     * Méthode appelée au chargement du class.
+     * Method called at class loading.
      *
      * @return void
      */
     public static function bootHasRoles()
     {
         static::deleting(function ($model) {
-            // Si on souhaite supprimer la ressources, on supprime les membres associés.
+            // If we want to delete the resource, we delete associated members.
             if (!method_exists($model, 'isForceDeleting') && $model->isForceDeleting()) {
                 $model->roles()->detach();
             }
@@ -41,7 +41,7 @@ trait HasRoles
     }
 
     /**
-     * Récupération du nom de la table de relation.
+     * Relation table name retrievement.
      *
      * @return string
      */
@@ -50,8 +50,8 @@ trait HasRoles
         return ($this->roleRelationTable ?? $this->getTable().'_roles');
     }
 
-    /**
-     * Liste des roles attribués.
+    /*
+     * Lists attributed roles.
      *
      * @return mixed
      */
@@ -61,11 +61,11 @@ trait HasRoles
     }
 
     /**
-     * Permet d'assigner un ou plusieurs roles attribués en fonction des données fournis.
+     * Assings one or several attributed roles depending on given data. 
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data  Possibilité d'affecter role_id, semester_id, validated_by_id, user_id.
-     * @param boolean                                              $force Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
+     * @param array                                                $data  role_id, semester_id, validated_by_id and user_if can be affected in this array.
+     * @param boolean                                              $force Enable to by-pass add securities. (to use with caution).
      * @return mixed
      */
     public function assignRoles($roles, array $data=[], bool $force=false)
@@ -118,12 +118,12 @@ trait HasRoles
     }
 
     /**
-     * Permet de modifier un ou plusieurs roles attribués en fonction des données fournis.
+     * Modifies one or several attributed roles depending on given data. 
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data        Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
-     * @param array                                                $updatedData Possibilité d'affecter role_id, semester_id, validated_by_id, user_id.
-     * @param boolean                                              $force       Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
+     * @param array                                                $data        Possiblility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
+     * @param array                                                $updatedData Possibility to affect new role_id, semester_id, validated_by_id and user_id.
+     * @param boolean                                              $force       Enbles to By-Pass add scurities (to use with caution).
      * @return mixed
      */
     public function updateRoles($roles, array $data=[], array $updatedData=[], bool $force=false)
@@ -173,12 +173,12 @@ trait HasRoles
     }
 
     /**
-     * Permet de supprimer un ou plusieurs roles attribués en fonction des données fournis.
+     * Deletes one or several attributed roles depending on given data. 
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data       Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
-     * @param string                                               $removed_by Personne demandant la suppression.
-     * @param boolean                                              $force      Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
+     * @param array                                                $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
+     * @param string                                               $removed_by Person requesting the deletion.
+     * @param boolean                                              $force      By-pass addition securities (to use with caution).
      * @return mixed
      */
     public function removeRoles($roles, array $data=[], string $removed_by=null, bool $force=false)
@@ -226,12 +226,12 @@ trait HasRoles
     }
 
     /**
-     * Permet de synchroniser (tout supprimer et assigner de nouveaux) un ou plusieurs roles en fonction des données fournis.
+     * Synchronizes (deletes all roles and assign new one.s) one or several attributed roles depending on given data.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data       Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
-     * @param string                                               $removed_by Personne demandant la suppression.
-     * @param boolean                                              $force      Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
+     * @param array                                                $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
+     * @param string                                               $removed_by Person requesting the deletion.
+     * @param boolean                                              $force      By-pass addition securities (to use with caution).
      * @return mixed
      */
     public function syncRoles($roles, array $data=[], string $removed_by=null, bool $force=false)
@@ -256,10 +256,10 @@ trait HasRoles
     }
 
     /**
-     * Regarde si un role parmi la liste a été donné ou non.
+     * Checks if a role in the given list has benn granted or not.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data  Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
+     * @param array                                                $data  Possibility to use role_id, semester_id, validated_by_id and user_id to match a membre or several members.
      * @return boolean
      */
     public function hasOneRole($roles, array $data=[])
@@ -270,10 +270,10 @@ trait HasRoles
     }
 
     /**
-     * Regarde si tous les roles parmi la liste existe ou non.
+     * Cheks if each role in the list exists or not.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data  Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
+     * @param array                                                $data  Possibility to use role_id, semester_id, validated_by_id and user_id to match a membre or several members.
      * @return boolean
      */
     public function hasAllRoles($roles, array $data=[])
@@ -284,7 +284,7 @@ trait HasRoles
     }
 
     /**
-     * Récupérer les rôles assignés d'une personne.
+     * Retrieves a given user's assigned roles.
      *
      * @param string  $user_id
      * @param string  $semester_id
@@ -322,7 +322,8 @@ trait HasRoles
     }
 
     /**
-     * Récupérer les rôles de cette instance ou de celui sur les users assignés et hérités d'une personne.
+     * 
+     * Retrieves roles of this instance or of assigned users and children.
      *
      * @param string $user_id
      * @param string $semester_id
@@ -344,7 +345,7 @@ trait HasRoles
     }
 
     /**
-     * Récupération des rôles d'un utilisateur à partir de ses permissions.
+     * User roles retrievement from his permissions.
      *
      * @param  string $user_id
      * @param  string $semester_id
@@ -362,7 +363,7 @@ trait HasRoles
     }
 
     /**
-     * Override de la méthode du class hasPermissions: Récupérer les permissions de cette instance ou de celui sur les users assignés et hérités d'une personne.
+     * Overrides of the class method hasPermissions: Retrieve permissions of this instance or of assigned users and children.
      *
      * @param string $user_id
      * @param string $semester_id
@@ -375,8 +376,8 @@ trait HasRoles
     }
 
     /**
-     * Indique si un rôle est supprimable.
-     * Par défaut, un role n'est pas supprimable s'il a déjà été assigné.
+     * Indicates if a role is deletable.
+     * By default a role is not deletable if it has already been assigned.
      *
      * @param  Role $role
      * @return boolean
@@ -387,7 +388,7 @@ trait HasRoles
     }
 
     /**
-     * Indique si un rôle est supprimable pour un id de cette instance.
+     * Indicates if a role is deletable for a given id of this instance.
      *
      * @param  Role   $role
      * @param  string $model_id
@@ -399,7 +400,7 @@ trait HasRoles
     }
 
     /**
-     * Action avant la suppression du rôle.
+     * Action before role deletion.
      *
      * @param  Role $role
      * @return boolean

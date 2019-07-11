@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux créateurs, possésseurs et valiateurs de la ressource.
+ * Adds the controller an access to creators, owners and validators of the resource.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ trait HasCreatorsAndOwnersAndValidators
     use HasCreatorsAndOwners;
 
     /**
-     * Récupère le validateur.
+     * Retrieves the validator.
      *
      * @param  Request $request
      * @param  Model   $owner

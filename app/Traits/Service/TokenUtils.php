@@ -1,6 +1,6 @@
 <?php
 /**
- * Méthodes pour manipuler scopes et token.
+ * Methods to handle scopes and tokens.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,10 +19,10 @@ use App\Exceptions\PortailException;
 trait TokenUtils
 {
     /**
-     * Renvoie le scope et ses parents ou ses hérédités (prend en compte l'héridité des verbes).
+     * Returns the scope and its parents or all childs (including verb inheritance).
      *
      * @param string  $scope
-     * @param boolean $goUp  Permet de spécifier dans quel sens de l'héridité à générer.
+     * @param boolean $goUp  Specify the inheritance direction.
      * @return array
      */
     public function getRelatives(string $scope=null, bool $goUp=false)
@@ -67,7 +67,7 @@ trait TokenUtils
     }
 
     /**
-     * Retourne si le token est du type User.
+     * Returns if a given token is a User token or not.
      *
      * @param  Request $request
      * @return boolean
@@ -78,7 +78,7 @@ trait TokenUtils
     }
 
     /**
-     * Retourne si le token est du type Transient.
+     * Returns if a given token is a Transient token or not.
      *
      * @param  Request $request
      * @return boolean
@@ -89,7 +89,7 @@ trait TokenUtils
     }
 
     /**
-     * Retourne si le token est du type Client ou si le token est transient et de type client.
+     * Returns if a given token is a Client token or if it is a Transient and Client token.
      *
      * @param  Request $request
      * @return boolean
@@ -100,7 +100,7 @@ trait TokenUtils
     }
 
     /**
-     * Récupérer le type de token (sert pour connaitre le header des scopes).
+     * Retrieves the type of a given token (useful to know the header of the scopes)
      *
      * @param  Request $request
      * @return string  'client' / 'user'
@@ -111,7 +111,7 @@ trait TokenUtils
     }
 
     /**
-     * Indique s'il s'agit d'un token user ou client.
+     * Indicates if it's a User or Client token.
      *
      * @param  Request $request
      * @return boolean
@@ -132,7 +132,7 @@ trait TokenUtils
     }
 
     /**
-     * Retourne le token.
+     * Returns the token.
      *
      * @param  Request $request
      * @return mixed
@@ -154,7 +154,7 @@ trait TokenUtils
     }
 
     /**
-     * Retourne le client Oauth de la requête.
+     * Returns the Request's OAuth client. 
      *
      * @param  Request $request
      * @return mixed
@@ -167,7 +167,7 @@ trait TokenUtils
     }
 
     /**
-     * Indique si la requête est OAuth.
+     * Idicates if the request is an OAuth request or not. 
      *
      * @param  Request $request
      * @return boolean
@@ -178,7 +178,7 @@ trait TokenUtils
     }
 
     /**
-     * Retourne les Middleware à utiliser pour accéder à une route en matchant le scope ou les scopes.
+     * Returns Middlewares to use to access a route by matching one or several scopes.
      *
      * @param  Request $request
      * @param  mixed   $scopes
@@ -190,7 +190,7 @@ trait TokenUtils
     }
 
     /**
-     * Retourne si on peut accéder à une route en matchant au moins un scope parmi la liste.
+     * Returns if we can access a route by matching at least a scope in the list. 
      *
      * @param  Request $request
      * @param mixed   $scopes
@@ -230,7 +230,7 @@ trait TokenUtils
     }
 
     /**
-     * Retourne si on peut accéder à une route en matchant tous les scopes parmi la liste.
+     * Returns if we can access a route by matchnig all scopes in the list.
      *
      * @param Request $request
      * @param array   $scopes
@@ -265,7 +265,7 @@ trait TokenUtils
     }
 
     /**
-     * Génère une exception si les scopes ne sont correspondent pas au bon type d'authentification.
+     * Generates an exception if scopes don't match the right authentification type
      *
      * @param  array  $scopes
      * @param  string $grantType
@@ -282,14 +282,14 @@ trait TokenUtils
                 $middleware = $elements[0];
             } else if ($middleware !== $elements[0]) {
                 throw new PortailException('Les scopes ne sont pas définis avec les mêmes types d\'authentification !');
-                // Des scopes commençant par c- et u-.
+                // Scopes starting by c- and u-.
             }
         }
 
         if ($middleware && (($middleware === 'client' && $grantType !== 'client_credentials')
         	|| ($grantType === 'client_credentials' && $middleware !== 'client'))) {
             throw new PortailException('Les scopes ne sont pas définis pour le bon type d\'authentification !');
-            // Des scopes commençant par c- et u-.
+            // Scopes starting by c- and u-.
         }
     }
 }

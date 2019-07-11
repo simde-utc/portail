@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux commentaires.
+ * Adds the controller an access to Comments.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 trait HasComments
 {
     /**
-     * Vérifie les droits du token.
+     * Checks the token rights.
      *
      * @param  Request $request
      * @param  string  $verb
@@ -31,7 +31,7 @@ trait HasComments
     }
 
     /**
-     * Récupère un commentaire.
+     * Retrieves a Comment.
      *
      * @param  Request $request
      * @param  string  $verb

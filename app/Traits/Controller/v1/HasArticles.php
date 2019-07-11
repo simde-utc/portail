@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux articles.
+ * Adds the controller an access to Articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,7 +26,7 @@ trait HasArticles
     }
 
     /**
-     * Indique si le token peut voir la ressource.
+     * Returns if the token can see the resource.
      *
      * @param  Request $request
      * @param  Model   $model
@@ -64,7 +64,7 @@ trait HasArticles
     }
 
     /**
-     * Récupère l'article demandé.
+     * Retrieves the requested article.
      *
      * @param  Request $request
      * @param  User    $user
@@ -78,7 +78,7 @@ trait HasArticles
         $article = Article::findSelection($article_id);
 
         if ($article) {
-            // On vérifie si l'accès est publique.
+            // Public access check.
             if (\Scopes::isOauthRequest($request)) {
                 if (!$this->tokenCanSee($request, $article, $verb, 'articles')) {
                     abort(403, 'L\'application n\'a pas les droits sur cet article');

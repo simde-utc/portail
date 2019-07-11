@@ -1,6 +1,6 @@
 <?php
 /**
- * Indique que le modèle possède des uuids.
+ * Indicates UUIDs' model.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -13,7 +13,7 @@ namespace App\Traits\Model;
 trait HasUuid
 {
     /**
-     * Au lancement du modèle, crée dynamiquement les UUIDs.
+     * At the model's launch, creates dynamically UUIDs.
      *
      * @return void
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Méthodes pour identifier et vérifier les scopes.
+ * Methods to identify and check scopes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,8 +15,8 @@ use App\Exceptions\PortailException;
 trait ScopesIdentification
 {
     /**
-     * Cette fonction permet de retrouver les plus petits scopes du scope donné.
-     * (très utile pour lister les scopes minimum dans les controlleurs).
+     * This function enables to find the smallest scopes of a given scope.
+     * (Really useful to list minimum scopes in controllers).
      *
      * @param  string|array $scope
      * @return array
@@ -55,7 +55,8 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne la liste des scopes et des ses parents (prise en compte de l'héridité des verbes).
+     * Return the scopes list and its parents (considering verbs inheritance). 
+     * 
      *
      * @param  array  $scopes
      * @param  string $middleware
@@ -80,7 +81,7 @@ trait ScopesIdentification
                 $middleware = $elements[0];
             } else if ($middleware !== $elements[0]) {
                 throw new PortailException('Les scopes ne sont pas définis avec les mêmes types d\'authentification !');
-                // Des scopes commençant par c- et u-.
+                // Scopes starting by c- and u-.
             }
 
             $current = $this->getRelatives($scope, true);
@@ -95,7 +96,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les middlewares d'authentification.
+     * Returns authentification middlewares.
      *
      * @param  array   $userScopes
      * @param  array   $clientScopes
@@ -124,7 +125,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les middlewares d'authentification pour tout client connecté à un utilisateur.
+     * Retuns authentification middlewares for every client connected to a user.
      *
      * @return array
      */
@@ -136,7 +137,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les middlewares d'authentification pour tout client non connecté à un utilisateur.
+     * Retuns authentification middlewares for every client not connected to a user.
      *
      * @return array
      */
@@ -148,7 +149,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les middlewares d'authentification pour tout client connecté ou non à un utilisateur.
+     * Retuns authentification middlewares for every client connected or not to a user.
      *
      * @return array
      */
@@ -160,10 +161,10 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les middlewares à utiliser pour accéder à une route en matchant le scope ou les scopes.
+     * Returns middlewares to use to access a route by matching a scopes or several scopes.
      *
-     * @param  string|array $userScopes   Liste des scopes ou des scopes user/client à avoir si on est user/client.
-     * @param  array        $clientScopes Liste des scopes client/user à avoir.
+     * @param  string|array $userScopes   Scopes list or User/Client scopes list if accessor is a User/Client.
+     * @param  array        $clientScopes User/Client scope list to have.
      * @return array
      */
     public function match($userScopes, array $clientScopes=[])
@@ -178,7 +179,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les middlewares à utiliser pour accéder à une route en matchant au moins un scope parmi la liste.
+     * Returns all widdlewares to use to access a route by matching at least one scope in the list.
      *
      * @param string|array $userScopes
      * @param string|array $clientScopes
@@ -202,7 +203,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retourne les middlewares à utiliser pour accéder à une route en matchant tous les scopes ou leurs parents de la liste.
+     * Returns all middleware to use to access a routes by matching all scopes or their parents.
      *
      * @param array $userScopes
      * @param array $clientScopes
@@ -223,7 +224,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Crée le middleware pour vérifier qu'un scope possède au moins un des plus petits enfants des scopes donnés.
+     * Creates the middleware to check that a scope owns one of the given scopes smallest children.
      *
      * @param  string|array $userScope
      * @param  string|array $clientScope

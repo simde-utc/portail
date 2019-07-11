@@ -1,6 +1,6 @@
 <?php
 /**
- * Trait servant de descriptif de relation pour les utilisateurs
+ * Trait for describing relations for users.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ use App\Models\{
 trait UserRelations
 {
     /**
-     * Relation avec l'authentification CAS.
+     * Relation with the CAS authentification.
      *
      * @return mixed
      */
@@ -28,7 +28,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec l'authentification par mot de passe.
+     * Relation with password authentification.
      *
      * @return mixed
      */
@@ -38,7 +38,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les authentifications applications.
+     * Relation with application authentification.
      *
      * @return mixed
      */
@@ -48,7 +48,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les détails.
+     * Relation with details.
      *
      * @return mixed
      */
@@ -58,7 +58,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les préférences.
+     * Relation with preferences.
      *
      * @return mixed
      */
@@ -68,7 +68,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les notifications.
+     * Relation with notifications.
      *
      * @return mixed
      */
@@ -78,7 +78,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les associations.
+     * Relation with associations.
      *
      * @return mixed
      */
@@ -88,7 +88,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les actuelles associations.
+     * Relation with current associations.
      *
      * @return mixed
      */
@@ -98,7 +98,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les associations dont l'utilisateur est membre.
+     * Relation with associations of wich the user is member.
      *
      * @return mixed
      */
@@ -109,7 +109,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les associations dont l'utilisateur est membre au semestre actuel.
+     * Relation with associations of wich the user is memeber at the current semester.
      *
      * @return mixed
      */
@@ -119,7 +119,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les associations où l'utilisateur a demandé de rejoindre.
+     * Relation with associations of which the user asked to join.
      *
      * @return mixed
      */
@@ -130,7 +130,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les associations où l'utilisateur a demandé de rejoindre au semestre actuel.
+     * Relation with associations of which the user asked to join at this current semester..
      *
      * @return mixed
      */
@@ -140,7 +140,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les associations que l'utilisateur suit.
+     * Relation with associtaions that the user is following.
      *
      * @return mixed
      */
@@ -151,7 +151,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les associations que l'utilisateur suit au semestre actuel.
+     * Relation with associtaions that the user is following at the current semester.
      *
      * @return mixed
      */
@@ -161,7 +161,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les groupes.
+     * Relation with groups.
      *
      * @return mixed
      */
@@ -171,7 +171,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les calendriers suivits.
+     * Relation with followed calendars.
      *
      * @return mixed
      */
@@ -181,7 +181,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les services suivis.
+     * Relation with followed services.
      *
      * @return mixed
      */
@@ -191,7 +191,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les commentaires.
+     * Relation with comments.
      *
      * @return mixed
      */
@@ -201,7 +201,7 @@ trait UserRelations
     }
 
     /**
-     * Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     * Functions to check user connection depending on different authentification types.
      *
      * @param string $username
      * @return User/null
@@ -226,7 +226,7 @@ trait UserRelations
     }
 
     /**
-     * Fonctions permettant de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     * Functions to check user connection depending on different authentification types.
      *
      * @param string $password
      * @return boolean
@@ -251,8 +251,8 @@ trait UserRelations
     }
 
     /**
-     * Indique si un rôle est supprimable s'il appartient à un utilisateur unique.
-     * Mais on permet sa suppression s'il est assigné à un seul groupe.
+     * Indicates if a role is deletable (if it belongs to a unique user).
+     * But we allow its deletion if it's assigned to a unique group. 
 
      * @param  mixed  $role
      * @param  string $user_id
@@ -264,7 +264,7 @@ trait UserRelations
     }
 
     /**
-     * Indique si un rôle est accessible.
+     * Returns if a user can access the role.
      *
      * @param  string $user_id
      * @return boolean
@@ -279,7 +279,7 @@ trait UserRelations
     }
 
     /**
-     * Indique si un rôle est gérable.
+     * Indicates if a role is manageable.
      *
      * @param  string $user_id
      * @return boolean
@@ -294,7 +294,7 @@ trait UserRelations
     }
 
     /**
-     * Indique si une permission est accessible.
+     * Idicates if the user can access a permission.
      *
      * @param  string $user_id
      * @return boolean
@@ -309,7 +309,7 @@ trait UserRelations
     }
 
     /**
-     * Indique si une permission est gérable.
+     * Indicates if a permission is manageable.
      *
      * @param  string $user_id
      * @return boolean
@@ -324,7 +324,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les contacts.
+     * Relation with contacts.
      *
      * @return mixed
      */
@@ -334,7 +334,7 @@ trait UserRelations
     }
 
     /**
-     * Indique si un contact est accessible.
+     * Indicates if a contact is accessible. 
      *
      * @param  string $user_id
      * @return boolean
@@ -345,7 +345,7 @@ trait UserRelations
     }
 
     /**
-     * Indique si un contact est gérable.
+     * Indicates if a contact is manageable.
      *
      * @param  string $user_id
      * @return boolean
@@ -356,7 +356,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les calendriers.
+     * Relation with calendars.
      *
      * @return mixed
      */
@@ -366,7 +366,7 @@ trait UserRelations
     }
 
     /**
-     * Indique si un calendrier est gérable.
+     * Indicates if a calendar is manageable.
      *
      * @param  string $user_id
      * @return boolean
@@ -377,7 +377,7 @@ trait UserRelations
     }
 
     /**
-     * Relation avec les événements.
+     * Relation with events.
      *
      * @return mixed
      */
@@ -387,7 +387,7 @@ trait UserRelations
     }
 
     /**
-     * Indique si un événement est gérable.
+     * Indicates if an event is manageable.
      *
      * @param  string $user_id
      * @return boolean
@@ -398,8 +398,8 @@ trait UserRelations
     }
 
     /**
-     * Indique si un commentaire est écrivable.
-     * On ne peut bien sûr pas écrire au nom de quelqu'un d'autre.
+     * Indicates if a comment is writable.
+     * Of course we cannot write as someone else. 
      *
      * @param  string $user_id
      * @return boolean
@@ -410,8 +410,8 @@ trait UserRelations
     }
 
     /**
-     * Indique si un commentaire est éditable.
-     * On ne peut bien sûr pas écrire au nom de quelqu'un d'autre.
+     * Indicates if a comment is editable.
+     * Of course we cannot write as someone else. 
      *
      * @param  string $user_id
      * @return boolean
@@ -422,8 +422,8 @@ trait UserRelations
     }
 
     /**
-     * Indique si un commentaire est supprimable.
-     * On ne peut bien sûr pas supprimer au nom de quelqu'un d'autre.
+     * Indicates if a comment is deletable.
+     * Of course we cannot delete as someone else. 
      *
      * @param  string $user_id
      * @return boolean

@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux services.
+ * Adds to the controller an access to Services.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -21,7 +21,7 @@ trait HasServices
     use HasUsers;
 
     /**
-     * Récupère un service.
+     * Retrieves a Service.
      *
      * @param  User   $user
      * @param  string $service_id
@@ -39,7 +39,7 @@ trait HasServices
     }
 
     /**
-     * Récupère un service suivi.
+     * Retrieves a followed service.
      *
      * @param  User   $user
      * @param  string $service_id

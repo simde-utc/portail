@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux réservations.
+ * Adds the controller an access to Bookings.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,7 +25,7 @@ trait HasBookings
     }
 
     /**
-     * Vérifie qu'il n'y ait pas de réservation au même moment.
+     * Checks that the time period is clear.
      *
      * @param  string $room_id
      * @param  string $begin_at
@@ -62,12 +62,12 @@ trait HasBookings
             abort(409, 'Il existe une réservation qui se déroule pendant la même période');
         }
 
-        // Si on dépasse la durée de réservation max, la réservation doit être validée.
+        // If we pass the maximun booking time, the booking must me validated. 
         return $end->diffInSeconds($begin) <= (config('portail.bookings.max_duration') * 60 * 60);
     }
 
     /**
-     * Récupère une réservation à partir d'une salle.
+     * Retrieves a booking from a room.
      *
      * @param  Request $request
      * @param  Room    $room
@@ -97,7 +97,7 @@ trait HasBookings
     }
 
     /**
-     * Indique si le token peut voir ou non.
+     * Returns if the token can see or not.
      *
      * @param  Request $request
      * @param  Model   $model

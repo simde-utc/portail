@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux groupes.
+ * Adds the controller an access to Groups.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 trait HasGroups
 {
     /**
-     * Renvoie le groupe demandé.
+     * Return the requested group.
      *
      * @param Request $request
      * @param string  $group_id
