@@ -1,8 +1,9 @@
 <?php
 /**
- * Connexion entre le compte CAS et la connexion email/mdp.
+ * Link between CAS auth and email/pwd auth.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Romain Maliach-Auguste <r.maliach@live.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -21,7 +22,7 @@ class LinkToPasswordController extends Controller
     protected $redirectTo = '/';
 
     /**
-     * Définition des middlewares: utilisateur cas et on password.
+     * Middleware definition: CAS, password
      *
      * @return void
      */
@@ -31,7 +32,7 @@ class LinkToPasswordController extends Controller
     }
 
     /**
-     * Renvoie la page de linkage.
+     * Returns linking page
      *
      * @param  Request $request
      * @return mixed
@@ -42,7 +43,7 @@ class LinkToPasswordController extends Controller
     }
 
     /**
-     * Enregistre l'interconnexion des modes de connexion.
+     * Stores the link between auth types
      *
      * @param  Request $request
      * @return mixed

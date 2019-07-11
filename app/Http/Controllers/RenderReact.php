@@ -1,8 +1,9 @@
 <?php
 /**
- * Permet de renvoyer la page React.
+ * Renders the React page
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Romain Maliach-Auguste <r.maliach@live.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -15,8 +16,8 @@ use App\Http\Controllers\Controller;
 class RenderReact extends Controller
 {
     /**
-     * Gère n'importe quelle requête.
-     * @param  string $whatever Catch n'importe quelle valeur.
+     * Manages any request
+     * @param  string $whatever Catches any value
      * @return mixed
      */
     public function __invoke(string $whatever=null)

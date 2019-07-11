@@ -1,8 +1,9 @@
 <?php
 /**
- * Génère les routes de l'api
+ * Manages API routes
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Romain Maliach-Auguste <r.maliach@live.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 class RouteController extends Controller
 {
     /**
-     * Définition des middlewares utilisés.
+     * Middleware definition
      */
     public function __construct()
     {
@@ -24,7 +25,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Permet de générer la liste des routes pour une version précise.
+     * Lists routes for a specific version
      * @param  string $version
      * @return array
      */
@@ -53,7 +54,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Indique toutes les versions du Portail.
+     * Lists portail versions
      *
      * @param  Request $request
      * @return mixed
@@ -92,7 +93,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Liste toutes les routes api d'une version précise.
+     * Lists API routes for a specific version
      * @param  Request $request
      * @param  string  $version
      * @return mixed
@@ -137,7 +138,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Retour expliquant que la version n'existe pas
+     * Exception for non-existing versions
      * @param  Request $request
      * @param  string  $version
      * @return mixed
@@ -148,7 +149,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Retour expliquant que la route api n'existe pas
+     * Exception for non-existing routes
      * @return mixed
      */
     public function notFound()

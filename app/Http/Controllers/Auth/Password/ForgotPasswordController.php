@@ -1,8 +1,9 @@
 <?php
 /**
- * Gère la demande de réinitilisation de mots de passe.
+ * Manages password reset requests.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Romain Maliach-Auguste <r.maliach@live.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -19,7 +20,7 @@ class ForgotPasswordController extends Controller
     use SendsPasswordResetEmails;
 
     /**
-     * Où rediriger les connectés.
+     * Where to redirect users once they're logged in
      *
      * @return void
      */
@@ -29,7 +30,7 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Montre le formulaire de demande de réinitilisation.
+     * Shows the password reset request form
      *
      * @return \Illuminate\View\View
      */
@@ -39,7 +40,7 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Validation de la demande.
+     * Request validation
      *
      * @param  \Illuminate\Http\Request $request
      * @return void
