@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux services.
+ * Model corresponding to services.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -45,7 +45,7 @@ class Service extends Model
     ];
 
     /**
-     * Scope spécifique pour n'avoir que les ressources publiques.
+     * Specific scope to have only public ressources.
      *
      * @param  Builder $query
      * @return Builder
@@ -61,7 +61,7 @@ class Service extends Model
     }
 
     /**
-     * Relation avec la visibilité.
+     * Relation with the visibility.
      *
      * @return mixed
      */
@@ -71,7 +71,7 @@ class Service extends Model
     }
 
     /**
-     * Relation avec les suiveurs.
+     * Relation with followers.
      *
      * @return mixed
      */

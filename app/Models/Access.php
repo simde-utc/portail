@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux accès.
+ * Model corresponding to accesses.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

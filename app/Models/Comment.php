@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux commentaires.
+ * Model corresponding to comments.
  *
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -45,7 +45,7 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     ];
 
     /**
-     * Relation avec la personne créatrice.
+     * Relation with the creator.
      *
      * @return mixed
      */
@@ -55,7 +55,7 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Relation avec l'instance possédant ce commentaire.
+     * Relation with this comment owner.
      *
      * @return mixed
      */
@@ -65,7 +65,7 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Relation avec les commentaires.
+     * Relation with comments.
      *
      * @return mixed
      */
@@ -75,8 +75,8 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Indique si le commentaire est accessible.
-     * Seule la personne qui possède le calendrier peut le voir.
+     * Indicates if the comment is accessible.
+     * Only the person who owns the calendar is allowed to see it.
      *
      * @param  string $user_id
      * @return boolean
@@ -87,8 +87,8 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Indique si le commentaire est gérable.
-     * Seule la personne qui possède le calendrier peut le modifier.
+     * Indicates if le commentaire is manageable.
+     * Only the person who owns the calendar is allowed to modify it.
      *
      * @param  CanComment $model
      * @return boolean

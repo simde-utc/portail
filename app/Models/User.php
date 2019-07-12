@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux utilisateurs.
+ * Model corresponding to users.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -44,7 +44,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Lancé à la création du modèle.
+     * Launched at the model creation.
      *
      * @return void
      */
@@ -82,7 +82,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         });
 
         static::updated(function ($model) {
-            // Modfication des préférences.
+            // Preferences update.
             if ($model->preferences()->valueOf('CONTACT_EMAIL') === $model->getOriginal('email')) {
                 $model->preferences()->key('CONTACT_EMAIL')->update([
                     'value' => $model->is_active ? $model->email : null,
@@ -140,7 +140,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     ];
 
     /**
-     * Crée l'attribut me à la volée.
+     * Create the "me" attributes on the fly.
      *
      * @return mixed
      */
@@ -150,7 +150,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Créer l'attribut name à la volée (concaténation du prénom et du nom).
+     * Creates the "name" attribute on the fly. (First and last name concatenation).
      *
      * @return string
      */
@@ -164,7 +164,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Récupère le mot de passe de l'utilisateur.
+     * Retrieves the user's password.
      *
      * @return string
      */
@@ -174,7 +174,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Retrouve un utilisateur par son adresse email.
+     * Finds a user with his email adress.
      *
      * @param  string $email
      * @return User|null
@@ -185,7 +185,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Récupère une liste des utilisateurs en fonction d'informations précises.
+     * Retrieves a user list depending on precise information. 
      *
      * @param  mixed $users
      * @return mixed
@@ -202,7 +202,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Donne la liste des canaux de notifications.
+     * Returns the notification channels list.
      *
      * @param  string $notificationType
      * @return array
@@ -233,7 +233,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Donne l'adresse email de notification.
+     * Returns the notification email adress.
      *
      * @param  mixed $notification
      * @return string
@@ -248,7 +248,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Donne l'icône de notification en tant que créateur.
+     * Returns the notification icon as creator.
      *
      * @param  Notification $notification
      * @return string
@@ -259,7 +259,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Notifie l'utilisateur en cas de modification.
+     * Notifies the user in case of update.
      *
      * @return boolean
      */
@@ -293,7 +293,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Retourne les types d'utilisateurs possible.
+     * Returns all possible user types.
      *
      * @return array
      */
@@ -303,7 +303,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Retourne les types d'utilisateurs possible avec leur description.
+     * Returns all possible user types with their description. 
      *
      * @return array
      */
@@ -313,7 +313,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Retourne les types d'utilisateurs possible.
+     * Returns if the user is of the given type.
      *
      * @param string $type
      * @return boolean
@@ -326,7 +326,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Donne le type majeur de l'utilisateur (admin, cas, cotisant, etc.).
+     * Returns the major type of the current user (admin, cas, contributorBDE, and so on.).
      *
      * @return string|null
      */
@@ -344,7 +344,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Indique si l'utilsateur est du public.
+     * Indicates if the user is a public user.
      *
      * @return boolean
      */
@@ -354,7 +354,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Indique si l'utilsateur est actif (sous-entendu, qu'il s'est bien déjà connecté une fois).
+     * Indicates if the user a active (implied: he has been connected at least once).
      *
      * @return boolean
      */
@@ -364,7 +364,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Indique si l'utilsateur a été un CAS-UTC.
+     * Indicates if the user is or has been a CAS-UTC member.
      *
      * @return boolean
      */
@@ -376,7 +376,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Indique si l'utilsateur est du CAS-UTC et l'est toujours.
+     * Indicates if the user is and still is a CAS member.
      *
      * @return boolean
      */
@@ -388,7 +388,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Indique si l'utilsateur peut se connecter via mot de passe.
+     * Indicates if the user can login trough password authentification.
      *
      * @return boolean
      */
@@ -398,7 +398,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Indique si l'utilsateur est connecté via une application.
+     * Indicates if the user is connected trough an application.
      *
      * @return boolean
      */
@@ -408,7 +408,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Indique si l'utilsateur est cotisant BDE-UTC.
+     * Indicates if the user is contributor to the BDE-UTC.
      *
      * @return boolean|null
      */
@@ -422,7 +422,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Indique si l'utlisateur fait partie d'une association.
+     * Indicates if the user is member of an association.
      *
      * @return boolean
      */
@@ -432,8 +432,8 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Indique si l'utilsateur est un administrateur.
-     * Yeah l'ami <3
+     * Indicates if the user is administrator.
+     * Yeah bro <3
      *
      * @return boolean
      */
@@ -443,7 +443,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Retourne la langue de l'utilisateur.
+     * Returns the lang of the user.
      *
      * @return string
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux authentifications mots de passe.
+ * Model corresponding to password authentifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -28,7 +28,7 @@ class AuthPassword extends Auth
     ];
 
     /**
-     * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     * Retrieves a user from its email adress. 
      *
      * @param string $email
      * @return mixed
@@ -39,7 +39,7 @@ class AuthPassword extends Auth
     }
 
     /**
-     * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     * Checks if a password is correct or not.
      *
      * @param string $password
      * @return boolean

@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux articles.
+ * Model corresponding to articles.
  *
  * @author Thomas Meurou <thomas.meurou@yahoo.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -71,7 +71,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     ];
 
     /**
-     * Scope spécifique concernant l'ordre dans lequel les articles peuvent être affichés.
+     * Specific scope concerning the order to display articles.
      *
      * @param  Builder $query
      * @param  string  $order
@@ -96,7 +96,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Scope spécifique permettant d'afficher.
+     * Specific scope to display.
      *
      * @param  Builder $query
      * @param  string  $action
@@ -139,7 +139,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Scope spécifique pour n'avoir que les ressources privées.
+     * Specific scope to have only the private resources.
      *
      * @param  Builder $query
      * @return Builder
@@ -169,9 +169,9 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Génère à la volée l'attribut description.
+     * Generates on the fly the "description" attribute.
      *
-     * @return string	Champ description ou raccourci du champ content.
+     * @return string	Rescription field or a shortcut of the content.
      */
     public function getDescriptionAttribute()
     {
@@ -185,7 +185,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Relation avec les tags.
+     * Relation with tags.
      *
      * @return mixed
      */
@@ -195,7 +195,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Relation avec la visibilité.
+     * Relation with the visibility.
      *
      * @return mixed
      */
@@ -205,7 +205,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Relation avec l'évènement.
+     * Relation with the event.
      *
      * @return mixed
      */
@@ -215,7 +215,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Relation avec les actions.
+     * Relation with the actions.
      *
      * @return mixed
      */
@@ -225,7 +225,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Relation avec les commentaires.
+     * Relation with comments.
      *
      * @return mixed
      */
@@ -235,8 +235,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Retourne si l'utilisateur peut voir les commentaires de l'article.
-     * Un commentaire quand il est publié il correspond à sa visibilité, aucun droit spécifique.
+     * Returns if the current user can see this article comments.
      *
      * @param  string $user_id
      * @return boolean
@@ -247,8 +246,8 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Retourne si un modèle peut modifier les commentaires de l'article.
-     * Un commentaire est uniquement rédigeable par la même instance possédant l'article ou un user.
+     * Returns si un modèle peut modifier les commentaires de l'article.
+     * A comment is only writable by the article owner instance or a user.
      *
      * @param  CanComment $model
      * @return boolean

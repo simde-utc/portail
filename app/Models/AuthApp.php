@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux authentifications applications.
+ * Model corresponding to application authentifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -27,7 +27,7 @@ class AuthApp extends Auth
     ];
 
     /**
-     * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     * Retrieves a user from its app_id.
      *
      * @param string $app_id
      * @return mixed
@@ -47,7 +47,7 @@ class AuthApp extends Auth
     }
 
     /**
-     * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     * Checks if the password is correct.
      *
      * @param string $password
      * @return boolean

@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux visibilités.
+ * Model corresponding to aux visibilités.
  *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -37,9 +37,9 @@ class Visibility extends Model
     ];
 
     /**
-     * Retrouve une visibilité par son type.
-     * TODO: Transformer en scope.
-     * TODO: A exporter en Trait
+     * Finds a visibility from its type.
+     * TODO: Transform into scope.
+     * TODO: To export into a trait.
      *
      * @param  string|null $type
      * @return Visibility|null
@@ -50,7 +50,7 @@ class Visibility extends Model
     }
 
     /**
-     * Retourne la visibilité publique.
+     * Returns the public visibility.
      *
      * @return mixed
      */
@@ -60,7 +60,7 @@ class Visibility extends Model
     }
 
     /**
-     * Relation avec la visibilité parent.
+     * Relation with parent visibility.
      *
      * @return mixed
      */
@@ -70,7 +70,7 @@ class Visibility extends Model
     }
 
     /**
-     * Relation avec les visibilités enfants.
+     * Relation with child visibilities.
      *
      * @return mixed
      */
@@ -80,7 +80,7 @@ class Visibility extends Model
     }
 
     /**
-     * Relation avec l'article.
+     * Relation with an article.
      *
      * @return mixed
      */
@@ -90,7 +90,7 @@ class Visibility extends Model
     }
 
     /**
-     * Relation avec l'événement.
+     * Relation with an event.
      *
      * @return mixed
      */

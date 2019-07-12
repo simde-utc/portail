@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle abstrait correspondant aux authentifications.
+ * Abstract model for authentifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,7 +22,7 @@ abstract class Auth extends Model
     public $incrementing = false;
 
     /**
-     * Relation avec l'utilisateur.
+     * Relation with the user.
      *
      * @return mixed
      */
@@ -32,7 +32,7 @@ abstract class Auth extends Model
     }
 
     /**
-     * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     * Retrieves a user by a unique data.
      *
      * @param string $username
      * @return mixed
@@ -40,7 +40,7 @@ abstract class Auth extends Model
     abstract public function getUserByIdentifiant(string $username);
 
     /**
-     * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     * Checks if the password is correct.
      *
      * @param string $password
      * @return boolean

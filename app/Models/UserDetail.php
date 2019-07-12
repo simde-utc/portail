@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux détails des utilisateurs.
+ * Model corresponding to user details.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -34,7 +34,7 @@ class UserDetail extends Model
     ];
 
     /**
-     * Permet de retrouver l'utilisateur sur lequel on travaille à partir d'un query.
+     * Retrieves the user on wich we're working on from a query.
      *
      * @param Builder $query
      * @return User|null
@@ -53,7 +53,7 @@ class UserDetail extends Model
     }
 
     /**
-     * Donne l'age de l'utilisateur.
+     * Give the user age.
      *
      * @param  Builder $query
      * @return integer
@@ -70,7 +70,7 @@ class UserDetail extends Model
     }
 
     /**
-     * Indique si l'utilisateur est majeur.
+     * Indicates if a user is major.
      *
      * @param  Builder $query
      * @return boolean
@@ -83,7 +83,7 @@ class UserDetail extends Model
             try {
                 return \Ginger::user($casLogin)->isAdult();
             } catch (\Exception $e) {
-                // Si on a pas les données CAS, on regarde avec la date de naissance.
+                // If we don't have CAS data, we check the birthdate.
             }
         }
 
@@ -97,7 +97,7 @@ class UserDetail extends Model
     }
 
     /**
-     * Donne le login CAS de l'utilisateur.
+     * Returns the user CAS login.
      *
      * @param  Builder $query
      * @return string
@@ -118,7 +118,7 @@ class UserDetail extends Model
     }
 
     /**
-     * Donne le login cotisant BDE de l'utilisateur.
+     * Returns the BDE-UTC contributor login.
      *
      * @param  Builder $query
      * @return string
@@ -143,7 +143,7 @@ class UserDetail extends Model
     }
 
     /**
-     * Indique si l'utilisateur est cotisant BDE.
+     * Indicates if a given user is BDE-UTC contributor.
      *
      * @param  Builder $query
      * @return boolean
@@ -158,7 +158,7 @@ class UserDetail extends Model
                     return $response;
                 }
             } catch (\Exception $e) {
-                // Dans le cas où on est pas contributeur, on renvoie une exception custom.
+                // In the case of the user is not a BDE-UTC contributor, we send a custom exception.
             }
         }
 

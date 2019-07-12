@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux calendriers.
+ * Model corresponding to calendars.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -53,7 +53,7 @@ class Calendar extends Model implements OwnableContract
     ];
 
     /**
-     * On défini une couleur au hasard si elle n'est pas définie.
+     * We define a random color if not already.
      *
      * @return void
      */
@@ -73,7 +73,7 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Prépare la requête pour chaque visibilité.
+     * Prepares the request for every visibility.
      *
      * @param  Builder $subQuery
      * @return Builder
@@ -90,7 +90,7 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Scope spécifique pour n'avoir que les ressources privées.
+     * Specific scope to have only the private resources.
      *
      * @param  Builder $query
      * @return Builder
@@ -120,7 +120,7 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec les évènements.
+     * Relation with events.
      *
      * @return mixed
      */
@@ -130,7 +130,7 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec la visibilité.
+     * Relation with the visibility.
      *
      * @return mixed
      */
@@ -140,7 +140,7 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec l'utilisateur.
+     * Relation with the user.
      *
      * @return mixed
      */
@@ -150,7 +150,7 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec les suiveurs.
+     * Relation with the followers.
      *
      * @return mixed
      */
@@ -160,7 +160,7 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec l'association.
+     * Relation with the association.
      *
      * @return mixed
      */
@@ -170,7 +170,7 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le client oauth.
+     * Relation with the OAuth client.
      *
      * @return mixed
      */
@@ -180,7 +180,7 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le groupe.
+     * Relation with the group.
      *
      * @return mixed
      */
@@ -190,8 +190,8 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Indique si le calendrier est gérable.
-     * Seule la personne qui possède le calendrier peut le modifier.
+     * Indicates if the calendar is manageable.
+     * Only the person who owns the calendar can modify it.
      *
      * @param  string $user_id
      * @return boolean

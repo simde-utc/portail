@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux permissions.
+ * Model corresponding to permissions.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -45,7 +45,7 @@ class Permission extends Model implements OwnableContract
     ];
 
     /**
-     * Relation avec les rôles.
+     * Relation with roles.
      *
      * @return BelongsToMany
      */
@@ -55,7 +55,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec les utilisateurs.
+     * Relation with users.
      *
      * @return BelongsToMany
      */
@@ -65,7 +65,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Surcharge de la méthode pour obtenir un array.
+     * Overloads the method to obtain an array.
      *
      * @return array
      */
@@ -85,7 +85,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Modifie à la volée l'attribut owned_by.
+     * Modifies on the fly the owned_by attribute.
      *
      * @return mixed
      */
@@ -95,7 +95,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le possédeur.
+     * Relation with the owner.
      *
      * @return mixed
      */
@@ -105,7 +105,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Scope pour obtenir les permissions liés à un owner.
+     * Scope to obtain all permissions linked to an owner.
      *
      * @param  Builder $query
      * @param  string  $owner_type
@@ -127,7 +127,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Retrouve une permission.
+     * Find a permission.
      *
      * @param  string             $permission_id
      * @param  CanHavePermissions $owner
@@ -150,8 +150,8 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Retrouve une permission par son type.
-     * TODO: Transformer en scope.
+     * Finds a permission by its type.
+     * TODO: Transforme into scope.
      *
      * @param  string             $type
      * @param  CanHavePermissions $owner
@@ -174,7 +174,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Retrouve une permission via une donnée qui lui correspond.
+     * Finds a permission trough a corresponding data.
      *
      * @param  mixed              $permission
      * @param  CanHavePermissions $owner
@@ -196,7 +196,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Retrouve plusieurs permissions via une donnée qui leur correspond.
+     * Finds several permission trough a corresponding data.
      *
      * @param  mixed              $permissions
      * @param  CanHavePermissions $owner

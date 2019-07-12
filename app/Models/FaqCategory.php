@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux FAQs.
+ * Model corresponding to FAQ categories.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -41,7 +41,7 @@ class FaqCategory extends Model
         'name', 'description', 'visibility',
     ];
 
-    // Children dans le cas où on affiche en mode étagé.
+    // Children in case of staged mode display.
     protected $selection = [
         'visibilities' => '*',
         'lang' => '~',
@@ -51,7 +51,7 @@ class FaqCategory extends Model
     ];
 
     /**
-     * Relation avec le parent.
+     * Relation with the parent.
      *
      * @return mixed
      */
@@ -61,7 +61,7 @@ class FaqCategory extends Model
     }
 
     /**
-     * Relation avec les enfants.
+     * Relation with the children.
      *
      * @return mixed
      */
@@ -71,7 +71,7 @@ class FaqCategory extends Model
     }
 
     /**
-     * Relation avec la visibilité.
+     * Relation with the visibility.
      *
      * @return mixed
      */
@@ -81,7 +81,7 @@ class FaqCategory extends Model
     }
 
     /**
-     * Relation avec la questions.
+     * Relation with the questions.
      *
      * @return mixed
      */
@@ -91,7 +91,7 @@ class FaqCategory extends Model
     }
 
     /**
-     * Scope spécifique pour avoir les ressources privées.
+     * Specifique scope to get private resources.
      *
      * @param  Builder $query
      * @return Builder
@@ -100,7 +100,7 @@ class FaqCategory extends Model
     {
         $visibility = $this->getSelectionForVisibility('private');
 
-        // Les faqs privés sont affiché uniquement aux personnes ayant la permission 'faq-question'.
+        // Private FAQs are displayed only to 'faq-question' permissions owners.
         if (($user = \Auth::user()) && $user->hasOnePermission('faq-question')) {
             return $query->where('visibility_id', $visibility->id);
         }

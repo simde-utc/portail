@@ -1,8 +1,8 @@
 <?php
 /**
- * Modèle correspondant aux préférences utilisateurs.
+ * Model corresponding to user preferences.
  *
- * TODO: corriger le only_for
+ * TODO: correct only_for
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -32,7 +32,7 @@ class UserPreference extends Model
     ];
 
     /**
-     * Scope pour sélectionner par instance.
+     * Scope to select by instance.
      *
      * @param  Builder $query
      * @param  string  $only_for

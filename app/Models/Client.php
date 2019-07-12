@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux clients oauth.
+ * Model corresponding to OAuth clients.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -45,7 +45,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     ];
 
     /**
-     * Relation avec l'utilisateur.
+     * Relation with the user.
      *
      * @return mixed
      */
@@ -55,7 +55,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Relation avec l'association.
+     * Relation with the association.
      *
      * @return mixed
      */
@@ -65,7 +65,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Relation avec les calendriers.
+     * Relation with calendars.
      *
      * @return mixed
      */
@@ -75,7 +75,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Relation avec les évènements.
+     * Relation with events.
      *
      * @return mixed
      */
@@ -85,7 +85,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Relation avec les articles.
+     * Relation with articles.
      *
      * @return mixed
      */
@@ -95,8 +95,8 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indique si le calendrier est gérable.
-     * Le calendrier privé est modifiable uniquement par les développeurs.
+     * Indicates if the calendar is manageable.
+     * The private calendar is manageable only by developers.
      *
      * @param  string $user_id
      * @return boolean
@@ -107,8 +107,8 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indique si l'évènement est gérable.
-     * L'évènement privé est modifiable uniquement par les développeurs.
+     * Indicates if the event is manageable.
+     * The private event is manageable only by developers.
      *
      * @param  string $user_id
      * @return boolean
@@ -119,8 +119,8 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indique si l'évènement est gérable.
-     * L'évènement privé est modifiable uniquement par les développeurs.
+     * Indicates if the event is manageable.
+     * The private event is manageable only by developers.
      *
      * @param  string $user_id
      * @return boolean
@@ -131,6 +131,8 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
+     * Retrieves the client name.
+     * 
      * @return string|null
      */
     public function getName(): ?string

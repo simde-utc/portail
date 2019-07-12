@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux contacts.
+ * Model corresponding to contacts.
  *
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -46,7 +46,7 @@ class Contact extends Model implements OwnableContract
     ];
 
     /**
-     * Appelé à la création du modèle
+     * Called at the model creation
      *
      * @return void
      */
@@ -80,7 +80,7 @@ class Contact extends Model implements OwnableContract
     }
 
     /**
-     * Scope spécifique pour n'avoir que les ressources privées.
+     * Specific scope to have only the private resources.
      *
      * @param  Builder $query
      * @return Builder
@@ -110,7 +110,7 @@ class Contact extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec l'instance possédant le moyen de contact.
+     * Relation with the contact means owner.
      *
      * @return mixed
      */
@@ -120,7 +120,7 @@ class Contact extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec la visibilité.
+     * Relation with the visibility.
      *
      * @return mixed
      */
@@ -130,7 +130,7 @@ class Contact extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec la type de contact.
+     * Relation with the contact type.
      *
      * @return mixed
      */
@@ -140,7 +140,7 @@ class Contact extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec l'utilisateur.
+     * Relation with the user.
      *
      * @return mixed
      */
@@ -150,7 +150,7 @@ class Contact extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec l'association.
+     * Relation with the association.
      *
      * @return mixed
      */
@@ -160,7 +160,7 @@ class Contact extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le client oauth.
+     * Relation with the OAuth client.
      *
      * @return mixed
      */
@@ -170,7 +170,7 @@ class Contact extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le groupe.
+     * Relation with the group.
      *
      * @return mixed
      */

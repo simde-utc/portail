@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux événements.
+ * Model corresponding to events.
  *
  * @author Thomas Meurou <thomas.meurou@yahoo.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -78,7 +78,7 @@ class Event extends Model implements OwnableContract
     ];
 
     /**
-     * Scope spécifique pour n'avoir que les ressources privées.
+     * Specific scope to have only the private resources.
      *
      * @param  Builder $query
      * @return Builder
@@ -108,7 +108,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec la personne créatrive.
+     * Relation with the creator.
      *
      * @return mixed
      */
@@ -118,7 +118,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec la personne possédant l'événement.
+     * Relation with the event owner.
      *
      * @return mixed
      */
@@ -128,7 +128,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec la visibilité.
+     * Relation with the visibility.
      *
      * @return mixed
      */
@@ -138,7 +138,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Crée dynamiquement l'attribut participants
+     * Create dynamically the 'participants' attribute.
      *
      * @return array
      */
@@ -152,7 +152,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec les calendriers.
+     * Relation with calendars.
      *
      * @return mixed
      */
@@ -162,7 +162,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le lieu.
+     * Relation with location.
      *
      * @return mixed
      */
@@ -172,7 +172,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec les détails.
+     * Relation with details.
      *
      * @return mixed
      */
@@ -182,7 +182,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec l'utilisateur.
+     * Relation with the user.
      *
      * @return mixed
      */
@@ -192,7 +192,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec l'association.
+     * Relation with the association.
      *
      * @return mixed
      */
@@ -202,7 +202,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le client oauth.
+     * Relation with the OAuth client.
      *
      * @return mixed
      */
@@ -212,7 +212,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le groupe.
+     * Relation with the group.
      *
      * @return mixed
      */
@@ -222,7 +222,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Surcharge de la méthode pour cacher les sous-données.
+     * Overloads the mothod to cache sub-data.
      *
      * @param boolean $addSubModelName
      * @return mixed
