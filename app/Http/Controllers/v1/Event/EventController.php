@@ -37,19 +37,19 @@ class EventController extends Controller
     {
         $this->middleware(
             \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-events', 'client-get-events'),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-events', 'client-create-events'),
-            ['only' => ['store']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-set-events', 'client-set-events'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-events', 'client-manage-events'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 

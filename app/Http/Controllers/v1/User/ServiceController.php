@@ -12,7 +12,9 @@
 namespace App\Http\Controllers\v1\User;
 
 use App\Http\Controllers\v1\Controller;
-use App\Traits\Controller\v1\HasServices;
+use App\Traits\Controller\v1\{
+    HasUserBulkMethods, HasServices
+};
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Service;
@@ -24,7 +26,7 @@ use App\Interfaces\CanHaveServices;
 
 class ServiceController extends Controller
 {
-    use HasServices;
+    use HasUserBulkMethods, HasServices;
 
     /**
      * Nécessité de pouvoir gérer les services suivis.
@@ -46,6 +48,11 @@ class ServiceController extends Controller
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-services-followed', 'client-manage-services-followed'),
             ['only' => ['destroy']]
+        );
+        // Can index, show and (un)follow and edit services for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow', 'bulkUpdate', 'bulkDestroy']]
         );
     }
 

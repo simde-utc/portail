@@ -18,11 +18,13 @@ use App\Http\Requests\UserDetailRequest;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Exceptions\PortailException;
-use App\Traits\Controller\v1\HasUsers;
+use App\Traits\Controller\v1\{
+    HasUserBulkMethods, HasUsers
+};
 
 class DetailController extends Controller
 {
-    use HasUsers;
+    use HasUserBulkMethods, HasUsers;
 
     /**
      * Nécessité de pouvoir gérer les détails des utilisateurs.
@@ -40,11 +42,16 @@ class DetailController extends Controller
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-edit-info-details'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
+        );
+        // Can index, show and create details for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-info-details'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 
