@@ -1,6 +1,6 @@
 <?php
 /**
- * Service authentification application.
+ * Application authentification service. 
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -21,7 +21,7 @@ class App extends BaseAuth
     protected $name = 'app';
 
     /**
-     * Récupération de la configuration.
+     * Configuration retrievement.
      */
     public function __construct()
     {
@@ -29,7 +29,7 @@ class App extends BaseAuth
     }
 
     /**
-     * Crée la connexion auth.
+     * Auth connection creation.
      *
      * @param string $user_id
      * @param array  $info

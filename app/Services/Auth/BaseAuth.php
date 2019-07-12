@@ -1,6 +1,6 @@
 <?php
 /**
- * Service authentification de base.
+ * Base authentification service.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -21,13 +21,13 @@ use App\Models\Session;
 abstract class BaseAuth
 {
     /**
-     * Attributs à définir.
+     * Attributes to define.
      */
     protected $name;
     protected $config;
 
     /**
-     * Renvoie un lien vers le formulaire de login.
+     * Returns a link to the login form.
      *
      * @param Request $request
      * @return mixed
@@ -41,7 +41,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Renvoie un lien vers le formulaire d'enregistrement.
+     * Returns a link to to subcribing form.
      *
      * @param Request $request
      * @return mixed
@@ -62,7 +62,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Méthode de connexion.
+     * Connection method.
      *
      * @param Request $request
      * @return mixed
@@ -73,7 +73,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Méthode d'inscription.
+     * Subscribing method.
      *
      * @param Request $request
      * @return mixed
@@ -95,7 +95,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Retrouve l'utilisateur via le modèle qui correspond au mode d'authentification.
+     * Find a user trough the model wich correspond at the authentification mode.
      *
      * @param string $key
      * @param string $value
@@ -107,7 +107,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Crée l'utilisateur et son mode de connexion auth_{provider}.
+     * Creates a user and his connection mode auth_{provider}.
      *
      * @param Request $request
      * @param array   $userInfo
@@ -116,21 +116,21 @@ abstract class BaseAuth
      */
     protected function create(Request $request, array $userInfo, array $authInfo)
     {
-        // Création de l'utilisateur avec les informations minimales.
+        // User creation with minimal information.
         try {
             $user = $this->createUser($userInfo);
         } catch (\Exception $e) {
             return $this->error($request, null, null, 'Cette adresse mail est déjà utilisée');
         }
 
-        // On crée le système d'authentification.
+        // Auth system creation.
         $userAuth = $this->createAuth($user->id, $authInfo);
 
         return $this->connect($request, $user, $userAuth);
     }
 
     /**
-     * Met à jour les informations de l'utilsateur et de son mode de connexion auth_{provider}.
+     * Updates user information and his connection mode auth_{provider}.
      *
      * @param Request $request
      * @param string  $user_id
@@ -140,17 +140,17 @@ abstract class BaseAuth
      */
     protected function update(Request $request, string $user_id, array $userInfo=[], array $authInfo=[])
     {
-        // Actualisation des informations.
+        // Information update.
         $user = $this->updateUser($user_id, $userInfo);
 
-        // On actualise le système d'authentification.
+        // Auth system actualisation.
         $userAuth = $this->updateAuth($user_id, $authInfo);
 
         return $this->connect($request, $user, $userAuth);
     }
 
     /**
-     * Crée ou ajuste les infos de l'utilisateur et son mode de connexion auth_{provider}.
+     * Creates or adjust user information and his connection mode auth_{provider}.
      *
      * @param Request $request
      * @param string  $key
@@ -161,7 +161,7 @@ abstract class BaseAuth
      */
     protected function updateOrCreate(Request $request, string $key, string $value, array $userInfo=[], array $authInfo=[])
     {
-        // On cherche l'utilisateur.
+        // Finds a user.
         $userAuth = $this->findUser($key, $value);
 
         if ($userAuth === null) {
@@ -170,7 +170,7 @@ abstract class BaseAuth
             if ($user === null) {
                 try {
                     return $this->create($request, $userInfo, $authInfo);
-                    // Si inconnu, on le crée et on le connecte.
+                    // If known, we create and connect him.
                 } catch (\Exception $e) {
                     return $this->error(
                         $request, null, null,
@@ -185,12 +185,12 @@ abstract class BaseAuth
             }
         } else {
             return $this->update($request, $userAuth->user_id, $userInfo, $authInfo);
-            // Si connu, on actualise ses infos et on le connecte.
+            // If known, we update and connect his information.
         }
     }
 
     /**
-     * Crée l'utilisateur User.
+     * Creates user.
      *
      * @param array $info
      * @return mixed
@@ -208,7 +208,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Met à jour l'utilisateur User.
+     * Updates user.
      *
      * @param string $user_id
      * @param array  $info
@@ -232,7 +232,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Création ou mis à jour de l'utilisateur User.
+     * Creates or update user.
      *
      * @param array $info
      * @return mixed
@@ -249,7 +249,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Crée la connexion auth.
+     * Auth connexion creation.
      *
      * @param string $user_id
      * @param array  $info
@@ -263,7 +263,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Crée la connexion auth.
+     * Auth connexion creation.
      *
      * @param string $user_id
      * @param array  $info
@@ -279,7 +279,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Met à jour la connexion auth.
+     * Update auth.
      *
      * @param string $user_id
      * @param array  $info
@@ -299,7 +299,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Permet de se connecter.
+     * Connects a user.
      *
      * @param Request          $request
      * @param User             $user
@@ -332,7 +332,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Redirige vers la bonne page en cas de succès.
+     * Redirects to the right page in case of success.
      *
      * @param Request          $request
      * @param User             $user
@@ -350,7 +350,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Redirige vers la bonne page en cas d'erreur.
+     * Redirects to the right page in case of error.
      *
      * @param Request          $request
      * @param User             $user

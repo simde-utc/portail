@@ -1,6 +1,6 @@
 <?php
 /**
- * Service Scopes.
+ * Scopes Service.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -24,7 +24,7 @@ class Scopes
     use TokenUtils, ScopesIdentification;
 
     /*
-     * Liste des scopes en fonction des routes.
+     * Lists des scopes en fonction des routes.
      *   - Définition des scopes:
      *   	portée + "-" + verbe + "-" + categorie + (pour chaque sous-catégorie: '-' + sous-catégorie)
      *   	ex: user-get-user user-get-user-assos user-get-user-assos-followed
@@ -264,7 +264,7 @@ class Scopes
     }
 
     /**
-     * Renvoie les scopes (doivent exister !) avec leur description par catégorie.
+     * Returns all scopes with their description by category.
      *
      * @param  array $scopes
      * @return array
@@ -283,7 +283,7 @@ class Scopes
             if (!isset($middleware)) {
                 $middleware = $elements[0];
             } else if ($middleware !== $elements[0]) {
-                // Des scopes commençant par c- et u-.
+                // Scopes starting by c- and u-.
                 throw new PortailException('Les scopes ne sont pas définis avec les mêmes types d\'authentification !');
             }
 
@@ -312,7 +312,8 @@ class Scopes
     }
 
     /**
-     * Retourne les scopes pour le développement.
+     * 
+     * Returns developement scopes.
      *
      * @return array
      */
@@ -320,7 +321,7 @@ class Scopes
     {
         $scopes = [
             'user-get-access',
-        // Il n'y a pas de manage.
+        // no manage.
         ];
 
         foreach (array_keys(self::all()) as $scope) {
