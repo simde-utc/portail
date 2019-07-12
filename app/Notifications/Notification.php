@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification de base.
+ * Base notification.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,7 +28,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     protected $icon;
 
     /**
-     * Définition du type de notification.
+     * Notification's type declaration.
      *
      * @param string $type
      * @param string $icon
@@ -42,7 +42,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Action réalisable via la notification.
+     * Achievable action trough the notification. 
      *
      * @param  CanBeNotifiable $notifiable
      * @return array
@@ -53,7 +53,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Sujet de la notification.
+     * Notification subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -61,7 +61,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     abstract protected function getSubject(CanBeNotifiable $notifiable);
 
     /**
-     * Contenu texte de la notification.
+     * Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -69,7 +69,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     abstract protected function getContent(CanBeNotifiable $notifiable);
 
     /**
-     * Contenu email de la notification.
+     * Notification email content.
      *
      * @param  CanBeNotifiable $notifiable
      * @param  MailMessage     $mail
@@ -85,7 +85,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Liste les canaux de notifications.
+     * Lists all notifications channels.
      *
      * @param  CanBeNotifiable $notifiable
      * @return array
@@ -104,7 +104,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Retourne la réprésentation email de la notification.
+     * Returns the notification email representation.
      *
      * @param  CanBeNotifiable $notifiable
      * @return MailMessage
@@ -125,7 +125,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Récupération du créateur.
+     * Creator retrievement.
      *
      * @param  Model $notifiable
      * @return Model
@@ -136,7 +136,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Récupération de l'icône.
+     * Icon retrievement.
      *
      * @param  mixed $notifiable
      * @return mixed
@@ -147,7 +147,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Renvoie la notification sous forme de tableau.
+     * Returns the notification under thr form of an array.
      *
      * @param  mixed $notifiable
      * @return array
@@ -163,7 +163,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Renvoie la notification sous forme de tableau pour la db.
+     * Returns the notification under the form of an array for the database.
      *
      * @param  mixed $notifiable
      * @return array

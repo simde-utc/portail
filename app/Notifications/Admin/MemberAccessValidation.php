@@ -1,6 +1,6 @@
 <?php
 /**
- * Notifie l'utilisateur de sa validation d'accès.
+ * Notifies the user of his access validation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,7 +22,7 @@ class MemberAccessValidation extends Notification
     protected $admin;
 
     /**
-     * Déclare le type de notification.
+     * Notification's type declaration.
      *
      * @param AssoAccess $access
      * @param Admin      $admin
@@ -36,7 +36,7 @@ class MemberAccessValidation extends Notification
     }
 
     /**
-     * Sujet de la notification.
+     * Notification's subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -47,7 +47,7 @@ class MemberAccessValidation extends Notification
     }
 
     /**
-     * Contenu texte de la notification.
+     * Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
