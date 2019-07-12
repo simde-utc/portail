@@ -1,6 +1,6 @@
 <?php
 /**
- * Service Ginger - Gestionnaire des cotisations.
+ * Ginger service - Contribution manager.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

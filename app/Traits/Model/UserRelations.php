@@ -294,7 +294,7 @@ trait UserRelations
     }
 
     /**
-     * Idicates if the user can access a permission.
+     * Indicates if the user can access a permission.
      *
      * @param  string $user_id
      * @return boolean

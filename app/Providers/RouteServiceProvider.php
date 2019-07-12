@@ -1,6 +1,6 @@
 <?php
 /**
- * Service des routes.
+ * Routes service.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -18,14 +18,14 @@ use Laravel\Passport\Passport;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * Namespace où les controlleurs sont tous définis par défaut.
+     * Namespace where the controllers are defined by default.
      *
      * @var string
      */
     protected $namespace = 'App\Http\Controllers';
 
     /**
-     * Définition des routes.
+     * Routes definition.
      *
      * @return void
      */
@@ -35,7 +35,7 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Définition des routes de l'applications.
+     * Application routes definition.
      *
      * @return void
      */
@@ -47,12 +47,12 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapApiRoutes();
 
-        // A définir en dernier car récupère les HTTP 404.
+        // To define lastly because it retrieves HTTP 404 errors.
         $this->mapWebRoutes();
     }
 
     /**
-     * Définition des routes Passport.
+     * Defines passport routes.
      *
      * @return void
      */
@@ -65,7 +65,7 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Définition des routes Web.
+     * Web routes definition.
      *
      * @return void
      */
@@ -81,14 +81,13 @@ class RouteServiceProvider extends ServiceProvider
                     ->namespace($this->namespace)->prefix('login/'.$provider)->group($file);
             }
         }
-
-        // A définir en dernier car la route '/' override tout.
+        // To define lastly because the '/' routes overrides everything.
         Route::middleware('web')
             ->namespace($this->namespace)->group(base_path('routes/web.php'));
     }
 
     /**
-     * Définition des routes Api.
+     * API routes definition.
      *
      * @return void
      */
@@ -136,7 +135,7 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Définition des routes Admin.
+     * Admin routes definition.
      *
      * @return void
      */
