@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les détails des utilisateurs.
+ * Manages user details.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -18,15 +18,17 @@ use App\Http\Requests\UserDetailRequest;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Exceptions\PortailException;
-use App\Traits\Controller\v1\HasUsers;
+use App\Traits\Controller\v1\{
+    HasUserBulkMethods, HasUsers
+};
 
 class DetailController extends Controller
 {
-    use HasUsers;
+    use HasUserBulkMethods, HasUsers;
 
     /**
-     * Nécessité de pouvoir gérer les détails des utilisateurs.
-     * Avec Token user uniquement.
+     * ust be able to manage user details.
+     * With token only.
      */
     public function __construct()
     {
@@ -40,16 +42,21 @@ class DetailController extends Controller
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-edit-info-details'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
+        );
+        // Can index, show and create details for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-info-details'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 
     /**
-     * Permet de vérifier le scope et le détail donné.
+     * Checks the scope and the given detail.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $key
@@ -68,7 +75,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Liste les détails de l'utilisateur.
+     * Lists the user details.
      *
      * @param Request $request
      * @param string  $user_id
@@ -83,7 +90,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Créer un détail pour l'utilisateur.
+     * Creates a detail for this user.
      *
      * @param UserDetailRequest $request
      * @param string            $user_id
@@ -104,7 +111,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Montre un détail pour l'utilisateur.
+     * Shows a detail for this user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -128,7 +135,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Met à jour un détail pour l'utilisateur.
+     * Updates a detail for this user.
      *
      * @param UserDetailRequest $request
      * @param string            $user_id
@@ -161,7 +168,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Supprime une détail pour l'utilisateur s'il est supprimable.
+     * Deletes a details for this user if its removable.
      *
      * @param Request $request
      * @param string  $user_id

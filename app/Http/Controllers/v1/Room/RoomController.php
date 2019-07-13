@@ -1,6 +1,6 @@
 <?php
 /**
- * Gérer les salles.
+ * Manages rooms.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -23,39 +23,39 @@ class RoomController extends Controller
     use HasRooms, HasCreatorsAndOwners;
 
     /**
-     * Nécessité de gérer les salles.
+     * Must be able to manage rooms.
      */
     public function __construct()
     {
         $this->middleware(
 	        \Scopes::matchOne('user-get-rooms', 'client-get-rooms'),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-create-rooms', 'client-create-rooms'),
 		        ['permission:room']
 	        ),
-	        ['only' => ['store']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-edit-rooms', 'client-edit-rooms'),
 		        ['permission:room']
 	        ),
-        	['only' => ['update']]
+        	['only' => ['edit']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-remove-rooms', 'client-remove-rooms'),
 		        ['permission:room']
 	        ),
-	        ['only' => ['destroy']]
+	        ['only' => ['remove']]
         );
     }
 
     /**
-     * Listes les salles.
+     * Lists rooms.
      *
      * @param  Request $request
      * @return JsonResponse
@@ -72,7 +72,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Crée une salle.
+     * Creates a room.
      *
      * @param  RoomRequest $request
      * @return JsonResponse
@@ -95,7 +95,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Montre une salle.
+     * Shows a room.
      *
      * @param Request $request
      * @param string  $room_id
@@ -109,7 +109,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Met à jour une salle.
+     * Updates a room.
      *
      * @param RoomRequest $request
      * @param string      $room_id
@@ -135,7 +135,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Supprime une salle.
+     * Deletes a room.
      *
      * @param Request $request
      * @param string  $room_id

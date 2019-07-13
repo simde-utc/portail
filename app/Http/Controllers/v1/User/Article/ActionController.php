@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les actions utilisateurs sur les articles.
+ * Manages user's actions on articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,15 +19,17 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserArticleActionRequest;
 use App\Models\Article;
-use App\Traits\Controller\v1\HasArticles;
+use App\Traits\Controller\v1\{
+	HasUserBulkMethods, HasArticles
+};
 use App\Exceptions\PortailException;
 
 class ActionController extends Controller
 {
-    use HasArticles;
+    use HasUserBulkMethods, HasArticles;
 
     /**
-     * Nécessité de pouvoir voir les artiles et gérer les actions utilisateurs.
+     * Must be able to see articles and handle users actions.
      */
     public function __construct()
     {
@@ -61,12 +63,17 @@ class ActionController extends Controller
                     ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-manage-articles-actions-user', 'client-manage-articles-actions-user')
             ),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
+        );
+        // Can index, show and create, edit and remove actions for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow', 'bulkUpdate', 'bulkDestroy']]
         );
     }
 
     /**
-     * Liste les actions de l'utilisateur.
+     * Lists user's actions.
      *
      * @param Request $request
      * @param string  $user_id
@@ -87,7 +94,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Créer une action de l'utilisateur.
+     * Creates a user actions.
      *
      * @param UserArticleActionRequest $request
      * @param string                   $user_id
@@ -115,7 +122,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Montre une action de l'utilisateur.
+     * Shows a user actions.
      *
      * @param Request $request
      * @param string  $user_id
@@ -137,7 +144,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Met à jour une action de l'utilisateur.
+     * Updates a user actions.
      *
      * @param UserArticleActionRequest $request
      * @param string                   $user_id
@@ -170,7 +177,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Supprime une action de l'utilisateur.
+     * Deletes a user actions.
      *
      * @param Request $request
      * @param string  $user_id

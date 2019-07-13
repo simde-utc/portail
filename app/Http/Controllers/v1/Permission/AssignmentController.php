@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les permissions assignées.
+ * Manages assigned permissions.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -24,30 +24,30 @@ class AssignmentController extends Controller
     use HasPermissions;
 
     /**
-     * Nécessité de pouvoir gérer les permissions assignées.
+     * Must be able to manage assigned permissions.
      */
     public function __construct()
     {
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-get-permissions', 'client-get-permissions'),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-create-permissions', 'client-create-permissions'),
-	        ['only' => ['store']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-edit-permissions', 'client-edit-permissions'),
-	        ['only' => ['update']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-remove-permissions', 'client-remove-permissions'),
-	        ['only' => ['destroy']]
+	        ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les permissions assignées.
+     * Lists assigned permissions.
      *
      * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
@@ -65,7 +65,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Assigne une permission.
+     * Assigns a permission.
      *
      * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
@@ -87,7 +87,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Montre une permission assignée.
+     * Shows an assigned permission.
      *
      * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
@@ -102,7 +102,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Il n'est pas possible de modifier une assignation.
+     * It is not possible to modify an assignement.
      *
      * @param  PermissionAssignmentRequest $request
      * @return void
@@ -113,7 +113,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Retraint d'une permission.
+     * Restraints a permission.
      *
      * @param  PermissionAssignmentRequest $request
      * @return void

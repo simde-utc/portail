@@ -177,14 +177,14 @@ class Scopes
     {
         if ($goUp) {
             switch ($verb) {
+                case 'get':
                 case 'set':
-                case 'remove':
                     return ['manage'];
                  break;
 
-                case 'get':
                 case 'create':
                 case 'edit':
+                case 'remove':
                     return ['set'];
                  break;
 
@@ -312,7 +312,7 @@ class Scopes
     }
 
     /**
-     * 
+     *
      * Returns developement scopes.
      *
      * @return array
@@ -321,7 +321,7 @@ class Scopes
     {
         $scopes = [
             'user-get-access',
-        // no manage.
+        // No manage.
         ];
 
         foreach (array_keys(self::all()) as $scope) {

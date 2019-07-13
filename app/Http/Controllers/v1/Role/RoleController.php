@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les rôles.
+ * Manages roles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,30 +25,30 @@ class RoleController extends Controller
     use HasRoles, HasOwners;
 
     /**
-     * Nécessité des gérer les rôles.
+     * Must be able to manage roles.
      */
     public function __construct()
     {
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-get-roles', 'client-get-roles'),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-create-roles', 'client-create-roles'),
-	        ['only' => ['store']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-edit-roles', 'client-edit-roles'),
-	        ['only' => ['update']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-remove-roles', 'client-remove-roles'),
-	        ['only' => ['destroy']]
+	        ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les rôles.
+     * Lists roles.
      *
      * @param Request $request
      * @return JsonResponse
@@ -65,7 +65,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Ajouter un rôle.
+     * Adds a role.
      *
      * @param RoleRequest $request
      * @return JsonResponse
@@ -88,7 +88,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Montre un rôle.
+     * Shows a role.
      *
      * @param Request $request
      * @param string 	$role_id
@@ -103,7 +103,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Met à jour un rôle.
+     * Updates a role.
      *
      * @param RoleRequest $request
      * @param string      $role_id
@@ -128,7 +128,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Supprime un rôle.
+     * Deletes a role.
      *
      * @param Request $request
      * @param string 	$role_id
@@ -142,10 +142,10 @@ class RoleController extends Controller
             if ($role->delete()) {
                 abort(204);
             } else {
-                abort(500, "Impossible de supprimer le role souhaité");
+                abort(500, "Impossible de Deletesr le role souhaité");
             }
         } else {
-            abort(403, "Il n'est pas autorisé de supprimer ce rôle (possiblement car déjà assigné ou rôles enfants attachés)");
+            abort(403, "Il n'est pas autorisé de Deletesr ce rôle (possiblement car déjà assigné ou rôles enfants attachés)");
         }
     }
 }

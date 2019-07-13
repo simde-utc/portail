@@ -62,7 +62,7 @@ class ExternalNotification extends Notification
     }
 
     /**
-     * Returns the Notification's text content. 
+     * Returns the Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string

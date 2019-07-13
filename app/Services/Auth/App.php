@@ -1,6 +1,6 @@
 <?php
 /**
- * Application authentification service. 
+ * Application authentification service.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

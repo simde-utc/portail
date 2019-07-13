@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 class OldToNewPortailController extends Controller
 {
     /**
-     * Redirection de /asso.
+     * /asso redirection.
      *
      * @return mixed
      */
@@ -25,7 +25,7 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection de /asso/{login}.
+     * /asso/{login} redirection.
      *
      * @param string $login
      * @return mixed
@@ -36,7 +36,7 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection de /asso/articles/{login}.
+     * /asso/articles/{login} redirection.
      *
      * @param string $login
      * @return mixed
@@ -47,8 +47,8 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection de /article.
-     * Redirection de /article/show/{wathever}.
+     * Redirection /article.
+     * Redirection /article/show/{wathever}.
      *
      * @return mixed
      */
@@ -58,9 +58,9 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection de /event.
-     * Redirection de /event/calendar.
-     * Redirection de /event/show/{wathever}.
+     * Redirection /event.
+     * Redirection /event/calendar.
+     * Redirection /event/show/{wathever}.
      *
      * @return mixed
      */

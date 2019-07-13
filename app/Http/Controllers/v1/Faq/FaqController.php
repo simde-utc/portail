@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les FAQs.
+ * Manages FAQs.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,30 +25,30 @@ class FaqController extends Controller
     use HasFaqs;
 
     /**
-     * Nécessité de gérer les questions FAQs.
+     * Must be able to manage FAQs.
      */
     public function __construct()
     {
         $this->middleware(
             \Scopes::allowPublic()->matchOne('user-get-faqs-questions', 'client-get-faqs-questions'),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOne('user-create-faqs-questions', 'client-create-faqs-questions'),
-            ['only' => ['store']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOne('user-edit-faqs-questions', 'client-edit-faqs-questions'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOne('user-remove-faqs-questions', 'client-remove-faqs-questions'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les faqs.
+     * Lists FAQs.
      *
      * @param Request $request
      * @param string  $category_id
@@ -65,7 +65,7 @@ class FaqController extends Controller
     }
 
     /**
-     * Ajoute une question FAQ.
+     * Adds a FAQ.
      *
      * @param FaqRequest $request
      * @param string     $category_id
@@ -81,7 +81,7 @@ class FaqController extends Controller
     }
 
     /**
-     * Montre une question FAQ.
+     * Shows a FAQ.
      *
      * @param Request $request
      * @param string  $category_id
@@ -96,7 +96,7 @@ class FaqController extends Controller
     }
 
     /**
-     * Met à jour une question FAQ.
+     * Updates a FAQ.
      *
      * @param FaqRequest $request
      * @param string     $category_id
@@ -115,7 +115,7 @@ class FaqController extends Controller
     }
 
     /**
-     * Supprime une question FAQ.
+     * Deletes a FAQ.
      *
      * @param Request $request
      * @param string  $category_id

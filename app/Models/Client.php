@@ -132,7 +132,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
 
     /**
      * Retrieves the client name.
-     * 
+     *
      * @return string|null
      */
     public function getName(): ?string

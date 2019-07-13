@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les événements des calendriers.
+ * Manages calendar's events.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -27,7 +27,7 @@ class EventController extends Controller
     use HasCalendars;
 
     /**
-     * Nécessité de gérer les événements des calendriers.
+     * Must be able to manage calendar's events.
      */
     public function __construct()
     {
@@ -36,19 +36,19 @@ class EventController extends Controller
 		        \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
 		        \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-events', 'client-get-events')
 	        ),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOneOfDeepestChildren('user-edit-calendars', 'client-edit-calendars'),
 		        \Scopes::matchOneOfDeepestChildren('user-get-events', 'client-get-events')
 	        ),
-	        ['only' => ['update', 'store', 'destroy']]
+	        ['only' => ['create', 'edit', 'remove']]
         );
     }
 
     /**
-     * Liste des événements du calendrier.
+     * Lists some calendar's events.
      *
      * @param Request	$request
      * @param string 	$calendar_id
@@ -71,7 +71,7 @@ class EventController extends Controller
     }
 
     /**
-     * Ajoute un événement au calendrier.
+     * Adds an event to the calendar.
      *
      * @param CalendarEventRequest	$request
      * @param string               $calendar_id
@@ -100,7 +100,7 @@ class EventController extends Controller
     }
 
     /**
-     * Montre un événement du calendrier.
+     * Shows a calendar event.
      *
      * @param Request	$request
      * @param string 	$calendar_id
@@ -116,7 +116,7 @@ class EventController extends Controller
     }
 
     /**
-     * Il est impossible de modifier un événement du calendrier.
+     * It is impossible to update a calendar event.
      *
      * @param CalendarEventRequest	$request
      * @param string               $calendar_id
@@ -129,7 +129,7 @@ class EventController extends Controller
     }
 
     /**
-     * Retire un événement du calendrier.
+     * Deletes a calendar event.
      *
      * @param Request	$request
      * @param string 	$calendar_id
@@ -144,7 +144,7 @@ class EventController extends Controller
         $calendar_ids = $event->owner->calendars()->get(['calendars.id'])->pluck('id');
         $event_calendar_ids = $event->calendars()->get(['calendars.id'])->pluck('id');
 
-        // On vérifie que celui qui possède l'event, possède l'événement dans au moins 2 de ses calendriers.
+        // Checks that the event owner, owns the event in at least 2 of its calendars.
         if (count($calendar_ids->intersect($event_calendar_ids)) === 1 && $calendar_ids->contains($calendar_id)) {
             abort(400, 'L\'événement doit au moins appartenir à un calendrier du propriétaire de l\'événement');
         }

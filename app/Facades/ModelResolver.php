@@ -1,6 +1,6 @@
 <?php
 /**
- * Facade to retrieve models dynamically. 
+ * Facade to retrieve models dynamically.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

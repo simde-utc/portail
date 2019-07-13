@@ -42,7 +42,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Achievable action trough the notification. 
+     * Achievable action trough the notification.
      *
      * @param  CanBeNotifiable $notifiable
      * @return array

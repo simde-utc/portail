@@ -1,9 +1,10 @@
 <?php
 /**
- * Gère la connexion via un formulaire.
+ * Manages connexions via form.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Romain Maliach-Auguste <r.maliach@live.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -25,14 +26,14 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Où rediriger les connectés.
+     * Where to redirect users once they are connected.
      *
      * @var string
      */
     protected $redirectTo = '/';
 
     /**
-     * Uniquement les non-connectés peuvent se connecter à leur compte.
+     * Only users that aren't currently logged in can log in.
      *
      * @return void
      */
@@ -47,7 +48,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Affiche la vue de choix de méthode de login.
+     * Shows the login method choice view.
      *
      * @param  Request $request
      * @return mixed
@@ -65,10 +66,10 @@ class LoginController extends Controller
     }
 
     /**
-     * Connection de l'utilisateur après passage par l'API.
+     * User login after API call.
      *
      * @param  Request $request
-     * @param  string  $provider Type d'authentification.
+     * @param  string  $provider Authentification type.
      * @return mixed
      */
     public function store(Request $request, string $provider)
@@ -84,10 +85,10 @@ class LoginController extends Controller
     }
 
     /**
-     * Récupère la classe d'authentication $provider_class dans le service container de Laravel et applique le show login.
+     * Fetches the authentication class $provider_class in the Laravel service container de Laravel, and shows login.
      *
      * @param  Request $request
-     * @param  string  $provider Type d'authentification.
+     * @param  string  $provider Authentification type.
      * @return mixed
      */
     public function show(Request $request, string $provider)
@@ -102,7 +103,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Actualisation du captcha.
+     * Captcha actualisation
      *
      * @param  Request $request
      * @return mixed
@@ -113,7 +114,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Déconnection de l'utilisateur.
+     * User logout.
      *
      * @param  Request $request
      * @param  string  $redirect Url de redirection.
@@ -127,7 +128,7 @@ class LoginController extends Controller
         if ($redirect === null) {
             $redirectUrl = $request->query('redirect', url()->previous());
 
-            // Évite les redirections sur logout.
+            // Avoids redirections to logout.
             if ($redirectUrl && $redirectUrl !== $request->url()) {
                 $redirect = redirect($redirectUrl);
             } else {
@@ -135,7 +136,7 @@ class LoginController extends Controller
             }
         }
 
-        // Si on est en mode personnifié.
+        // If impersonate mode is active.
         if ($user = Auth::guard('admin')->user()) {
             if (Auth::guard('web')->id() !== $user->id) {
                 Auth::guard('web')->login($user);
@@ -144,10 +145,10 @@ class LoginController extends Controller
             }
         }
 
-        // Ne pas oublier de détruire sa session.
+        // Session destruction.
         session()->flush();
 
-        // On le déconnecte uniquement lorsque le service a fini son travail.
+        // Logout once the service has finished its job.
         Auth::logout();
 
         return $redirect;

@@ -92,7 +92,7 @@ trait HasPermissions
 
             return $permission;
         } else {
-            abort(404, 'Cette instance ne possède pas cette permission');
+            abort(404, 'Le membre ne possède pas cette permission');
         }
     }
 

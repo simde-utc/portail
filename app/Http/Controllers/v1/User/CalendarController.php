@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les calendriers suivis par les utilisateurs.
+ * Manages all calandars followed by the user.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -10,9 +10,10 @@
  */
 
 namespace App\Http\Controllers\v1\User;
-
 use App\Http\Controllers\v1\Controller;
-use App\Traits\Controller\v1\HasCalendars;
+use App\Traits\Controller\v1\{
+    HasUserBulkMethods, HasCalendars
+};
 use App\Models\User;
 use App\Models\Asso;
 use App\Models\Calendar;
@@ -24,10 +25,10 @@ use App\Interfaces\CanHaveCalendars;
 
 class CalendarController extends Controller
 {
-    use HasCalendars;
+    use HasUserBulkMethods, HasCalendars;
 
     /**
-     * Nécessite de pouvoir gérer les calendriers de l'utilisateur.
+     * Must be able to manage user calendars.
      */
     public function __construct()
     {
@@ -59,10 +60,15 @@ class CalendarController extends Controller
             ),
             ['only' => ['destroy']]
         );
+        // Can index, show and (un)follow and edit calendars for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow', 'bulkUpdate', 'bulkDestroy']]
+        );
     }
 
     /**
-     * Liste les calendriers.
+     * Lists the calendars.
      *
      * @param Request $request
      * @param string  $user_id
@@ -86,7 +92,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Crée un calendrier.
+     * Creates a calendar.
      *
      * @param UserCalendarRequest $request
      * @param string              $user_id
@@ -113,7 +119,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Montre un calendrier.
+     * Shows a calendar.
      *
      * @param Request $request
      * @param string  $user_id
@@ -138,7 +144,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Il n'est pas possible de mettre à jour un calendrier.
+     * It is not possible to update a calendar.
      *
      * @param Request $request
      * @param string  $user_id
@@ -151,7 +157,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Supprime un calendrier.
+     * Deletes a calendar.
      *
      * @param Request $request
      * @param string  $user_id

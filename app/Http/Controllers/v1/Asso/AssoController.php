@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les associations.
+ * Manages associations.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -29,40 +29,40 @@ class AssoController extends Controller
     use HasAssos, HasImages;
 
     /**
-     * Nécessité de gérer les associations.
-     * Lecture publique.
+     * Must be able to manage associations.
+     * Public access.
      */
     public function __construct()
     {
         $this->middleware(
 	        \Scopes::allowPublic()->matchOne('user-get-assos', 'client-get-assos'),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-create-assos', 'client-create-assos'),
 		        ['permission:asso']
 	        ),
-	        ['only' => ['store']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-edit-assos', 'client-edit-assos'),
 		        ['permission:asso']
 	        ),
-	        ['only' => ['update']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-remove-assos', 'client-remove-assos'),
 		        ['permission:asso']
 	        ),
-        	['only' => ['destroy']]
+        	['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les associations.
+     * Lists associations.
      *
      * @param Request $request
      * @return JsonResponse
@@ -77,7 +77,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Ajoute une association.
+     * Adds an association.
      *
      * @param AssoRequest $request
      * @return JsonResponse
@@ -86,22 +86,22 @@ class AssoController extends Controller
     {
         $asso = Asso::create($request->input());
 
-        // On affecte l'image si tout s'est bien passé.
+        // Affecting image if everything went well.
         $this->setImage($request, $asso, 'assos/'.$asso->id);
 
-        // Après la création, on ajoute son président (non confirmé évidemment).
+        // After the creation, the president is added (not confirmed).
         $asso->assignRoles(config('portail.roles.admin.assos'), [
             'user_id' => $request->input('user_id'),
         ], true);
 
-        // On met l'asso en état inactif (en attente de confirmation).
+        // If we put the asso in a inactive state (waiting for confirmation).
         $asso->delete();
 
         return response()->json($asso, 201);
     }
 
     /**
-     * Montre une association.
+     * Shows an association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -115,7 +115,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Met à jour une association.
+     * Updates an association.
      *
      * @param AssoRequest $request
      * @param string      $asso_id
@@ -148,7 +148,7 @@ class AssoController extends Controller
         }
 
         if ($asso->update($request->input())) {
-            // On affecte l'image si tout s'est bien passé.
+            // Affecting image if everything went well.
             $this->setImage($request, $asso, 'assos/'.$asso->id);
 
             return response()->json($asso, 200);
@@ -158,7 +158,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Supprime une association.
+     * Deletes an association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -169,11 +169,11 @@ class AssoController extends Controller
         $asso = $this->getAsso($request, $asso_id);
 
         if ($asso->children()->exists()) {
-            abort(400, 'Il n\'est pas possible de supprimer une association parente');
+            abort(400, 'Il n\'est pas possible de Deletesr an association parente');
         }
 
         $asso->delete();
-        // On ne supprime pas une asso réellement: $this->deleteImage('assos/'.$asso->id);.
+        // An assos is not really deleted: $this->deleteImage('assos/'.$asso->id);.
         abort(204);
     }
 }

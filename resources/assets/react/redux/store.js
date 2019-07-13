@@ -317,7 +317,7 @@ export default createStore((state = store, action) => {
 						// Store the data by id for the resource.
 						if (id) {
 							switch (action.meta.action) {
-								case 'update':
+								case 'update': {
 									// On modifie/stock la donnée via l'id
 									let placeForData = buildStorePath(draft, path.concat([id]));
 
@@ -325,7 +325,7 @@ export default createStore((state = store, action) => {
 									placeForData.data = data;
 
 									break;
-
+								}
 								default:
 									// 'delete'
 									delete place.resources[id];
@@ -340,8 +340,9 @@ export default createStore((state = store, action) => {
 							switch (action.meta.action) {
 								case 'update':
 								case 'insert':
-								case 'create':
-									// Stores/updates data trough data's id.
+								case 'create': {
+                  // Stores/updates data trough data's id.
+                  
 									let placeForData = buildStorePath(draft, path.concat([data.id]));
 									const placeForIdData = placeForData;
 
@@ -350,7 +351,7 @@ export default createStore((state = store, action) => {
 									placeForIdData.resources = placeForData.resources;
 
 									break;
-
+								}
 								default:
 									// 'delete'.
 									delete place.resources[data.id];

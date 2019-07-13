@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les calendriers.
+ * Manages the calendars.
  *
  * TODO: En abort
  *
@@ -30,30 +30,30 @@ class CalendarController extends Controller
     use HasCalendars, HasCreatorsAndOwners;
 
     /**
-     * Nécessité de gérer les calendrier.
+     * Must be able to manage calendars.
      */
     public function __construct()
     {
         $this->middleware(
 	        \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-calendars', 'client-get-calendars'),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-create-calendars', 'client-create-calendars'),
-	        ['only' => ['store']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-edit-calendars', 'client-edit-calendars'),
-	        ['only' => ['update']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
 	        \Scopes::matchOneOfDeepestChildren('user-manage-calendars', 'client-manage-calendars'),
-	        ['only' => ['destroy']]
+	        ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les calendriers.
+     * Lists the calendars.
      *
      * @param Request $request
      * @return JsonResponse
@@ -74,7 +74,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Crée un calendrier.
+     * Creates a calendar.
      *
      * @param CalendarRequest $request
      * @return JsonResponse
@@ -99,7 +99,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Montre un calendrier.
+     * Shows a calendar.
      *
      * @param Request	$request
      * @param string 	$calendrier_id
@@ -113,7 +113,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Met à jour un calendrier.
+     * Updates a calendar.
      *
      * @param CalendarRequest	$request
      * @param string          $calendrier_id
@@ -139,7 +139,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Supprime un calendrier.
+     * Deletes a calendar.
      *
      * @param Request	$request
      * @param string 	$calendrier_id

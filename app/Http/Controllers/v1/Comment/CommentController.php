@@ -1,6 +1,6 @@
 <?php
 /**
- * Gérer les commentaires d'une ressource.
+ * Manages a resource comments.
  *
  * @author Natan Danous <natan.danous@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -25,30 +25,30 @@ class CommentController extends Controller
     use HasComments;
 
     /**
-     * Nécessité de gérer les commentaires.
+     * Must be able to manage comments.
      */
     public function __construct()
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-comments', 'client-get-comments'),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-comments', 'client-create-comments'),
-            ['only' => ['store']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-edit-comments', 'client-edit-comments'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-remove-comments', 'client-remove-comments'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les commentaires d'une ressource.
+     * Lists a resource comments.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -69,7 +69,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Crée un commentaire pour une ressource.
+     * Creates a comment for a ressource.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -95,7 +95,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Montre un commentaire d'une ressource.
+     * Shows a resource's comment.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -108,7 +108,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Met à jour un commentaire d'une ressource.
+     * Updates a resource's comment.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -129,7 +129,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Supprime un commentaire d'une ressource.
+     * Deletes a resource's comment.
      *
      * @param CommentRequest $request
      * @return void

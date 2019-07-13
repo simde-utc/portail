@@ -1,6 +1,6 @@
 <?php
 /**
- * Allows to search for a user. 
+ * Allows to search for a user.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

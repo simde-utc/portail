@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion des associations de l'utilisateur.
+ * User associations management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -19,14 +19,16 @@ use App\Models\Asso;
 use App\Models\Semester;
 use App\Models\Role;
 use App\Exceptions\PortailException;
-use App\Traits\Controller\v1\HasAssos;
+use App\Traits\Controller\v1\{
+    HasUserBulkMethods, HasAssos
+};
 
 class AssoController extends Controller
 {
-    use HasAssos;
+    use HasUserBulkMethods, HasAssos;
 
     /**
-     * Nécessité de pouvoir gérer les associations de l'utilisateur.
+     * Must be able to manage user's association.
      */
     public function __construct()
     {
@@ -46,10 +48,15 @@ class AssoController extends Controller
             \Scopes::matchOneOfDeepestChildren('user-remove-assos-members', 'client-remove-assos-members'),
             ['only' => ['destroy']]
         );
+        // Can index, show and create, edit and remove assos for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow', 'bulkUpdate', 'bulkDestroy']]
+        );
     }
 
     /**
-     * Liste des associations de l'utlisateur.
+     * Lists user's associations.
      *
      * @param Request $request
      * @param string  $user_id
@@ -81,7 +88,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Ajoute une association suivie par l'utilisateur.
+     * Adds an association followed by the user.
      *
      * @param UserAssoRequest $request
      * @param string          $user_id
@@ -104,7 +111,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Montre une association suivie par l'utilisateur.
+     * Shows an association followed by the user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -125,7 +132,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Il n'est pas possible de mettre à jour.
+     * It is not possible to update.
      *
      * @param Request $request
      * @param string  $user_id
@@ -138,7 +145,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Retire une association suivie par l'utilisateur.
+     * Retire an association followed by the user.
      *
      * @param Request $request
      * @param string  $user_id

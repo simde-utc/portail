@@ -12,6 +12,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -41,6 +43,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        Route::macro('apiBulkResources', [$this, 'apiBulkResources']);
+        Route::macro('apiBulkResource', [$this, 'apiBulkResource']);
+
         $this->mapAdminRoutes();
 
         $this->mapPassportRoutes();
@@ -49,6 +54,42 @@ class RouteServiceProvider extends ServiceProvider
 
         // To define lastly because it retrieves HTTP 404 errors.
         $this->mapWebRoutes();
+    }
+
+    /**
+     * Register an array of API bulk resource controllers.
+     *
+     * @param  array $resources
+     * @return void
+     */
+    public function apiBulkResources(array $resources)
+    {
+        foreach ($resources as $name => $controller) {
+            Route::apiBulkResource($name, $controller);
+        }
+    }
+
+    /**
+     * Route an API bulk resource to a controller.
+     *
+     * @param  string $name
+     * @param  string $controller
+     * @return void
+     */
+    public function apiBulkResource(string $name, string $controller)
+    {
+        $wheres = [];
+        $parts = explode('/', $name);
+        $uri = $name.'/{'.Str::singular(end($parts)).'}';
+
+        Route::middleware('bulk')->group(function () use ($name, $controller, $uri) {
+            Route::get($name, $controller.'@all');
+            Route::post($name, $controller.'@create');
+            Route::get($uri, $controller.'@get');
+            Route::put($uri, $controller.'@edit');
+            Route::patch($uri, $controller.'@edit');
+            Route::delete($uri, $controller.'@remove');
+        });
     }
 
     /**
@@ -81,6 +122,7 @@ class RouteServiceProvider extends ServiceProvider
                     ->namespace($this->namespace)->prefix('login/'.$provider)->group($file);
             }
         }
+
         // To define lastly because the '/' routes overrides everything.
         Route::middleware('web')
             ->namespace($this->namespace)->group(base_path('routes/web.php'));

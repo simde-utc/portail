@@ -63,7 +63,7 @@ class Validation
     }
 
     /**
-     * Indicates unicity. 
+     * Indicates unicity.
      *
      * @param string $table
      * @param string $fields

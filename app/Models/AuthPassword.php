@@ -28,7 +28,7 @@ class AuthPassword extends Auth
     ];
 
     /**
-     * Retrieves a user from its email adress. 
+     * Retrieves a user from its email adress.
      *
      * @param string $email
      * @return mixed

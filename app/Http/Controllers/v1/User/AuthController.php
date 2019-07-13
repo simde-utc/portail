@@ -1,7 +1,7 @@
 <?php
 /**
- * Gère les systèmes d'authentification de l'utilisateur.
- * TODO: Transformer les get en Trait.
+ * Manages user's authentification systems.
+ * TODO: Transform gets in Traits.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -20,14 +20,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserAuthRequest;
 use App\Exceptions\PortailException;
-use App\Traits\Controller\v1\HasUsers;
+use App\Traits\Controller\v1\{
+    HasUserBulkMethods, HasUsers
+};
 
 class AuthController extends Controller
 {
-    use HasUsers;
+    use HasUserBulkMethods, HasUsers;
 
     /**
-     * Nécessité de pouvoir gérer les systèmes d'authentification de l'utlisateur.
+     * Must be able to manage user's authentification systems.
      */
     public function __construct()
     {
@@ -41,16 +43,21 @@ class AuthController extends Controller
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-set-info-identity-auth', 'client-set-info-identity-auth'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
+        );
+        // Can index, show and create auths for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-info-identity-auth', 'client-manage-info-identity-auth'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les systèmes d'authentification de l'utilisateur.
+     * Lists user's authentification systems.
      *
      * @param  Request $request
      * @param  string 	$user_id
@@ -72,7 +79,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Ajoute un système d'authentification de l'utilisateur.
+     * Adds a user authentification system.
      *
      * @param  UserAuthRequest $request
      * @param  string          $user_id
@@ -109,7 +116,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Montre un système d'authentification de l'utilisateur.
+     * Shows a user authentification system.
      *
      * @param  Request $request
      * @param  string 	$user_id
@@ -144,7 +151,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Il est impossible de modifier un système d'authentification actuellement.
+     * It is currently impossible to update a authentification system.
      * TODO
      *
      * @param  Request $request
@@ -158,7 +165,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Supprime un système d'authentification de l'utilisateur.
+     * Deletes a user authentification system.
      *
      * @param  Request $request
      * @param  string 	$user_id

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les actions des articles.
+ * Manages les actions des articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,7 +26,7 @@ class ActionController extends Controller
     use HasArticles;
 
     /**
-     * Nécessité de pouvoir voir les articles et de pouvoir gérer les actions des articles.
+     * Must be able to see articles and manage articles actions.
      */
     public function __construct()
     {
@@ -34,38 +34,38 @@ class ActionController extends Controller
             array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-            \Scopes::matchOne('user-get-articles-actions', 'client-get-articles-actions')
+            	\Scopes::matchOne('user-get-articles-actions', 'client-get-articles-actions')
 	        ),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
             array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-            \Scopes::matchOne('user-create-articles-actions', 'client-create-articles-actions')
+            	\Scopes::matchOne('user-create-articles-actions', 'client-create-articles-actions')
 	        ),
-	        ['only' => ['store']]
+	        ['only' => ['create']]
         );
         $this->middleware(
             array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-            \Scopes::matchOne('user-edit-articles-actions', 'client-edit-articles-actions')
+            	\Scopes::matchOne('user-edit-articles-actions', 'client-edit-articles-actions')
 	        ),
-	        ['only' => ['update']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
             array_merge(
 		        \Scopes::matchOneOfDeepestChildren(['user-get-articles-assos', 'user-get-articles-groups'],
                     ['client-get-articles-assos', 'client-get-articles-groups']),
-            \Scopes::matchOne('user-manage-articles-actions', 'client-manage-articles-actions')
+            	\Scopes::matchOne('user-manage-articles-actions', 'client-manage-articles-actions')
 	        ),
-	        ['only' => ['destroy']]
+	        ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les actions de l'article.
+     * Lists the article's actions.
      *
      * @param Request $request
      * @param string  $article_id
@@ -80,7 +80,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Impossible d'ajouter depuis ce controlleur une action pour l'article.
+     * Impossible to add an article action from this controller.
      *
      * @param Request $request
      * @param string  $article_id
@@ -92,7 +92,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Montre une action de l'article.
+     * Shows an article action.
      *
      * @param Request $request
      * @param string  $article_id
@@ -108,7 +108,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Impossible de mettre un jour une action de l'article.
+     * Impossible to update an article action.
      *
      * @param Request $request
      * @param string  $article_id
@@ -121,7 +121,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Impossible de supprimer une action de l'article.
+     * Impossible to delete an article action.
      *
      * @param Request $request
      * @param string  $article_id

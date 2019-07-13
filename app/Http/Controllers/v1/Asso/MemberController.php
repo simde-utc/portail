@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les membres des associations.
+ * Manages les membres des associations.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -40,7 +40,7 @@ class MemberController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-get-roles-assos-assigned', 'client-get-assos-members-followed'),
 		        ['user:cas,contributorBde']
 	        ),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        array_merge(
@@ -49,7 +49,7 @@ class MemberController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-create-roles-assos-assigned', 'client-create-assos-members-followed'),
 		        ['user:contributorBde']
 	        ),
-	        ['only' => ['store']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        array_merge(
@@ -58,7 +58,7 @@ class MemberController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-edit-roles-assos-assigned', 'client-edit-assos-members-followed'),
 		        ['user:contributorBde']
 	        ),
-	        ['only' => ['update']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
 	        array_merge(
@@ -67,12 +67,12 @@ class MemberController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-remove-roles-assos-assigned', 'client-remove-assos-members-followed'),
 		        ['user:contributorBde']
 	        ),
-	        ['only' => ['destroy']]
+	        ['only' => ['remove']]
         );
     }
 
     /**
-     * Ajoute automatiquement des rôles et des permissions en fonction du membre.
+     * Adds automatiquement des rôles et des permissions en fonction du membre.
      *
      * @param Asso $asso
      * @param User $member
@@ -113,7 +113,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Liste les membres de l'association.
+     * Lists les membres de l'association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -143,7 +143,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Ajoute un membre à l'association.
+     * Adds un membre à l'association.
      *
      * @param AssoMemberRequest $request
      * @param string            $asso_id
@@ -168,7 +168,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Montre un membre de l'association.
+     * Shows un membre de l'association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -186,7 +186,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Modifie un membre de l'association.
+     * Updates un membre de l'association.
      *
      * @param AssoMemberRequest $request
      * @param string            $asso_id

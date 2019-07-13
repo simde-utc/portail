@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les emplacements de lieux.
+ * Manages locations places.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,30 +22,30 @@ class PlaceController extends Controller
     use HasPlaces;
 
     /**
-     * Nécessité de pouvoir gérer les emplacements.
+     * Must be able to manage places.
      */
     public function __construct()
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-get-locations-places'),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-create-locations-places'),
-            ['only' => ['store']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-set-locations-places'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-manage-locations-places'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les emplacements.
+     * Lists places.
      *
      * @return JsonResponse
      */
@@ -59,7 +59,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Créer un emplacement.
+     * Creates a place.
      *
      * @param PlaceRequest $request
      * @return JsonResponse
@@ -75,7 +75,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Montre un emplacement.
+     * Shows a place.
      *
      * @param Request $request
      * @param string  $place_id
@@ -89,7 +89,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Met à jour un emplacement.
+     * Updates a place.
      *
      * @param PlaceRequest $request
      * @param string       $place_id
@@ -110,7 +110,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Supprime un emplacement.
+     * Deletes a place.
      *
      * @param Request $request
      * @param string  $place_id

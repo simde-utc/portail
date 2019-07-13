@@ -154,7 +154,7 @@ trait TokenUtils
     }
 
     /**
-     * Returns the Request's OAuth client. 
+     * Returns the Request's OAuth client.
      *
      * @param  Request $request
      * @return mixed
@@ -167,7 +167,7 @@ trait TokenUtils
     }
 
     /**
-     * Idicates if the request is an OAuth request or not. 
+     * Idicates if the request is an OAuth request or not.
      *
      * @param  Request $request
      * @return boolean
@@ -190,7 +190,7 @@ trait TokenUtils
     }
 
     /**
-     * Returns if we can access a route by matching at least a scope in the list. 
+     * Returns if we can access a route by matching at least a scope in the list.
      *
      * @param  Request $request
      * @param mixed   $scopes

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les utilisateurs.
+ * Manages users.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -17,44 +17,45 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
-use App\Traits\Controller\v1\HasUsers;
-use App\Traits\Controller\v1\HasImages;
+use App\Traits\Controller\v1\{
+	HasUsers, HasImages, HasUserBulkMethods
+};
 use App\Exceptions\PortailException;
 
 class UserController extends Controller
 {
-    use HasUsers, HasImages;
+    use HasUserBulkMethods, HasUsers, HasImages;
 
     /**
-     * Uniqument client: Nécessité de pouvoir gérer les utilisateurs.
-     * Uniquement user: Lecture et modification uniquement possible de l'utlisateur.
+     * Only clients: Must have the right to manage users.
+     * Oly user: Reading and update only possible by the user.
      */
     public function __construct()
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-get-users'),
-            ['only' => 'index']
+            ['only' => ['all', 'show']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-create-users'),
-            ['only' => 'store']
+            ['only' => ['create']]
         );
         $this->middleware(
-            \Scopes::matchAnyUser(),
-            ['only' => 'show']
+        \Scopes::matchAnyClient(),
+            ['only' => ['bulkShow']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-set-info', 'client-edit-users'),
-            ['only' => 'update']
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-manage-users'),
-            ['only' => 'destroy']
+            ['only' => ['remove']]
         );
     }
 
     /**
-     * Récupère la liste des utilisateurs.
+     * Retrieves the user list.
      *
      * @param Request $request
      * @return JsonResponse
@@ -87,7 +88,7 @@ class UserController extends Controller
     }
 
     /**
-     * Créer un nouvel utilisateur.
+     * Creates a new user.
      *
      * @param Request $request
      * @return JsonResponse
@@ -111,7 +112,7 @@ class UserController extends Controller
             'is_active' => $active,
         ]);
 
-        // On affecte l'image si tout s'est bien passé.
+        // If everything went fine, affecting image.
         $this->setImage($request, $user, 'users/'.$user->id);
 
         if ($request->filled('details')) {
@@ -144,7 +145,7 @@ class UserController extends Controller
     }
 
     /**
-     * Montre un utilisateur.
+     * Shows a user.
      *
      * @param UserRequest $request
      * @param string      $user_id
@@ -152,66 +153,61 @@ class UserController extends Controller
      */
     public function show(UserRequest $request, string $user_id=null)
     {
-        $user = $this->getUser($request, $user_id, true);
-        $rightsOnUser = is_null($user_id) || (\Auth::id() && $user->id === \Auth::id());
+        $user = $this->getUser($request, $user_id);
 
-        if ($rightsOnUser) {
-            if (!\Scopes::has($request, 'user-get-info-identity-email')) {
-                $user->makeHidden('email');
-            }
-
-            if (\Scopes::has($request, 'user-get-info-identity-type')) {
-                $user->type = $user->type();
-            }
-
-            if ($request->has('types')) {
-                $possibleTypes = $request->input('types');
-                $types = [];
-
-                if ($possibleTypes === '*') {
-                    if (!\Scopes::has($request, 'user-get-info-identity-type')) {
-                        abort(403, 'Vous n\'avez pas le droit d\'avoir accès aux types de l\'utilisateur');
-                    }
-
-                    $possibleTypes = $user->getTypes();
-                } else {
-                    $possibleTypes = explode(',', $possibleTypes);
-                }
-
-                foreach ($possibleTypes as $type) {
-                    try {
-                        if (!\Scopes::has($request, 'user-get-info-identity-type-'.$type)) {
-                            continue;
-                        }
-
-                        $method = 'is'.ucfirst($type);
-
-                        if (method_exists($user, $method) && $user->$method()) {
-                            $types[$type] = true;
-                        } else {
-                            $types[$type] = false;
-                        }
-                    } catch (PortailException $e) {
-                        abort(400, 'Le type '.$type.' n\'existe pas !');
-                    }
-                }
-
-                $user->types = $types;
-            }
-
-            if (!\Scopes::has($request, 'user-get-info-identity-timestamps')) {
-                $user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
-            }
-        } else {
-            $user = $user->hideSubData();
+        if (!\Scopes::has($request, 'user-get-info-identity-email')) {
+            $user->makeHidden('email');
         }
 
-        // Par défaut, on retourne au moins l'id de la personne et son nom.
+        if (\Scopes::has($request, 'user-get-info-identity-type')) {
+            $user->type = $user->type();
+        }
+
+        if ($request->has('types')) {
+            $possibleTypes = $request->input('types');
+            $types = [];
+
+            if ($possibleTypes === '*') {
+                if (!\Scopes::has($request, 'user-get-info-identity-type')) {
+                    abort(403, 'Vous n\'avez pas le droit d\'avoir accès aux types de l\'utilisateur');
+                }
+
+                $possibleTypes = $user->getTypes();
+            } else {
+                $possibleTypes = explode(',', $possibleTypes);
+            }
+
+            foreach ($possibleTypes as $type) {
+                try {
+                    if (!\Scopes::has($request, 'user-get-info-identity-type-'.$type)) {
+                        continue;
+                    }
+
+                    $method = 'is'.ucfirst($type);
+
+                    if (method_exists($user, $method) && $user->$method()) {
+                        $types[$type] = true;
+                    } else {
+                        $types[$type] = false;
+                    }
+                } catch (PortailException $e) {
+                    abort(400, 'Le type '.$type.' n\'existe pas !');
+                }
+            }
+
+            $user->types = $types;
+        }
+
+        if (!\Scopes::has($request, 'user-get-info-identity-timestamps')) {
+            $user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
+        }
+
+        // By default, at least the user id and name is returned.
         return response()->json($user);
     }
 
     /**
-     * Met à jour un utilisateur.
+     * Updates a user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -227,14 +223,14 @@ class UserController extends Controller
         $user->is_active = $request->input('is_active', $user->is_active);
         $user->save();
 
-        // On affecte l'image si tout s'est bien passé.
+        // If everything went fine, affecting image.
         $this->setImage($request, $user, 'users/'.$user->id);
 
         return response()->json($user, 200);
     }
 
     /**
-     * (Non géré) Supprime un utilisateur.
+     * Not handled: deletes a user.
      * TODO RGPD.
      *
      * @param Request $request

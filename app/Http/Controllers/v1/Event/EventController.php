@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les événements.
+ * Manages events.
  *
  * @author Josselin Pennors <josselin.pennors@hotmail.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -30,31 +30,31 @@ class EventController extends Controller
     use HasEvents, HasCreatorsAndOwners;
 
     /**
-     * Nécessité de gérer les événements.
-     * Lecture publique.
+     * Must be able to manage events.
+     * Public read.
      */
     public function __construct()
     {
         $this->middleware(
             \Scopes::allowPublic()->matchOneOfDeepestChildren('user-get-events', 'client-get-events'),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-events', 'client-create-events'),
-            ['only' => ['store']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-set-events', 'client-set-events'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-events', 'client-manage-events'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les événements.
+     * Lists events.
      *
      * @param Request $request
      * @return JsonResponse
@@ -75,7 +75,7 @@ class EventController extends Controller
     }
 
     /**
-     * Crée un événement.
+     * Creates an event.
      *
      * @param EventRequest $request
      * @return JsonResponse
@@ -108,7 +108,7 @@ class EventController extends Controller
     }
 
     /**
-     * Montre un événement.
+     * Shows an event.
      *
      * @param Request $request
      * @param string  $event_id
@@ -122,7 +122,7 @@ class EventController extends Controller
     }
 
     /**
-     * Met à jour un événement.
+     * Updates an event.
      *
      * @param EventRequest $request
      * @param string       $event_id
@@ -149,7 +149,7 @@ class EventController extends Controller
     }
 
     /**
-     * Supprime un événement.
+     * Deletes an event.
      *
      * @param Request $request
      * @param string  $event_id

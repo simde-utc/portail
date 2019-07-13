@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les lieux.
+ * Manages locations.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,30 +22,30 @@ class LocationController extends Controller
     use HasPosition;
 
     /**
-     * Nécessité de gérer les lieux.
+     * Must be able to manage locations.
      */
     public function __construct()
     {
         $this->middleware(
             \Scopes::matchOne(['client-get-locations']),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOne(['client-create-locations']),
-            ['only' => ['store']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOne(['client-set-locations']),
-            ['only' => ['update']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOne(['client-manage-locations']),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les lieux.
+     * Lists locations.
      *
      * @return JsonResponse
      */
@@ -59,7 +59,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Crée un lieu.
+     * Creates a location.
      *
      * @param LocationRequest $request
      * @return JsonResponse
@@ -76,7 +76,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Montre un lieu.
+     * Shows a location.
      *
      * @param  string $location_id
      * @return JsonResponse
@@ -93,7 +93,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Met à jour un lieu.
+     * Updates a location.
      *
      * @param  LocationRequest $request
      * @param  string          $location_id
@@ -117,7 +117,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Supprime un lieu.
+     * Deletes a location.
      *
      * @param  string $location_id
      * @return void

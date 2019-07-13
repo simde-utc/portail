@@ -1,6 +1,6 @@
 <?php
 /**
- * Generates a management of an admin resource. 
+ * Generates a management of an admin resource.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -77,7 +77,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Global display interface 
+     * Global display interface
      *
      * @param Content $content
      * @return Content
@@ -120,7 +120,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Modifies an instance. 
+     * Modifies an instance.
      *
      * @param mixed   $model_id
      * @param Content $content

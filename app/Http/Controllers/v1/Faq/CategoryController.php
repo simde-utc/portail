@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les categories des FAQs.
+ * Manages FAQs' categories.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -23,30 +23,30 @@ class CategoryController extends Controller
     use HasFaqs;
 
     /**
-     * Nécessité de gérer les questions FAQs.
+     * Must be able to manage FAQ's questions.
      */
     public function __construct()
     {
         $this->middleware(
             \Scopes::allowPublic()->matchOne('user-get-faqs-categories', 'client-get-faqs-categories'),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOne('user-create-faqs-categories', 'client-create-faqs-categories'),
-            ['only' => ['store']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOne('user-edit-faqs-categories', 'client-edit-faqs-categories'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOne('user-remove-faqs-categories', 'client-remove-faqs-categories'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 
     /**
-     * Liste les categories.
+     * Lists categories.
      *
      * @param Request $request
      * @return JsonResponse
@@ -61,7 +61,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Ajoute une catégorie FAQ.
+     * Adds a FAQ category.
      *
      * @param FaqCategoryRequest $request
      * @return JsonResponse
@@ -74,7 +74,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Montre une catégorie FAQ.
+     * Shows a FAQ category.
      *
      * @param Request $request
      * @param string  $category_id
@@ -88,7 +88,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Met à jour une catégorie FAQ.
+     * Updates a FAQ category.
      *
      * @param FaqCategoryRequest $request
      * @param string             $category_id
@@ -106,7 +106,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Supprime une catégorie FAQ.
+     * Deletes a FAQ category.
      *
      * @param Request $request
      * @param string  $category_id
@@ -117,7 +117,7 @@ class CategoryController extends Controller
         $category = $this->getFaqCategory($request, $category_id);
 
         if ($category->children()->exists()) {
-            abort(400, 'Il n\'est pas possible de supprimer une catégorie FAQ parente');
+            abort(400, 'Il n\'est pas possible de Deletesr une catégorie FAQ parente');
         }
 
         $category->delete();

@@ -232,7 +232,7 @@ trait HasPermissions
                 ($data['semester_id'] ?? Semester::getThisSemester()->id))->pluck('id'))->isNotEmpty();
     }
 
-    /** 
+    /**
      * Checks if every permission in the list have been granted or not.
      *
      * @param  string|array|Collection $permissions
