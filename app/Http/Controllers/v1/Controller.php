@@ -1,6 +1,6 @@
 <?php
 /**
- * v1 controller
+ * V1 controller.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -23,14 +23,14 @@ use Illuminate\Support\Collection;
 class Controller extends BaseController
 {
     /**
-     * Know what to display
-     * TODO: deprecate for official v1
+     * Know what to display.
+     * TODO: deprecate for official v1.
      * TODO: transform into Trait working with getSelection.
      *
      * @param  Request $request
      * @param  array   $choices
      * @return array
-     * @throws PortailException For bad $choices
+     * @throws PortailException For bad $choices.
      */
     protected function getChoices(Request $request, array $choices)
     {

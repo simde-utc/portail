@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages API routes
+ * Manages API routes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Romain Maliach-Auguste <r.maliach@live.fr>
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 class RouteController extends Controller
 {
     /**
-     * Middleware definition
+     * Middleware definition.
      */
     public function __construct()
     {
@@ -25,7 +25,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Lists routes for a specific version
+     * Lists routes for a specific version.
      * @param  string $version
      * @return array
      */
@@ -54,7 +54,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Lists portail versions
+     * Lists portail versions.
      *
      * @param  Request $request
      * @return mixed
@@ -93,7 +93,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Lists API routes for a specific version
+     * Lists API routes for a specific version.
      * @param  Request $request
      * @param  string  $version
      * @return mixed
@@ -138,7 +138,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Exception for non-existing versions
+     * Exception for non-existing versions.
      * @param  Request $request
      * @param  string  $version
      * @return mixed
@@ -149,7 +149,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Exception for non-existing routes
+     * Exception for non-existing routes.
      * @return mixed
      */
     public function notFound()

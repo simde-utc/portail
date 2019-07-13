@@ -25,7 +25,7 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * /asso/{login} redirection
+     * /asso/{login} redirection.
      *
      * @param string $login
      * @return mixed
@@ -36,7 +36,7 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * /asso/articles/{login} redirection
+     * /asso/articles/{login} redirection.
      *
      * @param string $login
      * @return mixed

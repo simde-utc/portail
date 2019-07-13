@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages connexions via form
+ * Manages connexions via form.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -26,14 +26,14 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users once they are connected
+     * Where to redirect users once they are connected.
      *
      * @var string
      */
     protected $redirectTo = '/';
 
     /**
-     * Only users that aren't currently logged in can log in
+     * Only users that aren't currently logged in can log in.
      *
      * @return void
      */
@@ -48,7 +48,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Shows the login method choice view
+     * Shows the login method choice view.
      *
      * @param  Request $request
      * @return mixed
@@ -66,10 +66,10 @@ class LoginController extends Controller
     }
 
     /**
-     * User login after API call
+     * User login after API call.
      *
      * @param  Request $request
-     * @param  string  $provider authentification type
+     * @param  string  $provider Authentification type.
      * @return mixed
      */
     public function store(Request $request, string $provider)
@@ -88,7 +88,7 @@ class LoginController extends Controller
      * Fetches the authentication class $provider_class in the Laravel service container de Laravel, and shows login.
      *
      * @param  Request $request
-     * @param  string  $provider authentification type
+     * @param  string  $provider Authentification type.
      * @return mixed
      */
     public function show(Request $request, string $provider)
@@ -114,7 +114,7 @@ class LoginController extends Controller
     }
 
     /**
-     * User logout
+     * User logout.
      *
      * @param  Request $request
      * @param  string  $redirect Url de redirection.
@@ -128,7 +128,7 @@ class LoginController extends Controller
         if ($redirect === null) {
             $redirectUrl = $request->query('redirect', url()->previous());
 
-            // Avoids redirections to logout
+            // Avoids redirections to logout.
             if ($redirectUrl && $redirectUrl !== $request->url()) {
                 $redirect = redirect($redirectUrl);
             } else {
@@ -136,7 +136,7 @@ class LoginController extends Controller
             }
         }
 
-        // If impersonate mode is active
+        // If impersonate mode is active.
         if ($user = Auth::guard('admin')->user()) {
             if (Auth::guard('web')->id() !== $user->id) {
                 Auth::guard('web')->login($user);
@@ -145,10 +145,10 @@ class LoginController extends Controller
             }
         }
 
-	// session destruction
-	session()->flush();
+        // Session destruction.
+        session()->flush();
 
-        // logout once the service has finished its job
+        // Logout once the service has finished its job.
         Auth::logout();
 
         return $redirect;

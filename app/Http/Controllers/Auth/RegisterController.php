@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages inscription via form
+ * Manages inscription via form.
  *
  * @author Natan Danous <natan.danous@gmail.com>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -26,14 +26,14 @@ class RegisterController extends Controller
     use RegistersUsers;
 
     /**
-     * Where to redirict users once they are logged in
+     * Where to redirict users once they are logged in.
      *
      * @var string
      */
     protected $redirectTo = '/';
 
     /**
-     * Only users that aren't currently signed in can create an account
+     * Only users that aren't currently signed in can create an account.
      *
      * @return void
      */
@@ -43,7 +43,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * Fields required for form validation
+     * Fields required for form validation.
      *
      * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
@@ -59,11 +59,11 @@ class RegisterController extends Controller
     }
 
     /**
-     * Displays the form for a specific authentification type
-     * Redirects to the login page if non-existant
+     * Displays the form for a specific authentification type.
+     * Redirects to the login page if non-existant.
      *
      * @param  Request $request
-     * @param  string  $provider authentification type
+     * @param  string  $provider Authentification type.
      * @return mixed
      */
     public function show(Request $request, string $provider=null)
@@ -78,11 +78,11 @@ class RegisterController extends Controller
     }
 
     /**
-     * Registers the user for a specific type of authentification
-     * Redirects to login page if non-existant
+     * Registers the user for a specific type of authentification.
+     * Redirects to login page if non-existant.
      *
      * @param  Request $request
-     * @param  string  $provider authentification type
+     * @param  string  $provider Authentification type.
      * @return mixed
      */
     public function store(Request $request, string $provider)

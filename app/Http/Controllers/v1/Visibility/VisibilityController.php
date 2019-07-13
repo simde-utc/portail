@@ -23,7 +23,7 @@ class VisibilityController extends Controller
 {
     /**
      * Readable by anyone.
-     * Editable sub-scopes. 
+     * Editable sub-scopes.
      */
     public function __construct()
     {

@@ -64,7 +64,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Checks that the booking can done. 
+     * Checks that the booking can done.
      *
      * @param  Request $request
      * @param  string  $room_id
@@ -78,6 +78,7 @@ class BookingController extends Controller
             $inputs['begin_at'] = Carbon::parse($inputs['begin_at'])->toDateString();
             $inputs['end_at'] = Carbon::parse($inputs['end_at'])->toDateString();
         }
+
         // Check if the booking type auto-validated and that the duration is not too long.
         if (!$this->checkBookingPeriod($room_id, $inputs['begin_at'], $inputs['end_at'])) {
             $inputs['validated_by_id'] = null;
@@ -86,7 +87,7 @@ class BookingController extends Controller
             // Here we check if the validating person can validate the booking ask.
             $validator = $this->getValidatorFromOwner($request, $owner, 'booking', 'réservation', 'create');
 
-            //  Checks if we can validate an booking in a room owned by someone.
+            // Checks if we can validate an booking in a room owned by someone.
             if (!Room::find($room_id)->owned_by->isBookingValidableBy($validator)) {
                 abort(403, 'Vous n\'avez pas le droit de valider cette réservation');
             }
@@ -133,7 +134,7 @@ class BookingController extends Controller
 
         $owner = $this->getOwner($request, 'booking', 'réservation', 'create');
         $creator = $this->getCreatorFromOwner($request, $owner, 'booking', 'réservation', 'create');
-        // Checks if the booker has the rights in this room. 
+        // Checks if the booker has the rights in this room.
         if (!$room->owned_by->isRoomReservableBy($owner)) {
             abort(403, 'Vous n\'être pas autorisé à réserver cette salle');
         }
@@ -147,7 +148,7 @@ class BookingController extends Controller
 
         $calendar = $room->calendar;
 
-        // WARNING : the event belongs to the calendar owner (to prevent people from mofifying by themself the event). 
+        // WARNING : the event belongs to the calendar owner (to prevent people from mofifying by themself the event).
         $event = Event::create([
             'name' => ($inputs['name'] ?? BookingType::find($inputs['type_id'])->name),
             'begin_at' => $inputs['begin_at'],

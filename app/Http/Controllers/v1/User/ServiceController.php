@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages user favorite services. 
+ * Manages user favorite services.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>

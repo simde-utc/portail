@@ -20,7 +20,7 @@ class ForgotPasswordController extends Controller
     use SendsPasswordResetEmails;
 
     /**
-     * Where to redirect users once they're logged in
+     * Where to redirect users once they're logged in.
      *
      * @return void
      */
@@ -30,7 +30,7 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Shows the password reset request form
+     * Shows the password reset request form.
      *
      * @return \Illuminate\View\View
      */
@@ -40,7 +40,7 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Request validation
+     * Request validation.
      *
      * @param  \Illuminate\Http\Request $request
      * @return void

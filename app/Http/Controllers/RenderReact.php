@@ -17,7 +17,7 @@ class RenderReact extends Controller
 {
     /**
      * Manages any request
-     * @param  string $whatever Catches any value
+     * @param  string $whatever Catches any value.
      * @return mixed
      */
     public function __invoke(string $whatever=null)

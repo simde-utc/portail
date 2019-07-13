@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages the reset of passwords
+ * Manages the reset of passwords.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -23,14 +23,14 @@ class ResetPasswordController extends Controller
     use ResetsPasswords;
 
     /**
-     * Where to redirect users once they're logged in
+     * Where to redirect users once they're logged in.
      *
      * @var string
      */
     protected $redirectTo = '/';
 
     /**
-     * Only users that aren't connected can reset their password
+     * Only users that aren't connected can reset their password.
      *
      * @return void
      */
@@ -40,7 +40,7 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * Shows the password reset form
+     * Shows the password reset form.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  string|null              $token
@@ -54,7 +54,7 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * Resets the password
+     * Resets the password.
      *
      * @param  CanResetPassword $user
      * @param  string           $password

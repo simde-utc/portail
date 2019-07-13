@@ -22,7 +22,7 @@ class LinkToPasswordController extends Controller
     protected $redirectTo = '/';
 
     /**
-     * Middleware definition: CAS, password
+     * Middleware definition: CAS, password.
      *
      * @return void
      */
@@ -32,7 +32,7 @@ class LinkToPasswordController extends Controller
     }
 
     /**
-     * Returns linking page
+     * Returns linking page.
      *
      * @param  Request $request
      * @return mixed
@@ -43,7 +43,7 @@ class LinkToPasswordController extends Controller
     }
 
     /**
-     * Stores the link between auth types
+     * Stores the link between auth types.
      *
      * @param  Request $request
      * @return mixed
