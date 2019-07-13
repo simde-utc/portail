@@ -19,11 +19,13 @@ use App\Models\Asso;
 use App\Models\Semester;
 use App\Models\Role;
 use App\Exceptions\PortailException;
-use App\Traits\Controller\v1\HasAssos;
+use App\Traits\Controller\v1\{
+    HasUserBulkMethods, HasAssos
+};
 
 class AssoController extends Controller
 {
-    use HasAssos;
+    use HasUserBulkMethods, HasAssos;
 
     /**
      * Nécessité de pouvoir gérer les associations de l'utilisateur.
@@ -45,6 +47,11 @@ class AssoController extends Controller
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-remove-assos-members', 'client-remove-assos-members'),
             ['only' => ['destroy']]
+        );
+        // Can index, show and create, edit and remove assos for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow', 'bulkUpdate', 'bulkDestroy']]
         );
     }
 
