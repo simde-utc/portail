@@ -1,6 +1,6 @@
 <?php
 /**
- * Indique que le modèle peut créer des notifications.
+ * Indicates that a model can create notifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

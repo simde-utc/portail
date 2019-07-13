@@ -1,6 +1,6 @@
 <?php
 /**
- * Indique que le modèle peut posséder des contacts.
+ * Indicates that the model can have contacts.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,14 +15,14 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 interface CanHaveContacts
 {
     /**
-     * Renvoie la liste des contacts.
+     * Returns the contacts list.
      *
      * @return MorphMany
      */
     public function contacts();
 
     /**
-     * Permet d'indiquer si la personne à le droit de créer/modifier/supprimer les contacts appartenant au modèle.
+     * Indicates  if a given user can can create/update/delete the model's contacts.
      *
      * @param string $user_id
      * @return boolean
