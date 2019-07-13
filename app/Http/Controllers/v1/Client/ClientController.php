@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les clients de l'utilisateur
+ * Manages th user clients.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -23,7 +23,7 @@ use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 class ClientController extends Controller
 {
     /**
-     * Liste les informations (scopes) sur le client en cours.
+     * Lists current client's informations (scopes).
      *
      * @param  Request $request
      * @return JsonResponse
@@ -34,7 +34,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Retourne les users qui ont authorisé les actions du client en cours.
+     * Returns users who authorized the current client actions.
      *
      * @param  Request $request
      * @return JsonResponse
@@ -69,7 +69,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Retourne les users qui ont authorisé les actions du client en cours.
+     * Returns users who authorized the current client actions.
      *
      * @param Request $request
      * @param string  $user_id
@@ -89,7 +89,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Supprime les autorisations d'un utilisateur pour le client.
+     * Deletes a user authorizations for a client.
      *
      * @param Request $request
      * @param string  $user_id
@@ -106,7 +106,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Supprime les autorisations de tous les utilisateurs pour le client.
+     * Deletes all users authorizations for the client.
      *
      * @param Request $request
      * @return void
@@ -121,7 +121,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Supprime les autorisations pour l'utilisateur courant.
+     * Deletes current user's authorizations for the client.
      *
      * @param Request $request
      * @return void

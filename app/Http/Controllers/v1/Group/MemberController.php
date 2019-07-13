@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les membres des groupes.
+ * Manages groups members.
  *
  * TODO: Scopes !
  *
@@ -28,7 +28,7 @@ class MemberController extends Controller
     use HasGroups;
 
     /**
-     * Nécessité de gérer les groupes.
+     * Must be able to manage groups.
      */
     public function __construct()
     {
@@ -43,7 +43,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Liste les membres du groupe.
+     * Lists les membres du groupe.
      *
      * @param Request $request
      * @param string  $group_id
@@ -59,7 +59,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Ajouter un membre au groupe.
+     * Adds a member to the group.
      *
      * @param GroupMemberRequest $request
      * @param string             $group_id
@@ -73,7 +73,7 @@ class MemberController extends Controller
             'semester_id' => $request->input('semester_id', '0'),
             'role_id'     => $request->input('role_id', null),
         ];
-        // TODO: Envoyer un mail d'invitation dans le groupe.
+        // TODO: Send an invitation to the group email.
         try {
             $group->assignMembers($request->input('member_ids', (array) $request->input('member_id')), $data);
         } catch (PortailException $e) {
@@ -88,7 +88,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Montre un membre du groupe.
+     * Shows a member of the group.
      *
      * @param Request $request
      * @param string  $group_id
@@ -108,7 +108,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Met à jour un membre du groupe.
+     * Updates a member of the group.
      *
      * @param GroupMemberRequest $request
      * @param string             $group_id
@@ -132,7 +132,7 @@ class MemberController extends Controller
                     'semester_id' => $request->input('semester_id', $member->pivot->semester_id),
                     'role_id'     => $request->input('role_id', $member->pivot->role_id),
                 ];
-                // TODO: Envoyer un mail d'invitation dans le groupe.
+                // TODO: Send an invitation to the group email.
             }
 
             try {
@@ -150,7 +150,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Supprime un membre du groupe.
+     * Deletes a member of the group.
      *
      * @param Request $request
      * @param string  $group_id

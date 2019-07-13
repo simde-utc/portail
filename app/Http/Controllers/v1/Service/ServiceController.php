@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les services.
+ * Manages the services.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -24,8 +24,8 @@ class ServiceController extends Controller
     use HasServices, HasImages;
 
     /**
-     * Nécessité de pouvoir gérer les services.
-     * L'affichage est public.
+     * Must be able to manage the services.
+     * Display is public.
      */
     public function __construct()
     {
@@ -57,7 +57,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Récupère la liste des services.
+     * Retrieves the services list.
      *
      * @param Request $request
      * @return JsonResponse
@@ -72,7 +72,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Créer un service.
+     * Creates a service.
      *
      * @param ServiceRequest $request
      * @return JsonResponse
@@ -81,14 +81,14 @@ class ServiceController extends Controller
     {
         $service = Service::create($request->all());
 
-        // On affecte l'image si tout s'est bien passé.
+        // Affecting image if everything went well.
         $this->setImage($request, $service, 'services/'.$service->id);
 
         return response()->json($service->hideSubData(), 200);
     }
 
     /**
-     * Montre un service.
+     * Shows a service.
      *
      * @param Request $request
      * @param string  $service_id
@@ -102,7 +102,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Met à jour un service.
+     * Updates a service.
      *
      * @param ServiceRequest $request
      * @param string         $service_id
@@ -123,7 +123,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Supprime un service.
+     * Deletes a service.
      *
      * @param Request $request
      * @param string  $service_id
@@ -138,7 +138,7 @@ class ServiceController extends Controller
 
             abort(204);
         } else {
-            abort(500, 'Impossible de supprimer la service');
+            abort(500, 'Impossible de Deletesr la service');
         }
     }
 }

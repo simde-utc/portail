@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion des visibilités.
+ * Visibilities management.
  *
  * @author Josselin Pennors <josselin.pennors@etu.utc.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -22,12 +22,12 @@ use App\Models\Visibility;
 class VisibilityController extends Controller
 {
     /**
-     * Lisible par n'importe qui.
-     * Modifiable sous scopes.
+     * Readable by anyone.
+     * Editable sub-scopes.
      */
     public function __construct()
     {
-        // La récupération des visibilités est publique.
+        // The visibility retrivement is public.
         $this->middleware(
             \Scopes::allowPublic()->matchAnyUserOrClient(),
             ['only' => ['all', 'get']]
@@ -39,7 +39,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Liste les visibilités.
+     * Lists all visibilities.
      *
      * @param  VisibilityRequest $request
      * @return JsonResponse
@@ -54,7 +54,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Crée des visibilités.
+     * Creates some visibilities.
      *
      * @param  VisibilityRequest $request
      * @return JsonResponse
@@ -67,7 +67,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Montre une visivilité.
+     * Shows a visibility.
      *
      * @param  string $visibility_id
      * @return JsonResponse
@@ -84,7 +84,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Met à jour une visibilité.
+     * Updates a visibility.
      *
      * @param  VisibilityRequest $request
      * @param  string            $visibility_id
@@ -106,7 +106,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Supprime une visibilité.
+     * Deletes a visibility.
      *
      * @param  VisibilityRequest $request
      * @param  string            $visibility_id
@@ -120,7 +120,7 @@ class VisibilityController extends Controller
             if ($visibility->delete()) {
                 abort(204);
             } else {
-                abort(500, 'Impossible de supprimer la visibilité');
+                abort(500, 'Impossible de Deletesr la visibilité');
             }
         } else {
             abort(404, 'Visibilité non trouvée');

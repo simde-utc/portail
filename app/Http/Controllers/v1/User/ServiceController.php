@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les services favoris des utilisateurs.
+ * Manages user favorite services.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -29,7 +29,7 @@ class ServiceController extends Controller
     use HasUserBulkMethods, HasServices;
 
     /**
-     * Nécessité de pouvoir gérer les services suivis.
+     * Must be able to handle followed services.
      */
     public function __construct()
     {
@@ -57,7 +57,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Liste les services suivis par l'utilisateur.
+     * Lists all services followed by the user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -76,7 +76,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Ajouter un service suivi par l'utilisateur.
+     * Adds a followed service for the user.
      *
      * @param UserServiceRequest $request
      * @param string             $user_id
@@ -103,7 +103,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Montre un service suivi par l'utilisateur.
+     * Shows service followed by the user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -123,7 +123,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Il n'est pas possible de mettre à jour un service suivi par l'utilisateur.
+     * It is not possible tu update a service followed by the user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -136,7 +136,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Retire un service suivi par l'utilisateur.
+     * Removes a service followed by the user.
      *
      * @param Request $request
      * @param string  $user_id

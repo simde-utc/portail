@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les roles de l'utilisateur.
+ * Manages user's roles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -28,7 +28,7 @@ class RoleController extends Controller
     use HasUserBulkMethods, HasUsers, HasRoles;
 
     /**
-     * Nécessite de pouvoir voir les rôles utilisateur et gérer les rôles de l'utilisateur.
+     * Must be able to see and manage user roles.
      */
     public function __construct()
     {
@@ -68,7 +68,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Liste les rôles de l'utilisateur.
+     * Lists user roles.
      *
      * @param Request     $request
      * @param string|null $user_id
@@ -86,12 +86,12 @@ class RoleController extends Controller
     }
 
     /**
-     * Ajoute un rôle pour l'utilisateur.
+     * Adds a user role.
      *
      * @param  UserRoleRequest $request
      * @param  string|null     $user_id
      * @return JsonResponse
-     * @throws PortailException Si l'utilisateur possède déjà un rôle on qu'on a pas le droit de le lui assigner.
+     * @throws PortailException If the user already owns the role and we don't have the right to assign it to him.
      */
     public function store(UserRoleRequest $request, string $user_id=null): JsonResponse
     {
@@ -107,7 +107,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Montre un rôle de l'utilisateur.
+     * Shows a user role.
      *
      * @param Request     $request
      * @param string      $user_id
@@ -127,7 +127,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Il est impossible de mettre à jour un rôle d'un utilisateur.
+     * It is not possible to update a user role.
      *
      * @param  Request     $request
      * @param string      $user_id
@@ -140,13 +140,13 @@ class RoleController extends Controller
     }
 
     /**
-     * Supprime un rôle de l'utlisateur
+     * Deletes a user role.
      *
      * @param Request     $request
      * @param string      $user_id
      * @param string|null $role_id
      * @return void
-     * @throws PortailException Si l'utilisateur ne possède pas le rôle on qu'on a pas le droit de le lui supprimer.
+     * @throws PortailException If the user doesn't own the role and we don't have the right to assign it to him.
      */
     public function destroy(Request $request, string $user_id, string $role_id=null)
     {

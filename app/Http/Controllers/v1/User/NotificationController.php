@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les notification utilisateurs.
+ * Manages user notifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,7 +26,7 @@ class NotificationController extends Controller
     use HasUserBulkMethods, HasNotifications;
 
     /**
-     * Nécessite de pouvoir gérer les notifications.
+     * Must be able to manage notifications.
      */
     public function __construct()
     {
@@ -54,7 +54,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Liste les notifications de l'utilisateur.
+     * Lists all user notifications.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
@@ -82,7 +82,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Créer une notification pour l'utlisateur.
+     * Creates a notification for the user.
      *
      * @param UserNotificationRequest $request
      * @param string                  $user_id
@@ -103,7 +103,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Montre une notification de l'utlisateur.
+     * Shows a user notification.
      *
      * @param Request $request
      * @param string  $user_id
@@ -122,7 +122,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Met à jour une notification de l'utlisateur.
+     * Updates a user notification.
      *
      * @param UserNotificationRequest $request
      * @param string                  $user_id
@@ -147,7 +147,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Supprime une notification de l'utlisateur.
+     * Deletes a user notification.
      *
      * @param Request $request
      * @param string  $user_id

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les calendriers suivis par les utilisateurs.
+ * Manages all calandars followed by the user.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -28,7 +28,7 @@ class CalendarController extends Controller
     use HasUserBulkMethods, HasCalendars;
 
     /**
-     * Nécessite de pouvoir gérer les calendriers de l'utilisateur.
+     * Must be able to manage user calendars.
      */
     public function __construct()
     {
@@ -68,7 +68,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Liste les calendriers.
+     * Lists the calendars.
      *
      * @param Request $request
      * @param string  $user_id
@@ -92,7 +92,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Crée un calendrier.
+     * Creates a calendar.
      *
      * @param UserCalendarRequest $request
      * @param string              $user_id
@@ -119,7 +119,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Montre un calendrier.
+     * Shows a calendar.
      *
      * @param Request $request
      * @param string  $user_id
@@ -144,7 +144,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Il n'est pas possible de mettre à jour un calendrier.
+     * It is not possible to update a calendar.
      *
      * @param Request $request
      * @param string  $user_id
@@ -157,7 +157,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Supprime un calendrier.
+     * Deletes a calendar.
      *
      * @param Request $request
      * @param string  $user_id
