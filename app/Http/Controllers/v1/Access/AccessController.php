@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les accès.
+ * Manages accesses.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ use App\Models\Access;
 class AccessController extends Controller
 {
     /**
-     * Récupération publique ou sous scopes.
+     * Public retrievement or subscopes.
      */
     public function __construct()
     {
@@ -28,7 +28,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Liste les accès.
+     * Lists accesses.
      *
      * @param Request $request
      * @return JsonResponse
@@ -43,7 +43,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Création non possible.
+     * Creation not possible.
      *
      * @return void
      */
@@ -53,7 +53,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Montre un accès.
+     * Shows an access.
      *
      * @param  string $access_id
      * @return JsonResponse
@@ -66,7 +66,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Mise à jour non possible (génération automatique).
+     * Update not possible (automatic generation)
      *
      * @param  string $access_id
      * @return void
@@ -77,13 +77,13 @@ class AccessController extends Controller
     }
 
     /**
-     * Suppression non possible (génération automatique).
+     * Deletion not possible (automatic generation).
      *
      * @param  string $access_id
      * @return void
      */
     public function destroy(string $access_id): void
     {
-        abort(405, 'Il n\'est pas possible de supprimer un access');
+        abort(405, 'Il n\'est pas possible de Deletesr un access');
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * Gère les systèmes d'authentification de l'utilisateur.
- * TODO: Transformer les get en Trait.
+ * Manages user's authentification systems.
+ * TODO: Transform gets in Traits.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -27,7 +27,7 @@ class AuthController extends Controller
     use HasUsers;
 
     /**
-     * Nécessité de pouvoir gérer les systèmes d'authentification de l'utlisateur.
+     * Must be able to manage user's authentification systems.
      */
     public function __construct()
     {
@@ -50,7 +50,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Liste les systèmes d'authentification de l'utilisateur.
+     * Lists user's authentification systems.
      *
      * @param  Request $request
      * @param  string 	$user_id
@@ -72,7 +72,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Ajoute un système d'authentification de l'utilisateur.
+     * Adds a user authentification system.
      *
      * @param  UserAuthRequest $request
      * @param  string          $user_id
@@ -109,7 +109,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Montre un système d'authentification de l'utilisateur.
+     * Shows a user authentification system.
      *
      * @param  Request $request
      * @param  string 	$user_id
@@ -144,7 +144,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Il est impossible de modifier un système d'authentification actuellement.
+     * It is currently impossible to update a authentification system.
      * TODO
      *
      * @param  Request $request
@@ -158,7 +158,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Supprime un système d'authentification de l'utilisateur.
+     * Deletes a user authentification system.
      *
      * @param  Request $request
      * @param  string 	$user_id

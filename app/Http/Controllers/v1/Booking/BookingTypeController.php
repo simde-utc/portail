@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les types de réservation.
+ * Manages booking types.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ use App\Models\BookingType;
 class BookingTypeController extends Controller
 {
     /**
-     * Récupération publique ou sous scopes.
+     * Public retrievement or sub scopes.
      */
     public function __construct()
     {
@@ -28,7 +28,7 @@ class BookingTypeController extends Controller
     }
 
     /**
-     * Liste les accès.
+     * Lists the accesses.
      *
      * @param Request $request
      * @return JsonResponse
@@ -43,7 +43,7 @@ class BookingTypeController extends Controller
     }
 
     /**
-     * Création non possible.
+     * Creation not possible.
      *
      * @return void
      */
@@ -53,7 +53,7 @@ class BookingTypeController extends Controller
     }
 
     /**
-     * Montre un accès.
+     * Shows an access.
      *
      * @param  string $type_id
      * @return JsonResponse
@@ -66,7 +66,7 @@ class BookingTypeController extends Controller
     }
 
     /**
-     * Mise à jour non possible (génération automatique).
+     * Update not possible (automatic generation).
      *
      * @param  string $type_id
      * @return void
@@ -77,13 +77,13 @@ class BookingTypeController extends Controller
     }
 
     /**
-     * Suppression non possible (génération automatique).
+     * Deletion not possible (automatic generation).
      *
      * @param  string $type_id
      * @return void
      */
     public function destroy(string $type_id): void
     {
-        abort(405, 'Il n\'est pas possible de supprimer un type de réservation');
+        abort(405, 'Il n\'est pas possible de Deletesr un type de réservation');
     }
 }

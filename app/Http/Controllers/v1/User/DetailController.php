@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les détails des utilisateurs.
+ * Manages user details.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -25,8 +25,8 @@ class DetailController extends Controller
     use HasUsers;
 
     /**
-     * Nécessité de pouvoir gérer les détails des utilisateurs.
-     * Avec Token user uniquement.
+     * ust be able to manage user details.
+     * With token only.
      */
     public function __construct()
     {
@@ -49,7 +49,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Permet de vérifier le scope et le détail donné.
+     * Checks the scope and the given detail.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $key
@@ -68,7 +68,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Liste les détails de l'utilisateur.
+     * Lists the user details.
      *
      * @param Request $request
      * @param string  $user_id
@@ -83,7 +83,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Créer un détail pour l'utilisateur.
+     * Creates a detail for this user.
      *
      * @param UserDetailRequest $request
      * @param string            $user_id
@@ -104,7 +104,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Montre un détail pour l'utilisateur.
+     * Shows a detail for this user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -128,7 +128,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Met à jour un détail pour l'utilisateur.
+     * Updates a detail for this user.
      *
      * @param UserDetailRequest $request
      * @param string            $user_id
@@ -161,7 +161,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Supprime une détail pour l'utilisateur s'il est supprimable.
+     * Deletes a details for this user if its removable.
      *
      * @param Request $request
      * @param string  $user_id

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les semestres.
+ * Manages semesters.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -21,7 +21,7 @@ class SemesterController extends Controller
     use HasSemesters;
 
     /**
-     * Récupération publique ou sous scopes.
+     * Public retrievement or under scopes.
      */
     public function __construct()
     {
@@ -31,7 +31,7 @@ class SemesterController extends Controller
     }
 
     /**
-     * Liste les semestres.
+     * Lists semesters.
      *
      * @param Request $request
      * @return JsonResponse
@@ -50,7 +50,7 @@ class SemesterController extends Controller
     }
 
     /**
-     * Création non possible (génération automatique).
+     * Creation is not possible (Automatic generation).
      *
      * @return void
      */
@@ -60,7 +60,7 @@ class SemesterController extends Controller
     }
 
     /**
-     * Montre un semestre.
+     * Shows a semester.
      *
      * @param  string $semester_id
      * @return JsonResponse
@@ -73,7 +73,7 @@ class SemesterController extends Controller
     }
 
     /**
-     * Mise à jour non possible (génération automatique).
+     * Update not possible (automatic generation).
      *
      * @param  string $semester_id
      * @return void
@@ -84,13 +84,13 @@ class SemesterController extends Controller
     }
 
     /**
-     * Suppression non possible (génération automatique).
+     * Deletion not possible (automatic generation).
      *
      * @param  string $semester_id
      * @return void
      */
     public function destroy(string $semester_id): void
     {
-        abort(405, 'Il n\'est pas possible de supprimer un semester');
+        abort(405, 'Il n\'est pas possible de Deletesr un semester');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les calendriers.
+ * Manages the calendars.
  *
  * TODO: En abort
  *
@@ -30,7 +30,7 @@ class CalendarController extends Controller
     use HasCalendars, HasCreatorsAndOwners;
 
     /**
-     * Nécessité de gérer les calendrier.
+     * Must be able to manage calendars.
      */
     public function __construct()
     {
@@ -53,7 +53,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Liste les calendriers.
+     * Lists the calendars.
      *
      * @param Request $request
      * @return JsonResponse
@@ -74,7 +74,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Crée un calendrier.
+     * Creates a calendar.
      *
      * @param CalendarRequest $request
      * @return JsonResponse
@@ -99,7 +99,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Montre un calendrier.
+     * Shows a calendar.
      *
      * @param Request	$request
      * @param string 	$calendrier_id
@@ -113,7 +113,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Met à jour un calendrier.
+     * Updates a calendar.
      *
      * @param CalendarRequest	$request
      * @param string          $calendrier_id
@@ -139,7 +139,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Supprime un calendrier.
+     * Deletes a calendar.
      *
      * @param Request	$request
      * @param string 	$calendrier_id

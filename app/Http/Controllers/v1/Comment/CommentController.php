@@ -1,6 +1,6 @@
 <?php
 /**
- * Gérer les commentaires d'une ressource.
+ * Manages a resource comments.
  *
  * @author Natan Danous <natan.danous@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -25,7 +25,7 @@ class CommentController extends Controller
     use HasComments;
 
     /**
-     * Nécessité de gérer les commentaires.
+     * Must be able to manage comments.
      */
     public function __construct()
     {
@@ -48,7 +48,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Liste les commentaires d'une ressource.
+     * Lists a resource comments.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -69,7 +69,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Crée un commentaire pour une ressource.
+     * Creates a comment for a ressource.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -95,7 +95,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Montre un commentaire d'une ressource.
+     * Shows a resource's comment.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -108,7 +108,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Met à jour un commentaire d'une ressource.
+     * Updates a resource's comment.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -129,7 +129,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Supprime un commentaire d'une ressource.
+     * Deletes a resource's comment.
      *
      * @param CommentRequest $request
      * @return void

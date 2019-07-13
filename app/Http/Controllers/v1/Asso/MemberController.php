@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les membres des associations.
+ * Manages les membres des associations.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -72,7 +72,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Ajoute automatiquement des rôles et des permissions en fonction du membre.
+     * Adds automatiquement des rôles et des permissions en fonction du membre.
      *
      * @param Asso $asso
      * @param User $member
@@ -113,7 +113,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Liste les membres de l'association.
+     * Lists les membres de l'association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -143,7 +143,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Ajoute un membre à l'association.
+     * Adds un membre à l'association.
      *
      * @param AssoMemberRequest $request
      * @param string            $asso_id
@@ -168,7 +168,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Montre un membre de l'association.
+     * Shows un membre de l'association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -186,7 +186,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Modifie un membre de l'association.
+     * Updates un membre de l'association.
      *
      * @param AssoMemberRequest $request
      * @param string            $asso_id
