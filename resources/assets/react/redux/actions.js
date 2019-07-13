@@ -91,7 +91,7 @@ export const actionHandler = {
 					return target.generateAction(prop, queryParams, jsonData);
 
 				default:
-					// If known, adds the ID. 
+					// If known, adds the ID.
 					if (args.length === 1) {
 						target.addId(args[0]);
 					}

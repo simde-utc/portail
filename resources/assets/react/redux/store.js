@@ -70,7 +70,7 @@ export const store = {
 
 		return props;
 	},
-	// Finds easily a store's element. 
+	// Finds easily a store's element.
 	get(_props, replacement = {}, forceReplacement = false) {
 		let data = this;
 		const props = this.propsToArray(_props);
@@ -336,7 +336,6 @@ export default createStore((state = store, action) => {
 
 						// For example if we have an assciation ant we look for it by login.
 						if (id !== data.id) {
-
 							// Store the data by id for the resource.
 							switch (action.meta.action) {
 								case 'update':

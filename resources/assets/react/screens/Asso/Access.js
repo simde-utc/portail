@@ -88,7 +88,7 @@ class AccessScreen extends React.Component {
 
 				this.setState({ openModal: false });
 
-				// The user can confirm his own demand. 
+				// The user can confirm his own demand.
 				if (find(permissions, permission => permission.type === 'access')) {
 					actions
 						.assos(asso.id)

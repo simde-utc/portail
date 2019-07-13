@@ -27,7 +27,7 @@ if (token) {
 window.axios.interceptors.response.use(
 	response => response,
 	error => {
-		// HTTP 401 request catching. 
+		// HTTP 401 request catching.
 		if (error.response.status === 401 && window.isLogged) {
 			window.location.reload();
 		}
