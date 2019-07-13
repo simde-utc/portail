@@ -460,7 +460,7 @@ class Role extends Model implements OwnableContract
      */
     public function isDeletable()
     {
-        // Parents roles deletion forbidden. 
+        // Parents roles deletion forbidden.
         if ($this->children()->count() > 0) {
             return false;
         }

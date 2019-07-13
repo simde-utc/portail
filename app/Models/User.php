@@ -185,7 +185,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Retrieves a user list depending on precise information. 
+     * Retrieves a user list depending on precise information.
      *
      * @param  mixed $users
      * @return mixed
@@ -303,7 +303,7 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
     }
 
     /**
-     * Returns all possible user types with their description. 
+     * Returns all possible user types with their description.
      *
      * @return array
      */

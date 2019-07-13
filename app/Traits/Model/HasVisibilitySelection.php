@@ -99,7 +99,7 @@ trait HasVisibilitySelection
     }
 
     /**
-     * Returns the visibility of a given type. 
+     * Returns the visibility of a given type.
      *
      * @param  string $type
      * @return Visibility

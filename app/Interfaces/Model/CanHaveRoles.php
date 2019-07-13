@@ -30,7 +30,7 @@ interface CanHaveRoles
     public function isRoleAccessibleBy(string $user_id): bool;
 
     /**
-     * 
+     *
      * Indicates  if a given user can can create/update/delete the model's roles.
      *
      * @param string $user_id

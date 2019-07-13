@@ -26,7 +26,7 @@ class ShowGenerator extends Generator
     /**
      * Creates the presentation according to a model
      *
-     * @param mixed $model (Model of the resource to handle).
+     * @param mixed $model Model of the resource to handle.
      */
     public function __construct($model)
     {

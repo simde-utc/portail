@@ -351,7 +351,7 @@ class Test extends Command
     /**
      * Runs a bash command.
      *
-     * @param string $command (Command to run).
+     * @param string $command Command to run.
      * @return integer
      */
     private function process(string $command)

@@ -76,7 +76,7 @@ class Semester extends Model
 
     /**
      * Retrieves the semester of the current academic year.
-     * 
+     *
      * @param  string $currentYear
      * @param  string $currentMonth
      * @param  string $currentDay

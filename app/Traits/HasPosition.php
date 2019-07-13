@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds to the controller an access to the articles. 
+ * Adds to the controller an access to the articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

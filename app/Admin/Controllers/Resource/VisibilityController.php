@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages visibilities as admin. 
+ * Manages visibilities as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * Password authentification service. 
+ * Password authentification service.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

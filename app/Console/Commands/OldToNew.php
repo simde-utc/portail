@@ -225,7 +225,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * 
+     *
      * Retrieves User.
      *
      * @param  integer $user_id
@@ -270,7 +270,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * 
+     *
      * Retrieves semester.
      *
      * @param  integer $semester_id
@@ -397,7 +397,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Add association contact means. 
+     * Add association contact means.
      *
      * @param mixed $asso
      * @param mixed $model
@@ -803,7 +803,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates associations accesses from the old portal. 
+     * Creates associations accesses from the old portal.
      *
      * @return mixed
      */
@@ -859,7 +859,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
 
                         switch ($access->statut) {
                             case 1:
-                                // Waiting for confirmation. 
+                                // Waiting for confirmation.
                                 $model->validated = false;
                                 break;
 

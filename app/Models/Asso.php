@@ -531,7 +531,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     /**
      * Indicates if a booking is manageable.
      * Private bookings are manageable only by a member.
-     * 
+     *
      *
      * @param  string $user_id
      * @return boolean
@@ -615,7 +615,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
     /**
      * Retrieves the name.
-     * 
+     *
      * @return string|null
      */
     public function getName(): ?string

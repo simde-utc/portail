@@ -312,7 +312,7 @@ class Scopes
     }
 
     /**
-     * 
+     *
      * Returns developement scopes.
      *
      * @return array
@@ -321,7 +321,7 @@ class Scopes
     {
         $scopes = [
             'user-get-access',
-        // no manage.
+        // No manage.
         ];
 
         foreach (array_keys(self::all()) as $scope) {

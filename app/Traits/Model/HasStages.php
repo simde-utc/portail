@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds a staged selector and improves the caching method. 
+ * Adds a staged selector and improves the caching method.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -99,7 +99,7 @@ trait HasMembers
     }
 
     /**
-     * Lists all not accepted members. 
+     * Lists all not accepted members.
      *
      * @return mixed
      */
@@ -110,7 +110,7 @@ trait HasMembers
     }
 
     /**
-     * Lists all curently (this semester) not accepted members. 
+     * Lists all curently (this semester) not accepted members.
      *
      * @return mixed
      */
@@ -277,9 +277,9 @@ trait HasMembers
      * Deletes one or several members depending on the given data.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data        Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
-     * @param  string                  $removed_by  Deletion asker. 
-     * @param  boolean                 $force       Enables the additions securities by-pass (to use with caution).
+     * @param  array                   $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
+     * @param  string                  $removed_by Deletion asker.
+     * @param  boolean                 $force      Enables the additions securities by-pass (to use with caution).
      * @return mixed
      */
     public function removeMembers($members, array $data=[], string $removed_by=null, bool $force=false)
@@ -358,7 +358,7 @@ trait HasMembers
     }
 
     /**
-     * Checks if a member in the given list exists or not. 
+     * Checks if a member in the given list exists or not.
      *
      * @param  string|array|Collection $members
      * @param  array                   $data    Possibility to use role_id, semester_id, validated_by_id, user_id to match one or several members.
@@ -371,7 +371,7 @@ trait HasMembers
     }
 
     /**
-     * Checks if all members in the given list exist or not. 
+     * Checks if all members in the given list exist or not.
      *
      * @param  string|array|Collection $members
      * @param  array                   $data    Possibility to use role_id, semester_id, validated_by_id, user_id to match one or several members.

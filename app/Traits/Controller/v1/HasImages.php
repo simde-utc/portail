@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 trait HasImages
 {
     /**
-     * Defines the image for a resource. 
+     * Defines the image for a resource.
      *
      * @param Request $request
      * @param mixed   $model

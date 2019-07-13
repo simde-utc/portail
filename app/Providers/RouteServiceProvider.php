@@ -81,6 +81,7 @@ class RouteServiceProvider extends ServiceProvider
                     ->namespace($this->namespace)->prefix('login/'.$provider)->group($file);
             }
         }
+
         // To define lastly because the '/' routes overrides everything.
         Route::middleware('web')
             ->namespace($this->namespace)->group(base_path('routes/web.php'));

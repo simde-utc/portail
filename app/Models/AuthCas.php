@@ -20,7 +20,7 @@ class AuthCas extends Auth
         'user_id', 'login', 'email', 'last_login_at', 'is_active', 'is_confirmed',
     ];
 
-    // If there if a password connection, all that is CAS-related is disabled because we supose he no longer is a student. 
+    // If there if a password connection, all that is CAS-related is disabled because we supose he no longer is a student.
     protected $casts = [
         'is_active' => 'boolean',
         'is_confirmed' => 'boolean',

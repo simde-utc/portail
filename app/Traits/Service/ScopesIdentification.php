@@ -55,8 +55,8 @@ trait ScopesIdentification
     }
 
     /**
-     * Return the scopes list and its parents (considering verbs inheritance). 
-     * 
+     * Return the scopes list and its parents (considering verbs inheritance).
+     *
      *
      * @param  array  $scopes
      * @param  string $middleware

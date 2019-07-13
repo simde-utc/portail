@@ -62,7 +62,7 @@ trait HasBookings
             abort(409, 'Il existe une réservation qui se déroule pendant la même période');
         }
 
-        // If we pass the maximun booking time, the booking must me validated. 
+        // If we pass the maximun booking time, the booking must me validated.
         return $end->diffInSeconds($begin) <= (config('portail.bookings.max_duration') * 60 * 60);
     }
 

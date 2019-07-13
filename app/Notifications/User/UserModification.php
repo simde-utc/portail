@@ -32,7 +32,7 @@ class UserModification extends Notification
 
     /**
      * Achievable action through the notification.
-     * 
+     *
      * @param  CanBeNotifiable $notifiable
      * @return array
      */
@@ -67,7 +67,7 @@ class UserModification extends Notification
     }
 
     /**
-     * Notification's email content. 
+     * Notification's email content.
      *
      * @param  CanBeNotifiable $notifiable
      * @param  MailMessage     $mail

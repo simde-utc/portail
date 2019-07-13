@@ -50,7 +50,7 @@ trait HasRoles
         return ($this->roleRelationTable ?? $this->getTable().'_roles');
     }
 
-    /*
+    /**
      * Lists attributed roles.
      *
      * @return mixed
@@ -61,10 +61,10 @@ trait HasRoles
     }
 
     /**
-     * Assings one or several attributed roles depending on given data. 
+     * Assings one or several attributed roles depending on given data.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data  role_id, semester_id, validated_by_id and user_if can be affected in this array.
+     * @param array                                                $data  Role_id, semester_id, validated_by_id and user_if can be affected in this array.
      * @param boolean                                              $force Enable to by-pass add securities. (to use with caution).
      * @return mixed
      */
@@ -118,7 +118,7 @@ trait HasRoles
     }
 
     /**
-     * Modifies one or several attributed roles depending on given data. 
+     * Modifies one or several attributed roles depending on given data.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
      * @param array                                                $data        Possiblility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
@@ -173,7 +173,7 @@ trait HasRoles
     }
 
     /**
-     * Deletes one or several attributed roles depending on given data. 
+     * Deletes one or several attributed roles depending on given data.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
      * @param array                                                $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
@@ -322,7 +322,7 @@ trait HasRoles
     }
 
     /**
-     * 
+     *
      * Retrieves roles of this instance or of assigned users and children.
      *
      * @param string $user_id

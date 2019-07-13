@@ -160,7 +160,7 @@ trait HasKeyValue
 
     /**
      * From a group, returns all into an array.
-     * 
+     *
      *
      * @param  Builder $query
      * @return array
