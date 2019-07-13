@@ -29,7 +29,7 @@ if (!function_exists('validation_between')) {
 if (!function_exists('validation_max')) {
 
     /**
-     * Returns the max integer value for Migrations 
+     * Returns the max integer value for Migrations
      *
      * @param string $validationId
      * @return integer
@@ -44,7 +44,7 @@ if (!function_exists('validation_max')) {
 if (!function_exists('convertPipeToArray') && !function_exists('stringToArray')) {
 
     /**
-     * Convert string lists into an array. 
+     * Convert string lists into an array.
      *
      * @param  string|array $pipeString
      * @return mixed

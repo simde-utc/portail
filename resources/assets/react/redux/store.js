@@ -236,7 +236,6 @@ export default createStore((state = store, action) => {
 				case 'create':
 				case 'insert':
 					break;
-
 				default:
 					path = path.slice();
 					id = path.pop();
@@ -341,8 +340,7 @@ export default createStore((state = store, action) => {
 								case 'update':
 								case 'insert':
 								case 'create': {
-                  // Stores/updates data trough data's id.
-                  
+									// Stores/updates data trough data's id.
 									let placeForData = buildStorePath(draft, path.concat([data.id]));
 									const placeForIdData = placeForData;
 
