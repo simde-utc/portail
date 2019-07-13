@@ -1,5 +1,5 @@
 /**
- * Formulaire de demande d'accès.
+ * Access demand form.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

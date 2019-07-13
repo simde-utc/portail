@@ -1,5 +1,5 @@
 /**
- * Affichage des membres d'une association.
+ * Displays assciation articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,5 +1,5 @@
 /**
- * Formulaire de création d'un événement.
+ * Event creation form.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -82,7 +82,7 @@ class EventForm extends React.Component {
 			this.setDefaultCalendar(calendars);
 		}
 
-		// Indique que l'on souhaite ouvrir le formulaire.
+		// Indicates that we want to open the form.
 		if (!lastProps.opened && opened) {
 			setTimeout(() => this.setState(defaultData), 10);
 		}

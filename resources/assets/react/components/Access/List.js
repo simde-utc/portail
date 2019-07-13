@@ -1,5 +1,5 @@
 /**
- * Affiche les demande d'accès.
+ * Access demands display.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

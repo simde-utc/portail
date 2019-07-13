@@ -7,7 +7,7 @@
  * @license GNU GPL-3.0
  */
 
-// Liste de toutes les actions REST api possibles
+// Lists all posible REST actions.
 export const actionsData = {
 	all: {
 		type: 'ALL_',
@@ -41,22 +41,22 @@ export const actionsData = {
 	},
 };
 
-// On crée des alias:
+// Aliasses creation.
 actionsData.one = actionsData.find;
 actionsData.get = actionsData.find;
 actionsData.remove = actionsData.delete;
 
-// Gestionnaire d'actions (crée dynamiquement les routes api à appeler et où stocker les données)
+// Action Handler (Creates dynamically api routes to call and where to store the data).
 export const actionHandler = {
 	get: (_target, prop) => {
 		const target = _target;
 
-		// On crée la méthode de gestion de requête
+		// Request hangler method creation.
 		const method = (...args) => {
 			let id;
 			let queryParams;
 			let jsonData;
-			// On match si c'est une méthode HTTP connue et on wipe tout
+			// Matches if it's a known HTTP method and wipe everything.
 			switch (prop) {
 				case 'find':
 				case 'one':
@@ -91,7 +91,7 @@ export const actionHandler = {
 					return target.generateAction(prop, queryParams, jsonData);
 
 				default:
-					// On ajoute l'id s'il est renseigné
+					// If known, adds the ID. 
 					if (args.length === 1) {
 						target.addId(args[0]);
 					}
@@ -99,19 +99,21 @@ export const actionHandler = {
 					break;
 			}
 
-			// On retourne bien sûr un proxy sur sois-même pour se gérer de nouveau
+			// Returns a proxy on itself to handle itself again.
 			return new Proxy(target, actionHandler);
 		};
 
-		// Si c'est une action HTTP, l'exécuter
+		// If it's an HTTP action, executes it.
 		if (Object.keys(actionsData).includes(prop)) {
 			return method;
 		}
-		// Si c'est une méthode de l'objet Action, on l'exécute sans rochiner
+
+		// If it's an `Action` object method, executes it.
 		if (target[prop] !== undefined) {
 			return target[prop];
 		}
-		// Si on appelle une méthode qui agit directement sur la sauvegarde dans le store
+
+		// If a method wich acts directly on the save in the store.
 		if (prop === 'definePath') {
 			return path => {
 				target.path = path.slice();
@@ -120,7 +122,8 @@ export const actionHandler = {
 				return new Proxy(target, actionHandler);
 			};
 		}
-		// Si on appelle une méthode qui agit directement sur la sauvegarde dans le store
+
+		// If a method wich acts directly on the save in the store.
 		if (prop === 'addValidStatus') {
 			return validStatus => {
 				target.validStatus.push(validStatus);
@@ -128,7 +131,8 @@ export const actionHandler = {
 				return new Proxy(target, actionHandler);
 			};
 		}
-		// Si on appelle une méthode qui agit directement sur la sauvegarde dans le store
+
+		// If a method wich acts directly on the save in the store.
 		if (prop === 'defineValidStatus') {
 			return validStatus => {
 				target.validStatus = validStatus;
@@ -136,7 +140,7 @@ export const actionHandler = {
 				return new Proxy(target, actionHandler);
 			};
 		}
-		// On ajoute la catégorie et on gère dynmaiquement si c'est un appel propriété/méthode (expliquer sur un article de mon blog)
+		// The category is added and we handle dynamically if it's a property/method call.*
 
 		target.addUri(prop);
 		target.idIsGiven = false;
@@ -147,7 +151,7 @@ export const actionHandler = {
 	},
 };
 
-// Classe de gestion des actions (génération automatique des routes et création des appels HTTP)
+// Actions management class (Automatic routes generation and HTTP call creation).
 export class Actions {
 	constructor(rootUri) {
 		this.rootUri = rootUri || '/api/v1';
@@ -227,8 +231,8 @@ export class Actions {
 	}
 }
 
-// On crée dynamiquement nos actions (chaque action est une nouvelle génération de la classe)
-// Appelable: actions.category1 || actions('rootUri').category1
+// Actions are created dynamically (each action is a new class ganeration).
+// callable: actions.category1 || actions('rootUri').category1
 const actions = new Proxy(rootUri => new Actions(rootUri), {
 	get: (target, prop) => {
 		if (prop === 'config') {

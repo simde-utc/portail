@@ -1,5 +1,5 @@
 /**
- * Outils pratiques comme la conversion de dates
+ * Useful tool (Example: Dates convertion).
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -10,7 +10,7 @@
 
 import moment from 'moment';
 
-// Dates relatives
+// Relative dates.
 export const getTime = time => {
 	return moment(time).calendar(null, {
 		sameDay: 'H:m',

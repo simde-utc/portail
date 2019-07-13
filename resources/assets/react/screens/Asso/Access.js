@@ -1,5 +1,5 @@
 /**
- * Affichage des demandes d'accès.
+ * Displays the access demands of an association.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -88,7 +88,7 @@ class AccessScreen extends React.Component {
 
 				this.setState({ openModal: false });
 
-				// L'utilisateur peut confirmer sa propre demande.
+				// The user can confirm his own demand. 
 				if (find(permissions, permission => permission.type === 'access')) {
 					actions
 						.assos(asso.id)

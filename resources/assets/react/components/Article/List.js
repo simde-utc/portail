@@ -1,5 +1,5 @@
 /**
- * Affiche les associations de l'utlisateur.
+ * Displays an article list.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

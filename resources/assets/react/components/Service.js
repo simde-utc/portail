@@ -1,5 +1,5 @@
 /**
- * Affichage d'un service.
+ * Service display.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,5 +1,5 @@
 /**
- * Affichage des membres d'une association.
+ * Displays all members of an association.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,5 +1,5 @@
 /**
- * Préparation de l'application
+ * Application preparation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -10,12 +10,12 @@
 
 window._ = require('lodash');
 
-// Permet d'exécuter des requêtes Ajax simplement vers le Portail
+// Allows to execute Ajax request simply to the portal.
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-// Récupération du token CSRF
+// CSRF token retrievmement.
 const token = document.head.querySelector('meta[name="csrf-token"]');
 if (token) {
 	window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
@@ -23,11 +23,11 @@ if (token) {
 	console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
-// Ajout un intercepter de réponse.
+// Adds a response intercepter.
 window.axios.interceptors.response.use(
 	response => response,
 	error => {
-		// Récupération des requêtes HTTP 401
+		// HTTP 401 request catching. 
 		if (error.response.status === 401 && window.isLogged) {
 			window.location.reload();
 		}

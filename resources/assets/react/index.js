@@ -1,5 +1,5 @@
 /**
- * Point d'entrée du frontend.
+ * Frontend entrypoint.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
