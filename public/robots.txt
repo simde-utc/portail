@@ -1,4 +1,4 @@
-# Règle pour tous les robots
+# Rule for every robots
 
 User-agent: *
 Disallow: /admin*
