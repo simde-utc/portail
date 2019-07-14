@@ -48,14 +48,14 @@ Route::delete('client/{user_id}', 'Client\ClientController@destroy')->middleware
  *  show:    /{ressource}/{id} in GET
  *  update:  /{ressource}/{id} in PUT
  *  destroy: /{ressource}/{id} in DELETE
- 
+
  *  bulkShow:    /{ressource}/{id1,id2} in GET
  *  bulkStore:   /{ressource}/{id1,id2} in POST
  *  bulkUpdate:  /{ressource}/{id1,id2} in PUT
  *  bulkDestroy: /{ressource}/{id1,id2} in DELETE
  *
 
-/*
+    /*
  * Routes only for clients/connected users.
  */
 
