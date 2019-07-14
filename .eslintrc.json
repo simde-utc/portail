@@ -58,7 +58,6 @@
       }],
     "comma-dangle": [1, "always-multiline"],
     "no-cond-assign": 1,
-    "no-case-declarations": 0,
     "no-restricted-syntax": 0,
     "no-prototype-builtins": 0,
     "no-shadow": 0,
