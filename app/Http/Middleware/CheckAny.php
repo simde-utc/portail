@@ -29,7 +29,7 @@ class CheckAny
     public function handle(Request $request, Closure $next, string ...$args)
     {
         // On vérifie que le token n'est pas lié à un utilisateur.
-        if ($request->bearerToken() !== null) {
+        if ($request->bearerToken() !== null && !$request->isAFakedUserRequest) {
             $bearerToken = $request->bearerToken();
             $tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
             $token = Token::find($tokenId);

@@ -31,19 +31,19 @@ class FaqController extends Controller
     {
         $this->middleware(
             \Scopes::allowPublic()->matchOne('user-get-faqs-questions', 'client-get-faqs-questions'),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOne('user-create-faqs-questions', 'client-create-faqs-questions'),
-            ['only' => ['store']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOne('user-edit-faqs-questions', 'client-edit-faqs-questions'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOne('user-remove-faqs-questions', 'client-remove-faqs-questions'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 
