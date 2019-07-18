@@ -29,19 +29,19 @@ class CategoryController extends Controller
     {
         $this->middleware(
             \Scopes::allowPublic()->matchOne('user-get-faqs-categories', 'client-get-faqs-categories'),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOne('user-create-faqs-categories', 'client-create-faqs-categories'),
-            ['only' => ['store']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOne('user-edit-faqs-categories', 'client-edit-faqs-categories'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOne('user-remove-faqs-categories', 'client-remove-faqs-categories'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 

@@ -229,11 +229,11 @@ trait ScopesIdentification
      * @param  string|array $clientScope
      * @return array
      */
-    public function matchOneOfDeepestChildren($userScope=null, $clientScope=null)
+    public function matchOneOfDeepestChildren($userScope=[], $clientScope=[])
     {
         return $this->matchOne(
-            $userScope ? $this->getDeepestChildren($userScope) : null,
-            $clientScope ? $this->getDeepestChildren($clientScope) : null
+            $userScope ? $this->getDeepestChildren($userScope) : [],
+            $clientScope ? $this->getDeepestChildren($clientScope) : []
         );
     }
 }

@@ -357,9 +357,7 @@ class AssoScreen extends React.Component {
 							})
 							.catch(() => {
 								NotificationManager.error(
-									`Une erreur a été rencontrée lorsque vous avez voulu quitter cette association: ${
-										asso.name
-									}`,
+									`Une erreur a été rencontrée lorsque vous avez voulu quitter cette association: ${asso.name}`,
 									'Quitter une association'
 								);
 							})
@@ -412,9 +410,7 @@ class AssoScreen extends React.Component {
 							})
 							.catch(() => {
 								NotificationManager.error(
-									`Vous n'avez pas le droit de valider le membre de cette association: ${
-										asso.name
-									}`,
+									`Vous n'avez pas le droit de valider le membre de cette association: ${asso.name}`,
 									"Valider un membre d'une association"
 								);
 							})
@@ -461,9 +457,7 @@ class AssoScreen extends React.Component {
 							})
 							.catch(() => {
 								NotificationManager.error(
-									`Vous n'avez pas le droit de retirer le membre de cette association: ${
-										asso.name
-									}`,
+									`Vous n'avez pas le droit de retirer le membre de cette association: ${asso.name}`,
 									"Retirer un membre d'une association"
 								);
 							})
@@ -589,7 +583,7 @@ class AssoScreen extends React.Component {
 								userIsFollowing={this.user.isFollowing}
 								userIsMember={this.user.isMember}
 								userIsWaiting={this.user.isWaiting}
-								userIsContributorBde={user.types.contributorBde}
+								userIsContributorBde={user ? user.types.contributorBde : false}
 								follow={this.followAsso.bind(this)}
 								unfollow={this.unfollowAsso.bind(this)}
 								join={this.joinAsso.bind(this)}

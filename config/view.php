@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de configuration des vues.
+ * Views configuration file.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

@@ -1,10 +1,10 @@
 <?php
 /**
- * Fichier de configuration des validations.
- * Helper pour les requests:
- *  validation_between('login') => donne `between:1,15`
- * Helper pour les migrations :
- *  validation_max('login') => donne `15`
+ * Validation configuration file.
+ * Helper for requests:
+ *  validation_between('login') => returns `between:1,15`.
+ * Helper for migrations :
+ *  validation_max('login') => returns `15`.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -15,7 +15,7 @@
  */
 
 return [
-	// Login pour les assos et les étudiants.
+	// Login for associations and students.
     'login' => [
         'min' => 1,
         'max' => 31,
@@ -36,37 +36,37 @@ return [
         'max' => 255,
     ],
 
-    // Nom et prénom de personnes.
+    // First and last name.
     'name' => [
         'min' => 1,
         'max' => 127,
     ],
 
-    // Titre d'articles et d'évènements.
+    // Event and article title.
     'title' => [
         'min' => 1,
         'max' => 255,
     ],
 
-    // Description courte d'assos.
+    // Short association description.
     'description' => [
         'min' => 0,
         'max' => 8191,
     ],
 
-    // Chaine de charactère courte basique.
+    // Short basic string.
     'string' => [
         'min' => 0,
         'max' => 255,
     ],
 
-    // Contenu d'article.
+    // Article content.
     'article' => [
         'min' => 0,
         'max' => 16383,
     ],
 
-    // Commentaire d'article.
+    // Article comment.
     'comment' => [
         'min' => 1,
         'max' => 4095,

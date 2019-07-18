@@ -39,6 +39,7 @@ Route::delete('client/{user_id}', 'Client\ClientController@destroy')->middleware
 
 
 
+
 /*
  * Ressouces:
  *
@@ -47,6 +48,11 @@ Route::delete('client/{user_id}', 'Client\ClientController@destroy')->middleware
  *  show:    /{ressource}/{id} en GET
  *  update:  /{ressource}/{id} en PUT
  *  destroy: /{ressource}/{id} en DELETE
+ *
+ *  bulkShow:    /{ressource}/{id1,id2} en GET
+ *  bulkStore:   /{ressource}/{id1,id2} en POST
+ *  bulkUpdate:  /{ressource}/{id1,id2} en PUT
+ *  bulkDestroy: /{ressource}/{id1,id2} en DELETE
  */
 
 /*
@@ -58,7 +64,7 @@ Route::group(['middleware' => 'user:active'], function () {
      * Routes définies pour l'utilisateur.
      */
 
-    Route::apiResources([
+    Route::apiBulkResources([
         'users'	=> 'User\UserController',
         'users/{user_id}/roles'	=> 'User\RoleController',
         'users/{user_id}/calendars' => 'User\CalendarController',
@@ -78,7 +84,7 @@ Route::group(['middleware' => 'user:active'], function () {
      * Routes définies pour toutes ressources.
      */
 
-    Route::apiResources([
+    Route::apiBulkResources([
         '{resource_type}/{resource_id}/contacts' => 'Contact\ContactController',
         '{resource_type}/{resource_id}/comments' => 'Comment\CommentController',
         '{resource_type}/{resource_id}/members/{user_id}/permissions' => 'Permission\AssignmentController',
@@ -98,6 +104,7 @@ Route::group(['middleware' => 'user:active'], function () {
 });
 
 
+
 /*
  * Routes pour tous.
  */
@@ -107,7 +114,7 @@ Route::group([], function () {
      * Routes définies pour l'utilisateur.
      */
 
-    Route::apiResources([
+    Route::apiBulkResources([
         'users/{user_id}/notifications' => 'User\NotificationController',
         'users/{user_id}/articles/{article_id}/actions'	=> 'User\Article\ActionController',
         'users/{user_id}/auths' => 'User\AuthController',
@@ -133,7 +140,7 @@ Route::group([], function () {
      * Routes définies pour toutes ressources.
      */
 
-    Route::apiResources([
+    Route::apiBulkResources([
         'access' => 'Access\AccessController',
         'assos' => 'Asso\AssoController',
         'services' => 'Service\ServiceController',
