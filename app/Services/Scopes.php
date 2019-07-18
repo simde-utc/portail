@@ -177,14 +177,14 @@ class Scopes
     {
         if ($goUp) {
             switch ($verb) {
+                case 'get':
                 case 'set':
-                case 'remove':
                     return ['manage'];
                  break;
 
-                case 'get':
                 case 'create':
                 case 'edit':
+                case 'remove':
                     return ['set'];
                  break;
 

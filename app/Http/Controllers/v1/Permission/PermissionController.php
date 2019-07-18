@@ -31,19 +31,19 @@ class PermissionController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-permissions', 'client-get-permissions'),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-create-permissions', 'client-create-permissions'),
-            ['only' => ['store']]
+            ['only' => ['create']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-edit-permissions', 'client-edit-permissions'),
-            ['only' => ['update']]
+            ['only' => ['edit']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-remove-permissions', 'client-remove-permissions'),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
         );
     }
 

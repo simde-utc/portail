@@ -29,28 +29,28 @@ class RoomController extends Controller
     {
         $this->middleware(
 	        \Scopes::matchOne('user-get-rooms', 'client-get-rooms'),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-create-rooms', 'client-create-rooms'),
 		        ['permission:room']
 	        ),
-	        ['only' => ['store']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-edit-rooms', 'client-edit-rooms'),
 		        ['permission:room']
 	        ),
-        	['only' => ['update']]
+        	['only' => ['edit']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-remove-rooms', 'client-remove-rooms'),
 		        ['permission:room']
 	        ),
-	        ['only' => ['destroy']]
+	        ['only' => ['remove']]
         );
     }
 

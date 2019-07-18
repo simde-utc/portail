@@ -19,12 +19,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserArticleActionRequest;
 use App\Models\Article;
-use App\Traits\Controller\v1\HasArticles;
+use App\Traits\Controller\v1\{
+	HasUserBulkMethods, HasArticles
+};
 use App\Exceptions\PortailException;
 
 class ActionController extends Controller
 {
-    use HasArticles;
+    use HasUserBulkMethods, HasArticles;
 
     /**
      * Nécessité de pouvoir voir les artiles et gérer les actions utilisateurs.
@@ -61,7 +63,12 @@ class ActionController extends Controller
                     ['client-get-articles-assos', 'client-get-articles-groups']),
                 \Scopes::matchOne('user-manage-articles-actions-user', 'client-manage-articles-actions-user')
             ),
-            ['only' => ['destroy']]
+            ['only' => ['remove']]
+        );
+        // Can index, show and create, edit and remove actions for multiple users in a raw.
+        $this->middleware(
+            \Scopes::matchAnyClient(),
+            ['only' => ['bulkIndex', 'bulkStore', 'bulkShow', 'bulkUpdate', 'bulkDestroy']]
         );
     }
 
