@@ -13,8 +13,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use App\Interfaces\Model\CanBeNotifiable;
 use App\Interfaces\Model\CanNotify;
-use App\Models\Model;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Database\Eloquent\Model;
 
 class ExternalNotification extends Notification
 {
@@ -30,13 +29,13 @@ class ExternalNotification extends Notification
      * @param CanNotify $model
      * @param string    $content
      * @param array     $action
-     * @param string    $creator
+     * @param Model     $creator
      */
-    public function __construct(CanNotify $model, string $content, array $action=[], string $creator=null)
+    public function __construct(CanNotify $model, string $content, array $action=[], Model $creator=null)
     {
         parent::__construct('external_'.\ModelResolver::getNameFromObject($model), null, $creator);
 
-        $this->subject = $model->name;
+        $this->subject = $model->getName();
         $this->content = $content;
         $this->action = $action;
     }
@@ -46,7 +45,7 @@ class ExternalNotification extends Notification
      * @param  CanBeNotifiable $notifiable
      * @return array
      */
-    protected function getAction(CanBeNotifiable $notifiable)
+    protected function getAction(CanBeNotifiable $notifiable): array
     {
         return $this->action;
     }

@@ -123,7 +123,7 @@ class AssoMemberListScreen extends React.Component {
 
 		return (
 			<div className="container">
-				<div className="top-right-button">
+				<div>
 					Semestre:
 					<Select
 						onChange={this.handleSemesterChange.bind(this)}

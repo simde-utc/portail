@@ -40,34 +40,34 @@ class MemberController extends Controller
 		        \Scopes::matchOneOfDeepestChildren('user-get-roles-assos-assigned', 'client-get-assos-members-followed'),
 		        ['user:cas,contributorBde']
 	        ),
-	        ['only' => ['index', 'show']]
+	        ['only' => ['all', 'get']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-get-assos', 'client-get-assos'),
 		        \Scopes::matchOneOfDeepestChildren('user-create-assos-members', 'client-create-assos-members'),
 		        \Scopes::matchOneOfDeepestChildren('user-create-roles-assos-assigned', 'client-create-assos-members-followed'),
-		        ['user:cas,contributorBde']
+		        ['user:contributorBde']
 	        ),
-	        ['only' => ['store']]
+	        ['only' => ['create']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-get-assos', 'client-get-assos'),
 		        \Scopes::matchOneOfDeepestChildren('user-edit-assos-members', 'client-edit-assos-members'),
 		        \Scopes::matchOneOfDeepestChildren('user-edit-roles-assos-assigned', 'client-edit-assos-members-followed'),
-		        ['user:cas,contributorBde']
+		        ['user:contributorBde']
 	        ),
-	        ['only' => ['update']]
+	        ['only' => ['edit']]
         );
         $this->middleware(
 	        array_merge(
 		        \Scopes::matchOne('user-get-assos', 'client-get-assos'),
 		        \Scopes::matchOneOfDeepestChildren('user-remove-assos-members', 'client-remove-assos-members'),
 		        \Scopes::matchOneOfDeepestChildren('user-remove-roles-assos-assigned', 'client-remove-assos-members-followed'),
-		        ['user:cas,contributorBde']
+		        ['user:contributorBde']
 	        ),
-	        ['only' => ['destroy']]
+	        ['only' => ['remove']]
         );
     }
 

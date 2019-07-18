@@ -117,12 +117,17 @@ class AssoArticleList extends React.Component {
 					opened={openModal}
 					closeModal={() => this.setState({ openModal: false })}
 				/>
-				<div className="top-right-button">
-					<Button color="primary" outline onClick={() => this.setState({ openModal: true })}>
+				<div className="d-flex flex-wrap-reverse align-items-center">
+					<h1 className="title">Derniers articles</h1>
+					<Button
+						className="ml-auto"
+						color="primary"
+						outline
+						onClick={() => this.setState({ openModal: true })}
+					>
 						Rédiger un article
 					</Button>
 				</div>
-				<h1 className="title">Derniers articles</h1>
 				<ArticleList articles={articles} fetched={fetched} fetching={fetching} {...this.props} />
 			</div>
 		);

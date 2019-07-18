@@ -57,8 +57,14 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
 
 ### Développer
 
+- Nous utilisons le workflow Gitflow, présenté dans cet [article](https://nvie.com/files/Git-branching-model.pdf). Il y a cependant une exception: nous n'utilisons pas la branche `release`. Cela implique que toutes les PR sont merge dans la branche `develop`. Une fois ce code testé, il est mis en prod par version sur `master`.
+- Nom des branches:
+  - `feature/<issue shortname>` pour les dévelopments classiques.
+  - `fix/<issue shortname>` pour les fix de bug.
+  - `hot/<issue shortname>` pour les fix urgents.
 - Respecter le linter imposé pour le PHP mais aussi pour le JS
-- Commenter en français
+- Commenter et documenter en anglais. (Traduction de tout le projet à venir)
+- Faire ses commits et PRs en anglais.
 - Lancer `php artisan portail:test` pour vérifier que tout est bon avant de push son code
 
 

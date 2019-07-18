@@ -38,3 +38,4 @@ parameters:
 		- '#Call to an undefined method App\\Admin\\FormGenerator::disableEditingCheck#'
 		- '#App\\Admin\\Controllers\\Management\\.*::__construct.* does not call parent constructor from App\\Admin\\Controllers\\Controller#'
 		- '#Access to an undefined property App\\Admin\\FormGenerator::\$form#'
+		- '#Call to an undefined static method Illuminate\\Support\\Facades\\Route::apiBulkResource#'

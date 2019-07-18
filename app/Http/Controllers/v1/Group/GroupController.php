@@ -37,11 +37,11 @@ class GroupController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-get-groups', 'client-get-groups'),
-            ['only' => ['index', 'show']]
+            ['only' => ['all', 'get']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('user-manage-groups', 'client-manage-groups'),
-            ['only' => ['store', 'update', 'destroy']]
+            ['only' => ['create', 'edit', 'remove']]
         );
     }
 
