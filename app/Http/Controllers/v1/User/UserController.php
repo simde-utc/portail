@@ -34,14 +34,18 @@ class UserController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-get-users'),
-            ['only' => ['all', 'show']]
+            ['only' => ['all']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-create-users'),
             ['only' => ['create']]
         );
         $this->middleware(
-        \Scopes::matchAnyClient(),
+            \Scopes::matchOneOfDeepestChildren('user-get-info', 'client-get-users'),
+            ['only' => ['show']]
+        );
+        $this->middleware(
+        	\Scopes::matchAnyClient(),
             ['only' => ['bulkShow']]
         );
         $this->middleware(
