@@ -32,7 +32,7 @@ class ArticleController extends Controller
 
     /**
      * Must be able to manage articles.
-     * Lecture publique.
+     * Read access is public.
      */
     public function __construct()
     {
