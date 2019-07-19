@@ -1,6 +1,6 @@
 <?php
 /**
- * Defines first version API routes.
+ * Defines v1 API routes.
  * /!\ All Routes are prefixed with 'api/v1'.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
