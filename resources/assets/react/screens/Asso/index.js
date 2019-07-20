@@ -357,7 +357,9 @@ class AssoScreen extends React.Component {
 							})
 							.catch(() => {
 								NotificationManager.error(
-									`Une erreur a été rencontrée lorsque vous avez voulu quitter cette association: ${asso.name}`,
+									`Une erreur a été rencontrée lorsque vous avez voulu quitter cette association: ${
+										asso.name
+									}`,
 									'Quitter une association'
 								);
 							})
@@ -410,7 +412,9 @@ class AssoScreen extends React.Component {
 							})
 							.catch(() => {
 								NotificationManager.error(
-									`Vous n'avez pas le droit de valider le membre de cette association: ${asso.name}`,
+									`Vous n'avez pas le droit de valider le membre de cette association: ${
+										asso.name
+									}`,
 									"Valider un membre d'une association"
 								);
 							})
@@ -457,7 +461,9 @@ class AssoScreen extends React.Component {
 							})
 							.catch(() => {
 								NotificationManager.error(
-									`Vous n'avez pas le droit de retirer le membre de cette association: ${asso.name}`,
+									`Vous n'avez pas le droit de retirer le membre de cette association: ${
+										asso.name
+									}`,
 									"Retirer un membre d'une association"
 								);
 							})
