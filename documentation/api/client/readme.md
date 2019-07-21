@@ -1,1 +1,1 @@
-# Utilisation de l'api en mode client
+# API usage in client mode
