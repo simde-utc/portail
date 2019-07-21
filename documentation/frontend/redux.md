@@ -11,16 +11,16 @@ For more information on Redux, [have a look at this playlist](https://www.youtub
 
 ### Action types
 
-First, we have to define **action types**. They are constant strings which unable to identify actions to perform in the different reducers. It is recommanded to define them in the `types.js` file. In order to define CRUD actions sets more easily, use [`createCrudTypes`](#Action-types-creaters).
+First, we have to define **action types**. They are constant strings which unable to identify actions to perform in the different reducers. It is recommended to define them in the `types.js` file. In order to define CRUD actions sets more easily, use [`createCrudTypes`](#Action-types-creaters).
 
 ### Actions
 
-Actions are objects that are scattered in the reducers. they generally content in a `type` and in a `payload`. They are defined in the `actions.js` file.
+Actions are objects that are scattered in the reducers. They generally content in a `type` and in a `payload`. They are defined in the `actions.js` file.
 
 
 ### Reducers
 
-Reducers are fonctions with the following prototype: `function(prevState, action)`.
+Reducers are functions with the following prototype: `function(prevState, action)`.
 
 From the current status of the store `prevState` and of the dispatched action `action`, they return a new state (possibly `prevState` if the reducer doesn't have to do any modifications).
 
@@ -31,11 +31,11 @@ Do not directly modify `prevState`, make a copy of it. They are defined in the `
 
 ## CRUD creaters
 
-As th portal's api mainly follows CRUD (Create Read Update Delete) design, most part of the Redux actions also follows it. That is why we have created creaters of action types, of actions and of CRUD reducers. These functions are in `react/utils.js`.
+As the portal's api mainly follows CRUD (Create Read Update Delete) design, most part of the Redux actions also follows it. That is why we have created creaters of action types, of actions and of CRUD reducers. These functions are in `react/utils.js`.
 
 Ressources names are put in the singular by convention.
 
-### Action types creaters
+### Action types creators
 
 `createCrudTypes(name)` creates a set of types that follows the following scheme from a resources name `name` : 
 
@@ -46,16 +46,16 @@ This set of types is used by the following functions.
 
 `createCrudActionSet(actionTypes, uri, overrides = {})` creates a set of CRUD actions from these parameters :
 - `actionTypes` : a set of actions generated from the `createCrudTypes` function.
-- `uri` : the url piece located after the domain name. It unables to access the right resource in the API. For example `assos` unables to access to `https://assos.utc.fr/api/v1/assos`
+- `uri` : the url piece located after the domain name. It enables to access the right resource in the API. For example `assos` unables to access to `https://assos.utc.fr/api/v1/assos`
 - `overrides` : an object unabling to replace and to add actions to the action set.
 
 
-### Creater of reducer
+### Creator of reducer
 
 `createCrudReducer(actionTypes, initialState = initialCrudState, overrides = {})` creates a CRUD reducer from the following parameters :
 - `actionTypes` : an actions set generated from the `createCrudTypes` function
 - `initialState` the initial state by default `initialCrudState`, can be replaced by extension of this one
-- `overrides` : an object unabling to replace and to add actions gestions to the reducer.
+- `overrides` : an object that enable to replace and to add actions gestions to the reducer.
 
 ```js
 export const initialCrudState = {
@@ -108,7 +108,7 @@ const overrides = {
 
 const articleReducer = createCrudReducer(articleTypes, customInitialState, overrides)
 ```
-which corresponds to (in a simplified way) à :
+which corresponds to (in a simplified way):
 ```js
 function(state = customInitialState, action) {
 	switch (action.type) {

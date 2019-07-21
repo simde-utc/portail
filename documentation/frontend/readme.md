@@ -25,10 +25,10 @@ Semantic UI may be used later for its React components.
 
 All files are compiled by Laravel Mix, configured by `webpack.mix.js`.
 
-## Developement
+## Development
 
-To run the developement server BrowserSync:
-- Make sure you've cofigure `APP_URL` in the file `.env` with the Laravel server adress.
+To run the development server BrowserSync:
+- Make sure you've configured `APP_URL` in the file `.env` with the Laravel server adress.
 - Use `npm run watch`
-- The developement server runs on the port 3000 by default.
-- The display is reload at every change in the files.
+- The development server runs on the port 3000 by default.
+- The display is reloaded at every change in the files.

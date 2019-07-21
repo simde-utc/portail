@@ -1,6 +1,6 @@
 # Traits
 
-PHP functionnality to reduce some limitations of single inheritance.
+PHP functionality to reduce some limitations of single inheritance.
 Official Trait documentation : http://php.net/manual/en/language.oop5.traits.php
 
 The traits we defined **must only be used** within models.

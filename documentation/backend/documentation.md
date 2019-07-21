@@ -41,7 +41,7 @@ class RessourceController extends Controller
 
 ## Generate documentation
 
-make sure you've installed all necessary packages trough `composer update`.
+make sure you've installed all necessary packages through `composer update`.
 Then let artisan generate the documentation :
 ```
 php artisan api:generate --routePrefix="api/*"
@@ -50,7 +50,7 @@ The `routePrefix` must be changed depending on the wanted generated documentatio
 
 ## Update documentation
 
-The command tu update the documentation is:
+The command to update the documentation is:
 ```
 php artisan api:update
 ```

@@ -5,13 +5,13 @@
     - [Client](api/client/)
 - [Backend documentation](backend/)
     - [Installation](backend/installation.md)
-    - [Authentification](backend/oauth.md)
+    - [Authentication](backend/oauth.md)
     - [Models](backend/models.md)
     - [Controllers](backend/controllers.md)
     - [Traits](backend/traits.md)
     - [Services](backend/services.md)
     - [Routes](backend/routes.md)
-    - [How to comment](backend/commenter.md)
+    - [How to comment](backend/comment.md)
 - [Frontend documentation](frontend/)
     - [Installation](frontend/installation.md)
 - [Metadocumentation](#métadocumentation)
@@ -25,7 +25,7 @@
 
 *How to contribute to the documentation ?*
 
-***NB :*** *Make sure you have read the guide in order to comment : [How to comment](backend/commenter.md)*
+***NB :*** *Make sure you have read the guide in order to comment : [How to comment](backend/comment.md)*
 
 ## Shape
 
@@ -56,11 +56,11 @@ Each folder has its `readme.md` where the *table of contents* is located and nee
 
 The goal of this documentation is to show the users the api and how to use it. Therefore, requests examples and answers (in json) will be included.
 
-We are also going to show how to intercact with the api in differents languages. For instance, we will give examples of connexion code to the api in js, php and python.
+We are also going to show how to interact with the api in different languages. For instance, we will give examples of API connection code in js, php and python.
 
 ### Backend documentation
 
-Its goal is to document thearchitecture, the created services, the controllers, the models and so on in order to give this project some durability. It doesn't aim to recreate Laravel's documentation. **We need to focus on what's specific to our project** 
+Its goal is to document the architecture, the created services, the controllers, the models and so on in order to give this project some durability. It doesn't aim to recreate Laravel's documentation. **We need to focus on what's specific to our project** 
 
 Some examples :
 - Oauth2 Implementation.
