@@ -86,20 +86,24 @@ class NotificationController extends Controller
      *
      * @param UserNotificationRequest $request
      * @param string                  $user_id
-     * @return void
+     * @return mixed
      */
-    public function store(UserNotificationRequest $request, string $user_id=null): void
+    public function store(UserNotificationRequest $request, string $user_id=null)
     {
         $user = $this->getUser($request, $user_id);
 
-        $user->notify(new ExternalNotification(
+        $user->notify($notification = new ExternalNotification(
             \ModelResolver::getModel($request->input('notifier', 'client'), CanNotify::class),
+            $request->input('subject'),
             $request->input('content'),
+            $request->input('html'),
             $request->input('action', []),
+            $request->input('data', []),
+            $request->input('exceptedVia', []),
             \Scopes::getClient($request)->asso
         ));
 
-        abort(201, 'Notification créée et envoyée');
+        return response()->json($notification->toArray($user), 200);
     }
 
     /**
