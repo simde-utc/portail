@@ -1,8 +1,8 @@
-# Connexion OAuth2
+# OAuth2 connection
 
 - [Introduction](#introduction)
-- [Protocole](#protocole)
-- [Utilisation](#utilisation)
+- [Protocol](#protocol)
+- [Usage](#Usage)
 
 
 ## Introduction
@@ -35,7 +35,7 @@ Dans le cas du Authorization Code, l'utilisateur va autoriser le client (votre a
 Pour en savoir plus : [documentation/backend/](../backend/readme.md).
 
 
-## Protocole
+## Protocol
 
 Pour résumer OAuth2 dans l'action, il y a trois étapes :
 
@@ -63,28 +63,27 @@ Le serveur d'authentification enverra alors un `access_token` et un `refresh_tok
 ![Schéma](./schema_connexion_api.jpg)
 
 
-## Utilisation
+## Usage
 
-### Sous Insomnia ou Postman
+### Under Insomnia or Postman 
 
 - Type : OAuth2.0
 - Grant type : Authorization Code
 - Authorization url: https://assos.utc.fr/oauth/authorize
 - Access token url : https://assos.utc.fr/oauth/token
-- Client ID : l'ID de votre asso/client
-- Client secret : la clé de votre asso/client
-- Redirect url : l'adresse de votre application pour récupérer le code du token
+- Client ID : Your asso/client's ID 
+- Client secret : Your asso/client's key
+- Redirect url : Your application adress to retrieve the token code.
 
-### Par du code
+### With code
 
-Des packages sont disponibles pour utiliser OAuth2 en version Client facilement selon le langage utilisé.
-Une liste est disponible ici : https://oauth.net/code/#client-libraries
-Si vous ne tombez pas sur la page de login normale, vous avez soit un scope inexistant, soit votre adresse de callback n'est pas exacte, soit le mauvais couple client_id, client_secret.
+Some packages are available to easily use OAuth2 in a Client version depending on the used language.
+A list is available here : https://oauth.net/code/#client-libraries
+If you're not routed to the right login page, you either have an inexistant scope or your callback adress is not exact or the wrong `client_id`, `client_secret` couple.
 
+#### Example with NodeJS with the oauth package
 
-#### Exemple en NodeJS avec le package oauth
-
-Cet exemple permet seulement d'effectuer le protocole et de récupérer les tokens.
+This example shows only protocol execution and tokens retrievemet. 
 
 ```js
 var http = require('http');
