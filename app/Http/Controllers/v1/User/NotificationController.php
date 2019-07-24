@@ -54,6 +54,25 @@ class NotificationController extends Controller
     }
 
     /**
+     * Retourne la requête qui doit être exécuté pour élément du bulk.
+     *
+     * @param  string  $requestClass
+     * @param  Request $baseRequest
+     * @param  array   $args
+     * @return Request
+     */
+    protected function getRequestForBulk(string $requestClass, Request $baseRequest, array $args): Request
+    {
+        $request = parent::getRequestForBulk($requestClass, $baseRequest, $args);
+
+        if (isset($request->input('data')[$args[0]])) {
+            $request->merge(\array_merge($request->input(), ['data' => $request->input('data')[$args[0]]]));
+        }
+
+        return $request;
+    }
+
+    /**
      * Liste les notifications de l'utilisateur.
      *
      * @param \Illuminate\Http\Request $request
@@ -86,20 +105,24 @@ class NotificationController extends Controller
      *
      * @param UserNotificationRequest $request
      * @param string                  $user_id
-     * @return void
+     * @return mixed
      */
-    public function store(UserNotificationRequest $request, string $user_id=null): void
+    public function store(UserNotificationRequest $request, string $user_id=null)
     {
         $user = $this->getUser($request, $user_id);
 
-        $user->notify(new ExternalNotification(
+        $user->notify($notification = new ExternalNotification(
             \ModelResolver::getModel($request->input('notifier', 'client'), CanNotify::class),
+            $request->input('subject'),
             $request->input('content'),
+            $request->input('html'),
             $request->input('action', []),
+            $request->input('data', []),
+            $request->input('exceptedVia', []),
             \Scopes::getClient($request)->asso
         ));
 
-        abort(201, 'Notification créée et envoyée');
+        return response()->json($notification->toArray($user), 200);
     }
 
     /**
