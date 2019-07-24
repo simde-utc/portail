@@ -115,8 +115,6 @@ class Validation
             foreach ($args as $arg) {
                 array_push($this->args, $arg);
             }
-        } else {
-            $this->args[$method] = $args;
         }
 
         return $this;

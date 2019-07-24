@@ -54,6 +54,25 @@ class NotificationController extends Controller
     }
 
     /**
+     * Retourne la requête qui doit être exécuté pour élément du bulk.
+     *
+     * @param  string  $requestClass
+     * @param  Request $baseRequest
+     * @param  array   $args
+     * @return Request
+     */
+    protected function getRequestForBulk(string $requestClass, Request $baseRequest, array $args): Request
+    {
+        $request = parent::getRequestForBulk($requestClass, $baseRequest, $args);
+
+        if (isset($request->input('data')[$args[0]])) {
+            $request->merge(\array_merge($request->input(), ['data' => $request->input('data')[$args[0]]]));
+        }
+
+        return $request;
+    }
+
+    /**
      * Liste les notifications de l'utilisateur.
      *
      * @param \Illuminate\Http\Request $request
