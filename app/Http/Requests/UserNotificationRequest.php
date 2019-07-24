@@ -24,11 +24,21 @@ class UserNotificationRequest extends Request
         return [
             'notifier' => Validation::type('string')
                 ->get(),
+            'subject' => Validation::type('string')
+                ->get(),
             'content' => Validation::type('string')
                 ->post('required')
                 ->get(),
-            'action' => Validation::type('array')
+            'html' => Validation::type('string')
                 ->post('required')
+                ->get(),
+            'action' => Validation::type('array')
+                ->get(),
+            'action.name' => Validation::type('string')
+                ->get(),
+            'action.url' => Validation::type('url')
+                ->get(),
+            'data' => Validation::type('array')
                 ->get(),
         ];
     }

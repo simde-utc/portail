@@ -1,15 +1,16 @@
 # Services
 
-Les services ont pour but d'implémenter des API externes ou des fonctionnalités particulières tels que le CAS ou Ginger.
+Services aim to implement external APIs or particular functionalities such as Ginger or the CAS.
 
 Namespace : `\App\Services\...`
-Dossier :   `app/Services`
+Folder :   `app/Services`
 
-Pour créer un nouveau service/système d'authentification, il suffit de créer une classe hérité du service AuthService.php et d'overrider les fonctions de base. Il est aussi nécessaire d'ajouter dans config/auth.php le service.
+To create a new services/authentication system, just create a child class of the AuthService.php service and ovveride the parent functions.
+It is also necessary to add to service in `config/auth.php`.
 
-## CAS
+## Central Authentication Service (CAS)
 
-Le CAS est un système d'authentification automatiquement géré par le service Cas créé pour l'occasion. Il gère automatiquement la connexion, et la déconnexion
+The CAS is an authentication service automatically managed by the created CAS service. It handles automatically logins and logouts. 
 
 ## Ginger
 
