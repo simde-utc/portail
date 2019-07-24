@@ -1,6 +1,6 @@
 <?php
 /**
- * Overrides the controller that manages Passport clients
+ * Override the controller that manages Passport clients
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Romain Maliach-Auguste <r.maliach@live.fr>
@@ -23,7 +23,7 @@ use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 class ClientController extends Controller
 {
     /**
-     * Lists clients
+     * List clients
      *
      * @param  Request $request
      * @return mixed
@@ -41,7 +41,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Creates new clients (admin rights required)
+     * Create new clients (admin rights required)
      *
      * @param  \Illuminate\Http\Request $request
      * @return JsonResponse
@@ -66,7 +66,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Updates only specific fields of a specific client
+     * Update only specific fields of a specific client
      *
      * @param  \Illuminate\Http\Request $request
      * @param  string                   $clientId

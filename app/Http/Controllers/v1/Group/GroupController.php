@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages groups.
+ * Manage groups.
  *
  * TODO: Remake scopes.
  * TODO: Export in a Trait.
@@ -46,7 +46,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Lists groups.
+     * List groups.
      *
      * @param GroupRequest $request
      * @return JsonResponse
@@ -62,7 +62,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Creates a group.
+     * Create a group.
      *
      * @param GroupRequest $request
      * @return JsonResponse
@@ -100,7 +100,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Shows a group.
+     * Show a group.
      *
      * @param GroupRequest $request
      * @param string       $group_id
@@ -114,7 +114,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Updates a group.
+     * Update a group.
      *
      * @param GroupRequest $request
      * @param string       $group_id
@@ -161,7 +161,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Deletes a group.
+     * Delete a group.
      *
      * @param GroupRequest $request
      * @param string       $group_id

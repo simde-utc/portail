@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds a selector concerning language.
+ * Add a selector concerning language.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -56,7 +56,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Lists user's associations.
+     * List user's associations.
      *
      * @param Request $request
      * @param string  $user_id
@@ -88,7 +88,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Adds an association followed by the user.
+     * Add an association followed by the user.
      *
      * @param UserAssoRequest $request
      * @param string          $user_id
@@ -111,7 +111,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Shows an association followed by the user.
+     * Show an association followed by the user.
      *
      * @param Request $request
      * @param string  $user_id

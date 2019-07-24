@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages booking types.
+ * Manage booking types.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,7 +28,7 @@ class BookingTypeController extends Controller
     }
 
     /**
-     * Lists the accesses.
+     * List the accesses.
      *
      * @param Request $request
      * @return JsonResponse
@@ -53,7 +53,7 @@ class BookingTypeController extends Controller
     }
 
     /**
-     * Shows an access.
+     * Show an access.
      *
      * @param  string $type_id
      * @return JsonResponse
@@ -84,6 +84,6 @@ class BookingTypeController extends Controller
      */
     public function destroy(string $type_id): void
     {
-        abort(405, 'Il n\'est pas possible de Deletesr un type de réservation');
+        abort(405, 'Il n\'est pas possible de suprimer un type de réservation');
     }
 }

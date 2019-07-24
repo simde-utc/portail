@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Calendars as admin.
+ * Manage Calendars as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -53,7 +53,7 @@ class CalendarController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

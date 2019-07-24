@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages User Permissions.
+ * Manage User Permissions.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,7 +28,7 @@ class UserPermissionController extends Controller
     protected $model = UserPermission::class;
 
     /**
-     * Gives access only if user has the right permissions.
+     * Give access only if user has the right permissions.
      */
     public function __construct()
     {
@@ -36,7 +36,7 @@ class UserPermissionController extends Controller
     }
 
     /**
-     * Retrieves fields for admin.
+     * Retrieve fields for admin.
      *
      * @param  boolean $withAll
      * @return array
@@ -114,7 +114,7 @@ class UserPermissionController extends Controller
     }
 
     /**
-     * Creates a new instance.
+     * Create a new instance.
      *
      * @param Content $content
      * @return Content
@@ -135,7 +135,7 @@ class UserPermissionController extends Controller
     }
 
     /**
-     * Creates a user permission.
+     * Create a user permission.
      *
      * @param  Request $request
      * @return mixed
@@ -152,7 +152,7 @@ class UserPermissionController extends Controller
     }
 
     /**
-     * modifies a user permission.
+     * Modify a user permission.
      *
      * @param  Request $request
      * @param  string  $member_id
@@ -174,7 +174,7 @@ class UserPermissionController extends Controller
     }
 
     /**
-     * Removes a user permission.
+     * Remove a user permission.
      *
      * @param  Request $request
      * @param  string  $member_id

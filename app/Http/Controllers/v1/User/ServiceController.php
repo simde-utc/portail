@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages user favorite services.
+ * Manage user favorite services.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -57,7 +57,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Lists all services followed by the user.
+     * List all services followed by the user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -76,7 +76,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Adds a followed service for the user.
+     * Add a followed service for the user.
      *
      * @param UserServiceRequest $request
      * @param string             $user_id
@@ -103,7 +103,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Shows service followed by the user.
+     * Show service followed by the user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -123,7 +123,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * It is not possible tu update a service followed by the user.
+     * It is not possible to update a service followed by the user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -136,7 +136,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Removes a service followed by the user.
+     * Remove a service followed by the user.
      *
      * @param Request $request
      * @param string  $user_id

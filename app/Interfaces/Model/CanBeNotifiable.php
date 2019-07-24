@@ -1,6 +1,6 @@
 <?php
 /**
- * Indicates that the model is notifiable.
+ * Indicate that the model is notifiable.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use App\Notifications\Notification;
 interface CanBeNotifiable
 {
     /**
-     * Returns the notification channels.
+     * Return the notification channels.
      *
      * @param string $notificationType
      * @return array
@@ -31,7 +31,7 @@ interface CanBeNotifiable
     public function notify($instance);
 
     /**
-     * Returns the notification icon as the creator.
+     * Return the notification icon as the creator.
      *
      * @param  Notification $notification
      * @return void

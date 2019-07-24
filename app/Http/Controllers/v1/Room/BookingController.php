@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages bookings.
+ * Manage bookings.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -64,7 +64,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Checks that the booking can done.
+     * Check that the booking can done.
      *
      * @param  Request $request
      * @param  string  $room_id
@@ -87,7 +87,7 @@ class BookingController extends Controller
             // Here we check if the validating person can validate the booking ask.
             $validator = $this->getValidatorFromOwner($request, $owner, 'booking', 'réservation', 'create');
 
-            // Checks if we can validate an booking in a room owned by someone.
+            // Check if we can validate an booking in a room owned by someone.
             if (!Room::find($room_id)->owned_by->isBookingValidableBy($validator)) {
                 abort(403, 'Vous n\'avez pas le droit de valider cette réservation');
             }
@@ -103,7 +103,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Lists bookings of the room.
+     * List bookings of the room.
      *
      * @param  Request $request
      * @param  string  $room_id
@@ -121,7 +121,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Creates a booking for the room.
+     * Create a booking for the room.
      *
      * @param  BookingRequest $request
      * @param  string         $room_id
@@ -134,7 +134,7 @@ class BookingController extends Controller
 
         $owner = $this->getOwner($request, 'booking', 'réservation', 'create');
         $creator = $this->getCreatorFromOwner($request, $owner, 'booking', 'réservation', 'create');
-        // Checks if the booker has the rights in this room.
+        // Check if the booker has the rights in this room.
         if (!$room->owned_by->isRoomReservableBy($owner)) {
             abort(403, 'Vous n\'être pas autorisé à réserver cette salle');
         }
@@ -177,7 +177,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Shows a booking of the room.
+     * Show a booking of the room.
      *
      * @param  Request $request
      * @param  string  $room_id
@@ -193,7 +193,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Updates a booking of the room.
+     * Update a booking of the room.
      *
      * @param  BookingRequest $request
      * @param  string         $room_id
@@ -219,7 +219,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Deletes a booking of the room.
+     * Delete a booking of the room.
      *
      * @param  Request $request
      * @param  string  $room_id
@@ -234,7 +234,7 @@ class BookingController extends Controller
         if ($booking->delete()) {
             abort(204);
         } else {
-            abort(500, 'Impossible de Deletesr la réservation');
+            abort(500, 'Impossible de suprimer la réservation');
         }
     }
 }

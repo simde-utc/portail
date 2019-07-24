@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages roles.
+ * Manage roles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -48,7 +48,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Lists roles.
+     * List roles.
      *
      * @param Request $request
      * @return JsonResponse
@@ -65,7 +65,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Adds a role.
+     * Add a role.
      *
      * @param RoleRequest $request
      * @return JsonResponse
@@ -88,7 +88,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Shows a role.
+     * Show a role.
      *
      * @param Request $request
      * @param string 	$role_id
@@ -103,7 +103,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Updates a role.
+     * Update a role.
      *
      * @param RoleRequest $request
      * @param string      $role_id
@@ -128,7 +128,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Deletes a role.
+     * Delete a role.
      *
      * @param Request $request
      * @param string 	$role_id
@@ -142,10 +142,10 @@ class RoleController extends Controller
             if ($role->delete()) {
                 abort(204);
             } else {
-                abort(500, "Impossible de Deletesr le role souhaité");
+                abort(500, "Impossible de suprimer le role souhaité");
             }
         } else {
-            abort(403, "Il n'est pas autorisé de Deletesr ce rôle (possiblement car déjà assigné ou rôles enfants attachés)");
+            abort(403, "Il n'est pas autorisé de suprimer ce rôle (possiblement car déjà assigné ou rôles enfants attachés)");
         }
     }
 }

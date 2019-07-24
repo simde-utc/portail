@@ -31,7 +31,7 @@ class Menu extends BaseMenu
     }
 
     /**
-     * Returns all menus in the form of nodes
+     * Return all menus in the form of nodes
      *
      * @return array
      */

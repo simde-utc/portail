@@ -59,7 +59,7 @@ class Faq extends Model
     }
 
     /**
-     * Specifique scope to have the private resources.
+     * Specific scope to have the private resources.
      *
      * @param  Builder $query
      * @return Builder

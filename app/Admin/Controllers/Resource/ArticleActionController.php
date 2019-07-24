@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages ArticleActions as admin.
+ * Manage ArticleActions as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -54,7 +54,7 @@ class ArticleActionController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

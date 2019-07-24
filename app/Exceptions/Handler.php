@@ -1,7 +1,7 @@
 <?php
 /**
  * File generating exceptions.
- * Handles exception and returns a HTTP message.
+ * Handle exception and returns a HTTP message.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

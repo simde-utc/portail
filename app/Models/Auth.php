@@ -32,7 +32,7 @@ abstract class Auth extends Model
     }
 
     /**
-     * Retrieves a user by a unique data.
+     * Retrieve a user by a unique data.
      *
      * @param string $username
      * @return mixed
@@ -40,7 +40,7 @@ abstract class Auth extends Model
     abstract public function getUserByIdentifiant(string $username);
 
     /**
-     * Checks if the password is correct.
+     * Check if the password is correct.
      *
      * @param string $password
      * @return boolean

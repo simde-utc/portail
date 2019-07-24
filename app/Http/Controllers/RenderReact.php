@@ -1,6 +1,6 @@
 <?php
 /**
- * Renders the React page
+ * Render the React page
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Romain Maliach-Auguste <r.maliach@live.fr>
@@ -16,7 +16,7 @@ use App\Http\Controllers\Controller;
 class RenderReact extends Controller
 {
     /**
-     * Manages any request
+     * Manage any request
      * @param  string $whatever Catches any value.
      * @return mixed
      */

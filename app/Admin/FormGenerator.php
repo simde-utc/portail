@@ -36,7 +36,7 @@ class FormGenerator extends Generator
     }
 
     /**
-     * Indicates nothing special
+     * Indicate nothing special
      *
      * @param  mixed $field
      * @return mixed
@@ -47,7 +47,7 @@ class FormGenerator extends Generator
     }
 
     /**
-     * Allows us to add several fields
+     * Allow us to add several fields
      *
      * @param array $fields
      * @param array $defaults

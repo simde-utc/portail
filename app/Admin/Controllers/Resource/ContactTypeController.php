@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages ContactTypes as admin.
+ * Manage ContactTypes as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

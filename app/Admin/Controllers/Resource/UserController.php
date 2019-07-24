@@ -1,6 +1,6 @@
 <?php
 /**
- * Displays Users as admin.
+ * Display Users as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -47,7 +47,7 @@ class UserController extends Controller
     ];
 
     /**
-     * Gives access only if user has the right permission.
+     * Give access only if user has the right permission.
      */
     public function __construct()
     {
@@ -55,7 +55,7 @@ class UserController extends Controller
     }
 
     /**
-     * Returns search form.
+     * Return search form.
      *
      * @param Content $content
      * @return Content
@@ -104,7 +104,7 @@ class UserController extends Controller
     }
 
     /**
-     * Shows a User.
+     * Show a User.
      *
      * @param  Content $content
      * @param  string  $user_id
@@ -156,8 +156,8 @@ class UserController extends Controller
     }
 
     /**
-     * Generates the left side of the display a user.
-     * s
+     * Generate the left side of the display a user.
+     * 
      * @param  Column $column
      * @param  User   $user
      * @param  mixed  $image
@@ -231,7 +231,7 @@ class UserController extends Controller
     }
 
     /**
-     * Generates right side of the display a user.
+     * Generate right side of the display a user.
      *
      * @param  Column $column
      * @param  User   $user
@@ -275,7 +275,7 @@ class UserController extends Controller
     }
 
     /**
-     * Allows to become someone else (In this system of course :p )
+     * Allow to become someone else (In this system of course :p )
      *
      * @param Request $request
      * @param string  $user_id
@@ -320,7 +320,7 @@ class UserController extends Controller
     }
 
     /**
-     * Allows to make someone contribute.
+     * Allow to make someone contribute.
      *
      * @param Request $request
      * @param string  $user_id

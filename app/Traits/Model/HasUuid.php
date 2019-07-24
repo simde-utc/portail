@@ -1,6 +1,6 @@
 <?php
 /**
- * Indicates UUIDs' model.
+ * Indicate UUIDs' model.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

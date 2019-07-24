@@ -15,7 +15,7 @@ use Illuminate\Support\ServiceProvider;
 class ScopesServiceProvider extends ServiceProvider
 {
     /**
-     * Saves the scope service.
+     * Save the scope service.
      *
      * @return void
      */

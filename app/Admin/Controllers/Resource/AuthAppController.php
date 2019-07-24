@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Applications Authentification as admin.
+ * Manage Applications Authentification as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -36,7 +36,7 @@ class AuthAppController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

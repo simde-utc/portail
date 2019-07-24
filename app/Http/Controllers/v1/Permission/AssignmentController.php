@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages assigned permissions.
+ * Manage assigned permissions.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -47,7 +47,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Lists assigned permissions.
+     * List assigned permissions.
      *
      * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
@@ -87,7 +87,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Shows an assigned permission.
+     * Show an assigned permission.
      *
      * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
@@ -113,7 +113,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Restraints a permission.
+     * Restraint a permission.
      *
      * @param  PermissionAssignmentRequest $request
      * @return void

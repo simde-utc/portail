@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller an access to aux rôles.
+ * Add the controller an access to aux rôles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -21,7 +21,7 @@ trait HasRoles
     use HasSemesters;
 
     /**
-     * Retrieves un rôle.
+     * Retrieve un rôle.
      *
      * @param  Request $request
      * @param  string  $role_id
@@ -48,7 +48,7 @@ trait HasRoles
     }
 
     /**
-     * Retrieves un rôle depuis un utlisateur
+     * Retrieve un rôle depuis un utlisateur
      *
      * @param  Request $request
      * @param  User    $user
@@ -71,7 +71,7 @@ trait HasRoles
     }
 
     /**
-     * Indique si le token peut voir ou non.
+     * Indicate if the token can be seen or not.
      *
      * @param  Request $request
      * @param  Role    $role

@@ -55,7 +55,7 @@ class AuthCas extends Auth
     }
 
     /**
-     * Returns a user from its email adress.
+     * Return a user from its email adress.
      * TODO: transform into scope.
      *
      * @param  string $email
@@ -67,7 +67,7 @@ class AuthCas extends Auth
     }
 
     /**
-     * Retrieves a user from its login.
+     * Retrieve a user from its login.
      *
      * @param string $login
      * @return mixed
@@ -103,7 +103,7 @@ class AuthCas extends Auth
     }
 
     /**
-     * Checks if the password is correct.
+     * Check if the password is correct.
      *
      * @param string $password
      * @return boolean

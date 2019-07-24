@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages user details.
+ * Manage user details.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -27,7 +27,7 @@ class DetailController extends Controller
     use HasUserBulkMethods, HasUsers;
 
     /**
-     * ust be able to manage user details.
+     * Must be able to manage user details.
      * With token only.
      */
     public function __construct()
@@ -56,7 +56,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Checks the scope and the given detail.
+     * Check the scope and the given detail.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $key
@@ -75,7 +75,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Lists the user details.
+     * List the user details.
      *
      * @param Request $request
      * @param string  $user_id
@@ -90,7 +90,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Creates a detail for this user.
+     * Create a detail for this user.
      *
      * @param UserDetailRequest $request
      * @param string            $user_id
@@ -111,7 +111,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Shows a detail for this user.
+     * Show a detail for this user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -135,7 +135,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Updates a detail for this user.
+     * Update a detail for this user.
      *
      * @param UserDetailRequest $request
      * @param string            $user_id
@@ -168,7 +168,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Deletes a details for this user if its removable.
+     * Delete a details for this user if its removable.
      *
      * @param Request $request
      * @param string  $user_id

@@ -95,7 +95,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indicates if the calendar is manageable.
+     * Indicate if the calendar is manageable.
      * The private calendar is manageable only by developers.
      *
      * @param  string $user_id
@@ -107,7 +107,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indicates if the event is manageable.
+     * Indicate if the event is manageable.
      * The private event is manageable only by developers.
      *
      * @param  string $user_id
@@ -119,7 +119,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indicates if the event is manageable.
+     * Indicate if the event is manageable.
      * The private event is manageable only by developers.
      *
      * @param  string $user_id
@@ -131,7 +131,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Retrieves the client name.
+     * Retrieve the client name.
      *
      * @return string|null
      */

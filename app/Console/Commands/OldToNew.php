@@ -1,7 +1,7 @@
 <?php
 /**
  * File generating the command: portail:old-to-new.
- * Downloads all data from the old portal to this one.
+ * Download all data from the old portal to this one.
  * Based on the old portal version from 1st January 2019.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -169,7 +169,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Retrieves old portal database connection.
+     * Retrieve old portal database connection.
      *
      * @return Connection
      */
@@ -179,7 +179,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates image from the old portal.
+     * Create image from the old portal.
      *
      * @param  string $url
      * @param  mixed  $model
@@ -208,7 +208,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Retrieves model from field's value.
+     * Retrieve model from field's value.
      *
      * @param  array   $models
      * @param  integer $value
@@ -226,7 +226,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
 
     /**
      *
-     * Retrieves User.
+     * Retrieve User.
      *
      * @param  integer $user_id
      * @return mixed|null
@@ -239,7 +239,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Retrieves Association.
+     * Retrieve Association.
      *
      * @param  integer $asso_id
      * @return mixed|null
@@ -252,7 +252,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Retrieves role.
+     * Retrieve role.
      *
      * @param  integer $role_id
      * @return mixed|null
@@ -271,7 +271,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
 
     /**
      *
-     * Retrieves semester.
+     * Retrieve semester.
      *
      * @param  integer $semester_id
      * @return mixed|null
@@ -284,7 +284,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Retrieves access.
+     * Retrieve access.
      *
      * @param  integer $access_id
      * @return mixed|null
@@ -297,7 +297,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Retrieves room.
+     * Retrieve room.
      *
      * @param  integer $room_id
      * @return mixed|null
@@ -311,7 +311,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates associations from the old portal.
+     * Create associations from the old portal.
      *
      * @return mixed
      */
@@ -446,7 +446,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates articles from the old portal.
+     * Create articles from the old portal.
      *
      * @return mixed
      */
@@ -518,7 +518,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates users from old portal.
+     * Create users from old portal.
      *
      * @return mixed
      */
@@ -567,7 +567,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates associations members from the old portal.
+     * Create associations members from the old portal.
      *
      * @return mixed
      */
@@ -670,7 +670,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates events from the old portal.
+     * Create events from the old portal.
      *
      * @return mixed
      */
@@ -745,7 +745,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates services from the old portal.
+     * Create services from the old portal.
      *
      * @return mixed
      */
@@ -803,7 +803,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates associations accesses from the old portal.
+     * Create associations accesses from the old portal.
      *
      * @return mixed
      */
@@ -903,7 +903,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates romms from the old portal.
+     * Create rooms from the old portal.
      *
      * @return mixed
      */
@@ -985,7 +985,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Creates bookings from old portal.
+     * Create bookings from old portal.
      *
      * @return array
      */

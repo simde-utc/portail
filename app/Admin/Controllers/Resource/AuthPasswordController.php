@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Password Authentifications as admin.
+ * Manage Password Authentifications as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -35,7 +35,7 @@ class AuthPasswordController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */
@@ -47,7 +47,7 @@ class AuthPasswordController extends ResourceController
     }
 
     /**
-     * Generates the password's hash before save.
+     * Generate the password's hash before save.
      *
      * @return mixed
      */

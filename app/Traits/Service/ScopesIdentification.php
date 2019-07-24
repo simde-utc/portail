@@ -96,7 +96,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Returns authentification middlewares.
+     * Return authentification middlewares.
      *
      * @param  array   $userScopes
      * @param  array   $clientScopes
@@ -125,7 +125,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retuns authentification middlewares for every client connected to a user.
+     * Return authentification middlewares for every client connected to a user.
      *
      * @return array
      */
@@ -137,7 +137,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retuns authentification middlewares for every client not connected to a user.
+     * Return authentification middlewares for every client not connected to a user.
      *
      * @return array
      */
@@ -149,7 +149,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Retuns authentification middlewares for every client connected or not to a user.
+     * Return authentification middlewares for every client connected or not to a user.
      *
      * @return array
      */
@@ -161,7 +161,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Returns middlewares to use to access a route by matching a scopes or several scopes.
+     * Return middlewares to use to access a route by matching a scopes or several scopes.
      *
      * @param  string|array $userScopes   Scopes list or User/Client scopes list if accessor is a User/Client.
      * @param  array        $clientScopes User/Client scope list to have.
@@ -179,7 +179,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Returns all widdlewares to use to access a route by matching at least one scope in the list.
+     * Return all middlewares to use to access a route by matching at least one scope in the list.
      *
      * @param string|array $userScopes
      * @param string|array $clientScopes
@@ -203,7 +203,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Returns all middleware to use to access a routes by matching all scopes or their parents.
+     * Return all middleware to use to access a routes by matching all scopes or their parents.
      *
      * @param array $userScopes
      * @param array $clientScopes
@@ -224,7 +224,7 @@ trait ScopesIdentification
     }
 
     /**
-     * Creates the middleware to check that a scope owns one of the given scopes smallest children.
+     * Create the middleware to check that a scope owns one of the given scopes smallest children.
      *
      * @param  string|array $userScope
      * @param  string|array $clientScope

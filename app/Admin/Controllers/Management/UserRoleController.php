@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages User roles.
+ * Manage User roles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,7 +28,7 @@ class UserRoleController extends Controller
     protected $model = UserRole::class;
 
     /**
-     * Gives access only if user has the right permissions.
+     * Give access only if user has the right permissions.
      */
     public function __construct()
     {
@@ -36,7 +36,7 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Retrieves fields for admin.
+     * Retrieve fields for admin.
      *
      * @param  boolean $withAll
      * @return array

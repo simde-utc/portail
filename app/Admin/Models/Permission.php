@@ -30,7 +30,7 @@ class Permission extends BasePermission
     ];
 
     /**
-     * Finds a permission.
+     * Find a permission.
      *
      * @param  string             $permission_id
      * @param  CanHavePermissions $owner
@@ -53,7 +53,7 @@ class Permission extends BasePermission
     }
 
     /**
-     * Finds a permision by type.
+     * Find a permision by type.
      * TODO: Transform it into scope.
      *
      * @param  string             $type

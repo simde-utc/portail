@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages password reset requests.
+ * Manage password reset requests.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Romain Maliach-Auguste <r.maliach@live.fr>
@@ -30,7 +30,7 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Shows the password reset request form.
+     * Show the password reset request form.
      *
      * @return \Illuminate\View\View
      */

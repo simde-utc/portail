@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages the calendars.
+ * Manage the calendars.
  *
  * TODO: En abort
  *
@@ -53,7 +53,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Lists the calendars.
+     * List the calendars.
      *
      * @param Request $request
      * @return JsonResponse
@@ -74,7 +74,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Creates a calendar.
+     * Create a calendar.
      *
      * @param CalendarRequest $request
      * @return JsonResponse
@@ -99,7 +99,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Shows a calendar.
+     * Show a calendar.
      *
      * @param Request	$request
      * @param string 	$calendrier_id
@@ -113,7 +113,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Updates a calendar.
+     * Update a calendar.
      *
      * @param CalendarRequest	$request
      * @param string          $calendrier_id
@@ -139,7 +139,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Deletes a calendar.
+     * Delete a calendar.
      *
      * @param Request	$request
      * @param string 	$calendrier_id

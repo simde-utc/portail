@@ -1,7 +1,7 @@
 <?php
 /**
- * Permet de gérer les anciennes routes du Portail.
- *
+ * Handles old portal's routes.
+ *operating system
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
@@ -47,8 +47,8 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection /article.
-     * Redirection /article/show/{wathever}.
+     * /article redirection.
+     * /article/show/{wathever} redirection.
      *
      * @return mixed
      */
@@ -58,9 +58,9 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection /event.
-     * Redirection /event/calendar.
-     * Redirection /event/show/{wathever}.
+     * /event redirection.
+     * /event/calendar redirection.
+     * /event/show/{wathever} redirection.
      *
      * @return mixed
      */

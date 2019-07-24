@@ -65,7 +65,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Overloads the method to obtain an array.
+     * Overload the method to obtain an array.
      *
      * @return array
      */
@@ -85,7 +85,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Modifies on the fly the owned_by attribute.
+     * Modify on the fly the owned_by attribute.
      *
      * @return mixed
      */
@@ -150,7 +150,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Finds a permission by its type.
+     * Find a permission by its type.
      * TODO: Transforme into scope.
      *
      * @param  string             $type
@@ -174,7 +174,7 @@ class Permission extends Model implements OwnableContract
     }
 
     /**
-     * Finds a permission trough a corresponding data.
+     * Find a permission trough a corresponding data.
      *
      * @param  mixed              $permission
      * @param  CanHavePermissions $owner

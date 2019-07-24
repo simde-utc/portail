@@ -19,7 +19,7 @@ use App\Exceptions\PortailException;
 trait TokenUtils
 {
     /**
-     * Returns the scope and its parents or all childs (including verb inheritance).
+     * Return the scope and its parents or all childs (including verb inheritance).
      *
      * @param string  $scope
      * @param boolean $goUp  Specify the inheritance direction.
@@ -67,7 +67,7 @@ trait TokenUtils
     }
 
     /**
-     * Returns if a given token is a User token or not.
+     * Return if a given token is a User token or not.
      *
      * @param  Request $request
      * @return boolean
@@ -78,7 +78,7 @@ trait TokenUtils
     }
 
     /**
-     * Returns if a given token is a Transient token or not.
+     * Return if a given token is a Transient token or not.
      *
      * @param  Request $request
      * @return boolean
@@ -89,7 +89,7 @@ trait TokenUtils
     }
 
     /**
-     * Returns if a given token is a Client token or if it is a Transient and Client token.
+     * Return if a given token is a Client token or if it is a Transient and Client token.
      *
      * @param  Request $request
      * @return boolean
@@ -100,7 +100,7 @@ trait TokenUtils
     }
 
     /**
-     * Retrieves the type of a given token (useful to know the header of the scopes)
+     * Retrieve the type of a given token (useful to know the header of the scopes)
      *
      * @param  Request $request
      * @return string  'client' / 'user'
@@ -111,7 +111,7 @@ trait TokenUtils
     }
 
     /**
-     * Indicates if it's a User or Client token.
+     * Indicate if it's a User or Client token.
      *
      * @param  Request $request
      * @return boolean
@@ -132,7 +132,7 @@ trait TokenUtils
     }
 
     /**
-     * Returns the token.
+     * Return the token.
      *
      * @param  Request $request
      * @return mixed
@@ -154,7 +154,7 @@ trait TokenUtils
     }
 
     /**
-     * Returns the Request's OAuth client.
+     * Return the Request's OAuth client.
      *
      * @param  Request $request
      * @return mixed
@@ -167,7 +167,7 @@ trait TokenUtils
     }
 
     /**
-     * Idicates if the request is an OAuth request or not.
+     * Idicate if the request is an OAuth request or not.
      *
      * @param  Request $request
      * @return boolean
@@ -178,7 +178,7 @@ trait TokenUtils
     }
 
     /**
-     * Returns Middlewares to use to access a route by matching one or several scopes.
+     * Return middlewares to use to access a route by matching one or several scopes.
      *
      * @param  Request $request
      * @param  mixed   $scopes
@@ -190,7 +190,7 @@ trait TokenUtils
     }
 
     /**
-     * Returns if we can access a route by matching at least a scope in the list.
+     * Return if we can access a route by matching at least a scope in the list.
      *
      * @param  Request $request
      * @param mixed   $scopes
@@ -230,7 +230,7 @@ trait TokenUtils
     }
 
     /**
-     * Returns if we can access a route by matchnig all scopes in the list.
+     * Return if we can access a route by matchnig all scopes in the list.
      *
      * @param Request $request
      * @param array   $scopes
@@ -265,7 +265,7 @@ trait TokenUtils
     }
 
     /**
-     * Generates an exception if scopes don't match the right authentification type
+     * Generate an exception if scopes don't match the right authentification type
      *
      * @param  array  $scopes
      * @param  string $grantType

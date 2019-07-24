@@ -43,7 +43,7 @@ class Admin extends Administrator
     ];
 
     /**
-     * Returns associated user.
+     * Return associated user.
      *
      * @return User
      */
@@ -53,7 +53,7 @@ class Admin extends Administrator
     }
 
     /**
-     * Returns username.
+     * Return username.
      *
      * @return string
      */
@@ -63,7 +63,7 @@ class Admin extends Administrator
     }
 
     /**
-     * Creates name attribute on the fly (first and last name concatenation).
+     * Create name attribute on the fly (first and last name concatenation).
      *
      * @return string
      */
@@ -89,7 +89,7 @@ class Admin extends Administrator
     }
 
     /**
-     * Returns if user user is active (He has been connected at least once).
+     * Return if user user is active (He has been connected at least once).
      *
      * @return boolean
      */

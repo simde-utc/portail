@@ -1,7 +1,7 @@
 <?php
 /**
  * Files generating the command: portail:update.
- * Updates the application to the next version after a git pull.
+ * Update the application to the next version after a git pull.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

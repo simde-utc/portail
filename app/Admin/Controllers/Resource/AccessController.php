@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Accesses as admin.
+ * Manage Accesses as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

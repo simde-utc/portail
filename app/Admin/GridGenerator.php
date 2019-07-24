@@ -1,6 +1,6 @@
 <?php
 /**
- * Generates a global admin presentation.
+ * Generate a global admin presentation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,7 +25,7 @@ class GridGenerator extends Generator
     protected $valueMethod = 'display';
 
     /**
-     * Prepares main display.
+     * Prepare main display.
      *
      * @param string $model
      */
@@ -35,7 +35,7 @@ class GridGenerator extends Generator
     }
 
     /**
-     * Indicates that the field can be put in order.
+     * Indicate that the field can be put in order.
      *
      * @param  mixed $field
      * @return mixed
@@ -46,7 +46,7 @@ class GridGenerator extends Generator
     }
 
     /**
-     * Generates an admin filter.
+     * Generate an admin filter.
      *
      * @param  mixed  $filter
      * @param  string $field
@@ -94,7 +94,7 @@ class GridGenerator extends Generator
     }
 
     /**
-     * Allows to add several fields
+     * Allow to add several fields
      *
      * @param array $fields
      * @return Generator

@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages the services.
+ * Manage the services.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -57,7 +57,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Retrieves the services list.
+     * Retrieve the services list.
      *
      * @param Request $request
      * @return JsonResponse
@@ -72,7 +72,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Creates a service.
+     * Create a service.
      *
      * @param ServiceRequest $request
      * @return JsonResponse
@@ -88,7 +88,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Shows a service.
+     * Show a service.
      *
      * @param Request $request
      * @param string  $service_id
@@ -102,7 +102,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Updates a service.
+     * Update a service.
      *
      * @param ServiceRequest $request
      * @param string         $service_id
@@ -123,7 +123,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Deletes a service.
+     * Delete a service.
      *
      * @param Request $request
      * @param string  $service_id
@@ -138,7 +138,7 @@ class ServiceController extends Controller
 
             abort(204);
         } else {
-            abort(500, 'Impossible de Deletesr la service');
+            abort(500, 'Impossible de suprimer la service');
         }
     }
 }

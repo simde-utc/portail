@@ -222,7 +222,7 @@ class Event extends Model implements OwnableContract
     }
 
     /**
-     * Overloads the mothod to cache sub-data.
+     * Overload the mothod to cache sub-data.
      *
      * @param boolean $addSubModelName
      * @return mixed

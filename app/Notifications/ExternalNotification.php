@@ -41,7 +41,7 @@ class ExternalNotification extends Notification
     }
 
     /**
-     * Returns the action.
+     * Return the action.
      * @param  CanBeNotifiable $notifiable
      * @return array
      */
@@ -51,7 +51,7 @@ class ExternalNotification extends Notification
     }
 
     /**
-     * Returns the notification subject.
+     * Return the notification subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -62,7 +62,7 @@ class ExternalNotification extends Notification
     }
 
     /**
-     * Returns the Notification's text content.
+     * Return the Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string

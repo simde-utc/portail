@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds a selector concerning visibilities.
+ * Add a selector concerning visibilities.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -76,7 +76,7 @@ trait HasVisibilitySelection
     }
 
     /**
-     * Sets the user for visibility.
+     * Set the user for visibility.
      *
      * @param User $user
      * @return string
@@ -89,7 +89,7 @@ trait HasVisibilitySelection
     }
 
     /**
-     * Gets the user for visibility.
+     * Get the user for visibility.
      *
      * @return User|null
      */
@@ -99,7 +99,7 @@ trait HasVisibilitySelection
     }
 
     /**
-     * Returns the visibility of a given type.
+     * Return the visibility of a given type.
      *
      * @param  string $type
      * @return Visibility

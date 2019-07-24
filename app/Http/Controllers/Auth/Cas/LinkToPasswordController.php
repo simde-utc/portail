@@ -32,7 +32,7 @@ class LinkToPasswordController extends Controller
     }
 
     /**
-     * Returns linking page.
+     * Return linking page.
      *
      * @param  Request $request
      * @return mixed
@@ -43,7 +43,7 @@ class LinkToPasswordController extends Controller
     }
 
     /**
-     * Stores the link between auth types.
+     * Store the link between auth types.
      *
      * @param  Request $request
      * @return mixed

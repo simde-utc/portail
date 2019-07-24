@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages inscription via form.
+ * Manage inscription via form.
  *
  * @author Natan Danous <natan.danous@gmail.com>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -59,8 +59,8 @@ class RegisterController extends Controller
     }
 
     /**
-     * Displays the form for a specific authentification type.
-     * Redirects to the login page if non-existant.
+     * Display the form for a specific authentification type.
+     * Redirect to the login page if non-existant.
      *
      * @param  Request $request
      * @param  string  $provider Authentification type.
@@ -78,8 +78,8 @@ class RegisterController extends Controller
     }
 
     /**
-     * Registers the user for a specific type of authentification.
-     * Redirects to login page if non-existant.
+     * Register the user for a specific type of authentification.
+     * Redirect to login page if non-existant.
      *
      * @param  Request $request
      * @param  string  $provider Authentification type.

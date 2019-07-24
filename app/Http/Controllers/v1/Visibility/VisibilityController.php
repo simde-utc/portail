@@ -39,7 +39,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Lists all visibilities.
+     * List all visibilities.
      *
      * @param  VisibilityRequest $request
      * @return JsonResponse
@@ -54,7 +54,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Creates some visibilities.
+     * Create some visibilities.
      *
      * @param  VisibilityRequest $request
      * @return JsonResponse
@@ -67,7 +67,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Shows a visibility.
+     * Show a visibility.
      *
      * @param  string $visibility_id
      * @return JsonResponse
@@ -84,7 +84,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Updates a visibility.
+     * Update a visibility.
      *
      * @param  VisibilityRequest $request
      * @param  string            $visibility_id
@@ -106,7 +106,7 @@ class VisibilityController extends Controller
     }
 
     /**
-     * Deletes a visibility.
+     * Delete a visibility.
      *
      * @param  VisibilityRequest $request
      * @param  string            $visibility_id
@@ -120,7 +120,7 @@ class VisibilityController extends Controller
             if ($visibility->delete()) {
                 abort(204);
             } else {
-                abort(500, 'Impossible de Deletesr la visibilité');
+                abort(500, 'Impossible de suprimer la visibilité');
             }
         } else {
             abort(404, 'Visibilité non trouvée');

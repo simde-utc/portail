@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller an access to Groups.
+ * Add the controller an access to Groups.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

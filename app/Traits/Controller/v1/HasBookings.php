@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller an access to Bookings.
+ * Add the controller an access to Bookings.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,7 +25,7 @@ trait HasBookings
     }
 
     /**
-     * Checks that the time period is clear.
+     * Check that the time period is clear.
      *
      * @param  string $room_id
      * @param  string $begin_at
@@ -67,7 +67,7 @@ trait HasBookings
     }
 
     /**
-     * Retrieves a booking from a room.
+     * Retrieve a booking from a room.
      *
      * @param  Request $request
      * @param  Room    $room
@@ -97,7 +97,7 @@ trait HasBookings
     }
 
     /**
-     * Returns if the token can see or not.
+     * Return if the token can see or not.
      *
      * @param  Request $request
      * @param  Model   $model

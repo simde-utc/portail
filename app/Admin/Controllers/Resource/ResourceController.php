@@ -1,6 +1,6 @@
 <?php
 /**
- * Generates a management of an admin resource.
+ * Generate a management of an admin resource.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -32,7 +32,7 @@ abstract class ResourceController extends Controller
     protected $model;
 
     /**
-     * Gives access only if the user hs the right permission.
+     * Give access only if the user hs the right permission.
      */
     public function __construct()
     {
@@ -57,7 +57,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */
@@ -67,7 +67,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Returns the model name.
+     * Return the model name.
      *
      * @return string
      */
@@ -95,7 +95,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Shows an instance.
+     * Show an instance.
      *
      * @param mixed   $model_id
      * @param Content $content
@@ -120,7 +120,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Modifies an instance.
+     * Modify an instance.
      *
      * @param mixed   $model_id
      * @param Content $content
@@ -135,7 +135,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Creates a new instance.
+     * Create a new instance.
      *
      * @param Content $content
      * @return Content
@@ -149,7 +149,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Creates base form.
+     * Create base form.
      *
      * @return FormGenerator
      */

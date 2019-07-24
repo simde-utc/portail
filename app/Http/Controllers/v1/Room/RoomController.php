@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages rooms.
+ * Manage rooms.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -55,7 +55,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Lists rooms.
+     * List rooms.
      *
      * @param  Request $request
      * @return JsonResponse
@@ -72,7 +72,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Creates a room.
+     * Create a room.
      *
      * @param  RoomRequest $request
      * @return JsonResponse
@@ -95,7 +95,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Shows a room.
+     * Show a room.
      *
      * @param Request $request
      * @param string  $room_id
@@ -109,7 +109,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Updates a room.
+     * Update a room.
      *
      * @param RoomRequest $request
      * @param string      $room_id
@@ -135,7 +135,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Deletes a room.
+     * Delete a room.
      *
      * @param Request $request
      * @param string  $room_id

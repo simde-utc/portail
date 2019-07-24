@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Rooms as admin.
+ * Manage Rooms as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -53,7 +53,7 @@ class RoomController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

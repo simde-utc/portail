@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages API routes.
+ * Manage API routes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Romain Maliach-Auguste <r.maliach@live.fr>
@@ -25,7 +25,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Lists routes for a specific version.
+     * List routes for a specific version.
      * @param  string $version
      * @return array
      */
@@ -54,7 +54,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Lists portail versions.
+     * List portail versions.
      *
      * @param  Request $request
      * @return mixed
@@ -93,7 +93,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Lists API routes for a specific version.
+     * List API routes for a specific version.
      * @param  Request $request
      * @param  string  $version
      * @return mixed

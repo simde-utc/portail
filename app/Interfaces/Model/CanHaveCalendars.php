@@ -1,6 +1,6 @@
 <?php
 /**
- * Indicates that the model can have calendars.
+ * Indicate that the model can have calendars.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,14 +15,14 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 interface CanHaveCalendars
 {
     /**
-     * Returns the calendars list.
+     * Return the calendars list.
      *
      * @return MorphMany
      */
     public function calendars();
 
     /**
-     * Indicates if a given user can can create/update/delete the model's calendars.
+     * Indicate if a given user can can create/update/delete the model's calendars.
      *
      * @param string $user_id
      * @return boolean

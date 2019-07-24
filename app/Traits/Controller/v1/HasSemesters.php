@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds to the controller an access to Semesters.
+ * Add to the controller an access to Semesters.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use App\Models\Semester;
 trait HasSemesters
 {
     /**
-     * Retrieves the specified user.
+     * Retrieve the specified user.
      *
      * @param  string $semester_id
      * @return Semester

@@ -85,7 +85,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Lists all notifications channels.
+     * List all notifications channels.
      *
      * @param  CanBeNotifiable $notifiable
      * @return array
@@ -104,7 +104,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Returns the notification email representation.
+     * Return the notification email representation.
      *
      * @param  CanBeNotifiable $notifiable
      * @return MailMessage
@@ -147,7 +147,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Returns the notification under thr form of an array.
+     * Return the notification under thr form of an array.
      *
      * @param  mixed $notifiable
      * @return array
@@ -163,7 +163,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
     }
 
     /**
-     * Returns the notification under the form of an array for the database.
+     * Return the notification under the form of an array for the database.
      *
      * @param  mixed $notifiable
      * @return array

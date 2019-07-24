@@ -62,7 +62,7 @@ class Cas extends BaseAuth
 
         $ginger = Ginger::user($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user']);
 
-        // Returns a different error than the 200 error. We use the CAS.
+        // Return a different error than the 200 error. We use the CAS.
         if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
             list($login, $email, $firstname, $lastname, $is_confirmed) = [
                 $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
@@ -119,7 +119,7 @@ class Cas extends BaseAuth
     }
 
     /**
-     * Redirects to the right page in case of success.
+     * Redirect to the right page in case of success.
      *
      * @param Request          $request
      * @param User             $user
@@ -151,7 +151,7 @@ class Cas extends BaseAuth
     }
 
     /**
-     * Creates the auth connection.
+     * Create the auth connection.
      *
      * @param string $user_id
      * @param array  $info
@@ -203,7 +203,7 @@ class Cas extends BaseAuth
             try {
                    $ginger = Ginger::user($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user']);
 
-                // Returns a error diffrent than 200. We use the CAS.
+                // Return a error diffrent than 200. We use the CAS.
                 if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
                     list($login, $email, $firstname, $lastname, $active) = [
                         $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
@@ -275,8 +275,7 @@ class XmlToArrayParser
     }
 
     /**
-     *
-     * Libère la mémoire du parseur.
+     * Free the parser's memory.
      */
     public function __destruct()
     {
@@ -284,7 +283,7 @@ class XmlToArrayParser
     }
 
     /**
-     * Retrieves parsing errors.
+     * Retrieve parsing errors.
      *
      * @return string
      */

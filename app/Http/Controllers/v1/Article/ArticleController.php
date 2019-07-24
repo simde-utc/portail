@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages articles.
+ * Manage articles.
  *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -67,7 +67,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Retrieves the creator or the owner.
+     * Retrieve the creator or the owner.
      *
      * @param  Request $request
      * @param  string  $verb
@@ -122,7 +122,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Lists articles.
+     * List articles.
      *
      * @param Request $request
      * @return JsonResponse
@@ -143,7 +143,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Creates a article.
+     * Create a article.
      *
      * @param ArticleRequest $request
      * @return JsonResponse
@@ -183,7 +183,7 @@ class ArticleController extends Controller
         $inputs['owned_by_type'] = get_class($owner);
 
         if ($request->filled('event_id')) {
-            // Checks if the person has the rights on the event.
+            // Check if the person has the rights on the event.
             $this->getEvent($request, \Auth::user(), $inputs['event_id']);
         }
 
@@ -215,7 +215,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Shows an article.
+     * Show an article.
      *
      * @param Request $request
      * @param string  $article_id
@@ -229,7 +229,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Updates an article.
+     * Update an article.
      *
      * @param Request $request
      * @param string  $article_id
@@ -248,7 +248,7 @@ class ArticleController extends Controller
         }
 
         if ($request->filled('event_id')) {
-            // Checks if the person has the rights on the event.
+            // Check if the person has the rights on the event.
             $this->getEvent($request, \Auth::user(), $inputs['event_id']);
         }
 
@@ -283,7 +283,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Deletes an article.
+     * Delete an article.
      *
      * @param Request $request
      * @param string  $article_id

@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller an access to Creators and owners of the resource.
+ * Add the controller an access to Creators and owners of the resource.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

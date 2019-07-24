@@ -38,7 +38,7 @@ abstract class Generator
     protected const NULL_ICON = '<span class="text-warning">~</span>' ;
 
     /**
-     * Prepares generation.
+     * Prepare generation.
      *
      * @param string $generated
      * @param string $model
@@ -55,7 +55,7 @@ abstract class Generator
     }
 
     /**
-     * Returns generated form.
+     * Return generated form.
      *
      * @return mixed
      */
@@ -65,7 +65,7 @@ abstract class Generator
     }
 
     /**
-     * Converts a PHP array to a Table for admin interface
+     * Convert a PHP array to a Table for admin interface
      *
      * @param  array $data
      * @return mixed
@@ -88,7 +88,7 @@ abstract class Generator
     }
 
     /**
-     * Reduces the amount of information to what is strictly necessary.
+     * Reduce the amount of information to what is strictly necessary.
      *
      * @param  array    $value
      * @param  Relation $relation
@@ -114,7 +114,7 @@ abstract class Generator
     }
 
     /**
-     * Converts models in Table.
+     * Convert models in Table.
      *
      * @param  array    $value
      * @param  Relation $relation
@@ -130,7 +130,7 @@ abstract class Generator
     }
 
     /**
-     * Converts value for the admin.
+     * Convert value for the admin.
      *
      * @param  mixed $value
      * @param  mixed $field
@@ -188,7 +188,7 @@ abstract class Generator
     abstract protected function callCustomMethods($field);
 
     /**
-     * Allows to add several fields.
+     * Allow to add several fields.
      *
      * @param array $fields
      * @return Generator
@@ -209,7 +209,7 @@ abstract class Generator
     }
 
     /**
-     * Generates a new field.
+     * Generate a new field.
      *
      * @param  string $field
      * @return void
@@ -225,7 +225,7 @@ abstract class Generator
     }
 
     /**
-     * Returns all calls on the form.
+     * Return all calls on the form.
      *
      * @param  string $method
      * @param  array  $args

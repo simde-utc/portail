@@ -15,7 +15,7 @@ use Illuminate\Support\ServiceProvider;
 class GingerServiceProvider extends ServiceProvider
 {
     /**
-     * Enregistre le service Ginger.
+     * Save the Ginger service.
      *
      * @return void
      */

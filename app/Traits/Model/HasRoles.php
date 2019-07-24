@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds roles management.
+ * Add roles management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -51,7 +51,7 @@ trait HasRoles
     }
 
     /**
-     * Lists attributed roles.
+     * List attributed roles.
      *
      * @return mixed
      */
@@ -61,7 +61,7 @@ trait HasRoles
     }
 
     /**
-     * Assings one or several attributed roles depending on given data.
+     * Assing one or several attributed roles depending on given data.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
      * @param array                                                $data  Role_id, semester_id, validated_by_id and user_if can be affected in this array.
@@ -118,12 +118,12 @@ trait HasRoles
     }
 
     /**
-     * Modifies one or several attributed roles depending on given data.
+     * Modify one or several attributed roles depending on given data.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
      * @param array                                                $data        Possiblility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
      * @param array                                                $updatedData Possibility to affect new role_id, semester_id, validated_by_id and user_id.
-     * @param boolean                                              $force       Enbles to By-Pass add scurities (to use with caution).
+     * @param boolean                                              $force       Enble to By-Pass add scurities (to use with caution).
      * @return mixed
      */
     public function updateRoles($roles, array $data=[], array $updatedData=[], bool $force=false)
@@ -173,7 +173,7 @@ trait HasRoles
     }
 
     /**
-     * Deletes one or several attributed roles depending on given data.
+     * Delete one or several attributed roles depending on given data.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
      * @param array                                                $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
@@ -226,7 +226,7 @@ trait HasRoles
     }
 
     /**
-     * Synchronizes (deletes all roles and assign new one.s) one or several attributed roles depending on given data.
+     * Synchronize (delete all roles and assign new one.s) one or several attributed roles depending on given data.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
      * @param array                                                $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
@@ -256,7 +256,7 @@ trait HasRoles
     }
 
     /**
-     * Checks if a role in the given list has benn granted or not.
+     * Check if a role in the given list has benn granted or not.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
      * @param array                                                $data  Possibility to use role_id, semester_id, validated_by_id and user_id to match a membre or several members.
@@ -270,7 +270,7 @@ trait HasRoles
     }
 
     /**
-     * Cheks if each role in the list exists or not.
+     * Check if each role in the list exists or not.
      *
      * @param string|array|Illuminate\Database\Eloquent\Collection $roles
      * @param array                                                $data  Possibility to use role_id, semester_id, validated_by_id and user_id to match a membre or several members.
@@ -284,7 +284,7 @@ trait HasRoles
     }
 
     /**
-     * Retrieves a given user's assigned roles.
+     * Retrieve a given user's assigned roles.
      *
      * @param string  $user_id
      * @param string  $semester_id
@@ -323,7 +323,7 @@ trait HasRoles
 
     /**
      *
-     * Retrieves roles of this instance or of assigned users and children.
+     * Retrieve roles of this instance or of assigned users and children.
      *
      * @param string $user_id
      * @param string $semester_id
@@ -363,7 +363,7 @@ trait HasRoles
     }
 
     /**
-     * Overrides of the class method hasPermissions: Retrieve permissions of this instance or of assigned users and children.
+     * Override of the class method hasPermissions: Retrieve permissions of this instance or of assigned users and children.
      *
      * @param string $user_id
      * @param string $semester_id
@@ -376,7 +376,7 @@ trait HasRoles
     }
 
     /**
-     * Indicates if a role is deletable.
+     * Indicate if a role is deletable.
      * By default a role is not deletable if it has already been assigned.
      *
      * @param  Role $role
@@ -388,7 +388,7 @@ trait HasRoles
     }
 
     /**
-     * Indicates if a role is deletable for a given id of this instance.
+     * Indicate if a role is deletable for a given id of this instance.
      *
      * @param  Role   $role
      * @param  string $model_id

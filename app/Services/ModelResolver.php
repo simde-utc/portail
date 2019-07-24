@@ -22,7 +22,7 @@ class ModelResolver
     protected $namespace = 'App\Models';
 
     /**
-     * Defines the models namespace.
+     * Define the models namespace.
      *
      * @param string $namespace
      * @return ModelResolver
@@ -35,7 +35,7 @@ class ModelResolver
     }
 
     /**
-     * Returns the full model name.
+     * Return the full model name.
      *
      * @param  string $name
      * @return string
@@ -46,7 +46,7 @@ class ModelResolver
     }
 
     /**
-     * Finds the model class.
+     * Find the model class.
      *
      * @param  string $name
      * @param  mixed  $instance
@@ -64,7 +64,7 @@ class ModelResolver
     }
 
     /**
-     * Finds a model from its name and id.
+     * Find a model from its name and id.
      *
      * @param  string $name
      * @param  string $model_id
@@ -77,7 +77,7 @@ class ModelResolver
     }
 
     /**
-     * Finds the model class from its category.
+     * Find the model class from its category.
      *
      * @param  string $name
      * @param  mixed  $instance
@@ -95,7 +95,7 @@ class ModelResolver
     }
 
     /**
-     * Finds the model class from its category and id.
+     * Find the model class from its category and id.
      *
      * @param  string $name
      * @param  string $model_id
@@ -108,7 +108,7 @@ class ModelResolver
     }
 
     /**
-     * Returns the model shortname.
+     * Return the model shortname.
      *
      * @param  string $modelName
      * @param  string $delimiter
@@ -120,7 +120,7 @@ class ModelResolver
     }
 
     /**
-     * Returns the class shortname.
+     * Return the class shortname.
      *
      * @param  mixed  $object
      * @param  string $delimiter
@@ -132,7 +132,7 @@ class ModelResolver
     }
 
     /**
-     * Returns the model category.
+     * Return the model category.
      *
      * @param  string $modelName
      * @param  string $delimiter
@@ -152,7 +152,7 @@ class ModelResolver
     }
 
     /**
-     * Returns the class shortname.
+     * Return the class shortname.
      *
      * @param  mixed $object
      * @return string
@@ -163,7 +163,7 @@ class ModelResolver
     }
 
     /**
-     * Converts some text in camelcase.
+     * Convert some text in camelcase.
      *
      * @param  string $name
      * @param  string $delimiter
@@ -175,7 +175,7 @@ class ModelResolver
     }
 
     /**
-     * Converts some text in snakecase.
+     * Convert some text in snakecase.
      *
      * @param  string $name
      * @param  string $delimiter

@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller an access to Articles.
+ * Add the controller an access to Articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,7 +26,7 @@ trait HasArticles
     }
 
     /**
-     * Returns if the token can see the resource.
+     * Return if the token can see the resource.
      *
      * @param  Request $request
      * @param  Model   $model
@@ -64,7 +64,7 @@ trait HasArticles
     }
 
     /**
-     * Retrieves the requested article.
+     * Retrieve the requested article.
      *
      * @param  Request $request
      * @param  User    $user

@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages FAQs.
+ * Manage FAQs.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -48,7 +48,7 @@ class FaqController extends Controller
     }
 
     /**
-     * Lists FAQs.
+     * List FAQs.
      *
      * @param Request $request
      * @param string  $category_id
@@ -65,7 +65,7 @@ class FaqController extends Controller
     }
 
     /**
-     * Adds a FAQ.
+     * Add a FAQ.
      *
      * @param FaqRequest $request
      * @param string     $category_id
@@ -81,7 +81,7 @@ class FaqController extends Controller
     }
 
     /**
-     * Shows a FAQ.
+     * Show a FAQ.
      *
      * @param Request $request
      * @param string  $category_id
@@ -96,7 +96,7 @@ class FaqController extends Controller
     }
 
     /**
-     * Updates a FAQ.
+     * Update a FAQ.
      *
      * @param FaqRequest $request
      * @param string     $category_id
@@ -115,7 +115,7 @@ class FaqController extends Controller
     }
 
     /**
-     * Deletes a FAQ.
+     * Delete a FAQ.
      *
      * @param Request $request
      * @param string  $category_id

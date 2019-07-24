@@ -1,6 +1,6 @@
 <?php
 /**
- * Removes unuseful Laravel Admin's tools.
+ * Remove unuseful Laravel Admin's tools.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

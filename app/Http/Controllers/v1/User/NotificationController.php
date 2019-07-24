@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages user notifications.
+ * Manage user notifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -54,7 +54,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Lists all user notifications.
+     * List all user notifications.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
@@ -82,7 +82,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Creates a notification for the user.
+     * Create a notification for the user.
      *
      * @param UserNotificationRequest $request
      * @param string                  $user_id
@@ -103,7 +103,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Shows a user notification.
+     * Show a user notification.
      *
      * @param Request $request
      * @param string  $user_id
@@ -122,7 +122,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Updates a user notification.
+     * Update a user notification.
      *
      * @param UserNotificationRequest $request
      * @param string                  $user_id
@@ -147,7 +147,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Deletes a user notification.
+     * Delete a user notification.
      *
      * @param Request $request
      * @param string  $user_id

@@ -169,7 +169,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Generates on the fly the "description" attribute.
+     * Generate on the fly the "description" attribute.
      *
      * @return string	Rescription field or a shortcut of the content.
      */
@@ -235,7 +235,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Returns if the current user can see this article comments.
+     * Return if the current user can see this article comments.
      *
      * @param  string $user_id
      * @return boolean
@@ -246,7 +246,7 @@ class Article extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Returns si un modèle peut modifier les commentaires de l'article.
+     * Return si un modèle peut modifier les commentaires de l'article.
      * A comment is only writable by the article owner instance or a user.
      *
      * @param  CanComment $model

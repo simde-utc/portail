@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages a user connection.
+ * Manage a user connection.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -23,7 +23,7 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Lists connection means.
+     * List connection means.
      *
      * @return JsonResponse
      */
@@ -49,7 +49,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Disconnects the user from the portal and redirects to the logout route of its connection method.
+     * Disconnect the user from the portal and redirects to the logout route of its connection method.
      *
      * @param Request $request
      * @return JsonResponse

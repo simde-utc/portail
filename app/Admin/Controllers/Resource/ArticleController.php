@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Articles as admin.
+ * Manage Articles as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -58,7 +58,7 @@ class ArticleController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds a selector concerning deletion.
+ * Add a selector concerning deletion.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

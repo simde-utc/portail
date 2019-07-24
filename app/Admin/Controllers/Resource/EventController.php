@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Events as admin.
+ * Manage Events as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -55,7 +55,7 @@ class EventController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

@@ -75,7 +75,7 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Indicates if the comment is accessible.
+     * Indicate if the comment is accessible.
      * Only the person who owns the calendar is allowed to see it.
      *
      * @param  string $user_id
@@ -87,7 +87,7 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
     }
 
     /**
-     * Indicates if le commentaire is manageable.
+     * Indicate if le commentaire is manageable.
      * Only the person who owns the calendar is allowed to modify it.
      *
      * @param  CanComment $model

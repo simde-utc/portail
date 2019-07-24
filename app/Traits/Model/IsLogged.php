@@ -1,6 +1,6 @@
 <?php
 /**
- * Indicates that the model is watched.
+ * Indicate that the model is watched.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

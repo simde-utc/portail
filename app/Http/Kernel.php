@@ -1,6 +1,6 @@
 <?php
 /**
- * Interconnects every middlewares and controllers
+ * Interconnect every middlewares and controllers
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Natan Danous <natan.danous@gmail.com>

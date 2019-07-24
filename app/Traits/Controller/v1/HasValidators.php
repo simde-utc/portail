@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds to the controller validator management.
+ * Add to the controller validator management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ trait HasValidators
     use HasMorphs;
 
     /**
-     * Retrieves the validator.
+     * Retrieve the validator.
      *
      * @param  Request $request
      * @param  string  $modelName

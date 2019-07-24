@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur une gestion des bulks avec des utilisateurs.
+ * Add the controller a user bulk management. 
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -27,7 +27,8 @@ trait HasUserBulkMethods
     protected $allowedUsers = [];
 
     /**
-     * Gère les différents appels pour chaque élément bulk. Restreint par rapport aux utilisateurs.
+     * Handle different call foreach bulk element. User constrainted.
+     * Gère les différents appels pour chaque élément bulk. Retricted in relation with users.
      *
      * @param  Request $request
      * @param  string  $method
@@ -51,7 +52,7 @@ trait HasUserBulkMethods
     }
 
     /**
-     * Retourne la réponse pour un élément du bulk avec les informations d'un utilisateur précis.
+     * Return the response for an element of the bulk with information about a given user.
      *
      * @param  Request $request
      * @param  string  $method
@@ -80,7 +81,7 @@ trait HasUserBulkMethods
     }
 
     /**
-     * Execute la méthode pour un élément de bulk en passant les bons middlewares avant.
+     * Execute the method for an element of the bulk by passing the rights middlewares.
      *
      * @param  Request $request
      * @param  string  $method
@@ -110,7 +111,7 @@ trait HasUserBulkMethods
     }
 
     /**
-     * Résolution des middlewares pour une méthode précise.
+     * Resolve middlewares for a given method.
      *
      * @param  string $method
      * @return array

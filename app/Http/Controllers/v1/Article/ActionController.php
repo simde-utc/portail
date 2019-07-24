@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages les actions des articles.
+ * Manage les actions des articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -65,7 +65,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Lists the article's actions.
+     * List the article's actions.
      *
      * @param Request $request
      * @param string  $article_id
@@ -92,7 +92,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Shows an article action.
+     * Show an article action.
      *
      * @param Request $request
      * @param string  $article_id

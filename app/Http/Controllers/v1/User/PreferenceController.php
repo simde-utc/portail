@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages the user preferences.
+ * Manage the user preferences.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -56,7 +56,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Retrieves the user preferences list.
+     * Retrieve the user preferences list.
      *
      * @param Request $request
      * @param User    $user
@@ -95,7 +95,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Lists the user preferences.
+     * List the user preferences.
      *
      * @param Request $request
      * @param string  $user_id
@@ -123,7 +123,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Creates a user preferences.
+     * Create a user preferences.
      *
      * @param UserPreferenceRequest $request
      * @param string                $user_id
@@ -167,7 +167,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Shows a user preference.
+     * Show a user preference.
      *
      * @param Request $request
      * @param string  $user_id
@@ -191,7 +191,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Updates a user preference.
+     * Update a user preference.
      *
      * @param UserPreferenceRequest $request
      * @param string                $user_id
@@ -223,7 +223,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Deletes a user preference.
+     * Delete a user preference.
      *
      * @param Request $request
      * @param string  $user_id

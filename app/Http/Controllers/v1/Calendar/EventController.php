@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages calendar's events.
+ * Manage calendar's events.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -48,7 +48,7 @@ class EventController extends Controller
     }
 
     /**
-     * Lists some calendar's events.
+     * List some calendar's events.
      *
      * @param Request	$request
      * @param string 	$calendar_id
@@ -71,7 +71,7 @@ class EventController extends Controller
     }
 
     /**
-     * Adds an event to the calendar.
+     * Add an event to the calendar.
      *
      * @param CalendarEventRequest	$request
      * @param string               $calendar_id
@@ -100,7 +100,7 @@ class EventController extends Controller
     }
 
     /**
-     * Shows a calendar event.
+     * Show a calendar event.
      *
      * @param Request	$request
      * @param string 	$calendar_id
@@ -129,7 +129,7 @@ class EventController extends Controller
     }
 
     /**
-     * Deletes a calendar event.
+     * Delete a calendar event.
      *
      * @param Request	$request
      * @param string 	$calendar_id
@@ -144,7 +144,7 @@ class EventController extends Controller
         $calendar_ids = $event->owner->calendars()->get(['calendars.id'])->pluck('id');
         $event_calendar_ids = $event->calendars()->get(['calendars.id'])->pluck('id');
 
-        // Checks that the event owner, owns the event in at least 2 of its calendars.
+        // Check that the event owner, owns the event in at least 2 of its calendars.
         if (count($calendar_ids->intersect($event_calendar_ids)) === 1 && $calendar_ids->contains($calendar_id)) {
             abort(400, 'L\'événement doit au moins appartenir à un calendrier du propriétaire de l\'événement');
         }

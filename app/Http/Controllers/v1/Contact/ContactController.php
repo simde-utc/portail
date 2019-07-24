@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages a resource contact.
+ * Manage a resource contact.
  *
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -62,7 +62,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Lists some contacts of a resource.
+     * List some contacts of a resource.
      *
      * @param ContactRequest $request
      * @return JsonResponse
@@ -81,7 +81,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Creates a contact for a resource.
+     * Create a contact for a resource.
      *
      * @param ContactRequest $request
      * @return JsonResponse
@@ -97,7 +97,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Shows a resource contact.
+     * Show a resource contact.
      *
      * @param ContactRequest $request
      * @return JsonResponse
@@ -110,7 +110,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Updates a resource contact.
+     * Update a resource contact.
      *
      * @param ContactRequest $request
      * @return JsonResponse
@@ -127,7 +127,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Deletes a contact for a resource.
+     * Delete a contact for a resource.
      *
      * @param ContactRequest $request
      * @return void
@@ -139,7 +139,7 @@ class ContactController extends Controller
         if ($contact->delete()) {
             abort(204);
         } else {
-            abort(500, "Impossible de Deletesr le contact");
+            abort(500, "Impossible de suprimer le contact");
         }
     }
 }
