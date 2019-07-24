@@ -57,9 +57,9 @@ class ExternalNotification extends Notification
      * Parse all values to define the values.
      *
      * @param  string $string
-     * @return string
+     * @return string|null
      */
-    protected function parseString(string $string=null): string
+    protected function parseString(string $string=null): ?string
     {
         foreach ($this->data as $key => $value) {
             $string = \str_replace('${'.$key.'}', $value, $string);
