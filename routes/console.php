@@ -1,6 +1,6 @@
 <?php
 /**
- * Prepares the console.
+ * Prepare the console.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

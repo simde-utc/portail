@@ -10,7 +10,7 @@
 
 
 /**
- * Admin authentification routes.
+ * Admin authentication routes.
  */
 
 Route::get('auth/login', 'AuthController@getLogin');

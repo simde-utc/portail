@@ -165,7 +165,7 @@ class CalendarsTableSeeder extends Seeder
                 'description'	=> 'Calendrier des réunions du SiMDE',
                 'color'			=> '#FF0000',
                 'visibility'	=> 'private',
-            // Only visible by members.
+                // Only visible by members.
                 'created_by'	=> Asso::where('login', 'simde')->first(),
                 'owner'			=> Asso::where('login', 'simde')->first(),
                 'events'		=> [

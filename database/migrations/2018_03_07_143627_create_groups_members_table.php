@@ -40,13 +40,13 @@ class CreateGroupsMembersTable extends Migration
             $table->uuid('user_id');
             $table->uuid('permission_id')->nullable();
             $table->uuid('semester_id');
-            // We allow here the semester to be equal to 0 (Between two semesters for example).
+            // We allow here the semester to be null (Between two semesters for example).
             $table->uuid('validated_by')->nullable();
 
             $table->timestamps();
 
             $table->primary(['group_id', 'user_id', 'permission_id', 'semester_id'], 'group_permissions_user_semester');
-            // Unique pour permettre semester_id d'être nulle
+            // Unique to allow semester_id to be null.
         });
 
         // Laravel does it in the order so the primary key set crashes.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract test
+ * Abstract test.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

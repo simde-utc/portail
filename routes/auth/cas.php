@@ -1,6 +1,6 @@
 <?php
 /**
- * Cas Auth management routes.
+ * Cas auth management routes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

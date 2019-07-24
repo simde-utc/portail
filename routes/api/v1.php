@@ -1,7 +1,7 @@
 <?php
 /**
  * Defines first version API routes.
- * /!\ All Routes are prefixed with 'api/v1'.
+ * /!\ All Routes are prefixed by 'api/v1'.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -19,7 +19,7 @@ Route::get('logout', 'Client\LoginController@destroy')->middleware(Scopes::match
 
 
 /*
- * User related informations.
+ * User related information.
  */
 
 Route::get('user', 'User\UserController@show')->middleware(Scopes::matchAnyUser())->name('api/user');
@@ -117,7 +117,7 @@ Route::group([], function () {
         'users/{user_id}/services' => 'User\ServiceController',
 
     /*
-     * Routes `user`identical to `users/{Auth::id()}`.
+     * Routes `user` identical to `users/{Auth::id()}`.
      */
 
         'user/auths' => 'User\AuthController',

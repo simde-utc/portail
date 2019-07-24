@@ -19,7 +19,7 @@ class CreateRoomsBookingsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('room_id');
             $table->uuid('type_id')->nullable();
-            // No type if we stop the booking trough the admin interface for example
+            // No type if we stop the booking through the admin interface for example
             $table->uuid('event_id');
             $table->string('description')->nullable();
             $table->uuid('created_by_id')->nullable();
