@@ -92,14 +92,14 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
             $model->contacts()->create([
                 'name' => 'Adresse email',
                 'value' => $model->login.'@assos.utc.fr',
-                'type_id' => ContactType::where('name', 'Adresse email')->first()->id,
+                'type_id' => ContactType::where('type', 'email')->first()->id,
                 'visibility_id' => Visibility::findByType('public')->id,
             ]);
 
             $model->contacts()->create([
                 'name' => 'Site Web',
                 'value' => 'https://assos.utc.fr/'.$model->login.'/',
-                'type_id' => ContactType::where('name', 'Url')->first()->id,
+                'type_id' => ContactType::where('type', 'url')->first()->id,
                 'visibility_id' => Visibility::findByType('public')->id,
             ]);
 
@@ -130,6 +130,16 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
         }
 
         throw new PortailException('Association non existante');
+    }
+
+    /**
+     * Return the email value.
+     *
+     * @return string
+     */
+    public function getEmailAttribute(): string
+    {
+        return $this->login.'@assos.utc.fr';
     }
 
     /**

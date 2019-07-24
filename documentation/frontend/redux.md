@@ -1,61 +1,61 @@
 # Redux
 
-Redux est utilisé pour gérer des données dans un unique store.
-Toute l'implémentation de Redux est faite dans le dossier `redux/`.
+Redux is used in order to manage data in a unique store.
+All Redux's implementation is done in the `redux/` folder.
 
-Pour plus d'informations sur Redux, [regardez cette playlist](https://www.youtube.com/watch?v=1w-oQ-i1XB8&index=15&list=PLoYCgNOIyGABj2GQSlDRjgvXtqfDxKm5b).
-
-
-
-## Les 3 parties de Redux
-
-### Les types d'actions
-
-Tout d'abord, il faut définir des **types d'actions**. Ce sont des chaînes de charactères constantes permettant d'identifier actions à effectuer dans les différents reducers. Il est conseillé de les définir dans le fichier `types.js`. Pour définir des set d'actions CRUD plus facilement, utilisez [`createCrudTypes`](#créateur-de-types-dactions).
-
-### Les actions
-
-Les actions sont des objets qui sont dispatchés aux reducers. Elles contienent généralement un `type` et un `payload`. Elles sont définies dans le fichiers `actions.js`.
-
-
-### Les reducers
-
-Les reducers sont des fonctions de prototype : `function(prevState, action)`.
-
-A partir de l'état actuel du store `prevState` et de l'action dispatchée `action`, ils retournent un nouvel état (potentiellement `prevState` si le reducer ne doit pas faire de modifications).
-
-Il ne faut pas modifier `prevState` directement mais faire une copie. Ils sont définis dans le fichier `reducers.js`.
+For more information on Redux, [have a look at this playlist](https://www.youtube.com/watch?v=1w-oQ-i1XB8&index=15&list=PLoYCgNOIyGABj2GQSlDRjgvXtqfDxKm5b).
 
 
 
+## The 3 parts of Redux
 
-## Créateurs CRUD
+### Action types
 
-Comme l'API du portail suit principalement le design CRUD (Create Read Update Delete), la plupart des actions Redux suivent aussi. C'est pourquoi nous avons créé des créateurs de types d'action, d'actions et de reducers CRUD. Ces fonctions se trouvent dans `react/utils.js`.
+First, we have to define **action types**. They are constant strings which unable to identify actions to perform in the different reducers. It is recommended to define them in the `types.js` file. In order to define CRUD actions sets more easily, use [`createCrudTypes`](#Action-types-creaters).
 
-Les noms de ressources sont par convention mis au singulier.
+### Actions
 
-### Créateur de types d'actions
-
-`createCrudTypes(name)` permet de créer un set de types suivant le schéma suivant à partir d'un nom de resources `name` : 
-
-Ce set de types est alors utilisé par les fonctions suivantes.
+Actions are objects that are scattered in the reducers. They generally content in a `type` and in a `payload`. They are defined in the `actions.js` file.
 
 
-### Créateur d'actions
+### Reducers
 
-`createCrudActionSet(actionTypes, uri, overrides = {})` permet de créer un set d'actions CRUD à partir des paramètres suivants :
-- `actionTypes` : un set d'actions généré à partir de la fonction `createCrudTypes`
-- `uri` : le morceau d'url permettant d'accès au point de l'api concernant la ressource à partir de l'url de base. Par exemple `assos` permet d'accèder à `https://assos.utc.fr/api/v1/assos`
-- `overrides` : un objet permettant de remplacer et d'ajouter des actions au set d'actions
+Reducers are functions with the following prototype: `function(prevState, action)`.
+
+From the current status of the store `prevState` and of the dispatched action `action`, they return a new state (possibly `prevState` if the reducer doesn't have to do any modifications).
+
+Do not directly modify `prevState`, make a copy of it. They are defined in the `reducers.js` file.
 
 
-### Créateur de reducer
 
-`createCrudReducer(actionTypes, initialState = initialCrudState, overrides = {})` permet de créer un reducer CRUD à partir des paramètres suivants :
-- `actionTypes` : un set d'actions généré à partir de la fonction `createCrudTypes`
-- `initialState` le state initial, par défaut `initialCrudState`, pouvant être remplacé par une extension de celui-ci
-- `overrides` : un objet permettant de remplacer et d'ajouter des gestions d'actions au reducer
+
+## CRUD creaters
+
+As the portal's api mainly follows CRUD (Create Read Update Delete) design, most part of the Redux actions also follows it. That is why we have created creaters of action types, of actions and of CRUD reducers. These functions are in `react/utils.js`.
+
+Ressources names are put in the singular by convention.
+
+### Action types creators
+
+`createCrudTypes(name)` creates a set of types that follows the following scheme from a resources name `name` : 
+
+This set of types is used by the following functions.
+
+
+### Creater of actions
+
+`createCrudActionSet(actionTypes, uri, overrides = {})` creates a set of CRUD actions from these parameters :
+- `actionTypes` : a set of actions generated from the `createCrudTypes` function.
+- `uri` : the url piece located after the domain name. It enables to access the right resource in the API. For example `assos` unables to access to `https://assos.utc.fr/api/v1/assos`
+- `overrides` : an object unabling to replace and to add actions to the action set.
+
+
+### Creator of reducer
+
+`createCrudReducer(actionTypes, initialState = initialCrudState, overrides = {})` creates a CRUD reducer from the following parameters :
+- `actionTypes` : an actions set generated from the `createCrudTypes` function
+- `initialState` the initial state by default `initialCrudState`, can be replaced by extension of this one
+- `overrides` : an object that enable to replace and to add actions gestions to the reducer.
 
 ```js
 export const initialCrudState = {
@@ -71,14 +71,14 @@ export const initialCrudState = {
 
 
 
-## Exemple d'utilisation des helpers CRUD
+## CRUD helpers use example 
 
-**Types** dans `redux/types.js`
+**Types** in `redux/types.js`
 
 ```js
 const articleTypes = createCrudTypes("ARTICLE")
 ```
-qui correspond à :
+which correspond to :
 ```json
 {
 	getAll: 'GET_ALL_ARTICLE',
@@ -91,15 +91,15 @@ qui correspond à :
 
 
 
-**Reducers** dans `redux/reducers.js`
+**Reducers** in `redux/reducers.js`
 
 ```js
-// État initial
+// Initial state
 const customInitialState = {
 	...initialCrudState,
 	firstCall: true
 }
-// Surcharge du reducer CRUD
+// Overload of the CRUD reducer
 const overrides = {
 	CUSTOM_TYPE: function(state, action) {
 		return { ...state, firstCall: false }
@@ -108,11 +108,11 @@ const overrides = {
 
 const articleReducer = createCrudReducer(articleTypes, customInitialState, overrides)
 ```
-qui correspond (de manière simplifiée et schématique) à :
+which corresponds to (in a simplified way):
 ```js
 function(state = customInitialState, action) {
 	switch (action.type) {
-		// Surcharge via overrides
+		// Overload via overrides
 		'CUSTOM_TYPE':
 			return overrides['CUSTOM_TYPE'](state, action)
 			// return { ...state, firstCall: false }
@@ -127,11 +127,11 @@ function(state = customInitialState, action) {
 			if (action.meta.affectsAll) {
 				return { ...state, data: action.payload.data }
 			} else {
-				// Modifie, ajoute ou supprime l'élément désiré
-				// et renvoie la modification de l'état copié
+				// Modifies, adds or deletes the element
+				// and returns the modification of the copied state
 			}
-		// Si l'action n'est pas prise en charge par le reducer,
-		// retourne l'état actuel sans modifications
+		// If the action is not taken in charge by the reducer,
+		// comes back to the actual state without modifications
 		default:
 			return state
 	}
@@ -140,7 +140,7 @@ function(state = customInitialState, action) {
 
 
 
-**Actions** dans `redux/actions.js`
+**Actions** in `redux/actions.js`
 
 ```js
 const overrides = {
@@ -149,7 +149,7 @@ const overrides = {
 }
 const userActions = createCrudActionSet(articleTypes, 'articles', overrides)
 ```
-qui correspond à :
+which coresponds to :
 ```js
 {
 	getAll: (queryParams = '') => ({
@@ -162,17 +162,17 @@ qui correspond à :
 		meta: { affectsAll: false, arrayAction: 'update', timestamp: Date.now() },
 		payload: axios.get(`/api/v1/articles/${id}${queryParams}`)
 	}),
-	// Remplacé
+	// Replaced
 	create: (data) => ({ type: 'CUSTOM_TYPE', payload: null }),
 	update: (id, data) => ({ ... }),
 	delete: (id) => ({ ... }),
-	// Surcharges
+	// Overload
 	newAction: (id, data, whatever) => ({ ... })
 }
 ```
 
 
-Utilisation dans un composant:
+Use in a component:
 ```js
 this.props.dispatch(articleAction.create({ title: 'Article de test', description: '...', accent: "#ffffff" }))
 ```

@@ -1,9 +1,10 @@
-# Groupes de l'utilisateur
+# User's groups
 
-- [GET](#get)
-    - [Index](#index)
-    - [Show](#show)
-- [POST](#post)
+- [User's groups](#Users-groups)
+  - [GET](#GET)
+    - [Index](#Index)
+    - [Show](#Show)
+  - [POST](#POST)
 
 ## GET
 
@@ -74,7 +75,7 @@
 
 ## POST
 
-**Exemple de requête complète :**
+**Example of a full request :**
 
 ```json
 [
@@ -88,7 +89,7 @@
 ]
 ```
 
-**Exemple de requête partielle :**
+**Example of an incomplete request :**
 
 ```json
 [

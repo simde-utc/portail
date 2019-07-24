@@ -19,9 +19,12 @@ use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
 use App\Exceptions\PortailException;
 use Illuminate\Support\Collection;
+use App\Traits\Controller\v1\HasBulkMethods;
 
 class Controller extends BaseController
 {
+    use HasBulkMethods;
+
     /**
      * Permet de savoir quoi afficher.
      * TODO: A déprécier pour la v1 officielle.
