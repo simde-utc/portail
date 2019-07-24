@@ -1,7 +1,7 @@
 <?php
 /**
- * Handles old portal's routes.
- * 
+ * Handle old portal's routes.
+ *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
