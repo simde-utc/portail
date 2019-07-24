@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware permettant de détecter le token CSRF.
+ * CSRF token detection middleware.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

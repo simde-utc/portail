@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware permettant de détecter si l'utilsateur connecté possède un role.
+ * Middleware to detect if the connected user has a role. 
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class UserHasRole
 {
     /**
-     * Si l'utilisateur connecté n'a aucun des roles requiss, il est interdit d'accès.
+     * If the connected user does not have any of the required, access is refused.
      *
      * @param  Request $request
      * @param  Closure $next

@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware permettant de détecter si l'utilsateur connecté est d'un certain type.
+ * Middleware to detect if the connected user is of a given type.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class UserIs
 {
     /**
-     * Si l'utilisateur connecté n'est pas d'un des types requis, il est interdit d'accès.
+     * If the connected user is not of the required types, the access is refused.
      *
      * @param  Request $request
      * @param  Closure $next

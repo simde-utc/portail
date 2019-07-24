@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware vérifiant si la requête vient d'un client oauth user ou est en ajax.
+ * Middleware to check if the request comes from a user OAuth client or is in AJAX.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class CheckPublicUser
 {
     /**
-     * Vérifie si c'est un client oauth user ou si la requête est en ajax.
+     * Check if it's a user OAuth client or if the request is in AJAX.
      *
      * @param  Request $request
      * @param  Closure $next

@@ -1,6 +1,6 @@
 <?php
 /**
- * Permet de chiffrer les cookies côté client.
+ * Allow to crypt cookies on the client side.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
