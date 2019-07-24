@@ -17,7 +17,7 @@ class Request extends FormRequest
 {
     /**
      * Add request to validation.
-     * 
+     *
      */
     public function __construct()
     {
@@ -27,7 +27,7 @@ class Request extends FormRequest
     }
 
     /**
-     * 
+     *
      * Determine if the user has the right to make this request.
      * Everything is done in the controllers.
      *

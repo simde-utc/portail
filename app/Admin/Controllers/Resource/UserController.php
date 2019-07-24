@@ -157,7 +157,7 @@ class UserController extends Controller
 
     /**
      * Generate the left side of the display a user.
-     * 
+     *
      * @param  Column $column
      * @param  User   $user
      * @param  mixed  $image

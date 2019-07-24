@@ -45,6 +45,22 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     ];
 
     /**
+     * Return the email value.
+     *
+     * @return string
+     */
+    public function getEmailAttribute(): string
+    {
+        $asso = $this->asso;
+
+        if ($asso->login === env('APP_ASSO', 'simde')) {
+            return \strtolower($this->name).'@'.\explode('@', $asso->email)[1];
+        }
+
+        return $asso->email;
+    }
+
+    /**
      * Relation with the user.
      *
      * @return mixed

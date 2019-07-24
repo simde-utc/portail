@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware to check if the request comes from a user OAuth client. 
+ * Middleware to check if the request comes from a user OAuth client.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

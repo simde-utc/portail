@@ -1,6 +1,6 @@
 <?php
 /**
- * Add the controller a user bulk management. 
+ * Add the controller a user bulk management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware to detect if the connected user has a role. 
+ * Middleware to detect if the connected user has a role.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

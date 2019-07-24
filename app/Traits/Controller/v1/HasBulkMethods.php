@@ -329,7 +329,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Validate or not requests for each element of the bulk. 
+     * Validate or not requests for each element of the bulk.
      *
      * @param  Request $request
      * @return void
