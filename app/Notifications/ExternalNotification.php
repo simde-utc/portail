@@ -43,7 +43,7 @@ class ExternalNotification extends Notification
     {
         parent::__construct('external_'.\ModelResolver::getNameFromObject($model), null, $model);
 
-        $this->subject = ($subject ?? $model->getName());
+        $this->subject = ($subject ?? \ucfirst($model->getName()));
         $this->content = $content;
         $this->html = $html;
         $this->action = $action;
