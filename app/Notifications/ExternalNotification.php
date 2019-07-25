@@ -74,7 +74,7 @@ class ExternalNotification extends Notification
      */
     public function getSenderData(): array
     {
-        return [$this->creator->email, $this->creator->name];
+        return [$this->creator->email, \ucfirst($this->creator->name)];
     }
 
     /**
