@@ -1,6 +1,6 @@
 <?php
 /**
- * Notifies the user when an Impersonation occures.
+ * Notify the user when an Impersonation occures.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

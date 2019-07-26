@@ -1,6 +1,6 @@
 <?php
 /**
- * Permet de gérer les anciennes routes du Portail.
+ * Handle old portal's routes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -47,8 +47,8 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection /article.
-     * Redirection /article/show/{wathever}.
+     * /article redirection.
+     * /article/show/{wathever} redirection.
      *
      * @return mixed
      */
@@ -58,9 +58,9 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection /event.
-     * Redirection /event/calendar.
-     * Redirection /event/show/{wathever}.
+     * /event redirection.
+     * /event/calendar redirection.
+     * /event/show/{wathever} redirection.
      *
      * @return mixed
      */

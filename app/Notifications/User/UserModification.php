@@ -19,7 +19,7 @@ class UserModification extends Notification
     protected $modifications;
 
     /**
-     * Declares the notification type and indicates modifications.
+     * Declare the notification type and indicates modifications.
      *
      * @param array $modifications
      */

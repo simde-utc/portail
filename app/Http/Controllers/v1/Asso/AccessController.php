@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages association accesses.
+ * Manage association accesses.
  *
  * TODO: Export into a Trait
  * TODO: Missing Scopes !
@@ -97,7 +97,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Lists some accesses.
+     * List some accesses.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -125,7 +125,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Creates an access demand.
+     * Create an access demand.
      *
      * @param AccessRequest $request
      * @param string        $asso_id
@@ -170,7 +170,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Shows an access demand.
+     * Show an access demand.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -189,7 +189,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Updates an access demand.
+     * Update an access demand.
      *
      * @param AccessRequest $request
      * @param string        $asso_id
@@ -240,7 +240,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Deletes an access demand.
+     * Delete an access demand.
      *
      * @param Request $request
      * @param string  $asso_id

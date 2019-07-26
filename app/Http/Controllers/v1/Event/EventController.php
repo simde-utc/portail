@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages events.
+ * Manage events.
  *
  * @author Josselin Pennors <josselin.pennors@hotmail.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -54,7 +54,7 @@ class EventController extends Controller
     }
 
     /**
-     * Lists events.
+     * List events.
      *
      * @param Request $request
      * @return JsonResponse
@@ -75,7 +75,7 @@ class EventController extends Controller
     }
 
     /**
-     * Creates an event.
+     * Create an event.
      *
      * @param EventRequest $request
      * @return JsonResponse
@@ -108,7 +108,7 @@ class EventController extends Controller
     }
 
     /**
-     * Shows an event.
+     * Show an event.
      *
      * @param Request $request
      * @param string  $event_id
@@ -122,7 +122,7 @@ class EventController extends Controller
     }
 
     /**
-     * Updates an event.
+     * Update an event.
      *
      * @param EventRequest $request
      * @param string       $event_id
@@ -149,7 +149,7 @@ class EventController extends Controller
     }
 
     /**
-     * Deletes an event.
+     * Delete an event.
      *
      * @param Request $request
      * @param string  $event_id

@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages locations.
+ * Manage locations.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -45,7 +45,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Lists locations.
+     * List locations.
      *
      * @return JsonResponse
      */
@@ -59,7 +59,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Creates a location.
+     * Create a location.
      *
      * @param LocationRequest $request
      * @return JsonResponse
@@ -76,7 +76,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Shows a location.
+     * Show a location.
      *
      * @param  string $location_id
      * @return JsonResponse
@@ -93,7 +93,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Updates a location.
+     * Update a location.
      *
      * @param  LocationRequest $request
      * @param  string          $location_id
@@ -117,7 +117,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Deletes a location.
+     * Delete a location.
      *
      * @param  string $location_id
      * @return void

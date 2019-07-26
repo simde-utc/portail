@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages connexions via form.
+ * Manage connexions via form.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -48,7 +48,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Shows the login method choice view.
+     * Show the login method choice view.
      *
      * @param  Request $request
      * @return mixed
@@ -85,7 +85,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Fetches the authentication class $provider_class in the Laravel service container de Laravel, and shows login.
+     * Fetche the authentication class $provider_class in the Laravel service container de Laravel, and shows login.
      *
      * @param  Request $request
      * @param  string  $provider Authentification type.

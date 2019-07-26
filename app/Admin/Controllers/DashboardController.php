@@ -19,7 +19,7 @@ use Encore\Admin\Layout\Row;
 class DashboardController extends Controller
 {
     /**
-     * Gives access only if the user has the right permission.
+     * Give access only if the user has the right permission.
      */
     public function __construct()
     {
@@ -27,7 +27,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Affichage du dashboard.
+     * Dashboard's display.
      *
      * @param  Content $content
      * @return mixed

@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages BookingTypes as admin.
+ * Manage BookingTypes as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

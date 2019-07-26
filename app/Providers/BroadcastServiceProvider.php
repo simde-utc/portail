@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Broadcast;
 class BroadcastServiceProvider extends ServiceProvider
 {
     /**
-     * Prepares all application services.
+     * Prepare all application services.
      *
      * @return void
      */

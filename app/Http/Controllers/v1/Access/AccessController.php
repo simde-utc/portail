@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages accesses.
+ * Manage accesses.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,7 +28,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Lists accesses.
+     * List accesses.
      *
      * @param Request $request
      * @return JsonResponse
@@ -53,7 +53,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Shows an access.
+     * Show an access.
      *
      * @param  string $access_id
      * @return JsonResponse
@@ -84,6 +84,6 @@ class AccessController extends Controller
      */
     public function destroy(string $access_id): void
     {
-        abort(405, 'Il n\'est pas possible de Deletesr un access');
+        abort(405, 'Il n\'est pas possible de suprimer un accès');
     }
 }

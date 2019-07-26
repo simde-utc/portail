@@ -132,7 +132,7 @@ class Install extends Command
     }
 
     /**
-     * Allows changes within .env file.
+     * Allow changes within .env file.
      *
      * @param ProgressBar $bar
      * @param ProgressBar $subBar

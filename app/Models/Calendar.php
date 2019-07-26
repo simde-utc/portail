@@ -190,7 +190,7 @@ class Calendar extends Model implements OwnableContract
     }
 
     /**
-     * Indicates if the calendar is manageable.
+     * Indicate if the calendar is manageable.
      * Only the person who owns the calendar can modify it.
      *
      * @param  string $user_id

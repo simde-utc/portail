@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages associations.
+ * Manage associations.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -62,7 +62,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Lists associations.
+     * List associations.
      *
      * @param Request $request
      * @return JsonResponse
@@ -77,7 +77,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Adds an association.
+     * Add an association.
      *
      * @param AssoRequest $request
      * @return JsonResponse
@@ -101,7 +101,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Shows an association.
+     * Show an association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -115,7 +115,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Updates an association.
+     * Update an association.
      *
      * @param AssoRequest $request
      * @param string      $asso_id
@@ -158,7 +158,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Deletes an association.
+     * Delete an association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -169,11 +169,11 @@ class AssoController extends Controller
         $asso = $this->getAsso($request, $asso_id);
 
         if ($asso->children()->exists()) {
-            abort(400, 'Il n\'est pas possible de Deletesr an association parente');
+            abort(400, 'Il n\'est pas possible de suprimer an association parente');
         }
 
         $asso->delete();
-        // An assos is not really deleted: $this->deleteImage('assos/'.$asso->id);.
+        // An asso is not really deleted: $this->deleteImage('assos/'.$asso->id);.
         abort(204);
     }
 }

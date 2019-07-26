@@ -16,7 +16,7 @@ use Illuminate\Support\ServiceProvider;
 class ValidationServiceProvider extends ServiceProvider
 {
     /**
-     * Saves the validation services.
+     * Save the validation services.
      *
      * @return void
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Allows to search for a user on Ginger.
+ * Allow to search for a user on Ginger.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -29,7 +29,7 @@ class SearchContributorController extends Controller
     use HasUsers;
 
     /**
-     * Gives access only if the user has the right permission.
+     * Give access only if the user has the right permission.
      */
     public function __construct()
     {
@@ -37,7 +37,7 @@ class SearchContributorController extends Controller
     }
 
     /**
-     * Returns search form.
+     * Return search form.
      *
      * @param Content $content
      * @return Content
@@ -51,7 +51,7 @@ class SearchContributorController extends Controller
     }
 
     /**
-     * Returns user display.
+     * Return user display.
      *
      * @param  Request $request
      * @param  Content $content
@@ -94,7 +94,7 @@ class SearchContributorController extends Controller
     }
 
     /**
-     * Displays the image of the requested Ginger user.
+     * Display the image of the requested Ginger user.
      *
      * @param  Column $column
      * @param  mixed  $user
@@ -151,7 +151,7 @@ class SearchContributorController extends Controller
     }
 
     /**
-     * Displays BDE-UTC contributions of the requested user.
+     * Display BDE-UTC contributions of the requested user.
      *
      * @param  Column $column
      * @param  mixed  $user

@@ -1,7 +1,7 @@
 <?php
 /**
  * File generating the command: portail:csv-to-faq.
- * Adds CSV's categories and questions to FAQ.
+ * Add CSV's categories and questions to FAQ.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

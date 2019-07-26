@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds a staged selector and improves the caching method.
+ * Add a staged selector and improves the caching method.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ trait HasStages
 
     /**
      * This method automatically caches model's data for the JSON response.
-     * Overides HasHiddenData trait's method.
+     * Overide HasHiddenData trait's method.
      *
      * @param boolean $addModelName
      * @return mixed

@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages les membres des associations.
+ * Manage association members.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -28,8 +28,8 @@ class MemberController extends Controller
     use HasAssos;
 
     /**
-     * Nécessite de voir les associations et pouvoir gérer les membres.
-     * L'utilisateur doit être du CAS ou contributeur BDE.
+     * Must be able to see assocations and to manage members.
+     * The user must be from the CAS or BDE contributor.
      */
     public function __construct()
     {
@@ -72,7 +72,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Adds automatiquement des rôles et des permissions en fonction du membre.
+     * Add automatically permissions and role depending on the member.
      *
      * @param Asso $asso
      * @param User $member
@@ -80,7 +80,7 @@ class MemberController extends Controller
      */
     protected function addRolesAndPermissions(Asso $asso, User $member)
     {
-        // Ici, on va auto-affecter les droits et permissions que l'utilisateur doit posséder.
+        // Here the rights and permissions of the user are auto-affected.
         if ($member->pivot->validated_by_id) {
             $role = Role::find($member->pivot->role_id, $asso);
 
@@ -93,7 +93,7 @@ class MemberController extends Controller
                         'validated_by_id' => $member->id,
                     ], true);
                 } catch (\Exception $e) {
-                    // On ignore l'erreur.
+                    // Ingnoring error.
                 }
             }
 
@@ -106,14 +106,14 @@ class MemberController extends Controller
                         'validated_by_id' => $member->id,
                     ], true);
                 } catch (\Exception $e) {
-                    // On ignore l'erreur.
+                    // Ingnoring error.
                 }
             }
         }
     }
 
     /**
-     * Lists les membres de l'association.
+     * List all association's members.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -143,7 +143,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Adds un membre à l'association.
+     * Add a member to a given association.
      *
      * @param AssoMemberRequest $request
      * @param string            $asso_id
@@ -168,7 +168,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Shows un membre de l'association.
+     * Show an association member.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -186,7 +186,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Updates un membre de l'association.
+     * Update an association member.
      *
      * @param AssoMemberRequest $request
      * @param string            $asso_id
@@ -221,7 +221,7 @@ class MemberController extends Controller
         ], [
             'validated_by_id' => \Auth::id(),
         ], $forceUpdate);
-        // Si le rôle qu'on veut valider est un rôle qui peut-être validé par héridité.
+        // If the role we want to validate can be validted by inheritance.
         $member = $this->getUserFromAsso($request, $asso, $member_id, $semester);
 
         $this->addRolesAndPermissions($asso, $member);
@@ -230,7 +230,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Retire un membre de l'association
+     * Remove an association member.
      *
      * @param Request $request
      * @param string  $asso_id

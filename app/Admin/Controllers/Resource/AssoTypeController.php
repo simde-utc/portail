@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Association Types as admin.
+ * Manage Association Types as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

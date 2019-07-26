@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages semesters.
+ * Manage semesters.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -31,7 +31,7 @@ class SemesterController extends Controller
     }
 
     /**
-     * Lists semesters.
+     * List semesters.
      *
      * @param Request $request
      * @return JsonResponse
@@ -60,7 +60,7 @@ class SemesterController extends Controller
     }
 
     /**
-     * Shows a semester.
+     * Show a semester.
      *
      * @param  string $semester_id
      * @return JsonResponse
@@ -91,6 +91,6 @@ class SemesterController extends Controller
      */
     public function destroy(string $semester_id): void
     {
-        abort(405, 'Il n\'est pas possible de Deletesr un semester');
+        abort(405, 'Il n\'est pas possible de suprimer un semester');
     }
 }

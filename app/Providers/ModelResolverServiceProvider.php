@@ -15,7 +15,7 @@ use Illuminate\Support\ServiceProvider;
 class ModelResolverServiceProvider extends ServiceProvider
 {
     /**
-     * Saves the ModelResolver service.
+     * Save the ModelResolver service.
      *
      * @return void
      */

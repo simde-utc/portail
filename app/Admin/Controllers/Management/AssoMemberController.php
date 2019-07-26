@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Associations Members.
+ * Manage Associations Members.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,7 +26,7 @@ class AssoMemberController extends Controller
     protected $model = AssoMember::class;
 
     /**
-     * Gives access only if user has the right permissions.
+     * Give access only if user has the right permissions.
      */
     public function __construct()
     {
@@ -98,7 +98,7 @@ class AssoMemberController extends Controller
     }
 
     /**
-     * Cofirms member.
+     * Cofirm member.
      *
      * @param  Request $request
      * @param  string  $asso_id
@@ -118,7 +118,7 @@ class AssoMemberController extends Controller
     }
 
     /**
-     * Modifies a member information.
+     * Modify a member information.
      *
      * @param  Request $request
      * @param  string  $asso_id
@@ -139,7 +139,7 @@ class AssoMemberController extends Controller
     }
 
     /**
-     * Deletes membership.
+     * Delete membership.
      *
      * @param  Request $request
      * @param  string  $asso_id

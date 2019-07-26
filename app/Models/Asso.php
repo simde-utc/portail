@@ -92,14 +92,14 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
             $model->contacts()->create([
                 'name' => 'Adresse email',
                 'value' => $model->login.'@assos.utc.fr',
-                'type_id' => ContactType::where('name', 'Adresse email')->first()->id,
+                'type_id' => ContactType::where('type', 'email')->first()->id,
                 'visibility_id' => Visibility::findByType('public')->id,
             ]);
 
             $model->contacts()->create([
                 'name' => 'Site Web',
                 'value' => 'https://assos.utc.fr/'.$model->login.'/',
-                'type_id' => ContactType::where('name', 'Url')->first()->id,
+                'type_id' => ContactType::where('type', 'url')->first()->id,
                 'visibility_id' => Visibility::findByType('public')->id,
             ]);
 
@@ -115,7 +115,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Finds an association by login.
+     * Find an association by login.
      *
      * @param  mixed  $query
      * @param  string $login
@@ -130,6 +130,16 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
         }
 
         throw new PortailException('Association non existante');
+    }
+
+    /**
+     * Return the email value.
+     *
+     * @return string
+     */
+    public function getEmailAttribute(): string
+    {
+        return $this->login.'@assos.utc.fr';
     }
 
     /**
@@ -233,7 +243,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Notifies all association members.
+     * Notify all association members.
      *
      * @param  mixed        $notification
      * @param  string|array $restrictToRoleIds
@@ -253,7 +263,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Returns the notification email address.
+     * Return the notification email address.
      *
      * @param  mixed $notification
      * @return string
@@ -264,7 +274,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Returns the notification icon as creator.
+     * Return the notification icon as creator.
      *
      * @param  Notification $notification
      * @return string
@@ -275,7 +285,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Returns the last user with a role.
+     * Return the last user with a role.
      *
      * @param  mixed $role
      * @return User|null
@@ -303,7 +313,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a role is accessible or not.
+     * Indicate if a role is accessible or not.
      * Members roles is not a secret. Always displaying them.
      *
      * @param  string $user_id
@@ -315,7 +325,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a role is manageable or not.
+     * Indicate if a role is manageable or not.
      * A role is manageable only by a member who has the permission.
      *
      * @param  string $user_id
@@ -327,7 +337,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a permission is accessible or not.
+     * Indicate if a permission is accessible or not.
      * Members permissions is not a secret. Always displaying them.
      *
      * @param  string $user_id
@@ -339,7 +349,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a permission is manageable or not.
+     * Indicate if a permission is manageable or not.
      * A permission is manageable only by a member who has the permission.
      *
      * @param  string $user_id
@@ -361,7 +371,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if the contact mean is accessible.
+     * Indicate if the contact mean is accessible.
      * Accessible only bu members (private data).
      *
      * @param  string $user_id
@@ -373,7 +383,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if the contact mean is manageable.
+     * Indicate if the contact mean is manageable.
      * A contact mean is manageable only by a member who has the permission.
      *
      * @param  string $user_id
@@ -397,7 +407,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if the calendar is manageable.
+     * Indicate if the calendar is manageable.
      * A private calendar is manageable only by a member who has the permission.
      *
      * @param  string $user_id
@@ -421,7 +431,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if an event is manageable.
+     * Indicate if an event is manageable.
      * An event is manageable only by a member who has the permission.
      *
      * @param  string $user_id
@@ -445,7 +455,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if un article is manageable.
+     * Indicate if un article is manageable.
      * A private article is manageable only by a member.
      *
      * @param  string $user_id
@@ -469,7 +479,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a room is manageable.
+     * Indicate if a room is manageable.
      * Private rooms are manageable only by a member.
      *
      * @param  string $user_id
@@ -481,7 +491,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if the room the room is bookable.
+     * Indicate if the room the room is bookable.
      *
      * @param  \Illuminate\Database\Eloquent\Model $model
      * @return boolean
@@ -502,7 +512,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
             $toMatch = $toMatch->parent;
         }
 
-        // Corresponds to parents associations.
+        // Correspond to parents associations.
         return $this->isBookingValidableBy($model);
     }
 
@@ -517,7 +527,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a booking is accessible.
+     * Indicate if a booking is accessible.
      * Private bookings are accessible only by a member.
      *
      * @param  string $user_id
@@ -529,7 +539,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a booking is manageable.
+     * Indicate if a booking is manageable.
      * Private bookings are manageable only by a member.
      *
      *
@@ -544,7 +554,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a booking is validable.
+     * Indicate if a booking is validable.
      *
      * @param  \Illuminate\Database\Eloquent\Model $model
      * @return boolean
@@ -552,7 +562,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     public function isBookingValidableBy(\Illuminate\Database\Eloquent\Model $model): bool
     {
         if ($model instanceof Asso) {
-            // Chacks if the association is a parent of the asking asociation. (Example: the BDE-UTC has the rights on the PAE).
+            // Check if the association is a parent of the asking asociation. (Example: the BDE-UTC has the rights on the PAE).
             $toMatch = $this;
             while ($toMatch) {
                 if ($toMatch->id === $model->id) {
@@ -576,7 +586,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a comment is writable.
+     * Indicate if a comment is writable.
      * Only people who can write comments are able to write a comment.
      *
      * @param  string $user_id
@@ -590,7 +600,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a comment is editable.
+     * Indicate if a comment is editable.
      * Only people who can write comments are able to edit a comment.
      *
      * @param  string $user_id
@@ -602,7 +612,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indicates if a comment is deletable.
+     * Indicate if a comment is deletable.
      * Only people who can write comments are able to delete a comment.
      *
      * @param  string $user_id
@@ -614,7 +624,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Retrieves the name.
+     * Retrieve the name.
      *
      * @return string|null
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages accesses.
+ * Manage accesses.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,7 +25,7 @@ class AccessController extends Controller
     protected $model = AssoAccess::class;
 
     /**
-     * Gives access only if user has the right permissions.
+     * Give access only if user has the right permissions.
      */
     public function __construct()
     {
@@ -122,7 +122,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Saves access request change.
+     * Save access request change.
      *
      * @param  Request $request
      * @param  string  $accessId

@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Tags as admin.
+ * Manage Tags as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

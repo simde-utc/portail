@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Associations as admin.
+ * Manage Associations as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -40,7 +40,7 @@ class AssoController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

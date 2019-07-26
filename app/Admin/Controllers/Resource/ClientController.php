@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Clients as admin.
+ * Manage Clients as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -55,7 +55,7 @@ class ClientController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

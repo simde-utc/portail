@@ -28,7 +28,7 @@ class Role extends BaseRole
     ];
 
     /**
-     * Gets the relation with owner.
+     * Get the relation with owner.
      *
      * @return mixed
      */
@@ -38,7 +38,7 @@ class Role extends BaseRole
     }
 
     /**
-     * Finds a role.
+     * Find a role.
      *
      * @param  string       $role_id
      * @param  CanHaveRoles $owner
@@ -61,7 +61,7 @@ class Role extends BaseRole
     }
 
     /**
-     * Finds a fole by type.
+     * Find a fole by type.
      * TODO: Transform it into a scope.
      *
      * @param  string       $type

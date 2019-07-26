@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages UserPreferences as admin.
+ * Manage UserPreferences as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class UserPreferenceController extends ResourceController
     protected $model = UserPreference::class;
 
     /**
-     * Fields to display definition.
+     * Field to display definition.
      *
      * @return array
      */
@@ -50,7 +50,7 @@ class UserPreferenceController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

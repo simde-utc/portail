@@ -27,7 +27,7 @@ class AuthApp extends Auth
     ];
 
     /**
-     * Retrieves a user from its app_id.
+     * Retrieve a user from its app_id.
      *
      * @param string $app_id
      * @return mixed
@@ -47,7 +47,7 @@ class AuthApp extends Auth
     }
 
     /**
-     * Checks if the password is correct.
+     * Check if the password is correct.
      *
      * @param string $password
      * @return boolean

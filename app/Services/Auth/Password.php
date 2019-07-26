@@ -74,7 +74,7 @@ class Password extends BaseAuth
     }
 
     /**
-     * Creates the auth connection.
+     * Create the auth connection.
      *
      * @param string $user_id
      * @param array  $info
@@ -96,7 +96,7 @@ class Password extends BaseAuth
     }
 
     /**
-     * Redirects to the right page in case of success.
+     * Redirect to the right page in case of success.
      *
      * @param Request          $request
      * @param User             $user
@@ -120,7 +120,7 @@ class Password extends BaseAuth
     }
 
     /**
-     * Retrieves validations for this authentification.
+     * Retrieve validations for this authentification.
      *
      * @return array
      */

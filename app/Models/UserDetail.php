@@ -34,7 +34,7 @@ class UserDetail extends Model
     ];
 
     /**
-     * Retrieves the user on wich we're working on from a query.
+     * Retrieve the user on wich we're working on from a query.
      *
      * @param Builder $query
      * @return User|null
@@ -70,7 +70,7 @@ class UserDetail extends Model
     }
 
     /**
-     * Indicates if a user is major.
+     * Indicate if a user is major.
      *
      * @param  Builder $query
      * @return boolean
@@ -97,7 +97,7 @@ class UserDetail extends Model
     }
 
     /**
-     * Returns the user CAS login.
+     * Return the user CAS login.
      *
      * @param  Builder $query
      * @return string
@@ -118,7 +118,7 @@ class UserDetail extends Model
     }
 
     /**
-     * Returns the BDE-UTC contributor login.
+     * Return the BDE-UTC contributor login.
      *
      * @param  Builder $query
      * @return string
@@ -143,7 +143,7 @@ class UserDetail extends Model
     }
 
     /**
-     * Indicates if a given user is BDE-UTC contributor.
+     * Indicate if a given user is BDE-UTC contributor.
      *
      * @param  Builder $query
      * @return boolean

@@ -28,7 +28,7 @@ class AuthPassword extends Auth
     ];
 
     /**
-     * Retrieves a user from its email adress.
+     * Retrieve a user from its email adress.
      *
      * @param string $email
      * @return mixed
@@ -39,7 +39,7 @@ class AuthPassword extends Auth
     }
 
     /**
-     * Checks if a password is correct or not.
+     * Check if a password is correct or not.
      *
      * @param string $password
      * @return boolean

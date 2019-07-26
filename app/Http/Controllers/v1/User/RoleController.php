@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages user's roles.
+ * Manage user's roles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -68,7 +68,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Lists user roles.
+     * List user roles.
      *
      * @param Request     $request
      * @param string|null $user_id
@@ -86,7 +86,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Adds a user role.
+     * Add a user role.
      *
      * @param  UserRoleRequest $request
      * @param  string|null     $user_id
@@ -107,7 +107,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Shows a user role.
+     * Show a user role.
      *
      * @param Request     $request
      * @param string      $user_id
@@ -140,7 +140,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Deletes a user role.
+     * Delete a user role.
      *
      * @param Request     $request
      * @param string      $user_id

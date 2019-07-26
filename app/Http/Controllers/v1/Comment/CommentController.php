@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages a resource comments.
+ * Manage a resource comments.
  *
  * @author Natan Danous <natan.danous@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -48,7 +48,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Lists a resource comments.
+     * List a resource comments.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -69,7 +69,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Creates a comment for a ressource.
+     * Create a comment for a ressource.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -95,7 +95,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Shows a resource's comment.
+     * Show a resource's comment.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -108,7 +108,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Updates a resource's comment.
+     * Update a resource's comment.
      *
      * @param CommentRequest $request
      * @return JsonResponse
@@ -129,7 +129,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Deletes a resource's comment.
+     * Delete a resource's comment.
      *
      * @param CommentRequest $request
      * @return void

@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
-     * Saves authentification services.
+     * Save authentification services.
      *
      * @return void
      */
@@ -42,7 +42,7 @@ class AuthServiceProvider extends ServiceProvider
     }
 
     /**
-     * Saves actions for authentification services.
+     * Save actions for authentification services.
      *
      * @return void
      */
@@ -68,7 +68,7 @@ class AuthServiceProvider extends ServiceProvider
     }
 
     /**
-     * Lists all differed services.
+     * List all differed services.
      *
      * @return array
      */

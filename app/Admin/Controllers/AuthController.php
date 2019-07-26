@@ -1,6 +1,6 @@
 <?php
 /**
- * Authentificates admins.
+ * Authenticate admins.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

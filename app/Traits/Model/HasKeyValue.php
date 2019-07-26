@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds a key/value association.
+ * Add a key/value association.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -74,7 +74,7 @@ trait HasKeyValue
     }
 
     /**
-     * Returns if the key is a method or not.
+     * Return if the key is a method or not.
      *
      * @param  Builder $query
      * @param  string  $key
@@ -86,7 +86,7 @@ trait HasKeyValue
     }
 
     /**
-     * Returns if the key exists in the Database.
+     * Return if the key exists in the Database.
      *
      * @param  Builder $query
      * @param  string  $key
@@ -98,7 +98,7 @@ trait HasKeyValue
     }
 
     /**
-     * Returns if the key exists.
+     * Return if the key exists.
      *
      * @param  Builder $query
      * @param  string  $key
@@ -134,7 +134,7 @@ trait HasKeyValue
     }
 
     /**
-     * Returns everything in an array.
+     * Return everything in an array.
      *
      * @param  Builder $query
      * @return array
@@ -297,7 +297,7 @@ trait HasKeyValue
     }
 
     /**
-     * Conversion en json.
+     * Conversion in json.
      *
      * @param  mixed $options
      * @return string

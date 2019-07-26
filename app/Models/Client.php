@@ -10,6 +10,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Laravel\Passport\Client as PassportClient;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveEvents;
@@ -43,6 +44,32 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
         'paginate' => null,
         'filter' => [],
     ];
+
+    /**
+     * Return the email value.
+     *
+     * @return string
+     */
+    public function getEmailAttribute(): string
+    {
+        $asso = $this->asso;
+
+        if ($asso->login === env('APP_ASSO', 'simde')) {
+            return Str::snake($this->name, '-').'@'.\explode('@', $asso->email)[1];
+        }
+
+        return $asso->email;
+    }
+
+    /**
+     * Return the image value.
+     *
+     * @return string|null
+     */
+    public function getImageAttribute(): ?string
+    {
+        return $this->asso->image;
+    }
 
     /**
      * Relation with the user.
@@ -95,7 +122,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indicates if the calendar is manageable.
+     * Indicate if the calendar is manageable.
      * The private calendar is manageable only by developers.
      *
      * @param  string $user_id
@@ -107,7 +134,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indicates if the event is manageable.
+     * Indicate if the event is manageable.
      * The private event is manageable only by developers.
      *
      * @param  string $user_id
@@ -119,7 +146,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indicates if the event is manageable.
+     * Indicate if the event is manageable.
      * The private event is manageable only by developers.
      *
      * @param  string $user_id
@@ -131,7 +158,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Retrieves the client name.
+     * Retrieve the client name.
      *
      * @return string|null
      */

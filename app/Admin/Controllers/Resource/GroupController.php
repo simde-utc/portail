@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Groups as admin.
+ * Manage Groups as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -49,7 +49,7 @@ class GroupController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

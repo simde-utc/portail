@@ -115,7 +115,7 @@ class Room extends Model implements OwnableContract
     }
 
     /**
-     * Returns the room name.
+     * Return the room name.
      *
      * @return string
      */

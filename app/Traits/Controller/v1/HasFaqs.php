@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller an access to FAQs.
+ * Add the controller an access to FAQs.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ use App\Exceptions\PortailException;
 trait HasFaqs
 {
     /**
-     * Retrieves a FAQ category with its ID if it exists.
+     * Retrieve a FAQ category with its ID if it exists.
      *
      * @param Request $request
      * @param string  $category_id
@@ -37,7 +37,7 @@ trait HasFaqs
     }
 
     /**
-     * Retrieves a FAQ with its ID if it exists.
+     * Retrieve a FAQ with its ID if it exists.
      *
      * @param Request $request
      * @param string  $category_id

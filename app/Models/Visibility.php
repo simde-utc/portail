@@ -1,6 +1,6 @@
 <?php
 /**
- * Model corresponding to aux visibilités.
+ * Model corresponding to visibilities.
  *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -37,7 +37,7 @@ class Visibility extends Model
     ];
 
     /**
-     * Finds a visibility from its type.
+     * Find a visibility from its type.
      * TODO: Transform into scope.
      * TODO: To export into a trait.
      *
@@ -50,7 +50,7 @@ class Visibility extends Model
     }
 
     /**
-     * Returns the public visibility.
+     * Return the public visibility.
      *
      * @return mixed
      */

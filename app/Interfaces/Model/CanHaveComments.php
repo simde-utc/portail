@@ -1,6 +1,6 @@
 <?php
 /**
- * Indicates that the model can have comments.
+ * Indicate that the model can have comments.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,14 +17,14 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 interface CanHaveComments
 {
     /**
-     * Returns the comment list.
+     * Return the comment list.
      *
      * @return MorphMany
      */
     public function comments();
 
     /**
-     * Indicates if a given user can access the model's comments..
+     * Indicate if a given user can access the model's comments..
      *
      * @param string $user_id
      * @return boolean
@@ -32,7 +32,7 @@ interface CanHaveComments
     public function isCommentAccessibleBy(string $user_id): bool;
 
     /**
-     * Permet d'indiquer si l'instance à le droit de commenter/gérer ses commentaires.
+     * Indicate if the instance has the rights to comment/manage it's comments.
      *
      * @param CanComment $model
      * @return boolean

@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Services as admin.
+ * Manage Services as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class ServiceController extends ResourceController
     protected $model = Service::class;
 
     /**
-     * Fields to display definition.
+     * Field to display definition.
      *
      * @return array
      */
@@ -52,7 +52,7 @@ class ServiceController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

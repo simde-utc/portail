@@ -251,7 +251,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if a role is deletable (if it belongs to a unique user).
+     * Indicate if a role is deletable (if it belongs to a unique user).
      * But we allow its deletion if it's assigned to a unique group.
 
      * @param  mixed  $role
@@ -264,7 +264,7 @@ trait UserRelations
     }
 
     /**
-     * Returns if a user can access the role.
+     * Return if a user can access the role.
      *
      * @param  string $user_id
      * @return boolean
@@ -279,7 +279,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if a role is manageable.
+     * Indicate if a role is manageable.
      *
      * @param  string $user_id
      * @return boolean
@@ -294,7 +294,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if the user can access a permission.
+     * Indicate if the user can access a permission.
      *
      * @param  string $user_id
      * @return boolean
@@ -309,7 +309,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if a permission is manageable.
+     * Indicate if a permission is manageable.
      *
      * @param  string $user_id
      * @return boolean
@@ -334,7 +334,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if a contact is accessible.
+     * Indicate if a contact is accessible.
      *
      * @param  string $user_id
      * @return boolean
@@ -345,7 +345,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if a contact is manageable.
+     * Indicate if a contact is manageable.
      *
      * @param  string $user_id
      * @return boolean
@@ -366,7 +366,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if a calendar is manageable.
+     * Indicate if a calendar is manageable.
      *
      * @param  string $user_id
      * @return boolean
@@ -387,7 +387,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if an event is manageable.
+     * Indicate if an event is manageable.
      *
      * @param  string $user_id
      * @return boolean
@@ -398,7 +398,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if a comment is writable.
+     * Indicate if a comment is writable.
      * Of course we cannot write as someone else.
      *
      * @param  string $user_id
@@ -410,7 +410,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if a comment is editable.
+     * Indicate if a comment is editable.
      * Of course we cannot write as someone else.
      *
      * @param  string $user_id
@@ -422,7 +422,7 @@ trait UserRelations
     }
 
     /**
-     * Indicates if a comment is deletable.
+     * Indicate if a comment is deletable.
      * Of course we cannot delete as someone else.
      *
      * @param  string $user_id

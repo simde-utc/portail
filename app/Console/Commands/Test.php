@@ -215,7 +215,7 @@ class Test extends Command
     }
 
     /**
-     * Runs JS linter.
+     * Run JS linter.
      *
      * @return integer
      */
@@ -225,7 +225,7 @@ class Test extends Command
     }
 
     /**
-     * Runs PHP Code Sniffer to check PHP style.
+     * Run PHP Code Sniffer to check PHP style.
      *
      * @return integer
      */
@@ -269,7 +269,7 @@ class Test extends Command
     }
 
     /**
-     * Runs PHP Code Beautifier and Fixer to correct style problems on the fly.
+     * Run PHP Code Beautifier and Fixer to correct style problems on the fly.
      *
      * @return integer
      */
@@ -281,7 +281,7 @@ class Test extends Command
     }
 
     /**
-     * Runs PHPStan to find static errors.
+     * Run PHPStan to find static errors.
      *
      * @return integer
      */
@@ -307,7 +307,7 @@ class Test extends Command
     }
 
     /**
-     * Runs PHP Mess Detector to find:
+     * Run PHP Mess Detector to find:
      * - Possible bugs
      * - Suboptimal code
      * - Overcomplicated expressions
@@ -337,7 +337,7 @@ class Test extends Command
     }
 
     /**
-     * Runs PHP Unit for regression testing.
+     * Run PHP Unit for regression testing.
      *
      * @return integer
      */
@@ -349,7 +349,7 @@ class Test extends Command
     }
 
     /**
-     * Runs a bash command.
+     * Run a bash command.
      *
      * @param string $command Command to run.
      * @return integer

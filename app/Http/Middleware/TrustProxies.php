@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware par défaut de Laravel.
+ * Default Laravel's middleware.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -17,14 +17,14 @@ use Fideloper\Proxy\TrustProxies as Middleware;
 class TrustProxies extends Middleware
 {
     /**
-     * Les proxys dont on fait confiance.
+     * Trusted proxies.
      *
      * @var array
      */
     protected $proxies;
 
     /**
-     * Headers utilisées pour détecter les proxys.
+     * Header used to detect proxies.
      *
      * @var string
      */

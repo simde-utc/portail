@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller an access to Calendars.
+ * Add the controller an access to Calendars.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -23,7 +23,7 @@ trait HasCalendars
     }
 
     /**
-     * Retrieves an event from the calendar.
+     * Retrieve an event from the calendar.
      *
      * @param  Request  $request
      * @param  User     $user
@@ -51,7 +51,7 @@ trait HasCalendars
     }
 
     /**
-     * Returns if the token can see the ressource or not.
+     * Return if the token can see the ressource or not.
      *
      * @param  Request $request
      * @param  Model   $model

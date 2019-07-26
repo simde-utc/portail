@@ -1,6 +1,6 @@
 <?php
 /**
- * Indicates that the model can have bookings.
+ * Indicate that the model can have bookings.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,14 +17,14 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 interface CanHaveBookings
 {
     /**
-     * Returns the bookings list.
+     * Return the bookings list.
      *
      * @return MorphMany
      */
     public function bookings();
 
     /**
-     * Indicates if a given user can access the model's bookings.
+     * Indicate if a given user can access the model's bookings.
      *
      * @param string $user_id
      * @return boolean
@@ -32,7 +32,7 @@ interface CanHaveBookings
     public function isBookingAccessibleBy(string $user_id): bool;
 
     /**
-     * Indicates if a given user can can create/update/delete the model's bookings.
+     * Indicate if a given user can can create/update/delete the model's bookings.
      *
      * @param string $user_id
      * @return boolean
@@ -40,7 +40,7 @@ interface CanHaveBookings
     public function isBookingManageableBy(string $user_id): bool;
 
     /**
-     * Indicates if a given model can validate this model's bookings.
+     * Indicate if a given model can validate this model's bookings.
      *
      * @param Model $model
      * @return boolean

@@ -40,7 +40,7 @@ class Form extends BaseForm
         $this->model = $builder->with($relations)->findOrFail($model_id);
         $this->callEditing();
 
-        // Attributes and "visible" data retrievement.
+        // Attribute and "visible" data retrievement.
         $data = $this->model->getAttributes();
 
         $this->builder->fields()->each(function (Field $field) use ($data) {

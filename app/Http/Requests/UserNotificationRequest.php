@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les notifications par utilisateur.
+ * Notification by user request management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Validation;
 class UserNotificationRequest extends Request
 {
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */
@@ -24,11 +24,21 @@ class UserNotificationRequest extends Request
         return [
             'notifier' => Validation::type('string')
                 ->get(),
+            'subject' => Validation::type('string')
+                ->get(),
             'content' => Validation::type('string')
                 ->post('required')
                 ->get(),
-            'action' => Validation::type('array')
+            'html' => Validation::type('string')
                 ->post('required')
+                ->get(),
+            'action' => Validation::type('array')
+                ->get(),
+            'action.name' => Validation::type('string')
+                ->get(),
+            'action.url' => Validation::type('url')
+                ->get(),
+            'data' => Validation::type('array')
                 ->get(),
         ];
     }

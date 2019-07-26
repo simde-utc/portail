@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Contacts as admin.
+ * Manage Contacts as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -50,7 +50,7 @@ class ContactController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

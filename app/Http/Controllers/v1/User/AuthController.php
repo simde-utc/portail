@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages user's authentification systems.
+ * Manage user's authentification systems.
  * TODO: Transform gets in Traits.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -57,7 +57,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Lists user's authentification systems.
+     * List user's authentification systems.
      *
      * @param  Request $request
      * @param  string 	$user_id
@@ -79,7 +79,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Adds a user authentification system.
+     * Add a user authentification system.
      *
      * @param  UserAuthRequest $request
      * @param  string          $user_id
@@ -116,7 +116,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Shows a user authentification system.
+     * Show a user authentification system.
      *
      * @param  Request $request
      * @param  string 	$user_id
@@ -165,7 +165,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Deletes a user authentification system.
+     * Delete a user authentification system.
      *
      * @param  Request $request
      * @param  string 	$user_id

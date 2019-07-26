@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller a Owner management.
+ * Add the controller a Owner management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ trait HasOwners
     use HasMorphs;
 
     /**
-     * Retrieves the owner.
+     * Retrieve the owner.
      *
      * @param  Request $request
      * @param  string  $modelName

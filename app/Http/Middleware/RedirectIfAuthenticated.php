@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware vérifiant si l'utilisateur est connecté.
+ * Middleware to check if a user is connected.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 class RedirectIfAuthenticated
 {
     /**
-     * Redirige si l'utilisateur est connecté.
+     * Redidirect the user if he's connected.
      *
      * @param  Request     $request
      * @param  Closure     $next

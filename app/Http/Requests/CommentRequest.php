@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les commentaires.
+ * Comment request management.
  *
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -18,8 +18,8 @@ use App\Interfaces\Model\CanHaveComments;
 class CommentRequest extends Request
 {
     /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * Ici on détermine en particulier la ressource concernée par notre commentaire.
+     * Determine if the user has the right to make this request.
+     * Here we determine in particular the resource concerned by the comment.
      *
      * @return boolean
      */
@@ -33,7 +33,7 @@ class CommentRequest extends Request
     }
 
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

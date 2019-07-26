@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Semesters as admin.
+ * Manage Semesters as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

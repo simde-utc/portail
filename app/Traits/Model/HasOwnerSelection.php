@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds a selector concerning the owner.
+ * Add a selector concerning the owner.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

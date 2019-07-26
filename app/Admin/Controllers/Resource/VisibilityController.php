@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages visibilities as admin.
+ * Manage visibilities as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class VisibilityController extends ResourceController
     protected $model = Visibility::class;
 
     /**
-     * Fields to display definition.
+     * Field to display definition.
      *
      * @return array
      */
@@ -46,7 +46,7 @@ class VisibilityController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

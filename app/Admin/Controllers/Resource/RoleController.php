@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Roles as admin.
+ * Manage Roles as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -36,7 +36,7 @@ class RoleController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

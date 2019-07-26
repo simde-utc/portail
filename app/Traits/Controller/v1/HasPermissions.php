@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller an access to Permissions.
+ * Add the controller an access to Permissions.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -21,7 +21,7 @@ trait HasPermissions
     use HasSemesters;
 
     /**
-     * Retrieves a permission.
+     * Retrieve a permission.
      *
      * @param  Request $request
      * @param  string  $permission_id
@@ -48,7 +48,7 @@ trait HasPermissions
     }
 
     /**
-     * Retrieves all permissions of an instance.
+     * Retrieve all permissions of an instance.
      *
      * @param  Request $request
      * @return mixed
@@ -70,7 +70,7 @@ trait HasPermissions
     }
 
     /**
-     * Retrieves a permission of an instance.
+     * Retrieve a permission of an instance.
      *
      * @param  Request $request
      * @param  string  $permission_id
@@ -97,7 +97,7 @@ trait HasPermissions
     }
 
     /**
-     * Checks the token's rights.
+     * Check the token's rights.
      *
      * @param  Request $request
      * @param  string  $verb
@@ -113,7 +113,7 @@ trait HasPermissions
     }
 
     /**
-     * Checks if tokan can see or not.
+     * Check if tokan can see or not.
      *
      * @param  Request    $request
      * @param  Permission $permission

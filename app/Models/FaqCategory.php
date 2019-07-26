@@ -91,7 +91,7 @@ class FaqCategory extends Model
     }
 
     /**
-     * Specifique scope to get private resources.
+     * Specific scope to get private resources.
      *
      * @param  Builder $query
      * @return Builder

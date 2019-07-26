@@ -31,7 +31,7 @@ class Semester extends Model
     ];
 
     /**
-     * Retrieves a semester depending an the given id and name.
+     * Retrieve a semester depending an the given id and name.
      *
      * @param  string $semester_id
      * @return Semester|null
@@ -46,7 +46,7 @@ class Semester extends Model
     }
 
     /**
-     * Retrieves the current semester.
+     * Retrieve the current semester.
      *
      * @param  string $currentYear
      * @param  string $currentMonth
@@ -75,7 +75,7 @@ class Semester extends Model
     }
 
     /**
-     * Retrieves the semester of the current academic year.
+     * Retrieve the semester of the current academic year.
      *
      * @param  string $currentYear
      * @param  string $currentMonth
@@ -159,7 +159,7 @@ class Semester extends Model
     }
 
     /**
-     * Indicates if the month period is in the semester.
+     * Indicate if the month period is in the semester.
      *
      * @param  string $beginingMonth
      * @param  string $endingMonth

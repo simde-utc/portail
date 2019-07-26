@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages UserDetails as admin.
+ * Manage UserDetails as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -49,7 +49,7 @@ class UserDetailController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

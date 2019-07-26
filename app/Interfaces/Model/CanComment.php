@@ -1,6 +1,6 @@
 <?php
 /**
- * Indicates that the model can commnent.
+ * Indicate that the model can commnent.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -13,7 +13,7 @@ namespace App\Interfaces\Model;
 interface CanComment
 {
     /**
-     * Indicates if a user can comment for this model.
+     * Indicate if a user can comment for this model.
      *
      * @param string $user_id
      * @return boolean
@@ -21,7 +21,7 @@ interface CanComment
     public function isCommentWritableBy(string $user_id): bool;
 
     /**
-     * Indicates if a user can modifiy comments for this model.
+     * Indicate if a user can modifiy comments for this model.
      *
      * @param string $user_id
      * @return boolean
@@ -29,7 +29,7 @@ interface CanComment
     public function isCommentEditableBy(string $user_id): bool;
 
     /**
-     * Indicates if a user can delete comments for this model.
+     * Indicate if a user can delete comments for this model.
      *
      * @param string $user_id
      * @return boolean

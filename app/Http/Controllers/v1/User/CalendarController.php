@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages all calandars followed by the user.
+ * Manage all calandars followed by the user.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -68,7 +68,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Lists the calendars.
+     * List the calendars.
      *
      * @param Request $request
      * @param string  $user_id
@@ -92,7 +92,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Creates a calendar.
+     * Create a calendar.
      *
      * @param UserCalendarRequest $request
      * @param string              $user_id
@@ -119,7 +119,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Shows a calendar.
+     * Show a calendar.
      *
      * @param Request $request
      * @param string  $user_id
@@ -157,7 +157,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * Deletes a calendar.
+     * Delete a calendar.
      *
      * @param Request $request
      * @param string  $user_id

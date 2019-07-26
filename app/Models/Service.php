@@ -54,7 +54,7 @@ class Service extends Model
     {
         $visibility = $this->getSelectionForVisibility('private');
 
-        // Les services privés sont affiché uniquement aux personnes ayant la permission 'admin'.
+        // Private services are displayed only to the user with the admin permission.
         if (($user = \Auth::user()) && $user->hasOnePermission('admin')) {
             return $query->where('visibility_id', $visibility->id);
         }

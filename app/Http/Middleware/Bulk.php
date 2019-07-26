@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware redirigeant vers la bonne action en éxécutant les bons middlewares.
+ * Middlewar to redirect to the right action by executing the right middlewares.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -37,7 +37,7 @@ class Bulk
     ];
 
     /**
-     * Redirige si requête bulk.
+     * Redirect if the request is a bulk one.
      *
      * @param  Request $request
      * @param  Closure $next
@@ -57,7 +57,7 @@ class Bulk
     }
 
     /**
-     * Effectue le bon appel en fonction du tableau de correspondance.
+     * Call the right action depending on a given mapping array.
      *
      * @param  Route   $route
      * @param  Closure $next
@@ -74,7 +74,7 @@ class Bulk
     }
 
     /**
-     * Exécute le bon controlleur après avoir passé les middlewares.
+     * Execute the right controller after having passed all middlewares.
      *
      * @param  Route   $route
      * @param  Closure $next

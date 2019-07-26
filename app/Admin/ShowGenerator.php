@@ -1,6 +1,6 @@
 <?php
 /**
- * Generates an admin presentation.
+ * Generate an admin presentation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -24,7 +24,7 @@ class ShowGenerator extends Generator
     protected $valueMethod = 'as';
 
     /**
-     * Creates the presentation according to a model
+     * Create the presentation according to a model
      *
      * @param mixed $model Model of the resource to handle.
      */
@@ -36,7 +36,7 @@ class ShowGenerator extends Generator
     }
 
     /**
-     * Indicates that html rendering is possible.
+     * Indicate that html rendering is possible.
      *
      * @param  mixed $field
      * @return mixed
@@ -47,7 +47,7 @@ class ShowGenerator extends Generator
     }
 
     /**
-     * Generates a new field and linked field.
+     * Generate a new field and linked field.
      *
      * @param  string $field
      * @return void

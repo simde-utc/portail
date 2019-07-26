@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages FAQs' categories.
+ * Manage FAQs' categories.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -46,7 +46,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Lists categories.
+     * List categories.
      *
      * @param Request $request
      * @return JsonResponse
@@ -61,7 +61,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Adds a FAQ category.
+     * Add a FAQ category.
      *
      * @param FaqCategoryRequest $request
      * @return JsonResponse
@@ -74,7 +74,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Shows a FAQ category.
+     * Show a FAQ category.
      *
      * @param Request $request
      * @param string  $category_id
@@ -88,7 +88,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Updates a FAQ category.
+     * Update a FAQ category.
      *
      * @param FaqCategoryRequest $request
      * @param string             $category_id
@@ -106,7 +106,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Deletes a FAQ category.
+     * Delete a FAQ category.
      *
      * @param Request $request
      * @param string  $category_id
@@ -117,7 +117,7 @@ class CategoryController extends Controller
         $category = $this->getFaqCategory($request, $category_id);
 
         if ($category->children()->exists()) {
-            abort(400, 'Il n\'est pas possible de Deletesr une catégorie FAQ parente');
+            abort(400, 'Il n\'est pas possible de suprimer une catégorie FAQ parente');
         }
 
         $category->delete();

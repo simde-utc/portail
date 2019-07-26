@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller an access to Rooms.
+ * Add the controller an access to Rooms.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 trait HasRooms
 {
     /**
-     * Retrieves a Room.
+     * Retrieve a Room.
      *
      * @param  Request $request
      * @param  User    $user
@@ -47,7 +47,7 @@ trait HasRooms
     }
 
     /**
-     * Returns if the token is allowed to see the resource.
+     * Return if the token is allowed to see the resource.
      *
      * @param  Request $request
      * @param  Room    $room

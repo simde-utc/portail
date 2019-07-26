@@ -1,6 +1,6 @@
 <?php
 /**
- * Indicates that the model can have rooms.
+ * Indicate that the model can have rooms.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,14 +16,14 @@ use Illuminate\Database\Eloquent\Model;
 interface CanHaveRooms
 {
     /**
-     * Returns the rooms list.
+     * Return the rooms list.
      *
      * @return MorphMany
      */
     public function rooms();
 
     /**
-     * Indicates if the given user can create/update/delete this model's rooms.
+     * Indicate if the given user can create/update/delete this model's rooms.
      *
      * @param string $user_id
      * @return boolean
@@ -31,7 +31,7 @@ interface CanHaveRooms
     public function isRoomManageableBy(string $user_id): bool;
 
     /**
-     * Indicates if a model can book this model's rooms.
+     * Indicate if a model can book this model's rooms.
      *
      * @param Model $model
      * @return boolean

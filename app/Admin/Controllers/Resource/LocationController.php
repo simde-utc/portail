@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Locations as admin.
+ * Manage Locations as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -36,7 +36,7 @@ class LocationController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

@@ -19,7 +19,7 @@ class Validation
     protected $request;
 
     /**
-     * Defines the request.
+     * Define the request.
      *
      * @param Request $request
      * @return Validation
@@ -50,7 +50,7 @@ class Validation
     }
 
     /**
-     * Specifies the type.
+     * Specify the type.
      *
      * @param string $arg
      * @return Validation $this
@@ -63,7 +63,7 @@ class Validation
     }
 
     /**
-     * Indicates unicity.
+     * Indicate unicity.
      *
      * @param string $table
      * @param string $fields
@@ -77,7 +77,7 @@ class Validation
     }
 
     /**
-     * Indicates that the field must exist.
+     * Indicate that the field must exist.
      *
      * @param string $table
      * @param string $field
@@ -91,7 +91,7 @@ class Validation
     }
 
     /**
-     * Indicates that the field can be null.
+     * Indicate that the field can be null.
      *
      * @return Validation
      */
@@ -103,7 +103,7 @@ class Validation
     }
 
     /**
-     * Retrieves all calls.
+     * Retrieve all calls.
      *
      * @param string $method
      * @param array  $args

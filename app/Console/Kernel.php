@@ -1,7 +1,7 @@
 <?php
 /**
  * Files generating console and its commands.
- * Enables console and its commands start.
+ * Enable console and its commands start.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel
     }
 
     /**
-     * Saves application commands.
+     * Save application commands.
      *
      * @return void
      */

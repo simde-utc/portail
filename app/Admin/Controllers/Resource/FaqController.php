@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages FAQ questions as admin.
+ * Manage FAQ questions as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -50,7 +50,7 @@ class FaqController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds a permission management.
+ * Add a permission management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -45,7 +45,7 @@ trait HasPermissions
     }
 
     /**
-     * Lists all attributed permissions.
+     * List all attributed permissions.
      *
      * @return mixed
      */
@@ -55,11 +55,11 @@ trait HasPermissions
     }
 
     /**
-     * Assigns one or several permissions depending on the given data.
+     * Assign one or several permissions depending on the given data.
      *
      * @param  string|array|Collection $permissions
      * @param  array                   $data        Possibility to affect permission_id, semester_id, validated_by_id, user_id.
-     * @param  boolean                 $force       Enables to by-pass addition security (to use with caution).
+     * @param  boolean                 $force       Enable to by-pass addition security (to use with caution).
      * @return mixed
      */
     public function assignPermissions($permissions, array $data=[], bool $force=false)
@@ -95,12 +95,12 @@ trait HasPermissions
     }
 
     /**
-     * Modifies one or several permissions depending on the given data.
+     * Modify one or several permissions depending on the given data.
      *
      * @param  string|array|Collection $permissions
      * @param  array                   $data        Possibility to use permission_id, semester_id, validated_by_id and user_id to match a member or several members.
      * @param  array                   $updatedData Possibility to affect permission_id, semester_id, validated_by_id and user_id.
-     * @param  boolean                 $force       Enables to by-pass addition security (to use with caution).
+     * @param  boolean                 $force       Enable to by-pass addition security (to use with caution).
      * @return mixed
      */
     public function updatePermissions($permissions, array $data=[], array $updatedData=[], bool $force=false)
@@ -143,12 +143,12 @@ trait HasPermissions
     }
 
     /**
-     * Deletes one or several permissions depending on the given data.
+     * Delete one or several permissions depending on the given data.
      *
      * @param  string|array|Collection $permissions
-     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data        Possibility to use permission_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @param  string                  $removed_by  Personne demandant la suppression.
-     * @param  boolean                 $force       Enables to by-pass addition security (to use with caution).
+     * @param  boolean                 $force       Enable to by-pass addition security (to use with caution).
      * @return mixed
      */
     public function removePermissions($permissions, array $data=[], string $removed_by=null, bool $force=false)
@@ -189,12 +189,12 @@ trait HasPermissions
     }
 
     /**
-     * Synchronizes (Deletes all and assigns new permissions) one or several permissions depending on the given data.
+     * Synchronize (Delete all and assigns new permissions) one or several permissions depending on the given data.
      *
      * @param  string|array|Collection $permissions
-     * @param  array                   $data        Possibilité d'utiliser permission_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data        Possibility to use permission_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
      * @param  string                  $removed_by  Personne demandant la suppression.
-     * @param  boolean                 $force       Enables to by-pass addition security (to use with caution).
+     * @param  boolean                 $force       Enable to by-pass addition security (to use with caution).
      * @return mixed
      */
     public function syncPermissions($permissions, array $data=[], string $removed_by=null, bool $force=false)
@@ -222,7 +222,7 @@ trait HasPermissions
      * Check if a permission in the given list has been granted or not.
      *
      * @param  string|array|Collection $permissions
-     * @param  array                   $data        Possibilitto use permission_id, semester_id, validated_by_id an user_id to match one or several members.
+     * @param  array                   $data        Possibility to use permission_id, semester_id, validated_by_id an user_id to match one or several members.
      * @return boolean
      */
     public function hasOnePermission($permissions, array $data=[])
@@ -233,7 +233,7 @@ trait HasPermissions
     }
 
     /**
-     * Checks if every permission in the list have been granted or not.
+     * Check if every permission in the list have been granted or not.
      *
      * @param  string|array|Collection $permissions
      * @param  array                   $data        Possibility to use permission_id, semester_id, validated_by_id and user_id to mactch one or several members.

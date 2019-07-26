@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Bookings as admin.
+ * Manage Bookings as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -53,7 +53,7 @@ class BookingController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

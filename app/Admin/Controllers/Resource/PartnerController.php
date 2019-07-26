@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Partners as admin.
+ * Manage Partners as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

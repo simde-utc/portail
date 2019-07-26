@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les contacts.
+ * Contacts request management.
  *
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -20,8 +20,8 @@ use App\Interfaces\Model\CanHaveContacts;
 class ContactRequest extends Request
 {
     /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * Ici on détermine en particulier la ressource concernée par notre contact.
+     * Determine if the user has the right to make this request.
+     * Here we determine in particular the resource concerned by the contact.
      *
      * @return boolean
      */
@@ -32,7 +32,7 @@ class ContactRequest extends Request
                 $this->resource_type, $this->resource_id, CanHaveContacts::class
             );
         } else {
-            // On est sur /user/contacts.
+            // We are on /user/contacts.
             $this->resource = \Auth::user();
         }
 
@@ -40,7 +40,7 @@ class ContactRequest extends Request
     }
 
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

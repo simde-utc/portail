@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Facade;
 class ModelResolver extends Facade
 {
     /**
-     * Saves the accessor name.
+     * Save the accessor name.
      *
      * @return string
      */

@@ -93,7 +93,7 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Defines passport routes.
+     * Define passport routes.
      *
      * @return void
      */

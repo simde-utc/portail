@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages locations places.
+ * Manage locations places.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -45,7 +45,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Lists places.
+     * List places.
      *
      * @return JsonResponse
      */
@@ -59,7 +59,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Creates a place.
+     * Create a place.
      *
      * @param PlaceRequest $request
      * @return JsonResponse
@@ -75,7 +75,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Shows a place.
+     * Show a place.
      *
      * @param Request $request
      * @param string  $place_id
@@ -89,7 +89,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Updates a place.
+     * Update a place.
      *
      * @param PlaceRequest $request
      * @param string       $place_id
@@ -110,7 +110,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Deletes a place.
+     * Delete a place.
      *
      * @param Request $request
      * @param string  $place_id

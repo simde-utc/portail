@@ -27,7 +27,7 @@ abstract class BaseAuth
     protected $config;
 
     /**
-     * Returns a link to the login form.
+     * Return a link to the login form.
      *
      * @param Request $request
      * @return mixed
@@ -41,7 +41,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Returns a link to to subcribing form.
+     * Return a link to to subcribing form.
      *
      * @param Request $request
      * @return mixed
@@ -84,7 +84,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Méthode de déconnexion.
+     * Logout method.
      *
      * @param Request $request
      * @return mixed
@@ -107,7 +107,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Creates a user and his connection mode auth_{provider}.
+     * Create a user and his connection mode auth_{provider}.
      *
      * @param Request $request
      * @param array   $userInfo
@@ -130,7 +130,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Updates user information and his connection mode auth_{provider}.
+     * Update user information and his connection mode auth_{provider}.
      *
      * @param Request $request
      * @param string  $user_id
@@ -150,7 +150,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Creates or adjust user information and his connection mode auth_{provider}.
+     * Create or adjust user information and his connection mode auth_{provider}.
      *
      * @param Request $request
      * @param string  $key
@@ -161,7 +161,7 @@ abstract class BaseAuth
      */
     protected function updateOrCreate(Request $request, string $key, string $value, array $userInfo=[], array $authInfo=[])
     {
-        // Finds a user.
+        // Find a user.
         $userAuth = $this->findUser($key, $value);
 
         if ($userAuth === null) {
@@ -190,7 +190,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Creates user.
+     * Create user.
      *
      * @param array $info
      * @return mixed
@@ -208,7 +208,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Updates user.
+     * Update user.
      *
      * @param string $user_id
      * @param array  $info
@@ -232,7 +232,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Creates or update user.
+     * Create or update user.
      *
      * @param array $info
      * @return mixed
@@ -299,7 +299,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Connects a user.
+     * Connect a user.
      *
      * @param Request          $request
      * @param User             $user
@@ -308,7 +308,7 @@ abstract class BaseAuth
      */
     protected function connect(Request $request, User $user=null, \App\Models\Auth $userAuth=null)
     {
-        // Si tout est bon, on le connecte.
+        // If everything is ok, connecting the user.
         if ($user && $userAuth) {
             if (!$user->is_active) {
                 return $this->error($request, $user, $userAuth, 'Ce compte a été désactivé');
@@ -332,7 +332,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Redirects to the right page in case of success.
+     * Redirect to the right page in case of success.
      *
      * @param Request          $request
      * @param User             $user
@@ -350,7 +350,7 @@ abstract class BaseAuth
     }
 
     /**
-     * Redirects to the right page in case of error.
+     * Redirect to the right page in case of error.
      *
      * @param Request          $request
      * @param User             $user

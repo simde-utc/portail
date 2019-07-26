@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages user's actions on articles.
+ * Manage user's actions on articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -73,7 +73,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Lists user's actions.
+     * List user's actions.
      *
      * @param Request $request
      * @param string  $user_id
@@ -94,7 +94,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Creates a user actions.
+     * Create a user actions.
      *
      * @param UserArticleActionRequest $request
      * @param string                   $user_id
@@ -122,7 +122,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Shows a user actions.
+     * Show a user actions.
      *
      * @param Request $request
      * @param string  $user_id
@@ -144,7 +144,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Updates a user actions.
+     * Update a user actions.
      *
      * @param UserArticleActionRequest $request
      * @param string                   $user_id
@@ -177,7 +177,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Deletes a user actions.
+     * Delete a user actions.
      *
      * @param Request $request
      * @param string  $user_id

@@ -1,6 +1,6 @@
 <?php
 /**
- * Displays charts.
+ * Display charts.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,7 +22,7 @@ use App\Models\{
 class ChartsController extends Controller
 {
     /**
-     * Gives access only if the user has the right permission.
+     * Give access only if the user has the right permission.
      */
     public function __construct()
     {
@@ -44,7 +44,7 @@ class ChartsController extends Controller
     }
 
     /**
-     * Retrieves user data.
+     * Retrieve user data.
      *
      * @return array
      */
@@ -77,7 +77,7 @@ class ChartsController extends Controller
     }
 
     /**
-     * Retrives all member users.
+     * Retrieve all member users.
      *
      * @return array
      */
@@ -158,7 +158,7 @@ class ChartsController extends Controller
     }
 
     /**
-     * Adjusts arrays to have the same keys.
+     * Adjust arrays to have the same keys.
      *
      * @param  array $reference
      * @param  array $data
@@ -177,7 +177,7 @@ class ChartsController extends Controller
     }
 
     /**
-     * Adjusts arrays to have same keys by assining 0.
+     * Adjust arrays to have same keys by assining 0.
      *
      * @param  array $reference
      * @param  array $data

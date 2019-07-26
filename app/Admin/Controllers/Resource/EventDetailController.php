@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages EventDetails as admin.
+ * Manage EventDetails as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -37,7 +37,7 @@ class EventDetailController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

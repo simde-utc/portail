@@ -50,7 +50,7 @@ class UserContributionBde extends Notification
     }
 
     /**
-     * Returns the semesters name.
+     * Return the semesters name.
      *
      * @return string
      */

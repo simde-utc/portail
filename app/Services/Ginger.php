@@ -1,7 +1,7 @@
 <?php
 /**
  * Ginger Service.
- * Retrives infomations about UTC members.
+ * Retrieve infomation about UTC members.
  *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -22,7 +22,7 @@ class Ginger
     protected $key;
 
     /**
-     * Creates the class with the portal's default key.
+     * Create the class with the portal's default key.
      */
     public function __construct()
     {
@@ -30,7 +30,7 @@ class Ginger
     }
 
     /**
-     * Changes the used key.
+     * Change the used key.
      *
      * @param string $key
      * @return Ginger
@@ -43,7 +43,7 @@ class Ginger
     }
 
     /**
-     * Retrieves from ginger information about a user corresponding to the given login.
+     * Retrieve from ginger information about a user corresponding to the given login.
      *
      * @param  string $login
      * @return Ginger
@@ -62,7 +62,7 @@ class Ginger
     }
 
     /**
-     * Retrieves directly from Ginger trough a given email.
+     * Retrieve directly from Ginger trough a given email.
      *
      * @param  string $email
      * @return Ginger
@@ -81,7 +81,7 @@ class Ginger
     }
 
     /**
-     * Retrieves directly from Ginger trough a given login.
+     * Retrieve directly from Ginger trough a given login.
      *
      * @param  string $login
      * @return array        Retourne l'ensemble des données de l'utilisateur.
@@ -92,7 +92,7 @@ class Ginger
     }
 
     /**
-     * Retrieves directly from Ginger trough a given email.
+     * Retrieve directly from Ginger trough a given email.
      *
      * @param  string $email
      * @return array        Retourne l'ensemble des données de l'utilisateur.
@@ -103,7 +103,7 @@ class Ginger
     }
 
     /**
-     * Indicates if user exists or not.
+     * Indicate if user exists or not.
      *
      * @param  string $login
      * @return boolean
@@ -126,7 +126,7 @@ class Ginger
     }
 
     /**
-     * Retrieves from Ginger the response code for a given login.
+     * Retrieve from Ginger the response code for a given login.
      *
      * @param  string $login
      * @return integer
@@ -139,7 +139,7 @@ class Ginger
     }
 
     /**
-     * Retrieves from Ginger a user contributions.
+     * Retrieve from Ginger a user contributions.
      *
      * @param  string $login
      * @return array
@@ -236,7 +236,7 @@ class Ginger
     }
 
     /**
-     * Retrieves from Ginger the response code for a given login.
+     * Retrieve from Ginger the response code for a given login.
      *
      * @return integer|null
      */
@@ -246,7 +246,7 @@ class Ginger
     }
 
     /**
-     * Renvoie l'utlisateur si existance de celui-ci.
+     * Return the user if he exists.
      *
      * @return array|null
      */
@@ -256,7 +256,7 @@ class Ginger
     }
 
     /**
-     * Returns user's login if it exists.
+     * Return user's login if it exists.
      *
      * @return string|null
      */
@@ -266,7 +266,7 @@ class Ginger
     }
 
     /**
-     * Returns user's last name if it exists.
+     * Return user's last name if it exists.
      *
      * @return string|null
      */
@@ -276,7 +276,7 @@ class Ginger
     }
 
     /**
-     * Returns user's first name if it exists.
+     * Return user's first name if it exists.
      *
      * @return string|null
      */
@@ -286,7 +286,7 @@ class Ginger
     }
 
     /**
-     * Returns user's email if it exists.
+     * Return user's email if it exists.
      *
      * @return string|null
      */
@@ -296,7 +296,7 @@ class Ginger
     }
 
     /**
-     * Returns user's type if it exists.
+     * Return user's type if it exists.
      *
      * @return string|null
      */
@@ -306,7 +306,7 @@ class Ginger
     }
 
     /**
-     * Returns user's badge if it exists.
+     * Return user's badge if it exists.
      *
      * @return string|null
      */
@@ -316,7 +316,7 @@ class Ginger
     }
 
     /**
-     * Returns if user is adult if it exists.
+     * Return if user is adult if it exists.
      *
      * @return boolean|null
      */
@@ -326,7 +326,7 @@ class Ginger
     }
 
     /**
-     * Indicates if a user is contributor if exists.
+     * Indicate if a user is contributor if exists.
      *
      * @return boolean|null
      */
@@ -336,7 +336,7 @@ class Ginger
     }
 
     /**
-     * Executes a curl request.
+     * Execute a curl request.
      *
      * @param  string $method
      * @param  string $route

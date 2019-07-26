@@ -1,6 +1,6 @@
 <?php
 /**
- * Hides data by default to exporte it.
+ * Hide data by default to exporte it.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 trait HasHiddenData
 {
     /**
-     * Returns the model type.
+     * Return the model type.
      *
      * @return string
      */
@@ -25,7 +25,7 @@ trait HasHiddenData
     }
 
     /**
-     * Retuns all required fields.
+     * Return all required fields.
      *
      * @return array
      */

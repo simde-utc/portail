@@ -1,6 +1,6 @@
 <?php
 /**
- * Notifies the user of his access validation.
+ * Notify the user of his access validation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

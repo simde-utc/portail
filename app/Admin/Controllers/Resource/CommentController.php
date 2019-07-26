@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Comments as admin.
+ * Manage Comments as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -49,7 +49,7 @@ class CommentController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

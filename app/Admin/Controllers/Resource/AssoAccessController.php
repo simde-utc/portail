@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages AssosAccesses as admin.
+ * Manage AssosAccesses as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -57,7 +57,7 @@ class AssoAccessController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

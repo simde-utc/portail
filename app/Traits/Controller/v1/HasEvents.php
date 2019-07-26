@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller an access to Events.
+ * Add the controller an access to Events.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,7 +25,7 @@ trait HasEvents
     use HasUsers;
 
     /**
-     * Checks that there is no problem with atime period.
+     * Check that there is no problem with atime period.
      *
      * @param  string $begin_at
      * @param  string $end_at
@@ -46,7 +46,7 @@ trait HasEvents
     }
 
     /**
-     * Retrieves the event.
+     * Retrieve the event.
      *
      * @param  Request $request
      * @param  User    $user
@@ -79,7 +79,7 @@ trait HasEvents
     }
 
     /**
-     * Returns a given calendar.
+     * Return a given calendar.
      *
      * @param  Request $request
      * @param  User    $user
@@ -112,7 +112,7 @@ trait HasEvents
     }
 
     /**
-     * Indicates if the token can see or not.
+     * Indicate if the token can see or not.
      *
      * @param  Request $request
      * @param  Model   $model

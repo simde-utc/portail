@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages groups members.
+ * Manage groups members.
  *
  * TODO: Scopes !
  *
@@ -43,7 +43,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Lists les membres du groupe.
+     * List les membres du groupe.
      *
      * @param Request $request
      * @param string  $group_id
@@ -59,7 +59,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Adds a member to the group.
+     * Add a member to the group.
      *
      * @param GroupMemberRequest $request
      * @param string             $group_id
@@ -88,7 +88,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Shows a member of the group.
+     * Show a member of the group.
      *
      * @param Request $request
      * @param string  $group_id
@@ -108,7 +108,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Updates a member of the group.
+     * Update a member of the group.
      *
      * @param GroupMemberRequest $request
      * @param string             $group_id
@@ -150,7 +150,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Deletes a member of the group.
+     * Delete a member of the group.
      *
      * @param Request $request
      * @param string  $group_id

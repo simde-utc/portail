@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware vérifiant si la requête vient d'un client oauth.
+ * Middleware to check if the request comes from an OAuth client.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 class CheckAny
 {
     /**
-     * Vérifie si c'est un client oauth.
+     * Check if it's an OAuth client.
      *
      * @param  Request $request
      * @param  Closure $next
@@ -28,7 +28,7 @@ class CheckAny
      */
     public function handle(Request $request, Closure $next, string ...$args)
     {
-        // On vérifie que le token n'est pas lié à un utilisateur.
+        // We check that the token isxn't linked to a user.
         if ($request->bearerToken() !== null && !$request->isAFakedUserRequest) {
             $bearerToken = $request->bearerToken();
             $tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');

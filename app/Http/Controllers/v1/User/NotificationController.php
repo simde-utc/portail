@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages user notifications.
+ * Manage user notifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -54,7 +54,26 @@ class NotificationController extends Controller
     }
 
     /**
-     * Lists all user notifications.
+     * Return the request wich must be executed for an element of the bulk.
+     *
+     * @param  string  $requestClass
+     * @param  Request $baseRequest
+     * @param  array   $args
+     * @return Request
+     */
+    protected function getRequestForBulk(string $requestClass, Request $baseRequest, array $args): Request
+    {
+        $request = parent::getRequestForBulk($requestClass, $baseRequest, $args);
+
+        if (isset($request->input('data')[$args[0]])) {
+            $request->merge(\array_merge($request->input(), ['data' => $request->input('data')[$args[0]]]));
+        }
+
+        return $request;
+    }
+
+    /**
+     * List all user notifications.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
@@ -82,28 +101,36 @@ class NotificationController extends Controller
     }
 
     /**
-     * Creates a notification for the user.
+     * Create a notification for the user.
      *
      * @param UserNotificationRequest $request
      * @param string                  $user_id
-     * @return void
+     * @return mixed
      */
-    public function store(UserNotificationRequest $request, string $user_id=null): void
+    public function store(UserNotificationRequest $request, string $user_id=null)
     {
         $user = $this->getUser($request, $user_id);
+        $notifier = \Scopes::getClient($request);
 
-        $user->notify(new ExternalNotification(
-            \ModelResolver::getModel($request->input('notifier', 'client'), CanNotify::class),
+        if ($request->input('notifier') === 'asso') {
+            $notifier = $notifier->asso;
+        }
+
+        $user->notify($notification = new ExternalNotification(
+            $notifier,
+            $request->input('subject'),
             $request->input('content'),
+            $request->input('html'),
             $request->input('action', []),
-            \Scopes::getClient($request)->asso
+            $request->input('data', []),
+            $request->input('exceptedVia', [])
         ));
 
-        abort(201, 'Notification créée et envoyée');
+        return response()->json($notification->toArray($user), 200);
     }
 
     /**
-     * Shows a user notification.
+     * Show a user notification.
      *
      * @param Request $request
      * @param string  $user_id
@@ -122,7 +149,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Updates a user notification.
+     * Update a user notification.
      *
      * @param UserNotificationRequest $request
      * @param string                  $user_id
@@ -147,7 +174,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Deletes a user notification.
+     * Delete a user notification.
      *
      * @param Request $request
      * @param string  $user_id

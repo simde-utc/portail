@@ -1,6 +1,6 @@
 <?php
 /**
- * Model corresponding to aux groupes.
+ * Model corresponding to the groups.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -60,7 +60,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     ];
 
     /**
-     * Appelé dès la création du modèle.
+     * Called at the model's creation.
      *
      * @return void
      */
@@ -126,7 +126,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indicates if its possible to delete a role depending on a given group id.
+     * Indicate if its possible to delete a role depending on a given group id.
      * By default a group is not removable if it has already be assigned.
      * But we allow its deletion if it's assigned to one and only groupe.
      *
@@ -140,7 +140,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indicates if a role is accessible.
+     * Indicate if a role is accessible.
      * Only by members for custom roles of the assciation. Otherwise always visible.
      *
      * @param  string $user_id
@@ -156,7 +156,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indicates if a role is manageable.
+     * Indicate if a role is manageable.
      * Only by members for custom roles of the assciation. Otherwise always visible.
      *
      * @param  string $user_id
@@ -174,7 +174,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indicates if a permission is accessible.
+     * Indicate if a permission is accessible.
      * Only by members for custom permissions of the assciation. Otherwise always visible.
      *
      * @param  string $user_id
@@ -190,7 +190,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indicates if a permission is manageable.
+     * Indicate if a permission is manageable.
      * Only by members for custom permissions of the assciation. Otherwise always visible.
      *
      * @param  string $user_id
@@ -218,7 +218,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indicates if the contact mean est accessible.
+     * Indicate if the contact mean est accessible.
      * Only by group members.
      *
      * @param  string $user_id
@@ -230,7 +230,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indicates if the contact mean is manageable.
+     * Indicate if the contact mean is manageable.
      * Only by group members.
      *
      * @param  string $user_id
@@ -254,7 +254,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indicates if the private calendar is manageable.
+     * Indicate if the private calendar is manageable.
      * Only by group members.
      *
      * @param  string $user_id
@@ -278,7 +278,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indicates if an private event is manageable.
+     * Indicate if an private event is manageable.
      * Only by group members.
      *
      * @param  string $user_id
@@ -302,7 +302,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indicates if the private article is manageable.
+     * Indicate if the private article is manageable.
      * Only by group members.
      *
      * @param  string $user_id

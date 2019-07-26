@@ -17,7 +17,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 class EventServiceProvider extends ServiceProvider
 {
     /**
-     * Lists all watched events.
+     * List all watched events.
      *
      * @var array
      */
@@ -28,7 +28,7 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Saves here customs events.
+     * Save here customs events.
      *
      * @return void
      */

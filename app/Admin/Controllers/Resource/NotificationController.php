@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages Notifications as admin.
+ * Manage Notifications as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -35,7 +35,7 @@ class NotificationController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

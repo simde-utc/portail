@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the controller a Morphs management.
+ * Add the controller a Morphs management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 trait HasMorphs
 {
     /**
-     * Retrieves a morph from the request.
+     * Retrieve a morph from the request.
      *
      * @param  Request $request
      * @param  string  $modelName

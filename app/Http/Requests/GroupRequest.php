@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les articles.
+ * Articles request management.
  *
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -18,8 +18,8 @@ use App\Models\Group;
 class GroupRequest extends Request
 {
     /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * On vérifie que le groupe est bien géré par le propriétaire.
+     * Determines if the user has the right to make this request.
+     * We check that the group is managed by the owner.
      *
      * @return boolean
      */
@@ -35,7 +35,7 @@ class GroupRequest extends Request
     }
 
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

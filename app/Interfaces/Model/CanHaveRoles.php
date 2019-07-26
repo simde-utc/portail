@@ -1,6 +1,6 @@
 <?php
 /**
- * Indicates that the model can have roles.
+ * Indicate that the model can have roles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,14 +15,14 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 interface CanHaveRoles
 {
     /**
-     * Returns the roles list.
+     * Return the roles list.
      *
      * @return MorphMany
      */
     public function roles();
 
     /**
-     * Indicates  if a given user can access the model's roles.
+     * Indicate  if a given user can access the model's roles.
      *
      * @param string $user_id
      * @return boolean
@@ -31,7 +31,7 @@ interface CanHaveRoles
 
     /**
      *
-     * Indicates  if a given user can can create/update/delete the model's roles.
+     * Indicate  if a given user can can create/update/delete the model's roles.
      *
      * @param string $user_id
      * @return boolean

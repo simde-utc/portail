@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur une gestion des bulks.
+ * Add the controller the bulks management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 trait HasBulkMethods
 {
     /**
-     * Retourne tous les éléménts d'une ou plusieurs ressources.
+     * Return all elements of one or several resources.
      *
      * @param  Request $request
      * @return mixed
@@ -31,7 +31,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Crée un ou plusieurs élément d'une ressource.
+     * Create one or several elements of a resource.
      *
      * @param  Request $request
      * @return mixed
@@ -42,7 +42,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Récupère un ou plusieurs élément d'une ressource.
+     * Retrieve one or several elements of a resource.
      *
      * @param  Request $request
      * @return mixed
@@ -53,7 +53,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Récupère un ou plusieurs élément d'une ressource.
+     * Edit one or several elements of a resource.
      *
      * @param  Request $request
      * @return mixed
@@ -64,7 +64,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Supprime un ou plusieurs élément d'une ressource.
+     * Remove one or several elements of a resource.
      *
      * @param  Request $request
      * @return mixed
@@ -75,7 +75,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Retourne la réponse pour un ou plusieurs éléments.
+     * Return the response for one or several elements.
      *
      * @param  Request $request
      * @param  string  $method
@@ -97,7 +97,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Affiche plusieurs ressources en même temps.
+     * Display several resources at the same time.
      *
      * @param  Request $request
      * @return mixed
@@ -108,7 +108,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Affiche plusieurs ressources en même temps.
+     * Display several resources at the same time.
      *
      * @param  Request $request
      * @return mixed
@@ -119,7 +119,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Crée plusieurs ressources.
+     * Create several resources.
      *
      * @param  Request $request
      * @return mixed
@@ -130,7 +130,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Met à jour plusieurs ressources.
+     * Update several resources.
      *
      * @param  Request $request
      * @return mixed
@@ -141,7 +141,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Supprime plusieurs ressources.
+     * Destroy several resources.
      *
      * @param  Request $request
      * @return mixed
@@ -152,7 +152,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Gestion d'une requête bulk pour une méthode spécifique.
+     * Bulk request for a given method management.
      *
      * @param  Request $request
      * @param  string  $method
@@ -182,7 +182,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Gère les différents appels pour chaque élément bulk.
+     * Handle different calls for each bulk element.
      *
      * @param  Request $request
      * @param  string  $method
@@ -218,7 +218,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Exécute la requête pour chaque bulk argument.
+     * Execute the request for each bulk argument.
      *
      * @param  array    $args
      * @param  \Closure $callback
@@ -241,7 +241,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Retourne la réponse pour un élément du bulk.
+     * Return the response for a bulk element.
      *
      * @param  Request $request
      * @param  string  $method
@@ -267,7 +267,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Execute la méthode pour un élément de bulk en passant les bons middlewares avant.
+     * Execute the method for a bulk element by passing the right middlewares before.
      *
      * @param  Request $request
      * @param  string  $method
@@ -280,7 +280,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Retourne la requête qui doit être exécuté pour élément du bulk.
+     * Return the request wich must be executed for a element of the bulk.
      *
      * @param  string  $requestClass
      * @param  Request $baseRequest
@@ -313,7 +313,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Retourne les paramètres nettoyés de la route.
+     * Return the parameters cleaned from the route.
      *
      * @param  array $params
      * @return array
@@ -329,7 +329,7 @@ trait HasBulkMethods
     }
 
     /**
-     * Valide ou non les requêtes pour chaque élement du bulk.
+     * Validate or not requests for each element of the bulk.
      *
      * @param  Request $request
      * @return void

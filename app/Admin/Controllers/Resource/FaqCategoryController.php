@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages FAQ questions categories as admin.
+ * Manage FAQ questions categories as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class FaqCategoryController extends ResourceController
     protected $model = FaqCategory::class;
 
     /**
-     * Fields to display definition.
+     * Field to display definition.
      *
      * @return array
      */
@@ -54,7 +54,7 @@ class FaqCategoryController extends ResourceController
     }
 
     /**
-     * Returns dependencies.
+     * Return dependencies.
      *
      * @return array
      */

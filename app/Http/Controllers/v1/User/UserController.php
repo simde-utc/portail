@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages users.
+ * Manage users.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -34,14 +34,18 @@ class UserController extends Controller
     {
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-get-users'),
-            ['only' => ['all', 'show']]
+            ['only' => ['all']]
         );
         $this->middleware(
             \Scopes::matchOneOfDeepestChildren('client-create-users'),
             ['only' => ['create']]
         );
         $this->middleware(
-        \Scopes::matchAnyClient(),
+            \Scopes::matchOneOfDeepestChildren('user-get-info', 'client-get-users'),
+            ['only' => ['show']]
+        );
+        $this->middleware(
+        	\Scopes::matchAnyClient(),
             ['only' => ['bulkShow']]
         );
         $this->middleware(
@@ -55,7 +59,7 @@ class UserController extends Controller
     }
 
     /**
-     * Retrieves the user list.
+     * Retrieve the user list.
      *
      * @param Request $request
      * @return JsonResponse
@@ -88,7 +92,7 @@ class UserController extends Controller
     }
 
     /**
-     * Creates a new user.
+     * Create a new user.
      *
      * @param Request $request
      * @return JsonResponse
@@ -145,7 +149,7 @@ class UserController extends Controller
     }
 
     /**
-     * Shows a user.
+     * Show a user.
      *
      * @param UserRequest $request
      * @param string      $user_id
@@ -207,7 +211,7 @@ class UserController extends Controller
     }
 
     /**
-     * Updates a user.
+     * Update a user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -230,7 +234,7 @@ class UserController extends Controller
     }
 
     /**
-     * Not handled: deletes a user.
+     * Not handled: Delete a user.
      * TODO RGPD.
      *
      * @param Request $request
