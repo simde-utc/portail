@@ -52,6 +52,7 @@ class Contact extends Model implements OwnableContract
      */
     public static function boot()
     {
+        parent::boot();
         $verificator = function ($model) {
             if ($type = $model->type) {
                 if (!preg_match("/$type->pattern/", $model->value)) {
