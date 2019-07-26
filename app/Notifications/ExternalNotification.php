@@ -41,20 +41,19 @@ class ExternalNotification extends Notification
      * @param array     $action
      * @param array     $data        Data for placed variables in subject, content, action and html.
      * @param array     $exceptedVia
-     * @param Model     $creator
      */
     public function __construct(CanNotify $model, string $subject=null, string $content=null, string $html=null,
-        array $action=[], array $data=[], array $exceptedVia=[], Model $creator=null)
+        array $action=[], array $data=[], array $exceptedVia=[])
     {
-        parent::__construct('external_'.\ModelResolver::getNameFromObject($model), null, $creator);
+        parent::__construct('external_'.\ModelResolver::getNameFromObject($model), null, $model);
 
-        $this->subject = ($subject ?? $model->getName());
+        $this->subject = ($subject ?? \ucfirst($model->getName()));
         $this->content = $content;
         $this->html = $html;
         $this->action = $action;
         $this->data = $data;
         $this->exceptedVia = $exceptedVia;
-        $this->icon = $creator->image;
+        $this->icon = $model->image;
     }
 
     /**
@@ -79,7 +78,7 @@ class ExternalNotification extends Notification
      */
     public function getSenderData(): array
     {
-        return [$this->creator->email, $this->creator->name];
+        return [$this->creator->email, \ucfirst($this->creator->name)];
     }
 
     /**
