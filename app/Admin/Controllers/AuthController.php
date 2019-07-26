@@ -1,6 +1,6 @@
 <?php
 /**
- * Authentifie les admins.
+ * Authenticate admins.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class AuthController extends BaseAuthController
 {
     /**
-     * Vérification de la connexion.
+     * Connection check.
      *
      * @return mixed
      */
@@ -37,7 +37,7 @@ class AuthController extends BaseAuthController
     }
 
     /**
-     * Déconnexion.
+     * Logout.
      *
      * @param Request $request
      * @return mixed

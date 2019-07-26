@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute un sélecteur concernant le créateur.
+ * Add a selector concerning the creator.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 trait HasCreatorSelection
 {
     /**
-     * Relation avec le créateur.
+     * Relation with the creator.
      *
      * @return mixed
      */
@@ -25,7 +25,7 @@ trait HasCreatorSelection
     }
 
     /**
-     * Sélecteur créateur.
+     * Creator selector.
      *
      * @param  Builder $query
      * @param  string  $creator_type

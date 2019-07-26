@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les actions utilisateurs sur les articles.
+ * Manage user's actions on articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -29,7 +29,7 @@ class ActionController extends Controller
     use HasUserBulkMethods, HasArticles;
 
     /**
-     * Nécessité de pouvoir voir les artiles et gérer les actions utilisateurs.
+     * Must be able to see articles and handle users actions.
      */
     public function __construct()
     {
@@ -73,7 +73,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Liste les actions de l'utilisateur.
+     * List user's actions.
      *
      * @param Request $request
      * @param string  $user_id
@@ -94,7 +94,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Créer une action de l'utilisateur.
+     * Create a user actions.
      *
      * @param UserArticleActionRequest $request
      * @param string                   $user_id
@@ -122,7 +122,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Montre une action de l'utilisateur.
+     * Show a user actions.
      *
      * @param Request $request
      * @param string  $user_id
@@ -144,7 +144,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Met à jour une action de l'utilisateur.
+     * Update a user actions.
      *
      * @param UserArticleActionRequest $request
      * @param string                   $user_id
@@ -177,7 +177,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Supprime une action de l'utilisateur.
+     * Delete a user actions.
      *
      * @param Request $request
      * @param string  $user_id

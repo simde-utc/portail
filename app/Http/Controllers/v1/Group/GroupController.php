@@ -1,9 +1,9 @@
 <?php
 /**
- * Gère les groupes.
+ * Manage groups.
  *
- * TODO: Refaire les scopes.
- * TODO: Exporter dans un Trait.
+ * TODO: Remake scopes.
+ * TODO: Export in a Trait.
  *
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -31,7 +31,7 @@ class GroupController extends Controller
     use HasGroups;
 
     /**
-     * Nécessité de pouvoir gérer les groupes.
+     * Must be able to manage groups.
      */
     public function __construct()
     {
@@ -46,14 +46,14 @@ class GroupController extends Controller
     }
 
     /**
-     * Liste les groupes.
+     * List groups.
      *
      * @param GroupRequest $request
      * @return JsonResponse
      */
     public function index(GroupRequest $request): JsonResponse
     {
-        // On inclue les relations et on les formattent.
+        // Relations inclusion anf formatting them.
         $groups = Group::getSelection();
 
         return response()->json($groups->map(function ($group) {
@@ -62,7 +62,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Créer un groupe.
+     * Create a group.
      *
      * @param GroupRequest $request
      * @return JsonResponse
@@ -77,12 +77,12 @@ class GroupController extends Controller
 
         if ($group->save()) {
             /*
-                Le créateur du groupe devient automatiquement admin et membre de son groupe.
-                Les ids des membres à ajouter seront passé dans la requête.
-                ids est un array de user ids.
+                The group creator becomes automatically admin and member of its group.
+                Members ids to add will be passed into the request.
+                Ids is an array of user ids.
             */
 
-            // TODO: Envoyer un mail d'invitation dans le groupe.
+            // TODO: Send an invitation to the group email.
             try {
                 $group->assignMembers($request->input('member_ids', []), [
                     'semester_id' => $request->input('semester_id', '0'),
@@ -100,7 +100,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Montre un groupe.
+     * Show a group.
      *
      * @param GroupRequest $request
      * @param string       $group_id
@@ -114,7 +114,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Met à jour un groupe.
+     * Update a group.
      *
      * @param GroupRequest $request
      * @param string       $group_id
@@ -161,7 +161,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Supprime un groupe.
+     * Delete a group.
      *
      * @param GroupRequest $request
      * @param string       $group_id

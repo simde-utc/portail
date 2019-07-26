@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware vérifiant si la requête est en ajax.
+ * Middleware to check if the request is in AJAX.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class CheckPublic
 {
     /**
-     * Vérifie la requête.
+     * Check the request.
      *
      * @param  Request $request
      * @param  Closure $next
@@ -25,7 +25,7 @@ class CheckPublic
      */
     public function handle(Request $request, Closure $next)
     {
-        // Pas de token requis.
+        // No required token.
         try {
             if ($request->token()) {
                 throw new AuthenticationException('Client connecté mais n\'ayant pas les scopes nécessaires');

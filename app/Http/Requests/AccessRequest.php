@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les accès.
+ * Access request management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use App\Traits\Model\CanHavePermissions;
 class AccessRequest extends Request
 {
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

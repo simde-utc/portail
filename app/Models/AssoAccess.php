@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux accès des associations.
+ * Model corresponding to association accesses.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -41,7 +41,7 @@ class AssoAccess extends Model
     ];
 
     /**
-     * Relation avec l'association.
+     * Relation with the association.
      *
      * @return mixed
      */
@@ -51,7 +51,7 @@ class AssoAccess extends Model
     }
 
     /**
-     * Relation avec le membre.
+     * Relation with the member.
      *
      * @return mixed
      */
@@ -61,7 +61,7 @@ class AssoAccess extends Model
     }
 
     /**
-     * Relation avec l'utilisateur ayant confirmé.
+     * Relation with the user who confirmed.
      *
      * @return mixed
      */
@@ -71,7 +71,7 @@ class AssoAccess extends Model
     }
 
     /**
-     * Relation avec l'utilisateur ayant validé.
+     * Relation with the user who validated.
      *
      * @return mixed
      */
@@ -81,7 +81,7 @@ class AssoAccess extends Model
     }
 
     /**
-     * Relation avec l'accès.
+     * Relation with the access.
      *
      * @return mixed
      */
@@ -91,7 +91,7 @@ class AssoAccess extends Model
     }
 
     /**
-     * Relation avec le semestre.
+     * Relation with the semester.
      *
      * @return mixed
      */

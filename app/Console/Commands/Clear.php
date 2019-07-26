@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier générant la commande portail:clear.
- * Efface le cache de l'application.
+ * File generating the command: portail:clear.
+ * Erase application cache.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -35,7 +35,7 @@ class Clear extends Command
     }
 
     /**
-     * Exécution de la commande.
+     * Command execution.
      *
      * @return mixed
      */

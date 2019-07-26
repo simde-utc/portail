@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les authentifications mots de passe.
+ * Manage Password Authentifications as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ class AuthPasswordController extends ResourceController
     protected $model = AuthPassword::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -35,7 +35,7 @@ class AuthPasswordController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Return dependencies.
      *
      * @return array
      */
@@ -47,7 +47,7 @@ class AuthPasswordController extends ResourceController
     }
 
     /**
-     * Génère le hash du mot de passe avant sauvegarde.
+     * Generate the password's hash before save.
      *
      * @return mixed
      */

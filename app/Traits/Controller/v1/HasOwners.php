@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un gestion des possésseurs.
+ * Add the controller a Owner management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ trait HasOwners
     use HasMorphs;
 
     /**
-     * Récupère le possésseur.
+     * Retrieve the owner.
      *
      * @param  Request $request
      * @param  string  $modelName

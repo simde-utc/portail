@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux actions des articles.
+ * Model corresponding to article actions.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -27,7 +27,7 @@ class ArticleAction extends Model
     ];
 
     /**
-     * Relation avec les articles.
+     * Relation with articles.
      *
      * @return mixed
      */

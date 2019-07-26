@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les utilisateurs.
+ * Manage users.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -27,8 +27,8 @@ class UserController extends Controller
     use HasUserBulkMethods, HasUsers, HasImages;
 
     /**
-     * Uniqument client: Nécessité de pouvoir gérer les utilisateurs.
-     * Uniquement user: Lecture et modification uniquement possible de l'utlisateur.
+     * Only clients: Must have the right to manage users.
+     * Oly user: Reading and update only possible by the user.
      */
     public function __construct()
     {
@@ -59,7 +59,7 @@ class UserController extends Controller
     }
 
     /**
-     * Récupère la liste des utilisateurs.
+     * Retrieve the user list.
      *
      * @param Request $request
      * @return JsonResponse
@@ -92,7 +92,7 @@ class UserController extends Controller
     }
 
     /**
-     * Créer un nouvel utilisateur.
+     * Create a new user.
      *
      * @param Request $request
      * @return JsonResponse
@@ -116,7 +116,7 @@ class UserController extends Controller
             'is_active' => $active,
         ]);
 
-        // On affecte l'image si tout s'est bien passé.
+        // If everything went fine, affecting image.
         $this->setImage($request, $user, 'users/'.$user->id);
 
         if ($request->filled('details')) {
@@ -149,7 +149,7 @@ class UserController extends Controller
     }
 
     /**
-     * Montre un utilisateur.
+     * Show a user.
      *
      * @param UserRequest $request
      * @param string      $user_id
@@ -206,12 +206,12 @@ class UserController extends Controller
             $user->makeHidden('last_login_at')->makeHidden('created_at')->makeHidden('updated_at');
         }
 
-        // Par défaut, on retourne au moins l'id de la personne et son nom.
+        // By default, at least the user id and name is returned.
         return response()->json($user);
     }
 
     /**
-     * Met à jour un utilisateur.
+     * Update a user.
      *
      * @param Request $request
      * @param string  $user_id
@@ -227,14 +227,14 @@ class UserController extends Controller
         $user->is_active = $request->input('is_active', $user->is_active);
         $user->save();
 
-        // On affecte l'image si tout s'est bien passé.
+        // If everything went fine, affecting image.
         $this->setImage($request, $user, 'users/'.$user->id);
 
         return response()->json($user, 200);
     }
 
     /**
-     * (Non géré) Supprime un utilisateur.
+     * Not handled: Delete a user.
      * TODO RGPD.
      *
      * @param Request $request

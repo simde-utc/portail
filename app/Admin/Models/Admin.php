@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux admins.
+ * Administrators model.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -43,7 +43,7 @@ class Admin extends Administrator
     ];
 
     /**
-     * Retourne l'utilisateur associé.
+     * Return associated user.
      *
      * @return User
      */
@@ -53,7 +53,7 @@ class Admin extends Administrator
     }
 
     /**
-     * Donne le username.
+     * Return username.
      *
      * @return string
      */
@@ -63,7 +63,7 @@ class Admin extends Administrator
     }
 
     /**
-     * Créer l'attribut name à la volée (concaténation du prénom et du nom).
+     * Create name attribute on the fly (first and last name concatenation).
      *
      * @return string
      */
@@ -89,7 +89,7 @@ class Admin extends Administrator
     }
 
     /**
-     * Indique si l'utilsateur est actif (sous-entendu, qu'il s'est bien déjà connecté une fois).
+     * Return if user user is active (He has been connected at least once).
      *
      * @return boolean
      */

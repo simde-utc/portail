@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux salles.
+ * Model corresponding to rooms.
  *
  * @author Thomas Meurou <thomas.meurou@yahoo.fr>
  * @author Josselin Pennors <josselin.pennors@hotmail.fr>
@@ -53,7 +53,7 @@ class Room extends Model implements OwnableContract
     ];
 
     /**
-     * Appelé à la création du modèle.
+     * Called at the model creation.
      *
      * @return void
      */
@@ -85,7 +85,7 @@ class Room extends Model implements OwnableContract
     }
 
     /**
-     * Scope spécifique pour n'avoir que les ressources privées.
+     * Specific scope to have only private resources.
      *
      * @param  Builder $query
      * @return Builder
@@ -115,7 +115,7 @@ class Room extends Model implements OwnableContract
     }
 
     /**
-     * Retourne le nom de la salle.
+     * Return the room name.
      *
      * @return string
      */
@@ -125,7 +125,7 @@ class Room extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec la visibilité.
+     * Relation with the visibility.
      *
      * @return mixed
      */
@@ -135,7 +135,7 @@ class Room extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le lieu.
+     * Relation with the location.
      *
      * @return mixed
      */
@@ -145,7 +145,7 @@ class Room extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le calendrier.
+     * Relation with the calendar.
      *
      * @return mixed
      */
@@ -155,7 +155,7 @@ class Room extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le créateur.
+     * Relation with the creator.
      *
      * @return mixed
      */
@@ -165,7 +165,7 @@ class Room extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec la possédeur.
+     * Relation with the owner.
      *
      * @return mixed
      */
@@ -175,7 +175,7 @@ class Room extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec les réservations.
+     * Relation with bookings.
      *
      * @return mixed
      */

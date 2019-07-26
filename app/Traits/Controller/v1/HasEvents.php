@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux événements.
+ * Add the controller an access to Events.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,7 +25,7 @@ trait HasEvents
     use HasUsers;
 
     /**
-     * Vérifie qu'il n'y ait pas de problème au niveau des horaires.
+     * Check that there is no problem with atime period.
      *
      * @param  string $begin_at
      * @param  string $end_at
@@ -46,7 +46,7 @@ trait HasEvents
     }
 
     /**
-     * Récupère l'événement.
+     * Retrieve the event.
      *
      * @param  Request $request
      * @param  User    $user
@@ -60,7 +60,7 @@ trait HasEvents
         $event = Event::findSelection($event_id);
 
         if ($event) {
-            // On vérifie si l'accès est publique.
+            // Public access checking.
             if (\Scopes::isOauthRequest($request)) {
                 if (!$this->tokenCanSee($request, $event, $verb, 'events')) {
                     abort(403, 'L\'application n\'a pas les droits sur cet évènenement');
@@ -79,7 +79,7 @@ trait HasEvents
     }
 
     /**
-     * Retourne le calendrier.
+     * Return a given calendar.
      *
      * @param  Request $request
      * @param  User    $user
@@ -93,7 +93,7 @@ trait HasEvents
         $calendar = Calendar::findSelection($calendar_id);
 
         if ($calendar) {
-            // On vérifie si l'accès est publique.
+            // Public access checking.
             if (\Scopes::isOauthRequest($request)) {
                 if (!$this->tokenCanSee($request, $calendar, $verb, 'calendars')) {
                     abort(403, 'L\'application n\'a pas les droits sur ce calendrier');
@@ -112,7 +112,7 @@ trait HasEvents
     }
 
     /**
-     * Indique si le token peut voir ou non.
+     * Indicate if the token can see or not.
      *
      * @param  Request $request
      * @param  Model   $model

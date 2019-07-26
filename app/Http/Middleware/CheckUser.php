@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware vérifiant si la requête vient d'un client oauth user.
+ * Middleware to check if the request comes from a user OAuth client.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 class CheckUser
 {
     /**
-     * Vérifie si c'est un client oauth user.
+     * Check if it's a user OAuth client.
      *
      * @param  Request $request
      * @param  Closure $next

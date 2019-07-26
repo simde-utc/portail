@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les permissions assignées.
+ * Manage assigned permissions.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -24,7 +24,7 @@ class AssignmentController extends Controller
     use HasPermissions;
 
     /**
-     * Nécessité de pouvoir gérer les permissions assignées.
+     * Must be able to manage assigned permissions.
      */
     public function __construct()
     {
@@ -47,7 +47,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Liste les permissions assignées.
+     * List assigned permissions.
      *
      * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
@@ -65,7 +65,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Assigne une permission.
+     * Assigns a permission.
      *
      * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
@@ -87,7 +87,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Montre une permission assignée.
+     * Show an assigned permission.
      *
      * @param  PermissionAssignmentRequest $request
      * @return JsonResponse
@@ -102,7 +102,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Il n'est pas possible de modifier une assignation.
+     * It is not possible to modify an assignement.
      *
      * @param  PermissionAssignmentRequest $request
      * @return void
@@ -113,7 +113,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * Retraint d'une permission.
+     * Restraint a permission.
      *
      * @param  PermissionAssignmentRequest $request
      * @return void

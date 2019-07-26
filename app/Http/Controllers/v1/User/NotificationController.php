@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les notification utilisateurs.
+ * Manage user notifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,7 +26,7 @@ class NotificationController extends Controller
     use HasUserBulkMethods, HasNotifications;
 
     /**
-     * Nécessite de pouvoir gérer les notifications.
+     * Must be able to manage notifications.
      */
     public function __construct()
     {
@@ -54,7 +54,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Retourne la requête qui doit être exécuté pour élément du bulk.
+     * Return the request wich must be executed for an element of the bulk.
      *
      * @param  string  $requestClass
      * @param  Request $baseRequest
@@ -73,7 +73,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Liste les notifications de l'utilisateur.
+     * List all user notifications.
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $user_id
@@ -101,7 +101,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Créer une notification pour l'utlisateur.
+     * Create a notification for the user.
      *
      * @param UserNotificationRequest $request
      * @param string                  $user_id
@@ -130,7 +130,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Montre une notification de l'utlisateur.
+     * Show a user notification.
      *
      * @param Request $request
      * @param string  $user_id
@@ -149,7 +149,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Met à jour une notification de l'utlisateur.
+     * Update a user notification.
      *
      * @param UserNotificationRequest $request
      * @param string                  $user_id
@@ -174,7 +174,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Supprime une notification de l'utlisateur.
+     * Delete a user notification.
      *
      * @param Request $request
      * @param string  $user_id

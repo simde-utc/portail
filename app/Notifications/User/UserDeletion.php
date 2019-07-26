@@ -16,11 +16,11 @@ use Illuminate\Notifications\Messages\MailMessage;
 
 class UserDeletion extends Notification
 {
-    // On ne souhaite pas garder la notification en bdd.
+    // We don't want to keep the notification within the database.
     protected $exceptedVia = ['database'];
 
     /**
-     * Déclare le type de notification.
+     * Notification's type declaration.
      */
     public function __construct()
     {
@@ -28,7 +28,7 @@ class UserDeletion extends Notification
     }
 
     /**
-     * Sujet de la notification.
+     * Notification's subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -39,7 +39,7 @@ class UserDeletion extends Notification
     }
 
     /**
-     * Contenu texte de la notification.
+     * Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -50,7 +50,7 @@ class UserDeletion extends Notification
     }
 
     /**
-     * Contenu email de la notification.
+     * Notification's email content.
      *
      * @param  CanBeNotifiable $notifiable
      * @param  MailMessage     $mail

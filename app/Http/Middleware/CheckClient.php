@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware vérifiant si la requête vient d'un client oauth client.
+ * Middleware to check if the request comes from a client OAuth client.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
 class CheckClient
 {
     /**
-     * Vérifie si c'est un client oauth client.
+     * Check if it's a client OAuth client.
      *
      * @param  Request $request
      * @param  Closure $next
@@ -30,7 +30,7 @@ class CheckClient
      */
     public function handle(Request $request, Closure $next, string ...$args)
     {
-        // On vérifie que le token n'est pas lié à un utilisateur.
+        // We check that the token isxn't linked to a user.
         $bearerToken = $request->bearerToken();
         $tokenId = (new Parser())->parse($bearerToken)->getHeader('jti');
         $token = Token::find($tokenId);
@@ -61,9 +61,9 @@ class CheckClient
 
                 $tokenScopes = $token->scopes;
 
-                // On vérifie pour chaque ensemble de scopes.
+                // We check for each scope.
                 foreach ($scopes as $scopeList) {
-                    // Qu'on en possède au moins un parmi la liste.
+                    // That one in the list is owned.
                     if (empty(array_intersect($tokenScopes, $scopeList))) {
                         throw new MissingScopeException($scopes);
                     }

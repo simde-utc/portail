@@ -1,6 +1,6 @@
 <?php
 /**
- * Service d'événement.
+ * Events Service.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -17,7 +17,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 class EventServiceProvider extends ServiceProvider
 {
     /**
-     * Liste de tous les événements surveillés.
+     * List all watched events.
      *
      * @var array
      */
@@ -28,7 +28,7 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Enregistre ici des événements customs.
+     * Save here customs events.
      *
      * @return void
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux groupes.
+ * Model corresponding to the groups.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -60,7 +60,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     ];
 
     /**
-     * Appelé dès la création du modèle.
+     * Called at the model's creation.
      *
      * @return void
      */
@@ -78,7 +78,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Scope spécifique pour n'avoir que les ressources privées.
+     * Specific scope to have only the private resources.
      *
      * @param  Builder $query
      * @return Builder
@@ -96,7 +96,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Relation avec le possédeur du groupe.
+     * Relation with the group owner.
      *
      * @return mixed
      */
@@ -106,7 +106,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Relation avec le possédeur du groupe.
+     * Relation with the group owner.
      *
      * @return mixed
      */
@@ -116,7 +116,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Relation avec la visibilité.
+     * Relation with the visibility.
      *
      * @return mixed
      */
@@ -126,9 +126,9 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique s'il est possible de supprimer un rôle pour le groupe d'un id précis.
-     * Par défaut, un role n'est pas supprimable s'il a déjà été assigné.
-     * Mais on permet sa suppression s'il est assigné à un seul groupe.
+     * Indicate if its possible to delete a role depending on a given group id.
+     * By default a group is not removable if it has already be assigned.
+     * But we allow its deletion if it's assigned to one and only groupe.
      *
      * @param  Role   $role
      * @param  string $group_id
@@ -140,8 +140,8 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si un rôle est accessible.
-     * Uniquement par les membres pour les rôles customs de l'associations sinon toujours visibles
+     * Indicate if a role is accessible.
+     * Only by members for custom roles of the assciation. Otherwise always visible.
      *
      * @param  string $user_id
      * @return boolean
@@ -156,8 +156,8 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si un rôle est gérable.
-     * Uniquement par les membres pour les rôles customs de l'associations sinon toujours visibles
+     * Indicate if a role is manageable.
+     * Only by members for custom roles of the assciation. Otherwise always visible.
      *
      * @param  string $user_id
      * @return boolean
@@ -174,8 +174,8 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si une permission est accessible.
-     * Uniquement par les membres pour les permissions customs de l'associations sinon toujours visibles
+     * Indicate if a permission is accessible.
+     * Only by members for custom permissions of the assciation. Otherwise always visible.
      *
      * @param  string $user_id
      * @return boolean
@@ -190,8 +190,8 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si une permission est gérable.
-     * Uniquement par les membres pour les permissions customs de l'associations sinon toujours visibles
+     * Indicate if a permission is manageable.
+     * Only by members for custom permissions of the assciation. Otherwise always visible.
      *
      * @param  string $user_id
      * @return boolean
@@ -208,7 +208,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Relation avec les moyens de contact.
+     * Relation with contact means.
      *
      * @return mixed
      */
@@ -218,8 +218,8 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si le moyen de contact est accessible.
-     * Uniquement par les membres du groupe.
+     * Indicate if the contact mean est accessible.
+     * Only by group members.
      *
      * @param  string $user_id
      * @return boolean
@@ -230,8 +230,8 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si le moyen de contact est gérable.
-     * Uniquement par les membres du groupe.
+     * Indicate if the contact mean is manageable.
+     * Only by group members.
      *
      * @param  string $user_id
      * @return boolean
@@ -244,7 +244,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Relation avec les calendriers.
+     * Relation with calendars.
      *
      * @return mixed
      */
@@ -254,8 +254,8 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si le calendrier privé est gérable.
-     * Uniquement par les membres du groupe.
+     * Indicate if the private calendar is manageable.
+     * Only by group members.
      *
      * @param  string $user_id
      * @return boolean
@@ -268,7 +268,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Relation avec les événements.
+     * Relation with events.
      *
      * @return mixed
      */
@@ -278,8 +278,8 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si l'événement privé est gérable.
-     * Uniquement par les membres du groupe.
+     * Indicate if an private event is manageable.
+     * Only by group members.
      *
      * @param  string $user_id
      * @return boolean
@@ -292,7 +292,7 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Relation avec les articles.
+     * Relation with articles.
      *
      * @return mixed
      */
@@ -302,8 +302,8 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
     }
 
     /**
-     * Indique si l'article privé est gérable.
-     * Uniquement par les membres du groupe.
+     * Indicate if the private article is manageable.
+     * Only by group members.
      *
      * @param  string $user_id
      * @return boolean

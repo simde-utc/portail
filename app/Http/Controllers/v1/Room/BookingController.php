@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les réservations.
+ * Manage bookings.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -29,7 +29,7 @@ class BookingController extends Controller
     use HasBookings, HasCreatorsAndOwnersAndValidators;
 
     /**
-     * Nécessité de pouvoir voir les salles et de gérer les réservations.
+     * Must be able to see rooms and manage bookings.
      */
     public function __construct()
     {
@@ -64,7 +64,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Vérifie que la réservation peut être réalisée.
+     * Check that the booking can done.
      *
      * @param  Request $request
      * @param  string  $room_id
@@ -79,15 +79,15 @@ class BookingController extends Controller
             $inputs['end_at'] = Carbon::parse($inputs['end_at'])->toDateString();
         }
 
-        // On va maintenant voir si le type de réservation est auto-validée et que la durée n'est pas trop longue.
+        // Check if the booking type auto-validated and that the duration is not too long.
         if (!$this->checkBookingPeriod($room_id, $inputs['begin_at'], $inputs['end_at'])) {
             $inputs['validated_by_id'] = null;
             $inputs['validated_by_type'] = null;
         } else if (isset($inputs['validated_by_type'])) {
-            // Ici on vérifie si la valideur peu valider la demande de résa du demandeur.
+            // Here we check if the validating person can validate the booking ask.
             $validator = $this->getValidatorFromOwner($request, $owner, 'booking', 'réservation', 'create');
 
-            // Maintenant on vérifie qu'on a le droit de valider pour une résa dans une salle appartenant à qq'un.
+            // Check if we can validate an booking in a room owned by someone.
             if (!Room::find($room_id)->owned_by->isBookingValidableBy($validator)) {
                 abort(403, 'Vous n\'avez pas le droit de valider cette réservation');
             }
@@ -103,7 +103,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Liste les réservations de la salle.
+     * List bookings of the room.
      *
      * @param  Request $request
      * @param  string  $room_id
@@ -121,7 +121,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Crée une réservation réalisée pour la salle.
+     * Create a booking for the room.
      *
      * @param  BookingRequest $request
      * @param  string         $room_id
@@ -134,7 +134,7 @@ class BookingController extends Controller
 
         $owner = $this->getOwner($request, 'booking', 'réservation', 'create');
         $creator = $this->getCreatorFromOwner($request, $owner, 'booking', 'réservation', 'create');
-        // On vérifie que celui qui veut faire la réservation à le droit dans cette salle.
+        // Check if the booker has the rights in this room.
         if (!$room->owned_by->isRoomReservableBy($owner)) {
             abort(403, 'Vous n\'être pas autorisé à réserver cette salle');
         }
@@ -148,7 +148,7 @@ class BookingController extends Controller
 
         $calendar = $room->calendar;
 
-        // WARNING: L'événement appartient bien sûr à celui qui possède le calendrier (pour éviter en fait que les gens modifient eux-même l'event).
+        // WARNING : the event belongs to the calendar owner (to prevent people from mofifying by themself the event).
         $event = Event::create([
             'name' => ($inputs['name'] ?? BookingType::find($inputs['type_id'])->name),
             'begin_at' => $inputs['begin_at'],
@@ -177,7 +177,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Montre une réservation de la salle.
+     * Show a booking of the room.
      *
      * @param  Request $request
      * @param  string  $room_id
@@ -193,7 +193,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Met à jour une réservation de la salle.
+     * Update a booking of the room.
      *
      * @param  BookingRequest $request
      * @param  string         $room_id
@@ -219,7 +219,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Supprime une réservation de la salle.
+     * Delete a booking of the room.
      *
      * @param  Request $request
      * @param  string  $room_id
@@ -234,7 +234,7 @@ class BookingController extends Controller
         if ($booking->delete()) {
             abort(204);
         } else {
-            abort(500, 'Impossible de supprimer la réservation');
+            abort(500, 'Impossible de suprimer la réservation');
         }
     }
 }

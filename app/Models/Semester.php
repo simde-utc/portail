@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux semestres.
+ * Model corresponding to semesters.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -31,7 +31,7 @@ class Semester extends Model
     ];
 
     /**
-     * Permet de récupérer un semestre en fonction de son id et de son nom.
+     * Retrieve a semester depending an the given id and name.
      *
      * @param  string $semester_id
      * @return Semester|null
@@ -46,7 +46,7 @@ class Semester extends Model
     }
 
     /**
-     * Permet de récupérer le semestre courant.
+     * Retrieve the current semester.
      *
      * @param  string $currentYear
      * @param  string $currentMonth
@@ -75,7 +75,7 @@ class Semester extends Model
     }
 
     /**
-     * Permet de récupérer les semestres de cette année scolaire.
+     * Retrieve the semester of the current academic year.
      *
      * @param  string $currentYear
      * @param  string $currentMonth
@@ -114,7 +114,7 @@ class Semester extends Model
     }
 
     /**
-     * Création d'un semestre.
+     * Semester creation.
      *
      * @param  integer|string $currentYear
      * @param  string         $currentMonth
@@ -159,7 +159,7 @@ class Semester extends Model
     }
 
     /**
-     * Indique si le mois courant est dans le semestre.
+     * Indicate if the month period is in the semester.
      *
      * @param  string $beginingMonth
      * @param  string $endingMonth

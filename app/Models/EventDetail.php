@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux détails des événements.
+ * Model corresponding to event details.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,7 +28,7 @@ class EventDetail extends Model
     ];
 
     /**
-     * Relation avec l'événement.
+     * Relation with an event.
      * @return mixed
      */
     public function event()

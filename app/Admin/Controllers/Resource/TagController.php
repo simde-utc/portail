@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Tag.
+ * Manage Tags as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class TagController extends ResourceController
     protected $model = Tag::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */

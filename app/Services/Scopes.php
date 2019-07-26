@@ -1,6 +1,6 @@
 <?php
 /**
- * Service Scopes.
+ * Scopes Service.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -24,22 +24,23 @@ class Scopes
     use TokenUtils, ScopesIdentification;
 
     /*
-     * Liste des scopes en fonction des routes.
-     *   - Définition des scopes:
-     *   	portée + "-" + verbe + "-" + categorie + (pour chaque sous-catégorie: '-' + sous-catégorie)
-     *   	ex: user-get-user user-get-user-assos user-get-user-assos-followed
+     * Scopes list depending on routes.
+     *   - Scopes definition:
+     *       `baseScope-verb-category` + (for each subcategory: `-subCategoryName`).
+     *       For example : `user-get-info`, `user-get-assos`, `user-get-assos-followed-now`
      *
-     *   - Définition de la portée des scopes:
-     *     + user :    user_credential => nécessite que l'application soit connecté à un utilisateur
-     *     + client :  client_credential => nécessite que l'application est les droits d'application indépendante d'un utilisateur
-     *
-     *   - Définition du verbe:
-     *     + manage:  gestion de la ressource entière
-     *       + get :  récupération des informations en lecture seule
-     *       + set :  posibilité d'écrire et modifier les données
-     *         + create:  créer une donnée associée
-     *         + edit:    modifier une donnée
-     *         + remove:  supprimer une donnée
+     *   - Base scopes definition:
+     *      - **user** : An authentificated user is needed.
+     *      - **client** :  The application needs to have application rights independently of a user.
+
+     *   - Verb definition.
+     *      Actions have a classification and inherit their parents' rights.
+     *      - **manage**:  Whole resource management
+     *          + **set** :  Possibility to write, update and delete data
+     *              * **create**:  Create the associated data
+     *              * **edit**:    Update the associated data
+     *              * **remove**:  Delete the associated data
+     *          + **get** :  Read-only retrievement.
      */
 
     protected $scopes;
@@ -47,7 +48,7 @@ class Scopes
     protected $allowPublic = false;
 
     /**
-     * Récupère la configuration des scopes.
+     * Retrieve the scopes' configuration.
      */
     public function __construct()
     {
@@ -55,7 +56,7 @@ class Scopes
     }
 
     /**
-     * Cette méthode permet de définir si les routes sont accessibles.
+     * Define if all routes are reachable.
      *
      * @param boolean $allow
      * @return Scopes
@@ -68,7 +69,7 @@ class Scopes
     }
 
     /**
-     * Cette méthode définie le middleware à appeler.
+     * Define the middleware to call.
      *
      * @return string
      */
@@ -81,7 +82,7 @@ class Scopes
     }
 
     /**
-     * Génère le scope et les hérédités.
+     * Generate scope and child scopes (with verb inheritance).
      *
      * @param  string $before
      * @param  array  $subScopes
@@ -109,7 +110,7 @@ class Scopes
     }
 
     /**
-     * Renvoie tous les scopes et les hérédités.
+     * Return all scopes and child scopes (with verbs inheritance).
      *
      * @return array
      */
@@ -139,7 +140,7 @@ class Scopes
     }
 
     /**
-     * Renvoie les scopes (doivent exister !) avec leur description par catégorie.
+     * Return scopes (must exist) with their description by category.
      *
      * @return array
      */
@@ -167,11 +168,11 @@ class Scopes
     }
 
     /**
-     * Donne le verbe qui suit par héridité montante ou descendante.
+     * Give the verbe which follows on the way down or up in the inheritance chain
      *
      * @param  string  $verb
      * @param  boolean $goUp
-     * @return array        Liste des verbes à suivre.
+     * @return array        List of following verbs.
      */
     private function nextVerbs(string $verb, bool $goUp=false)
     {
@@ -208,7 +209,7 @@ class Scopes
     }
 
     /**
-     * Recherche le scope existant (qui doit exister) et sa descendance.
+     * Find the existing scope (Must exist) and its descendants.
      *
      * @param  string $scope
      * @return array|null
@@ -245,7 +246,7 @@ class Scopes
     }
 
     /**
-     * Renvoie le scope (doit exister !) avec sa description.
+     * Return the scope (Must exist !) with its description.
      *
      * @param  string $scope
      * @return array  scope => description
@@ -264,7 +265,7 @@ class Scopes
     }
 
     /**
-     * Renvoie les scopes (doivent exister !) avec leur description par catégorie.
+     * Returns all scopes with their description by category.
      *
      * @param  array $scopes
      * @return array
@@ -283,7 +284,7 @@ class Scopes
             if (!isset($middleware)) {
                 $middleware = $elements[0];
             } else if ($middleware !== $elements[0]) {
-                // Des scopes commençant par c- et u-.
+                // Scopes starting by c- and u-.
                 throw new PortailException('Les scopes ne sont pas définis avec les mêmes types d\'authentification !');
             }
 
@@ -312,7 +313,8 @@ class Scopes
     }
 
     /**
-     * Retourne les scopes pour le développement.
+     *
+     * Returns development scopes.
      *
      * @return array
      */
@@ -320,7 +322,7 @@ class Scopes
     {
         $scopes = [
             'user-get-access',
-        // Il n'y a pas de manage.
+        // No manage.
         ];
 
         foreach (array_keys(self::all()) as $scope) {

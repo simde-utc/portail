@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux partenaires.
+ * Model corresponding to partners.
  *
  * @author Thomas Meurou <thomas.meurou@yahoo.fr>
  * @author Josselin Pennors <josselin.pennors@hotmail.fr>

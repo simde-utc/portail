@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les permissions.
+ * Manage permissions.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,7 +25,7 @@ class PermissionController extends Controller
     use HasPermissions, HasOwners;
 
     /**
-     * Nécessité de gérer les permissions.
+     * Must be able to manage permissions.
      */
     public function __construct()
     {
@@ -48,7 +48,7 @@ class PermissionController extends Controller
     }
 
     /**
-     * Liste des permissions.
+     * List permissions.
      *
      * @param  Request $request
      * @return JsonResponse
@@ -65,7 +65,7 @@ class PermissionController extends Controller
     }
 
     /**
-     * Crée une permission.
+     * Create a permission.
      *
      * @param  PermissionRequest $request
      * @return JsonResponse
@@ -84,7 +84,7 @@ class PermissionController extends Controller
     }
 
     /**
-     * Montre une permission.
+     * Show a permission.
      *
      * @param  Request $request
      * @param  string  $permission_id
@@ -99,7 +99,7 @@ class PermissionController extends Controller
     }
 
     /**
-     * Met à jour une permission.
+     * Update a permission.
      *
      * @param  PermissionRequest $request
      * @param  string            $permission_id
@@ -119,7 +119,7 @@ class PermissionController extends Controller
     }
 
     /**
-     * Supprime une permission.
+     * Delete a permission.
      *
      * @param  Request $request
      * @param  string  $permission_id
@@ -133,10 +133,10 @@ class PermissionController extends Controller
             if ($permission->delete()) {
                 abort(204);
             } else {
-                abort(500, "Impossible de supprimer le permission souhaité");
+                abort(500, "Impossible de suprimer le permission souhaité");
             }
         } else {
-            abort(403, "Il n'est pas autorisé de supprimer cettte permission (déjà assignée ou utilisée)");
+            abort(403, "Il n'est pas autorisé de suprimer cettte permission (déjà assignée ou utilisée)");
         }
     }
 }

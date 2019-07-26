@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier composant notre exception Portail nous permettant de gérer les exceptions de manière structurée.
+ * File generating our exception "Portail" wich allows a structured exception management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class PortailException extends HttpException
 {
     /**
-     * Création de l'exception.
+     * Exception creation.
      *
      * @param string     $message
      * @param integer    $statusCode

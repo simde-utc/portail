@@ -1,6 +1,6 @@
 <?php
 /**
- * Indique que le modèle peut posséder des articles.
+ * Indicate that the model can have articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -13,14 +13,14 @@ namespace App\Interfaces\Model;
 interface CanHaveArticles
 {
     /**
-     * Renvoie la liste des articles.
+     * Return the articles list.
      *
      * @return mixed
      */
     public function articles();
 
     /**
-     * Permet d'indiquer si la personne à le droit de créer/modifier/supprimer les articles appartenant au modèle.
+     * Indicate if a given user can can create/update/delete the model articles.
      *
      * @param string $user_id
      * @return boolean

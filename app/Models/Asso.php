@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux associations.
+ * Model corresponding to associations.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -62,7 +62,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
         'name', 'shortname', 'login', 'image', 'deleted_at',
     ];
 
-    // Children dans le cas où on affiche en mode étagé.
+    // Children in the case of a staged mode display.
     protected $selection = [
         'order' => [
             'default' => 'oldest',
@@ -79,7 +79,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     protected $roleRelationTable = 'assos_members';
 
     /**
-     * Appelé à la création du modèle.
+     * Called at the model creation.
      *
      * @return void
      */
@@ -88,7 +88,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
         parent::boot();
 
         static::created(function ($model) {
-            // On crée automatiquement des moyens de contacts !
+            // Automatic creation of contact means.
             $model->contacts()->create([
                 'name' => 'Adresse email',
                 'value' => $model->login.'@assos.utc.fr',
@@ -103,7 +103,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
                 'visibility_id' => Visibility::findByType('public')->id,
             ]);
 
-            // On crée un calendrier pour chaque association.
+            // A calender for each association is created.
             $model->calendars()->create([
                 'name' => 'Evénements',
                 'description' => 'Calendrier regroupant les événements de l\'associations',
@@ -115,7 +115,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Retrouve une association par son login.
+     * Find an association by login.
      *
      * @param  mixed  $query
      * @param  string $login
@@ -143,7 +143,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec le type d'association.
+     * Relation with association type.
      *
      * @return mixed
      */
@@ -153,7 +153,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec l'association parent.
+     * Relation with the association parent.
      *
      * @return mixed
      */
@@ -163,7 +163,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les associations enfants.
+     * Relation with the child associations.
      *
      * @return mixed
      */
@@ -173,7 +173,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les accès de l'association.
+     * Relation with the association accesses.
      *
      * @return mixed
      */
@@ -183,7 +183,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les membres de l'association.
+     * Relation with the association members.
      *
      * @return mixed
      */
@@ -193,7 +193,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les membres du semestre actuel de l'association.
+     * Relation with the association current members.
      *
      * @return mixed
      */
@@ -203,7 +203,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les membres en attente de validation de l'association.
+     * Relation with the association's members waitng for validation.
      *
      * @return mixed
      */
@@ -213,7 +213,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les membres en attente de validation du semestre actuel de l'association.
+     * Relation with the association's members waitng for validation during th ecurrent semester.
      *
      * @return mixed
      */
@@ -223,7 +223,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les suiveurs de l'association.
+     * Relation with the followers of the association.
      *
      * @return mixed
      */
@@ -233,7 +233,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les suiveurs du semestre actuel de l'association.
+     * Relation with the followers of the association during this semester.
      *
      * @return mixed
      */
@@ -243,7 +243,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Notifie les membres de l'association.
+     * Notify all association members.
      *
      * @param  mixed        $notification
      * @param  string|array $restrictToRoleIds
@@ -263,7 +263,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Donne l'adresse email de notification.
+     * Return the notification email address.
      *
      * @param  mixed $notification
      * @return string
@@ -274,7 +274,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Donne l'icône de notification en tant que créateur.
+     * Return the notification icon as creator.
      *
      * @param  Notification $notification
      * @return string
@@ -285,7 +285,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Donne le dernier utilisateur avec un rôle.
+     * Return the last user with a role.
      *
      * @param  mixed $role
      * @return User|null
@@ -313,8 +313,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si un rôle est affichable ou non.
-     * On affiche toujours le rôle des membres, ce n'est pas un secret.
+     * Indicate if a role is accessible or not.
+     * Members roles is not a secret. Always displaying them.
      *
      * @param  string $user_id
      * @return boolean
@@ -325,8 +325,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si un rôle est modifiable ou non.
-     * Un rôle est modifiable uniquement par un membre ayant le droit.
+     * Indicate if a role is manageable or not.
+     * A role is manageable only by a member who has the permission.
      *
      * @param  string $user_id
      * @return boolean
@@ -337,8 +337,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si une permission est affichable ou non.
-     * On affiche toujours les permissions des membres, ce n'est pas un secret.
+     * Indicate if a permission is accessible or not.
+     * Members permissions is not a secret. Always displaying them.
      *
      * @param  string $user_id
      * @return boolean
@@ -349,8 +349,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si une permission est gérable ou non.
-     * Une permission est modifiable uniquement par un membre ayant la permission.
+     * Indicate if a permission is manageable or not.
+     * A permission is manageable only by a member who has the permission.
      *
      * @param  string $user_id
      * @return boolean
@@ -361,7 +361,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les moyens de contacts de l'association.
+     * Relation with the associatin contact means.
      *
      * @return mixed
      */
@@ -371,8 +371,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si le moyen de contact est accessible.
-     * Affichable uniquement pour les membres (données privées).
+     * Indicate if the contact mean is accessible.
+     * Accessible only bu members (private data).
      *
      * @param  string $user_id
      * @return boolean
@@ -383,8 +383,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si le moyen de contact est gérable.
-     * Modifiable uniquement par un membre ayant la permission.
+     * Indicate if the contact mean is manageable.
+     * A contact mean is manageable only by a member who has the permission.
      *
      * @param  string $user_id
      * @return boolean
@@ -397,7 +397,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les calendriers.
+     * Relation with calendars.
      *
      * @return mixed
      */
@@ -407,8 +407,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si le calendrier est gérable.
-     * Seulement les membres ayant la permission peuvent modifier les calendriers privées.
+     * Indicate if the calendar is manageable.
+     * A private calendar is manageable only by a member who has the permission.
      *
      * @param  string $user_id
      * @return boolean
@@ -421,7 +421,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les évènements.
+     * Relation with events.
      *
      * @return mixed
      */
@@ -431,8 +431,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si un évènement est gérable.
-     * Seulement les membres ayant la permission peuvent modifier les évènements privés.
+     * Indicate if an event is manageable.
+     * An event is manageable only by a member who has the permission.
      *
      * @param  string $user_id
      * @return boolean
@@ -445,7 +445,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les articles.
+     * Relation with articles.
      *
      * @return mixed
      */
@@ -455,8 +455,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si un article est gérable.
-     * Seulement les membres peuvent modifier les articles privés.
+     * Indicate if un article is manageable.
+     * A private article is manageable only by a member.
      *
      * @param  string $user_id
      * @return boolean
@@ -469,7 +469,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Relation avec les salles.
+     * Relation with rooms.
      *
      * @return mixed
      */
@@ -479,8 +479,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si une salle est gérable.
-     * Seulement les membres peuvent modifier les salles privées.
+     * Indicate if a room is manageable.
+     * Private rooms are manageable only by a member.
      *
      * @param  string $user_id
      * @return boolean
@@ -491,7 +491,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si la salle est réservable.
+     * Indicate if the room the room is bookable.
      *
      * @param  \Illuminate\Database\Eloquent\Model $model
      * @return boolean
@@ -502,7 +502,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
             throw new PortailException('Seules les associations peuvent réserver une salle appartenant à une association', 503);
         }
 
-        // On regarde si l'asso est un enfant de celle possédant la salle (ex: Picsart peut réserver du PAE).
+        // We check if this association is a child of the room owner (Example Picsart can book PAE's rooms).
         $toMatch = $model;
         while ($toMatch) {
             if ($toMatch->id === $this->id) {
@@ -512,12 +512,12 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
             $toMatch = $toMatch->parent;
         }
 
-        // Correspond aux assos parents.
+        // Correspond to parents associations.
         return $this->isBookingValidableBy($model);
     }
 
     /**
-     * Relation avec les réservations.
+     * Relation with bookings.
      *
      * @return mixed
      */
@@ -527,8 +527,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si une réservation est accessible.
-     * Seulement les membres peuvent voir les réservations privées.
+     * Indicate if a booking is accessible.
+     * Private bookings are accessible only by a member.
      *
      * @param  string $user_id
      * @return boolean
@@ -539,8 +539,9 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si une réservation est gérable.
-     * Seulement les membres peuvent modifier les réservations privées.
+     * Indicate if a booking is manageable.
+     * Private bookings are manageable only by a member.
+     *
      *
      * @param  string $user_id
      * @return boolean
@@ -553,7 +554,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si une réservation est validable.
+     * Indicate if a booking is validable.
      *
      * @param  \Illuminate\Database\Eloquent\Model $model
      * @return boolean
@@ -561,7 +562,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     public function isBookingValidableBy(\Illuminate\Database\Eloquent\Model $model): bool
     {
         if ($model instanceof Asso) {
-            // On regarde si l'asso possédant la salle est un enfant de celle qui fait la demande (ex: BDE à le droit sur PAE).
+            // Check if the association is a parent of the asking asociation. (Example: the BDE-UTC has the rights on the PAE).
             $toMatch = $this;
             while ($toMatch) {
                 if ($toMatch->id === $model->id) {
@@ -585,8 +586,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si un commentaire est rédigeable.
-     * Les commentaires écrits par une asso se font uniquement par les gens pouvant en rédiger.
+     * Indicate if a comment is writable.
+     * Only people who can write comments are able to write a comment.
      *
      * @param  string $user_id
      * @return boolean
@@ -599,8 +600,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si un commentaire est modifiable.
-     * Les commentaires écrits par une asso se font uniquement par les gens pouvant en modifier.
+     * Indicate if a comment is editable.
+     * Only people who can write comments are able to edit a comment.
      *
      * @param  string $user_id
      * @return boolean
@@ -611,8 +612,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
-     * Indique si un commentaire est supprimable.
-     * Les commentaires écrits par une asso se font uniquement par les gens pouvant en supprimer.
+     * Indicate if a comment is deletable.
+     * Only people who can write comments are able to delete a comment.
      *
      * @param  string $user_id
      * @return boolean
@@ -623,6 +624,8 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     }
 
     /**
+     * Retrieve the name.
+     *
      * @return string|null
      */
     public function getName(): ?string

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les ContactType.
+ * Manage ContactTypes as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class ContactTypeController extends ResourceController
     protected $model = ContactType::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
