@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification pour rappeler de connecter son compte CAS à un mot de passe.
+ * Notification to remember a user to connect his CAS account to a password.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ use Carbon\Carbon;
 class RememberToLinkCAS extends Notification
 {
     /**
-     * Déclare le type de notification.
+     * Notification's type declaration.
      */
     public function __construct()
     {
@@ -26,7 +26,7 @@ class RememberToLinkCAS extends Notification
     }
 
     /**
-     * Action réalisable via la notification.
+     * Achievable action trough the notification.
      * @param  CanBeNotifiable $notifiable
      * @return array
      */
@@ -39,7 +39,7 @@ class RememberToLinkCAS extends Notification
     }
 
     /**
-     * Sujet de la notification.
+     * Notification's subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -50,7 +50,7 @@ class RememberToLinkCAS extends Notification
     }
 
     /**
-     * Contenu texte de la notification.
+     * Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -62,7 +62,7 @@ class RememberToLinkCAS extends Notification
     }
 
     /**
-     * Contenu email de la notification.
+     * Notification's email content.
      *
      * @param  CanBeNotifiable $notifiable
      * @param  MailMessage     $mail

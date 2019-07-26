@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux créateurs et possésseurs de la ressource.
+ * Add the controller an access to Creators and owners of the resource.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,7 +18,7 @@ trait HasCreatorsAndOwners
     use HasOwners;
 
     /**
-     * Le créateur peut être multiple: le user, l'asso ou le client courant.
+     * The creator can be have several types: current user, association or client?
      *
      * @param  Request $request
      * @param  Model   $owner

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les accès.
+ * Manage Accesses as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class AccessController extends ResourceController
     protected $model = Access::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */

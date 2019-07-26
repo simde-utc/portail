@@ -1,6 +1,6 @@
 <?php
 /**
- * Pivot de base.
+ * Base pivot.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

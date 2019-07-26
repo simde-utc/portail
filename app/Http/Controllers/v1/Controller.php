@@ -1,6 +1,6 @@
 <?php
 /**
- * Controlleur de base pour la v1.
+ * V1 controller.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,14 +26,14 @@ class Controller extends BaseController
     use HasBulkMethods;
 
     /**
-     * Permet de savoir quoi afficher.
-     * TODO: A déprécier pour la v1 officielle.
-     * TODO: Ou a transformer en Trait fonctionnant avec getSelection.
+     * Know what to display.
+     * TODO: deprecate for official v1.
+     * TODO: transform into Trait working with getSelection.
      *
      * @param  Request $request
      * @param  array   $choices
      * @return array
-     * @throws PortailException Si les choix donnés sont mauvais.
+     * @throws PortailException For bad $choices.
      */
     protected function getChoices(Request $request, array $choices)
     {

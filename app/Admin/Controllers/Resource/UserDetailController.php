@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les UserDetail.
+ * Manage UserDetails as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class UserDetailController extends ResourceController
     protected $model = UserDetail::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -37,7 +37,7 @@ class UserDetailController extends ResourceController
     }
 
     /**
-     * Définition des valeurs par défaut champs à afficher.
+     * Default values definition of the fields to display.
      *
      * @return array
      */
@@ -49,7 +49,7 @@ class UserDetailController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Return dependencies.
      *
      * @return array
      */

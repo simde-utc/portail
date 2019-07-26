@@ -1,6 +1,6 @@
 <?php
 /**
- * Permet de gérer les anciennes routes du Portail.
+ * Handle old portal's routes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 class OldToNewPortailController extends Controller
 {
     /**
-     * Redirection de /asso.
+     * /asso redirection.
      *
      * @return mixed
      */
@@ -25,7 +25,7 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection de /asso/{login}.
+     * /asso/{login} redirection.
      *
      * @param string $login
      * @return mixed
@@ -36,7 +36,7 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection de /asso/articles/{login}.
+     * /asso/articles/{login} redirection.
      *
      * @param string $login
      * @return mixed
@@ -47,8 +47,8 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection de /article.
-     * Redirection de /article/show/{wathever}.
+     * /article redirection.
+     * /article/show/{wathever} redirection.
      *
      * @return mixed
      */
@@ -58,9 +58,9 @@ class OldToNewPortailController extends Controller
     }
 
     /**
-     * Redirection de /event.
-     * Redirection de /event/calendar.
-     * Redirection de /event/show/{wathever}.
+     * /event redirection.
+     * /event/calendar redirection.
+     * /event/show/{wathever} redirection.
      *
      * @return mixed
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification pour indiquer la désaction du compte.
+ * Accout disabling notification.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 class UserDesactivation extends Notification
 {
     /**
-     * Déclare le type de notification.
+     * Notification type declaration.
      */
     public function __construct()
     {
@@ -25,7 +25,7 @@ class UserDesactivation extends Notification
     }
 
     /**
-     * Sujet de la notification.
+     * Notification subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -36,7 +36,7 @@ class UserDesactivation extends Notification
     }
 
     /**
-     * Contenu texte de la notification.
+     * Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -47,7 +47,7 @@ class UserDesactivation extends Notification
     }
 
     /**
-     * Contenu email de la notification.
+     * Notification's email content.
      *
      * @param  CanBeNotifiable $notifiable
      * @param  MailMessage     $mail

@@ -1,6 +1,6 @@
 <?php
 /**
- * Service authentification par mot de passe.
+ * Password authentification service.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,7 +22,7 @@ class Password extends BaseAuth
     protected $name = 'password';
 
     /**
-     * Récupération de la configuration.
+     * Configuration retrievement.
      */
     public function __construct()
     {
@@ -30,7 +30,7 @@ class Password extends BaseAuth
     }
 
     /**
-     * Méthode de connexion.
+     * Connexion method.
      *
      * @param Request $request
      * @return mixed
@@ -55,7 +55,7 @@ class Password extends BaseAuth
     }
 
     /**
-     * Méthode d'inscription.
+     * Subcribing method.
      *
      * @param Request $request
      * @return mixed
@@ -74,7 +74,7 @@ class Password extends BaseAuth
     }
 
     /**
-     * Crée la connexion auth.
+     * Create the auth connection.
      *
      * @param string $user_id
      * @param array  $info
@@ -96,7 +96,7 @@ class Password extends BaseAuth
     }
 
     /**
-     * Redirige vers la bonne page en cas de succès.
+     * Redirect to the right page in case of success.
      *
      * @param Request          $request
      * @param User             $user
@@ -109,7 +109,7 @@ class Password extends BaseAuth
         $casAuth = $user->cas;
 
         if ($casAuth !== null && $casAuth->is_active && !Ginger::userExists($casAuth->login)) {
-            // Si l'utilisateur n'existe plus auprès de Ginger, on peut désactiver son compte.
+            // If the user no longer exists in Ginger, we can disable his account.
             $casAuth->is_active = 0;
             $casAuth->save();
 
@@ -120,7 +120,7 @@ class Password extends BaseAuth
     }
 
     /**
-     * Donne les validations pour cette authentification.
+     * Retrieve validations for this authentification.
      *
      * @return array
      */

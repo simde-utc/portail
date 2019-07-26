@@ -1,6 +1,6 @@
 <?php
 /**
- * Log les accés à la page admin.
+ * Put in log all accesses to admin page.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux associations.
+ * Add the controller an access to Associations.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,7 +25,7 @@ trait HasAssos
     }
 
     /**
-     * Récupère le semestre en fonction des choix.
+     * Retrieve the semester depending on the choices.
      *
      * @param  Request $request
      * @param  array   $choices
@@ -62,7 +62,7 @@ trait HasAssos
     }
 
     /**
-     * Récupère la liste de choix.
+     * Retrieve the choice list.
      *
      * @param  Request $request
      * @param  array   $initialChoices
@@ -83,7 +83,7 @@ trait HasAssos
     }
 
     /**
-     * Récupère une association par son id si elle existe.
+     * Retrieve an Association with its ID if it exists.
      *
      * @param Request  $request
      * @param string   $asso_id
@@ -114,7 +114,7 @@ trait HasAssos
     }
 
     /**
-     * Récupère un utilisateur à partir d'une association.
+     * Retrieve a user from an association.
      *
      * @param  Request  $request
      * @param  Asso     $asso

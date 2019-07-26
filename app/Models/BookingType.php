@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux événements.
+ * Model corresponding to booking types.
  *
  * @author Thomas Meurou <thomas.meurou@yahoo.fr>
  * @author Josselin Pennors <josselin.pennors@hotmail.fr>
@@ -30,7 +30,7 @@ class BookingType extends Model
     ];
 
     /**
-     * Relation avec les relations.
+     * Relation with relations.
      *
      * @return mixed
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux types des associations.
+ * Model corresponding to association types.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -23,7 +23,7 @@ class AssoType extends Model
     ];
 
     /**
-     * Relation avec l'association.
+     * Relation with the association.
      *
      * @return mixed
      */

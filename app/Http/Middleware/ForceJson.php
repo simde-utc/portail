@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware forçant la réponse en json.
+ * Middleware that forces the response in JSON.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class ForceJson
 {
     /**
-     * On force le retour en JSON.
+     * Force the return in JSON.
      *
      * @param  Request $request
      * @param  Closure $next

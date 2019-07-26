@@ -1,10 +1,11 @@
 <?php
 /**
- * Gère l'inscription via un formulaire.
+ * Manage inscription via form.
  *
  * @author Natan Danous <natan.danous@gmail.com>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Romain Maliach-Auguste <r.maliach@live.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -25,14 +26,14 @@ class RegisterController extends Controller
     use RegistersUsers;
 
     /**
-     * Où rediriger les connectés.
+     * Where to redirict users once they are logged in.
      *
      * @var string
      */
     protected $redirectTo = '/';
 
     /**
-     * Uniquement les non-connectés peuvent créer un compte.
+     * Only users that aren't currently signed in can create an account.
      *
      * @return void
      */
@@ -42,7 +43,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * Champs requis pour la validation du formulaire.
+     * Fields required for form validation.
      *
      * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
@@ -58,11 +59,11 @@ class RegisterController extends Controller
     }
 
     /**
-     * Montre le formulaire spécifique à un type d'authentification.
-     * Redirige vers la page de connexion si non existant.
+     * Display the form for a specific authentification type.
+     * Redirect to the login page if non-existant.
      *
      * @param  Request $request
-     * @param  string  $provider Type d'authentification.
+     * @param  string  $provider Authentification type.
      * @return mixed
      */
     public function show(Request $request, string $provider=null)
@@ -77,11 +78,11 @@ class RegisterController extends Controller
     }
 
     /**
-     * Enregistrement de l'utilisateur pour un type d'authentification.
-     * Redirige vers la page de connexion si non existant.
+     * Register the user for a specific type of authentification.
+     * Redirect to login page if non-existant.
      *
      * @param  Request $request
-     * @param  string  $provider Type d'authentification.
+     * @param  string  $provider Authentification type.
      * @return mixed
      */
     public function store(Request $request, string $provider)

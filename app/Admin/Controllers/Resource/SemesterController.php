@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Semester.
+ * Manage Semesters as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class SemesterController extends ResourceController
     protected $model = Semester::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */

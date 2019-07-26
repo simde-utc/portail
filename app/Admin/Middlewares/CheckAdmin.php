@@ -1,6 +1,6 @@
 <?php
 /**
- * Vérifie les droits d'accéder à la page admin.
+ * Check access rights to the admin page.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

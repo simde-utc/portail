@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute une gestion des membres.
+ * Add a member management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -25,13 +25,13 @@ trait HasMembers
     use HasRoles;
 
     /**
-     * Méthode appelée au chargement du class.
+     * Method called at the class loading.
      *
      * @return void
      */
     public static function bootHasMembers()
     {
-        // Si on souhaite supprimer la ressource, on supprime les membres associés.
+        // If we want to delete the ressource, we delete the associated members.
         static::deleting(function ($model) {
             if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
                 return;
@@ -42,7 +42,7 @@ trait HasMembers
     }
 
     /**
-     * Récupération du nom de la table de relation.
+     * Relation table name retrievement.
      *
      * @return string
      */
@@ -52,7 +52,7 @@ trait HasMembers
     }
 
     /**
-     * Liste des membres (validés par une personne).
+     * List all validated or not members.
      *
      * @return mixed
      */
@@ -63,7 +63,7 @@ trait HasMembers
     }
 
     /**
-     * Liste des membres de ce semestre ou d'aucun semestre (validés par une personne).
+     * List all current (this semester) validated or not members.
      *
      * @return mixed
      */
@@ -75,7 +75,7 @@ trait HasMembers
     }
 
     /**
-     * Liste des membres (validés par une personne).
+     * List all validated members.
      *
      * @return mixed
      */
@@ -87,7 +87,7 @@ trait HasMembers
     }
 
     /**
-     * Liste des membres de ce semestre ou d'aucun semestre (validés par une personne).
+     * List all current (this semester) validated members.
      *
      * @return mixed
      */
@@ -99,7 +99,7 @@ trait HasMembers
     }
 
     /**
-     * Liste des personnes souhaitant se joindre (non validés).
+     * List all not accepted members.
      *
      * @return mixed
      */
@@ -110,7 +110,7 @@ trait HasMembers
     }
 
     /**
-     * Liste des personnes souhaitant se joindre ce semestre ou d'aucun semestre (non validés).
+     * List all curently (this semester) not accepted members.
      *
      * @return mixed
      */
@@ -122,11 +122,11 @@ trait HasMembers
     }
 
     /**
-     * Permet d'assigner un ou plusieurs membres en fonction des données fournis.
+     * Assign one or several members depending on the diven data.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data    Possibilité d'affecter role_id, semester_id, validated_by_id, user_id.
-     * @param  boolean                 $force   Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
+     * @param  array                   $data    Possibilitto affect role_id, semester_id, validated_by_id and user_id.
+     * @param  boolean                 $force   Enable to by-pass addition securities (to use with caution).
      *
      * @return mixed
      */
@@ -191,12 +191,12 @@ trait HasMembers
     }
 
     /**
-     * Permet de modifier un ou plusieurs membres en fonction des données fournis.
+     * Modify one or several members depending on the given data.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data        Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
-     * @param  array                   $updatedData Possibilité d'affecter role_id, semester_id, validated_by_id, user_id.
-     * @param  boolean                 $force       Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
+     * @param  array                   $data        Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
+     * @param  array                   $updatedData Possibility to affect role_id, semester_id, validated_by_id and user_id.
+     * @param  boolean                 $force       Enable the additions securities by-pass (to use with caution).
      * @return mixed
      */
     public function updateMembers($members, array $data=[], array $updatedData=[], bool $force=false)
@@ -274,12 +274,12 @@ trait HasMembers
     }
 
     /**
-     * Permet de supprimer un ou plusieurs membres en fonction des données fournis.
+     * Delete one or several members depending on the given data.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data       Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
-     * @param  string                  $removed_by Personne demandant la suppression.
-     * @param  boolean                 $force      Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
+     * @param  array                   $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
+     * @param  string                  $removed_by Deletion asker.
+     * @param  boolean                 $force      Enable the additions securities by-pass (to use with caution).
      * @return mixed
      */
     public function removeMembers($members, array $data=[], string $removed_by=null, bool $force=false)
@@ -328,12 +328,12 @@ trait HasMembers
     }
 
     /**
-     * Permet de synchroniser (tout supprimer et assigner de nouveaux) un ou plusieurs membres en fonction des données fournis.
+     * Synchronize (deletes all and assign new members) one or several members depending on the given data.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data       Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
-     * @param  string                  $removed_by Personne demandant la suppression.
-     * @param  boolean                 $force      Permet de sauter les sécurités d'ajout (à utiliser avec prudence).
+     * @param  array                   $data       Possibility to use role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
+     * @param  string                  $removed_by Deletion asker.
+     * @param  boolean                 $force      Enables the additions securities by-pass (to use with caution).
      * @return mixed
      */
     public function syncMembers($members, array $data=[], string $removed_by=null, bool $force=false)
@@ -358,10 +358,10 @@ trait HasMembers
     }
 
     /**
-     * Regarde si un membre parmi la liste existe ou non.
+     * Check if a member in the given list exists or not.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data    Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data    Possibility to use role_id, semester_id, validated_by_id, user_id to match one or several members.
      * @return boolean
      */
     public function hasOneMember($members, array $data=[])
@@ -370,10 +370,11 @@ trait HasMembers
             ->wherePivotIn('user_id', User::getUsers(stringToArray($members))->pluck('id'))->get()->count() > 0;
     }
 
-    /** Regarde si tous les membres parmi la liste existe ou non.
+    /**
+     * Check if all members in the given list exist or not.
      *
      * @param  string|array|Collection $members
-     * @param  array                   $data    Possibilité d'utiliser role_id, semester_id, validated_by_id, user_id pour matcher un member ou plusieurs membres.
+     * @param  array                   $data    Possibility to use role_id, semester_id, validated_by_id, user_id to match one or several members.
      * @return boolean
      */
     public function hasAllMembers($members, array $data=[])

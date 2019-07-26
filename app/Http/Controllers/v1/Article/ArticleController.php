@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les articles.
+ * Manage articles.
  *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -31,8 +31,8 @@ class ArticleController extends Controller
     use HasArticles, HasImages;
 
     /**
-     * Nécessité de gérer les articles.
-     * Lecture publique.
+     * Must be able to manage articles.
+     * Read access is public.
      */
     public function __construct()
     {
@@ -67,7 +67,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Récupère le créateur ou le owner.
+     * Retrieve the creator or the owner.
      *
      * @param  Request $request
      * @param  string  $verb
@@ -122,7 +122,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Liste les articles.
+     * List articles.
      *
      * @param Request $request
      * @return JsonResponse
@@ -143,7 +143,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Créer un article.
+     * Create a article.
      *
      * @param ArticleRequest $request
      * @return JsonResponse
@@ -152,11 +152,11 @@ class ArticleController extends Controller
     {
         $inputs = $request->all();
 
-        // On récupère pour qui c'est créé.
+        // Creator or owner retrievement.
         $owner = $this->getCreaterOrOwner($request, 'create', 'owned');
         $ownerName = \ModelResolver::getNameFromObject($owner);
 
-        // Le créateur peut être multiple: le user, l'asso ou le client courant. Ou autre.
+        // The creator can be multiple: the user, the association or the current client. Or any other.
         if ($request->input('created_by_type', 'user') === 'user'
 	        && \Auth::id()
 	        && $request->input('created_by_id', \Auth::id()) === \Auth::id()
@@ -183,13 +183,13 @@ class ArticleController extends Controller
         $inputs['owned_by_type'] = get_class($owner);
 
         if ($request->filled('event_id')) {
-            // On fait vérifier que la personne à les droits sur l'event.
+            // Check if the person has the rights on the event.
             $this->getEvent($request, \Auth::user(), $inputs['event_id']);
         }
 
         $article = Article::create($inputs);
 
-        // On affecte l'image si tout s'est bien passé.
+        // Affecting image if everything went well.
         $this->setImage($request, $article, 'articles', $article->id);
 
         // Tags.
@@ -215,7 +215,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Montre un article.
+     * Show an article.
      *
      * @param Request $request
      * @param string  $article_id
@@ -229,7 +229,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Met à jour un article.
+     * Update an article.
      *
      * @param Request $request
      * @param string  $article_id
@@ -248,12 +248,12 @@ class ArticleController extends Controller
         }
 
         if ($request->filled('event_id')) {
-            // On fait vérifier que la personne à les droits sur l'event.
+            // Check if the person has the rights on the event.
             $this->getEvent($request, \Auth::user(), $inputs['event_id']);
         }
 
         if ($article->update($inputs)) {
-            // On affecte l'image si tout s'est bien passé.
+            // Affecting image if everything went well.
             $this->setImage($request, $article, 'articles', $article->id);
 
             // Tags.
@@ -283,7 +283,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Supprime un article.
+     * Delete an article.
      *
      * @param Request $request
      * @param string  $article_id

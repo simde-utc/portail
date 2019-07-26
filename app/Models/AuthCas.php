@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux authentifications CAS-UTC.
+ * Model corresponding to CAS-UTC authentifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -20,7 +20,7 @@ class AuthCas extends Auth
         'user_id', 'login', 'email', 'last_login_at', 'is_active', 'is_confirmed',
     ];
 
-    // Si on se connecte via passsword, on désactive tout ce qui est relié au CAS car on suppose qu'il n'est plus étudiant.
+    // If there if a password connection, all that is CAS-related is disabled because we supose he no longer is a student.
     protected $casts = [
         'is_active' => 'boolean',
         'is_confirmed' => 'boolean',
@@ -31,7 +31,7 @@ class AuthCas extends Auth
     ];
 
     /**
-     * Lancer à la création du modèle.
+     * Called at the model creation.
      *
      * @return void
      */
@@ -40,7 +40,7 @@ class AuthCas extends Auth
         parent::boot();
 
         static::created(function ($model) {
-            // On crée une notif de rappel de linkage.
+            // Linkage reminder notification creation.
             $user = $model->user;
 
             if (!$user->image) {
@@ -55,8 +55,8 @@ class AuthCas extends Auth
     }
 
     /**
-     * Permet de retrouver par email.
-     * TODO: transformer en scope.
+     * Return a user from its email adress.
+     * TODO: transform into scope.
      *
      * @param  string $email
      * @return AuthCas|null
@@ -67,7 +67,7 @@ class AuthCas extends Auth
     }
 
     /**
-     * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     * Retrieve a user from its login.
      *
      * @param string $login
      * @return mixed
@@ -103,7 +103,7 @@ class AuthCas extends Auth
     }
 
     /**
-     * Permet de vérifier la connexion d'un utilisateur en fonction des différents types d'authentification.
+     * Check if the password is correct.
      *
      * @param string $password
      * @return boolean
@@ -123,7 +123,7 @@ class AuthCas extends Auth
 
         $connected = $curl->post()->status === 201;
 
-        // On doit donc créer le compte.
+        // We have to create the account.
         if ($connected && $this->user_id === null) {
             $user = User::firstOrCreate([
                 'email' => $this->user->email,

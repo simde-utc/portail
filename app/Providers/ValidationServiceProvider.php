@@ -1,6 +1,6 @@
 <?php
 /**
- * Service Validation - Gestionnaire des validations de requêtes.
+ * Service Validation - Request validation manager.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -16,7 +16,7 @@ use Illuminate\Support\ServiceProvider;
 class ValidationServiceProvider extends ServiceProvider
 {
     /**
-     * Enregistre le service Validation.
+     * Save the validation services.
      *
      * @return void
      */

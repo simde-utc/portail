@@ -1,6 +1,6 @@
 <?php
 /**
- * Façade permettant de générer les validations pour les requêtes.
+ * Facade generating validations for requests.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Facade;
 class Validation extends Facade
 {
     /**
-     * Enregistre le nom de l'accesseur.
+     * Save the accessor name.
      *
      * @return string
      */

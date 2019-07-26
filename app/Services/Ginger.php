@@ -1,7 +1,7 @@
 <?php
 /**
- * Service Ginger.
- * Permet de récupérer des informations concernant un membre de l'UTC
+ * Ginger Service.
+ * Retrieve infomation about UTC members.
  *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -22,7 +22,7 @@ class Ginger
     protected $key;
 
     /**
-     * Crée la classe avec la clé du portail par défaut.
+     * Create the class with the portal's default key.
      */
     public function __construct()
     {
@@ -30,7 +30,7 @@ class Ginger
     }
 
     /**
-     * Change la clé utilisée.
+     * Change the used key.
      *
      * @param string $key
      * @return Ginger
@@ -43,7 +43,7 @@ class Ginger
     }
 
     /**
-     * Permet de récupérer auprès de Ginger un login précis.
+     * Retrieve from ginger information about a user corresponding to the given login.
      *
      * @param  string $login
      * @return Ginger
@@ -62,7 +62,7 @@ class Ginger
     }
 
     /**
-     * Permet de récupérer directement auprès de Ginger via un email précis.
+     * Retrieve directly from Ginger trough a given email.
      *
      * @param  string $email
      * @return Ginger
@@ -81,7 +81,7 @@ class Ginger
     }
 
     /**
-     * Permet de récupérer directement auprès de Ginger via un login précis.
+     * Retrieve directly from Ginger trough a given login.
      *
      * @param  string $login
      * @return array        Retourne l'ensemble des données de l'utilisateur.
@@ -92,7 +92,7 @@ class Ginger
     }
 
     /**
-     * Permet de récupérer directement auprès de Ginger via un email précis.
+     * Retrieve directly from Ginger trough a given email.
      *
      * @param  string $email
      * @return array        Retourne l'ensemble des données de l'utilisateur.
@@ -103,7 +103,7 @@ class Ginger
     }
 
     /**
-     * Indique si l'utilisateur existe ou non.
+     * Indicate if user exists or not.
      *
      * @param  string $login
      * @return boolean
@@ -116,7 +116,7 @@ class Ginger
     }
 
     /**
-     * Identique à la fonction précédente mais à être utilisé après recherche d'un user.
+     * Same as previous functions but has to be used after searching a user.
      *
      * @return boolean
      */
@@ -126,7 +126,7 @@ class Ginger
     }
 
     /**
-     * Permet de récupérer auprès de Ginger le code de réponse pour un login précis.
+     * Retrieve from Ginger the response code for a given login.
      *
      * @param  string $login
      * @return integer
@@ -139,7 +139,7 @@ class Ginger
     }
 
     /**
-     * Permet de récupérer auprès de Ginger les cotisations d'un utilisateur.
+     * Retrieve from Ginger a user contributions.
      *
      * @param  string $login
      * @return array
@@ -170,7 +170,7 @@ class Ginger
     }
 
     /**
-     * Ajoute une contribution.
+     * Adds a contribution.
      *
      * @param string $begin
      * @param string $end
@@ -197,7 +197,7 @@ class Ginger
     }
 
     /**
-     * Parse une contribution pour la retourner au bon format.
+     * Parse a contribution to return it at the right format.
      *
      * @param  mixed $contribution
      * @return mixed
@@ -207,7 +207,7 @@ class Ginger
         if ($contribution) {
             return new class($contribution) {
                 /**
-                 * Création de la contribution.
+                 * Contribution creation.
                  *
                  * @param mixed $contribution
                  */
@@ -222,7 +222,7 @@ class Ginger
         } else {
             return new class() {
                 /**
-                 * Création d'un contribution null.
+                 * Null contribution creation.
                  */
                 public function __construct()
                 {
@@ -236,7 +236,7 @@ class Ginger
     }
 
     /**
-     * Permet de récupérer auprès de Ginger le code de réponse pour un login précis.
+     * Retrieve from Ginger the response code for a given login.
      *
      * @return integer|null
      */
@@ -246,7 +246,7 @@ class Ginger
     }
 
     /**
-     * Renvoie l'utlisateur si existance de celui-ci.
+     * Return the user if he exists.
      *
      * @return array|null
      */
@@ -256,7 +256,7 @@ class Ginger
     }
 
     /**
-     * Renvoie le login de l'utilisateur si existant.
+     * Return user's login if it exists.
      *
      * @return string|null
      */
@@ -266,7 +266,7 @@ class Ginger
     }
 
     /**
-     * Renvoie le nom de l'utilisateur si existant.
+     * Return user's last name if it exists.
      *
      * @return string|null
      */
@@ -276,7 +276,7 @@ class Ginger
     }
 
     /**
-     * Renvoie le prenom de l'utilisateur si existant.
+     * Return user's first name if it exists.
      *
      * @return string|null
      */
@@ -286,7 +286,7 @@ class Ginger
     }
 
     /**
-     * Renvoie le mail de l'utilisateur si existant.
+     * Return user's email if it exists.
      *
      * @return string|null
      */
@@ -296,7 +296,7 @@ class Ginger
     }
 
     /**
-     * Renvoie le type de l'utilisateur si existant.
+     * Return user's type if it exists.
      *
      * @return string|null
      */
@@ -306,7 +306,7 @@ class Ginger
     }
 
     /**
-     * Renvoie le badge de l'utilisateur si existant.
+     * Return user's badge if it exists.
      *
      * @return string|null
      */
@@ -316,7 +316,7 @@ class Ginger
     }
 
     /**
-     * Indique si l'utilisateur est adulte si existant.
+     * Return if user is adult if it exists.
      *
      * @return boolean|null
      */
@@ -326,7 +326,7 @@ class Ginger
     }
 
     /**
-     * Indique si l'utilisateur est contisant si existant.
+     * Indicate if a user is contributor if exists.
      *
      * @return boolean|null
      */
@@ -336,12 +336,12 @@ class Ginger
     }
 
     /**
-     * Exécute la requête via Curl.
+     * Execute a curl request.
      *
      * @param  string $method
      * @param  string $route
      * @param  array  $params
-     * @return object         Contient la réponse mais aussi le code HTTP et quelques headers
+     * @return object         Contains the response and also the HTTP code and some headers.
      */
     protected function call(string $method, string $route, array $params=[])
     {

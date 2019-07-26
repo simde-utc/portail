@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux clients oauth.
+ * Model corresponding to OAuth clients.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -10,6 +10,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Laravel\Passport\Client as PassportClient;
 use App\Interfaces\Model\CanHaveCalendars;
 use App\Interfaces\Model\CanHaveEvents;
@@ -54,14 +55,24 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
         $asso = $this->asso;
 
         if ($asso->login === env('APP_ASSO', 'simde')) {
-            return \strtolower($this->name).'@'.\explode('@', $asso->email)[1];
+            return Str::snake($this->name, '-').'@'.\explode('@', $asso->email)[1];
         }
 
         return $asso->email;
     }
 
     /**
-     * Relation avec l'utilisateur.
+     * Return the image value.
+     *
+     * @return string|null
+     */
+    public function getImageAttribute(): ?string
+    {
+        return $this->asso->image;
+    }
+
+    /**
+     * Relation with the user.
      *
      * @return mixed
      */
@@ -71,7 +82,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Relation avec l'association.
+     * Relation with the association.
      *
      * @return mixed
      */
@@ -81,7 +92,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Relation avec les calendriers.
+     * Relation with calendars.
      *
      * @return mixed
      */
@@ -91,7 +102,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Relation avec les évènements.
+     * Relation with events.
      *
      * @return mixed
      */
@@ -101,7 +112,7 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Relation avec les articles.
+     * Relation with articles.
      *
      * @return mixed
      */
@@ -111,8 +122,8 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indique si le calendrier est gérable.
-     * Le calendrier privé est modifiable uniquement par les développeurs.
+     * Indicate if the calendar is manageable.
+     * The private calendar is manageable only by developers.
      *
      * @param  string $user_id
      * @return boolean
@@ -123,8 +134,8 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indique si l'évènement est gérable.
-     * L'évènement privé est modifiable uniquement par les développeurs.
+     * Indicate if the event is manageable.
+     * The private event is manageable only by developers.
      *
      * @param  string $user_id
      * @return boolean
@@ -135,8 +146,8 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
-     * Indique si l'évènement est gérable.
-     * L'évènement privé est modifiable uniquement par les développeurs.
+     * Indicate if the event is manageable.
+     * The private event is manageable only by developers.
      *
      * @param  string $user_id
      * @return boolean
@@ -147,6 +158,8 @@ class Client extends PassportClient implements CanHaveCalendars, CanHaveEvents, 
     }
 
     /**
+     * Retrieve the client name.
+     *
      * @return string|null
      */
     public function getName(): ?string

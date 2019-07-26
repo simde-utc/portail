@@ -1,6 +1,6 @@
 <?php
 /**
- * Service authentification par mot de passe.
+ * CAS authentification service.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -25,7 +25,7 @@ class Cas extends BaseAuth
     private $casURL;
 
     /**
-     * Récupération de la configuration.
+     * Configuration retrievement.
      */
     public function __construct()
     {
@@ -34,7 +34,7 @@ class Cas extends BaseAuth
     }
 
     /**
-     * Méthode de connexion.
+     * Connexion method.
      *
      * @param Request $request
      * @return mixed
@@ -62,7 +62,7 @@ class Cas extends BaseAuth
 
         $ginger = Ginger::user($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user']);
 
-        // Renvoie une erreur différente de la 200. On passe par le CAS.
+        // Return a different error than the 200 error. We use the CAS.
         if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
             list($login, $email, $firstname, $lastname, $is_confirmed) = [
                 $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
@@ -72,7 +72,7 @@ class Cas extends BaseAuth
                 false
             ];
         } else {
-            // Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update.
+            // Otherwise with Ginger. We test if the user exists or not. Then we create or update him.
             list($login, $email, $firstname, $lastname, $is_confirmed) = [
                 $ginger->getLogin(),
                 $ginger->getEmail(),
@@ -105,7 +105,7 @@ class Cas extends BaseAuth
     }
 
     /**
-     * Méthode d'inscription.
+     * Inscription method.
      *
      * @param Request $request
      * @return mixed
@@ -119,7 +119,7 @@ class Cas extends BaseAuth
     }
 
     /**
-     * Redirige vers la bonne page en cas de succès.
+     * Redirect to the right page in case of success.
      *
      * @param Request          $request
      * @param User             $user
@@ -140,7 +140,7 @@ class Cas extends BaseAuth
     }
 
     /**
-     * Méthode de déconnexion.
+     * Deconnection method.
      *
      * @param Request $request
      * @return mixed
@@ -151,7 +151,7 @@ class Cas extends BaseAuth
     }
 
     /**
-     * Crée la connexion auth.
+     * Create the auth connection.
      *
      * @param string $user_id
      * @param array  $info
@@ -203,7 +203,7 @@ class Cas extends BaseAuth
             try {
                    $ginger = Ginger::user($parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user']);
 
-                   // Renvoie une erreur différente de la 200. On passe par le CAS.
+                // Return a error diffrent than 200. We use the CAS.
                 if (!$ginger->exists() || $ginger->getResponseCode() !== 200) {
                     list($login, $email, $firstname, $lastname, $active) = [
                         $parsed->array['cas:serviceResponse']['cas:authenticationSuccess']['cas:user'],
@@ -213,7 +213,7 @@ class Cas extends BaseAuth
                         false
                     ];
                 } else {
-                    // Sinon par Ginger. On regarde si l'utilisateur existe ou non et on le crée ou l'update.
+                    // Otherwise with Ginger. We test if the user exists or not. Then we create or update him.
                     list($login, $email, $firstname, $lastname, $active) = [
                         $ginger->getLogin(),
                         $ginger->getEmail(),
@@ -259,7 +259,7 @@ class XmlToArrayParser
     private $parseError;
 
     /**
-     * Parse le XML.
+     * XML parsing.
      *
      * @param string $xml
      */
@@ -275,7 +275,7 @@ class XmlToArrayParser
     }
 
     /**
-     * Libère la mémoire du parseur.
+     * Free the parser's memory.
      */
     public function __destruct()
     {
@@ -283,7 +283,7 @@ class XmlToArrayParser
     }
 
     /**
-     * Récupères les erreurs engendrées par le parsing.
+     * Retrieve parsing errors.
      *
      * @return string
      */
@@ -302,7 +302,7 @@ class XmlToArrayParser
     }
 
     /**
-     * Méthode pour parser le tag.
+     * Tag parsing method.
      *
      * @param  mixed $parser
      * @param  mixed $tag
@@ -327,7 +327,7 @@ class XmlToArrayParser
     }
 
     /**
-     * Ajoute les données au niveau du pointeur.
+     * Add data to the pointer.
      *
      * @param  mixed $parser
      * @param  mixed $cdata
@@ -339,7 +339,7 @@ class XmlToArrayParser
     }
 
     /**
-     * Méthide pour gérer le tag de fin.
+     * Method to handle the final tag.
      *
      * @param  mixed $parser
      * @param  mixed $tag
@@ -363,7 +363,7 @@ class XmlToArrayParser
     }
 
     /**
-     * Convertion en array.
+     * Array conversion.
      *
      * @param  mixed $tag
      * @param  mixed $item

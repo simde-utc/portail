@@ -1,6 +1,6 @@
 <?php
 /**
- * Notifie l'utilisateur lors d'une personnification.
+ * Notify the user when an Impersonation occures.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,7 +22,7 @@ class UserImpersonation extends Notification
     protected $asAdmin;
 
     /**
-     * Déclare le type de notification.
+     * Notification's type declaration.
      *
      * @param Admin   $admin
      * @param string  $description
@@ -39,7 +39,7 @@ class UserImpersonation extends Notification
     }
 
     /**
-     * Sujet de la notification.
+     * Notification's subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -50,7 +50,7 @@ class UserImpersonation extends Notification
     }
 
     /**
-     * Contenu texte de la notification.
+     * Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string

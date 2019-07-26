@@ -1,6 +1,6 @@
 <?php
 /**
- * Indique que le modèle peut posséder des événements.
+ * Indicate that the model can have events.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,14 +15,14 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 interface CanHaveEvents
 {
     /**
-     * Renvoie la liste des événements.
+     * Return the events list.
      *
      * @return MorphMany
      */
     public function events();
 
     /**
-     * Permet d'indiquer si la personne à le droit de créer/modifier/supprimer les événements appartenant au modèle.
+     * Indicate if a given user can can create/update/delete the model's events.
      *
      * @param string $user_id
      * @return boolean

@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur une gestion des images pour la ressource concernée.
+ * Add the controller an Image management for a given resource.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 trait HasImages
 {
     /**
-     * Défini l'image pour une ressource.
+     * Define the image for a resource.
      *
      * @param Request $request
      * @param mixed   $model
@@ -42,7 +42,7 @@ trait HasImages
     }
 
     /**
-     * Supprime une image.
+     * Delete an image.
      *
      * @param  string $path
      * @return boolean
