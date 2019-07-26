@@ -322,6 +322,7 @@ class AssoScreen extends React.Component {
 
 	leaveAsso(isWaiting) {
 		const { asso, dispatch, user } = this.props;
+		const { name } = asso;
 
 		this.setState({
 			modal: {
@@ -331,7 +332,7 @@ class AssoScreen extends React.Component {
 					<div>
 						<p>
 							Souhaitez-vous vraiment quitter l'association{' '}
-							<span className="font-italic">{asso.name}</span> ?
+							<span className="font-italic">{name}</span> ?
 						</p>
 						<p>
 							{isWaiting
@@ -351,13 +352,13 @@ class AssoScreen extends React.Component {
 								dispatch(actions.user.assos.all());
 								dispatch(actions.assos(asso.id).members.all());
 								NotificationManager.warning(
-									`Vous ne faites plus partie de l'association: ${asso.name}`,
+									`Vous ne faites plus partie de l'association: ${name}`,
 									'Quitter une association'
 								);
 							})
 							.catch(() => {
 								NotificationManager.error(
-									`Une erreur a été rencontrée lorsque vous avez voulu quitter cette association: ${asso.name}`,
+									`Une erreur a été rencontrée lorsque vous avez voulu quitter cette association: ${name}`,
 									'Quitter une association'
 								);
 							})
@@ -374,6 +375,7 @@ class AssoScreen extends React.Component {
 
 	validateMember(member_id) {
 		const { asso, dispatch } = this.props;
+		const { name } = asso;
 
 		this.setState({
 			modal: {
@@ -383,7 +385,7 @@ class AssoScreen extends React.Component {
 					<div>
 						<p>
 							Souhaitez-vous valider le poste de ce membre dans l'association{' '}
-							<span className="font-italic">{asso.name}</span> ?
+							<span className="font-italic">{name}</span> ?
 						</p>
 					</div>
 				),
@@ -399,7 +401,7 @@ class AssoScreen extends React.Component {
 							.payload.then(() => {
 								dispatch(actions.assos(asso.id).members.all());
 								NotificationManager.success(
-									`Vous avez validé avec succès le membre de cette association: ${asso.name}`,
+									`Vous avez validé avec succès le membre de cette association: ${name}`,
 									"Valider un membre d'une association"
 								);
 
@@ -410,7 +412,7 @@ class AssoScreen extends React.Component {
 							})
 							.catch(() => {
 								NotificationManager.error(
-									`Vous n'avez pas le droit de valider le membre de cette association: ${asso.name}`,
+									`Vous n'avez pas le droit de valider le membre de cette association: ${name}`,
 									"Valider un membre d'une association"
 								);
 							})
@@ -427,6 +429,7 @@ class AssoScreen extends React.Component {
 
 	leaveMember(member_id) {
 		const { asso, dispatch } = this.props;
+		const { name } = asso;
 
 		this.setState({
 			modal: {
@@ -451,13 +454,13 @@ class AssoScreen extends React.Component {
 								dispatch(actions.user.assos.all());
 								dispatch(actions.assos(asso.id).members.all());
 								NotificationManager.warning(
-									`Vous avez retiré avec succès le membre de cette association: ${asso.name}`,
+									`Vous avez retiré avec succès le membre de cette association: ${name}`,
 									"Retirer un membre d'une association"
 								);
 							})
 							.catch(() => {
 								NotificationManager.error(
-									`Vous n'avez pas le droit de retirer le membre de cette association: ${asso.name}`,
+									`Vous n'avez pas le droit de retirer le membre de cette association: ${name}`,
 									"Retirer un membre d'une association"
 								);
 							})
