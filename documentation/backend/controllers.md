@@ -1,8 +1,8 @@
 ## Controllers
 
-Interfaces de validation des données.
+Data validation interfaces
 
-Namespace : `\App\Http\Requests\...`
-<br>Dossier :   `app/Http/Requests`
+Namespace : `\App\Http\Requests\...`<br>
+Folder :   `app/Http/Requests`
 
-Les requêtes POST et PUT doivent être en JSON et formatées comme indiquée dans la documentation des controllers spécifiques.
+POST and PUT requests must be in JSON as indicated in the specific controllers' documentation.

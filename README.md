@@ -1,4 +1,4 @@
-# Portail des assos - API 
+# Portail des assos - API
 
 [![Build Status](https://travis-ci.org/simde-utc/portail.svg?branch=master)](https://travis-ci.org/simde-utc/portail)
 [![GitHub license](https://img.shields.io/github/license/simde-utc/portail.svg)](https://github.com/simde-utc/portail/blob/develop/LICENSE)
@@ -35,6 +35,10 @@ Nouvelle API du [Portail des Assos](https://assos.utc.fr), construite avec [Lara
     + Wamp/Apache : aller directement sur le dossier `public` de l'installation via Wamp
 - Si les identifiants mail et notification sont renseignés :
     + Lancer `php artisan queue:work` pour avoir l'envoie de notif qui marche
+    + Pour avoir le système de queues fonctionnant indépendament:
+		- Installer le paquet `supervisor` sous Linux.
+	    - Copier et adapter le fichier `laravel-worker.conf` dans `/etc/supervisor/conf.d`
+	    - Lancer le worker: `sudo supervisorctl reread && sudo supervisorctl update && sudo supervisorctl start laravel-worker:*`
 - Ça part !
 
 
