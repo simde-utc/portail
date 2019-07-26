@@ -47,7 +47,7 @@ class CreateAssosMembersTable extends Migration
             $table->primary(['asso_id', 'user_id', 'permission_id', 'semester_id'], 'assos_permissions_user_semester');
         });
 
-        // En fait Laravel fait dans l'ordre, du coup le primary plante..
+        // Laravel does it in the order so the primary key set crashes.
         // https://github.com/laravel/framework/issues/25190
         Schema::table('assos_permissions', function (Blueprint $table) {
             $table->charset = 'utf8';

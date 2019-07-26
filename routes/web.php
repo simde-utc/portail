@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion des routes web.
+ * Web routes management.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -11,7 +11,7 @@
  */
 
 /**
- * Gestion des authentifications.
+ * Authentifications management.
  */
 
 Route::get('login', 'Auth\LoginController@index')->name('login');
@@ -22,7 +22,7 @@ Route::match(['get', 'post'], 'logout/{redirect?}', 'Auth\LoginController@destro
 
 
 /*
- * Gestion des inscriptions.
+ * Registering management.
  */
 
 Route::get('register/{provider?}', 'Auth\RegisterController@show')->name('register.show');
@@ -30,7 +30,7 @@ Route::match(['get', 'post'], 'register/{provider?}/process', 'Auth\RegisterCont
 
 
 /*
- * Gestion des anciennes routes Portail.
+ * Old portal's routes management.
  */
 
 Route::any('asso', 'OldToNewPortailController@asso');
@@ -43,7 +43,7 @@ Route::any('event/calendar', 'OldToNewPortailController@event');
 Route::any('event/show/{whatever}', 'OldToNewPortailController@event')->where('whatever', '.*');
 
 /*
- * Redirige le reste du flux (HTTP 404) vers React.
+ * Redirects the rest to React (HTTP 404).
  */
 
 Route::any('{whatever}', 'RenderReact')->where('whatever', '.*')->name('home');

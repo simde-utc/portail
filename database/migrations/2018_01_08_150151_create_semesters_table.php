@@ -22,9 +22,9 @@ class CreateSemestersTable extends Migration
             $table->char('year', 2);
 
             $table->timestamp('begin_at')->unique()->nullable();
-            // Le début du semestre
+            // Begin of the semester.
             $table->timestamp('end_at')->unique()->nullable();
-            // La fin du semestre
+            // End of the semester.
             $table->timestamps();
         });
     }

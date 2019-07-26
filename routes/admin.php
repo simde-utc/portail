@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion des routes admin.
+ * Admin routes management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -10,7 +10,7 @@
 
 
 /**
- * Routes pour l'authentification admin.
+ * Admin authentication routes.
  */
 
 Route::get('auth/login', 'AuthController@getLogin');
@@ -18,7 +18,7 @@ Route::post('auth/login', 'AuthController@postLogin');
 Route::get('auth/logout', 'AuthController@getLogout');
 
 /*
- * Routes classiques d'affichage admin.
+ * Admin display classic routes.
  */
 
 Route::get('/', 'HomeController@index');
@@ -26,7 +26,7 @@ Route::get('dashboard', 'DashboardController@index')->name('dashboard-index');
 Route::get('charts', 'ChartsController@index')->name('charts-index');
 
 /*
- * Routes de recherche.
+ * Search routes.
  */
 
 Route::get('search/user', 'SearchUserController@index')->name('search-user-index');
@@ -37,7 +37,7 @@ Route::get('search/contributor', 'SearchContributorController@index')->name('sea
 Route::get('search/contributor/{login}', 'SearchContributorController@show')->name('search-contributor-show');
 
 /*
- * Routes de gestion.
+ * Management routes.
  */
 
 Route::get('management/access', 'Management\\AccessController@index')->name('access-index');
@@ -61,7 +61,7 @@ Route::put('management/users/permissions/{user_id}/{semester_id}', 'Management\\
 Route::delete('management/users/permissions/{user_id}/{semester_id}', 'Management\\UserPermissionController@delete')->name('user-permission-delete');
 
 /*
- * Routes de gestion des ressources.
+ * Resources management routes.
  */
 
 Route::get('resources/users', 'Resource\\UserController@index')->name('users-index');

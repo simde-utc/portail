@@ -1,6 +1,6 @@
 <?php
 /**
- * Teste unitaire.
+ * Unit testing.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,7 +16,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class ExampleTest extends TestCase
 {
     /**
-     * Teste d'exemple.
+     * Example test.
      *
      * @return void
      */

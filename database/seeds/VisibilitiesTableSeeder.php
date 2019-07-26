@@ -12,7 +12,7 @@ class VisibilitiesTableSeeder extends Seeder
      */
     public function run() : void
     {
-        // Visibilités possibles, du moins permissif au plus permissif
+        // Possible visibilities. From the least permissive to the most.
         $visibilities = [
             [
                 'type' => 'public',

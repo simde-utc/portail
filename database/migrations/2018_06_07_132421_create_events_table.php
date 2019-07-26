@@ -22,7 +22,7 @@ class CreateEventsTable extends Migration
             $table->timestamp('begin_at')->useCurrent();
             $table->timestamp('end_at')->useCurrent();
             $table->uuid('full_day')->default(false);
-            // Les horaires seront ignorés si vrai
+            // Begin and End time will be ignored if true
             $table->uuid('visibility_id');
             $table->uuid('created_by_id')->nullable();
             $table->string('created_by_type')->nullable();
