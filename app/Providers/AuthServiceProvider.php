@@ -1,6 +1,6 @@
 <?php
 /**
- * Service de l'authentification.
+ * Authentification service.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -26,11 +26,11 @@ class AuthServiceProvider extends ServiceProvider
         'App\Model' => 'App\Policies\ModelPolicy',
     ];
 
-    // Important d'être non différé car sinon les scopes ne sont pas chargés.
+    // It is important to be not deferred because otherwise scopes are not loaded.
     protected $defer = false;
 
     /**
-     * Enregistre les services d'authentification.
+     * Save authentification services.
      *
      * @return void
      */
@@ -42,7 +42,7 @@ class AuthServiceProvider extends ServiceProvider
     }
 
     /**
-     * Enregistrement des actions pour les services d'authentification.
+     * Save actions for authentification services.
      *
      * @return void
      */
@@ -52,7 +52,7 @@ class AuthServiceProvider extends ServiceProvider
     }
 
     /**
-     * Enregistrement du service Passport.
+     * Passport service save.
      *
      * @return void
      */
@@ -68,7 +68,7 @@ class AuthServiceProvider extends ServiceProvider
     }
 
     /**
-     * Liste tous les services différés
+     * List all differed services.
      *
      * @return array
      */

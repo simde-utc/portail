@@ -1,6 +1,6 @@
 <?php
 /**
- * Génère une présentation globale admin.
+ * Generate a global admin presentation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,14 +18,14 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 class GridGenerator extends Generator
 {
     /**
-     * Méthode correspondante à l'admin (qui change en fonction du type de formulaire...).
+     * Method corresponding to the admin (which changes according to the type of form...).
      *
      * @var string
      */
     protected $valueMethod = 'display';
 
     /**
-     * Prépare l'affichage principal.
+     * Prepare main display.
      *
      * @param string $model
      */
@@ -35,7 +35,7 @@ class GridGenerator extends Generator
     }
 
     /**
-     * Indique que le champ peut être mis dans l'ordre.
+     * Indicate that the field can be put in order.
      *
      * @param  mixed $field
      * @return mixed
@@ -46,7 +46,7 @@ class GridGenerator extends Generator
     }
 
     /**
-     * Génère un filtre admin.
+     * Generate an admin filter.
      *
      * @param  mixed  $filter
      * @param  string $field
@@ -94,7 +94,7 @@ class GridGenerator extends Generator
     }
 
     /**
-     * Permet d'ajouter plusieurs champs.
+     * Allow to add several fields
      *
      * @param array $fields
      * @return Generator

@@ -1,6 +1,6 @@
 <?php
 /**
- * Service de broadcast.
+ * Broadcast service.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Broadcast;
 class BroadcastServiceProvider extends ServiceProvider
 {
     /**
-     * Prépare tous les services de l'application.
+     * Prepare all application services.
      *
      * @return void
      */

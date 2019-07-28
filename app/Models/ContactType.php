@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux types de contacts.
+ * Model corresponding to contact types.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -28,7 +28,7 @@ class ContactType extends Model
     ];
 
     /**
-     * Relation avec les contacts.
+     * Relation with contacts.
      *
      * @return mixed
      */

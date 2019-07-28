@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux notifications.
+ * Add the controller an access to Notifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ trait HasNotifications
     use HasUsers;
 
     /**
-     * Récupère les notifications de l'utlisateur.
+     * Retrieve user's notifications.
      *
      * @param  Request $request
      * @param  string  $user_id

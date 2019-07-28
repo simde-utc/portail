@@ -19,7 +19,7 @@ class Validation
     protected $request;
 
     /**
-     * Défini la requête.
+     * Define the request.
      *
      * @param Request $request
      * @return Validation
@@ -32,7 +32,7 @@ class Validation
     }
 
     /**
-     * Force une longueur maximale.
+     * Force a max length.
      *
      * @param string|integer $arg
      * @param integer        $max
@@ -50,7 +50,7 @@ class Validation
     }
 
     /**
-     * Spécifie le type.
+     * Specify the type.
      *
      * @param string $arg
      * @return Validation $this
@@ -63,7 +63,7 @@ class Validation
     }
 
     /**
-     * Indique l'unicité.
+     * Indicate unicity.
      *
      * @param string $table
      * @param string $fields
@@ -77,7 +77,7 @@ class Validation
     }
 
     /**
-     * Indique la nécessité d'existance.
+     * Indicate that the field must exist.
      *
      * @param string $table
      * @param string $field
@@ -91,7 +91,7 @@ class Validation
     }
 
     /**
-     * Indique que le champ peut être nul.
+     * Indicate that the field can be null.
      *
      * @return Validation
      */
@@ -103,7 +103,7 @@ class Validation
     }
 
     /**
-     * Récupère tous les appels.
+     * Retrieve all calls.
      *
      * @param string $method
      * @param array  $args
@@ -121,7 +121,7 @@ class Validation
     }
 
     /**
-     * Compilation de la validation.
+     * Validation compilation.
      *
      * @return string
      */

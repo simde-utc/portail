@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe abstraite de génération d'un type de formulaire.
+ * Abstract class for generating a form of a given type.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -38,7 +38,7 @@ abstract class Generator
     protected const NULL_ICON = '<span class="text-warning">~</span>' ;
 
     /**
-     * Prépare la génréation.
+     * Prepare generation.
      *
      * @param string $generated
      * @param string $model
@@ -55,7 +55,7 @@ abstract class Generator
     }
 
     /**
-     * Retourne le formulaire généré.
+     * Return generated form.
      *
      * @return mixed
      */
@@ -65,7 +65,7 @@ abstract class Generator
     }
 
     /**
-     * Permet de convertir un tableau pour l'interface admin.
+     * Convert a PHP array to a Table for admin interface
      *
      * @param  array $data
      * @return mixed
@@ -88,7 +88,7 @@ abstract class Generator
     }
 
     /**
-     * Réduit le nombre d'informations au strict nécessaire.
+     * Reduce the amount of information to what is strictly necessary.
      *
      * @param  array    $value
      * @param  Relation $relation
@@ -114,7 +114,7 @@ abstract class Generator
     }
 
     /**
-     * Converti les modèles en tableau.
+     * Convert models in Table.
      *
      * @param  array    $value
      * @param  Relation $relation
@@ -130,7 +130,7 @@ abstract class Generator
     }
 
     /**
-     * Converti les valeurs pour l'admin.
+     * Convert value for the admin.
      *
      * @param  mixed $value
      * @param  mixed $field
@@ -160,7 +160,7 @@ abstract class Generator
 
             return $date->format('d/m/Y à H:i');
         } catch (\Exception $e) {
-            // Ce champ n'est pas une date.
+            // This field is not a date.
         }
 
         try {
@@ -168,11 +168,11 @@ abstract class Generator
                 return Generator::arrayToTable($array);
             }
         } catch (\Exception $e) {
-            // Ce champ n'est pas un json.
+            // This field is not json-formatted.
         }
 
         if (is_string($value)) {
-            // L'appel e($value) permet de rendre la valeur saine #SansInjections.
+            // Call to e($value) allows us to render the value without any injection.
             return e($value);
         } else {
             return $value;
@@ -180,7 +180,7 @@ abstract class Generator
     }
 
     /**
-     * Définition sépécifique de la part du type de formulaire.
+     * Specific definition from the form type.
      *
      * @param mixed $field
      * @return mixed
@@ -188,7 +188,7 @@ abstract class Generator
     abstract protected function callCustomMethods($field);
 
     /**
-     * Permet d'ajouter plusieurs champs.
+     * Allow to add several fields.
      *
      * @param array $fields
      * @return Generator
@@ -209,7 +209,7 @@ abstract class Generator
     }
 
     /**
-     * Génère un nouveau champ.
+     * Generate a new field.
      *
      * @param  string $field
      * @return void
@@ -225,7 +225,7 @@ abstract class Generator
     }
 
     /**
-     * Renvoie tous les appels sur le formulaire.
+     * Return all calls on the form.
      *
      * @param  string $method
      * @param  array  $args

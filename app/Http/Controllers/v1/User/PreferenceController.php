@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les préférences utilisateurs.
+ * Manage the user preferences.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -28,7 +28,7 @@ class PreferenceController extends Controller
     use HasUserBulkMethods, HasUsers;
 
     /**
-     * Nécessité de pouvoir gérer les préférences de l'utilisateur.
+     * Must be able to manage user preferences.
      */
     public function __construct()
     {
@@ -56,7 +56,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Récupère la liste des préférences d'un utilisateur.
+     * Retrieve the user preferences list.
      *
      * @param Request $request
      * @param User    $user
@@ -95,7 +95,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Liste les préférences d'un utilisateur.
+     * List the user preferences.
      *
      * @param Request $request
      * @param string  $user_id
@@ -123,7 +123,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Créer une préférence pour un utilisateur.
+     * Create a user preferences.
      *
      * @param UserPreferenceRequest $request
      * @param string                $user_id
@@ -135,7 +135,7 @@ class PreferenceController extends Controller
         $inputs = $request->input();
         $token = \Scopes::getToken($request);
 
-        // On ajoute l'id associé.
+        // Associated ID is added.
         if ($request->input('only_for') === 'asso') {
             if (!\Scopes::has($request, 'user-create-info-preferences-asso')) {
                 abort(403, 'Vous n\'avez pas les droits sur les préférences de l\'association');
@@ -167,7 +167,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Montre une préférence d'un utilisateur.
+     * Show a user preference.
      *
      * @param Request $request
      * @param string  $user_id
@@ -191,7 +191,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Met à jour une préférence d'un utilisateur.
+     * Update a user preference.
      *
      * @param UserPreferenceRequest $request
      * @param string                $user_id
@@ -223,7 +223,7 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Supprime une préférence d'un utilisateur.
+     * Delete a user preference.
      *
      * @param Request $request
      * @param string  $user_id

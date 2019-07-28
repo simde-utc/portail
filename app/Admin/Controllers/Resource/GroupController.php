@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Group.
+ * Manage Groups as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class GroupController extends ResourceController
     protected $model = Group::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -36,7 +36,7 @@ class GroupController extends ResourceController
     }
 
     /**
-     * Définition des valeurs par défaut champs à afficher.
+     * Default values definition of the fields to display.
      *
      * @return array
      */
@@ -49,7 +49,7 @@ class GroupController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Return dependencies.
      *
      * @return array
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les roles.
+ * Roles request management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Validation;
 class RoleRequest extends Request
 {
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

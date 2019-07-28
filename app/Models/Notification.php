@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux notifications.
+ * Model corresponding to notifications.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -44,7 +44,7 @@ class Notification extends Model
     ];
 
     /**
-     * Lancé à la création du modèle.
+     * Launched at the model creation.
      *
      * @return void
      */
@@ -67,7 +67,7 @@ class Notification extends Model
     }
 
     /**
-     * Relation avec l'entité notifiée
+     * Relation with the notified entity.
      *
      * @return mixed
      */
@@ -77,7 +77,7 @@ class Notification extends Model
     }
 
     /**
-     * Relation avec l'entité créatrice
+     * Relation with creator entity.
      *
      * @return mixed
      */

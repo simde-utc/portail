@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute un sélecteur concernant les visibilités.
+ * Add a selector concerning visibilities.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -18,11 +18,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait HasVisibilitySelection
 {
-    // Pour la visibilité on a besoin de connaître l'utilisateur sur lequel appliquer.
+    // We need to know the user on which apply the visibility.
     protected static $userForVisibility;
 
     /**
-     * Scope spécifique concernant l'ordre dans lequel les articles peuvent être affichés.
+     * Specific scope concerning the display order for articles.
      *
      * @param  Builder $query
      * @param  string  ...$types
@@ -42,7 +42,7 @@ trait HasVisibilitySelection
     }
 
     /**
-     * Prépare la requête pour chaque visibilité.
+     * Prepare the request for each visibility.
      *
      * @param  Builder $subQuery
      * @return Builder
@@ -61,12 +61,12 @@ trait HasVisibilitySelection
             foreach ($this->selection['visibilities'] as $visibility) {
                 $method = [$this, 'scope'.ucfirst($visibility->type).'Visibility'];
                 if (method_exists(...$method)) {
-                    // Soit la visibilité est définié par une méthode.
+                    // Either the visibility is defined by a method.
                     $subQuery = $subQuery->orWhere(function ($subSubQuery) use ($method) {
                         return call_user_func($method, $subSubQuery);
                     });
                 } else if ($user && $user->{'is'.ucfirst($visibility->type)}()) {
-                    // Soit on vérifie que le user est du type.
+                    // Or we verify that the is of the right type.
                     $subQuery = $subQuery->orWhere('visibility_id', $visibility->id);
                 }
             }
@@ -76,7 +76,7 @@ trait HasVisibilitySelection
     }
 
     /**
-     * Défini l'utilisateur sur lequel se baser pour la visibilité.
+     * Set the user for visibility.
      *
      * @param User $user
      * @return string
@@ -89,7 +89,7 @@ trait HasVisibilitySelection
     }
 
     /**
-     * Donne l'utilisateur sur lequel se baser pour la visibilité.
+     * Get the user for visibility.
      *
      * @return User|null
      */
@@ -99,7 +99,7 @@ trait HasVisibilitySelection
     }
 
     /**
-     * Retourne la visibilité correspondante au type demandé.
+     * Return the visibility of a given type.
      *
      * @param  string $type
      * @return Visibility
@@ -120,7 +120,7 @@ trait HasVisibilitySelection
     }
 
     /**
-     * Scope spécifique pour n'avoir que les ressources publiques.
+     * Specific scope to have only public resources.
      *
      * @param  Builder $query
      * @return Builder
@@ -133,7 +133,7 @@ trait HasVisibilitySelection
     }
 
     /**
-     * Scope spécifique pour n'avoir que les ressources privées.
+     * Specific scope to have only private resources.
      *
      * @param  Builder $query
      * @return Builder|null
@@ -141,14 +141,14 @@ trait HasVisibilitySelection
     abstract public function scopePrivateVisibility(Builder $query);
 
     /**
-     * Scope spécifique pour n'avoir que les ressources internes.
+     * Specific scope to have only internal resources.
      *
      * @param  Builder $query
      * @return Builder|null
      */
     public function scopeInternalVisibility(Builder $query)
     {
-        // Accessible uniquement par les clients OAuth2.
+        // Only OAuth2 clients can access this.
         if (!$this->getUserForVisibility()) {
             $visibility = $this->getSelectionForVisibility('internal');
 

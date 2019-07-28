@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware gérant les scopes.
+ * Middleware to handle scopes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
 class CheckPassport
 {
     /**
-     * Vérifie ou manipule les scopes en fonction du type de demande oauth.
+     * Check or handle scopes depending on the OAuth request type.
      *
      * @param  Request $request
      * @param  Closure $next
@@ -34,24 +34,24 @@ class CheckPassport
         $clientId = ($input['client_id'] ?? $request->header('PHP_AUTH_USER', null));
         $client = Client::find($clientId);
 
-        // Si on n'arrive pas à récupérer le client_id, on refuse l'accès.
+        // If we cannot retrieve client_id, access is refused.
         if ($clientId === null || $client === null) {
             throw OAuthServerException::accessDenied();
         }
 
-        // On vérifie la requête uniquement s'il s'agit d'une authentification par client uniquement.
+        // We check the request only if it's a client authentication.
         if ($request->input('grant_type') === 'client_credentials') {
             $this->checkClientCredentials($request, $client, $input);
         }
 
-        // Méthode magique pour simplifier le dev.
+        // Magical method to simplify the development.
         if (isset($input['scope']) && $input['scope'] === '*' && config('app.debug')) {
             $input['scope'] = implode(' ', \Scopes::getDevScopes());
 
             $request->replace($input);
         }
 
-        // On vérifie que les scopes sont bien définis et pour le bon type d'authentification.
+        // We check that the scopes are defined and for the right authetication type.
         if (isset($input['scope']) && ($input['scope'] !== '')) {
             \Scopes::checkScopesForGrantType(explode(' ', $input['scope']), ($input['grant_type'] ?? null));
         } else if (isset($input['scopes']) && ($input['scopes'] !== '')) {
@@ -59,7 +59,7 @@ class CheckPassport
         }
 
         if (\Auth::id()) {
-            // On vérifie si l'application n'est pas restreinte à du développement et à l'association en elle-même.
+            // We check if the application is not only for the developement and to the association itself.
             if ($client->restricted) {
                 if ($client->asso) {
                     if (!$client->asso->hasOneMember(\Auth::id())) {
@@ -72,7 +72,7 @@ class CheckPassport
                 }
             }
 
-            // On vérifie si l'application n'est pas réduite à un certain public.
+            // We check if the application is not only for a public.
             if ($client->targeted_types) {
                 $targets = json_decode($client->targeted_types, true);
 
@@ -94,7 +94,7 @@ class CheckPassport
     }
 
     /**
-     * Vérifie le type de demande client que les scopes ne sont pas définis.
+     * Check in the client request type that the scopes are not defined.
      * @param  Request $request
      * @param  Client  $client
      * @param  array   $input
@@ -107,13 +107,13 @@ class CheckPassport
                 Il ne faut pas les définir dans la requête');
         }
 
-        // On récupère la liste des scopes définis pour le client.
+        // We retrieve the client defined scopes list.
         $scopes = json_decode($client->scopes, true);
 
         if ($scopes === null) {
             $input['scope'] = '';
         } else {
-            // On override pour l'instant, on gèrera ça plus tard via la bdd.
+            // We override for now, it will be handle later through the DB.
             $input['scope'] = implode(' ', $scopes);
         }
 

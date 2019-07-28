@@ -1,6 +1,6 @@
 <?php
 /**
- * Requête par défaut.
+ * Default request.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,7 +16,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class Request extends FormRequest
 {
     /**
-     * Ajoute notre requête à la validation.
+     * Add request to validation.
+     *
      */
     public function __construct()
     {
@@ -26,8 +27,9 @@ class Request extends FormRequest
     }
 
     /**
-     * Détermine si l'utilisateur à le droit de faire cette requête.
-     * Tout est réalisé dans les controlleurs.
+     *
+     * Determine if the user has the right to make this request.
+     * Everything is done in the controllers.
      *
      * @return boolean
      */
@@ -37,7 +39,7 @@ class Request extends FormRequest
     }
 
     /**
-     * Retourne la liste des règles de validation.
+     * Return the validation rules list.
      *
      * @return array
      */

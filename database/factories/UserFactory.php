@@ -1,6 +1,6 @@
 <?php
 /**
- * Non utilisé.
+ * Not used.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

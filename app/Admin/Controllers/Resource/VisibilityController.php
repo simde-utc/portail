@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Visibility.
+ * Manage visibilities as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class VisibilityController extends ResourceController
     protected $model = Visibility::class;
 
     /**
-     * Définition des champs à afficher.
+     * Field to display definition.
      *
      * @return array
      */
@@ -34,7 +34,7 @@ class VisibilityController extends ResourceController
     }
 
     /**
-     * Définition des valeurs par défaut champs à afficher.
+     * Default values definition of the fields to display.
      *
      * @return array
      */
@@ -46,7 +46,7 @@ class VisibilityController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Return dependencies.
      *
      * @return array
      */

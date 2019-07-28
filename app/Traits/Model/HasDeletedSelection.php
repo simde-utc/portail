@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute un sélecteur concernant la suppression.
+ * Add a selector concerning deletion.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 trait HasDeletedSelection
 {
     /**
-     * Sélecteur suppression.
+     * Deletion selector.
      *
      * @param  Builder $query
      * @param  string  $choice

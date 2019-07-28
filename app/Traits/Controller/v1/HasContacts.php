@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux contacts.
+ * Add the controller an access to Contacts.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,7 +16,7 @@ use App\Models\Contact;
 trait HasContacts
 {
     /**
-     * Vérifie les droits du token.
+     * Check the token rights.
      *
      * @param  Request $request
      * @param  string  $verb
@@ -32,7 +32,7 @@ trait HasContacts
     }
 
     /**
-     * Récupère un contact.
+     * Retrieve a Contact.
      *
      * @param  Request $request
      * @param  string  $verb

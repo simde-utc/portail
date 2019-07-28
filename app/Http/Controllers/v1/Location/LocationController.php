@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les lieux.
+ * Manage locations.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,7 +22,7 @@ class LocationController extends Controller
     use HasPosition;
 
     /**
-     * Nécessité de gérer les lieux.
+     * Must be able to manage locations.
      */
     public function __construct()
     {
@@ -45,7 +45,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Liste les lieux.
+     * List locations.
      *
      * @return JsonResponse
      */
@@ -59,7 +59,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Crée un lieu.
+     * Create a location.
      *
      * @param LocationRequest $request
      * @return JsonResponse
@@ -76,7 +76,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Montre un lieu.
+     * Show a location.
      *
      * @param  string $location_id
      * @return JsonResponse
@@ -93,7 +93,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Met à jour un lieu.
+     * Update a location.
      *
      * @param  LocationRequest $request
      * @param  string          $location_id
@@ -117,7 +117,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Supprime un lieu.
+     * Delete a location.
      *
      * @param  string $location_id
      * @return void

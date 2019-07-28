@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les calendriers.
+ * Calendar request management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Validation;
 class CalendarRequest extends Request
 {
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

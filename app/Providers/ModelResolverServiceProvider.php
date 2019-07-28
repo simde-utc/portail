@@ -1,6 +1,6 @@
 <?php
 /**
- * Service ModelResolver - Permet de retrouver les modèles.
+ * ModelResolver Service - Retrieves the models.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Support\ServiceProvider;
 class ModelResolverServiceProvider extends ServiceProvider
 {
     /**
-     * Enregistre le service ModelResolver.
+     * Save the ModelResolver service.
      *
      * @return void
      */

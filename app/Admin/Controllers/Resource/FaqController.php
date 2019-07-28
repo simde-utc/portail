@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les questions FAQs.
+ * Manage FAQ questions as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class FaqController extends ResourceController
     protected $model = Faq::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -37,7 +37,7 @@ class FaqController extends ResourceController
     }
 
     /**
-     * Définition des valeurs par défaut champs à afficher.
+     * Default values definition of the fields to display.
      *
      * @return array
      */
@@ -50,7 +50,7 @@ class FaqController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Return dependencies.
      *
      * @return array
      */

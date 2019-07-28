@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux tags.
+ * Model corresponding to tags.
  *
  * TODO: must, etc...
  *
@@ -20,7 +20,7 @@ class Tag extends Model
     ];
 
     /**
-     * Relation avec l'article.
+     * Relation with an article.
      *
      * @return mixed
      */

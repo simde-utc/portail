@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère la réinitialisation des mots de passe.
+ * Manage the reset of passwords.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -23,14 +23,14 @@ class ResetPasswordController extends Controller
     use ResetsPasswords;
 
     /**
-     * Où rediriger les connectés.
+     * Where to redirect users once they're logged in.
      *
      * @var string
      */
     protected $redirectTo = '/';
 
     /**
-     * Uniquement les non-connectés peuvent réinitialiser un mot de passe.
+     * Only users that aren't connected can reset their password.
      *
      * @return void
      */
@@ -40,7 +40,7 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * Affiche le formulaire de réinitialisation.
+     * Show the password reset form.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  string|null              $token
@@ -54,7 +54,7 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * Réinitilise le mot de passe.
+     * Reset the password.
      *
      * @param  CanResetPassword $user
      * @param  string           $password

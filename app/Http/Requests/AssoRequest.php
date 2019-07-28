@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les associations.
+ * Association request management.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -17,7 +17,7 @@ use Validation;
 class AssoRequest extends Request
 {
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

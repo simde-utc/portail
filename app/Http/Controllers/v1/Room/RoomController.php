@@ -1,6 +1,6 @@
 <?php
 /**
- * Gérer les salles.
+ * Manage rooms.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -23,7 +23,7 @@ class RoomController extends Controller
     use HasRooms, HasCreatorsAndOwners;
 
     /**
-     * Nécessité de gérer les salles.
+     * Must be able to manage rooms.
      */
     public function __construct()
     {
@@ -55,7 +55,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Listes les salles.
+     * List rooms.
      *
      * @param  Request $request
      * @return JsonResponse
@@ -72,7 +72,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Crée une salle.
+     * Create a room.
      *
      * @param  RoomRequest $request
      * @return JsonResponse
@@ -95,7 +95,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Montre une salle.
+     * Show a room.
      *
      * @param Request $request
      * @param string  $room_id
@@ -109,7 +109,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Met à jour une salle.
+     * Update a room.
      *
      * @param RoomRequest $request
      * @param string      $room_id
@@ -135,7 +135,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Supprime une salle.
+     * Delete a room.
      *
      * @param Request $request
      * @param string  $room_id

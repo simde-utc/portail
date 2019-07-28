@@ -1,8 +1,8 @@
 <?php
 /**
- * Fichier générant la commande portail:old-to-new.
- * Télécharge toutes les données dans l'ancien Portail vers celui-ci.
- * Basé sur la version de l'ancien Portail en date du 1er Janvier 2019.
+ * File generating the command: portail:old-to-new.
+ * Download all data from the old portal to this one.
+ * Based on the old portal version from 1st January 2019.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -48,7 +48,7 @@ class OldToNew extends Command
     protected $resultedRoles = [];
 
     /**
-     * Défini les anciens rôles vers les nouveaux.
+     * Transform old roles labels into the new ones.
      *
      * @var array
      */
@@ -72,7 +72,7 @@ class OldToNew extends Command
     protected const DEFAULT_ROLE = 'Membre de l\'association';
 
     /**
-     * Exécution de la commande.
+     * Command execution.
      *
      * @return mixed
      */
@@ -169,7 +169,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Récupère la connexion à la base de données de l'ancien Portail.
+     * Retrieve old portal database connection.
      *
      * @return Connection
      */
@@ -179,7 +179,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Crée une image à partir du l'ancien lien Portail.
+     * Create image from the old portal.
      *
      * @param  string $url
      * @param  mixed  $model
@@ -208,7 +208,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Récupère le modèle depuis la valeur d'un champ.
+     * Retrieve model from field's value.
      *
      * @param  array   $models
      * @param  integer $value
@@ -225,7 +225,8 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Récupère l'utilisateur.
+     *
+     * Retrieve User.
      *
      * @param  integer $user_id
      * @return mixed|null
@@ -238,7 +239,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Récupère l'association.
+     * Retrieve Association.
      *
      * @param  integer $asso_id
      * @return mixed|null
@@ -251,7 +252,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Récupère le rôle.
+     * Retrieve role.
      *
      * @param  integer $role_id
      * @return mixed|null
@@ -269,7 +270,8 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Récupère le semestre.
+     *
+     * Retrieve semester.
      *
      * @param  integer $semester_id
      * @return mixed|null
@@ -282,7 +284,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Récupère l'accès.
+     * Retrieve access.
      *
      * @param  integer $access_id
      * @return mixed|null
@@ -295,7 +297,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Récupère la salle.
+     * Retrieve room.
      *
      * @param  integer $room_id
      * @return mixed|null
@@ -309,7 +311,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Crée les associations depuis l'ancien Portail.
+     * Create associations from the old portal.
      *
      * @return mixed
      */
@@ -351,13 +353,13 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     'parent_id' => ($parent_id ?? null),
                 ]);
 
-                // Obligé de définir les dates après création.
+                // Forced to define dates after creation.
                 $model->timestamps = false;
                 $model->created_at = $asso->created_at ?: $model->created_at;
                 $model->updated_at = $asso->updated_at ?: $model->updated_at;
                 $model->save();
 
-                // Permet de déterminer si une association est dans le cimetière ou non.
+                // Allow to know if an asso is in the asso's cemetery.
                 $isDeleted = !$asso->active ||
                     (!$asso->pole_id && ($parent_id ?? false) && !starts_with($asso->login, 'pole')) ||
                     $pole_id === self::CIMETIERE;
@@ -395,7 +397,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Ajoute des moyens de contacts aux associations.
+     * Add association contact means.
      *
      * @param mixed $asso
      * @param mixed $model
@@ -444,7 +446,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Crée les articles depuis l'ancien Portail.
+     * Create articles from the old portal.
      *
      * @return mixed
      */
@@ -482,13 +484,13 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     'owned_by_type' => Asso::class,
                 ]);
 
-                // Obligé de définir les dates après création.
+                // Forced to define dates after creation.
                 $model->timestamps = false;
                 $model->created_at = $article->created_at ?: $model->created_at;
                 $model->updated_at = $article->updated_at ?: $model->updated_at;
                 $model->save();
 
-                // On ajoute le tag de l'ancien Portail.
+                // Add old portal tag.
                 $model->tags()->save($tag);
 
                 if ($article->image && !$this->option('quick')) {
@@ -516,7 +518,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Crée les utlisateurs depuis l'ancien Portail.
+     * Create users from old portal.
      *
      * @return mixed
      */
@@ -536,7 +538,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     'email' => $user->email_address,
                 ]);
 
-                // Obligé de définir les dates après création.
+                // Forced to define dates after creation.
                 $model->timestamps = false;
                 $model->created_at = $user->created_at ?: $model->created_at;
                 $model->updated_at = $user->updated_at ?: $model->updated_at;
@@ -565,7 +567,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Crée les membres d'associations depuis l'ancien Portail.
+     * Create associations members from the old portal.
      *
      * @return mixed
      */
@@ -645,8 +647,8 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Corrige les membres non logiques (je vous hais).
-     * Exemple: Christina.
+     * Fix non-logical members. (I hate you)
+     * Exemple: Christina
      *
      * @param array $errors
      * @return void
@@ -668,7 +670,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Crée les événements depuis l'ancien Portail.
+     * Create events from the old portal.
      *
      * @return mixed
      */
@@ -700,19 +702,19 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     'owned_by_type' => Asso::class,
                 ]);
 
-                // Obligé de définir les dates après création.
+                // Forced to define dates after creation.
                 $model->timestamps = false;
                 $model->created_at = $event->created_at ?: $model->created_at;
                 $model->updated_at = $event->updated_at ?: $model->updated_at;
                 $model->save();
 
-                // On ajoute le type de l'événement.
+                // Add event type.
                 $model->details()->create([
                     'key' => 'TYPE',
                     'value' => $this->getModelFrom($eventTypes, $event->type_id)->name,
                 ]);
 
-                // On ajoute le tag de l'ancien Portail.
+                // Add old portal tag.
                 $model->details()->create([
                     'key' => 'TAG',
                     'value' => 'old-portail',
@@ -743,7 +745,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Crée les services depuis l'ancien Portail.
+     * Create services from the old portal.
      *
      * @return mixed
      */
@@ -770,7 +772,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     'url' => $service->url,
                 ]);
 
-                // Obligé de définir les dates après création.
+                // Forced to define dates after creation.
                 $model->timestamps = false;
                 $model->created_at = $service->created_at ?: $model->created_at;
                 $model->updated_at = $service->updated_at ?: $model->updated_at;
@@ -801,7 +803,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Crée les accès d'associations depuis l'ancien Portail.
+     * Create associations accesses from the old portal.
      *
      * @return mixed
      */
@@ -857,23 +859,23 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
 
                         switch ($access->statut) {
                             case 1:
-                                // En attente de confirmation.
+                                // Waiting for confirmation.
                                 $model->validated = false;
                                 break;
 
                             case 3:
-                                // Accepté.
+                                // Accepted.
                                 $model->validated = true;
                             case 0:
-                                // Refusé   => on met par défaut le même utilisateur.
+                                // Refused   => Same user by default.
                                 $model->validated = ($model->validated ?? false);
                                 $model->validated_by_id = $user->id;
                             case 2:
-                                // Confirmé => on met par défaut le même utilisateur.
+                                // Confirmed => Same user by default.
                                 $model->confirmed_by_id = $user->id;
                         }
 
-                        // Obligé de définir les dates après création.
+                        // Forced to define dates after creation.
                         $model->timestamps = false;
                         $model->created_at = $access->created_at ?: $model->created_at;
                         $model->updated_at = $access->updated_at ?: $model->updated_at;
@@ -901,7 +903,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Crée les salles depuis l'ancien Portail.
+     * Create rooms from the old portal.
      *
      * @return mixed
      */
@@ -983,7 +985,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
     }
 
     /**
-     * Crée les réservation depuis l'ancien Portail.
+     * Create bookings from old portal.
      *
      * @return array
      */
@@ -1046,7 +1048,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     continue;
                 }
 
-                // Ici si aucun type n'est trouvé, on considère que c'est un blocage de créneau.
+                // If no type is found, we consider it as blocking.
                 $type = BookingType::where('name', $booking->activite)->first();
                 $name = ($booking->commentaire ? $booking->commentaire : ($type ? $type->name : 'Blocage'));
 

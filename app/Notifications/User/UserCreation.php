@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification pour indiquer la création du compte.
+ * Account creation notification.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 class UserCreation extends Notification
 {
     /**
-     * Déclare le type de notification.
+     * Notification's type declaration.
      */
     public function __construct()
     {
@@ -25,7 +25,7 @@ class UserCreation extends Notification
     }
 
     /**
-     * Action réalisable via la notification.
+     * Achievable action trough the notification.
      * @param  CanBeNotifiable $notifiable
      * @return array
      */
@@ -38,7 +38,7 @@ class UserCreation extends Notification
     }
 
     /**
-     * Sujet de la notification.
+     * Notification's subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -49,7 +49,7 @@ class UserCreation extends Notification
     }
 
     /**
-     * Contenu texte de la notification.
+     * Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -60,7 +60,7 @@ class UserCreation extends Notification
     }
 
     /**
-     * Contenu email de la notification.
+     * Notification's email content.
      *
      * @param  CanBeNotifiable $notifiable
      * @param  MailMessage     $mail

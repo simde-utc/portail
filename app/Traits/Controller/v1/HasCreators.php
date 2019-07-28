@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux créateurs de la ressource.
+ * Add the controller an access to resource Creators.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ trait HasCreators
     use HasMorphs;
 
     /**
-     * Le créateur peut être multiple: le user, l'asso ou le client courant.
+     * The creator can be have several types: current user, association or client?
      *
      * @param  Request $request
      * @param  string  $modelName

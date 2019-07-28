@@ -1,6 +1,6 @@
 <?php
 /**
- * Service Ginger - Gestionnaire des cotisations.
+ * Ginger service - Contribution manager.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Support\ServiceProvider;
 class GingerServiceProvider extends ServiceProvider
 {
     /**
-     * Enregistre le service Ginger.
+     * Save the Ginger service.
      *
      * @return void
      */

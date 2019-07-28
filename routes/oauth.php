@@ -1,6 +1,6 @@
 <?php
 /**
- * Surcouche des routes Oauth.
+ * OAuth routes overlayer.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -10,7 +10,7 @@
  */
 
 /**
- * Liste les scopes.
+ * Lists scopes.
  */
 
 Route::get('scopes', '\App\Services\Scopes@all');
@@ -18,7 +18,7 @@ Route::get('scopes/categories', '\App\Services\Scopes@getAllByCategories');
 
 
 /*
- * Gestion des clients.
+ * Clients management.
  */
 
 Route::get('clients', '\App\Http\Controllers\Passport\ClientController@index')
@@ -32,7 +32,7 @@ Route::delete('clients/{client_id}', '\App\Http\Controllers\Passport\ClientContr
 
 
 /*
- * Route d'authorisation
+ * Authorization route.
  */
 
 Route::get('authorize', '\Laravel\Passport\Http\Controllers\AuthorizationController@authorize')
@@ -40,7 +40,7 @@ Route::get('authorize', '\Laravel\Passport\Http\Controllers\AuthorizationControl
 
 
 /*
- * Gestion des tokens.
+ * Tokens management.
  */
 
 Route::post('token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')

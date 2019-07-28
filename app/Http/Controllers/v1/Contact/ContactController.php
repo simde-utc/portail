@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les contacts d'une ressource.
+ * Manage a resource contact.
  *
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -27,7 +27,7 @@ class ContactController extends Controller
     use HasContacts;
 
     /**
-     * Nécessité de pouvoir gérer les contacts.
+     * Must be able to manage contacts.
      */
     public function __construct()
     {
@@ -62,7 +62,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Liste des contacts d'une ressource.
+     * List some contacts of a resource.
      *
      * @param ContactRequest $request
      * @return JsonResponse
@@ -81,7 +81,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Créer un contact pour une ressource.
+     * Create a contact for a resource.
      *
      * @param ContactRequest $request
      * @return JsonResponse
@@ -97,7 +97,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Montre un contact d'une ressource.
+     * Show a resource contact.
      *
      * @param ContactRequest $request
      * @return JsonResponse
@@ -110,7 +110,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Met à jour un contact d'une ressource.
+     * Update a resource contact.
      *
      * @param ContactRequest $request
      * @return JsonResponse
@@ -127,7 +127,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Supprime un contact pour une ressource.
+     * Delete a contact for a resource.
      *
      * @param ContactRequest $request
      * @return void
@@ -139,7 +139,7 @@ class ContactController extends Controller
         if ($contact->delete()) {
             abort(204);
         } else {
-            abort(500, "Impossible de supprimer le contact");
+            abort(500, "Impossible de suprimer le contact");
         }
     }
 }

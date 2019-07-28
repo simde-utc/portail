@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les Role.
+ * Manage Roles as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class RoleController extends ResourceController
     protected $model = Role::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
@@ -36,7 +36,7 @@ class RoleController extends ResourceController
     }
 
     /**
-     * Retourne les dépendances.
+     * Return dependencies.
      *
      * @return array
      */

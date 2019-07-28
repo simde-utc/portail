@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux réservations.
+ * Model corresponding to bookings.
  *
  * @author Thomas Meurou <thomas.meurou@yahoo.fr>
  * @author Josselin Pennors <josselin.pennors@hotmail.fr>
@@ -44,7 +44,7 @@ class Booking extends Model implements OwnableContract
     ];
 
     /**
-     * Lancé à la création du modèle
+     * Launched at the model creation.
      *
      * @return void
      */
@@ -65,7 +65,7 @@ class Booking extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le type de réservation.
+     * Relation with the booking type.
      *
      * @return mixed
      */
@@ -75,7 +75,7 @@ class Booking extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec la salle.
+     * Relation with the room.
      *
      * @return mixed
      */
@@ -85,7 +85,7 @@ class Booking extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec l'événement.
+     * Relation with an event.
      *
      * @return mixed
      */
@@ -95,7 +95,7 @@ class Booking extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le créateur.
+     * Relation with the creator.
      *
      * @return mixed
      */
@@ -105,7 +105,7 @@ class Booking extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le possédeur.
+     * Relation with the owner.
      *
      * @return mixed
      */
@@ -115,7 +115,7 @@ class Booking extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec la personne validatrice.
+     * Relation with the validating person.
      *
      * @return mixed
      */

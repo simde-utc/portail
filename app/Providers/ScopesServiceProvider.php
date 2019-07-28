@@ -1,6 +1,6 @@
 <?php
 /**
- * Service Scopes - Gestionnaire des scopes OAuth/Passport.
+ * Service Scopes - OAuth/Passport scopes manager.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Support\ServiceProvider;
 class ScopesServiceProvider extends ServiceProvider
 {
     /**
-     * Enregistre le service Scopes.
+     * Save the scope service.
      *
      * @return void
      */

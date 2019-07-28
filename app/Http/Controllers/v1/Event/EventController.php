@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les événements.
+ * Manage events.
  *
  * @author Josselin Pennors <josselin.pennors@hotmail.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -30,8 +30,8 @@ class EventController extends Controller
     use HasEvents, HasCreatorsAndOwners;
 
     /**
-     * Nécessité de gérer les événements.
-     * Lecture publique.
+     * Must be able to manage events.
+     * Public read.
      */
     public function __construct()
     {
@@ -54,7 +54,7 @@ class EventController extends Controller
     }
 
     /**
-     * Liste les événements.
+     * List events.
      *
      * @param Request $request
      * @return JsonResponse
@@ -75,7 +75,7 @@ class EventController extends Controller
     }
 
     /**
-     * Crée un événement.
+     * Create an event.
      *
      * @param EventRequest $request
      * @return JsonResponse
@@ -108,7 +108,7 @@ class EventController extends Controller
     }
 
     /**
-     * Montre un événement.
+     * Show an event.
      *
      * @param Request $request
      * @param string  $event_id
@@ -122,7 +122,7 @@ class EventController extends Controller
     }
 
     /**
-     * Met à jour un événement.
+     * Update an event.
      *
      * @param EventRequest $request
      * @param string       $event_id
@@ -149,7 +149,7 @@ class EventController extends Controller
     }
 
     /**
-     * Supprime un événement.
+     * Delete an event.
      *
      * @param Request $request
      * @param string  $event_id

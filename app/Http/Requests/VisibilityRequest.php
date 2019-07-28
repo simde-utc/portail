@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les visibilités.
+ * Visibility request management.
  *
  * @author Josselin Pennors <josselin.pennors@hotmail.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -17,7 +17,7 @@ use App\Facades\Validation;
 class VisibilityRequest extends Request
 {
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

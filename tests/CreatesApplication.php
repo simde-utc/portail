@@ -1,6 +1,6 @@
 <?php
 /**
- * Crée une application pour les tests.
+ * Create an application for testing.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,7 +16,7 @@ use Illuminate\Contracts\Console\Kernel;
 trait CreatesApplication
 {
     /**
-     * Crée l'application.
+     * Create the app.
      *
      * @return \Illuminate\Foundation\Application
      */

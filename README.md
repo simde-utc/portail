@@ -35,6 +35,10 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
     + Wamp/Apache : Hit the folder `public` of the installation with Wamp with your web browser
 - If email and notification crendentials are filled in:
     + Run `php artisan queue:work` for working notification sending.
+    + To have a queue system that works independently:
+    - Install the `supervisor` package under Linux.
+      - Copy and adapt the file `laravel-worker.conf` in `/etc/supervisor/conf.d`
+      - launch the worker: `sudo supervisorctl reread && sudo supervisorctl update && sudo supervisorctl start laravel-worker:*`
 
 ## Update
 

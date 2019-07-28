@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux places.
+ * Model corresponding to places.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -29,7 +29,7 @@ class Place extends Model
     ];
 
     /**
-     * Relation avec le lieu.
+     * Relation with the location.
      *
      * @return mixed
      */

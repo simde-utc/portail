@@ -20,7 +20,7 @@ class CreateRoomsBookingsTypesTable extends Migration
             $table->string('type', validation_max('name'))->unique();
             $table->string('name', validation_max('name'))->unique();
             $table->boolean('need_validation')->default(true);
-            // Permet d'indiquer si le type doit être valider par le owner
+            // Indicates if the type must me validated by the owner.
             $table->timestamps();
         });
     }

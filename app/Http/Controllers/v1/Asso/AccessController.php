@@ -1,9 +1,9 @@
 <?php
 /**
- * Gère les accès des assos.
+ * Manage association accesses.
  *
- * TODO: Exporter dans un Trait
- * TODO: Scopes manquant !
+ * TODO: Export into a Trait
+ * TODO: Missing Scopes !
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -31,42 +31,42 @@ class AccessController extends Controller
     use HasAssos;
 
     /**
-     * Nécessité de gérer les accès des associations.
+     * Must be able to manage the accesses of the associations.
      */
     public function __construct()
     {
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos')
-                // Pouvoir voir les assos.
+                // Be able to see associations.
             ),
             ['only' => ['all', 'get']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos')
-                // Pouvoir voir les assos.
+                // Be able to see associations.
             ),
             ['only' => ['create']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos')
-                // Pouvoir voir les assos.
+                // Be able to see associations.
             ),
             ['only' => ['edit']]
         );
         $this->middleware(
             array_merge(
                 \Scopes::matchOneOfDeepestChildren('user-get-assos', 'client-get-assos')
-                // Pouvoir voir les assos.
+                // Be able to see associations.
             ),
             ['only' => ['remove']]
         );
     }
 
     /**
-     * Récupération des accès.
+     * Accesses retrievement.
      *
      * @param  Request $request
      * @param  string  $access_id
@@ -97,7 +97,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Liste des accès.
+     * List some accesses.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -125,7 +125,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Crée une demande d'accès.
+     * Create an access demand.
      *
      * @param AccessRequest $request
      * @param string        $asso_id
@@ -170,7 +170,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Montre une demande d'accès.
+     * Show an access demand.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -189,7 +189,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Met à jour une demande d'accès.
+     * Update an access demand.
      *
      * @param AccessRequest $request
      * @param string        $asso_id
@@ -204,7 +204,7 @@ class AccessController extends Controller
         $asso = $this->getAsso($request, $asso_id, \Auth::user(), $semester);
         $access = $this->getAccess($request, $access_id, $user_id, $asso, $semester->id);
 
-        // On doit valider au moins la demande d'accès.
+        // We must validate at least the access demand.
         if (!$access->confirmed_by_id) {
             if ($asso->hasOnePermission('access', [ 'user_id' => $user_id ])) {
                 $access->confirmed_by_id = $user_id;
@@ -240,7 +240,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Supprime une demande d'accès.
+     * Delete an access demand.
      *
      * @param Request $request
      * @param string  $asso_id
