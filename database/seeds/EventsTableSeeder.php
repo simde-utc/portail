@@ -44,7 +44,7 @@ class EventsTableSeeder extends Seeder
                 'end_at'	=> '2018-04-01 12:15',
                 'visibility' => 'cas',
                 'owner'		=> Asso::where('login', 'simde')->first(),
-                // Théoriquement ici, ça devrait être le client emploidutemps
+                // Here should be the "emploidutemps" client.
                 'details'	=> [
                     'semester' => 'P18',
                 ],
@@ -56,7 +56,7 @@ class EventsTableSeeder extends Seeder
                 'end_at'	=> '2018-04-01 10:00',
                 'visibility' => 'cas',
                 'owner'		=> Asso::where('login', 'simde')->first(),
-                // Théoriquement ici, ça devrait être le client emploidutemps
+                // Here should be the "emploidutemps" client.
                 'details'	=> [
                     'semester' => 'P18',
                 ],

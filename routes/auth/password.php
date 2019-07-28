@@ -1,6 +1,6 @@
 <?php
 /**
- * Route de gestion email/mot de passe.
+ * Email/password auth management routes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

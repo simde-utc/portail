@@ -338,7 +338,7 @@ class AdminMenuTableSeeder extends Seeder
     }
 
     /**
-     * Création des menus et des sous-menus.
+     * Menus and sub-menus creation.
      *
      * @param  array   $menus
      * @param  integer $parent_id
