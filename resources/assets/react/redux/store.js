@@ -1,5 +1,5 @@
 /**
- * Création et gestion automatique et dynmaique du store géré par redux (store refait sur la base du travail d'Alexandre)
+ * Automatic and dynamic store management and creation by redux. (store remade on the basis of Alexandre's work)
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
@@ -16,7 +16,7 @@ import promise from 'redux-promise-middleware';
 // import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 
-// Suffixes des actions asynchrones
+// Asynchronous actions suffixes.
 export const ASYNC_SUFFIXES = {
 	loading: 'LOADING',
 	success: 'SUCCESS',
@@ -26,9 +26,9 @@ export const ASYNC_SUFFIXES = {
 
 /**
  * ActionTypes Creator
- * Fonction qui permet de créer les types d'actions CRUD
- * @param      {string}   name    Le nom de la ressource au singulier en capital
- * @return     {Object}           Un set de types d'action CRUD pour la ressource name
+ * Function that creates the CRUD action types.
+ * @param      {string}   name    The name of the resource at the singular in uppercase.
+ * @return     {Object}           A CRUD action types set for the ressource name.
  */
 export const createCrudTypes = name => ({
 	// _resource_name: name,
@@ -54,9 +54,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 /* eslint-enable */
 
-// La racine du store
+// Store root.
 export const store = {
-	// Converti tout simple une route uri (string) en array | ex: 'assos/calendars' => ['assos', 'calendars']
+	// Convert a URI in array | ex: 'assos/calendars' => ['assos', 'calendars']
 	propsToArray(_props) {
 		let props = _props;
 
@@ -70,8 +70,7 @@ export const store = {
 
 		return props;
 	},
-
-	// Permet de retouver facilement un élément du store (remplacement est par quoi on replace si on trouve pas, et on force si array vide par ex)
+	// Find easily a store's element.
 	get(_props, replacement = {}, forceReplacement = false) {
 		let data = this;
 		const props = this.propsToArray(_props);
@@ -92,12 +91,12 @@ export const store = {
 		return data;
 	},
 
-	// Retrouver un élément précis
+	// Find a precise element.
 	getData(props, replacement = [], forceReplacement = true) {
 		return this.get(this.propsToArray(props).concat(['data']), replacement, forceReplacement);
 	},
 	findData(props, value, key = 'id', replacement, forceReplacement = true) {
-		// Les ressources sont rangées par id:
+		// Resources are ordered by id.
 		if (key === 'id') {
 			return this.getData(
 				this.propsToArray(props).concat(['value']),
@@ -136,7 +135,7 @@ export const store = {
 	isFetched(props, replacement = false, forceReplacement = true) {
 		return this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement);
 	},
-	// Permet de savoir si une requête s'est terminée
+	// Allow to know if a request has finished.
 	hasFinished(props, replacement = false, forceReplacement = true) {
 		return (
 			this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement) ||
@@ -147,7 +146,7 @@ export const store = {
 	config: {},
 };
 
-// Racine de chaque catégorie CRUD
+// Root of every CRUD category.
 export const initialCrudState = {
 	data: [],
 	error: null,
@@ -159,7 +158,7 @@ export const initialCrudState = {
 	resources: {},
 };
 
-// Comme le JS ne fait pas deep copy avec Object.assign, on est obligé de le faire nous-même..
+// As the JS doesn't do a deep copy with Object.assign, it must be done.
 export const initCrudState = (_state, initialState = initialCrudState) => {
 	const state = _state;
 
@@ -177,7 +176,7 @@ export const initCrudState = (_state, initialState = initialCrudState) => {
 	return state;
 };
 
-// Ici, toute la magie opère, on génère dynmaiquement et automatiquement la route api et l'emplacement dans le store
+// Here the magic works. It generates dnamically and automatically the api route and the place in the store.
 export const buildStorePath = (_store, path) => {
 	let place = _store;
 	let part;
@@ -209,7 +208,7 @@ export const makeResourceSuccessed = (_place, timestamp, status) => {
 	return place;
 };
 
-// Ici on crée le store et on modifie ses données via immer en fonction de la récup des données
+// Store creation and Store's data update through immer depending on the data retrievement.
 export default createStore((state = store, action) => {
 	if (action.type === ASYNC_SUFFIXES.config) {
 		return produce(state, draft => {
@@ -231,13 +230,12 @@ export default createStore((state = store, action) => {
 			let { path } = action.meta;
 			let id;
 
-			// Si on ne modifie qu'une donnée précise, il faut qu'on change le statut pour la ressource
+			// If a precise data is updated, the resource status must be updated.
 			switch (action.meta.action) {
 				case 'updateAll':
 				case 'create':
 				case 'insert':
 					break;
-
 				default:
 					path = path.slice();
 					id = path.pop();
@@ -249,7 +247,7 @@ export default createStore((state = store, action) => {
 				place.fetching = true;
 				place.status = null;
 			}
-			// Si on a défini que la réponse HTTP était valide:
+			// If we defined the HTTP response as a valid response.
 			else if (
 				action.meta.validStatus.includes(action.payload.status || action.payload.response.status)
 			) {
@@ -287,7 +285,7 @@ export default createStore((state = store, action) => {
 					} else {
 						let index;
 
-						// On stock la data dans la liste des données de la ressource
+						// Store the data in the resource's data list.
 						switch (action.meta.action) {
 							case 'update':
 								index = place.data.findIndex(dataFromPlace => dataFromPlace.id === data.id);
@@ -305,7 +303,7 @@ export default createStore((state = store, action) => {
 								break;
 
 							default:
-								// 'delete'
+								// 'delete'.
 								index = place.data.findIndex(dataFromPlace => dataFromPlace.id === data.id);
 
 								if (index > -1) {
@@ -315,7 +313,7 @@ export default createStore((state = store, action) => {
 								break;
 						}
 
-						// On stock la data par id pour la ressource
+						// Store the data by id for the resource.
 						if (id) {
 							switch (action.meta.action) {
 								case 'update': {
@@ -335,14 +333,14 @@ export default createStore((state = store, action) => {
 							}
 						}
 
-						// Typiquement, si on a une asso et qu'on la recherche par login
+						// For example if we have an assciation ant we look for it by login.
 						if (id !== data.id) {
-							// On stock la data par id pour la ressource
+							// Store the data by id for the resource.
 							switch (action.meta.action) {
 								case 'update':
 								case 'insert':
 								case 'create': {
-									// On modifie/stock la donnée via l'id de la data
+									// Store/update data trough data's id.
 									let placeForData = buildStorePath(draft, path.concat([data.id]));
 									const placeForIdData = placeForData;
 
@@ -353,7 +351,7 @@ export default createStore((state = store, action) => {
 									break;
 								}
 								default:
-									// 'delete'
+									// 'delete'.
 									delete place.resources[data.id];
 									break;
 							}
@@ -383,7 +381,7 @@ export default createStore((state = store, action) => {
 				place.failed = true;
 				place.status = action.payload.response.status;
 			}
-			// On a un success du côté de Redux mais on refuse de notre côté le code HTTP
+			// Redux success but on our side the HTTP code is refused.
 			else {
 				place = buildStorePath(draft, path);
 

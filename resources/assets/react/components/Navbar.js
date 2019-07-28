@@ -1,5 +1,5 @@
 /**
- * Affichage de la bar de navigation
+ * Nav bar display.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

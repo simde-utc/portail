@@ -1,6 +1,6 @@
 <?php
 /**
- * Traduction du texte lié aux mots de passe.
+ * Password-related text translation.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

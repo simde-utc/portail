@@ -1,6 +1,6 @@
 /**
- * Chargement de toutes les ressources de base
- * On réalise un loader séparé pour éviter les conflits entre loading/redux/router
+ * All base resources loading.
+ * Seperate loader to avoid confilct with loading/redux/router.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,7 +26,7 @@ import 'moment/locale/fr';
 require('./bootstrap');
 
 @connect(store => ({
-	// Données importantes à charger
+	// Important data to load.
 	dataLoaded: [
 		store.hasFinished('user'),
 		store.hasFinished('user/permissions'),
@@ -34,15 +34,15 @@ require('./bootstrap');
 	],
 }))
 class AppLoader extends React.Component {
-	// Toutes les infos à récupérer dès le lancement
+	// All information to retrieve at the app launch.
 	componentWillMount() {
 		const { dispatch } = this.props;
 
-		// Récupère les semestres
+		// Semesters retrievement.
 		dispatch(actions.semesters.all());
-		// Récupère le semestre courant
+		// Current semester retrievement.
 		dispatch(actions.semesters('current').get());
-		// Récupère les données utilisateurs
+		// User data retrievement.
 		dispatch(actions.user.all({ types: '*' }))
 			.then(() => {
 				window.isLogged = true;
@@ -50,24 +50,24 @@ class AppLoader extends React.Component {
 			.catch(() => {
 				window.isLogged = false;
 			});
-		// Récupère les permissions de l'utilisateur
+		// User permissions retrievement.
 		dispatch(actions.user.permissions.all());
-		// Récupère les associations de l'utilisateur
+		// User associations retrievement.
 		dispatch(actions.user.assos.all());
-		// Récupère les services de l'utilisateur
+		// User services retrievement.
 		dispatch(actions.user.services.all());
 
 		library.add(fas, far, fab);
 		moment.locale('fr');
 	}
 
-	// Permet d'afficher le chargement initial de la page
+	// Display initial page's loading.
 	render() {
 		const { dataLoaded, generateChildren } = this.props;
 
 		const isLoading = dataLoaded.some(loading => !loading);
 
-		// Lorsque le chargement est terminé, on génère la page
+		// When the loading is over the page is generated.
 		if (!isLoading) {
 			generateChildren();
 		}

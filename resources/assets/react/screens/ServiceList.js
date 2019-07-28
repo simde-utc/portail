@@ -1,5 +1,5 @@
 /**
- * Liste les services
+ * List services.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,5 +1,5 @@
 /**
- * Affiche une page d'erreur lorsque le Portail plante
+ * Display an error page when the portal crashes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

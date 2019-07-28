@@ -1,5 +1,5 @@
 /**
- * Permet de générer une Card asso.
+ * Generate as association card.
  *
  * @author Matt Glorion <matt@glorion.fr>
  *

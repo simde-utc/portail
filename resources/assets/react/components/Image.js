@@ -1,5 +1,5 @@
 /**
- * Permet de faire en sorte de toujours avoir le BDE en image si l'image de base n'est pas trouvée
+ * Put the BDE-UTC image if the original image isn't found.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,5 +1,5 @@
 /**
- * Affichage les calendriers de l'association.
+ * Displays the association calendars.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

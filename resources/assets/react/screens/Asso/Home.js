@@ -1,5 +1,5 @@
 /**
- * Affichage principal d'une association
+ * Main display of an association.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

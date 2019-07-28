@@ -1,5 +1,5 @@
 /**
- * Création et gestion automatique des actions que l'on dispatch via redux
+ * Modal display.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
