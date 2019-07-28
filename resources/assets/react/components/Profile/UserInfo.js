@@ -1,5 +1,5 @@
 /**
- * Displays user's personnal data.
+ * Display user's personnal data.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

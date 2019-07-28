@@ -1,5 +1,5 @@
 /**
- * Displays an article list.
+ * Display an article list.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

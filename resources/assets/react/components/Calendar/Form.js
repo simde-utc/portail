@@ -82,7 +82,7 @@ class EventForm extends React.Component {
 			this.setDefaultCalendar(calendars);
 		}
 
-		// Indicates that we want to open the form.
+		// Indicate that we want to open the form.
 		if (!lastProps.opened && opened) {
 			setTimeout(() => this.setState(defaultData), 10);
 		}

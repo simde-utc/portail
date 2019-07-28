@@ -1,5 +1,5 @@
 /**
- * Displays the access demands of an association.
+ * Display the access demands of an association.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

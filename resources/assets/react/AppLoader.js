@@ -52,16 +52,16 @@ class AppLoader extends React.Component {
 			});
 		// User permissions retrievement.
 		dispatch(actions.user.permissions.all());
-		// User's associations retrievement.
+		// User associations retrievement.
 		dispatch(actions.user.assos.all());
-		// User's services retrievement.
+		// User services retrievement.
 		dispatch(actions.user.services.all());
 
 		library.add(fas, far, fab);
 		moment.locale('fr');
 	}
 
-	// Displays initial page's loading.
+	// Display initial page's loading.
 	render() {
 		const { dataLoaded, generateChildren } = this.props;
 

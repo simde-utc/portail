@@ -1,5 +1,5 @@
 /**
- * Catches the errors.
+ * Catche the errors.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,5 +1,5 @@
 /**
- * Displys an error page when the portal crashes.
+ * Display an error page when the portal crashes.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

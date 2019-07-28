@@ -1,5 +1,5 @@
 /**
- * Puts the BDE-UTC image if the original image isn't found.
+ * Put the BDE-UTC image if the original image isn't found.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

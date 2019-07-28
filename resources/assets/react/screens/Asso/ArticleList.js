@@ -1,5 +1,5 @@
 /**
- * Displays assciation articles.
+ * Display assciation articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

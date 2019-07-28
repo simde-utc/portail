@@ -1,5 +1,5 @@
 /**
- * Generates as association card.
+ * Generate as association card.
  *
  * @author Matt Glorion <matt@glorion.fr>
  *

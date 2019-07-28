@@ -1,5 +1,5 @@
 /**
- * Displays an error page for a not found page.
+ * Display an error page for a not found page.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

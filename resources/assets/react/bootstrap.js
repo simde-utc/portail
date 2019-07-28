@@ -10,7 +10,7 @@
 
 window._ = require('lodash');
 
-// Allows to execute Ajax request simply to the portal.
+// Allow to execute Ajax request simply to the portal.
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -23,7 +23,7 @@ if (token) {
 	console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
-// Adds a response intercepter.
+// Add a response intercepter.
 window.axios.interceptors.response.use(
 	response => response,
 	error => {

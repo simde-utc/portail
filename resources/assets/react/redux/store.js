@@ -39,7 +39,7 @@ export const createCrudTypes = name => ({
 	delete: `DELETE_${name}`,
 });
 
-// Configures Middlewares
+// Configure Middlewares
 let middlewares = applyMiddleware(
 	thunk,
 	promise({
@@ -56,7 +56,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Store root.
 export const store = {
-	// Converts a URI in array | ex: 'assos/calendars' => ['assos', 'calendars']
+	// Convert a URI in array | ex: 'assos/calendars' => ['assos', 'calendars']
 	propsToArray(_props) {
 		let props = _props;
 
@@ -70,7 +70,7 @@ export const store = {
 
 		return props;
 	},
-	// Finds easily a store's element.
+	// Find easily a store's element.
 	get(_props, replacement = {}, forceReplacement = false) {
 		let data = this;
 		const props = this.propsToArray(_props);
@@ -91,7 +91,7 @@ export const store = {
 		return data;
 	},
 
-	// Finds a precise element.
+	// Find a precise element.
 	getData(props, replacement = [], forceReplacement = true) {
 		return this.get(this.propsToArray(props).concat(['data']), replacement, forceReplacement);
 	},
@@ -135,7 +135,7 @@ export const store = {
 	isFetched(props, replacement = false, forceReplacement = true) {
 		return this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement);
 	},
-	// Allows to know if a request has finished.
+	// Allow to know if a request has finished.
 	hasFinished(props, replacement = false, forceReplacement = true) {
 		return (
 			this.get(this.propsToArray(props).concat(['fetched']), replacement, forceReplacement) ||
@@ -285,7 +285,7 @@ export default createStore((state = store, action) => {
 					} else {
 						let index;
 
-						// Stores the data in the resource's data list.
+						// Store the data in the resource's data list.
 						switch (action.meta.action) {
 							case 'update':
 								index = place.data.findIndex(dataFromPlace => dataFromPlace.id === data.id);
@@ -340,7 +340,7 @@ export default createStore((state = store, action) => {
 								case 'update':
 								case 'insert':
 								case 'create': {
-									// Stores/updates data trough data's id.
+									// Store/update data trough data's id.
 									let placeForData = buildStorePath(draft, path.concat([data.id]));
 									const placeForIdData = placeForData;
 

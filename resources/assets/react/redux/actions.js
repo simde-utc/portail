@@ -1,5 +1,5 @@
 /**
- * Création et gestion automatique des actions que l'on dispatch via redux
+ * Actions dispatched through redux creation and management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -7,7 +7,7 @@
  * @license GNU GPL-3.0
  */
 
-// Lists all posible REST actions.
+// List all posible REST actions.
 export const actionsData = {
 	all: {
 		type: 'ALL_',
@@ -56,7 +56,7 @@ export const actionHandler = {
 			let id;
 			let queryParams;
 			let jsonData;
-			// Matches if it's a known HTTP method and wipe everything.
+			// Matche if it's a known HTTP method and wipe everything.
 			switch (prop) {
 				case 'find':
 				case 'one':
@@ -99,7 +99,7 @@ export const actionHandler = {
 					break;
 			}
 
-			// Returns a proxy on itself to handle itself again.
+			// Return a proxy on itself to handle itself again.
 			return new Proxy(target, actionHandler);
 		};
 

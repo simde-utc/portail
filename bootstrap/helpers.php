@@ -13,7 +13,7 @@
 if (!function_exists('validation_between')) {
 
     /**
-     * Returns the `between` string for validations Requests.
+     * Return the `between` string for validations Requests.
      *
      * @param string $validationId
      * @return string
@@ -29,7 +29,7 @@ if (!function_exists('validation_between')) {
 if (!function_exists('validation_max')) {
 
     /**
-     * Returns the max integer value for Migrations
+     * Return the max integer value for Migrations
      *
      * @param string $validationId
      * @return integer
