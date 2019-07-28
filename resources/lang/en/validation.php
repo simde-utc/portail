@@ -1,6 +1,6 @@
 <?php
 /**
- * Traduction lié à la validation.
+ * Validation tansltation.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

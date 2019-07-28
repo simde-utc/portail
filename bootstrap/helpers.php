@@ -1,6 +1,6 @@
 <?php
 /**
- * Fonctions globales.
+ * Global functions.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -13,7 +13,7 @@
 if (!function_exists('validation_between')) {
 
     /**
-     * Donne la chaine between pour les validations Requests.
+     * Return the `between` string for validations Requests.
      *
      * @param string $validationId
      * @return string
@@ -29,7 +29,7 @@ if (!function_exists('validation_between')) {
 if (!function_exists('validation_max')) {
 
     /**
-     * Donne la valeur entière max pour les Migrations.
+     * Return the max integer value for Migrations
      *
      * @param string $validationId
      * @return integer
@@ -44,7 +44,7 @@ if (!function_exists('validation_max')) {
 if (!function_exists('convertPipeToArray') && !function_exists('stringToArray')) {
 
     /**
-     * Converti les listes en string vers un array.
+     * Convert string lists into an array.
      *
      * @param  string|array $pipeString
      * @return mixed
@@ -72,7 +72,7 @@ if (!function_exists('convertPipeToArray') && !function_exists('stringToArray'))
     }
 
     /**
-     * Converti les listes en string vers un array.
+     * Convert string lists into an array.
      *
      * @param  string|array $toArray
      * @return array
@@ -105,7 +105,7 @@ if (!function_exists('convertPipeToArray') && !function_exists('stringToArray'))
 if (!function_exists('trimText')) {
 
     /**
-     * Coupe le texte à une longueur choisie.
+     * Cut the given text at a given length.
      *
      * @param string  $input
      * @param integer $length

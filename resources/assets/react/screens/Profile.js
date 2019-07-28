@@ -1,5 +1,5 @@
 /**
- * Affichage du profile d'une personne.
+ * Display of a user profile.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

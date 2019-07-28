@@ -1,5 +1,5 @@
 /**
- * Affiche les informations personnelles de l'utlisateur.
+ * Display user's personnal data.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -20,7 +20,7 @@ class UserInfo extends Component {
 
 	render() {
 		const { info, details } = this.props;
-		// Si des informations sont manquantes, chargement
+		// If some data is missing, display loading.
 		if (!info || !details) return <div>loading</div>;
 
 		return (

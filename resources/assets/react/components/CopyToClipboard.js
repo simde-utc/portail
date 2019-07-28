@@ -1,5 +1,5 @@
 /**
- * Ajout d'une fonctionnalité de copie automatique.
+ * Copy to clipboard feature.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,5 +1,5 @@
 /**
- * Liste les réservations
+ * List bookings.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

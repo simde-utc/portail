@@ -1,6 +1,6 @@
 <?php
 /**
- * Traduction d'authentification.
+ * Authentification translation.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

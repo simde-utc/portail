@@ -1,5 +1,5 @@
 /**
- * Formulaire de création d'article.
+ * Article creation form.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

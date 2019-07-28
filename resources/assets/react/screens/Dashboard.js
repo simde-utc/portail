@@ -1,5 +1,5 @@
 /**
- * Gestion des tokens
+ * Token management.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Natan Danous <natous.danous@hotmail.fr>

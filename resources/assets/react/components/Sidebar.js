@@ -1,5 +1,5 @@
 /**
- * Affichage de la navbar permettant de naviguer facilement
+ * Side bar display to navigate easily.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
