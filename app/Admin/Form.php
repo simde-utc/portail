@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\{
 	DB, Input
 };
+use Illuminate\Support\Arr;
 
 class Form extends BaseForm
 {
@@ -91,7 +92,7 @@ class Form extends BaseForm
             if (!$isEditable) {
                 return back()->withInput()->withErrors($validationMessages);
             } else {
-                return response()->json(['errors' => array_dot($validationMessages->getMessages())], 422);
+                return response()->json(['errors' => Arr::dot($validationMessages->getMessages())], 422);
             }
         }
 
