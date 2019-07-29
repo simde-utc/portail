@@ -9,6 +9,8 @@
  * @license GNU GPL-3.0
  */
 
+use Illuminate\Support\Str;
+
 return [
     'default' => env('CACHE_DRIVER', 'file'),
 
@@ -59,6 +61,6 @@ return [
 
     'prefix' => env(
         'CACHE_PREFIX',
-        str_slug(env('APP_NAME', 'laravel'), '_').'_cache'
+        Str::slug(env('APP_NAME', 'laravel'), '_').'_cache'
     ),
 ];
