@@ -64,12 +64,16 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
 - Comments, Commits and Pull Request must be in 
 
 ### Issues
+
 - Open as much issues as possible
 - Use tags (labels), in order to precise wether the issue is a bug or a feature request and its importance (in terms of severity or work). You may also indicate the affected area of the code (notifications, frontend, database... etc). You can create new tags if (maintainers will remove redundant tags). Please do not remove tags.
 
 ### Contributing
+
 - Urgent issues first (they are tagged as urgent)
 - Submit your own issues before working
+- PRs must be reviewed by at least one SiMDE developer, except for minor fixes with absolutely no side effect (i.e. comments, local variable names etc.).
+- You can join the SiMDE association. We have a [slack](https://simde.slack.com) and we organise meetings during which devs can work together and explain the code. We will be very glad to answer your questions!
 
 ## Documentation
 
