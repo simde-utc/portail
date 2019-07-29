@@ -28,11 +28,7 @@ class ExternalNotification extends Notification
     protected $action;
 
     /**
-<<<<<<< HEAD
-     * Notif type and description definition.
-=======
      * Create an external notification.
->>>>>>> develop
      *
      * @param CanNotify $model
      * @param string    $subject
