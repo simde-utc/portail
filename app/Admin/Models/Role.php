@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux rôles admins.
+ * Admin roles model.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,7 +28,7 @@ class Role extends BaseRole
     ];
 
     /**
-     * Relation avec le possédeur.
+     * Get the relation with owner.
      *
      * @return mixed
      */
@@ -38,7 +38,7 @@ class Role extends BaseRole
     }
 
     /**
-     * Retrouve une role.
+     * Find a role.
      *
      * @param  string       $role_id
      * @param  CanHaveRoles $owner
@@ -61,8 +61,8 @@ class Role extends BaseRole
     }
 
     /**
-     * Retrouve une role par son type.
-     * TODO: Transformer en scope.
+     * Find a fole by type.
+     * TODO: Transform it into a scope.
      *
      * @param  string       $type
      * @param  CanHaveRoles $owner

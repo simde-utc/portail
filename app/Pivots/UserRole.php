@@ -1,6 +1,6 @@
 <?php
 /**
- * Pivot correspondant à la relation roles - utlisateurs.
+ * Pivot corresponding to the roles - users relation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -34,7 +34,7 @@ class UserRole extends Pivot
     ];
 
     /**
-     * Relation avec l'accès.
+     * Relation with access.
      *
      * @return mixed
      */
@@ -44,7 +44,7 @@ class UserRole extends Pivot
     }
 
     /**
-     * Relation avec le semestre.
+     * Semester relation.
      *
      * @return mixed
      */
@@ -54,7 +54,7 @@ class UserRole extends Pivot
     }
 
     /**
-     * Relation avec l'accès.
+     * Access relation.
      *
      * @return mixed
      */
@@ -64,7 +64,7 @@ class UserRole extends Pivot
     }
 
     /**
-     * Relation avec l'utilisateur ayant validé.
+     * Relation with the user user who validated him.
      *
      * @return mixed
      */

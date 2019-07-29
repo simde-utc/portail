@@ -1,6 +1,6 @@
 <?php
 /**
- * Façade permettant de récupérer les modèles dynamiquement
+ * Facade to retrieve models dynamically.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Facade;
 class ModelResolver extends Facade
 {
     /**
-     * Enregistre le nom de l'accesseur.
+     * Save the accessor name.
      *
      * @return string
      */

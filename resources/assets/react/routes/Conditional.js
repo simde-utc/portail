@@ -1,5 +1,5 @@
 /**
- * Gestion des routes privées sur condition
+ * Private routes on condition management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

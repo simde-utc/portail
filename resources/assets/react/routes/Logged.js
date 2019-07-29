@@ -1,5 +1,5 @@
 /**
- * Gestion des routes privées (par défaut, on doit être au moins connecté et ensuite d'avoir une spécifité)
+ * Private routes management (Default: Must be at least connected then have a secificity).
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -22,7 +22,7 @@ class LoggedRoute extends React.Component {
 	isAllowed() {
 		const { isAuthenticated, isLoading, user, types } = this.props;
 
-		// On ne redirige pas tant qu'on ne possède pas les données de l'utilisateur.
+		// No redirection while we don't have user data.
 		if (isLoading) {
 			return true;
 		}

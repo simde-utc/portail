@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux rôles.
+ * Model corresponding to roles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -55,7 +55,7 @@ class Role extends Model implements OwnableContract
     ];
 
     /**
-     * Appelé au lancement du modèle.
+     * Called at the model launch.
      *
      * @return void
      */
@@ -69,7 +69,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Scope pour obtenir les rôles liés à un owner.
+     * Scope to get the roles linked to a given owner.
      *
      * @param  Builder $query
      * @param  string  $owner_type
@@ -91,7 +91,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Récupère un rôle.
+     * Retrieve a role.
      *
      * @param  string       $role_id
      * @param  CanHaveRoles $owner
@@ -114,7 +114,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Retrouve un rôle par son type.
+     * Find a role by type.
      * TODO: Transformer en scope.
      *
      * @param  string       $type
@@ -138,7 +138,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Retrouve une role via une donnée qui lui correspond.
+     * Find a role by uuid or type.
      *
      * @param  mixed        $role
      * @param  CanHaveRoles $owner
@@ -160,7 +160,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Retrouve plusieurs roles via une donnée qui leur correspond.
+     * Retrieve several roles by a corresponding data.
      *
      * @param  mixed        $roles
      * @param  CanHaveRoles $owner
@@ -190,7 +190,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Donne le rôle et ses parents.
+     * Return the role and its parents.
      *
      * @param  mixed        $role
      * @param  CanHaveRoles $owner
@@ -215,7 +215,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Surcharge de la méthode pour obtenir un array.
+     * Overload the method to obtain an array.
      *
      * @return array
      */
@@ -235,7 +235,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec les permissions.
+     * Relation with the permissions.
      *
      * @return BelongsToMany
      */
@@ -245,7 +245,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec les rôles enfants.
+     * Relation with the child roles.
      *
      * @return BelongsToMany
      */
@@ -255,7 +255,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec les rôles parents.
+     * Relation with the parent roles.
      *
      * @return BelongsToMany
      */
@@ -265,7 +265,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Modifie à la volée l'attribut owned_by.
+     * Modify on the fly the owned_by attribute.
      *
      * @return mixed
      */
@@ -275,7 +275,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Relation avec le possédeur.
+     * Relation with the owner.
      *
      * @return mixed
      */
@@ -285,7 +285,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Récupère tous les enfants hérités.
+     * Retrieve all inherited children.
      *
      * @return Collection
      */
@@ -304,7 +304,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Récupère tous les parents hérités.
+     * Retrieve all parents.
      *
      * @return Collection
      */
@@ -323,7 +323,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Indique si un rôle possède une permission.
+     * Indicate if a role has a permission.
      *
      * @param  mixed $permission
      * @return boolean
@@ -340,7 +340,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Donne au rôle une permission.
+     * Give the role a permission.
      *
      * @param  mixed $permissions
      * @return Role
@@ -355,7 +355,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Retire au rôle une permission.
+     * Remove the role a permission.
      *
      * @param  mixed $permissions
      * @return Role
@@ -370,7 +370,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Assigne des rôles parents.
+     * Assign parents roles.
      *
      * @param  mixed $roles
      * @return Role
@@ -402,7 +402,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Retire des rôles parents.
+     * Remove parents roles.
      *
      * @param  mixed $roles
      * @return Role
@@ -422,7 +422,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Met à jour les rôles parents.
+     * Update parents roles.
      *
      * @param  mixed $roles
      * @return Role
@@ -454,13 +454,13 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Indique si un rôle est supprimable.
+     * Indicate if a role is deleteable.
      *
      * @return boolean
      */
     public function isDeletable()
     {
-        // On ne permet la suppression de rôles parents.
+        // Parents roles deletion forbidden.
         if ($this->children()->count() > 0) {
             return false;
         }
@@ -473,7 +473,7 @@ class Role extends Model implements OwnableContract
     }
 
     /**
-     * Surcharge de la méthode d'appel pour retourner une relation.
+     * Overload the "_call" methode to return a relation.
      *
      * @param  mixed $method
      * @param  mixed $arguments

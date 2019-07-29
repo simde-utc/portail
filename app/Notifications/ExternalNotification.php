@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification créée par l'extérieure.
+ * External created notification.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -28,7 +28,11 @@ class ExternalNotification extends Notification
     protected $action;
 
     /**
+<<<<<<< HEAD
+     * Notif type and description definition.
+=======
      * Create an external notification.
+>>>>>>> develop
      *
      * @param CanNotify $model
      * @param string    $subject
@@ -126,7 +130,7 @@ class ExternalNotification extends Notification
     }
 
     /**
-     * Action réalisable via la notification.
+     * Action achievable through the notification.
      *
      * @param  CanBeNotifiable $notifiable
      * @return array
@@ -139,7 +143,7 @@ class ExternalNotification extends Notification
     }
 
     /**
-     * Sujet de la notification.
+     * Return the notification subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -150,7 +154,7 @@ class ExternalNotification extends Notification
     }
 
     /**
-     * Contenu texte de la notification.
+     * Return the Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string

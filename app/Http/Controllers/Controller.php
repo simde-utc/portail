@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de base pour tous les controlleurs.
+ * Base file for all controllers.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

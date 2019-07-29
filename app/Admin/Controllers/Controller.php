@@ -1,6 +1,6 @@
 <?php
 /**
- * Controlleur de base pour l'admin.
+ * Base controller for the admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller as BaseController;
 class Controller extends BaseController
 {
     /**
-     * Par défaut l'accès est bloqué pour les superadmins.
+     * Access for superadmins is blocked by default.
      */
     public function __construct()
     {

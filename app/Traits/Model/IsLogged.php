@@ -1,6 +1,6 @@
 <?php
 /**
- * Indique que le modèle est surveillé.
+ * Indicate that the model is watched.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Monolog\Handler\StreamHandler;
 trait IsLogged
 {
     /**
-     * On log les actions.
+     * Logging actions.
      *
      * @param  string $operation
      * @param  string $title
@@ -41,7 +41,7 @@ trait IsLogged
     }
 
     /**
-     * Au lancement du modèle, crée log dynamiquement.
+     * At the Model's lauch, create logs dynamically.
      *
      * @return void
      */

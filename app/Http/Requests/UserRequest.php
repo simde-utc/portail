@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les services des utilisateurs.
+ * User services request manamegement.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Validation;
 class UserRequest extends Request
 {
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

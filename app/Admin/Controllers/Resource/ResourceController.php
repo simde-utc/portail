@@ -1,6 +1,6 @@
 <?php
 /**
- * Génère une gestion d'une ressource admin.
+ * Generate a management of an admin resource.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,14 +25,14 @@ abstract class ResourceController extends Controller
     use HasResourceActions;
 
     /**
-     * Modèle de la ressource.
+     * Resource model.
      *
      * @var string
      */
     protected $model;
 
     /**
-     * Donne l'accès uniquement si la personne possède la permission.
+     * Give access only if the user hs the right permission.
      */
     public function __construct()
     {
@@ -40,14 +40,14 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */
     abstract protected function getFields(): array;
 
     /**
-     * Définition des valeurs par défaut champs à afficher.
+     * Default values definition of the fields to display.
      *
      * @return array
      */
@@ -57,7 +57,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Retourne les dépendances.
+     * Return dependencies.
      *
      * @return array
      */
@@ -67,7 +67,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Retourne le nom du modèle.
+     * Return the model name.
      *
      * @return string
      */
@@ -77,7 +77,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Interface d'affichage global.
+     * Global display interface
      *
      * @param Content $content
      * @return Content
@@ -95,7 +95,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Montre une instance.
+     * Show an instance.
      *
      * @param mixed   $model_id
      * @param Content $content
@@ -120,7 +120,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Modifie une instance.
+     * Modify an instance.
      *
      * @param mixed   $model_id
      * @param Content $content
@@ -135,7 +135,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Crée une nouvelle instance.
+     * Create a new instance.
      *
      * @param Content $content
      * @return Content
@@ -149,7 +149,7 @@ abstract class ResourceController extends Controller
     }
 
     /**
-     * Créer le formulaire de base.
+     * Create base form.
      *
      * @return FormGenerator
      */

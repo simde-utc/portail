@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux lieux.
+ * Model corresponding to locations.
  *
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -42,7 +42,7 @@ class Location extends Model
     ];
 
     /**
-     * Relation avec l'emplacement.
+     * Relation with the place.
      *
      * @return mixed
      */

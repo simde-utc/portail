@@ -1,6 +1,6 @@
 <?php
 /**
- * Notifie lors de la cotisation.
+ * Contribution to the BDE-UTC notification.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,7 +22,7 @@ class UserContributionBde extends Notification
     protected $admin;
 
     /**
-     * Déclare le type de notification.
+     * Notification's type declaration.
      *
      * @param array   $semesters
      * @param integer $money
@@ -39,7 +39,7 @@ class UserContributionBde extends Notification
     }
 
     /**
-     * Sujet de la notification.
+     * Notification's subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -50,7 +50,7 @@ class UserContributionBde extends Notification
     }
 
     /**
-     * Retourne le nom de cette année.
+     * Return the semesters name.
      *
      * @return string
      */
@@ -60,7 +60,7 @@ class UserContributionBde extends Notification
     }
 
     /**
-     * Contenu texte de la notification.
+     * Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string

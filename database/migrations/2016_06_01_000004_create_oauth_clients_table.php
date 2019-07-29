@@ -23,7 +23,7 @@ class CreateOauthClientsTable extends Migration
             $table->string('secret', 100);
             $table->string('redirect');
             $table->string('policy_url');
-            // Scopes définis pour le client credential.
+            // Scopes defined for the credential client.
             $table->text('scopes')->nullable();
             $table->string('targeted_types')->nullable();
             $table->boolean('personal_access_client');

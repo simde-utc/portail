@@ -1,6 +1,6 @@
 <?php
 /**
- * Prépare la console.
+ * Prepare the console.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -9,4 +9,4 @@
  * @license GNU GPL-3.0
  */
 
-// Non utilisé.
+// Not used.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux services.
+ * Model corresponding to services.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -45,7 +45,7 @@ class Service extends Model
     ];
 
     /**
-     * Scope spécifique pour n'avoir que les ressources publiques.
+     * Specific scope to have only public ressources.
      *
      * @param  Builder $query
      * @return Builder
@@ -54,14 +54,14 @@ class Service extends Model
     {
         $visibility = $this->getSelectionForVisibility('private');
 
-        // Les services privés sont affiché uniquement aux personnes ayant la permission 'admin'.
+        // Private services are displayed only to the user with the admin permission.
         if (($user = \Auth::user()) && $user->hasOnePermission('admin')) {
             return $query->where('visibility_id', $visibility->id);
         }
     }
 
     /**
-     * Relation avec la visibilité.
+     * Relation with the visibility.
      *
      * @return mixed
      */
@@ -71,7 +71,7 @@ class Service extends Model
     }
 
     /**
-     * Relation avec les suiveurs.
+     * Relation with followers.
      *
      * @return mixed
      */

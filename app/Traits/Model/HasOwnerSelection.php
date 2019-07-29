@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute un sélecteur concernant le possésseur.
+ * Add a selector concerning the owner.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 trait HasOwnerSelection
 {
     /**
-     * Relation avec le possésseur.
+     * Relation with the owner.
      *
      * @return mixed
      */
@@ -25,7 +25,7 @@ trait HasOwnerSelection
     }
 
     /**
-     * Sélecteur possésseur.
+     * Owner selector.
      *
      * @param  Builder $query
      * @param  string  $owner_type

@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux menus admins.
+ * Admin menus model.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 class Menu extends BaseMenu
 {
     /**
-     * Défini l'ordre automatiquement.
+     * Define the order automatically.
      *
      * @param  array $args
      * @return BaseMenu
@@ -31,7 +31,7 @@ class Menu extends BaseMenu
     }
 
     /**
-     * Retourne tous les menus sous forme de noeuds.
+     * Return all menus in the form of nodes
      *
      * @return array
      */

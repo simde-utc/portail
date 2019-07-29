@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute au controlleur un accès aux articles.
+ * Add to the controller an access to the articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,7 +16,7 @@ use Grimzy\LaravelMysqlSpatial\Types\Point;
 trait HasPosition
 {
     /**
-     * Indique que l'utilisateur est membre de l'instance.
+     * Indicate that the user is a member a given instance.
      *
      * @param  Request $request
      * @return Point|null

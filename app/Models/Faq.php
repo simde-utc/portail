@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle correspondant aux FAQs.
+ * Model corresponding to FAQs.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -39,7 +39,7 @@ class Faq extends Model
     ];
 
     /**
-     * Relation avec la catégorie.
+     * Relation with the category.
      *
      * @return mixed
      */
@@ -49,7 +49,7 @@ class Faq extends Model
     }
 
     /**
-     * Relation avec la visibilité.
+     * Relation with the visibility.
      *
      * @return mixed
      */
@@ -59,7 +59,7 @@ class Faq extends Model
     }
 
     /**
-     * Scope spécifique pour avoir les ressources privées.
+     * Specific scope to have the private resources.
      *
      * @param  Builder $query
      * @return Builder
@@ -68,7 +68,7 @@ class Faq extends Model
     {
         $visibility = $this->getSelectionForVisibility('private');
 
-        // Les faqs privés sont affiché uniquement aux personnes ayant la permission 'faq'.
+        // Privates faqs are displayed only to 'faq' permission owners.
         if (($user = \Auth::user()) && $user->hasOnePermission('faq')) {
             return $query->where('visibility_id', $visibility->id);
         }

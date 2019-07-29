@@ -1,6 +1,6 @@
 <?php
 /**
- * Service de l'application.
+ * Application service.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Natan Danous <natous.danous@hotmail.fr>
@@ -19,20 +19,20 @@ use Laravel\Passport\Passport;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Lancé à chaque démarrage de l'application.
+     * Launched at each application start.
      *
      * @return void
      */
     public function boot()
     {
-        // Pour que 'email' puisse être une clé.
+        // For 'email' to be a key.
         Schema::defaultStringLength(191);
 
         $this->passport();
     }
 
     /**
-     * Contourne un correctif pour laisser Passport fonctionner.
+     * By-pass a patch to let Passport work.
      *
      * @return void
      */

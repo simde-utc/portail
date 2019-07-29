@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware permettant de détecter si l'utilsateur connecté possède une permission.
+ * Middleware to detect if the connected user has a permission.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class UserHasPermission
 {
     /**
-     * Si l'utilisateur connecté n'a aucune des permissions requises, il est interdit d'accès.
+     * If the connected user does not have any of the required permissions, access is refused.
      *
      * @param  Request $request
      * @param  Closure $next

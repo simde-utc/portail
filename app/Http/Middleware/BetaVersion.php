@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware indiquant que nous sommes en version Beta.
+ * Middleware to indicate that it is currently a beta version.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 class BetaVersion
 {
     /**
-     * Modifie la réponse.
+     * Midify the response.
      *
      * @param  Request $request
      * @param  Closure $next
@@ -27,7 +27,7 @@ class BetaVersion
     {
         $response = $next($request);
 
-        // On indique que la version utilisée est encore en bêta.
+        // We indicate that the current version is still in beta.
         $response->headers->set(
 	        config('portail.headers.warn'),
 	        'La version '.$version.' est en bêta. Préférez utiliser la dernière version stable: '.config('portail.version')

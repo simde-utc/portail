@@ -1,6 +1,6 @@
 <?php
 /**
- * Pivot correspondant à la relation associations - utlisateurs.
+ * Pivot corresponding to the associations - users relation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -35,7 +35,7 @@ class AssoMember extends Pivot
     ];
 
     /**
-     * Relation avec l'accès.
+     * Relation with access.
      *
      * @return mixed
      */
@@ -45,7 +45,7 @@ class AssoMember extends Pivot
     }
 
     /**
-     * Relation avec l'accès.
+     * Relation with access.
      *
      * @return mixed
      */
@@ -55,7 +55,7 @@ class AssoMember extends Pivot
     }
 
     /**
-     * Relation avec le semestre.
+     * Relation with the semester.
      *
      * @return mixed
      */
@@ -65,7 +65,7 @@ class AssoMember extends Pivot
     }
 
     /**
-     * Relation avec l'accès.
+     * Relation with access.
      *
      * @return mixed
      */
@@ -75,7 +75,7 @@ class AssoMember extends Pivot
     }
 
     /**
-     * Relation avec l'utilisateur ayant validé.
+     * Relation with the user user who validated him.
      *
      * @return mixed
      */

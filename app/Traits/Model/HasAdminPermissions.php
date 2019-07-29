@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajoute une gestion des permissions admins.
+ * Add admin permissions management.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

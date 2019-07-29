@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère en admin les BookingType.
+ * Manage BookingTypes as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -17,7 +17,7 @@ class BookingTypeController extends ResourceController
     protected $model = BookingType::class;
 
     /**
-     * Définition des champs à afficher.
+     * Fields to display definition.
      *
      * @return array
      */

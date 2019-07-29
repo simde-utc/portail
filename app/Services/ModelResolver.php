@@ -1,7 +1,7 @@
 <?php
 /**
- * Service ModelResolver.
- * Permet de récupérer une classe à partir de son nom et inversement
+ * ModelResolver Service.
+ * Retrieves a class from its name and vice-versa.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,7 +22,7 @@ class ModelResolver
     protected $namespace = 'App\Models';
 
     /**
-     * Défini le namespace des modèles.
+     * Define the models namespace.
      *
      * @param string $namespace
      * @return ModelResolver
@@ -35,7 +35,7 @@ class ModelResolver
     }
 
     /**
-     * Donne le nom entier du modèle.
+     * Return the full model name.
      *
      * @param  string $name
      * @return string
@@ -46,7 +46,7 @@ class ModelResolver
     }
 
     /**
-     * Retrouve la classe du modèle.
+     * Find the model class.
      *
      * @param  string $name
      * @param  mixed  $instance
@@ -64,7 +64,7 @@ class ModelResolver
     }
 
     /**
-     * Retrouve un modèle à partir de son nom et de son id.
+     * Find a model from its name and id.
      *
      * @param  string $name
      * @param  string $model_id
@@ -77,7 +77,7 @@ class ModelResolver
     }
 
     /**
-     * Retrouve la classe du modèle à partir de sa catégorie.
+     * Find the model class from its category.
      *
      * @param  string $name
      * @param  mixed  $instance
@@ -95,7 +95,7 @@ class ModelResolver
     }
 
     /**
-     * Retrouve un modèle à partir de son catégorie et de son id.
+     * Find the model class from its category and id.
      *
      * @param  string $name
      * @param  string $model_id
@@ -108,7 +108,7 @@ class ModelResolver
     }
 
     /**
-     * Donne le nom court du modèle.
+     * Return the model shortname.
      *
      * @param  string $modelName
      * @param  string $delimiter
@@ -120,7 +120,7 @@ class ModelResolver
     }
 
     /**
-     * Donne le nom court de la classe.
+     * Return the class shortname.
      *
      * @param  mixed  $object
      * @param  string $delimiter
@@ -132,7 +132,7 @@ class ModelResolver
     }
 
     /**
-     * Donne la catégorie du modèle.
+     * Return the model category.
      *
      * @param  string $modelName
      * @param  string $delimiter
@@ -152,7 +152,7 @@ class ModelResolver
     }
 
     /**
-     * Donne le nom court de la classe.
+     * Return the class shortname.
      *
      * @param  mixed $object
      * @return string
@@ -163,7 +163,7 @@ class ModelResolver
     }
 
     /**
-     * Converti du texte en camelcase.
+     * Convert some text in camelcase.
      *
      * @param  string $name
      * @param  string $delimiter
@@ -175,7 +175,7 @@ class ModelResolver
     }
 
     /**
-     * Converti du texte en snakecase.
+     * Convert some text in snakecase.
      *
      * @param  string $name
      * @param  string $delimiter

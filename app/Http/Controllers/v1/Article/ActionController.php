@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les actions des articles.
+ * Manage les actions des articles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,7 +26,7 @@ class ActionController extends Controller
     use HasArticles;
 
     /**
-     * Nécessité de pouvoir voir les articles et de pouvoir gérer les actions des articles.
+     * Must be able to see articles and manage articles actions.
      */
     public function __construct()
     {
@@ -65,7 +65,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Liste les actions de l'article.
+     * List the article's actions.
      *
      * @param Request $request
      * @param string  $article_id
@@ -80,7 +80,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Impossible d'ajouter depuis ce controlleur une action pour l'article.
+     * Impossible to add an article action from this controller.
      *
      * @param Request $request
      * @param string  $article_id
@@ -92,7 +92,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Montre une action de l'article.
+     * Show an article action.
      *
      * @param Request $request
      * @param string  $article_id
@@ -108,7 +108,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Impossible de mettre un jour une action de l'article.
+     * Impossible to update an article action.
      *
      * @param Request $request
      * @param string  $article_id
@@ -121,7 +121,7 @@ class ActionController extends Controller
     }
 
     /**
-     * Impossible de supprimer une action de l'article.
+     * Impossible to delete an article action.
      *
      * @param Request $request
      * @param string  $article_id

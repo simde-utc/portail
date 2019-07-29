@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les articles.
+ * Articles request management.
  *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -16,7 +16,7 @@ use Validation;
 class ArticleRequest extends Request
 {
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

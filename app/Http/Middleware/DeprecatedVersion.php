@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware ajoutant un header expliquant que la version est dépréciée.
+ * Middleware to add a header to explain that the current version is deprecated.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 class DeprecatedVersion
 {
     /**
-     * Indique que la version est dépréciée en réponse.
+     * Indicate that the version is deprecated in response.
      *
      * @param  Request $request
      * @param  Closure $next
@@ -27,7 +27,7 @@ class DeprecatedVersion
     {
         $response = $next($request);
 
-        // On indique que la version utilisée est encore en bêta.
+        // Indicate that the current version is still in beta.
         $response->headers->set(
         config('portail.headers.warn'),
         'La version '.$version.' est dépréciée. Préférez utiliser la dernière version stable: '.config('portail.version')

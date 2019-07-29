@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les associations.
+ * Manage associations.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -29,8 +29,8 @@ class AssoController extends Controller
     use HasAssos, HasImages;
 
     /**
-     * Nécessité de gérer les associations.
-     * Lecture publique.
+     * Must be able to manage associations.
+     * Public access.
      */
     public function __construct()
     {
@@ -62,7 +62,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Liste les associations.
+     * List associations.
      *
      * @param Request $request
      * @return JsonResponse
@@ -77,7 +77,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Ajoute une association.
+     * Add an association.
      *
      * @param AssoRequest $request
      * @return JsonResponse
@@ -86,22 +86,22 @@ class AssoController extends Controller
     {
         $asso = Asso::create($request->input());
 
-        // On affecte l'image si tout s'est bien passé.
+        // Affecting image if everything went well.
         $this->setImage($request, $asso, 'assos/'.$asso->id);
 
-        // Après la création, on ajoute son président (non confirmé évidemment).
+        // After the creation, the president is added (not confirmed).
         $asso->assignRoles(config('portail.roles.admin.assos'), [
             'user_id' => $request->input('user_id'),
         ], true);
 
-        // On met l'asso en état inactif (en attente de confirmation).
+        // If we put the asso in a inactive state (waiting for confirmation).
         $asso->delete();
 
         return response()->json($asso, 201);
     }
 
     /**
-     * Montre une association.
+     * Show an association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -115,7 +115,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Met à jour une association.
+     * Update an association.
      *
      * @param AssoRequest $request
      * @param string      $asso_id
@@ -148,7 +148,7 @@ class AssoController extends Controller
         }
 
         if ($asso->update($request->input())) {
-            // On affecte l'image si tout s'est bien passé.
+            // Affecting image if everything went well.
             $this->setImage($request, $asso, 'assos/'.$asso->id);
 
             return response()->json($asso, 200);
@@ -158,7 +158,7 @@ class AssoController extends Controller
     }
 
     /**
-     * Supprime une association.
+     * Delete an association.
      *
      * @param Request $request
      * @param string  $asso_id
@@ -169,11 +169,11 @@ class AssoController extends Controller
         $asso = $this->getAsso($request, $asso_id);
 
         if ($asso->children()->exists()) {
-            abort(400, 'Il n\'est pas possible de supprimer une association parente');
+            abort(400, 'Il n\'est pas possible de suprimer an association parente');
         }
 
         $asso->delete();
-        // On ne supprime pas une asso réellement: $this->deleteImage('assos/'.$asso->id);.
+        // An asso is not really deleted: $this->deleteImage('assos/'.$asso->id);.
         abort(204);
     }
 }

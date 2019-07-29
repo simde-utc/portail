@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware par défaut de Laravel.
+ * Default Laravel's middleware.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
@@ -16,7 +16,7 @@ use Illuminate\Foundation\Http\Middleware\TrimStrings as Middleware;
 class TrimStrings extends Middleware
 {
     /**
-     * Les champs qui ne doivent pas être touchés.
+     * Fields not to be touched.
      *
      * @var array
      */

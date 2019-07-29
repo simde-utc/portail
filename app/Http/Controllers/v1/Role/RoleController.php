@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les rôles.
+ * Manage roles.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -25,7 +25,7 @@ class RoleController extends Controller
     use HasRoles, HasOwners;
 
     /**
-     * Nécessité des gérer les rôles.
+     * Must be able to manage roles.
      */
     public function __construct()
     {
@@ -48,7 +48,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Liste les rôles.
+     * List roles.
      *
      * @param Request $request
      * @return JsonResponse
@@ -65,7 +65,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Ajouter un rôle.
+     * Add a role.
      *
      * @param RoleRequest $request
      * @return JsonResponse
@@ -88,7 +88,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Montre un rôle.
+     * Show a role.
      *
      * @param Request $request
      * @param string 	$role_id
@@ -103,7 +103,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Met à jour un rôle.
+     * Update a role.
      *
      * @param RoleRequest $request
      * @param string      $role_id
@@ -128,7 +128,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Supprime un rôle.
+     * Delete a role.
      *
      * @param Request $request
      * @param string 	$role_id
@@ -142,10 +142,10 @@ class RoleController extends Controller
             if ($role->delete()) {
                 abort(204);
             } else {
-                abort(500, "Impossible de supprimer le role souhaité");
+                abort(500, "Impossible de suprimer le role souhaité");
             }
         } else {
-            abort(403, "Il n'est pas autorisé de supprimer ce rôle (possiblement car déjà assigné ou rôles enfants attachés)");
+            abort(403, "Il n'est pas autorisé de suprimer ce rôle (possiblement car déjà assigné ou rôles enfants attachés)");
         }
     }
 }

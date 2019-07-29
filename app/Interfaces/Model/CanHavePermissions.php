@@ -1,6 +1,6 @@
 <?php
 /**
- * Indique que le modèle peut posséder des permissions.
+ * Indicate that the model can have permissions.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -15,14 +15,14 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 interface CanHavePermissions
 {
     /**
-     * Renvoie la liste des roles.
+     * Return the permission list.
      *
      * @return MorphMany
      */
     public function permissions();
 
     /**
-     * Permet d'indiquer si la personne à le droit de voir les permissions appartenant au modèle.
+     * Indicate if a given user can access the model's permissions
      *
      * @param string $user_id
      * @return boolean
@@ -30,7 +30,7 @@ interface CanHavePermissions
     public function isPermissionAccessibleBy(string $user_id): bool;
 
     /**
-     * Permet d'indiquer si la personne à le droit de créer/modifier/supprimer les permissions appartenant au modèle.
+     * Indicate if a given user can can create/update/delete the model's permissions
      *
      * @param string $user_id
      * @return boolean

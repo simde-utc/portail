@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification pour indiquer une modification sur le compte.
+ * Notification that indicates an account modification.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -19,7 +19,7 @@ class UserModification extends Notification
     protected $modifications;
 
     /**
-     * Déclare le type de notification et indique les modifications.
+     * Declare the notification type and indicates modifications.
      *
      * @param array $modifications
      */
@@ -31,7 +31,8 @@ class UserModification extends Notification
     }
 
     /**
-     * Action réalisable via la notification.
+     * Achievable action through the notification.
+     *
      * @param  CanBeNotifiable $notifiable
      * @return array
      */
@@ -44,7 +45,7 @@ class UserModification extends Notification
     }
 
     /**
-     * Sujet de la notification.
+     * Notification subject.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -55,7 +56,7 @@ class UserModification extends Notification
     }
 
     /**
-     * Contenu texte de la notification.
+     * Notification's text content.
      *
      * @param  CanBeNotifiable $notifiable
      * @return string
@@ -66,7 +67,7 @@ class UserModification extends Notification
     }
 
     /**
-     * Contenu email de la notification.
+     * Notification's email content.
      *
      * @param  CanBeNotifiable $notifiable
      * @param  MailMessage     $mail

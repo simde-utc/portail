@@ -1,6 +1,6 @@
 <?php
 /**
- * Gère les emplacements de lieux.
+ * Manage locations places.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -22,7 +22,7 @@ class PlaceController extends Controller
     use HasPlaces;
 
     /**
-     * Nécessité de pouvoir gérer les emplacements.
+     * Must be able to manage places.
      */
     public function __construct()
     {
@@ -45,7 +45,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Liste les emplacements.
+     * List places.
      *
      * @return JsonResponse
      */
@@ -59,7 +59,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Créer un emplacement.
+     * Create a place.
      *
      * @param PlaceRequest $request
      * @return JsonResponse
@@ -75,7 +75,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Montre un emplacement.
+     * Show a place.
      *
      * @param Request $request
      * @param string  $place_id
@@ -89,7 +89,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Met à jour un emplacement.
+     * Update a place.
      *
      * @param PlaceRequest $request
      * @param string       $place_id
@@ -110,7 +110,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * Supprime un emplacement.
+     * Delete a place.
      *
      * @param Request $request
      * @param string  $place_id

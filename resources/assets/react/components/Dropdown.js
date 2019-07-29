@@ -1,5 +1,5 @@
 /**
- * Affichage d'un bouton cliquable avec un sous-menu
+ * Dispay a dropdown menu.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

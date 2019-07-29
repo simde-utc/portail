@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier générant la commande portail:optimize.
- * Optimise le cache de l'application.
+ * File generating the command: portail:optimize.
+ * Optimize the application cache.
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>

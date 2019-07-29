@@ -1,9 +1,9 @@
 <?php
 /**
- * Gère les partenaires.
+ * Manage partners.
  *
- * TODO: Déplacer la récupération dans un Trait.
- * TODO: Transformer en abort.
+ * TODO: Move retrievement in a Trait.
+ * TODO: Transform in abort.
  * TODO: Scopes !
  *
  * @author Rémy Huet <remyhuet@gmail.com>
@@ -26,7 +26,7 @@ use Illuminate\Http\Request;
 class PartnerController extends Controller
 {
     /**
-     * Liste les partenaires.
+     * List partners.
      *
      * @return JsonResponse
      */
@@ -40,7 +40,7 @@ class PartnerController extends Controller
     }
 
     /**
-     * Crée un partenaire.
+     * Create a partner.
      *
      * @param PartnerRequest $request
      * @return JsonResponse
@@ -53,7 +53,7 @@ class PartnerController extends Controller
     }
 
     /**
-     * Montre un partenaire.
+     * Show a partner.
      *
      * @param PartnerRequest $request
      * @param string         $partner_id
@@ -71,7 +71,7 @@ class PartnerController extends Controller
     }
 
     /**
-     * Met à jour un partenaire.
+     * Update a partner.
      *
      * @param PartnerRequest $request
      * @param string         $partner_id
@@ -91,7 +91,7 @@ class PartnerController extends Controller
     }
 
     /**
-     * Supprime un partenaire.
+     * Delete a partner.
      *
      * @param PartnerRequest $request
      * @param string         $partner_id

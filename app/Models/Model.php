@@ -1,6 +1,6 @@
 <?php
 /**
- * Modèle de base.
+ * Base model.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestion de la requête pour les partenaires.
+ * Partners request management.
  *
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Josselin Pennors <josselin.pennors@hotmail.fr>
@@ -18,7 +18,7 @@ use Validation;
 class PartnerRequest extends Request
 {
     /**
-     * Défini les règles de validation des champs.
+     * Define fields validation rules.
      *
      * @return array
      */

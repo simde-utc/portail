@@ -1,6 +1,6 @@
 <?php
 /**
- * Teste abstrait.
+ * Abstract test.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
