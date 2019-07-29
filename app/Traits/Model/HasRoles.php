@@ -53,7 +53,7 @@ trait HasRoles
     /**
      * List attributed roles.
      *
-     * @return mixed
+     * @return mixed|null
      */
     public function roles()
     {
@@ -63,9 +63,9 @@ trait HasRoles
     /**
      * Assing one or several attributed roles depending on given data.
      *
-     * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data  Role_id, semester_id, validated_by_id and user_if can be affected in this array.
-     * @param boolean                                              $force Enable to by-pass add securities. (to use with caution).
+     * @param string|array|Collection $roles
+     * @param array                   $data  Role_id, semester_id, validated_by_id and user_if can be affected in this array.
+     * @param boolean                 $force Enable to by-pass add securities. (to use with caution).
      * @return mixed
      */
     public function assignRoles($roles, array $data=[], bool $force=false)
@@ -120,10 +120,10 @@ trait HasRoles
     /**
      * Modify one or several attributed roles depending on given data.
      *
-     * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data        Possiblility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
-     * @param array                                                $updatedData Possibility to affect new role_id, semester_id, validated_by_id and user_id.
-     * @param boolean                                              $force       Enble to By-Pass add scurities (to use with caution).
+     * @param string|array|Collection $roles
+     * @param array                   $data        Possiblility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
+     * @param array                   $updatedData Possibility to affect new role_id, semester_id, validated_by_id and user_id.
+     * @param boolean                 $force       Enble to By-Pass add scurities (to use with caution).
      * @return mixed
      */
     public function updateRoles($roles, array $data=[], array $updatedData=[], bool $force=false)
@@ -175,10 +175,10 @@ trait HasRoles
     /**
      * Delete one or several attributed roles depending on given data.
      *
-     * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
-     * @param string                                               $removed_by Person requesting the deletion.
-     * @param boolean                                              $force      By-pass addition securities (to use with caution).
+     * @param string|array|Collection $roles
+     * @param array                   $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
+     * @param string                  $removed_by Person requesting the deletion.
+     * @param boolean                 $force      By-pass addition securities (to use with caution).
      * @return mixed
      */
     public function removeRoles($roles, array $data=[], string $removed_by=null, bool $force=false)
@@ -228,10 +228,10 @@ trait HasRoles
     /**
      * Synchronize (delete all roles and assign new one.s) one or several attributed roles depending on given data.
      *
-     * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
-     * @param string                                               $removed_by Person requesting the deletion.
-     * @param boolean                                              $force      By-pass addition securities (to use with caution).
+     * @param string|array|Collection $roles
+     * @param array                   $data       Possibility to use role_id, semester_id, validated_by_id and user_id to match one or several members.
+     * @param string                  $removed_by Person requesting the deletion.
+     * @param boolean                 $force      By-pass addition securities (to use with caution).
      * @return mixed
      */
     public function syncRoles($roles, array $data=[], string $removed_by=null, bool $force=false)
@@ -258,8 +258,8 @@ trait HasRoles
     /**
      * Check if a role in the given list has benn granted or not.
      *
-     * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data  Possibility to use role_id, semester_id, validated_by_id and user_id to match a membre or several members.
+     * @param string|array|Collection $roles
+     * @param array                   $data  Possibility to use role_id, semester_id, validated_by_id and user_id to match a membre or several members.
      * @return boolean
      */
     public function hasOneRole($roles, array $data=[])
@@ -272,8 +272,8 @@ trait HasRoles
     /**
      * Check if each role in the list exists or not.
      *
-     * @param string|array|Illuminate\Database\Eloquent\Collection $roles
-     * @param array                                                $data  Possibility to use role_id, semester_id, validated_by_id and user_id to match a membre or several members.
+     * @param string|array|Collection $roles
+     * @param array                   $data  Possibility to use role_id, semester_id, validated_by_id and user_id to match a membre or several members.
      * @return boolean
      */
     public function hasAllRoles($roles, array $data=[])
@@ -296,7 +296,7 @@ trait HasRoles
         $semester_id = ($semester_id ?? Semester::getThisSemester()->id);
         $roles = $this->roles();
 
-        if ($roles === null) {
+        if (is_null($roles)) {
             return collect();
         }
 

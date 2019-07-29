@@ -22,6 +22,7 @@
         "nastuzzi-samy/api-tester": "^1.1",
         "nastuzzi-samy/laravel-model-stages": "^1.0",
         "nastuzzi-samy/laravel-query-selection": "^2.2",
+        "nunomaduro/larastan": "^0.3.17",
         "phpmd/phpmd": "^2.6",
         "predis/predis": "^1.1",
         "webpatser/laravel-uuid": "^3.0"
@@ -31,7 +32,6 @@
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~1.0",
         "nunomaduro/collision": "3.0.*",
-        "nunomaduro/larastan": "0.3.*",
         "phpunit/phpunit": "~7.0",
         "symfony/thanks": "^1.0",
         "squizlabs/php_codesniffer": "3.*"
