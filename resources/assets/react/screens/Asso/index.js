@@ -559,7 +559,7 @@ class AssoScreen extends React.Component {
 							ÉVÈNEMENTS
 						</NavLink>
 					</li>
-					{user && (
+					{user && (user.types.casComfirmed || user.types.contributorBde) && (
 						<li className="nav-item">
 							<NavLink className="nav-link" activeClassName="active" to={`${match.url}/members`}>
 								TROMBINOSCOPE
