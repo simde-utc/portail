@@ -27,8 +27,8 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
     + Clear cache : `php artisan portail:clear`
     + Key generation : `php artisan key:generate`
     + Tables creation and seeding : `php artisan migrate:fresh --seed`
-	+ JS dependencies installation : `npm install --production` (assez long)
-	+ front-end application compilation : `npm run prod` (assez long)
+	+ JS dependencies installation : `npm install --production` (pretty slow)
+	+ front-end application compilation : `npm run prod` (dammit JS so slooow)
 
 - Application run :
     + Artisan : `php artisan serve` and hit http://localhost:8000 with your web browser
@@ -61,7 +61,7 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
   - `fix/<issue shortname>` for bug fixes.
   - `hot/<issue shortname>` for hotfixes.
 - Follow the linter for PHP and JS
-- Comments, Commits and Pull Request must be in 
+- Comments, Commits and Pull Request must be in English
 
 ### Issues
 
