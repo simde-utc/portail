@@ -65,7 +65,7 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
 
 ### Issues
 - Open as much issues as possible
-- Use tags (labels), in order to precise wether the issue is a bug or a feature request and its importance (in terms of severity or work). You may also indicate the affected area of the code (notifications, frontend, database... etc).
+- Use tags (labels), in order to precise wether the issue is a bug or a feature request and its importance (in terms of severity or work). You may also indicate the affected area of the code (notifications, frontend, database... etc). You can create new tags if (maintainers will remove redundant tags). Please do not remove tags.
 
 ### Contributing
 - Urgent issues first (they are tagged as urgent)
@@ -73,4 +73,4 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
 
 ## Documentation
 
-Documentation can be found in `documentation/README.md`
+Documentation can be found in `documentation/README.md`. It is currently incomplete, PRs are welcolme!
