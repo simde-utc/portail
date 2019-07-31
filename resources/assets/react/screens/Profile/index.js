@@ -2,6 +2,7 @@
  * Display of a user profile.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -70,7 +71,11 @@ class ScreenProfile extends React.Component {
 					</li>
 				</ul>
 				<Switch>
-					<Route path={`${match.url}/career`} exact render={() => <AssociativeCareerScreen user={user} />} />
+					<Route
+						path={`${match.url}/career`}
+						exact
+						render={() => <AssociativeCareerScreen user={user} />}
+					/>
 				</Switch>
 			</div>
 		);
