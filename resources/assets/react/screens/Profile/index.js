@@ -2,16 +2,19 @@
  * Display of a user profile.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
  * @license GNU GPL-3.0
  */
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import actions from '../redux/actions';
+import AssociativeCareerScreen from './AssociativeCareer';
+
+import actions from '../../redux/actions';
 
 @connect(store => ({
 	user: store.getData('user', false),
@@ -36,7 +39,7 @@ class ScreenProfile extends React.Component {
 						</NavLink>
 					</li>
 					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/assos`}>
+						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/career`}>
 							MON PARCOURS
 						</NavLink>
 					</li>
@@ -67,19 +70,13 @@ class ScreenProfile extends React.Component {
 						</a>
 					</li>
 				</ul>
-
-				<div className="container pr-3 pl-3">
-					Le profil est en cours de développement. Il sera possible de consulter et modifier:
-					<ul>
-						<li>Vos informations personnelles</li>
-						<li>Votre parcours associatif et étudiant</li>
-						<li>Les applications/sites associatifs qui ont accès à vos données (et lequelles)</li>
-						<li>Vos cotisations</li>
-					</ul>
-					{
-						'Seul le bouton de déconnexion fonctionne. Nous vous invitons à glisser la onglets jusque cliquer sur "Me déconnecter" pour vous déconnecter :)'
-					}
-				</div>
+				<Switch>
+					<Route
+						path={`${match.url}/career`}
+						exact
+						render={() => <AssociativeCareerScreen user={user} />}
+					/>
+				</Switch>
 			</div>
 		);
 	}
