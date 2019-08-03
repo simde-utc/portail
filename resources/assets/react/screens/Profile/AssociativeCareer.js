@@ -39,7 +39,7 @@ class AssociativeCareerScreen extends React.Component {
 			dispatch(actions.roles.all());
 		}
 
-		dispatch(actions.config({ title: `Mon Parcours` }));
+		dispatch(actions.config({ title: 'Mon Parcours' }));
 
 		semesters.forEach(semester => {
 			if (!associativeSemesters[semester.id]) {
@@ -59,7 +59,7 @@ class AssociativeCareerScreen extends React.Component {
 			dispatch(actions.roles.all());
 		}
 
-		dispatch(actions.config({ title: `Mon Parcours` }));
+		dispatch(actions.config({ title: 'Mon Parcours' }));
 	}
 
 	addNewAssociativeSemester(semester_id, assos) {
@@ -90,7 +90,8 @@ class AssociativeCareerScreen extends React.Component {
 										<AssoCard
 											key={asso.id}
 											name={asso.name}
-											shortname={`${asso.shortname} - ${roleName}`}
+											shortname={asso.shortname}
+											additionalInfo={roleName}
 											image={asso.image}
 											login={asso.parent ? asso.parent.login : asso.login}
 										/>

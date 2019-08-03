@@ -2,6 +2,7 @@
  * Generate as association card.
  *
  * @author Matt Glorion <matt@glorion.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -10,7 +11,7 @@
 import React from 'react';
 import bdeImage from '../../images/bde.jpg';
 
-const AssoCard = ({ image, login, name, shortname }) => {
+const AssoCard = ({ image, login, name, shortname, additionalInfo }) => {
 	const style = {
 		backgroundImage: `url('${!image ? bdeImage : image}')`,
 		backgroundSize: 'contain',
@@ -26,7 +27,11 @@ const AssoCard = ({ image, login, name, shortname }) => {
 			</div>
 			<div className="name-container">
 				<div className="asso-shortname">{shortname}</div>
+				{additionalInfo &&
+					<p class="w-100 text-center">{additionalInfo}</p>
+				}
 			</div>
+
 			<div className={`card-line bg-${login}`} />
 		</div>
 	);
