@@ -19,7 +19,7 @@ import actions from '../../redux/actions';
 	semesters: store.getData(['semesters']),
 	semestersFetched: store.isFetched(['semesters']),
 	roles: store.getData('roles'),
-	rolesIsFetching: store.isFetching('roles'),
+	rolesFetching: store.isFetching('roles'),
 	rolesFetched: store.isFetched('roles'),
 }))
 class AssociativeCareerScreen extends React.Component {
@@ -32,17 +32,17 @@ class AssociativeCareerScreen extends React.Component {
 	}
 
 	componentDidMount() {
-		const { dispatch, rolesFetched, semesters } = this.props;
+		const { dispatch, rolesFetched, semesters, rolesFetching } = this.props;
 		const { associativeSemesters } = this.state;
 
-		if (!rolesFetched) {
+		if (!rolesFetched && !rolesFetching) {
 			dispatch(actions.roles.all());
 		}
 
 		dispatch(actions.config({ title: 'Mon Parcours' }));
 
 		semesters.forEach(semester => {
-			if (!associativeSemesters[semester.id]) {
+			if (associativeSemesters[semester.id] === undefined) {
 				actions.user.assos.all({ semester: semester.id }).payload.then(({ data }) => {
 					if (data.length > 0) {
 						this.addNewAssociativeSemester(semester.id, data);
@@ -50,16 +50,6 @@ class AssociativeCareerScreen extends React.Component {
 				});
 			}
 		});
-	}
-
-	componentDidUpdate() {
-		const { dispatch, rolesFetched } = this.props;
-
-		if (!rolesFetched) {
-			dispatch(actions.roles.all());
-		}
-
-		dispatch(actions.config({ title: 'Mon Parcours' }));
 	}
 
 	addNewAssociativeSemester(semester_id, assos) {
@@ -83,7 +73,7 @@ class AssociativeCareerScreen extends React.Component {
 							const semester = semesters.find(semester => semester.id === semester_id);
 
 							const assosBySemesterList = associativeSemesters[semester_id].map(asso => {
-								const roleName = roles.find(role => role.id === asso.pivot.role_id).name;
+								const role = roles.find(role => role.id === asso.pivot.role_id);
 
 								return (
 									<NavLink key={asso.id} to={`/assos/${asso.login}`}>
@@ -91,7 +81,7 @@ class AssociativeCareerScreen extends React.Component {
 											key={asso.id}
 											name={asso.name}
 											shortname={asso.shortname}
-											additionalInfo={roleName}
+											additionalInfo={role ? role.name : ''}
 											image={asso.image}
 											login={asso.parent ? asso.parent.login : asso.login}
 										/>
