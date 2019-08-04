@@ -1,4 +1,15 @@
+/**
+ * Display an article.
+ *
+ * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Romain Maliach-Auguste <r.maliach@live.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
+ *
+ */
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 
 import Img from '../Image';
@@ -23,18 +34,25 @@ class Article extends React.Component {
 	render() {
 		const { article } = this.props;
 		const { expanded } = this.state;
-		let articleBody = <p>{article.content}</p>;
+		const expandPossible = article.content.length > MAX_CONTENT_LENGTH && !expanded;
 
-		if (article.content.length > MAX_CONTENT_LENGTH && !expanded) {
-			articleBody = (
-				<p>
-					{article.content.substring(0, MAX_CONTENT_LENGTH)}...&nbsp;
+		const articleBody = (
+			<div style={{ whiteSpace: 'pre-line' }}>
+				<ReactMarkdown
+					source={
+						expandPossible
+							? `${article.content.substring(0, MAX_CONTENT_LENGTH)}...&nbsp;`
+							: article.content
+					}
+					className="articleContent"
+				/>
+				{expandPossible && (
 					<a className="text-info" onClick={this.toggleExpand}>
 						Lire la suite
 					</a>
-				</p>
-			);
-		}
+				)}
+			</div>
+		);
 
 		return (
 			<div className="Article row m-0 my-3 my-md-4 justify-content-start">
@@ -63,7 +81,7 @@ class Article extends React.Component {
 							{getTime(article.created_at)}
 						</span>
 					</div>
-					<div style={{ whiteSpace: 'pre-line' }}>{articleBody}</div>
+					{articleBody}
 				</div>
 				{article.event ? 'Il y a un event associé !' : ''}
 			</div>
