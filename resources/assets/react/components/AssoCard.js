@@ -27,9 +27,7 @@ const AssoCard = ({ image, login, name, shortname, additionalInfo }) => {
 			</div>
 			<div className="name-container">
 				<div className="asso-shortname">{shortname}</div>
-				{additionalInfo &&
-					<p class="w-100 text-center">{additionalInfo}</p>
-				}
+				{additionalInfo && <p className="w-100 text-center">{additionalInfo}</p>}
 			</div>
 
 			<div className={`card-line bg-${login}`} />
