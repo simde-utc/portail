@@ -16,12 +16,14 @@ namespace App\Models;
 
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
-use App\Traits\Model\HasCreatorSelection;
-use App\Traits\Model\HasOwnerSelection;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Model\{
+    HasCreatorSelection, HasOwnerSelection, HasDeletedSelection
+};
 
 class Booking extends Model implements OwnableContract
 {
-    use HasMorphOwner, HasCreatorSelection, HasOwnerSelection;
+    use HasMorphOwner, HasCreatorSelection, HasOwnerSelection, SoftDeletes, HasDeletedSelection;
 
     protected $table = 'rooms_bookings';
 

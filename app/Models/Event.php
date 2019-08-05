@@ -16,12 +16,15 @@ namespace App\Models;
 
 use Cog\Contracts\Ownership\Ownable as OwnableContract;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
-use App\Traits\Model\HasVisibilitySelection;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Model\{
+    HasVisibilitySelection, HasDeletedSelection
+};
 use Illuminate\Database\Eloquent\Builder;
 
 class Event extends Model implements OwnableContract
 {
-    use HasMorphOwner, HasVisibilitySelection;
+    use HasMorphOwner, HasVisibilitySelection, SoftDeletes, HasDeletedSelection;
 
     protected $fillable = [
         'name', 'location_id', 'visibility_id', 'begin_at', 'end_at', 'full_day', 'created_by_id', 'created_by_type',
@@ -74,8 +77,23 @@ class Event extends Model implements OwnableContract
                 'end' => 'begin_at',
             ],
         ],
+        'deleted' => 'without',
         'filter' => [],
     ];
+
+    /**
+     * Launched at the model creation.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::deleting(function ($model) {
+            $model->calendars()->detach();
+        });
+    }
 
     /**
      * Specific scope to have only the private resources.

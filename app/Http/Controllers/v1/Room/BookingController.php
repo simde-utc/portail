@@ -230,11 +230,8 @@ class BookingController extends Controller
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
         $booking = $this->getBookingFromRoom($request, $room, \Auth::user(), $booking_id, 'manage');
-		$event = $booking->event;
 
-		$event->calendars()->detach();
-
-        if ($booking->delete() && $event->delete()) {
+        if ($booking->delete()) {
             abort(204);
         } else {
             abort(500, 'Impossible de suprimer la réservation');
