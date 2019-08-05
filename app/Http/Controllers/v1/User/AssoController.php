@@ -71,15 +71,15 @@ class AssoController extends Controller
         $assos = collect();
 
         if (in_array('joined', $choices)) {
-            $assos = $assos->merge($user->joinedAssos()->where('semester_id', $semester->id)->get());
+            $assos = $assos->merge($user->joinedAssos()->with('parent')->where('semester_id', $semester->id)->get());
         }
 
         if (in_array('joining', $choices)) {
-            $assos = $assos->merge($user->joiningAssos()->where('semester_id', $semester->id)->get());
+            $assos = $assos->merge($user->joiningAssos()->with('parent')->where('semester_id', $semester->id)->get());
         }
 
         if (in_array('followed', $choices)) {
-            $assos = $assos->merge($user->followedAssos()->where('semester_id', $semester->id)->get());
+            $assos = $assos->merge($user->followedAssos()->with('parent')->where('semester_id', $semester->id)->get());
         }
 
         return response()->json($assos->map(function ($asso) {

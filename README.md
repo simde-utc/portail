@@ -27,8 +27,8 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
     + Clear cache : `php artisan portail:clear`
     + Key generation : `php artisan key:generate`
     + Tables creation and seeding : `php artisan migrate:fresh --seed`
-	+ JS dependencies installation : `npm install --production` (assez long)
-	+ front-end application compilation : `npm run prod` (assez long)
+	+ JS dependencies installation : `npm install --production` (pretty slow)
+	+ front-end application compilation : `npm run prod` (dammit JS so slooow)
 
 - Application run :
     + Artisan : `php artisan serve` and hit http://localhost:8000 with your web browser
@@ -53,7 +53,7 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
 - Run `npm run watch`
 - Enjoy
 
-### Develop
+### Developing
 
 - We use the workflow `Gitflow`, presented in this article [article](https://nvie.com/files/Git-branching-model.pdf). There is an exception: We don't use the `release` branch. This implies that all Pull Requests are merged in `develop`. Once this code is tested it is released version by version on `master`.
 - Branch naming:
@@ -63,6 +63,18 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
 - Follow the linter for PHP and JS
 - Comments, Commits and Pull Request must be in English
 
+### Issues
+
+- Open as much issues as possible
+- Use tags (labels), in order to precise wether the issue is a bug or a feature request and its importance (in terms of severity or work). You may also indicate the affected area of the code (notifications, frontend, database... etc). You can create new tags if (maintainers will remove redundant tags). Please do not remove tags.
+
+### Contributing
+
+- Urgent issues first (they are tagged as urgent)
+- Submit your own issues before working
+- PRs must be reviewed by at least one SiMDE developer, except for minor fixes with absolutely no side effect (i.e. comments, local variable names etc.).
+- You can join the SiMDE association. We have a [slack](https://simde.slack.com) and we organise meetings during which devs can work together and explain the code. We will be very glad to answer your questions!
+
 ## Documentation
 
-Documentation can be found in `documentation/README.md`
+Documentation can be found in `documentation/README.md`. It is currently incomplete, PRs are welcolme!

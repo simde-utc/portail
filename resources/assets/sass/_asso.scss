@@ -48,6 +48,10 @@
 	border-bottom: 1px solid $gray-light;
 }
 
+.Article .body .articleContent a{
+	text-decoration: underline;
+}
+
 .asso-card {
 	vertical-align: top;
 	width: 200px;
@@ -114,12 +118,12 @@
 .name-container{
 	height: 100px;
 	width: 100%;
-	display: table;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 
 .name-container .asso-shortname{
-	display: table-cell;
-	vertical-align: middle;
 	text-align: center;
 	word-wrap: break-word;
 	margin: 5%;
