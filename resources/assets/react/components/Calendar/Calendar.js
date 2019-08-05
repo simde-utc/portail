@@ -10,7 +10,6 @@ export default class CalendarCalendar extends React.Component {
 	getEvents() {
 		const { events, calendars } = this.props;
 		const generatedEvents = [];
-
 		Object.keys(events).forEach(calendar_id => {
 			const calendar = calendars[calendar_id];
 
