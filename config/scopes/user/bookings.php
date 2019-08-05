@@ -341,5 +341,68 @@ return [
                 ],
             ]
         ],
+        'remove' => [
+            'description' => 'Supprimer des réservations',
+            'scopes' => [
+                'assos' => [
+                    'description' => 'Supprimer des réservations des associations de l\'utilisateur',
+                    'scopes' => [
+                        'created' => [
+                            'description' => 'Supprimer des réservations que chaque association de l\'utilisateur a créé',
+                        ],
+                        'owned' => [
+                            'description' => 'Supprimer des réservations que chaque association de l\'utilisateur possède',
+                            'scopes' => [
+                                'user' => [
+                                    'description' => 'Supprimer des réservations que chaque association de l\'utilisateur possède et qu\'il crée',
+                                ],
+                                'client' => [
+                                    'description' => 'Supprimer des réservations que chaque association de l\'utilisateur possède et que mon client crée',
+                                ],
+                                'asso' => [
+                                    'description' => 'Supprimer des réservations que chaque association de l\'utilisateur possède et que mon association crée',
+                                ],
+                            ]
+                        ],
+                        'validated' => [
+                            'description' => 'Supprimer da validation des réservations de chaque association de l\'utilisateur',
+                            'scopes' => [
+                                'user' => [
+                                    'description' => 'Supprimer da validation de l\'utilisateur des réservations de chaque association de l\'utilisateur',
+                                ],
+                                'client' => [
+                                    'description' => 'Supprimer da validation du client des réservations de chaque association de l\'utilisateur',
+                                ],
+                                'asso' => [
+                                    'description' => 'Supprimer da validation de l\'association des réservations de chaque association de l\'utilisateur',
+                                ],
+                            ]
+                        ],
+                    ]
+                ],
+                'users' => [
+                    'description' => 'Supprimer des réservations de l\'utilisateur',
+                    'scopes' => [
+                        'created' => [
+                            'description' => 'Supprimer des réservations que l\'utilisateur a créé',
+                        ],
+                        'validated' => [
+                            'description' => 'Supprimer des réservations que l\'utilisateur a validé',
+                        ],
+                    ]
+                ],
+                'clients' => [
+                    'description' => 'Supprimer des réservations des clients de l\'utilisateur',
+                    'scopes' => [
+                        'created' => [
+                            'description' => 'Supprimer des réservations des clients que l\'utilisateur ont créé',
+                        ],
+                        'validated' => [
+                            'description' => 'Supprimer des réservations des clients que l\'utilisateur ont validé',
+                        ],
+                    ]
+                ],
+            ]
+        ],
     ]
 ];
