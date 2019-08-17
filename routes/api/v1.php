@@ -78,7 +78,6 @@ Route::group(['middleware' => 'user:active'], function () {
         'user/calendars' => 'User\CalendarController',
         'user/contacts'	=> 'Contact\ContactController',
         'user/permissions' => 'Permission\AssignmentController',
-
     ]);
 
     /*
