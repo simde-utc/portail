@@ -17,17 +17,23 @@ trait HasSemesters
     /**
      * Retrieve the specified user.
      *
-     * @param  string $semester_id
+     * @param  string  $semester_id
+     * @param  boolean $hideData
      * @return Semester
      */
-    protected function getSemester(string $semester_id=null)
+    protected function getSemester(string $semester_id=null, bool $hideData=false)
     {
-        if ($semester_id) {
-            if ($semester_id !== 'current') {
-                return Semester::getSemester($semester_id);
-            }
+        if ($semester_id && $semester_id !== 'current') {
+            $semester = Semester::getSemester($semester_id);
+        } else {
+            $semester = Semester::getThisSemester();
         }
 
-        return Semester::getThisSemester();
+        if ($hideData) {
+            return $semester->hideData();
+        }
+
+        return $semester;
+
     }
 }

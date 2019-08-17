@@ -18,10 +18,9 @@
  *       + remove:  Delete data.
  */
 
-// All routes starting with user-{verb}-contributions-.
+// All routes starting with client-{verb}-contributions-.
 return [
     'description' => 'Cotisations au BDE-UTC',
-    'icon' => 'money-bill',
     'verbs' => [
         'manage' => [
             'description' => 'Gérer toutes les cotisations de l\'utilisateur',
