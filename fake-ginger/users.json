@@ -1,0 +1,13 @@
+[
+    {
+        "login": "lvaroqui",
+        "nom": "Varoqui",
+        "prenom": "Luc",
+        "mail": "luc.varoqui@etu.utc.fr",
+        "type": "etu",
+        "is_adulte": true,
+        "is_cotisant": true,
+        "badge_uid": "123456AB",
+        "expiration_badge": "2020-02-16"
+    }
+]

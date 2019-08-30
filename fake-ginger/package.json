@@ -1,0 +1,13 @@
+{
+  "name": "fake-ginger",
+  "version": "1.0.0",
+  "description": "A small NodeJS server to fake Ginger API during development",
+  "main": "index.js",
+  "author": "Luc Varoqui",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}

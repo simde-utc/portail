@@ -132,6 +132,8 @@ return [
         'Validation' => App\Facades\Validation::class,
         'ModelResolver' => App\Facades\ModelResolver::class,
     ],
-
-    'ginger_key' => env('GINGER_KEY'),
+    'ginger' => [
+        'key' => env('GINGER_KEY'),
+        'url' => env('GINGER_URL', 'https://assos.utc.fr/ginger/v1/'),
+    ]
 ];

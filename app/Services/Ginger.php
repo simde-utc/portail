@@ -15,18 +15,19 @@ namespace App\Services;
 
 class Ginger
 {
-    protected const URL = 'https://assos.utc.fr/ginger/v1/';
+    protected $url;
+    protected $key;
 
     protected $user;
     protected $responseCode;
-    protected $key;
 
     /**
      * Create the class with the portal's default key.
      */
     public function __construct()
     {
-        $this->key = config('app.ginger_key');
+        $this->key = config('app.ginger.key');
+        $this->url = config('app.ginger.url');
     }
 
     /**
@@ -345,7 +346,7 @@ class Ginger
      */
     protected function call(string $method, string $route, array $params=[])
     {
-        $curl = \Curl::to(self::URL.$route.'?key='.$this->key)
+        $curl = \Curl::to($this->url.$route.'?key='.$this->key)
 	        ->withData($params)
 	        ->returnResponseObject();
 
