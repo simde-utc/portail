@@ -417,6 +417,10 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         try {
             return $this->details()->valueOf('isContributorBde');
         } catch (PortailException $e) {
+            if (config('app.debug', false) && config('app.admin.email') === $this->email) {
+                return true;
+            }
+
             return null;
         }
     }
