@@ -18,12 +18,12 @@ class CommentsTableSeeder extends Seeder
         $comments = [
             [
                 'body' => 'Vraiment une équipe de choc, gg.',
-                'created_by' => User::where('firstname', 'Samy')->first(),
+                'created_by' => User::where('firstname', config('app.admin.firstname'))->first(),
                 'owned_by' => Article::get()[0],
             ],
             [
                 'body' => 'Et j\'en suis fier #KIKOO JE SPAM',
-                'created_by' => User::where('firstname', 'Samy')->first(),
+                'created_by' => User::where('firstname', config('app.admin.firstname'))->first(),
                 'owned_by' => Article::get()[1],
             ],
             [

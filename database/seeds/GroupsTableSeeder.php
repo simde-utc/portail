@@ -16,7 +16,7 @@ class GroupsTableSeeder extends Seeder
     {
         $groups = [
             [
-                'user_id'       => User::where('firstname', 'Samy')->first()->id,
+                'user_id'       => User::where('firstname', config('app.admin.firstname'))->first()->id,
                 'name'          => 'LA13 Forever',
                 'icon'          => null,
                 'visibility_id' => Visibility::findByType('public')->id,
@@ -28,7 +28,7 @@ class GroupsTableSeeder extends Seeder
                 'visibility_id' => Visibility::findByType('private')->id,
             ],
             [
-                'user_id'       => User::where('firstname', 'Rémy')->first()->id,
+                'user_id'       => User::where('firstname', 'Alexandre')->first()->id,
                 'name'          => 'Mon groupe sur invitation <3',
                 'icon'          => null,
                 'visibility_id' => Visibility::findByType('private')->id,
