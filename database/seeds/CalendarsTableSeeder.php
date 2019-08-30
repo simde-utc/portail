@@ -24,8 +24,8 @@ class CalendarsTableSeeder extends Seeder
                 'description'	=> 'Calendrier personnel',
                 'color'			=> '#00FF00',
                 'visibility'	=> 'private',
-                'created_by'	=> User::where('firstname', 'Samy')->first(),
-                'owner'			=> User::where('firstname', 'Samy')->first(),
+                'created_by'	=> User::where('firstname', config('app.admin.firstname'))->first(),
+                'owner'			=> User::where('firstname', config('app.admin.firstname'))->first(),
                 'events'		=> [
                     'Petit pic des familles',
                     'Petite chose perso'
@@ -36,21 +36,10 @@ class CalendarsTableSeeder extends Seeder
                 'description'	=> 'Calendrier associatif',
                 'color'			=> '#0000FF',
                 'visibility'	=> 'private',
-                'created_by'	=> User::where('firstname', 'Samy')->first(),
-                'owner'			=> User::where('firstname', 'Samy')->first(),
+                'created_by'	=> User::where('firstname', config('app.admin.firstname'))->first(),
+                'owner'			=> User::where('firstname', config('app.admin.firstname'))->first(),
                 'events'		=> [
                     'Première réunion - Portail',
-                    'Seconde réunion - Portail',
-                ],
-            ],
-            [
-                'name'     		=> 'Assos',
-                'description'	=> 'Calendrier associatif',
-                'color'			=> '#0000FF',
-                'visibility'	=> 'private',
-                'created_by'	=> User::where('firstname', 'Rémy')->first(),
-                'owner'			=> User::where('firstname', 'Rémy')->first(),
-                'events'		=> [
                     'Seconde réunion - Portail',
                 ],
             ],
@@ -94,7 +83,7 @@ class CalendarsTableSeeder extends Seeder
                 'color'			=> '#FFC0CB',
                 'visibility'	=> 'cas',
                 'created_by'	=> Asso::where('login', 'simde')->first(),
-                'owner'			=> User::where('firstname', 'Samy')->first(),
+                'owner'			=> User::where('firstname', config('app.admin.firstname'))->first(),
                 'events'		=> [
                     'LA13'
                 ],
@@ -105,7 +94,7 @@ class CalendarsTableSeeder extends Seeder
                 'color'			=> '#FFC0CB',
                 'visibility'	=> 'cas',
                 'created_by'	=> Asso::where('login', 'simde')->first(),
-                'owner'			=> User::where('firstname', 'Rémy')->first(),
+                'owner'			=> User::where('firstname', 'Alexandre')->first(),
                 'events'		=> [
                     'MT90/91'
                 ],
@@ -132,7 +121,7 @@ class CalendarsTableSeeder extends Seeder
                     'JDA'
                 ],
                 'followers'		=> [
-                    User::where('firstname', 'Samy')->first(),
+                    User::where('firstname', config('app.admin.firstname'))->first(),
                     User::where('firstname', 'Natan')->first(),
                 ],
             ],
@@ -145,7 +134,7 @@ class CalendarsTableSeeder extends Seeder
                 'created_by'	=> Asso::where('login', 'bde')->first(),
                 'owner'			=> Asso::where('login', 'bde')->first(),
                 'followers'		=> [
-                    User::where('firstname', 'Samy')->first()
+                    User::where('firstname', config('app.admin.firstname'))->first()
                 ],
             ],
             [
@@ -156,8 +145,8 @@ class CalendarsTableSeeder extends Seeder
                 'created_by'	=> Asso::where('login', 'simde')->first(),
                 'owner'			=> Asso::where('login', 'simde')->first(),
                 'followers'		=> [
-                    User::where('firstname', 'Samy')->first(),
-                    User::where('firstname', 'Rémy')->first(),
+                    User::where('firstname', config('app.admin.firstname'))->first(),
+                    User::where('firstname', 'Alexandre')->first(),
                 ],
             ],
             [
@@ -173,8 +162,8 @@ class CalendarsTableSeeder extends Seeder
                     'Seconde réunion - Portail',
                 ],
                 'followers'		=> [
-                    User::where('firstname', 'Samy')->first(),
-                    User::where('firstname', 'Rémy')->first(),
+                    User::where('firstname', config('app.admin.firstname'))->first(),
+                    User::where('firstname', 'Alexandre')->first(),
                     User::where('firstname', 'Natan')->first(),
                     User::where('firstname', 'Romain')->first(),
                 ],
