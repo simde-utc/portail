@@ -25,7 +25,7 @@ class BookingsTableSeeder extends Seeder
                 'begin_at' => '2018-04-03 16:30',
                 'end_at' => '2018-04-03 18:30',
                 'location' => 'BDE-UTC (1er étage)',
-                'created_by' => User::where('firstname', 'Samy')->first(),
+                'created_by' => User::where('firstname', config('app.admin.firstname'))->first(),
                 'owned_by' => Asso::where('login', 'bde')->first(),
                 'validated_by' => Asso::where('login', 'bde')->first(),
                 'booking_type' => 'meeting',
