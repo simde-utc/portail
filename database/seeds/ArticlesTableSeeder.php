@@ -18,30 +18,30 @@ class ArticlesTableSeeder extends Seeder
     {
         $articles = [
             [
-                'title' => 'Samy a tout cassé !!!',
-                'content' => 'Le serveur des associations a été cassé par Samy ce jour. Paix à lui (le serveur pas Samy)',
+                'title' => 'Samy a créé le Portail !!!',
+                'content' => 'Le serveur des associations a été intiié par Samy ce jour. Paix sur lui (Samy, pas le serveur)',
                 'description' => 'Samy est encore un expert en informatique, n\'hésitez pas à voir pourquoi en lisant l\'article',
                 'created_by' => Asso::findByLogin('simde'),
                 'owner' => Asso::findByLogin('simde'),
                 'visibility_id' => 'public',
                 'actions' => [
                     [
-                        'user_id' => User::where('firstname', 'Samy')->first()->id,
+                        'user_id' => User::where('firstname', config('app.admin.firstname'))->first()->id,
                         'key' => 'liked',
                         'value' => false,
                     ],
                     [
-                        'user_id' => User::where('firstname', 'Samy')->first()->id,
+                        'user_id' => User::where('firstname', config('app.admin.firstname'))->first()->id,
                         'key' => 'seen',
                         'value' => 3,
                     ],
                     [
-                        'user_id' => User::where('firstname', 'Samy')->first()->id,
+                        'user_id' => User::where('firstname', config('app.admin.firstname'))->first()->id,
                         'key' => 'shared',
                         'value' => 1,
                     ],
                     [
-                        'user_id' => User::where('firstname', 'Rémy')->first()->id,
+                        'user_id' => User::where('firstname', 'Alexandre')->first()->id,
                         'key' => 'liked',
                         'value' => true,
                     ],
@@ -76,12 +76,12 @@ class ArticlesTableSeeder extends Seeder
                 'visibility_id' => 'contributorBde',
                 'actions' => [
                     [
-                        'user_id' => User::where('firstname', 'Rémy')->first()->id,
+                        'user_id' => User::where('firstname', 'Alexandre')->first()->id,
                         'key' => 'liked',
                         'value' => true,
                     ],
                     [
-                        'user_id' => User::where('firstname', 'Samy')->first()->id,
+                        'user_id' => User::where('firstname', config('app.admin.firstname'))->first()->id,
                         'key' => 'seen',
                         'value' => 2,
                     ],

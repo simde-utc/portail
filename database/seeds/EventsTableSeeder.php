@@ -25,8 +25,8 @@ class EventsTableSeeder extends Seeder
                 'begin_at'	=> '2018-04-01 16:30',
                 'end_at'	=> '2018-04-01 21:30',
                 'visibility' => 'private',
-                'created_by' => User::where('firstname', 'Samy')->first(),
-                'owner'		=> User::where('firstname', 'Samy')->first(),
+                'created_by' => User::where('firstname', config('app.admin.firstname'))->first(),
+                'owner'		=> User::where('firstname', config('app.admin.firstname'))->first(),
             ],
             [
                 'name'     	=> 'Petite chose perso',
@@ -34,8 +34,8 @@ class EventsTableSeeder extends Seeder
                 'begin_at'	=> '2018-03-05 16:30',
                 'end_at'	=> '2018-03-05 21:30',
                 'visibility' => 'private',
-                'created_by' => User::where('firstname', 'Samy')->first(),
-                'owner'		=> User::where('firstname', 'Samy')->first(),
+                'created_by' => User::where('firstname', config('app.admin.firstname'))->first(),
+                'owner'		=> User::where('firstname', config('app.admin.firstname'))->first(),
             ],
             [
                 'name'     	=> 'TD LA13',
@@ -67,7 +67,7 @@ class EventsTableSeeder extends Seeder
                 'begin_at'	=> '2018-04-03 16:30',
                 'end_at'	=> '2018-04-03 18:30',
                 'visibility' => 'private',
-                'created_by' => User::where('firstname', 'Samy')->first(),
+                'created_by' => User::where('firstname', config('app.admin.firstname'))->first(),
                 'owner'		=> Asso::where('login', 'simde')->first(),
                 'details'	=> [
                     'description' 	=> 'Réunion de présentation et de recrutement',
@@ -82,7 +82,7 @@ class EventsTableSeeder extends Seeder
                 'begin_at'	=> date('Y-m-d 16:30'),
                 'end_at'	=> date('Y-m-d 18:30'),
                 'visibility' => 'private',
-                'created_by' => User::where('firstname', 'Rémy')->first(),
+                'created_by' => User::where('firstname', 'Alexandre')->first(),
                 'owner'		=> Asso::where('login', 'simde')->first(),
                 'details'	=> [
                     'description' 	=> 'Réunion de préparation',
@@ -98,7 +98,7 @@ class EventsTableSeeder extends Seeder
                 'begin_at'	=> '2018-09-07',
                 'end_at'	=> '2018-09-07',
                 'full_day'	=> true,
-                'created_by' => User::where('firstname', 'Rémy')->first(),
+                'created_by' => User::where('firstname', 'Alexandre')->first(),
                 'owner'		=> Asso::where('login', 'bde')->first(),
                 'visibility' => 'public',
                 'details'	=> [
