@@ -51,8 +51,8 @@ class UserController extends Controller
      */
     public function __construct()
     {
-		$this->middleware('permission:user', ['except' => 'contributeBde']);
-        $this->middleware('permission:user-contributorBde', ['only' => 'contributeBde']);
+		$this->middleware('permission:user', ['except' => ['contributeBde']]);
+        $this->middleware('permission:user-contributeBde', ['only' => ['contributeBde']]);
     }
 
     /**
