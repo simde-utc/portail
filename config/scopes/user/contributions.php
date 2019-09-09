@@ -39,7 +39,7 @@ return [
             'description' => 'Créer des cotisations pour l\'utilisateur',
         ],
         'remove' => [
-            'description' => "Supprimer une ou plusieurs cotisations de l'utilisateur",
+            'description' => 'Supprimer une ou plusieurs cotisations de l\'utilisateur',
         ],
     ],
 ];
