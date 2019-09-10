@@ -32,10 +32,9 @@ class Contributions extends React.Component {
 
 	render() {
 		const { contributions, contributionsFetched } = this.props;
-		console.log(contributions);
 		return (
 			<div>
-				{contributions.map(contribution => {
+				{contributionsFetched && contributions.map(contribution => {
 					return (
 						<ContributionsCard
 							key={contribution.start}
