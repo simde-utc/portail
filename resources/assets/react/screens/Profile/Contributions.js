@@ -21,31 +21,33 @@ import actions from '../../redux/actions';
 	contributionsFetched: store.isFetched(['user', 'contributions']),
 }))
 class Contributions extends React.Component {
-
 	componentDidMount() {
 		const { dispatch, contributionsFetched, contributionsFetching } = this.props;
 
-    if(!contributionsFetched && !contributionsFetching){
-      dispatch(actions.user.contributions.all());
-    }
+		if (!contributionsFetched && !contributionsFetching) {
+			dispatch(actions.user.contributions.all());
+		}
 	}
 
 	render() {
 		const { contributions, contributionsFetched } = this.props;
 		return (
 			<div>
-				{contributionsFetched && contributions.map(contribution => {
-					return (
-						<ContributionsCard
-							key={contribution.start}
-							semester1={contribution.semesters[0].name}
-							semester2={contribution.semesters.length == 2 ? contribution.semesters[1].name : ''}
-							amount={contribution.amount}
-							start={moment(contribution.start, 'YYYY-MM-DD').format('Do MMMM YYYY')}
-							end={moment(contribution.end, 'YYYY-MM-DD').format('Do MMMM YYYY')}
-						/>
-					);
-				})}
+				{contributionsFetched &&
+					contributions.map(contribution => {
+						return (
+							<ContributionsCard
+								key={contribution.start}
+								semester1={contribution.semesters[0].name}
+								semester2={
+									contribution.semesters.length === 2 ? contribution.semesters[1].name : ''
+								}
+								amount={contribution.amount}
+								start={moment(contribution.start, 'YYYY-MM-DD').format('Do MMMM YYYY')}
+								end={moment(contribution.end, 'YYYY-MM-DD').format('Do MMMM YYYY')}
+							/>
+						);
+					})}
 			</div>
 		);
 	}
