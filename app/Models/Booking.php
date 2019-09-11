@@ -45,6 +45,36 @@ class Booking extends Model implements OwnableContract
         'room_id', 'type_id', 'event_id', 'description', 'owned_by', 'validated_by', 'type', 'event',
     ];
 
+    protected $selection = [
+        'paginate' => null,
+        'order' => [
+            'default' => 'latest',
+            'columns' => [
+                'date' => 'begin_at',
+            ],
+        ],
+        'month' => [
+            'columns' => [
+                'begin' => 'begin_at',
+                'end' => 'begin_at',
+            ],
+        ],
+        'week' => [
+            'columns' => [
+                'begin' => 'begin_at',
+                'end' => 'begin_at',
+            ],
+        ],
+        'day' => [
+            'columns' => [
+                'begin' => 'begin_at',
+                'end' => 'begin_at',
+            ],
+        ],
+        'deleted' => 'without',
+        'filter' => [],
+    ];
+
     /**
      * Launched at the model creation.
      *

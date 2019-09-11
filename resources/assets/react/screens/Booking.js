@@ -117,7 +117,6 @@ class BookingScreen extends React.Component {
 	onClickEvent(event, e){
 		console.log("onclick")
 		console.log(event)
-		console.log(this.getAllowedAssos())
 		const isAllowed = this.getAllowedAssos().find((element) => {
 			return element.id === event.calendar.owned_by.id
 		})
@@ -143,30 +142,31 @@ class BookingScreen extends React.Component {
 					</div>
 				</div>
 			)
-			modal.button.type = "danger"
-			modal.button.text = "Supprimer"
-			modal.button.disabled = !isAllowed
+			modal.button.style = {display : "none"}
+			// modal.button.type = "danger"
+			// modal.button.text = "Supprimer"
+			// modal.button.disabled = !isAllowed
+			// modal.button.onClick = isAllowed ? () => {
 			
-			modal.button.onClick = isAllowed ? () => {
-				const action = actions.rooms(event.calendar.id).bookings.remove(event.id);	
+			// 	const action = actions.rooms(event.calendar.id).bookings().remove();	
 				
-				action.payload
-					.then(({ data }) => {
-						NotificationManager.warning('Réservation supprimée avec succès', 'Suppression');
+			// 	action.payload
+			// 		.then(({ data }) => {
+			// 			NotificationManager.warning('Réservation supprimée avec succès', 'Suppression');
 
-						// On recharge le calendrier
-						this.setState({
-							reloadCalendar: data.room.calendar,
-						});
+			// 			// On recharge le calendrier
+			// 			this.setState({
+			// 				reloadCalendar: data.room.calendar,
+			// 			});
 
-						this.setState(({ modal }) => ({
-							modal: { ...modal, show: false },
-						}));
-					})
-					.catch(({ response: { data: { message } } }) => {
-						NotificationManager.error(message, 'Suppression');
-					});
-			} : null
+			// 			this.setState(({ modal }) => ({
+			// 				modal: { ...modal, show: false },
+			// 			}));
+			// 		})
+			// 		.catch(({ response: { data: { message } } }) => {
+			// 			NotificationManager.error(message, 'Suppression');
+			// 		});
+			// } : null
 
 			return prevState 
 		})
@@ -225,6 +225,7 @@ class BookingScreen extends React.Component {
 			modal.button.type = 'primary';
 			modal.button.text = 'Réserver';
 			modal.button.disabled = false
+			modal.button.style = null
 
 			modal.button.onClick = () => {
 				const { room_id, asso_id, type_id, name, begin_at, end_at } = this.state;
@@ -295,6 +296,7 @@ class BookingScreen extends React.Component {
 							color={modal.button.type}
 							onClick={modal.button.onClick}
 							disabled={modal.button.disabled}
+							style={modal.button.style}
 						>
 							{modal.button.text}
 						</Button>
