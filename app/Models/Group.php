@@ -35,10 +35,6 @@ class Group extends Model implements CanBeOwner, CanHaveCalendars, CanHaveEvents
         'name', 'user_id', 'icon', 'visibility_id',
     ];
 
-    protected $dates = [
-        'deleted_at',
-    ];
-
     protected $hidden = [
         'user_id', 'visibility_id',
     ];

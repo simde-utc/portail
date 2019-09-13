@@ -26,6 +26,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Model' => 'App\Policies\ModelPolicy',
     ];
 
+
     // It is important to be not deferred because otherwise scopes are not loaded.
     protected $defer = false;
 
