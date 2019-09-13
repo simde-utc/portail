@@ -17,9 +17,7 @@ const ContributionsCard = ({ start, end, semester1, semester2, amount }) => {
 	};
 	return (
 		<Card style={style}>
-			<CardHeader>
-				{semester1, semester2 === '' ? '' : ' - '+semester2}
-			</CardHeader>
+			<CardHeader>{(semester1, semester2 === '' ? '' : ' - ', semester2)}</CardHeader>
 			<CardBody>
 				<CardTitle className="mb-2 text-muted">{amount}€</CardTitle>
 				<CardText>
