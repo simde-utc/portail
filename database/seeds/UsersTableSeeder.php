@@ -16,21 +16,12 @@ class UsersTableSeeder extends Seeder
         $users = [
             [
                 'id'		=> '45617374-6572-2065-6767-7321202b5f2b',
-                'email'     => 'samy.nastuzzi@etu.utc.fr',
-                'firstname' => 'Samy',
-                'lastname'  => 'Nastuzzi',
+                'email'     => config('app.admin.email'),
+                'firstname' => config('app.admin.firstname'),
+                'lastname'  => config('app.admin.lastname'),
                 'role'		=> 'superadmin',
                 'assos'		=> [
                     'simde' => 'president',
-                ],
-            ],
-            [
-                'email'     => 'remy.huet@etu.utc.fr',
-                'firstname' => 'Rémy',
-                'lastname'  => 'Huet',
-                'role'		=> 'admin',
-                'assos'		=> [
-                    'simde' => 'developer',
                 ],
             ],
             [
