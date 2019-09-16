@@ -122,6 +122,7 @@ Route::group([], function () {
         'users/{user_id}/preferences' => 'User\PreferenceController',
         'users/{user_id}/assos' => 'User\AssoController',
         'users/{user_id}/services' => 'User\ServiceController',
+        'users/{user_id}/contributions' => 'User\ContributionController',
 
     /*
      * Routes `user` identical to `users/{Auth::id()}`.
@@ -134,6 +135,7 @@ Route::group([], function () {
         'user/services' => 'User\ServiceController',
         'user/articles/{article_id}/actions' => 'User\Article\ActionController',
         'user/notifications' => 'User\NotificationController',
+        'user/contributions' => 'User\ContributionController',
     ]);
 
     /*
