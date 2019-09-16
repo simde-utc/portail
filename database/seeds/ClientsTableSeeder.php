@@ -17,7 +17,7 @@ class ClientsTableSeeder extends Seeder
         $clients = [
             [
                 'id'            => '53616d79-206a-6520-7427-61696d652021',
-                'user_id'       => User::where('firstname', 'Samy')->first()->id,
+                'user_id'       => User::where('firstname', config('app.admin.firstname'))->first()->id,
                 'name'          => 'Portail dev',
                 'secret'        => 'password',
                 'personal_access_client'    => '0',
@@ -29,7 +29,7 @@ class ClientsTableSeeder extends Seeder
             ],
             [
                 'id'            => '44696575-2065-7374-2075-6e6971756521',
-                'user_id'       => User::where('firstname', 'Samy')->first()->id,
+                'user_id'       => User::where('firstname', config('app.admin.firstname'))->first()->id,
                 'name'          => 'Appli dev',
                 'secret'        => 'password',
                 'personal_access_client'    => '0',

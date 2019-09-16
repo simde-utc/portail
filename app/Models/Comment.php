@@ -28,10 +28,6 @@ class Comment extends Model implements CanBeOwner, OwnableContract, CanHaveComme
         'body', 'created_by_id', 'created_by_type', 'owned_by_id', 'owned_by_type',
     ];
 
-    protected $dates = [
-        'deleted_at'
-    ];
-
     protected $with = [
         'created_by', 'owned_by',
     ];

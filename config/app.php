@@ -133,5 +133,11 @@ return [
         'ModelResolver' => App\Facades\ModelResolver::class,
     ],
 
+    'admin' => [
+        'email' => env('ADMIN_EMAIL'),
+        'firstname' => env('ADMIN_FIRSTNAME'),
+        'lastname' => env('ADMIN_LASTNAME'),
+    ],
+
     'ginger_key' => env('GINGER_KEY'),
 ];
