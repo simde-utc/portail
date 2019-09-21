@@ -1,0 +1,10 @@
+.prettier*
+.eslint*
+.travis*
+.env.*
+.git*
+
+docker/*.Dockerfile
+docker-compose.yml
+LICENSE
+README.md

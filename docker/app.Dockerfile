@@ -1,5 +1,24 @@
+# WEBPACK BUILD (js)
+
+FROM node:lts AS webpack_build
+MAINTAINER Cesar Richard <cesar.richard2@gmail.com>
+
+WORKDIR /tmp
+
+COPY package*.json ./
+RUN npm install && npm install --global cross-env
+
+COPY . .
+RUN npm run dev \
+  && chmod -R 777 storage \
+  && rm -rf node_modules
+
+# APP (php)
+
 FROM php:7.2-fpm
 LABEL maintainer="Cesar Richard <cesar.richard2@gmail.com>"
+
+WORKDIR /var/www/html
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
@@ -7,7 +26,7 @@ RUN apt-get update && \
     gnupg \
     git \
     unzip \
-    mysql-client \
+    # mysql-client \
     libmagickwand-dev  \
     zlib1g-dev \
     libzip-dev \
@@ -33,12 +52,15 @@ RUN apt-get update && \
     && pecl channel-update pecl.php.net \
     && pecl install \
      imagick \
-     mcrypt
+     mcrypt \
+    && php -r "readfile('https://getcomposer.org/installer');" | php \
+    && mv composer.phar /usr/local/bin/composer
 
-COPY composer.json /var/www/html
-RUN php -r "readfile('https://getcomposer.org/installer');" | php \
-  && mv composer.phar /usr/local/bin/composer \
-  && composer install --no-autoloader --no-scripts
+COPY --from=webpack_build /tmp .
 
-COPY . /var/www/html
+RUN composer install --no-autoloader --no-scripts
+
 COPY docker/.env.docker .env
+COPY docker/setup.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["php-fpm"]

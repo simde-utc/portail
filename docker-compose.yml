@@ -1,34 +1,25 @@
 version: '3.7'
 services:
+
   # The Application
   app:
     build:
       context: ./
-      dockerfile: docker/app.dockerfile
+      dockerfile: docker/app.Dockerfile
+    image: simde_portal_app:latest # Required to get the generated public folder
     working_dir: /var/www/html
     depends_on:
       - database
-      - nodejs
-    volumes:
-      - ./:/var/www/html
     env_file:
       - docker/.env.docker
-  nodejs:
-    build:
-      context: ./
-      dockerfile: docker/node.dockerfile
-    working_dir: /var/www/html
-    volumes:
-      - ./:/var/www/html
-      - ./node_modules:/var/www/node_modules
+
   # The Web Server
   web:
-    image: nginx:latest
+    build:
+      context: ./
+      dockerfile: docker/nginx.Dockerfile
     ports:
       - 8000:80
-    volumes:
-      - .:/var/www/html
-      - ./docker/vhost.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
 
