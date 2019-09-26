@@ -51,7 +51,7 @@ class AssoMember extends Pivot
      */
     public function asso()
     {
-        return $this->belongsTo(ASso::class);
+        return $this->belongsTo(Asso::class);
     }
 
     /**

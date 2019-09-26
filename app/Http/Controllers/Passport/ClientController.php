@@ -13,6 +13,7 @@ namespace App\Http\Controllers\Passport;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Exceptions\PortailException;
 use App\Models\Client;
@@ -54,7 +55,7 @@ class ClientController extends Controller
             'user_id' => \Auth::id(),
             'asso_id' => $request->asso_id,
             'name' => $request->name,
-            'secret' => str_random(40),
+            'secret' => Str::random(40),
             'redirect' => $request->redirect,
             'personal_access_client' => false,
             'password_client' => false,

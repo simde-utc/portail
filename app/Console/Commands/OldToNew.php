@@ -1084,7 +1084,7 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     'created_by_type' => User::class,
                     'owned_by_id' => $asso->id,
                     'owned_by_type' => Asso::class,
-                    'validated_by_id' => ($validated_by->id ?? null),
+                    'validated_by_id' => (isset($validated_by) ? ($validated_by->id ?? null) : null),
                     'validated_by_type' => User::class,
                 ]);
 

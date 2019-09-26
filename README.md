@@ -10,6 +10,8 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
 
 ## Installation
 
+/!\ WARNING: The docker image is currently not working /!\
+
 - Check your PHP version (must be more than 7.1.3) :  `php -v`
 - Install [composer](https://getcomposer.org/download/)
 - Install `redis` and launch the service (necessary for cache/queue )
@@ -17,13 +19,15 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
 - Copy `.env.example` to `.env` :
     + Specify current intallation status prod/dev and debug or not
     + Specify database connection crendentials
+    + Specify CAS url (and Ginger key if you have one)
+    + Specify your admin credentials
     + Specify redis credentials (default: no password)
     + Optional: Specify email and notifications crendentials (for queues)
 - Create the database: `portail`
 - Install packages with `composer install` (Make sure you are at the project's root folder)
 
 - App installation and server preparation: `php artisan portail:install`
-- OU Lancer les commances suivantes :
+- OR run the following commands :
     + Clear cache : `php artisan portail:clear`
     + Key generation : `php artisan key:generate`
     + Tables creation and seeding : `php artisan migrate:fresh --seed`
@@ -44,7 +48,7 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
 
 - Run `php artisan portail:update`
 - Run `npm run prod` or `npm run watch`
-- 
+-
 ## Developement
 
 ### Run in dev mode
@@ -52,6 +56,15 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
 - Run `npm install` (long)
 - Run `npm run watch`
 - Enjoy
+
+### Credentials:
+
+- Admin user id: `45617374-6572-2065-6767-7321202b5f2b`
+- Oauth client:
+	+ id: `53616d79-206a-6520-7427-61696d652021`
+	+ secret: `password`
+	+ redirect: `http://localhost/`
+	+ to use all scopes: scopes: `*`
 
 ### Developing
 

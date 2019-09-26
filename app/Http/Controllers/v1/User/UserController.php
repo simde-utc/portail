@@ -188,12 +188,7 @@ class UserController extends Controller
                     }
 
                     $method = 'is'.ucfirst($type);
-
-                    if (method_exists($user, $method) && $user->$method()) {
-                        $types[$type] = true;
-                    } else {
-                        $types[$type] = false;
-                    }
+                    $types[$type] = (method_exists($user, $method) && $user->$method());
                 } catch (PortailException $e) {
                     abort(400, 'Le type '.$type.' n\'existe pas !');
                 }
