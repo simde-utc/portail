@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Allow execution from anywhere
+cd "$(dirname $(dirname $(readlink -f $0)))"
+
+# Prepare context (set user id, etc.)
+. docker/prepare
+
+# Execute the command
+echo docker-compose $@
+docker-compose $@

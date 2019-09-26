@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Avoid a "Couldn't find env file" error with docker-compose if ".env" not found
+if [ ! -r '.env' ]; then
+  if [ -r 'docker/.env.docker' ]; then
+    echo "Creating '.env' from 'docker/.env.docker'." >&2
+    cp docker/.env.docker .env
+  elif [ -r '.env.example' ]; then
+    echo "Creating '.env' from '.env.example'." >&2
+    cp .env.example .env
+  else
+    echo "Creating an empty '.env'." >&2
+    touch .env
+  fi
+  echo "You should customize this file to make all features working." >&2
+fi
+
+# Set the current user ids to avoid permissions problems
+export USER_ID=$(id -u)
+export GROUP_ID=$(id -g)
