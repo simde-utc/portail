@@ -10,7 +10,49 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.6](h
 
 ## Installation
 
-/!\ WARNING: The docker image is currently not working /!\
+<!-- /!\ WARNING: The docker image is currently not working /!\ -->
+
+### With Docker (recommended)
+
+The following 3 commands will download the project, move to the new folder and install and run all the services :
+
+```bash
+git clone https://github.com/simde-utc/portail.git # ssh version : git clone git@github.com:simde-utc/portail.git
+cd portail
+docker/run # or "docker/run -d" to run in background
+```
+
+4 services will then be run :
+ * `back`  : the PHP server with Laravel
+ * `front` : NodeJS in watching mode for building the front
+ * `proxy` : the Nginx reverse proxy to serve the API as well as statics assets
+ * `database` : the MySQL server used by the `back` service
+
+The following list describe the scripts that can be used to easly manage thoses services with Docker (assume your terminal is in the root folder of the project) :
+ * `docker/compose` : same command as `docker-compose` but with some earlier configuration (set the user id for instance)
+ * `docker/run`     : same as `docker/compose up`. Add `-d` to run the run the command in the background.
+ * `docker/execute` : execute a command in the given service. If the command is missing, run a bash shell. Syntax : `docker/execute [SERVICE_NAME] <COMMAND>`. Shortcut version are also available :
+   * `docker/back` : same as `docker/execute back`.
+   * `docker/front` : same as `docker/execute front`.
+   * `docker/proxy` : same as `docker/execute proxy`.
+   * `docker/database` : same as `docker/execute database`.
+
+The database will not be automatically created, so you don't forget to run the following commands *after the `back` service is ready* :
+```bash
+docker/back # Enter a bash shell running in the 'back' container
+php artisan portail:clear # Clear cache
+php artisan key:generate # Key generation
+php artisan migrate:fresh --seed # Tables creation and seeding
+exit # It's done. Exit the container
+```
+
+This configuration does not require manual update to get changes applied, expect for the database.
+You have to run this command to update the database :
+```bash
+docker/back php artisan portail:update
+```
+
+### Without Docker (much more complicated)
 
 - Check your PHP version (must be more than 7.1.3) :  `php -v`
 - Install [composer](https://getcomposer.org/download/)
