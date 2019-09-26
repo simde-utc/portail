@@ -13,7 +13,7 @@ fi
 if [[ ! -d './vendor' || ! -r './vendor/autoload.php' ]]
 then # FIXME : Let the user manually install dependencies, even if we know it will not run correctly ?
   cat <<EOM
-NOTE : Dependencies not fully installed ('vendor/autoload.php' missing), running `composer install --no-scripts`.
+NOTE : Dependencies not fully installed ('vendor/autoload.php' missing), running 'composer install --no-scripts'.
 If you just cloned this project, make sure to run commands indicated in the README file.
 EOM
   composer install --no-scripts

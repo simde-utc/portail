@@ -1,5 +1,5 @@
 FROM node:lts
-MAINTAINER Cesar Richard <cesar.richard2@gmail.com>
+LABEL maintainer="Cesar Richard <cesar.richard2@gmail.com>"
 
 RUN npm install --global cross-env
 

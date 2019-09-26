@@ -1,5 +1,5 @@
 FROM php:7.2-fpm
-MAINTAINER Cesar Richard <cesar.richard2@gmail.com>
+LABEL maintainer="Cesar Richard <cesar.richard2@gmail.com>"
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
@@ -19,6 +19,8 @@ RUN apt-get update && \
     libxml2 \
     libxml2-dev \
     g++ \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
     && docker-php-source extract \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure zip --with-libzip \
