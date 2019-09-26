@@ -1,24 +1,5 @@
-# WEBPACK BUILD (js)
-
-FROM node:lts AS webpack_build
-MAINTAINER Cesar Richard <cesar.richard2@gmail.com>
-
-WORKDIR /tmp
-
-COPY package*.json ./
-RUN npm install && npm install --global cross-env
-
-COPY . .
-RUN npm run dev \
-  && chmod -R 777 storage \
-  && rm -rf node_modules
-
-# APP (php)
-
 FROM php:7.2-fpm
-LABEL maintainer="Cesar Richard <cesar.richard2@gmail.com>"
-
-WORKDIR /var/www/html
+MAINTAINER Cesar Richard <cesar.richard2@gmail.com>
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
@@ -26,7 +7,6 @@ RUN apt-get update && \
     gnupg \
     git \
     unzip \
-    # mysql-client \
     libmagickwand-dev  \
     zlib1g-dev \
     libzip-dev \
@@ -56,11 +36,25 @@ RUN apt-get update && \
     && php -r "readfile('https://getcomposer.org/installer');" | php \
     && mv composer.phar /usr/local/bin/composer
 
-COPY --from=webpack_build /tmp .
+# Run as non root for safety and to avoid permissions problems
 
-RUN composer install --no-autoloader --no-scripts
+ARG USER_ID
+ARG GROUP_ID
 
-COPY docker/.env.docker .env
-COPY docker/setup.sh /entrypoint.sh
+RUN groupadd -g ${GROUP_ID} developper &&\
+    useradd -l -u ${USER_ID} -g developper developper &&\
+    mkdir -p /home/developper && chown developper:developper /home/developper &&\
+    mkdir /var/www/html/vendor && chown developper:developper /var/www/html/vendor
+
+ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=developper --with-fpm-group=developper
+
+USER developper
+
+WORKDIR /var/www/html
+
+# Let the user install dependencies
+
+COPY entrypoint.sh /entrypoint.sh
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
