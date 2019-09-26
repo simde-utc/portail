@@ -38,13 +38,10 @@ class Contributions extends React.Component {
 						return (
 							<ContributionsCard
 								key={contribution.start}
-								semester1={contribution.semesters[0].name}
-								semester2={
-									contribution.semesters.length === 2 ? contribution.semesters[1].name : ''
-								}
+								semesters={contribution.semesters}
 								amount={contribution.amount}
-								start={moment(contribution.start, 'YYYY-MM-DD').format('Do MMMM YYYY')}
-								end={moment(contribution.end, 'YYYY-MM-DD').format('Do MMMM YYYY')}
+								start={moment(contribution.start, 'YYYY-MM-DD')}
+								end={moment(contribution.end, 'YYYY-MM-DD')}
 							/>
 						);
 					})}

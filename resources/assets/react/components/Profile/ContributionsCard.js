@@ -9,7 +9,7 @@
 import React from 'react';
 import { Card, CardBody, CardHeader, CardText, CardTitle } from 'reactstrap';
 
-const ContributionsCard = ({ start, end, semester1, semester2, amount }) => {
+const ContributionsCard = ({ start, end, semesters, amount }) => {
 	const style = {
 		display: 'inline-block',
 		textAlign: 'center',
@@ -17,11 +17,11 @@ const ContributionsCard = ({ start, end, semester1, semester2, amount }) => {
 	};
 	return (
 		<Card style={style}>
-			<CardHeader>{(semester1, semester2 === '' ? '' : ' - ', semester2)}</CardHeader>
+			<CardHeader>{semesters.map(semester => `${semester.name} `)}</CardHeader>
 			<CardBody>
 				<CardTitle className="mb-2 text-muted">{amount}€</CardTitle>
 				<CardText>
-					du {start} au {end}
+					du {start.format('Do MMMM YYYY')} au {end.format('Do MMMM YYYY')}
 				</CardText>
 			</CardBody>
 		</Card>
