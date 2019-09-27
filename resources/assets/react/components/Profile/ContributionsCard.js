@@ -17,7 +17,13 @@ const ContributionsCard = ({ start, end, semesters, amount }) => {
 	};
 	return (
 		<Card style={style}>
-			<CardHeader>{semesters.map(semester => `${semester.name} `)}</CardHeader>
+			<CardHeader>
+				{semesters.map((semester, index) => {
+					let result = semester.name;
+					result += index + 1 === semesters.length ? '' : ' - ';
+					return `${result}`;
+				})}
+			</CardHeader>
 			<CardBody>
 				<CardTitle className="mb-2 text-muted">{amount}€</CardTitle>
 				<CardText>
