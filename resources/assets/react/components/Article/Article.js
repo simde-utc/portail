@@ -37,11 +37,7 @@ class Article extends React.Component {
 		const articleBody = (
 			<div style={{ whiteSpace: 'pre-line' }}>
 				<ReactMarkdown
-					source={
-						expandPossible
-							? `${article.description}...&nbsp;`
-							: article.content
-					}
+					source={expandPossible ? `${article.description}...&nbsp;` : article.content}
 					className="articleContent"
 				/>
 				{expandPossible && (
