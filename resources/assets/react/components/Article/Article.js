@@ -16,8 +16,6 @@ import Img from '../Image';
 
 import { getTime } from '../../utils';
 
-const MAX_CONTENT_LENGTH = 80;
-
 class Article extends React.Component {
 	constructor(props) {
 		super(props);
@@ -34,16 +32,12 @@ class Article extends React.Component {
 	render() {
 		const { article } = this.props;
 		const { expanded } = this.state;
-		const expandPossible = article.content.length > MAX_CONTENT_LENGTH && !expanded;
+		const expandPossible = article.description !== article.content && !expanded;
 
 		const articleBody = (
 			<div style={{ whiteSpace: 'pre-line' }}>
 				<ReactMarkdown
-					source={
-						expandPossible
-							? `${article.content.substring(0, MAX_CONTENT_LENGTH)}...&nbsp;`
-							: article.content
-					}
+					source={expandPossible ? `${article.description}...&nbsp;` : article.content}
 					className="articleContent"
 				/>
 				{expandPossible && (
