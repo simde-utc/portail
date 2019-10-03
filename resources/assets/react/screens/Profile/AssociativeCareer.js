@@ -84,6 +84,7 @@ class AssociativeCareerScreen extends React.Component {
 											additionalInfo={role ? role.name : ''}
 											image={asso.image}
 											login={asso.parent ? asso.parent.login : asso.login}
+											deleted={asso.deleted_at != null}
 										/>
 									</NavLink>
 								);

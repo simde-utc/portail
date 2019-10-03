@@ -6,7 +6,7 @@
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
- * @author Corentin Mercier <corentin@cmercier.fr> 
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -72,8 +72,8 @@ class AssoController extends Controller
     {
         $assos = Asso::with('parent');
 
-        // If GET parameter `deleted` exists and is true, we add soft deleted associations 
-        if($request->input('deleted') != null && $request->input('deleted') === 'true'){
+        // If GET parameter `deleted` exists and is true, we add soft deleted associations.
+        if ($request->input('deleted') != null && $request->input('deleted') === 'true') {
             $assos = $assos->withTrashed('deleted_at');
         }
 
