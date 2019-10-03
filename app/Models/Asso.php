@@ -70,7 +70,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
                 'name' => 'shortname',
             ],
         ],
-        'deleted' => 'without',
         'filter' => [],
         'stage' => null,
         'stages' => null,
