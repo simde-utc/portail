@@ -27,11 +27,9 @@ import AssoCard from '../components/AssoCard';
 	fetched: store.isFetched('assos'),
 }))
 class AssoListScreen extends React.Component {
-
 	// Prevents users from being redirected to a dead assos page.
 	static handleAssoCardClic(event, deleted_at) {
-		if (deleted_at != null)
-			event.preventDefault();
+		if (deleted_at != null) event.preventDefault();
 	}
 
 	constructor(props) {
