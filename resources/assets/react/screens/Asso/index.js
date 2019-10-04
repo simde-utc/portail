@@ -98,7 +98,7 @@ class AssoScreen extends React.Component {
 	}
 
 	loadAssosData(login) {
-		// On doit d'abord récupérer l'asso id:
+		// First, we need to find the assos id.
 		const { dispatch } = this.props;
 		const action = actions.assos.find(login);
 

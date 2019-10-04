@@ -27,6 +27,13 @@ import AssoCard from '../components/AssoCard';
 	fetched: store.isFetched('assos'),
 }))
 class AssoListScreen extends React.Component {
+
+	// Prevents users from being redirected to a dead assos page.
+	static handleAssoCardClic(event, deleted_at) {
+		if (deleted_at != null)
+			event.preventDefault();
+	}
+
 	constructor(props) {
 		super(props);
 
@@ -38,8 +45,6 @@ class AssoListScreen extends React.Component {
 
 	componentDidMount() {
 		const { dispatch } = this.props;
-
-		console.log('blob');
 
 		dispatch(
 			actions.assos.all({
@@ -82,7 +87,11 @@ class AssoListScreen extends React.Component {
 			<div className="assosContainer">
 				{filteredList.map(asso => {
 					return (
-						<NavLink key={asso.id} to={`assos/${asso.login}`}>
+						<NavLink
+							key={asso.id}
+							to={`assos/${asso.login}`}
+							onClick={event => AssoListScreen.handleAssoCardClic(event, asso.deleted_at)}
+						>
 							<AssoCard
 								onClick={() => window.history.push(`assos/${asso.login}`)}
 								key={asso.id}
