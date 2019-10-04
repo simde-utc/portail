@@ -27,13 +27,7 @@ const AssoCard = ({ image, login, name, shortname, additionalInfo, deleted }) =>
 			</div>
 			<div className="name-container">
 				<div className="asso-shortname">
-					{deleted ? (
-						<div>
-							<del>{shortname}</del>
-						</div>
-					) : (
-						<div>{shortname}</div>
-					)}
+					<div style={deleted ? { textDecorationLine: 'line-through' } : {}}>{shortname}</div>
 				</div>
 				{additionalInfo && <p className="w-100 text-center">{additionalInfo}</p>}
 			</div>
