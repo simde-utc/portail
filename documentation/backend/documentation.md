@@ -3,6 +3,15 @@
 An automatic API documentation was implemented with the [laravel-apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator) package.
 The documentation is not to be tracked by git and must be generated each time.
 
+## Table of content
+
+- [API documentation](#api-documentation)
+  - [Table of content](#table-of-content)
+  - [Access the documentation](#access-the-documentation)
+  - [Documenter le code](#documenter-le-code)
+  - [Generate documentation](#generate-documentation)
+  - [Update documentation](#update-documentation)
+
 ## Access the documentation
 
 The documentation is available in the folder `/public/docs/` and can be accessed directly from a browser with the adress: [https://assos.utc.fr/docs/](https://assos.utc.fr/docs/).

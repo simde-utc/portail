@@ -1,54 +1,35 @@
 # Documentation
 
-- [Api documentation](api/)
-    - [User](api/user/)
-    - [Client](api/client/)
-- [Backend documentation](backend/)
-    - [Installation](backend/installation.md)
-    - [Authentication](backend/oauth.md)
-    - [Models](backend/models.md)
-    - [Controllers](backend/controllers.md)
-    - [Traits](backend/traits.md)
-    - [Services](backend/services.md)
-    - [Routes](backend/routes.md)
-    - [How to comment](backend/comment.md)
-- [Frontend documentation](frontend/)
-    - [Installation](frontend/installation.md)
-- [Metadocumentation](#métadocumentation)
+## Table of content
+- [Documentation](#documentation)
+  - [Table of content](#table-of-content)
+  - [Useful links](#useful-links)
+- [Metadocumentation](#metadocumentation)
+  - [Shape](#shape)
+  - [Content](#content)
+    - [Api's documentation](#apis-documentation)
+    - [Backend documentation](#backend-documentation)
 
 ## Useful links
 
 - Associations portal frontend : https://github.com/simde-utc/portail-web
 - Laravel 5.6 documentation : https://laravel.com/docs/5.6
+- This rendered documentation : https://simde.gitlab.utc.fr/documentation
 
 # Metadocumentation
 
 *How to contribute to the documentation ?*
 
-***NB :*** *Make sure you have read the guide in order to comment : [How to comment](backend/comment.md)*
+***NB :*** *Make sure you have read the guide in order to comment : [How to comment](portail/dev/backend/comment.md)*
 
 ## Shape
 
 Organisation in two parts : one **documentation to use the api** and another **documentation about the api's code and architecture** (which we will call *backend*).
 
-Each folder has its `readme.md` where the *table of contents* is located and needs to be updated. This table of contents goes to à 2 depth :
+Each folder has its `_sidebar.md` where the *table of contents* is located and needs to be updated. You have to prefix every link by `portail/dev/`.
 
-**Correct :** 
+Each file has its *Table Of Contents* which must be up to date.
 
-```
-- [Link to folder]
-    - [Link to son folder]
-    - [Link to son folder]
-```
-
-**Incorrect :**
-
-```
-- [Link to folder]
-    - [Link to son folder]
-        - [Link to grandson folder]
-    - [Link to son folder]
-```
 
 ## Content
 
