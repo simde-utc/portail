@@ -5,7 +5,18 @@ All Redux's implementation is done in the `redux/` folder.
 
 For more information on Redux, [have a look at this playlist](https://www.youtube.com/watch?v=1w-oQ-i1XB8&index=15&list=PLoYCgNOIyGABj2GQSlDRjgvXtqfDxKm5b).
 
-
+## Table of content
+- [Redux](#redux)
+	- [Table of content](#table-of-content)
+	- [The 3 parts of Redux](#the-3-parts-of-redux)
+		- [Action types](#action-types)
+		- [Actions](#actions)
+		- [Reducers](#reducers)
+	- [CRUD creaters](#crud-creaters)
+		- [Action types creators](#action-types-creators)
+		- [Creater of actions](#creater-of-actions)
+		- [Creator of reducer](#creator-of-reducer)
+	- [CRUD helpers use example](#crud-helpers-use-example)
 
 ## The 3 parts of Redux
 
