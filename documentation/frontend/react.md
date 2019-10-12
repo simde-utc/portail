@@ -3,6 +3,11 @@
 The portal's frontend is a Single Page Application (SPA) developed with React.
 All files can be found in `resources/assets/react/`.
 
+## Table of content
+- [React](#react)
+  - [Table of content](#table-of-content)
+  - [Architecture](#architecture)
+  - [Redux](#redux)
 
 ## Architecture
 

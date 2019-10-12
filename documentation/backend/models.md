@@ -5,6 +5,15 @@ They are data models, with wich it is possible to interract trough Eloquent.
 Namespace : `\App\Models\...` <br>
 Folder :   `app/Models`
 
+## Table of content
+
+- [Models](#models)
+  - [Table of content](#table-of-content)
+  - [User](#user)
+  - [UserPreferences](#userpreferences)
+  - [AuthCas](#authcas)
+  - [AuthPassword](#authpassword)
+
 ## User
 ```
 id: int() primary key
