@@ -1,8 +1,14 @@
 # OAuth2 connection
 
-- [Introduction](#introduction)
-- [Protocol](#protocol)
-- [Usage](#Usage)
+## Table of content
+- [OAuth2 connection](#oauth2-connection)
+  - [Table of content](#table-of-content)
+  - [Introduction](#introduction)
+  - [Protocol](#protocol)
+  - [Usage](#usage)
+    - [Under Insomnia or Postman](#under-insomnia-or-postman)
+    - [With code](#with-code)
+      - [Example with NodeJS with the oauth package](#example-with-nodejs-with-the-oauth-package)
 
 
 ## Introduction

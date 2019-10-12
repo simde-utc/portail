@@ -59,16 +59,16 @@ class Install extends Command
         $bar = $this->output->createProgressBar(9);
         $bar->advance();
 
-        $this->info(' [Portail Install] Préparation');
-        $this->info(' [Portail Install] Préparation - Portail');
+        $this->info(' [Portail Install] Preparation');
+        $this->info(' [Portail Install] Preparation - Portail');
         $subBar = $this->output->createProgressBar(14);
         $subBar->advance();
         $editEnv = true;
 
         if (file_exists('.env')) {
-            $this->info(' /!\ Le fichier .env existe déjà /!\\ ');
+            $this->info(' /!\ A .env file already exists /!\\ ');
 
-            if ($this->confirm('Le remplacer (ancienne version déplacée en .env.last) ?')) {
+            if ($this->confirm('Do you want to replace it (old version will be placed in .env.last ?')) {
                 shell_exec('cp .env .env.last');
             } else {
                 $editEnv = false;
@@ -84,32 +84,32 @@ class Install extends Command
         $bar->advance();
 
         // Installation.
-        $this->info(' [Portail Install] Installation des dépendances Composer');
+        $this->info(' [Portail Install] Composer packages install');
         shell_exec('composer install');
         $bar->advance();
 
         // Configuration.
-        $this->info(' [Portail Install] Définition des clés');
+        $this->info(' [Portail Install] Keys generation');
         $this->call('key:generate');
         $this->call('passport:keys');
         $bar->advance();
 
-        $this->info(' [Portail Install] Installation des dépendances NodeJS');
+        $this->info(' [Portail Install] NodeJS packages install');
         shell_exec('npm install');
         shell_exec('npm run dev');
         $bar->advance();
 
         $this->info(' [Portail Install] Migration');
-        if ($this->confirm('Supprimer la base de données ?')) {
+        if ($this->confirm('Clear database ?')) {
             $this->call('migrate:fresh');
         } else {
             $this->call('migrate');
         }
 
-        if ($this->confirm('Remplir la base de données ?')) {
+        if ($this->confirm('Seed database ?')) {
             $this->call("db:seed");
 
-            if (config('app.env') === 'production' && $this->confirm('Ajouter les données de l\'ancien Portail ?')) {
+            if (config('app.env') === 'production' && $this->confirm('Add old portal\'s old data ?')) {
                 $this->call("portail:old-to-new");
             }
         }
@@ -117,18 +117,18 @@ class Install extends Command
         $bar->advance();
 
         // Cache clear.
-        $this->info(' [Portail Install] Nettoyage');
+        $this->info(' [Portail Install] Cleaning');
         $this->call('portail:clear');
         $bar->advance();
 
         // Optimization.
-        $this->info(' [Portail Install] Optimisation');
+        $this->info(' [Portail Install] Optimizing');
         $this->call('portail:optimize');
         $bar->advance();
 
         // End.
         $bar->finish();
-        $this->info(' [Portail Install] Installation finie !');
+        $this->info(' [Portail Install] Installation done !');
     }
 
     /**
@@ -164,7 +164,7 @@ class Install extends Command
         $this->changeEnv('GINGER_KEY', $value);
         $subBar->advance();
 
-        $this->info(' [Portail Install] Préparation - Base de données');
+        $this->info(' [Portail Install] Preparation - Database');
         $subBar->advance();
 
         $value = $this->choice('Type ?', ['mysql', 'pgsql', 'sqlite'], 'mysql');
