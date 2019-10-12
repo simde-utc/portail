@@ -42,7 +42,7 @@ class App extends BaseAuth
             'user_id' => $user_id,
             'app_id' => $info['app_id'],
             'password' => Hash::make($info['password']),
-            'key' => Str::random()(64)
+            'key' => Str::random(64)
         ]);
     }
 }
