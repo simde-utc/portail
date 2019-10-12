@@ -20,7 +20,7 @@ RUN apt-get update && \
     libxml2-dev \
     g++ \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
     && docker-php-source extract \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure zip --with-libzip \
