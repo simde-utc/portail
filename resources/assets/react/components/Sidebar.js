@@ -180,7 +180,7 @@ class Sidebar extends React.Component {
 						{isAuthenticated && services.length > 0 && (
 							<div className="sidebar-group">
 								<h6 className="sidebar-header d-hover-zone">
-									MES SERVICES{' '}
+									MES SERVICES FAVORIS{' '}
 									<NavLink
 										className="float-right d-hover fas fa-cog"
 										style={{ display: 'none' }}
