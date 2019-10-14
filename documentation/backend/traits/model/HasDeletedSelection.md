@@ -1,0 +1,2 @@
+# HasDeletedSelection.md
+ TO DO

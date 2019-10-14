@@ -5,3 +5,5 @@
 - [Api documentation](portail/dev/api/)
 - [Backend documentation](portail/dev/backend/)
 - [Frontend documentation](portail/dev/frontend/)
+  - [React](portail/dev/frontend/react.md)
+  - [Redux](portail/dev/frontend/redux.md)

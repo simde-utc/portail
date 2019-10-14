@@ -8,6 +8,8 @@ PRs must be reviewed by at least one SiMDE developer, except for minor fixes wit
 
 You can join the SiMDE association. We have a [slack](https://simde.slack.com) and we organise meetings during which devs can work together and explain the code. We will be very glad to answer your questions!
 
+Don't forget to update this documentation. (Read [Metadocumentation](portail/dev/#metadocumentation))
+
 ## Table of content
 - [How to contribute](#how-to-contribute)
   - [Table of content](#table-of-content)

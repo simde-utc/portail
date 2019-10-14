@@ -5,6 +5,7 @@
 - [Api documentation](portail/dev/api/)
     - [OAuth2 connection](portail/dev/api/oauth2.md)
     - [User](portail/dev/api/user/)
+      - [Groups](portail/dev/api/user/groups.md)
     - [Client](portail/dev/api/client/)
 - [Backend documentation](portail/dev/backend/)
 - [Frontend documentation](portail/dev/frontend/)
