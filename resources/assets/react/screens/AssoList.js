@@ -27,11 +27,6 @@ import AssoCard from '../components/AssoCard';
 	fetched: store.isFetched('assos'),
 }))
 class AssoListScreen extends React.Component {
-	// Prevents users from being redirected to a dead assos page.
-	static handleAssoCardClic(event, deleted_at) {
-		if (deleted_at != null) event.preventDefault();
-	}
-
 	constructor(props) {
 		super(props);
 
@@ -47,7 +42,7 @@ class AssoListScreen extends React.Component {
 		dispatch(
 			actions.assos.all({
 				order: 'a-z',
-				deleted: true,
+				cemetery: true,
 			})
 		);
 
@@ -68,16 +63,16 @@ class AssoListScreen extends React.Component {
 				.join('.*')
 		);
 
-		const filteredList = assos.filter(({ shortname, name, deleted_at }) => {
+		const filteredList = assos.filter(({ shortname, name, in_cemetery_at }) => {
 			if (!assosCemetaryActive) {
 				return (
 					(regex.test(shortname.toLowerCase()) || regex.test(name.toLowerCase())) &&
-					deleted_at === null
+					in_cemetery_at === null
 				);
 			}
 			return (
 				(regex.test(shortname.toLowerCase()) || regex.test(name.toLowerCase())) &&
-				deleted_at != null
+				in_cemetery_at != null
 			);
 		});
 
@@ -85,11 +80,7 @@ class AssoListScreen extends React.Component {
 			<div className="assosContainer">
 				{filteredList.map(asso => {
 					return (
-						<NavLink
-							key={asso.id}
-							to={`assos/${asso.login}`}
-							onClick={event => AssoListScreen.handleAssoCardClic(event, asso.deleted_at)}
-						>
+						<NavLink key={asso.id} to={`assos/${asso.login}`}>
 							<AssoCard
 								onClick={() => window.history.push(`assos/${asso.login}`)}
 								key={asso.id}
@@ -97,7 +88,7 @@ class AssoListScreen extends React.Component {
 								shortname={asso.shortname}
 								image={asso.image}
 								login={asso.parent ? asso.parent.login : asso.login}
-								deleted={asso.deleted_at != null}
+								deleted={asso.in_cemetery_at != null}
 							/>
 						</NavLink>
 					);

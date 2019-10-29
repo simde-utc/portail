@@ -23,11 +23,6 @@ import actions from '../../redux/actions';
 	rolesFetched: store.isFetched('roles'),
 }))
 class AssociativeCareerScreen extends React.Component {
-	// Prevents users from being redirected to a dead assos page.
-	static handleAssoCardClic(event, deleted_at) {
-		if (deleted_at != null) event.preventDefault();
-	}
-
 	constructor(props) {
 		super(props);
 
@@ -49,7 +44,7 @@ class AssociativeCareerScreen extends React.Component {
 		semesters.forEach(semester => {
 			if (associativeSemesters[semester.id] === undefined) {
 				actions.user.assos
-					.all({ deleted: 'true', semester: semester.id })
+					.all({ cemetery: true, semester: semester.id })
 					.payload.then(({ data }) => {
 						if (data.length > 0) {
 							this.addNewAssociativeSemester(semester.id, data);
@@ -83,13 +78,7 @@ class AssociativeCareerScreen extends React.Component {
 								const role = roles.find(role => role.id === asso.pivot.role_id);
 
 								return (
-									<NavLink
-										key={asso.id + semester.id}
-										to={`/assos/${asso.login}`}
-										onClick={event =>
-											AssociativeCareerScreen.handleAssoCardClic(event, asso.deleted_at)
-										}
-									>
+									<NavLink key={asso.id + semester.id} to={`/assos/${asso.login}`}>
 										<AssoCard
 											key={asso.id + semester.id}
 											name={asso.name}
@@ -97,7 +86,7 @@ class AssociativeCareerScreen extends React.Component {
 											additionalInfo={role ? role.name : ''}
 											image={asso.image}
 											login={asso.parent ? asso.parent.login : asso.login}
-											deleted={asso.deleted_at != null}
+											deleted={asso.in_cemetery_at != null}
 										/>
 									</NavLink>
 								);

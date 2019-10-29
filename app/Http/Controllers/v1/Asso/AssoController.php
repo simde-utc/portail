@@ -72,9 +72,9 @@ class AssoController extends Controller
     {
         $assos = Asso::with('parent');
 
-        // If GET parameter `deleted` exists and is true, we add soft deleted associations.
-        if ($request->input('deleted') != null && $request->input('deleted') === 'true') {
-            $assos = $assos->withTrashed('deleted_at');
+        // If GET parameter `cemetary` exists and is true, we add associations in cemetery.
+        if (!($request->input('cemetery') != null && $request->input('cemetery') === 'true')) {
+            $assos = $assos->whereNull('in_cemetery_at');
         }
 
         $assos = $assos->getSelection()->map(function ($asso) {
