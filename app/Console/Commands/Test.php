@@ -70,10 +70,10 @@ class Test extends Command
         $this->files = $this->argument('file');
         $bar = $this->output->createProgressBar(6);
 
-        $this->info(' [JS Syntax] Vérification de la syntaxe JS');
+        $this->info(' [JS Syntax] JS syntax check');
 
         if ($this->runEslint()) {
-            $this->output->error('Des erreurs de syntaxe ont été détectées');
+            $this->output->error('Syntax errors have been detected');
 
             return 1;
         }
@@ -82,10 +82,10 @@ class Test extends Command
         $bar->advance();
         $this->info(PHP_EOL);
         $this->info(PHP_EOL);
-        $this->info(' [PHP Syntax] Vérification de la syntaxe PHP');
+        $this->info(' [PHP Syntax] PHP syntax check');
 
         if ($this->runPHPSyntax()) {
-            $this->output->error('Des erreurs de syntaxe ont été détectées');
+            $this->output->error('Syntax errors have been detected');
 
             return 1;
         }
@@ -94,18 +94,18 @@ class Test extends Command
         $bar->advance();
         $this->info(PHP_EOL);
         $this->info(PHP_EOL);
-        $this->info(' [PHP CS] Vérification du linting PHP');
+        $this->info(' [PHP CS] PHP linting check');
 
         if ($this->runPHPCS()) {
-            $this->output->error('Des erreurs ont été rencontrées lors de la vérification du linting');
+            $this->output->error('Errors have been detected during PHP linting check');
 
-            $value = $this->choice('Tenter de fixer les erreurs ?', ['Oui', 'Non'], 'Non');
+            $value = $this->choice('Try to fix errors ?', ['Yes', 'No'], 'No');
 
-            if ($value === 'Oui') {
+            if ($value === 'Yes') {
                 $this->runPHPCBF();
 
                 if ($this->runPHPCS()) {
-                    $this->output->error('Des erreurs n\'ont pas pu être corrigées lors de la vérification du linting');
+                    $this->output->error('Some errors couldn\'t be corrected during PHP linting check');
 
                     return 2;
                 }
@@ -118,10 +118,10 @@ class Test extends Command
         $bar->advance();
         $this->info(PHP_EOL);
         $this->info(PHP_EOL);
-        $this->info(' [PHP STAN] Vérification du code PHP');
+        $this->info(' [PHP STAN] PHP code check');
 
         if ($this->runPHPStan()) {
-            $this->output->error('Des erreurs de code ont été détectées');
+            $this->output->error('Errors in code have been detected');
 
             return 3;
         }
@@ -129,10 +129,10 @@ class Test extends Command
         $bar->advance();
         $this->info(PHP_EOL);
         $this->info(PHP_EOL);
-        $this->info(' [PHP MD] Vérification des optimisations PHP');
+        $this->info(' [PHP MD] PHP optimization check');
 
         if ($this->runPHPMD()) {
-            $this->output->error('Des erreurs d\'optimisation ont été détectées');
+            $this->output->error('Optimization errors have been detected');
 
             return 4;
         }
@@ -141,10 +141,10 @@ class Test extends Command
         $bar->advance();
         $this->info(PHP_EOL);
         $this->info(PHP_EOL);
-        $this->info(' [PHP Unit] Vérification des tests PHP');
+        $this->info(' [PHP Unit] PHP tests check');
 
         if ($this->runPHPUnit()) {
-            $this->output->error('Des erreurs ont été rencontrées lors de la game');
+            $this->output->error('Errors have been detected during PHP tests');
 
             return 5;
         }
@@ -154,7 +154,7 @@ class Test extends Command
         $this->info(PHP_EOL);
         $this->info(PHP_EOL);
 
-        $this->output->success('Code parfait √');
+        $this->output->success('Perfect code √');
     }
 
     /**
