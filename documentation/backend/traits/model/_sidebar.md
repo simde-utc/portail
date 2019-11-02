@@ -26,7 +26,7 @@
         - [IsLogged](portail/dev/backend/traits/models/IsLogged.md)
         - [UserRelations](portail/dev/backend/traits/models/UserRelations.md)
       - [Service](portail/dev/backend/traits/service/)
-    - [Services](portail/dev/backend/services.md)
+    - [Services](portail/dev/backend/services/)
     - [Routes](portail/dev/backend/routes.md)
     - [How to comment](portail/dev/backend/comment.md)
 - [Frontend documentation](portail/dev/frontend/)

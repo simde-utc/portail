@@ -8,7 +8,7 @@
     - [Models](portail/dev/backend/models/)
     - [Controllers](portail/dev/backend/controllers.md)
     - [Traits](portail/dev/backend/traits/)
-    - [Services](portail/dev/backend/services.md)
+    - [Services](portail/dev/backend/services/)
     - [Routes](portail/dev/backend/routes.md)
     - [How to comment](portail/dev/backend/comment.md)
 - [Frontend documentation](portail/dev/frontend/)

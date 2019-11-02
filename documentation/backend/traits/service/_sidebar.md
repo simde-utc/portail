@@ -13,7 +13,7 @@
       - [Service](portail/dev/backend/traits/service/)
         - [ScopesIdentification](portail/dev/backend/traits/service/ScopesIdentification.md)
         - [TokenUtils](portail/dev/backend/traits/service/TokenUtils.md)
-    - [Services](portail/dev/backend/services.md)
+    - [Services](portail/dev/backend/services/)
     - [Routes](portail/dev/backend/routes.md)
     - [How to comment](portail/dev/backend/comment.md)
 - [Frontend documentation](portail/dev/frontend/)

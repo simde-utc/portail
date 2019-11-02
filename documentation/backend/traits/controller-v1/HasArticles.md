@@ -12,11 +12,11 @@ This trait allows a controller to access articles depending on their visibility 
 
 **Request**: See Laravel HTTP requests : [https://laravel.com/docs/5.8/requests](https://laravel.com/docs/5.8/requests)
 
-**User**: An instance of the User Model. See [portail/dev/models/User.md](User Model documentation) for more information.
+**User**: An instance of the User Model. See [User Model documentation](portail/dev/backend/models/User.md) for more information.
 
 **Article Id**: Explicit.
 
-**Verb**: You can add a verb from the [portail/dev/backend/oauth.md#verb-definition](verb list) check if the autenticated user is authorized to update/delete/get the given article.
+**Verb**: You can add a verb from the [verb list](portail/dev/backend/oauth#verb-definition) check if the autenticated user is authorized to update/delete/get the given article.
  
 ### Return value
 
