@@ -4,7 +4,7 @@
 - [Documentation](#documentation)
   - [Table of content](#table-of-content)
   - [Useful links](#useful-links)
-- [Metadocumentation](#metadocumentation)
+  - [Metadocumentation](#metadocumentation)
   - [Shape](#shape)
   - [Content](#content)
     - [Api's documentation](#apis-documentation)
@@ -16,7 +16,9 @@
 - Laravel 5.6 documentation : https://laravel.com/docs/5.6
 - This rendered documentation : https://simde.gitlab.utc.fr/documentation
 
-# Metadocumentation
+## Metadocumentation
+
+This documentation is rendered by [docsify](https://docsify.js.org/#/) on [https://simde.gitlab.utc.fr/documentation/#/portail/dev/](https://simde.gitlab.utc.fr/documentation/#/portail/dev/).
 
 *How to contribute to the documentation ?*
 
@@ -24,12 +26,14 @@
 
 ## Shape
 
-Organisation in two parts : one **documentation to use the api** and another **documentation about the api's code and architecture** (which we will call *backend*).
+Organisation in three parts : one **documentation to use the api**, another **documentation about the api's code and architecture** (which we will call *backend*) and a last **documentation about the frontend**.
 
-Each folder has its `_sidebar.md` where the *table of contents* is located and needs to be updated. You have to prefix every link by `portail/dev/`.
+Each documentation folder has its `_sidebar.md` where the all files of the folder must be referenced and needs to be updated.
 
-Each file has its *Table Of Contents* which must be up to date.
+Each documentation file has its *Table Of Contents* which must be up to date.
 
+
+You have to prefix every link by `portail/dev/` because this documentation is extracted and automatically added to the central documentation every day at 4 am.
 
 ## Content
 
