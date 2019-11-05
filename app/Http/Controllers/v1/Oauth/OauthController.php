@@ -18,7 +18,8 @@ class OauthController extends Controller
 {
     /**
      * Get the given scopes descriptions by category.
-     * 
+     *
+     * @param Request $request
      * @return JsonResponse
      */
     public function getByCategories(Request $request): JsonResponse
