@@ -101,6 +101,14 @@ Route::group(['middleware' => 'user:active'], function () {
         'faqs' => 'Faq\CategoryController',
         'faqs/{category_id}/questions' => 'Faq\FaqController',
     ]);
+
+    // Oauth Api through portal's API
+    // TO DO put oauth routes into /api/v1/oauth/
+
+    Route::redirect('oauth/tokens', "/oauth/tokens");
+    Route::get('oauth/scopes/categories', "Oauth\OauthController@getByCategories");
+    Route::delete('oauth/tokens/{token_id}', '\Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController@destroy')
+        ->middleware(['forceJson', 'web', 'auth:web']);
 });
 
 
