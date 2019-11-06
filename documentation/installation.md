@@ -26,7 +26,13 @@ Required version is `>=7.2` it is forced in `Project-root/composer.json`. This i
 ```bash
 sudo apt update
 sudo apt upgrade -y
-sudo apt install -y php7.2 php7.2-mbstring php7.2-dg php7.2-dom php7.2-mysql redis git composer npm mysql-server
+sudo apt install -y \
+	php7.2 php7.2-mbstring php7.2-dg php7.2-dom php7.2-mysql \
+	redis \
+	git \
+	composer \
+	npm \
+	mysql-server
 ```
 
 ### Create MySQL User and Database
@@ -57,7 +63,7 @@ If you used the given commands, there's no need to change `DB_*` values. Otherwi
 
 Fill `ADMIN_EMAIL`, `ADMIN_FIRSTNAME`, `ADMIN_LASTNAME` with your own information. 
 
-Then ask a portal's admin for `GINGER_KEY`, `CAS_URL`, `CAS_IMAGE` values. 
+If (And only if) you need to manage BDE Contributions, ask an administrator for the `GINGER_KEY` value.
 
 Finally launch this last command. It will ask you some questions:
 - `/!\ A .env file already exists /!\`  `Do you want to replace it (old version will be placed in .env.last ? yes/no [no]:` : Type enter.

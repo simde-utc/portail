@@ -8,8 +8,8 @@ New API of [Portail des Assos](https://assos.utc.fr), built with [Laravel 5.8](h
 
 ## Documentation
 
-Documentation can be found at [simde.gitlab.utc.fr/documentation]. It is currently incomplete, PRs are welcolme!
+Documentation can be found at [https://simde.gitlab.utc.fr/documentation/#/portail/dev/](https://simde.gitlab.utc.fr/documentation/#/portail/dev/). It is currently incomplete, PRs are welcolme!
 
 ## Installation 
 
-See documentation [simde.gitlab.utc.fr/documentation/](here) or [./documentation](here).
+See installation documentation [here](https://simde.gitlab.utc.fr/documentation/#/portail/dev/installation) or in `documentation/installation.md`.
