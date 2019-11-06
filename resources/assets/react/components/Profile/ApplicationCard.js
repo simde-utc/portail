@@ -41,6 +41,16 @@ const ApplicationCard = ({ application, categories, revokeToken }) => {
 											return <li key={desc}>{desc}</li>;
 										})}
 								</ul>
+								<p>
+									Vous avez accepté la{' '}
+									<a
+										href={application.client.policy_url}
+										style={{ fontStyle: 'italic', color: 'grey' }}
+									>
+										politique de confidentialité
+									</a>{' '}
+									de {application.client.name}
+								</p>
 							</div>
 						);
 					})}
