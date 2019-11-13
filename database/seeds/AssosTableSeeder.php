@@ -35,7 +35,6 @@ N'hésite pas à venir nous poser tes questions!
 Viens, on est bien !
 DESC
         ,
-                'in_cemetery_at' => null,
                 'type_id'  => '1901',
             ],
             [
@@ -50,7 +49,6 @@ Le PAE est fier d'être impliqué dans l'UTCéenne, l'IF, les Estus, les concert
 Trésorerie, administratif, communication, le PAE aide les assos dans leur gestion pour voir leur projet aboutir.
 DESC
             ,
-                'in_cemetery_at' => null,
                 'type_id'  => '1901',
                 'parent_login'  => 'bde',
             ],
@@ -64,7 +62,6 @@ Le Pôle Solidarité et Citoyenneté est là pour soutenir, accompagner et coord
 Le pôle est la personne à contacter si tu as envie de t'investir dans la *solidarité internationale*, le *développement durable*, la défense des *droits de l'homme*, le combat contre les *discriminations* de toutes sortes, mais que tu ne sais pas quelle asso rejoindre. De même, si tu apportes ton propre projet associatif, n'hésite pas à nous contacter pour le lancer dans de bonnes conditions.
 DESC
             ,
-                'in_cemetery_at' => null,
                 'type_id'	=> '1901',
                 'parent_login'	=> 'bde',
             ],
@@ -91,7 +88,6 @@ Hormis cette activité de soutien, le PTE organise des conférences conviviales,
 Si vous êtes désireux d'apporter votre aide, des idées, au pôle ou à ses associations, ou encore si vous êtes porteur d'un projet associatif s'inscrivant dans notre thématique, n'hésitez pas à nous contacter!
 DESC
             ,
-                'in_cemetery_at' => null,
                 'type_id'  => '1901',
                 'parent_login'  => 'bde',
             ],
@@ -111,7 +107,6 @@ En début de semestre, les référents aident les assos à se lancer et les suiv
 Bien sûr; si tu veux créer une nouvelle asso qui rejoint l'un de ces thèmes, contacte ton pôle qui répondra à toutes tes questions !
 DESC
             ,
-                'in_cemetery_at' => null,
                 'type_id'  => '1901',
                 'parent_login'  => 'bde',
             ],
@@ -126,7 +121,6 @@ Le SiMDE est chargé de la mise en place :
 	- de la gestion du site assos.utc.fr
 DESC
             ,
-                'in_cemetery_at' => null,
                 'type_id'  => 'commission',
                 'parent_login'  => 'bde',
             ],
@@ -148,7 +142,6 @@ Du 30 août au 10 Septembre viens vibrer avec nous pour gagner le Bidet d'or...
 Ensemble, rendons cet événement inoubliable
 DESC
             ,
-                'in_cemetery_at' => null,
                 'type_id'  => 'commission',
                 'parent_login'  => 'polevdc',
             ],
@@ -164,7 +157,6 @@ Après un *spectacle* d'une qualité impressionnante (et encore, je pèse mes mo
 Réalisée par des étudiants du script jusqu'aux décors en passant par la musique, les costumes et les danses, la comédie musicale ne vous décevra pas!
 DESC
             ,
-                'in_cemetery_at' => null,
                 'type_id'  => '1901',
                 'parent_login'  => 'poleae',
             ],
@@ -176,7 +168,6 @@ DESC
 Pendant 24h, les étudiants vont unir leurs forces pour développer des *projets utiles à tous* (vie associative et vie étudiante).
 DESC
             ,
-                'in_cemetery_at' => null,
                 'type_id'  => 'commission',
                 'parent_login'  => 'polete',
             ],
@@ -190,7 +181,6 @@ T'as déjà entendu parler de *"neutralité du net", "dégooglisons internet" ou
 - Pôle sensibilisation/formation: une journée Picasoft par semestre (conférences, ateliers), de la veille en ligne et plein d'ateliers tout au long du semestre pour apprendre à utiliser Linux, à chiffrer ses mails... Initié ou non, t'apprendras énormément avec des gens passionnés et tu pourras même proposer tes propres ateliers !
 DESC
             ,
-                'in_cemetery_at' => null,
                 'type_id'  => '1901',
                 'parent_login'  => 'polesec',
             ],
@@ -202,7 +192,6 @@ DESC
                 'shortname' => $asso['shortname'],
                 'name' => $asso['name'],
                 'description' => $asso['description'],
-                'in_cemetery_at' => $asso['in_cemetery_at'],
                 'type_id' => isset($asso['type_id']) ? AssoType::where('type', $asso['type_id'])->first()->id : null,
                 'parent_id' => isset($asso['parent_login']) ? Asso::where('login', $asso['parent_login'])->first()->id : null,
             ]);

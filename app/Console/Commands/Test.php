@@ -154,7 +154,7 @@ class Test extends Command
         $this->info(PHP_EOL);
         $this->info(PHP_EOL);
 
-        $this->output->success('Perfect code √');
+        $this->output->success('Code checked √');
     }
 
     /**

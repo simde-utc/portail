@@ -11,7 +11,7 @@
 import React from 'react';
 import bdeImage from '../../images/bde.jpg';
 
-const AssoCard = ({ image, login, name, shortname, additionalInfo, deleted }) => {
+const AssoCard = ({ image, login, name, shortname, additionalInfo, inCemetary }) => {
 	const style = {
 		backgroundImage: `url('${!image ? bdeImage : image}')`,
 		backgroundSize: 'contain',
@@ -27,7 +27,7 @@ const AssoCard = ({ image, login, name, shortname, additionalInfo, deleted }) =>
 			</div>
 			<div className="name-container">
 				<div className="asso-shortname">
-					<div style={deleted ? { textDecorationLine: 'line-through' } : {}}>{shortname}</div>
+					<div style={inCemetary ? { textDecorationLine: 'line-through' } : {}}>{shortname}</div>
 				</div>
 				{additionalInfo && <p className="w-100 text-center">{additionalInfo}</p>}
 			</div>
