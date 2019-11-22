@@ -24,7 +24,6 @@ class CreateAssosTable extends Migration
             $table->string('name', validation_max('name'))->unique();
             $table->string('image', validation_max('url'))->nullable();
             $table->text('description', validation_max('description'));
-            $table->timestamp('in_cemetery_at')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
