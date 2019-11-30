@@ -134,7 +134,7 @@ class BookingScreen extends React.Component {
 					<DatetimeRangePicker
 						startDate={begin}
 						endDate={end}
-						onStartDateChange={date => console.log(date) || this.setState({ begin_at: date })}
+						onStartDateChange={date => this.setState({ begin_at: date })}
 						onEndDateChange={date => this.setState({ end_at: date })}
 						className="d-flex"
 						input
