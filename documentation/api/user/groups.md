@@ -1,10 +1,13 @@
 # User's groups
 
-- [User's groups](#Users-groups)
-  - [GET](#GET)
-    - [Index](#Index)
-    - [Show](#Show)
-  - [POST](#POST)
+## Table of content
+
+- [User's groups](#users-groups)
+  - [Table of content](#table-of-content)
+  - [GET](#get)
+    - [Index](#index)
+    - [Show](#show)
+  - [POST](#post)
 
 ## GET
 

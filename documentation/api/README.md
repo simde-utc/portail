@@ -1,11 +1,5 @@
 # API documentation
 
-- [OAuth2 connection](oauth2.md)
-- [User](user/)
-    - [Groups retrievement](user/groups.md)
-- [Client](client/)
-
-
 The API is currently under the first version. All URLs have the form : `https://assos.utc.fr/api/v1/{requete}`
 
 

@@ -1,5 +1,12 @@
 # Portal's Frontend
 
+## Table of content
+- [Portal's Frontend](#portals-frontend)
+  - [Table of content](#table-of-content)
+  - [Installation](#installation)
+  - [Architecture](#architecture)
+  - [Development](#development)
+
 ## Installation
 
 - Install NodeJS

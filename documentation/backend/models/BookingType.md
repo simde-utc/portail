@@ -1,0 +1,2 @@
+# BookingType.md
+TO DO
