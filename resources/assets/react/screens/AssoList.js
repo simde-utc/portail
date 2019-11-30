@@ -88,7 +88,7 @@ class AssoListScreen extends React.Component {
 								shortname={asso.shortname}
 								image={asso.image}
 								login={asso.parent ? asso.parent.login : asso.login}
-								deleted={asso.in_cemetery_at != null}
+								inCemetary={asso.in_cemetery_at != null}
 							/>
 						</NavLink>
 					);
