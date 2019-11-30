@@ -1,0 +1,2 @@
+# ContactType.md
+TO DO

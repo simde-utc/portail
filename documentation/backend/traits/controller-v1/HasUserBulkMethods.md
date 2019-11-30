@@ -1,0 +1,2 @@
+# HasUserBulkMethods.md
+ TO DO
