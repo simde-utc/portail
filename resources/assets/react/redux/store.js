@@ -223,8 +223,6 @@ export default createStore((state = store, action) => {
 		});
 	}
 
-	console.debug(action.type);
-
 	if (action.meta && action.meta.path && action.meta.path.length > 0) {
 		return produce(state, draft => {
 			let { path } = action.meta;
