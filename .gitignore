@@ -12,6 +12,7 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+composer.phar
 .env
 .ftpconfig
 .phpunit.result.cache
