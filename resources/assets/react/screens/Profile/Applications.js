@@ -62,6 +62,37 @@ class AppsScreen extends React.Component {
 		});
 	}
 
+	getAppsGrid() {
+		const { tokens, categories } = this.state;
+		const { assos } = this.props;
+
+		console.log(tokens);
+
+		if (tokens.length !== 0) {
+			return (
+				<div className="d-flex flex-wrap justify-content-start">
+					{tokens &&
+						Object.keys(categories).length > 0 &&
+						tokens.map(token => {
+							return (
+								<ApplicationCard
+									key={token.id}
+									application={token}
+									categories={categories.find(el => el.tokenId === token.id).data}
+									asso={assos.find(asso => asso.id === token.client.asso_id)}
+									revokeToken={() => this.revokeToken(token.id)}
+								/>
+							);
+						})}
+				</div>
+			);
+		}
+
+		return (
+			<p className="text-center p-5">Aucune application n'est autorisée à accéder à vos données.</p>
+		);
+	}
+
 	addScopesDescription(index, data) {
 		this.setState(prevState => {
 			prevState.categories[index] = data;
@@ -99,25 +130,7 @@ class AppsScreen extends React.Component {
 	}
 
 	render() {
-		const { tokens, categories } = this.state;
-		const { assos } = this.props;
-		return (
-			<div className="d-flex flex-wrap justify-content-start">
-				{tokens &&
-					Object.keys(categories).length > 0 &&
-					tokens.map(token => {
-						return (
-							<ApplicationCard
-								key={token.id}
-								application={token}
-								categories={categories.find(el => el.tokenId === token.id).data}
-								asso={assos.find(asso => asso.id === token.client.asso_id)}
-								revokeToken={() => this.revokeToken(token.id)}
-							/>
-						);
-					})}
-			</div>
-		);
+		return this.getAppsGrid();
 	}
 }
 export default AppsScreen;
