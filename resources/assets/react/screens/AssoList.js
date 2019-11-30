@@ -5,6 +5,7 @@
  * @author Natan Danous <natous.danous@hotmail.fr>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Matt Glorion <matt@glorion.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -31,21 +32,30 @@ class AssoListScreen extends React.Component {
 
 		this.state = {
 			searchQuery: '',
+			assosCemetaryActive: false,
 		};
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const { dispatch } = this.props;
 
 		dispatch(
 			actions.assos.all({
 				order: 'a-z',
+				cemetery: true,
 			})
 		);
+
 		dispatch(actions.config({ title: 'Liste des associations' }));
 	}
 
-	static getGrid(assos, filter) {
+	onAssosCemetaryChange() {
+		const { assosCemetaryActive } = this.state;
+		this.setState({ assosCemetaryActive: !assosCemetaryActive });
+	}
+
+	getGrid(assos, filter) {
+		const { assosCemetaryActive } = this.state;
 		const regex = RegExp(
 			filter
 				.toLowerCase()
@@ -53,8 +63,17 @@ class AssoListScreen extends React.Component {
 				.join('.*')
 		);
 
-		const filteredList = assos.filter(({ shortname, name }) => {
-			return regex.test(shortname.toLowerCase()) || regex.test(name.toLowerCase());
+		const filteredList = assos.filter(({ shortname, name, in_cemetery_at }) => {
+			if (!assosCemetaryActive) {
+				return (
+					(regex.test(shortname.toLowerCase()) || regex.test(name.toLowerCase())) &&
+					in_cemetery_at === null
+				);
+			}
+			return (
+				(regex.test(shortname.toLowerCase()) || regex.test(name.toLowerCase())) &&
+				in_cemetery_at != null
+			);
 		});
 
 		return (
@@ -69,6 +88,7 @@ class AssoListScreen extends React.Component {
 								shortname={asso.shortname}
 								image={asso.image}
 								login={asso.parent ? asso.parent.login : asso.login}
+								deleted={asso.in_cemetery_at != null}
 							/>
 						</NavLink>
 					);
@@ -129,7 +149,7 @@ class AssoListScreen extends React.Component {
 
 	render() {
 		const { fetching, assos } = this.props;
-		const { searchQuery } = this.state;
+		const { searchQuery, assosCemetaryActive } = this.state;
 		actions.config({ title: 'Liste des associations' });
 
 		return (
@@ -154,10 +174,21 @@ class AssoListScreen extends React.Component {
 						<div className="filterBar">
 							<ButtonGroup>{this.populateGroupButtons()}</ButtonGroup>
 						</div>
+						<div>
+							<input
+								type="checkbox"
+								name="assosCemetaryActive"
+								className="form-check-input"
+								checked={assosCemetaryActive === true}
+								onChange={this.onAssosCemetaryChange.bind(this)}
+							/>
+							<label htmlFor="assosCemetaryActive" className="form-check-label">
+								Cimetière des assos
+							</label>
+						</div>
 					</div>
 					<span className={`loader large${fetching ? ' active' : ''}`} />
-					{!fetching &&
-						AssoListScreen.getGrid(assos.filter(this.isAssoInGroup.bind(this)), searchQuery)}
+					{!fetching && this.getGrid(assos.filter(this.isAssoInGroup.bind(this)), searchQuery)}
 				</div>
 			</div>
 		);

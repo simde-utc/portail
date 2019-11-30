@@ -137,6 +137,12 @@ class ArticleController extends Controller
             });
         }
 
+        if (!($request->input('cemetery') != null && $request->input('cemetery') === 'true')) {
+            $articles = $articles->filter(function ($article) {
+                return $article->owned_by['in_cemetery_at'] == null;
+            });
+        }
+
         return response()->json($articles->values()->map(function ($article) {
             return $article->hideData();
         }));
