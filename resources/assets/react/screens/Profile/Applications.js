@@ -17,6 +17,9 @@ import actions from '../../redux/actions';
 
 @connect(store => ({
 	config: store.config,
+	assos: store.getData('assos'),
+	assosFetching: store.isFetching('assos'),
+	assosFetched: store.isFetched('assos'),
 }))
 class AppsScreen extends React.Component {
 	constructor(props) {
@@ -29,9 +32,13 @@ class AppsScreen extends React.Component {
 	}
 
 	componentDidMount() {
-		const { dispatch } = this.props;
+		const { dispatch, assosFetched, assosFetching } = this.props;
 
 		dispatch(actions.config({ title: 'Mes applications' }));
+
+		if (!assosFetched && !assosFetching) {
+			dispatch(actions.assos.all());
+		}
 
 		actions.oauth.tokens.all().payload.then(({ data }) => {
 			const tokens = data;
@@ -40,6 +47,7 @@ class AppsScreen extends React.Component {
 					const { data } = await actions.oauth.scopes.categories.all({
 						scopes: token.scopes.join(' '),
 					}).payload;
+
 					return {
 						data,
 						tokenId: token.id,
@@ -92,6 +100,7 @@ class AppsScreen extends React.Component {
 
 	render() {
 		const { tokens, categories } = this.state;
+		const { assos } = this.props;
 		return (
 			<div className="d-flex flex-wrap justify-content-start">
 				{tokens &&
@@ -102,6 +111,7 @@ class AppsScreen extends React.Component {
 								key={token.id}
 								application={token}
 								categories={categories.find(el => el.tokenId === token.id).data}
+								asso={assos.find(asso => asso.id === token.client.asso_id)}
 								revokeToken={() => this.revokeToken(token.id)}
 							/>
 						);
