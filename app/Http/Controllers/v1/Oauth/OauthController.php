@@ -24,8 +24,6 @@ class OauthController extends Controller
      */
     public function getByCategories(Request $request): JsonResponse
     {
-        $scopes = explode(' ', $request->input('scopes'));
-        $scopes = \Scopes::getByCategories($scopes);
-        return response()->json($scopes);
+        return response()->json(\Scopes::getByCategories(explode(' ', $request->input('scopes'))));
     }
 }
