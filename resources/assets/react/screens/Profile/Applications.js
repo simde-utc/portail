@@ -11,6 +11,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
+import moment from 'moment';
 import ApplicationCard from '../../components/Profile/ApplicationCard';
 
 import actions from '../../redux/actions';
@@ -41,7 +42,9 @@ class AppsScreen extends React.Component {
 		}
 
 		actions.oauth.tokens.all().payload.then(({ data }) => {
-			const tokens = data;
+			const tokens = data.filter(
+				token => moment(token.expires_at, 'YYYY-MM-DD HH:mm:ss').unix() > moment().unix()
+			);
 			Promise.all(
 				tokens.map(async token => {
 					const { data } = await actions.oauth.scopes.categories.all({
