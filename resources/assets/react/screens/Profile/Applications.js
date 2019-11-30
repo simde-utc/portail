@@ -66,8 +66,6 @@ class AppsScreen extends React.Component {
 		const { tokens, categories } = this.state;
 		const { assos } = this.props;
 
-		console.log(tokens);
-
 		if (tokens.length !== 0) {
 			return (
 				<div className="d-flex flex-wrap justify-content-start">

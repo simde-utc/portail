@@ -29,20 +29,20 @@ const ApplicationCard = ({ application, categories, revokeToken, asso }) => {
 					)}
 					L'application peut:
 					{categories &&
-						Object.keys(categories).map(key => {
+						Object.entries(categories).map(([key, category]) => {
 							return (
-								<div key={categories[key].description}>
+								<div key={key}>
 									<div className="d-flex align-items-center">
 										<FontAwesomeIcon
-											icon={categories[key].icon}
+											icon={category.icon}
 											className="m-2"
 											style={{ height: '1rem' }}
 										/>
-										<p className="m-2">{categories[key].description}</p>
+										<p className="m-2">{category.description}</p>
 									</div>
-									<ul style={{ testAlign: 'left' }}>
-										{categories[key].scopes &&
-											categories[key].scopes.map(desc => {
+									<ul>
+										{category.scopes &&
+											category.scopes.map(desc => {
 												return <li key={desc}>{desc}</li>;
 											})}
 									</ul>
