@@ -13,14 +13,6 @@ import React from 'react';
 
 import Image from '../Image';
 
-const displayTypes = {
-	admin: 'Administrateur',
-	member: "Membre d'une association",
-	contributorBde: 'Cotisant BDE',
-	cas: 'Connecté via CAS',
-	password: 'Connecté via mot de passe',
-};
-
 const UserInfo = ({
 	info: { firstname, lastname, email, types, image },
 	typeNames,
