@@ -39,8 +39,6 @@ class AssociativeCareerScreen extends React.Component {
 			dispatch(actions.roles.all());
 		}
 
-		dispatch(actions.config({ title: 'Mon Parcours' }));
-
 		semesters.forEach(semester => {
 			if (associativeSemesters[semester.id] === undefined) {
 				actions.user.assos

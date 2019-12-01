@@ -24,8 +24,6 @@ class Contributions extends React.Component {
 	componentDidMount() {
 		const { dispatch, contributionsFetched, contributionsFetching } = this.props;
 
-		dispatch(actions.config({ title: 'Mes Cotisations' }));
-
 		if (!contributionsFetched && !contributionsFetching) {
 			dispatch(actions.user.contributions.all());
 		}
