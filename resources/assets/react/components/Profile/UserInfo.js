@@ -42,14 +42,16 @@ const UserInfo = ({ info: { firstname, lastname, email, types, image } }) => {
 						<th>Email</th>
 						<td>{email}</td>
 					</tr>
-					{Object.entries(types)
-						.filter(([key, value]) => value && displayTypes[key])
-						.map(([key]) => (
-							<tr key={key}>
-								<th>Role</th>
-								<td>{displayTypes[key]}</td>
-							</tr>
-						))}
+					<tr>
+						<th>Roles</th>
+						<td>
+							{Object.entries(types)
+								.filter(([key, value]) => value && displayTypes[key])
+								.map(([key]) => (
+									<p key={key}>{displayTypes[key]}</p>
+								))}
+						</td>
+					</tr>
 					<tr>
 						<th>Photo de profil</th>
 						<td>
