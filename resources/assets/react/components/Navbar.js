@@ -111,7 +111,16 @@ class Navbar extends React.Component {
 				<ul className="navbar-nav ml-auto">
 					{user ? (
 						<li className="nav-item no-gutters pl-2 pr-2" style={{ width: 'max-content' }}>
-							<NavLink className="nav-link d-flex profilepic bg-secondary" to="/profile">
+							<NavLink
+								className="nav-link d-flex profilepic bg-secondary"
+								to="/profile"
+								style={{
+									padding: '0 .6rem 0 0',
+									height: '45px',
+									display: 'flex !important',
+									alignItems: 'center',
+								}}
+							>
 								<Img
 									image={user.image}
 									width="25"
