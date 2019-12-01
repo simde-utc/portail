@@ -118,12 +118,10 @@ class Navbar extends React.Component {
 									height="25"
 									className="rounded-circle mr-2"
 									unloader={
-										<a className="nav-link d-flex" href="/login">
-											<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
-												<FontAwesomeIcon icon="circle" className="icon-background2" />
-												<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
-											</span>
-										</a>
+										<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
+											<FontAwesomeIcon icon="circle" className="icon-background2" />
+											<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
+										</span>
 									}
 								/>
 								{user.firstname}
