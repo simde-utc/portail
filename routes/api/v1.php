@@ -5,6 +5,7 @@
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -24,7 +25,7 @@ Route::get('logout', 'Client\LoginController@destroy')->middleware(Scopes::match
 
 Route::get('user', 'User\UserController@show')->middleware(Scopes::matchAnyUser())->name('api/user');
 Route::patch('user', 'User\UserController@update')->middleware(Scopes::matchAnyUser())->name('api/user/update');
-
+Route::get('user/types/description', 'User\UserController@getLocalizedTypes')->middleware(Scopes::matchAnyUser())->name('api/user/types/description');
 
 /*
  * Management of client given authorization.

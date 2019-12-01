@@ -610,9 +610,7 @@ class AssoScreen extends React.Component {
 						path={`${match.url}/members`}
 						redirect={`${match.url}`}
 						isAllowed={() => {
-							return (
-								user.types.casConfirmed && user.types.contributorBde && asso.in_cemetery_at == null
-							);
+							return user.types.contributorBde && asso.in_cemetery_at == null;
 						}}
 						render={() => (
 							<AssoMemberListScreen
