@@ -4,6 +4,7 @@
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Paco Pompeani <paco.pompeani@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -111,7 +112,16 @@ class Navbar extends React.Component {
 				<ul className="navbar-nav ml-auto">
 					{user ? (
 						<li className="nav-item no-gutters pl-2 pr-2" style={{ width: 'max-content' }}>
-							<NavLink className="nav-link d-flex profilepic bg-secondary" to="/profile">
+							<NavLink
+								className="nav-link d-flex profilepic bg-secondary"
+								to="/profile"
+								style={{
+									padding: '0 .6rem',
+									height: '45px',
+									display: 'flex !important',
+									alignItems: 'center',
+								}}
+							>
 								<Img
 									image={user.image}
 									width="25"
