@@ -39,8 +39,6 @@ class AssociativeCareerScreen extends React.Component {
 			dispatch(actions.roles.all());
 		}
 
-		dispatch(actions.config({ title: 'Mon Parcours' }));
-
 		semesters.forEach(semester => {
 			if (associativeSemesters[semester.id] === undefined) {
 				actions.user.assos
@@ -64,14 +62,14 @@ class AssociativeCareerScreen extends React.Component {
 	render() {
 		const { roles, rolesFetched, semesters, semestersFetched } = this.props;
 		const { associativeSemesters } = this.state;
+		const associativeSemestersKeys = Object.keys(associativeSemesters);
 
-		return (
-			<div className="ml-5">
-				{rolesFetched &&
-					semestersFetched &&
-					Object.keys(associativeSemesters)
-						.reverse()
-						.map(semester_id => {
+		if (associativeSemestersKeys.length) {
+			return (
+				<div className="ml-5 AssociativeCareer">
+					{rolesFetched &&
+						semestersFetched &&
+						associativeSemestersKeys.reverse().map(semester_id => {
 							const semester = semesters.find(semester => semester.id === semester_id);
 
 							const assosBySemesterList = associativeSemesters[semester_id].map(asso => {
@@ -98,8 +96,11 @@ class AssociativeCareerScreen extends React.Component {
 
 							return assosBySemesterList ? [title, ...assosBySemesterList] : null;
 						})}
-			</div>
-		);
+				</div>
+			);
+		}
+
+		return <p className="text-center p-5">Vous n'avez pas encore été membre d'une association.</p>;
 	}
 }
 

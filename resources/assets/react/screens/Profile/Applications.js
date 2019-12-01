@@ -35,8 +35,6 @@ class AppsScreen extends React.Component {
 	componentDidMount() {
 		const { dispatch, assosFetched, assosFetching } = this.props;
 
-		dispatch(actions.config({ title: 'Mes applications' }));
-
 		if (!assosFetched && !assosFetching) {
 			dispatch(actions.assos.all());
 		}
