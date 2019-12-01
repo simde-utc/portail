@@ -17,14 +17,24 @@ import UserInfo from '../../components/Profile/UserInfo';
 	user: store.getData('user'),
 }))
 class InfoScreen extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = { data: {} };
+	}
+
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch(actions.config({ title: 'Mes Informations' }));
+		actions.user.types
+			.description()
+			.all()
+			.payload.then(({ data }) => this.setState(() => ({ data, fetched: true })));
 	}
 
 	render() {
 		const { user } = this.props;
-		return <UserInfo info={user} />;
+		const { data, fetched } = this.state;
+		return <UserInfo info={user} typeNames={data} typeNamesFetched={fetched} />;
 	}
 }
 export default InfoScreen;

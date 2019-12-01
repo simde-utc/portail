@@ -21,7 +21,11 @@ const displayTypes = {
 	password: 'Connecté via mot de passe',
 };
 
-const UserInfo = ({ info: { firstname, lastname, email, types, image } }) => {
+const UserInfo = ({
+	info: { firstname, lastname, email, types, image },
+	typeNames,
+	typeNamesFetched,
+}) => {
 	// If some data is missing, display loading.
 	if (!firstname) return <div>loading</div>;
 
@@ -45,11 +49,14 @@ const UserInfo = ({ info: { firstname, lastname, email, types, image } }) => {
 					<tr>
 						<th>Roles</th>
 						<td>
-							{Object.entries(types)
-								.filter(([key, value]) => value && displayTypes[key])
-								.map(([key]) => (
-									<p key={key}>{displayTypes[key]}</p>
-								))}
+							{typeNamesFetched &&
+								Object.entries(types)
+									.filter(([key, value]) => value && typeNames[key])
+									.map(([key]) => (
+										<p key={key}>
+											{typeNames[key].charAt(0).toUpperCase() + typeNames[key].slice(1)}
+										</p>
+									))}
 						</td>
 					</tr>
 					<tr>
