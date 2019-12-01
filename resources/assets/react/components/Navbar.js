@@ -116,7 +116,7 @@ class Navbar extends React.Component {
 								className="nav-link d-flex profilepic bg-secondary"
 								to="/profile"
 								style={{
-									padding: '0 .6rem 0 0',
+									padding: '0 .6rem',
 									height: '45px',
 									display: 'flex !important',
 									alignItems: 'center',

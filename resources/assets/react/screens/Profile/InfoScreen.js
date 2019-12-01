@@ -23,8 +23,6 @@ class InfoScreen extends React.Component {
 	}
 
 	componentDidMount() {
-		const { dispatch } = this.props;
-		dispatch(actions.config({ title: 'Mes Informations' }));
 		actions.user.types
 			.description()
 			.all()

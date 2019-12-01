@@ -23,7 +23,6 @@ const UserInfo = ({
 
 	return (
 		<div style={{ overflowX: 'auto' }}>
-			<h2 className="title">Mes Informations</h2>
 			<table className="table">
 				<tbody>
 					<tr>
