@@ -33,6 +33,7 @@ class AssoController extends ResourceController
             'description' => 'textarea',
             'type' => AssoType::get(['id', 'name']),
             'parent' => Asso::get(['id', 'name']),
+            'in_cemetery_at' => 'date',
             'created_at' => 'display',
             'updated_at' => 'display',
             'deleted_at' => 'date',

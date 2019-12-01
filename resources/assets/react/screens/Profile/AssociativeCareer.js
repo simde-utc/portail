@@ -43,11 +43,13 @@ class AssociativeCareerScreen extends React.Component {
 
 		semesters.forEach(semester => {
 			if (associativeSemesters[semester.id] === undefined) {
-				actions.user.assos.all({ semester: semester.id }).payload.then(({ data }) => {
-					if (data.length > 0) {
-						this.addNewAssociativeSemester(semester.id, data);
-					}
-				});
+				actions.user.assos
+					.all({ cemetery: true, semester: semester.id })
+					.payload.then(({ data }) => {
+						if (data.length > 0) {
+							this.addNewAssociativeSemester(semester.id, data);
+						}
+					});
 			}
 		});
 	}
@@ -76,14 +78,15 @@ class AssociativeCareerScreen extends React.Component {
 								const role = roles.find(role => role.id === asso.pivot.role_id);
 
 								return (
-									<NavLink key={asso.id} to={`/assos/${asso.login}`}>
+									<NavLink key={asso.id + semester.id} to={`/assos/${asso.login}`}>
 										<AssoCard
-											key={asso.id}
+											key={asso.id + semester.id}
 											name={asso.name}
 											shortname={asso.shortname}
 											additionalInfo={role ? role.name : ''}
 											image={asso.image}
 											login={asso.parent ? asso.parent.login : asso.login}
+											deleted={asso.in_cemetery_at != null}
 										/>
 									</NavLink>
 								);
