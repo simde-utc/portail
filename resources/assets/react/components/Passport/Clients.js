@@ -45,7 +45,7 @@ class Clients extends Component {
 						client.scopes = [];
 					}
 				} catch (error) {
-					console.log(error);
+					console.error(error);
 					client.scopes = [];
 				}
 

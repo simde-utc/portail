@@ -146,14 +146,13 @@ class Ginger
      */
     public function getContributions(string $login=null)
     {
-        if (!$this->get()) {
-            if ($login) {
-                $this->user($login);
-            }
 
-            if (!$this->get()) {
-                return [];
-            }
+        if ($login && (!$this->user || $this->user->login != $login)) {
+            $this->user($login);
+        }
+
+        if (!$this->get()) {
+            return [];
         }
 
         $contributionList = $this->call(

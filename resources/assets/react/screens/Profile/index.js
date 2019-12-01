@@ -14,6 +14,7 @@ import { NavLink, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import AssociativeCareerScreen from './AssociativeCareer';
+import AppsScreen from './Applications';
 import Contributions from './Contributions';
 import InfoScreen from './InfoScreen';
 
@@ -79,6 +80,7 @@ class ScreenProfile extends React.Component {
 						exact
 						render={() => <AssociativeCareerScreen user={user} />}
 					/>
+					<Route path={`${match.url}/apps`} exact render={() => <AppsScreen />} />
 					<Route path={`${match.url}/Contributions`} exact render={() => <Contributions />} />
 					<Route path={`${match.url}`} exact render={() => <InfoScreen />} />
 				</Switch>

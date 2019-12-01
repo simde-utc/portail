@@ -1,0 +1,2 @@
+# HasBulkMethod.md
+ TO DO

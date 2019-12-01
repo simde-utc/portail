@@ -5,6 +5,7 @@
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Romain Maliach-Auguste <r.maliach@live.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -110,7 +111,7 @@ class LoginController extends Controller
      */
     public function update(Request $request)
     {
-        return response()->json(['captcha' => captcha_img()]);
+        return captcha_img("flat");
     }
 
     /**

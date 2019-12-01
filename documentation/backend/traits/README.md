@@ -6,6 +6,17 @@ Official Trait documentation : http://php.net/manual/en/language.oop5.traits.php
 The traits we defined **must only be used** within models.
 Conceptually speaking, they must apply to a model instance and not to a collection or a query builder. 
 
+## Table of content
+- [Traits](#traits)
+  - [Table of content](#table-of-content)
+  - [HasMembers](#hasmembers)
+  - [HasPermissions](#haspermissions)
+  - [HasRoles](#hasroles)
+  - [HasVisibility](#hasvisibility)
+    - [hide()](#hide)
+    - [getVisibilityType()](#getvisibilitytype)
+    - [isVisible()](#isvisible)
+
 ## HasMembers
 
 ## HasPermissions

@@ -40,10 +40,11 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
 
     protected $casts = [
         'deleted_at' => 'datetime',
+        'in_cemetery_at' => 'datetime',
     ];
 
     protected $fillable = [
-        'name', 'shortname', 'login', 'image', 'description', 'type_id', 'parent_id',
+        'name', 'shortname', 'login', 'image', 'description', 'type_id', 'parent_id', 'in_cemetery_at'
     ];
 
     protected $hidden = [
@@ -59,7 +60,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     ];
 
     protected $must = [
-        'name', 'shortname', 'login', 'image', 'deleted_at',
+        'name', 'shortname', 'login', 'image', 'in_cemetery_at', 'deleted_at',
     ];
 
     // Children in the case of a staged mode display.
@@ -70,7 +71,6 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
                 'name' => 'shortname',
             ],
         ],
-        'deleted' => 'without',
         'filter' => [],
         'stage' => null,
         'stages' => null,
@@ -631,5 +631,15 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    /**
+     * Indicate if an association is in the cemetary or not
+     *
+     * @return boolean
+     */
+    public function isInCemetary()
+    {
+        return $this->in_cemetery_at == null;
     }
 }

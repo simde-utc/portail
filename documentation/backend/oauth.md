@@ -1,6 +1,19 @@
 # API rights with OAuth
 *(customized by Samy because he's a beast)*
 
+## Table of content
+- [API rights with OAuth](#api-rights-with-oauth)
+  - [Table of content](#table-of-content)
+  - [Quick presentation](#quick-presentation)
+  - [Middleware](#middleware)
+  - [Scopes](#scopes)
+    - [Scopes list depending on the routes](#scopes-list-depending-on-the-routes)
+      - [Scopes definition](#scopes-definition)
+      - [Base scopes definition](#base-scopes-definition)
+      - [Verb definition](#verb-definition)
+    - [Facades](#facades)
+    - [Scopes usage in the portal's controllers](#scopes-usage-in-the-portals-controllers)
+  
 ## Quick presentation
 
 A token is a triplet (`client`, `user`, `scopes`). This token is retrieved by an association's `client` (Which is an API, a Webwite, an Interface) or a user (connected user or personnal API). 
