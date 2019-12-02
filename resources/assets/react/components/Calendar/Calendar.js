@@ -14,10 +14,10 @@ export default class CalendarCalendar extends React.Component {
 		Object.keys(events).forEach(calendar_id => {
 			const calendar = calendars[calendar_id];
 
-			events[calendar_id].forEach(({ id, name, begin_at, end_at }) => {
+			events[calendar_id].forEach(({ id, name, begin_at, end_at, owned_by }) => {
 				generatedEvents.push({
 					id,
-					title: name,
+					title: `${owned_by.shortname} - ${name}`,
 					start: new Date(begin_at),
 					end: new Date(end_at),
 					calendar,
