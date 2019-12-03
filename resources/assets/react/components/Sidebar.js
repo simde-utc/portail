@@ -125,7 +125,7 @@ class Sidebar extends React.Component {
 								rel="noopener noreferrer"
 								href="https://webmail.utc.fr"
 							>
-								<FontAwesomeIcon icon="paper-plane" /> Webmail
+								<FontAwesomeIcon icon="paper-plane" /> Webmail UTC
 							</a>
 							<a
 								className="sidebar-link"
