@@ -42,7 +42,7 @@ export default class CalendarCalendar extends React.Component {
 			events[calendar_id].forEach(({ id, name, begin_at, end_at, owned_by }) => {
 				generatedEvents.push({
 					id,
-					title: owned_by.shortname ? `${owned_by.shortname} - ${name}` : name,
+					title: owned_by ? `${owned_by.shortname} - ${name}` : name,
 					start: new Date(begin_at),
 					end: new Date(end_at),
 					calendar,
