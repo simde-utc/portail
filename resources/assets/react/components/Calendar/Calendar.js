@@ -16,6 +16,21 @@ import { colorFromBackground } from '../../utils';
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
+const messages = {
+	allDay: 'Journée',
+	previous: 'Précédent',
+	next: 'Suivant',
+	today: "Aujourd'hui",
+	month: 'Mois',
+	week: 'Semaine',
+	day: 'Jour',
+	agenda: 'Agenda',
+	date: 'Date',
+	time: 'Heure',
+	event: 'Événement', // Or anything you want
+	showMore: total => `+ ${total} événement(s) supplémentaire(s)`,
+};
+
 export default class CalendarCalendar extends React.Component {
 	getEvents() {
 		const { events, calendars } = this.props;
@@ -61,6 +76,7 @@ export default class CalendarCalendar extends React.Component {
 					eventPropGetter={CalendarCalendar.getEventProps}
 					{...this.props}
 					events={this.getEvents()}
+					messages={messages}
 				/>
 			</div>
 		);
