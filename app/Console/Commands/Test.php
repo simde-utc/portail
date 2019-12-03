@@ -4,6 +4,7 @@
  * Run sufficient tests to be able to merge in develop.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -12,7 +13,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
 class Test extends Command
@@ -74,8 +74,17 @@ class Test extends Command
 
         if ($this->runEslint()) {
             $this->output->error('Syntax errors have been detected');
+            $value = $this->choice('Try to fix errors ?', ['Yes', 'No'], 'No');
 
-            return 1;
+            if ($value === 'Yes') {
+                if ($this->runEslint(true)) {
+                    $this->output->error('Some errors couldn\'t be corrected during PHP linting check');
+
+                    return 2;
+                }
+            } else {
+                return 2;
+            }
         }
 
         $this->info(PHP_EOL);
@@ -217,11 +226,12 @@ class Test extends Command
     /**
      * Run JS linter.
      *
+     * @param boolean $fix
      * @return integer
      */
-    private function runEslint()
+    private function runEslint(bool $fix=false)
     {
-        return $this->process("./node_modules/.bin/eslint --ext .js resources/assets/react/**");
+        return $this->process("./node_modules/.bin/eslint ".($fix ? "--fix " : "" )."--ext .js resources/assets/react/**");
     }
 
     /**
