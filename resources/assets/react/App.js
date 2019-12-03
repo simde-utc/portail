@@ -24,7 +24,6 @@ import LoggedRoute from './routes/Logged';
 // Screens
 import AppLoader from './AppLoader';
 import HomeScreen from './screens/Home';
-import DashboardScreen from './screens/Dashboard';
 import AssoListScreen from './screens/AssoList';
 import ServiceListScreen from './screens/ServiceList';
 import AssoDetailScreen from './screens/Asso';
@@ -55,7 +54,6 @@ class App extends React.Component {
 									<ErrorCatcher>
 										<Switch>
 											<Route path="/" exact component={HomeScreen} />
-											<Route path="/dashboard" component={DashboardScreen} />
 											<Route path="/assos" exact component={AssoListScreen} />
 											<Route path="/assos/:login" component={AssoDetailScreen} />
 											<Route path="/services" exact component={ServiceListScreen} />
