@@ -172,6 +172,9 @@ class Sidebar extends React.Component {
 							<NavLink className="sidebar-link" to="/assos">
 								<FontAwesomeIcon icon="hands-helping" /> Associations
 							</NavLink>
+							<NavLink className="sidebar-link" to="/partners">
+								<FontAwesomeIcon icon="handshake" /> Partenaires
+							</NavLink>
 							<NavLink className="sidebar-link" to="/groupes" style={{ display: 'none' }}>
 								<FontAwesomeIcon icon="users" /> Groupes
 							</NavLink>
