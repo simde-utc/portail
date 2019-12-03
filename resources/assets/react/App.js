@@ -3,6 +3,7 @@
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -30,6 +31,7 @@ import ServiceListScreen from './screens/ServiceList';
 import AssoDetailScreen from './screens/Asso';
 import ProfileScreen from './screens/Profile';
 import BookingScreen from './screens/Booking';
+import PartnersListScreen from './screens/PartnersList';
 
 class App extends React.Component {
 	constructor(props) {
@@ -59,6 +61,7 @@ class App extends React.Component {
 											<Route path="/assos" exact component={AssoListScreen} />
 											<Route path="/assos/:login" component={AssoDetailScreen} />
 											<Route path="/services" exact component={ServiceListScreen} />
+											<Route path="/partners" exact component={PartnersListScreen} />
 											<LoggedRoute path="/profile" component={ProfileScreen} />
 											<LoggedRoute
 												path="/bookings"
