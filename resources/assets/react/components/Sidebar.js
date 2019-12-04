@@ -125,7 +125,7 @@ class Sidebar extends React.Component {
 								rel="noopener noreferrer"
 								href="https://webmail.utc.fr"
 							>
-								<FontAwesomeIcon icon="paper-plane" /> Webmail
+								<FontAwesomeIcon icon="paper-plane" /> Webmail UTC
 							</a>
 							<a
 								className="sidebar-link"
@@ -171,6 +171,9 @@ class Sidebar extends React.Component {
 							</NavLink>
 							<NavLink className="sidebar-link" to="/assos">
 								<FontAwesomeIcon icon="hands-helping" /> Associations
+							</NavLink>
+							<NavLink className="sidebar-link" to="/partners">
+								<FontAwesomeIcon icon="handshake" /> Partenaires
 							</NavLink>
 							<NavLink className="sidebar-link" to="/groupes" style={{ display: 'none' }}>
 								<FontAwesomeIcon icon="users" /> Groupes

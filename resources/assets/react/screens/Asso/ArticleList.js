@@ -35,12 +35,12 @@ class AssoArticleList extends React.Component {
 
 	componentWillMount() {
 		const {
-			asso: { id, shortname },
+			asso: { id, shortname, in_cemetery_at },
 			dispatch,
 		} = this.props;
 
 		if (id) {
-			this.loadAssosData(id);
+			this.loadAssosData(id, in_cemetery_at);
 		}
 
 		dispatch(actions.config({ title: `${shortname} - Articles` }));
@@ -59,7 +59,7 @@ class AssoArticleList extends React.Component {
 		}
 	}
 
-	loadAssosData(id) {
+	loadAssosData(id, in_cemetery_at) {
 		const { dispatch } = this.props;
 
 		dispatch(
@@ -67,7 +67,7 @@ class AssoArticleList extends React.Component {
 				.definePath(['assos', id, 'articles'])
 				.addValidStatus(416)
 				.articles()
-				.all({ owner: `asso,${id}` })
+				.all({ owner: `asso,${id}`, cemetery: in_cemetery_at != null })
 		);
 	}
 

@@ -6,6 +6,7 @@
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Romain Maliach-Auguste <r.maliach@live.fr>
  * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author Paco Pompeani <paco.pompeani@etu.utc.fr>
  *
  */
 import React from 'react';
@@ -33,6 +34,7 @@ class Article extends React.Component {
 		const { article } = this.props;
 		const { expanded } = this.state;
 		const expandPossible = article.description !== article.content && !expanded;
+		const unexpandPossible = article.description !== article.content && expanded;
 
 		const articleBody = (
 			<div style={{ whiteSpace: 'pre-line' }}>
@@ -40,9 +42,9 @@ class Article extends React.Component {
 					source={expandPossible ? `${article.description}...&nbsp;` : article.content}
 					className="articleContent"
 				/>
-				{expandPossible && (
+				{(expandPossible || unexpandPossible) && (
 					<a className="text-info" onClick={this.toggleExpand}>
-						Lire la suite
+						{expandPossible ? 'Lire la suite' : 'Voir moins'}
 					</a>
 				)}
 			</div>

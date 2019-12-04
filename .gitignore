@@ -12,6 +12,7 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+composer.phar
 .env
 .env.last
 .ftpconfig
@@ -28,4 +29,5 @@ public/images/articles/*
 public/images/assos/*
 public/images/events/*
 public/images/services/*
+public/images/partners/*
 .DS_Store
