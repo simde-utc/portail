@@ -4,6 +4,7 @@
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Paco Pompeani <paco.pompeani@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -39,7 +40,7 @@ class ScreensHome extends React.Component {
 		this.moreArticles = this.moreArticles.bind(this);
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const { dispatch } = this.props;
 
 		actions
@@ -52,7 +53,7 @@ class ScreensHome extends React.Component {
 						...oldState,
 						fetched: true,
 						canAskMore: true,
-						articles: [...data],
+						articles: data,
 					};
 				})
 			);
