@@ -3,6 +3,7 @@
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -24,12 +25,12 @@ import LoggedRoute from './routes/Logged';
 // Screens
 import AppLoader from './AppLoader';
 import HomeScreen from './screens/Home';
-import DashboardScreen from './screens/Dashboard';
 import AssoListScreen from './screens/AssoList';
 import ServiceListScreen from './screens/ServiceList';
 import AssoDetailScreen from './screens/Asso';
 import ProfileScreen from './screens/Profile';
 import BookingScreen from './screens/Booking';
+import PartnersListScreen from './screens/PartnersList';
 
 class App extends React.Component {
 	constructor(props) {
@@ -55,10 +56,10 @@ class App extends React.Component {
 									<ErrorCatcher>
 										<Switch>
 											<Route path="/" exact component={HomeScreen} />
-											<Route path="/dashboard" component={DashboardScreen} />
 											<Route path="/assos" exact component={AssoListScreen} />
 											<Route path="/assos/:login" component={AssoDetailScreen} />
 											<Route path="/services" exact component={ServiceListScreen} />
+											<Route path="/partners" exact component={PartnersListScreen} />
 											<LoggedRoute path="/profile" component={ProfileScreen} />
 											<LoggedRoute
 												path="/bookings"

@@ -36,7 +36,7 @@ trait HasMorphs
                 $morph = \ModelResolver::getModel($request->input($type.'_by_type'))->find($request->input($type.'_by_id'));
 
                 if (!($morph instanceof $interface)) {
-                    abort(400, 'L\'instance n\'a pas le droit de posséder de '.$modelName.'s');
+                    abort(400, 'L\'instance n\'a pas le droit de posséder de '.$modelText.'s');
                 }
 
                 if (\Auth::id() && !$morph->{'is'.ucfirst($modelName).$action}(\Auth::id())) {
