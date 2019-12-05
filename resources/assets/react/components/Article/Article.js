@@ -58,22 +58,24 @@ class Article extends React.Component {
 				>
 					<Img
 						className="align-self-start img-fluid"
-						images={[article.image, article.owned_by.image]}
+						images={[article.image, article.owned_by && article.owned_by.image]}
 						style={{ maxWidth: 100, marginRight: 10 }}
 					/>
 				</div>
 				<div className="col-12 col-md-9 body">
 					<h3 style={{ marginBottom: 0.5 }}>{article.title}</h3>
 					<div>
-						<Link className="text-secondary" to={`/assos/${article.owned_by.login}`}>
-							<Img
-								className="align-self-start img-fluid"
-								image={article.owned_by.image}
-								style={{ maxWidth: 20, marginRight: 5 }}
-							/>
-							{article.owned_by.shortname}
-						</Link>
-						<span style={{ marginLeft: 5 }} className="text-muted small">
+						{article.owned_by && (
+							<Link className="text-secondary" to={`/assos/${article.owned_by.login}`}>
+								<Img
+									className="align-self-start img-fluid"
+									image={article.owned_by.image}
+									style={{ maxWidth: 20, marginRight: 5 }}
+								/>
+								{article.owned_by.shortname}
+							</Link>
+						)}
+						<span style={article.owned_by && { marginLeft: 5 }} className="text-muted small">
 							{getTime(article.created_at)}
 						</span>
 					</div>
