@@ -12,22 +12,11 @@ class PartnersTableSeeder extends Seeder
      */
     public function run()
     {
-        $partners = [
-            [
-                'name' => 'Société Générale',
-                'description' => 'La société générale est une banque (surprise). Elle donne des sous au bde et aux assos',
-                'image' => 'image de la sogé',
-            ],
-            [
-                'name' => 'Ecocup',
-                'description' => 'Ecocup est la référence en gobelet réutilisables pour les associations de l\'UTC.',
-                'image' => 'image de ecocup',
-            ],
-        ];
-
-        foreach ($partners as $partner) {
-            Partner::create($partner);
+        // Not using the classical way as decribed in laravel factories in order to display log (otherwise it seems too long)
+        for ($i = 0; $i < config('seeder.partner.amount') ; $i++) {
+            $partner = factory(Partner::class)->create();
+            $partner->save();
+            fprintf(STDOUT, "Partner ".$i." \tof ".config('seeder.partner.amount')." created\n");
         }
-
     }
 }
