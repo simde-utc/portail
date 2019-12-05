@@ -19,7 +19,7 @@ const getWebsite = website => {
 		return (
 			<p>
 				Site Web :{' '}
-				<a href={website} target="_blank" rel="noopener noreferrer">
+				<a href={website} target="_blank" rel="noopener noreferrer" className="text-primary">
 					{website}
 				</a>
 			</p>
@@ -65,7 +65,7 @@ const mapsSearch = (address, postal_code, city, service) => {
 const Partner = ({ name, image, description, website, address, postal_code, city }) => {
 	const fullAddress = address && postal_code && city;
 	return (
-		<div className="mx-auto my-3 d-flex justify-content-between flex-wrap flex-sm-wrap flex-md-nowrap flex-lg-nowrap flex-xl-nowrap">
+		<div className="mx-auto my-3 d-flex justify-content-center justify-content-sm-between justify-content-md-between justify-content-lg-between justify-content-xl-between flex-wrap flex-sm-wrap flex-md-nowrap flex-lg-nowrap flex-xl-nowrap">
 			<div className="mr-3">
 				<div className="d-flex justify-content-start align-items-center">
 					<AspectRatio className="mb-2 mr-3" ratio="1">
@@ -80,7 +80,7 @@ const Partner = ({ name, image, description, website, address, postal_code, city
 				</div>
 			</div>
 			{fullAddress && (
-				<div className="d-flex flex-column justify-content-center flex-fill">
+				<div className="d-flex flex-column justify-content-center">
 					<Button
 						className="m-1 btn-sm font-weight-bold"
 						color="primary"
