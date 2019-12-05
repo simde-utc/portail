@@ -65,8 +65,8 @@ const mapsSearch = (address, postal_code, city, service) => {
 const Partner = ({ name, image, description, website, address, postal_code, city }) => {
 	const fullAddress = address && postal_code && city;
 	return (
-		<div className="mx-auto my-3 my-md-4 d-flex justify-content-between align-items-sm-center flex-wrap">
-			<div className="w-75 mr-3">
+		<div className="mx-auto my-3 d-flex justify-content-between flex-wrap flex-sm-wrap flex-md-nowrap flex-lg-nowrap flex-xl-nowrap">
+			<div className="mr-3">
 				<div className="d-flex justify-content-start align-items-center">
 					<AspectRatio className="mb-2 mr-3" ratio="1">
 						<Img image={image} style={{ width: '100px' }} />
@@ -76,13 +76,13 @@ const Partner = ({ name, image, description, website, address, postal_code, city
 				<div>
 					{getWebsite(website)}
 					{getAddress(address, postal_code, city)}
-					<p>{description}</p>
+					<p className="text-justify">{description}</p>
 				</div>
 			</div>
 			{fullAddress && (
-				<div className="d-flex flex-column justify-content-center">
+				<div className="d-flex flex-column justify-content-center flex-fill">
 					<Button
-						className="m-1 btn btn-sm font-weight-bold"
+						className="m-1 btn-sm font-weight-bold"
 						color="primary"
 						outline
 						onClick={() => mapsSearch(address, postal_code, city, 'qmaps')}
