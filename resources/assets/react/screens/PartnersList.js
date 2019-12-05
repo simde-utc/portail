@@ -39,8 +39,17 @@ class PartnerListScreen extends React.Component {
 		if (partners.length) {
 			return (
 				<div className="container">
-					{partners.map(({ id, description, image, name }) => (
-						<Partner key={id} name={name} image={image} description={description} />
+					{partners.map(({ id, description, image, name, website, address, postal_code, city }) => (
+						<Partner
+							key={id}
+							name={name}
+							image={image}
+							description={description}
+							website={website}
+							address={address}
+							postal_code={postal_code}
+							city={city}
+						/>
 					))}
 				</div>
 			);
