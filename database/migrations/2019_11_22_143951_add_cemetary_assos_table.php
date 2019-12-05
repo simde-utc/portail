@@ -27,7 +27,7 @@ class AddCemetaryAssosTable extends Migration
     public function down()
     {
         Schema::table('assos', function (Blueprint $table) {
-            $table->dropColumn(['in_cemetary_at']);
+            $table->dropColumn(['in_cemetery_at']);
         });
     }
 }
