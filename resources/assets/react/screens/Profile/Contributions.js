@@ -31,22 +31,26 @@ class Contributions extends React.Component {
 
 	render() {
 		const { contributions, contributionsFetched } = this.props;
-		return (
-			<div>
-				{contributionsFetched &&
-					contributions.map(contribution => {
-						return (
-							<ContributionsCard
-								key={contribution.start}
-								semesters={contribution.semesters}
-								amount={contribution.amount}
-								start={moment(contribution.start, 'YYYY-MM-DD')}
-								end={moment(contribution.end, 'YYYY-MM-DD')}
-							/>
-						);
-					})}
-			</div>
-		);
+		if (contributions.length > 0) {
+			return (
+				<div>
+					{contributionsFetched &&
+						contributions.reverse().map(contribution => {
+							return (
+								<ContributionsCard
+									key={contribution.start}
+									semesters={contribution.semesters}
+									amount={contribution.amount}
+									start={moment(contribution.start, 'YYYY-MM-DD')}
+									end={moment(contribution.end, 'YYYY-MM-DD')}
+								/>
+							);
+						})}
+				</div>
+			);
+		}
+
+		return <p className="text-center p-5">Vous n'avez pas encore cotisé au bde.</p>;
 	}
 }
 export default Contributions;

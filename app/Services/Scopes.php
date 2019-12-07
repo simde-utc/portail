@@ -69,7 +69,7 @@ class Scopes
     }
 
     /**
-     * Define the middleware to call.
+     * Define the middleware to call for authentication.
      *
      * @return string
      */
@@ -284,7 +284,7 @@ class Scopes
             if (!isset($middleware)) {
                 $middleware = $elements[0];
             } else if ($middleware !== $elements[0]) {
-                // Scopes starting by c- and u-.
+                // Scopes starting by client- and user-.
                 throw new PortailException('Les scopes ne sont pas définis avec les mêmes types d\'authentification !');
             }
 
@@ -299,11 +299,14 @@ class Scopes
 
                 $categories[$elements[2]] = [
                     'description' => $categorie['description'],
-                    'icon' => $categorie['icon'],
                     'scopes' => [
                         $current[$scope]
                     ]
                 ];
+
+                if ($elements[0] == "user") {
+                    $categories[$elements[2]]['icon'] = $categorie['icon'];
+                }
             } else {
                 array_push($categories[$elements[2]]['scopes'], $current[$scope]);
             }

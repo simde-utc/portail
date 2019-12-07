@@ -3,6 +3,7 @@
  * Manage Partners as admin.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -26,6 +27,10 @@ class PartnerController extends ResourceController
         return [
             'id' => 'display',
             'name' => 'text',
+            'website' => 'url',
+            'address' => 'text',
+            'postal_code' => 'text',
+            'city' => 'text',
             'description' => 'textarea',
             'image' => 'image',
             'created_at' => 'display',

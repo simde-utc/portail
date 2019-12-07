@@ -18,7 +18,6 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import Select from 'react-select';
 import actions from '../../redux/actions';
 
-import LoggedRoute from '../../routes/Logged';
 import ConditionalRoute from '../../routes/Conditional';
 import Http404 from '../../routes/Http404';
 
@@ -98,7 +97,7 @@ class AssoScreen extends React.Component {
 	}
 
 	loadAssosData(login) {
-		// On doit d'abord récupérer l'asso id:
+		// First, we need to find the assos id.
 		const { dispatch } = this.props;
 		const action = actions.assos.find(login);
 
@@ -554,19 +553,23 @@ class AssoScreen extends React.Component {
 							ARTICLES
 						</NavLink>
 					</li>
-					<li className="nav-item">
-						<NavLink className="nav-link" activeClassName="active" to={`${match.url}/events`}>
-							ÉVÈNEMENTS
-						</NavLink>
-					</li>
-					{user && (user.types.casComfirmed || user.types.contributorBde) && (
+					{asso.in_cemetery_at == null && (
 						<li className="nav-item">
-							<NavLink className="nav-link" activeClassName="active" to={`${match.url}/members`}>
-								TROMBINOSCOPE
+							<NavLink className="nav-link" activeClassName="active" to={`${match.url}/events`}>
+								ÉVÈNEMENTS
 							</NavLink>
 						</li>
 					)}
-					{this.user.isMember && (
+					{user &&
+						(user.types.casComfirmed || user.types.contributorBde) &&
+						asso.in_cemetery_at == null && (
+							<li className="nav-item">
+								<NavLink className="nav-link" activeClassName="active" to={`${match.url}/members`}>
+									TROMBINOSCOPE
+								</NavLink>
+							</li>
+						)}
+					{this.user.isMember && asso.in_cemetery_at == null && (
 						<li className="nav-item">
 							<NavLink className="nav-link" activeClassName="active" to={`${match.url}/access`}>
 								ACCES
@@ -574,6 +577,13 @@ class AssoScreen extends React.Component {
 						</li>
 					)}
 				</ul>
+
+				{asso && asso.parent && asso.in_cemetery_at != null && (
+					<div className="bg-warning m-2 p-3">
+						Attention l'association {asso.name} est morte, pour la reprendre envoyer un mail à son
+						pole à l'adresse suivante : {asso.parent.login}@assos.utc.fr
+					</div>
+				)}
 
 				<Switch>
 					<Route
@@ -596,10 +606,12 @@ class AssoScreen extends React.Component {
 					/>
 					<Route exact path={`${match.url}/events`} render={() => <AssoCalendar asso={asso} />} />
 					<Route exact path={`${match.url}/articles`} render={() => <ArticleList asso={asso} />} />
-					<LoggedRoute
+					<ConditionalRoute
 						path={`${match.url}/members`}
 						redirect={`${match.url}`}
-						types={['casConfirmed', 'contributorBde']}
+						isAllowed={() => {
+							return user.types.contributorBde && asso.in_cemetery_at == null;
+						}}
 						render={() => (
 							<AssoMemberListScreen
 								asso={asso}
@@ -620,7 +632,7 @@ class AssoScreen extends React.Component {
 						path={`${match.url}/access`}
 						redirect={`${match.url}`}
 						isAllowed={() => {
-							return this.user.isMember;
+							return this.user.isMember && asso.in_cemetery_at == null;
 						}}
 						render={() => <AccessScreen asso={asso} />}
 					/>

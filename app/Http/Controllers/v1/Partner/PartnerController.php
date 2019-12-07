@@ -10,6 +10,7 @@
  * @author Josselin Pennors <josselin.pennors@hotmail.fr>
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -21,7 +22,6 @@ use App\Http\Controllers\v1\Controller;
 use App\Http\Requests\PartnerRequest;
 use App\Models\Partner;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class PartnerController extends Controller
 {
@@ -32,7 +32,9 @@ class PartnerController extends Controller
      */
     public function index(): JsonResponse
     {
-        $partners = Partner::all()->map(function ($partner) {
+        $partners = Partner::getSelection();
+
+        $partners = $partners->map(function ($partner) {
             return $partner->hideData();
         });
 
