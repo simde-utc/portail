@@ -129,8 +129,11 @@ class BookingScreen extends React.Component {
 			modal.title = "Réservation d'un créneau";
 			modal.body = (
 				<div>
-					Name:
-					<Input onChange={e => this.setState({ name: e.target.value })} />
+					Intitulé:
+					<Input
+						onChange={e => this.setState({ name: e.target.value })}
+						placeholder="Ex: Réunion team com"
+					/>
 					Créneau:
 					<DatetimeRangePicker
 						startDate={begin}
