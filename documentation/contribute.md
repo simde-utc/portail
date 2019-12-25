@@ -52,7 +52,7 @@ On two terminals:
 
 ## Update
 
-- Run `php artisan portail:update`
+- Run `php artisan portail:update` and **accept deleting the database and seeding it** to update also the database structure.
 - Run `npm run prod` or `npm run watch`
 
 ## Commands
