@@ -6,6 +6,7 @@
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Romain Maliach-Auguste <r.maliach@live.fr>
  * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author Paco Pompeani <paco.pompeani@etu.utc.fr>
  *
  */
 import React from 'react';
@@ -15,8 +16,6 @@ import { Link } from 'react-router-dom';
 import Img from '../Image';
 
 import { getTime } from '../../utils';
-
-const MAX_CONTENT_LENGTH = 80;
 
 class Article extends React.Component {
 	constructor(props) {
@@ -34,21 +33,18 @@ class Article extends React.Component {
 	render() {
 		const { article } = this.props;
 		const { expanded } = this.state;
-		const expandPossible = article.content.length > MAX_CONTENT_LENGTH && !expanded;
+		const expandPossible = article.description !== article.content && !expanded;
+		const unexpandPossible = article.description !== article.content && expanded;
 
 		const articleBody = (
 			<div style={{ whiteSpace: 'pre-line' }}>
 				<ReactMarkdown
-					source={
-						expandPossible
-							? `${article.content.substring(0, MAX_CONTENT_LENGTH)}...&nbsp;`
-							: article.content
-					}
+					source={expandPossible ? `${article.description}...&nbsp;` : article.content}
 					className="articleContent"
 				/>
-				{expandPossible && (
+				{(expandPossible || unexpandPossible) && (
 					<a className="text-info" onClick={this.toggleExpand}>
-						Lire la suite
+						{expandPossible ? 'Lire la suite' : 'Voir moins'}
 					</a>
 				)}
 			</div>
@@ -62,22 +58,24 @@ class Article extends React.Component {
 				>
 					<Img
 						className="align-self-start img-fluid"
-						images={[article.image, article.owned_by.image]}
+						images={[article.image, article.owned_by && article.owned_by.image]}
 						style={{ maxWidth: 100, marginRight: 10 }}
 					/>
 				</div>
 				<div className="col-12 col-md-9 body">
 					<h3 style={{ marginBottom: 0.5 }}>{article.title}</h3>
 					<div>
-						<Link className="text-secondary" to={`/assos/${article.owned_by.login}`}>
-							<Img
-								className="align-self-start img-fluid"
-								image={article.owned_by.image}
-								style={{ maxWidth: 20, marginRight: 5 }}
-							/>
-							{article.owned_by.shortname}
-						</Link>
-						<span style={{ marginLeft: 5 }} className="text-muted small">
+						{article.owned_by && (
+							<Link className="text-secondary" to={`/assos/${article.owned_by.login}`}>
+								<Img
+									className="align-self-start img-fluid"
+									image={article.owned_by.image}
+									style={{ maxWidth: 20, marginRight: 5 }}
+								/>
+								{article.owned_by.shortname}
+							</Link>
+						)}
+						<span style={article.owned_by && { marginLeft: 5 }} className="text-muted small">
 							{getTime(article.created_at)}
 						</span>
 					</div>

@@ -14,6 +14,7 @@ use Ginger;
 use App\Models\User;
 use App\Models\AuthApp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 class App extends BaseAuth
@@ -41,7 +42,7 @@ class App extends BaseAuth
             'user_id' => $user_id,
             'app_id' => $info['app_id'],
             'password' => Hash::make($info['password']),
-            'key' => str_random(64)
+            'key' => Str::random(64)
         ]);
     }
 }

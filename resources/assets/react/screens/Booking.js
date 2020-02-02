@@ -2,6 +2,7 @@
  * List bookings.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -128,13 +129,16 @@ class BookingScreen extends React.Component {
 			modal.title = "Réservation d'un créneau";
 			modal.body = (
 				<div>
-					Name:
-					<Input onChange={e => this.setState({ name: e.target.value })} />
+					Intitulé:
+					<Input
+						onChange={e => this.setState({ name: e.target.value })}
+						placeholder="Ex: Réunion team com"
+					/>
 					Créneau:
 					<DatetimeRangePicker
 						startDate={begin}
 						endDate={end}
-						onStartDateChange={date => console.log(date) || this.setState({ begin_at: date })}
+						onStartDateChange={date => this.setState({ begin_at: date })}
 						onEndDateChange={date => this.setState({ end_at: date })}
 						className="d-flex"
 						input
@@ -167,19 +171,22 @@ class BookingScreen extends React.Component {
 			modal.button.text = 'Réserver';
 			modal.button.onClick = () => {
 				const { room_id, asso_id, type_id, name, begin_at, end_at } = this.state;
-				const action = actions.rooms(room_id).bookings.create({
-					room_id,
-					name,
-					type_id,
-					begin_at: formatDate(begin_at),
-					end_at: formatDate(end_at),
-					owned_by_id: asso_id,
-					owned_by_type: 'asso',
-				});
+				const action = actions.rooms(room_id).bookings.create(
+					{},
+					{
+						room_id,
+						name,
+						type_id,
+						begin_at: formatDate(begin_at),
+						end_at: formatDate(end_at),
+						owned_by_id: asso_id,
+						owned_by_type: 'asso',
+					}
+				);
 
 				action.payload
 					.then(({ data }) => {
-						NotificationManager.warning('Réservation réalisée avec succès', 'Réservation');
+						NotificationManager.success('Réservation réalisée avec succès', 'Réservation');
 
 						// On recharge le calendrier
 						this.setState({

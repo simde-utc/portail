@@ -3,6 +3,14 @@
 The authentication system is modular.
 Each authentication type is described in `config/auth.php`, in the array `services`.
 
+## Table of content
+- [Authentication](#authentication)
+	- [Table of content](#table-of-content)
+	- [System Declaration](#system-declaration)
+	- [LoginController](#logincontroller)
+	- [Parent authentication service](#parent-authentication-service)
+	- [Specific authentication service](#specific-authentication-service)
+	- [Table and Model](#table-and-model)
 
 ## System Declaration
 

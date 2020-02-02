@@ -3,6 +3,7 @@
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author Paco Pompeani <paco.pompeani@etu.utc.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -13,6 +14,9 @@ import { NavLink, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import AssociativeCareerScreen from './AssociativeCareer';
+import AppsScreen from './Applications';
+import Contributions from './Contributions';
+import InfoScreen from './InfoScreen';
 
 import actions from '../../redux/actions';
 
@@ -76,6 +80,9 @@ class ScreenProfile extends React.Component {
 						exact
 						render={() => <AssociativeCareerScreen user={user} />}
 					/>
+					<Route path={`${match.url}/apps`} exact render={() => <AppsScreen />} />
+					<Route path={`${match.url}/Contributions`} exact render={() => <Contributions />} />
+					<Route path={`${match.url}`} exact render={() => <InfoScreen />} />
 				</Switch>
 			</div>
 		);

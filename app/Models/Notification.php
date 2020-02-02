@@ -9,6 +9,7 @@
  */
 
 namespace App\Models;
+use Illuminate\Support\Arr;
 
 class Notification extends Model
 {
@@ -55,7 +56,7 @@ class Notification extends Model
         static::creating(function ($model) {
             if (isset($model->data['created_by'])) {
                 $data = $model->data;
-                $created_by = array_pull($data, 'created_by');
+                $created_by = Arr::pull($data, 'created_by');
                 $model->data = $data;
 
                 $model->created_by_id = $created_by['id'];

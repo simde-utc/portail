@@ -51,7 +51,8 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('permission:user');
+        $this->middleware('permission:user', ['except' => ['contributeBde']]);
+        $this->middleware('permission:user-contributeBde', ['only' => ['contributeBde']]);
     }
 
     /**
@@ -79,12 +80,6 @@ class UserController extends Controller
         });
 
         $grid->model()->orderBy('created_at');
-
-        $grid->filter(function (Filter $filter) {
-            $filter->like('email');
-            $filter->like('firstname');
-            $filter->like('lastname');
-        });
 
         $grid->tools(function ($tools) {
             $tools->disableBatchActions();

@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthPassword extends Auth
 {
+    protected $table = "auth_passwords";
+
     protected $fillable = [
         'user_id', 'password', 'last_login_at',
     ];

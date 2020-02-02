@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthApp extends Auth
 {
+    protected $table = "auth_apps";
+
     protected $fillable = [
         'user_id', 'app_id', 'password', 'key',
     ];

@@ -11,7 +11,6 @@
  */
 
 if (!function_exists('validation_between')) {
-
     /**
      * Return the `between` string for validations Requests.
      *
@@ -23,11 +22,9 @@ if (!function_exists('validation_between')) {
         $values = config("validation.$validationId");
         return "between:".$values['min'].",".$values['max'];
     }
-
 }
 
 if (!function_exists('validation_max')) {
-
     /**
      * Return the max integer value for Migrations
      *
@@ -38,11 +35,9 @@ if (!function_exists('validation_max')) {
     {
         return config("validation.$validationId.max");
     }
-
 }
 
 if (!function_exists('convertPipeToArray') && !function_exists('stringToArray')) {
-
     /**
      * Convert string lists into an array.
      *
@@ -99,11 +94,9 @@ if (!function_exists('convertPipeToArray') && !function_exists('stringToArray'))
 
         return $toArray;
     }
-
 }
 
 if (!function_exists('trimText')) {
-
     /**
      * Cut the given text at a given length.
      *
@@ -127,5 +120,4 @@ if (!function_exists('trimText')) {
 
         return $trimmed_text;
     }
-
 }

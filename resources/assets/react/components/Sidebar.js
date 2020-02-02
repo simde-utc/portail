@@ -125,7 +125,7 @@ class Sidebar extends React.Component {
 								rel="noopener noreferrer"
 								href="https://webmail.utc.fr"
 							>
-								<FontAwesomeIcon icon="paper-plane" /> Webmail
+								<FontAwesomeIcon icon="paper-plane" /> Webmail UTC
 							</a>
 							<a
 								className="sidebar-link"
@@ -172,6 +172,9 @@ class Sidebar extends React.Component {
 							<NavLink className="sidebar-link" to="/assos">
 								<FontAwesomeIcon icon="hands-helping" /> Associations
 							</NavLink>
+							<NavLink className="sidebar-link" to="/partners">
+								<FontAwesomeIcon icon="handshake" /> Partenaires
+							</NavLink>
 							<NavLink className="sidebar-link" to="/groupes" style={{ display: 'none' }}>
 								<FontAwesomeIcon icon="users" /> Groupes
 							</NavLink>
@@ -180,7 +183,7 @@ class Sidebar extends React.Component {
 						{isAuthenticated && services.length > 0 && (
 							<div className="sidebar-group">
 								<h6 className="sidebar-header d-hover-zone">
-									MES SERVICES{' '}
+									MES SERVICES FAVORIS{' '}
 									<NavLink
 										className="float-right d-hover fas fa-cog"
 										style={{ display: 'none' }}

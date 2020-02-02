@@ -6,6 +6,7 @@
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -69,7 +70,14 @@ class AssoController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $assos = Asso::with('parent')->getSelection()->map(function ($asso) {
+        $assos = Asso::with('parent');
+
+        // If GET parameter `cemetary` exists and is true, we add associations in cemetery.
+        if (!($request->input('cemetery') != null && $request->input('cemetery') === 'true')) {
+            $assos = $assos->whereNull('in_cemetery_at');
+        }
+
+        $assos = $assos->getSelection()->map(function ($asso) {
             return $asso->hideData();
         });
 
