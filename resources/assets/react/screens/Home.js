@@ -18,7 +18,7 @@ import ArticleList from '../components/Article/List';
 
 const buttonStyle = {
 	display: 'block',
-	border: '1px solid black',
+	border: '2px solid #17a2b8',
 	borderRadius: '10px',
 	margin: '0 auto 10px auto',
 	width: '150px',
