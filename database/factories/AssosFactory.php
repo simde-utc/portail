@@ -13,11 +13,11 @@ $factory->define(Asso::class, function (Faker $faker) {
         'id' => Uuid::generate()->string,
         'type_id' => AssoType::where('type', $faker->randomElement($assoTypeIdentifiers))->first()->id,
         'parent_id' => Asso::where('login', $faker->randomElement($assoParents))->first()->id,
-        'login' => $faker->regexify('\w{0,15}'),
+        'login' => $faker->regexify('\w{6,30}'),
         'shortname' => $faker->company(),
         'name' => $faker->catchPhrase(),
-        'image' => 'todo',
+        'image' => config("seeder.asso.generate_images", false) ? '/images/assos/'.$faker->image('public/images/assos', config('seeder.asso.image_width'), config('seeder.asso.image_height'), null, false) : null ,
         'description' => $faker->realText(400, 2),
         'in_cemetery_at' => $faker->boolean(20) ? $faker->dateTimeBetween('-5 years', 'now') : null,
-   ];
+    ];
 });

@@ -196,5 +196,11 @@ DESC
                 'parent_id' => isset($asso['parent_login']) ? Asso::where('login', $asso['parent_login'])->first()->id : null,
             ]);
         }
+
+        for ($i = 0; $i < config('seeder.asso.amount'); $i++) {
+            $asso = factory(Asso::class)->create();
+            $asso->save();
+            fprintf(STDOUT, "Asso ".($i + 1)." \tof ".config('seeder.asso.amount')." created\n");
+        }
     }
 }

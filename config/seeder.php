@@ -16,6 +16,9 @@ return [
             'descriptions' => 'Association loi 1901,Commission,Club,Projet',
         ],
         'parents' => 'bde,poleae,polesec,polete,polevdc',
+        'generate_images' => true,
+        'image_width' => 300,
+        'image_height' => 400,
     ],
     'partner' => [
         'amount' => 0,
