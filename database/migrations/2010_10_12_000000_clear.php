@@ -1,4 +1,14 @@
 <?php
+/**
+ * Clear migration
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
+ *
+ * @copyright Copyright (c) 2020, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
+
 use Illuminate\Database\Migrations\Migration;
 
 class Clear extends Migration
@@ -11,7 +21,7 @@ class Clear extends Migration
     public function up()
     {
         $this->removeDir(public_path('/images/assos/'), true);
-        $this->removeDir(public_path('/images/articles'));
+        $this->removeDir(public_path('/images/articles'), true);
         $this->removeDir(public_path('/images/events'));
     }
 
