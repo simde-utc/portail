@@ -27,8 +27,14 @@ return [
         'image_height' => 400,
     ],
     'partner' => [
-        'amount' => 0,
+        'amount' => 12,
         'description_length' => 500,
+        'generate_images' => false,
+        'image_width' => 300,
+        'image_height' => 400,
+    ],
+    'user' => [
+        'amount' => 20,
         'generate_images' => false,
         'image_width' => 300,
         'image_height' => 400,
