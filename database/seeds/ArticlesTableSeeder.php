@@ -6,6 +6,7 @@ use App\Models\ArticleAction;
 use App\Models\Visibility;
 use App\Models\Asso;
 use App\Models\User;
+use PHPStan\DependencyInjection\ConditionalTagsExtension;
 
 class ArticlesTableSeeder extends Seeder
 {
@@ -108,6 +109,12 @@ class ArticlesTableSeeder extends Seeder
                     'value'         => $action['value'],
                 ]);
             }
+        }
+
+        for ($i = 0; $i < config('seeder.article.amount') ; $i++) {
+            $article = factory(Article::class)->create();
+            $article->save();
+            fprintf(STDOUT, "Article ".($i + 1)." \tof ".config('seeder.article.amount')." created\n");
         }
 
     }
