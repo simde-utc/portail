@@ -1,4 +1,14 @@
 <?php
+/**
+ * Clear migration
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author Romain Maliach-Auguste <r.maliach@live.fr>
+ *
+ * @copyright Copyright (c) 2020, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 use Illuminate\Database\Seeder;
 use App\Models\Asso;
@@ -197,10 +207,10 @@ DESC
             ]);
         }
 
-        for ($i = 0; $i < config('seeder.asso.amount'); $i++) {
+        for ($i = 1; $i <= config('seeder.asso.amount'); $i++) {
             $asso = factory(Asso::class)->create();
             $asso->save();
-            fprintf(STDOUT, "Asso ".($i + 1)." \tof ".config('seeder.asso.amount')." created\n");
+            fprintf(STDOUT, "Asso ".$i." \tof ".config('seeder.asso.amount')." created\n");
         }
     }
 }

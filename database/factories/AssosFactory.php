@@ -1,4 +1,12 @@
 <?php
+/**
+ * Assos factory
+ *
+ * @author Corentin Mercier <corentin@cmercier.fr>
+ *
+ * @copyright Copyright (c) 2020, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 use App\Models\AssoType;
 use App\Models\Asso;
