@@ -86,7 +86,7 @@ class UserController extends Controller
         }
 
         $users = $users->getSelection()->map(function ($user) {
-            return $user->hideData();
+            return $user->hideData()->makeVisible('email');
         });
 
         return response()->json($users, 200);
