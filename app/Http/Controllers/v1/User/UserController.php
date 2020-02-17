@@ -160,7 +160,9 @@ class UserController extends Controller
     {
         $user = $this->getUser($request, $user_id);
 
-        if (!\Scopes::has($request, 'user-get-info-identity-email')) {
+        if (!\Scopes::has($request, 'user-get-info-identity-email')
+            && !\Scopes::has($request, 'client-get-users-active')
+            && !\Scopes::has($request, 'client-get-users-inactive')) {
             $user->makeHidden('email');
         }
 
