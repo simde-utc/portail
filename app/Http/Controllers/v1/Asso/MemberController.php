@@ -128,6 +128,7 @@ class MemberController extends Controller
         $members = $asso->allMembers()
             ->where('semester_id', $semester->id)
             ->whereNotNull('role_id')
+            ->whereNotNull('validated_by_id')
             ->getSelection(true)
             ->map(function ($member) {
                 $member->pivot = [
