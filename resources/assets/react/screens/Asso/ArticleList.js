@@ -33,7 +33,7 @@ class AssoArticleList extends React.Component {
 		};
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const {
 			asso: { id, shortname, in_cemetery_at },
 			dispatch,

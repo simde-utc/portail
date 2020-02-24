@@ -25,7 +25,7 @@ import actions from '../../redux/actions';
 	permissions: store.getData('user/permissions'),
 }))
 class ScreenProfile extends React.Component {
-	componentWillMount() {
+	componentDidMount() {
 		const { dispatch } = this.props;
 
 		dispatch(actions.config({ title: 'Mon profil' }));
