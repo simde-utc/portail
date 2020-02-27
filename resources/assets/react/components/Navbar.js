@@ -143,7 +143,7 @@ class Navbar extends React.Component {
 						</li>
 					)}
 
-					{user && permissions.length && (
+					{user && permissions.length > 0 && (
 						<li className="nav-item">
 							<a className="nav-link d-flex" href="/admin">
 								<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
