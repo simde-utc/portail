@@ -88,5 +88,11 @@ class UsersTableSeeder extends Seeder
                 ], true);
             }
         }
+
+        for ($i = 1; $i <= config('seeder.user.amount') ; $i++) {
+            $user = factory(User::class)->create();
+            $user->save();
+            fprintf(STDOUT, "User ".$i." \tof ".config('seeder.user.amount')." created\n");
+        }
     }
 }
