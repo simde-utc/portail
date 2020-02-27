@@ -39,17 +39,22 @@ class AssociativeCareerScreen extends React.Component {
 			dispatch(actions.roles.all());
 		}
 
-		semesters.forEach(semester => {
-			if (associativeSemesters[semester.id] === undefined) {
-				actions.user.assos
-					.all({ cemetery: true, semester: semester.id })
-					.payload.then(({ data }) => {
-						if (data.length > 0) {
-							this.addNewAssociativeSemester(semester.id, data);
-						}
-					});
-			}
-		});
+		[...semesters]
+			.sort((a, b) => {
+				return a.begin_at < b.begin_at;
+			})
+			.reverse()
+			.forEach(semester => {
+				if (associativeSemesters[semester.id] === undefined) {
+					actions.user.assos
+						.all({ cemetery: true, semester: semester.id })
+						.payload.then(({ data }) => {
+							if (data.length > 0) {
+								this.addNewAssociativeSemester(semester.id, data);
+							}
+						});
+				}
+			});
 	}
 
 	addNewAssociativeSemester(semester_id, assos) {
