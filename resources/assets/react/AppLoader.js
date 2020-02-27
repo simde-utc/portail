@@ -35,7 +35,7 @@ require('./bootstrap');
 }))
 class AppLoader extends React.Component {
 	// All information to retrieve at the app launch.
-	componentWillMount() {
+	componentDidMount() {
 		const { dispatch } = this.props;
 
 		// Semesters retrievement.

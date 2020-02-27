@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Prod:
+        // Production seeders, be sure before editing this array.
         $this->call([
             SemestersTableSeeder::class,
             AssosTypesTableSeeder::class,
@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             AdminMenuTableSeeder::class,
         ]);
 
+        // Developement seeders
         if ((bool) env('APP_DEBUG', config('app.debug', false))) {
             $this->call([
                 AssosTableSeeder::class,

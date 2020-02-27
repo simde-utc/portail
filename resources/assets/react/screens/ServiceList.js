@@ -41,7 +41,7 @@ class ServiceListScreen extends React.Component {
 		};
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const { dispatch } = this.props;
 
 		dispatch(actions.services.all());

@@ -63,7 +63,7 @@ class BookingScreen extends React.Component {
 		};
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const { user, assos, dispatch } = this.props;
 
 		dispatch(actions.rooms.all());
