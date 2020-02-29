@@ -59,7 +59,7 @@ class EventForm extends React.Component {
 		}
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const { calendars, visibilities } = this.props;
 
 		if (calendars.length !== 0) {

@@ -62,7 +62,7 @@ class AssoScreen extends React.Component {
 		};
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const {
 			match: {
 				params: { login },

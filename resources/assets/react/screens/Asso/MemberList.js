@@ -44,7 +44,7 @@ class AssoMemberListScreen extends React.Component {
 		dispatch(actions.config({ title: `${asso.shortname} - Membres` }));
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const { asso, dispatch } = this.props;
 
 		dispatch(actions.config({ title: `${asso.shortname} - Membres` }));

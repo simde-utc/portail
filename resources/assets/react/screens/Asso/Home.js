@@ -30,7 +30,7 @@ import Img from '../../components/Image';
 	roles: store.getData(['assos', props.asso.id, 'roles']),
 }))
 class AssoHomeScreen extends React.Component {
-	componentWillMount() {
+	componentDidMount() {
 		const {
 			asso: { id, shortname },
 			contactsFetched,
