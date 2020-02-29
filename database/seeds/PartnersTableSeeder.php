@@ -21,10 +21,17 @@ class PartnersTableSeeder extends Seeder
     public function run()
     {
         // Not using the classical way as decribed in laravel factories in order to display log (otherwise it seems too long)
+        $this->command->getOutput()->progressStart();
+
         for ($i = 1; $i <= config('seeder.partner.amount') ; $i++) {
-            $partner = factory(Partner::class)->create();
-            $partner->save();
-            fprintf(STDOUT, "Partner ".$i." \tof ".config('seeder.partner.amount')." created\n");
+            try {
+                factory(Partner::class)->create()->save();
+                $this->command->getOutput()->progressAdvance();
+            } catch (\Throwable $e) {
+                $i--;
+            }
         }
+
+        $this->command->getOutput()->progressFinish();
     }
 }
