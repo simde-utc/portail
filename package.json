@@ -49,7 +49,7 @@
 		"moment": "2.22.2",
 		"prop-types": "^15.7.2",
 		"react": "^16.13.0",
-		"react-aspect-ratio": "^1.0.41",
+		"react-aspect-ratio": "^1.0.42",
 		"react-big-calendar": "^0.19.2",
 		"react-copy-to-clipboard": "^5.0.2",
 		"react-datetime": "^2.16.3",
