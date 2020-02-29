@@ -16,7 +16,7 @@ return [
         'image_height' => 400,
     ],
     'asso' => [
-        'amount' => 40,
+        'amount' => 20,
         'type' => [
             'identifiers' => '1901,commission,club,projet',
             'descriptions' => 'Association loi 1901,Commission,Club,Projet',
@@ -28,7 +28,7 @@ return [
     ],
     // We recommand seeding 1000 memberships if multiple_semester is true
     'membership' => [
-        'amount' => 400,
+        'amount' => 50,
         // Enables membership to be created for past semesters (useful for carrers)
         'multiple_semesters' => false,
     ],
@@ -40,7 +40,7 @@ return [
         'image_height' => 400,
     ],
     'user' => [
-        'amount' => 50,
+        'amount' => 10,
         'generate_images' => false,
         'image_width' => 300,
         'image_height' => 400,
