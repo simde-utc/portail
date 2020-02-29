@@ -30,7 +30,7 @@
         "mews/captcha": "^2.2",
         "nastuzzi-samy/api-tester": "^1.1",
         "nastuzzi-samy/laravel-model-stages": "^1.0",
-        "nastuzzi-samy/laravel-query-selection": "^2.2",
+        "nastuzzi-samy/laravel-query-selection": "^2.5",
         "predis/predis": "^1.1",
         "webpatser/laravel-uuid": "^3.0"
     },
