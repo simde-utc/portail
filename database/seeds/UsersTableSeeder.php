@@ -3,6 +3,8 @@
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Asso;
+use App\Models\Semester;
+use App\Models\Role;
 
 class UsersTableSeeder extends Seeder
 {
@@ -71,6 +73,7 @@ class UsersTableSeeder extends Seeder
             ],
         ];
 
+        fprintf(STDOUT, "Seeding manually added users\n");
         foreach ($users as $user) {
             $model = User::create([
                 'id'		=> ($user['id'] ?? null),
@@ -89,10 +92,74 @@ class UsersTableSeeder extends Seeder
             }
         }
 
+        // Giving information
+        fprintf(STDOUT, "Seeding random users\n");
+        $this->command->getOutput()->progressStart(config('seeder.user.amount'));
+
+        // Seeding random users
         for ($i = 1; $i <= config('seeder.user.amount') ; $i++) {
-            $user = factory(User::class)->create();
-            $user->save();
-            fprintf(STDOUT, "User ".$i." \tof ".config('seeder.user.amount')." created\n");
+            $user = factory(User::class)->create()->save();
+            $this->command->getOutput()->progressAdvance();
         }
+
+        $this->command->getOutput()->progressFinish();
+
+        // Fetching common data
+        $presidentRoleId = Role::where('type', 'president')->first()->id;
+        $roles = Role::where([
+            ["owned_by_type", "=", 'App\Models\Asso'],
+            ["owned_by_id" , "=", null]
+        ])->get()->toArray();
+        $assos = Asso::whereNull('in_cemetery_at')->get()->toArray();
+        $admin_id = User::where("email", config('app.admin.email'))->first()->id;
+        $semester_id = Semester::getThisSemester()->id;
+        if (config("seeder.membership.multiple_semesters")) {
+            $semesters = Semester::all()->toArray();
+        }
+
+        // Start progress bar
+        fprintf(STDOUT, "Seeding memberships\n");
+        $this->command->getOutput()->progressStart(config('seeder.membership.amount'));
+
+        // Seeding
+        for ($i = 1; $i <= config('seeder.membership.amount'); $i++) {
+            $faker = Faker\Factory::create();
+            $user_id = $faker->randomElement(User::all()->toArray())['id'];
+            $asso = Asso::where('id', $faker->randomElement($assos)['id'])->first();
+
+            if (config("seeder.membership.multiple_semesters")) {
+                $semester_id = $faker->randomElement($semesters)['id'];
+            }
+
+            if ($asso->members()->where("semester_id", $semester_id)->count() == 0) {
+                try {
+                    $asso->assignRoles("president", [
+                        'user_id' => $user_id,
+                        'validated_by_id' => $admin_id,
+                        'semester_id' => $semester_id,
+                    ], true);
+                    $this->command->getOutput()->progressAdvance();
+                } catch (\Throwable $e) {
+                    $i--;
+                }
+
+                continue;
+            }
+
+            $validatedById = $asso->members()->where('role_id', $presidentRoleId)->first()->id;
+            $role = $faker->randomElement($roles)['id'];
+            try {
+                $asso->assignRoles($role, [
+                    'user_id' => $user_id,
+                    'validated_by_id' => $validatedById,
+                    'semester_id' => $semester_id,
+                ]);
+                $this->command->getOutput()->progressAdvance();
+            } catch (\Throwable $e) {
+                    $i--;
+            }
+        }
+
+        $this->command->getOutput()->progressFinish();
     }
 }

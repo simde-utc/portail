@@ -196,6 +196,7 @@ DESC
             ],
         ];
 
+        fprintf(STDOUT, "Seeding manually added association\n");
         foreach ($assos as $asso) {
             Asso::create([
                 'login' => $asso['login'],
@@ -207,10 +208,17 @@ DESC
             ]);
         }
 
+        fprintf(STDOUT, "Seeding random associations\n");
+        $this->command->getOutput()->progressStart(config('seeder.asso.amount'));
         for ($i = 1; $i <= config('seeder.asso.amount'); $i++) {
-            $asso = factory(Asso::class)->create();
-            $asso->save();
-            fprintf(STDOUT, "Asso ".$i." \tof ".config('seeder.asso.amount')." created\n");
+            try {
+                factory(Asso::class)->create()->save();
+                $this->command->getOutput()->progressAdvance();
+            } catch (\Throwable $e) {
+                $i--;
+            }
         }
+
+        $this->command->getOutput()->progressFinish();
     }
 }
