@@ -27,23 +27,32 @@ import AssoMemberListScreen from './MemberList';
 import AssoCalendar from './Calendar';
 import AccessScreen from './Access';
 
-@connect((store, { match: { params: { login } } }) => {
-	const user = store.getData('user', false);
-	const asso = store.getData(['assos', login]);
+@connect(
+	(
+		store,
+		{
+			match: {
+				params: { login },
+			},
+		}
+	) => {
+		const user = store.getData('user', false);
+		const asso = store.getData(['assos', login]);
 
-	return {
-		user,
-		asso,
-		config: store.config,
-		isNotConnected: store.hasFailed('user'),
-		member: store.findData(['user', 'assos'], login, 'login', false),
-		roles: store.getData(['assos', asso.id, 'roles']),
-		memberPermissions: store.getData(['assos', asso.id, 'members', user.id, 'permissions']),
-		fetching: store.isFetching(['assos', login]),
-		fetched: store.isFetched(['assos', login]),
-		failed: store.hasFailed(['assos', login]),
-	};
-})
+		return {
+			user,
+			asso,
+			config: store.config,
+			isNotConnected: store.hasFailed('user'),
+			member: store.findData(['user', 'assos'], login, 'login', false),
+			roles: store.getData(['assos', asso.id, 'roles']),
+			memberPermissions: store.getData(['assos', asso.id, 'members', user.id, 'permissions']),
+			fetching: store.isFetching(['assos', login]),
+			fetched: store.isFetched(['assos', login]),
+			failed: store.hasFailed(['assos', login]),
+		};
+	}
+)
 class AssoScreen extends React.Component {
 	constructor(props) {
 		super(props);

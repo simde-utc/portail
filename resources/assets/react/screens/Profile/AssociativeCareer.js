@@ -71,7 +71,7 @@ class AssociativeCareerScreen extends React.Component {
 
 		if (associativeSemestersKeys.length) {
 			return (
-				<div className="ml-5 AssociativeCareer">
+				<div className="ml-5 AssociativeCareer" key="test">
 					{rolesFetched &&
 						semestersFetched &&
 						associativeSemestersKeys.reverse().map(semester_id => {
