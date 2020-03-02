@@ -43,7 +43,7 @@ class AssociativeCareerScreen extends React.Component {
 		semesters.forEach(semester => {
 			if (associativeSemesters[semester.id] === undefined) {
 				actions.user.assos
-					.all({ cemetery: true, semester: semester.id })
+					.all({ cemetery: true, semester: semester.id, only: 'joined' })
 					.payload.then(({ data }) => {
 						if (data.length > 0) {
 							this.addNewAssociativeSemester(semester.id, data);
