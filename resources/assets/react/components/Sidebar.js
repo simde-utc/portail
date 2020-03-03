@@ -96,6 +96,34 @@ class Sidebar extends React.Component {
 
 						<div className="sidebar-group">
 							<h6 className="sidebar-header d-hover-zone">
+								RACCOURCIS{' '}
+								<NavLink
+									className="float-right d-hover fas fa-cog"
+									style={{ display: 'none' }}
+									to="/settings/sidebar/shortcuts"
+								/>
+							</h6>
+							{isAuthenticated && user.types.contributorBde && (
+								<NavLink className="sidebar-link" to="/bookings">
+									<FontAwesomeIcon icon="person-booth" /> Réservations
+								</NavLink>
+							)}
+							<NavLink className="sidebar-link" to="/services">
+								<FontAwesomeIcon icon="concierge-bell" /> Services
+							</NavLink>
+							<NavLink className="sidebar-link" to="/assos">
+								<FontAwesomeIcon icon="hands-helping" /> Associations
+							</NavLink>
+							<NavLink className="sidebar-link" to="/partners">
+								<FontAwesomeIcon icon="handshake" /> Partenaires
+							</NavLink>
+							<NavLink className="sidebar-link" to="/groupes" style={{ display: 'none' }}>
+								<FontAwesomeIcon icon="users" /> Groupes
+							</NavLink>
+						</div>
+
+						<div className="sidebar-group">
+							<h6 className="sidebar-header d-hover-zone">
 								LIENS UTILES{' '}
 								<NavLink
 									className="float-right d-hover fas fa-cog"
@@ -152,34 +180,6 @@ class Sidebar extends React.Component {
 							>
 								<FontAwesomeIcon icon="bug" /> Signaler un bug
 							</a>
-						</div>
-
-						<div className="sidebar-group">
-							<h6 className="sidebar-header d-hover-zone">
-								RACCOURCIS{' '}
-								<NavLink
-									className="float-right d-hover fas fa-cog"
-									style={{ display: 'none' }}
-									to="/settings/sidebar/shortcuts"
-								/>
-							</h6>
-							{isAuthenticated && user.types.contributorBde && (
-								<NavLink className="sidebar-link" to="/bookings">
-									<FontAwesomeIcon icon="person-booth" /> Réservations
-								</NavLink>
-							)}
-							<NavLink className="sidebar-link" to="/services">
-								<FontAwesomeIcon icon="concierge-bell" /> Services
-							</NavLink>
-							<NavLink className="sidebar-link" to="/assos">
-								<FontAwesomeIcon icon="hands-helping" /> Associations
-							</NavLink>
-							<NavLink className="sidebar-link" to="/partners">
-								<FontAwesomeIcon icon="handshake" /> Partenaires
-							</NavLink>
-							<NavLink className="sidebar-link" to="/groupes" style={{ display: 'none' }}>
-								<FontAwesomeIcon icon="users" /> Groupes
-							</NavLink>
 						</div>
 
 						{isAuthenticated && services.length > 0 && (
