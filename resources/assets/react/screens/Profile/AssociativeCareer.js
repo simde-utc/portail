@@ -43,7 +43,7 @@ class AssociativeCareerScreen extends React.Component {
 		semesters.forEach(semester => {
 			if (associativeSemesters[semester.id] === undefined) {
 				actions.user.assos
-					.all({ cemetery: true, semester: semester.id, only: 'joined' })
+					.all({ cemetery: true, semester: semester.id, only: 'joined,followed' })
 					.payload.then(({ data }) => {
 						if (data.length > 0) {
 							this.addNewAssociativeSemester(semester.id, data);
@@ -87,7 +87,7 @@ class AssociativeCareerScreen extends React.Component {
 											key={asso.id + semester.id}
 											name={asso.name}
 											shortname={asso.shortname}
-											additionalInfo={role ? role.name : ''}
+											additionalInfo={role ? role.name : 'Association suivie'}
 											image={asso.image}
 											login={asso.parent ? asso.parent.login : asso.login}
 											deleted={asso.in_cemetery_at != null}
