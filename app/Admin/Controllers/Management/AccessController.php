@@ -3,6 +3,7 @@
  * Manage accesses.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -48,6 +49,31 @@ class AccessController extends Controller
             'asso' => Asso::get(['id', 'name']),
             'member' => User::get(['id', 'firstname', 'lastname']),
         ]);
+
+        // Define the filter for parents.
+        $grid->filter(function($filter) {
+            // Get all poles (all assos with children).
+            $poles = Asso::whereIn('id', function($query) {
+                return $query->select('parent_id')->from('assos');
+            })->pluck('name', 'id');
+
+            $filter->where(function ($query) {
+                $query->whereHas('asso', function ($query) {
+                    $query->where('parent_id', '=', $this->input);
+                });
+            }, 'Parent')->select($poles);
+        });
+
+        $grid->get()->parent()->sortable()->display(function () {
+            $asso = Asso::find($this->asso_id);
+
+            if ($asso) {
+                $parent = Asso::find($asso->parent_id);
+                if ($parent) {
+                    return $parent->name;
+                }
+            }
+        });
 
         $grid->get()->role()->sortable()->display(function () {
             $asso = Asso::find($this->asso_id);
