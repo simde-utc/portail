@@ -61,10 +61,10 @@ class AccessController extends Controller
                 $query->whereHas('asso', function ($query) {
                     $query->where('parent_id', '=', $this->input);
                 });
-            }, 'Parent')->select($poles);
+            }, 'Pôle')->select($poles);
         });
 
-        $grid->get()->parent()->sortable()->display(function () {
+        $grid->get()->pôle()->sortable()->display(function () {
             $asso = Asso::find($this->asso_id);
 
             if ($asso) {
