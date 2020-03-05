@@ -4,6 +4,7 @@
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Rémy Huet <remyhuet@gmail.com>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -125,19 +126,38 @@ class MemberController extends Controller
         $semester = $this->getSemester($request, $choices);
         $asso = $this->getAsso($request, $asso_id);
 
-        $members = $asso->allMembers()
-            ->where('semester_id', $semester->id)
-            ->whereNotNull('role_id')
-            ->getSelection(true)
-            ->map(function ($member) {
-                $member->pivot = [
-                    'role_id' => $member->role_id,
-                    'validated_by_id' => $member->validated_by_id,
-                    'semester_id' => $member->semester_id,
-                ];
+        $members = collect();
 
-                return $member->hideData();
-            });
+        // By default, we show all joined.
+        if (in_array('joined', $choices)) {
+            $members = $members->merge($asso->members()
+              ->where('semester_id', $semester->id)
+              ->whereNotNull('role_id')
+              ->getSelection(true)
+              ->map(function ($member) {
+                  $member->pivot = [
+                      'role_id' => $member->role_id,
+                      'validated_by_id' => $member->validated_by_id,
+                      'semester_id' => $member->semester_id,
+                  ];
+                    return $member->hideData();
+              }));
+        }
+
+        if (in_array('joining', $choices)) {
+            $members = $members->merge($asso->joiners()
+              ->where('semester_id', $semester->id)
+              ->whereNotNull('role_id')
+              ->getSelection(true)
+              ->map(function ($member) {
+                  $member->pivot = [
+                      'role_id' => $member->role_id,
+                      'validated_by_id' => $member->validated_by_id,
+                      'semester_id' => $member->semester_id,
+                  ];
+                    return $member->hideData();
+              }));
+        }
 
         return response()->json($members, 200);
     }
