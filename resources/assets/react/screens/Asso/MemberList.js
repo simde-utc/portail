@@ -69,7 +69,7 @@ class AssoMemberListScreen extends React.Component {
 
 	getBeforeTheCurrentSemester() {
 		const { semesters, currentSemester } = this.props;
-		let semester;
+		let semester = currentSemester;
 
 		for (const key in semesters) {
 			const possibleSemester = semesters[key];
