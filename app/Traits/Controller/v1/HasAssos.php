@@ -83,8 +83,9 @@ trait HasAssos
         }
 
         foreach ($defaultChoices as $choice) {
-            if(!in_array($choice, $choices))
-              throw new PortailException('Les choix demandés ne peuvent qu\'appartienir à: '.implode(', ', $choices));
+            if (!in_array($choice, $choices)) {
+                throw new PortailException('Les choix demandés ne peuvent qu\'appartienir à: '.implode(', ', $choices));
+            }
 
             $askedDefaultChoices[] = $choice;
         }
@@ -137,7 +138,6 @@ trait HasAssos
         $user = $asso->allMembers()
             ->wherePivot('user_id', $this->getUser($request, $user_id, true)->id)
             ->wherePivot('semester_id', $semester ? $semester->id : Semester::getThisSemester())
-            ->whereNotNull('role_id')
             ->first();
 
         if ($user) {

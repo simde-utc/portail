@@ -47,8 +47,8 @@ class Controller extends BaseController
             throw new PortailException('Il n\'est possible de spécifier uniquement: '.implode(', ', $choices));
         }
 
-        if(empty($only) && empty($except)) {
-          return $defaultChoices;
+        if (empty($only) && empty($except)) {
+            return $defaultChoices;
         }
 
         if (count($only) > 0) {

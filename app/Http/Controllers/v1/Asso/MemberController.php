@@ -122,7 +122,7 @@ class MemberController extends Controller
      */
     public function index(Request $request, string $asso_id): JsonResponse
     {
-        $choices = $this->getChoices($request, ["joined", "joining"], ["joined"]);
+        $choices = $this->getChoices($request, ["joined", "joining", "followed"], ["joined"]);
         $semester = $this->getSemester($request, $choices);
         $asso = $this->getAsso($request, $asso_id);
 
@@ -148,6 +148,20 @@ class MemberController extends Controller
             $members = $members->merge($asso->joiners()
               ->where('semester_id', $semester->id)
               ->whereNotNull('role_id')
+              ->getSelection(true)
+              ->map(function ($member) {
+                  $member->pivot = [
+                      'role_id' => $member->role_id,
+                      'validated_by_id' => $member->validated_by_id,
+                      'semester_id' => $member->semester_id,
+                  ];
+                    return $member->hideData();
+              }));
+        }
+
+        if (in_array('followed', $choices)) {
+            $members = $members->merge($asso->followers()
+              ->where('semester_id', $semester->id)
               ->getSelection(true)
               ->map(function ($member) {
                   $member->pivot = [
@@ -197,12 +211,24 @@ class MemberController extends Controller
      */
     public function show(Request $request, string $asso_id, string $member_id): JsonResponse
     {
-        $choices = $this->getChoices($request);
+        $choices = $this->getChoices($request, ["joined", "joining", "followed"], ["joined"]);
         $semester = $this->getSemester($request, $choices);
         $asso = $this->getAsso($request, $asso_id);
         $user = $this->getUserFromAsso($request, $asso, $member_id, $semester);
 
-        return response()->json($user->hideData(), 200);
+        if (in_array('joined', $choices)
+          && !is_null($user["pivot"]["validated_by_id"])
+          && !is_null($user["pivot"]["role_id"])) {
+            return response()->json($user->hideData(), 200);
+        } else if (in_array('joining', $choices)
+          && is_null($user["pivot"]["validated_by_id"])
+          && !is_null($user["pivot"]["role_id"])) {
+            return response()->json($user->hideData(), 200);
+        } else if (in_array('followed', $choices) && $user["pivot"]["role_id"] == null) {
+            return response()->json($user->hideData(), 200);
+        }
+
+        return response()->json([], 200);
     }
 
     /**

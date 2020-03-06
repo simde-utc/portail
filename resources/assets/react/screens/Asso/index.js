@@ -157,7 +157,7 @@ class AssoScreen extends React.Component {
 								}
 							)
 							.payload.then(() => {
-								dispatch(actions.user.assos.all());
+								dispatch(actions.user.assos.all({ only: 'joined,joining,followed' }));
 								dispatch(actions.assos(asso.id).members.all());
 								NotificationManager.success(
 									`Vous suivez maintenant l'association: ${asso.name}`,
@@ -201,7 +201,7 @@ class AssoScreen extends React.Component {
 						actions.user.assos
 							.remove(asso.id)
 							.payload.then(() => {
-								dispatch(actions.user.assos.all());
+								dispatch(actions.user.assos.all({ only: 'joined,joining,followed' }));
 								dispatch(actions.assos(asso.id).members.all());
 								NotificationManager.warning(
 									`Vous ne suivez plus l'association: ${asso.name}`,
@@ -283,7 +283,7 @@ class AssoScreen extends React.Component {
 						.payload.then(({ data: { id: member_id } }) => {
 							const { user, asso } = this.props;
 
-							dispatch(actions.user.assos.all());
+							dispatch(actions.user.assos.all({ only: 'joined,joining,followed' }));
 							dispatch(actions.assos(asso.id).members.all());
 							NotificationManager.success(
 								`Vous avez demandé à rejoindre l'association: ${asso.name}`,
@@ -301,7 +301,7 @@ class AssoScreen extends React.Component {
 									);
 
 									if (user.id === member_id) {
-										dispatch(actions.user.assos.all());
+										dispatch(actions.user.assos.all({ only: 'joined,joining,followed' }));
 										dispatch(actions.user.permissions.all());
 									}
 								})
@@ -357,7 +357,7 @@ class AssoScreen extends React.Component {
 							.assos(asso.id)
 							.members.remove(user.id)
 							.payload.then(() => {
-								dispatch(actions.user.assos.all());
+								dispatch(actions.user.assos.all({ only: 'joined,joining,followed' }));
 								dispatch(actions.assos(asso.id).members.all());
 								NotificationManager.warning(
 									`Vous ne faites plus partie de l'association: ${name}`,
@@ -414,7 +414,7 @@ class AssoScreen extends React.Component {
 								);
 
 								if (user.id === member_id) {
-									dispatch(actions.user.assos.all());
+									dispatch(actions.user.assos.all({ only: 'joined,joining,followed' }));
 									dispatch(actions.user.permissions.all());
 								}
 							})
@@ -459,7 +459,7 @@ class AssoScreen extends React.Component {
 							.assos(asso.id)
 							.members.remove(member_id)
 							.payload.then(() => {
-								dispatch(actions.user.assos.all());
+								dispatch(actions.user.assos.all({ only: 'joined,joining,followed' }));
 								dispatch(actions.assos(asso.id).members.all());
 								NotificationManager.warning(
 									`Vous avez retiré avec succès le membre de cette association: ${name}`,

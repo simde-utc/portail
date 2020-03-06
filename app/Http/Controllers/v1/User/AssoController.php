@@ -65,7 +65,7 @@ class AssoController extends Controller
     public function index(Request $request, string $user_id=null): JsonResponse
     {
         $user = $this->getUser($request, $user_id);
-        $choices = $this->getChoices($request, ['joined', 'joining', 'followed']);
+        $choices = $this->getChoices($request, ['joined', 'joining', 'followed'], ["joined"]);
         $semester = $this->getSemester($request, $choices);
 
         $assos = collect();
