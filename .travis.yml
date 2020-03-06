@@ -6,8 +6,9 @@ services:
 
 php:
   - 7.2
-
+  
 before_script:
+  - nvm install lts/dubnium 
   - cp .env.travis .env
   - mysql -e 'CREATE DATABASE portail;'
   - composer self-update
