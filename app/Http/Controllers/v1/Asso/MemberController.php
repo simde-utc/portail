@@ -122,7 +122,7 @@ class MemberController extends Controller
      */
     public function index(Request $request, string $asso_id): JsonResponse
     {
-        $choices = $this->getChoices($request);
+        $choices = $this->getChoices($request, ["joined", "joining"], ["joined"]);
         $semester = $this->getSemester($request, $choices);
         $asso = $this->getAsso($request, $asso_id);
 

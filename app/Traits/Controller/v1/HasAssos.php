@@ -3,6 +3,7 @@
  * Add the controller an access to Associations.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -66,12 +67,14 @@ trait HasAssos
      *
      * @param  Request $request
      * @param  array   $initialChoices
+     * @param  array   $defaultChoices
      * @return array
      */
-    protected function getChoices(Request $request, array $initialChoices=['joined', 'joining'])
+    protected function getChoices(Request $request, array $initialChoices=['joined', 'joining'], array $defaultChoices=[])
     {
         $scopeHead = \Scopes::getTokenType($request);
         $choices = [];
+        $askedDefaultChoices = [];
 
         foreach ($initialChoices as $choice) {
             if (\Scopes::hasOne($request, $scopeHead.'-get-assos-members-'.$choice.'-now')) {
@@ -79,7 +82,14 @@ trait HasAssos
             }
         }
 
-        return parent::getChoices($request, $choices);
+        foreach ($defaultChoices as $choice) {
+            if(!in_array($choice, $choices))
+              throw new PortailException('Les choix demandés ne peuvent qu\'appartienir à: '.implode(', ', $choices));
+
+            $askedDefaultChoices[] = $choice;
+        }
+
+        return parent::getChoices($request, $choices, $askedDefaultChoices);
     }
 
     /**
