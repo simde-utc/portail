@@ -4,6 +4,7 @@
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -29,12 +30,13 @@ class Sidebar extends React.Component {
 	static getAssos(assos) {
 		return assos.map(asso => {
 			let color = `color-${asso.login}`;
+			const icon = asso.pivot.role_id ? 'hourglass' : 'thumbs-up';
 
 			if (asso.parent) color += ` color-${asso.parent.login}`;
 
 			return (
 				<NavLink key={asso.id} className="sidebar-link" to={`/assos/${asso.login}`}>
-					<FontAwesomeIcon icon={asso.pivot.role_id ? 'hands-helping' : 'thumbs-up'} />{' '}
+					<FontAwesomeIcon icon={asso.pivot.validated_by_id ? 'hands-helping' : icon} />{' '}
 					<span className={color}>{asso.shortname}</span>
 				</NavLink>
 			);
@@ -89,6 +91,34 @@ class Sidebar extends React.Component {
 							</h6>
 							<NavLink exact className="sidebar-link" to="/">
 								<FontAwesomeIcon icon="newspaper" /> Flux
+							</NavLink>
+						</div>
+
+						<div className="sidebar-group">
+							<h6 className="sidebar-header d-hover-zone">
+								RACCOURCIS{' '}
+								<NavLink
+									className="float-right d-hover fas fa-cog"
+									style={{ display: 'none' }}
+									to="/settings/sidebar/shortcuts"
+								/>
+							</h6>
+							{isAuthenticated && user.types.contributorBde && (
+								<NavLink className="sidebar-link" to="/bookings">
+									<FontAwesomeIcon icon="person-booth" /> Réservations
+								</NavLink>
+							)}
+							<NavLink className="sidebar-link" to="/services">
+								<FontAwesomeIcon icon="concierge-bell" /> Services
+							</NavLink>
+							<NavLink className="sidebar-link" to="/assos">
+								<FontAwesomeIcon icon="hands-helping" /> Associations
+							</NavLink>
+							<NavLink className="sidebar-link" to="/partners">
+								<FontAwesomeIcon icon="handshake" /> Partenaires
+							</NavLink>
+							<NavLink className="sidebar-link" to="/groupes" style={{ display: 'none' }}>
+								<FontAwesomeIcon icon="users" /> Groupes
 							</NavLink>
 						</div>
 
@@ -150,34 +180,6 @@ class Sidebar extends React.Component {
 							>
 								<FontAwesomeIcon icon="bug" /> Signaler un bug
 							</a>
-						</div>
-
-						<div className="sidebar-group">
-							<h6 className="sidebar-header d-hover-zone">
-								RACCOURCIS{' '}
-								<NavLink
-									className="float-right d-hover fas fa-cog"
-									style={{ display: 'none' }}
-									to="/settings/sidebar/shortcuts"
-								/>
-							</h6>
-							{isAuthenticated && user.types.contributorBde && (
-								<NavLink className="sidebar-link" to="/bookings">
-									<FontAwesomeIcon icon="person-booth" /> Réservations
-								</NavLink>
-							)}
-							<NavLink className="sidebar-link" to="/services">
-								<FontAwesomeIcon icon="concierge-bell" /> Services
-							</NavLink>
-							<NavLink className="sidebar-link" to="/assos">
-								<FontAwesomeIcon icon="hands-helping" /> Associations
-							</NavLink>
-							<NavLink className="sidebar-link" to="/partners">
-								<FontAwesomeIcon icon="handshake" /> Partenaires
-							</NavLink>
-							<NavLink className="sidebar-link" to="/groupes" style={{ display: 'none' }}>
-								<FontAwesomeIcon icon="users" /> Groupes
-							</NavLink>
 						</div>
 
 						{isAuthenticated && services.length > 0 && (
