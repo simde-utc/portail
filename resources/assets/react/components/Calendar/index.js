@@ -45,6 +45,8 @@ class Calendar extends React.Component {
 			selectedCalendars: {},
 			loadingCalendars: {},
 			events: {},
+			date: new Date(),
+			duration: Calendar.getDefaultView(),
 		};
 
 		if (props.selectedCalendars) {
@@ -79,6 +81,20 @@ class Calendar extends React.Component {
 		};
 	}
 
+	onNavigate(date) {
+		this.setState(
+			state => ({ ...state, date }),
+			() => this.loadAllEvents()
+		);
+	}
+
+	onView(duration) {
+		this.setState(
+			state => ({ ...state, duration }),
+			() => this.loadAllEvents()
+		);
+	}
+
 	getEvents() {
 		const { events, selectedCalendars } = this.state;
 		const generatedEvents = [];
@@ -100,9 +116,20 @@ class Calendar extends React.Component {
 	}
 
 	loadEvents(calendar) {
-		// const action = actions.calendars(calendar.id).events.all({ 'month|day|week': new Date().'YYYY-MM-DD' });
 		const { dispatch } = this.props;
-		const action = actions.calendars(calendar.id).events.all();
+		const { duration, date } = this.state;
+		// TODO let monday = new Date(today.getTime() - (today.getDay() - 1) * oneDay);
+		const oneDay = 1000 * 60 * 60 * 24;
+		const firstOfTheWeekOrMonthOrWhatever =
+			duration === 'day'
+				? date
+				: new Date(
+						date.getTime() - ((duration === 'week' ? date.getDay() : date.getDate()) - 1) * oneDay
+				  );
+
+		const action = actions
+			.calendars(calendar.id)
+			.events.all({ [duration]: firstOfTheWeekOrMonthOrWhatever.toISOString().slice(0, 10) });
 
 		dispatch(action);
 		action.payload
@@ -128,6 +155,11 @@ class Calendar extends React.Component {
 					return prevState;
 				});
 			});
+	}
+
+	loadAllEvents() {
+		const { selectedCalendars } = this.state;
+		Object.values(selectedCalendars).map(cal => this.loadEvents(cal));
 	}
 
 	addCalendar(calendar) {
@@ -174,6 +206,8 @@ class Calendar extends React.Component {
 						{...this.props}
 						events={this.getEvents()}
 						messages={messages}
+						onNavigate={date => this.onNavigate(date)}
+						onView={duration => this.onView(duration)}
 					/>
 				</div>
 				<span className={`loader large${fetching ? ' active' : ''}`} />
