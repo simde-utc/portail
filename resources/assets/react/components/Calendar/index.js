@@ -118,7 +118,6 @@ class Calendar extends React.Component {
 	loadEvents(calendar) {
 		const { dispatch } = this.props;
 		const { duration, date } = this.state;
-		// TODO let monday = new Date(today.getTime() - (today.getDay() - 1) * oneDay);
 		const oneDay = 1000 * 60 * 60 * 24;
 		const firstOfTheWeekOrMonthOrWhatever =
 			duration === 'day'
