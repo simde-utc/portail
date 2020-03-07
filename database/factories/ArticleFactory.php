@@ -10,20 +10,17 @@
 
 use App\Models\Article;
 use App\Models\Visibility;
-// Once user articles are implemented.
-// use App\Models\User;
+use App\Models\User;
 use App\Models\Asso;
 use Webpatser\Uuid\Uuid;
 use Faker\Generator as Faker;
 
 $factory->define(Article::class, function (Faker $faker) {
-    $createdAndOwnedById = $faker->randomElement(Asso::all()->toArray())['id'];
-    $createdAndOwnedByType = "App\\Models\\Asso";
 
-    // Once user articles are implemented.
-    // $userArticle = $faker->boolean(50);
-    // $createdAndOwnedById = $userArticle ? $faker->randomElement(User::all()->toArray())['id'] : $faker->randomElement(Asso::all()->toArray())['id'];
-    // $createdAndOwnedByType = $userArticle ? "App\\Models\\User" : "App\\Models\\Asso" ;
+    $userArticle = $faker->boolean(50);
+    $createdAndOwnedById = $userArticle ? $faker->randomElement(User::all()->toArray())['id'] : $faker->randomElement(Asso::all()->toArray())['id'];
+    $createdAndOwnedByType = $userArticle ? "App\\Models\\User" : "App\\Models\\Asso" ;
+    
     return [
         'id' => Uuid::generate()->string,
         'title' => $faker->sentence(6, true),
