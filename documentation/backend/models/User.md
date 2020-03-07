@@ -14,7 +14,10 @@ last_login_at: timestamp
 
 The `image` field is an external link to the image.
 
-Laravel manages a the remember token (`remember_token`), create timestamps (created_at and updated_at) and update timestamps itself. Documentation about these functionnality can be found [here (remember token)](https://laravel.com/docs/5.8/authentication#remembering-users) and [here (timestamps)](https://laravel.com/docs/5.8/eloquent#eloquent-model-conventions).
+Laravel manages the remember token (`remember_token`), creates timestamps (created_at and updated_at) and updates timestamps itself. Documentation about these functionnality can be found [here (remember token)](https://laravel.com/docs/5.8/authentication#remembering-users) and [here (timestamps)](https://laravel.com/docs/5.8/eloquent#eloquent-model-conventions).
+
+## Traits
+To get user relations (joined assos, followed assos, comments, ...) see [UserRelations Trait](portail/dev/backend/traits/model/UserRelations.md)
 
 ## Methods
 ### getMeAttribute()

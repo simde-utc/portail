@@ -81,12 +81,6 @@ class UserController extends Controller
 
         $grid->model()->orderBy('created_at');
 
-        $grid->filter(function (Filter $filter) {
-            $filter->like('email');
-            $filter->like('firstname');
-            $filter->like('lastname');
-        });
-
         $grid->tools(function ($tools) {
             $tools->disableBatchActions();
         });

@@ -2,6 +2,7 @@
  * Display all associations of a given user.
  *
  * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -39,15 +40,15 @@ class AssociativeCareerScreen extends React.Component {
 			dispatch(actions.roles.all());
 		}
 
-		dispatch(actions.config({ title: 'Mon Parcours' }));
-
 		semesters.forEach(semester => {
 			if (associativeSemesters[semester.id] === undefined) {
-				actions.user.assos.all({ semester: semester.id }).payload.then(({ data }) => {
-					if (data.length > 0) {
-						this.addNewAssociativeSemester(semester.id, data);
-					}
-				});
+				actions.user.assos
+					.all({ cemetery: true, semester: semester.id, only: 'joined,followed' })
+					.payload.then(({ data }) => {
+						if (data.length > 0) {
+							this.addNewAssociativeSemester(semester.id, data);
+						}
+					});
 			}
 		});
 	}
@@ -62,28 +63,34 @@ class AssociativeCareerScreen extends React.Component {
 	render() {
 		const { roles, rolesFetched, semesters, semestersFetched } = this.props;
 		const { associativeSemesters } = this.state;
+		const associativeSemestersKeys = Object.keys(associativeSemesters);
 
-		return (
-			<div className="ml-5">
-				{rolesFetched &&
-					semestersFetched &&
-					Object.keys(associativeSemesters)
-						.reverse()
-						.map(semester_id => {
+		const orderedAssociativeSemestersKeys = [];
+		for (let i = 0; i < semesters.length; i++)
+			if (associativeSemestersKeys.indexOf(semesters[i].id) !== -1)
+				orderedAssociativeSemestersKeys.push(semesters[i].id);
+
+		if (associativeSemestersKeys.length) {
+			return (
+				<div className="ml-5 AssociativeCareer" key="test">
+					{rolesFetched &&
+						semestersFetched &&
+						orderedAssociativeSemestersKeys.map(semester_id => {
 							const semester = semesters.find(semester => semester.id === semester_id);
 
 							const assosBySemesterList = associativeSemesters[semester_id].map(asso => {
 								const role = roles.find(role => role.id === asso.pivot.role_id);
 
 								return (
-									<NavLink key={asso.id} to={`/assos/${asso.login}`}>
+									<NavLink key={asso.id + semester.id} to={`/assos/${asso.login}`}>
 										<AssoCard
-											key={asso.id}
+											key={asso.id + semester.id}
 											name={asso.name}
 											shortname={asso.shortname}
-											additionalInfo={role ? role.name : ''}
+											additionalInfo={role ? role.name : 'Association suivie'}
 											image={asso.image}
 											login={asso.parent ? asso.parent.login : asso.login}
+											deleted={asso.in_cemetery_at != null}
 										/>
 									</NavLink>
 								);
@@ -95,8 +102,11 @@ class AssociativeCareerScreen extends React.Component {
 
 							return assosBySemesterList ? [title, ...assosBySemesterList] : null;
 						})}
-			</div>
-		);
+				</div>
+			);
+		}
+
+		return <p className="text-center p-5">Vous n'avez pas encore été membre d'une association.</p>;
 	}
 }
 

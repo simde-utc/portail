@@ -93,7 +93,7 @@
 
                         <div class="col-md-6">
                             <div class="captcha mb-2">
-                                <span>{!! captcha_img() !!}</span>
+                                <span>{!! captcha_img("flat") !!}</span>
                                 <button type="button" onclick="refreshCaptcha()" class="btn btn-success btn-sm"><i class="fas fa-sync-alt"></i></button>
                             </div>
 
@@ -127,8 +127,11 @@
         $.ajax({
             type:'GET',
             url: "{{ route('login.captcha') }}",
-            success: function (data) {
-                $(".captcha span").html(data.captcha);
+            success: function (captcha) {
+                $(".captcha span").html(captcha);
+            },
+            error: function(error){
+                console.error(error);
             }
         });
     };

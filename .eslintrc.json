@@ -47,7 +47,7 @@
     "linebreak-style": [2, "unix"],
     "semi": [1, "always"],
     "indent": [0, "tab"],
-    "no-console": 0,
+    "no-console": ["error", { "allow" : ["warn", "error"] }] ,
     "no-case-declarations": 1,
     "no-fallthrough": 0,
     "no-plusplus": 0,

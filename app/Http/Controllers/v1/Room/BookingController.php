@@ -3,6 +3,7 @@
  * Manage bookings.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Cornentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -148,7 +149,6 @@ class BookingController extends Controller
 
         $calendar = $room->calendar;
 
-        // WARNING : the event belongs to the calendar owner (to prevent people from mofifying by themself the event).
         $event = Event::create([
             'name' => ($inputs['name'] ?? BookingType::find($inputs['type_id'])->name),
             'begin_at' => $inputs['begin_at'],
@@ -157,8 +157,8 @@ class BookingController extends Controller
             'location_id' => $room->location->id,
             'created_by_id' => $inputs['created_by_id'],
             'created_by_type' => $inputs['created_by_type'],
-            'owned_by_id' => $calendar->owned_by_id,
-            'owned_by_type' => $calendar->owned_by_type,
+            'owned_by_id' => $inputs['owned_by_id'],
+            'owned_by_type' => $inputs['owned_by_type'],
             'visibility_id' => $calendar->visibility_id,
         ]);
 
@@ -231,7 +231,7 @@ class BookingController extends Controller
         $room = $this->getRoom($request, \Auth::user(), $room_id);
         $booking = $this->getBookingFromRoom($request, $room, \Auth::user(), $booking_id, 'manage');
 
-        if ($booking->delete()) {
+        if ($booking->event->calendars()->detach() && $booking->event->delete() && $booking->delete()) {
             abort(204);
         } else {
             abort(500, 'Impossible de suprimer la réservation');

@@ -1,4 +1,14 @@
 <?php
+/**
+ * Clear migration
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author Romain Maliach-Auguste <r.maliach@live.fr>
+ *
+ * @copyright Copyright (c) 2020, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
 
 use Illuminate\Database\Seeder;
 use App\Models\Asso;
@@ -186,6 +196,7 @@ DESC
             ],
         ];
 
+        fprintf(STDOUT, "Seeding manually added association\n");
         foreach ($assos as $asso) {
             Asso::create([
                 'login' => $asso['login'],
@@ -196,5 +207,18 @@ DESC
                 'parent_id' => isset($asso['parent_login']) ? Asso::where('login', $asso['parent_login'])->first()->id : null,
             ]);
         }
+
+        fprintf(STDOUT, "Seeding random associations\n");
+        $this->command->getOutput()->progressStart(config('seeder.asso.amount'));
+        for ($i = 1; $i <= config('seeder.asso.amount'); $i++) {
+            try {
+                factory(Asso::class)->create()->save();
+                $this->command->getOutput()->progressAdvance();
+            } catch (\Throwable $e) {
+                $i--;
+            }
+        }
+
+        $this->command->getOutput()->progressFinish();
     }
 }

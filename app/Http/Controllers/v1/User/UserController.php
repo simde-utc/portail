@@ -5,6 +5,7 @@
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Mercier Corentin <corentin@mercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -85,7 +86,7 @@ class UserController extends Controller
         }
 
         $users = $users->getSelection()->map(function ($user) {
-            return $user->hideData();
+            return $user->hideData()->makeVisible('email');
         });
 
         return response()->json($users, 200);
@@ -159,7 +160,9 @@ class UserController extends Controller
     {
         $user = $this->getUser($request, $user_id);
 
-        if (!\Scopes::has($request, 'user-get-info-identity-email')) {
+        if (!\Scopes::has($request, 'user-get-info-identity-email')
+            && !\Scopes::has($request, 'client-get-users-active')
+            && !\Scopes::has($request, 'client-get-users-inactive')) {
             $user->makeHidden('email');
         }
 
@@ -239,5 +242,17 @@ class UserController extends Controller
     public function destroy(Request $request, string $user_id)
     {
         abort(403, "Wow l'ami, patience, c'est galère ça...");
+    }
+
+    /**
+     * Return all possibles types and their description.
+     *
+     * @param Request $request
+     * @param string  $locale
+     * @return JsonResponse
+     */
+    public function getLocalizedTypes(Request $request, string $locale="fr"): JsonResponse
+    {
+        return response()->json((new User)->getTypeDescriptions(), 200);
     }
 }

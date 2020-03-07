@@ -5,6 +5,7 @@
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -24,7 +25,7 @@ Route::get('logout', 'Client\LoginController@destroy')->middleware(Scopes::match
 
 Route::get('user', 'User\UserController@show')->middleware(Scopes::matchAnyUser())->name('api/user');
 Route::patch('user', 'User\UserController@update')->middleware(Scopes::matchAnyUser())->name('api/user/update');
-
+Route::get('user/types/description', 'User\UserController@getLocalizedTypes')->middleware(Scopes::matchAnyUser())->name('api/user/types/description');
 
 /*
  * Management of client given authorization.
@@ -101,6 +102,13 @@ Route::group(['middleware' => 'user:active'], function () {
         'faqs' => 'Faq\CategoryController',
         'faqs/{category_id}/questions' => 'Faq\FaqController',
     ]);
+
+    // Oauth Api through portal's API
+    // TO DO put oauth routes into /api/v1/oauth/
+    Route::redirect('oauth/tokens', "/oauth/tokens");
+    Route::get('oauth/scopes/categories', "Oauth\OauthController@getByCategories");
+    Route::delete('oauth/tokens/{token_id}', '\Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController@destroy')
+        ->middleware(['forceJson', 'web', 'auth:web']);
 });
 
 

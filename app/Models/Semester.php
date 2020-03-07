@@ -3,6 +3,7 @@
  * Model corresponding to semesters.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -26,7 +27,12 @@ class Semester extends Model
 
     protected $selection = [
         'paginate' => [],
-        'order' => [],
+        'order' => [
+            'default' 	=> 'z-a',
+            'columns'	=> [
+                'name' 	=> 'begin_at',
+            ],
+        ],
         'filter' => [],
     ];
 

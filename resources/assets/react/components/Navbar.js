@@ -4,6 +4,7 @@
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Paco Pompeani <paco.pompeani@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -86,12 +87,10 @@ class Navbar extends React.Component {
 									className="rounded-circle"
 									style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
 									unloader={
-										<a className="nav-link d-flex" href="/login">
-											<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
-												<FontAwesomeIcon icon="circle" className="icon-background2" />
-												<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
-											</span>
-										</a>
+										<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
+											<FontAwesomeIcon icon="circle" className="icon-background2" />
+											<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
+										</span>
 									}
 								/>
 							</NavLink>
@@ -111,19 +110,26 @@ class Navbar extends React.Component {
 				<ul className="navbar-nav ml-auto">
 					{user ? (
 						<li className="nav-item no-gutters pl-2 pr-2" style={{ width: 'max-content' }}>
-							<NavLink className="nav-link d-flex profilepic bg-secondary" to="/profile">
+							<NavLink
+								className="nav-link d-flex profilepic bg-secondary"
+								to="/profile"
+								style={{
+									padding: '0 .6rem',
+									height: '45px',
+									display: 'flex !important',
+									alignItems: 'center',
+								}}
+							>
 								<Img
 									image={user.image}
 									width="25"
 									height="25"
 									className="rounded-circle mr-2"
 									unloader={
-										<a className="nav-link d-flex" href="/login">
-											<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
-												<FontAwesomeIcon icon="circle" className="icon-background2" />
-												<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
-											</span>
-										</a>
+										<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>
+											<FontAwesomeIcon icon="circle" className="icon-background2" />
+											<FontAwesomeIcon icon="user-alt" transform="shrink-8" />
+										</span>
 									}
 								/>
 								{user.firstname}
@@ -137,7 +143,7 @@ class Navbar extends React.Component {
 						</li>
 					)}
 
-					{user && permissions.length && (
+					{user && permissions.length > 0 && (
 						<li className="nav-item">
 							<a className="nav-link d-flex" href="/admin">
 								<span className="fa-layers fa-lg" style={{ fontSize: 28 }}>

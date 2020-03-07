@@ -21,7 +21,7 @@ The install section describes the installation for this particulary project.
 
 Install made for Ubuntu, Debian and Mint.
 
-Required version is `>=7.2` it is forced in `Project-root/composer.json`. This indicates how to install php version 7.3.
+Required version is `>=7.2` it is forced in `Project-root/composer.json`. This indicates how to install php version 7.2.
 
 ```bash
 sudo apt update
@@ -35,6 +35,12 @@ sudo apt install -y \
 	mysql-server
 ```
 
+### Choose right version of node and npm
+
+```bash
+nvm install lts/dubnium
+npm i -g npm
+```
 ### Create MySQL User and Database
 
 Enter into MySQL as root:
@@ -84,6 +90,7 @@ npm run prod # Front-end application compilation (dammit JS so slooow)
 ```
 
 ## For email and notification credentials
+You only need to install this if you want to work on emails and notification
 
 ```bash
 php artisan queue:work # For working notification sending.
@@ -96,13 +103,14 @@ sudo supervisorctl reread && sudo supervisorctl update && sudo supervisorctl sta
 ```
 
 ## Credentials
+If you need to use the api except from the frontend, you'll need to connect with the API through Oauth2 protocol.
 
 - Admin user id: `45617374-6572-2065-6767-7321202b5f2b`
 - Oauth client:
 	+ id: `53616d79-206a-6520-7427-61696d652021`
 	+ secret: `password`
-	+ redirect: `http://localhost/`
-	+ to use all scopes: scopes: `*`
+	+ redirect: `http://localhost:8000`
+	+ scopes: `*` for all scopes
 
 
 ## In case of a problem

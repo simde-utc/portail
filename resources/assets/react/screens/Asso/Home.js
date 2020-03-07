@@ -30,7 +30,7 @@ import Img from '../../components/Image';
 	roles: store.getData(['assos', props.asso.id, 'roles']),
 }))
 class AssoHomeScreen extends React.Component {
-	componentWillMount() {
+	componentDidMount() {
 		const {
 			asso: { id, shortname },
 			contactsFetched,
@@ -180,8 +180,11 @@ class AssoHomeScreen extends React.Component {
 							<AspectRatio className="mb-2" ratio="1">
 								<Img image={asso.image} style={{ width: '100%' }} />
 							</AspectRatio>
-							{isAuthenticated && this.getFollowButton(userIsFollowing, userIsMember)}
 							{isAuthenticated &&
+								asso.in_cemetery_at == null &&
+								this.getFollowButton(userIsFollowing, userIsMember)}
+							{isAuthenticated &&
+								asso.in_cemetery_at == null &&
 								this.getMemberButton(
 									userIsMember,
 									userIsFollowing,
@@ -198,7 +201,9 @@ class AssoHomeScreen extends React.Component {
 							</h1>
 							<span className="mt-4">{asso.type && asso.type.description}</span>
 							<ReactMarkdown className="my-3 text-justify" source={asso.description} />
-							<ContactList className="mt-4" contacts={contacts} authorized={!contactsFailed} />
+							{asso.in_cemetery_at == null && (
+								<ContactList className="mt-4" contacts={contacts} authorized={!contactsFailed} />
+							)}
 						</div>
 					</div>
 				) : null}

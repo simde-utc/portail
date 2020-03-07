@@ -11,7 +11,7 @@
 import React from 'react';
 import Article from './Article';
 
-const ArticleList = ({ articles, fetched }) => (
+const ArticleList = ({ articles = [], fetched }) => (
 	<div className="container ArticleList">
 		{fetched ? (
 			articles.map(article => <Article key={article.id} article={article} />)

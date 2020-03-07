@@ -44,7 +44,7 @@ class AssoMemberListScreen extends React.Component {
 		dispatch(actions.config({ title: `${asso.shortname} - Membres` }));
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const { asso, dispatch } = this.props;
 
 		dispatch(actions.config({ title: `${asso.shortname} - Membres` }));
@@ -69,7 +69,7 @@ class AssoMemberListScreen extends React.Component {
 
 	getBeforeTheCurrentSemester() {
 		const { semesters, currentSemester } = this.props;
-		let semester;
+		let semester = currentSemester;
 
 		for (const key in semesters) {
 			const possibleSemester = semesters[key];

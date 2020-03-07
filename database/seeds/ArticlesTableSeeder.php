@@ -6,6 +6,7 @@ use App\Models\ArticleAction;
 use App\Models\Visibility;
 use App\Models\Asso;
 use App\Models\User;
+use PHPStan\DependencyInjection\ConditionalTagsExtension;
 
 class ArticlesTableSeeder extends Seeder
 {
@@ -89,6 +90,7 @@ class ArticlesTableSeeder extends Seeder
             ]
         ];
 
+        fprintf(STDOUT, "Seeding manually added articles\n");
         foreach ($articles as $article) {
             $model = Article::create([
                 'title'           => $article['title'],
@@ -109,6 +111,20 @@ class ArticlesTableSeeder extends Seeder
                 ]);
             }
         }
+
+        fprintf(STDOUT, "Seeding random articles\n");
+        $this->command->getOutput()->progressStart();
+
+        for ($i = 0; $i < config('seeder.article.amount') ; $i++) {
+            try {
+                $article = factory(Article::class)->create()->save();
+                $this->command->getOutput()->progressAdvance();
+            } catch (\Throwable $th) {
+                $i--;
+            }
+        }
+
+        $this->command->getOutput()->progressFinish();
 
     }
 }

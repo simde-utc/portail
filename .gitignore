@@ -12,10 +12,12 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+composer.phar
 .env
 .env.last
 .ftpconfig
 .phpunit.result.cache
+.yarn.lock
 
 # Front generated filed
 public/js/app\.js
