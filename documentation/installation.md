@@ -21,7 +21,7 @@ The install section describes the installation for this particulary project.
 
 Install made for Ubuntu, Debian and Mint.
 
-Required version is `>=7.2` it is forced in `Project-root/composer.json`. This indicates how to install php version 7.3.
+Required version is `>=7.2` it is forced in `Project-root/composer.json`. This indicates how to install php version 7.2.
 
 ```bash
 sudo apt update
@@ -35,6 +35,12 @@ sudo apt install -y \
 	mysql-server
 ```
 
+### Choose right version of node and npm
+
+```bash
+nvm install lts/dubnium
+npm i -g npm
+```
 ### Create MySQL User and Database
 
 Enter into MySQL as root:
