@@ -63,7 +63,7 @@ class BookingScreen extends React.Component {
 		};
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const { user, assos, dispatch } = this.props;
 
 		dispatch(actions.rooms.all());
@@ -197,9 +197,15 @@ class BookingScreen extends React.Component {
 							modal: { ...modal, show: false },
 						}));
 					})
-					.catch(({ response: { data: { message } } }) => {
-						NotificationManager.error(message, 'Réservation');
-					});
+					.catch(
+						({
+							response: {
+								data: { message },
+							},
+						}) => {
+							NotificationManager.error(message, 'Réservation');
+						}
+					);
 			};
 
 			return prevState;

@@ -2,6 +2,7 @@
  * Display all associations of a given user.
  *
  * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -42,7 +43,7 @@ class AssociativeCareerScreen extends React.Component {
 		semesters.forEach(semester => {
 			if (associativeSemesters[semester.id] === undefined) {
 				actions.user.assos
-					.all({ cemetery: true, semester: semester.id })
+					.all({ cemetery: true, semester: semester.id, only: 'joined,followed' })
 					.payload.then(({ data }) => {
 						if (data.length > 0) {
 							this.addNewAssociativeSemester(semester.id, data);
@@ -64,12 +65,17 @@ class AssociativeCareerScreen extends React.Component {
 		const { associativeSemesters } = this.state;
 		const associativeSemestersKeys = Object.keys(associativeSemesters);
 
+		const orderedAssociativeSemestersKeys = [];
+		for (let i = 0; i < semesters.length; i++)
+			if (associativeSemestersKeys.indexOf(semesters[i].id) !== -1)
+				orderedAssociativeSemestersKeys.push(semesters[i].id);
+
 		if (associativeSemestersKeys.length) {
 			return (
-				<div className="ml-5 AssociativeCareer">
+				<div className="ml-5 AssociativeCareer" key="test">
 					{rolesFetched &&
 						semestersFetched &&
-						associativeSemestersKeys.reverse().map(semester_id => {
+						orderedAssociativeSemestersKeys.map(semester_id => {
 							const semester = semesters.find(semester => semester.id === semester_id);
 
 							const assosBySemesterList = associativeSemesters[semester_id].map(asso => {
@@ -81,7 +87,7 @@ class AssociativeCareerScreen extends React.Component {
 											key={asso.id + semester.id}
 											name={asso.name}
 											shortname={asso.shortname}
-											additionalInfo={role ? role.name : ''}
+											additionalInfo={role ? role.name : 'Association suivie'}
 											image={asso.image}
 											login={asso.parent ? asso.parent.login : asso.login}
 											deleted={asso.in_cemetery_at != null}
