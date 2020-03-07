@@ -118,17 +118,11 @@ class Calendar extends React.Component {
 	loadEvents(calendar) {
 		const { dispatch } = this.props;
 		const { duration, date } = this.state;
-		const oneDay = 1000 * 60 * 60 * 24;
-		const firstOfTheWeekOrMonthOrWhatever =
-			duration === 'day'
-				? date
-				: new Date(
-						date.getTime() - ((duration === 'week' ? date.getDay() : date.getDate()) - 1) * oneDay
-				  );
+		const firstOfTheWeekOrMonthOrWhatever = moment(date).startOf(duration);
 
 		const action = actions
 			.calendars(calendar.id)
-			.events.all({ [duration]: firstOfTheWeekOrMonthOrWhatever.toISOString().slice(0, 10) });
+			.events.all({ [duration]: firstOfTheWeekOrMonthOrWhatever.format('YYYY-MM-DD') });
 
 		dispatch(action);
 		action.payload
