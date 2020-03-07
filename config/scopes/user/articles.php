@@ -40,6 +40,20 @@ return [
                         'created' => [
                             'description' => 'Gérer les articles que l\'utilisateur a créé',
                         ],
+                        'owned' => [
+                            'description' => 'Gérer les articles que chaque utilisateur possède',
+                            'scopes' => [
+                                'user' => [
+                                    'description' => 'Gérer les articles que chaque utilisateur possède et qu\'il crée',
+                                ],
+                                'client' => [
+                                    'description' => 'Gérer les articles que chaque utilisateur possède et que mon client crée',
+                                ],
+                                'asso' => [
+                                    'description' => 'Gérer les articles que chaque utilisateur possède et que mon association crée',
+                                ],
+                            ]
+                        ],
                     ]
                 ],
                 'clients' => [
@@ -126,6 +140,20 @@ return [
                     'scopes' => [
                         'created' => [
                             'description' => 'Récupérer les articles que l\'utilisateur a créé',
+                        ],
+                        'owned' => [
+                            'description' => 'Récupérer les articles que chaque utilisateur possède',
+                            'scopes' => [
+                                'user' => [
+                                    'description' => 'Récupérer les articles que chaque utilisateur possède et qu\'il crée',
+                                ],
+                                'client' => [
+                                    'description' => 'Récupérer les articles que chaque utilisateur possède et que mon client crée',
+                                ],
+                                'asso' => [
+                                    'description' => 'Récupérer les articles que chaque utilisateur possède et que mon association crée',
+                                ],
+                            ]
                         ],
                     ]
                 ],
@@ -214,6 +242,20 @@ return [
                         'created' => [
                             'description' => 'Modifier et créer les articles que l\'utilisateur a créé',
                         ],
+                        'owned' => [
+                            'description' => 'Modifier et créer les articles que chaque utilisateur possède',
+                            'scopes' => [
+                                'user' => [
+                                    'description' => 'Modifier et créer les articles que chaque utilisateur possède et qu\'il crée',
+                                ],
+                                'client' => [
+                                    'description' => 'Modifier et créer les articles que chaque utilisateur possède et que mon client crée',
+                                ],
+                                'asso' => [
+                                    'description' => 'Modifier et créer les articles que chaque utilisateur possède et que mon association crée',
+                                ],
+                            ]
+                        ],
                     ]
                 ],
                 'clients' => [
@@ -301,6 +343,20 @@ return [
                         'created' => [
                             'description' => 'Modifier les articles que l\'utilisateur a créé',
                         ],
+                        'owned' => [
+                            'description' => 'Modifier les articles que chaque utilisateur possède',
+                            'scopes' => [
+                                'user' => [
+                                    'description' => 'Modifier les articles que chaque utilisateur possède et qu\'il crée',
+                                ],
+                                'client' => [
+                                    'description' => 'Modifier les articles que chaque utilisateur possède et que mon client crée',
+                                ],
+                                'asso' => [
+                                    'description' => 'Modifier les articles que chaque utilisateur possède et que mon association crée',
+                                ],
+                            ]
+                        ],
                     ]
                 ],
                 'clients' => [
@@ -387,6 +443,20 @@ return [
                     'scopes' => [
                         'created' => [
                             'description' => 'Créer les articles que l\'utilisateur a créé',
+                        ],
+                        'owned' => [
+                            'description' => 'Créer les articles que chaque utilisateur possède',
+                            'scopes' => [
+                                'user' => [
+                                    'description' => 'Créer les articles que chaque utilisateur possède et qu\'il crée',
+                                ],
+                                'client' => [
+                                    'description' => 'Créer les articles que chaque utilisateur possède et que mon client crée',
+                                ],
+                                'asso' => [
+                                    'description' => 'Créer les articles que chaque utilisateur possède et que mon association crée',
+                                ],
+                            ]
                         ],
                     ]
                 ],
