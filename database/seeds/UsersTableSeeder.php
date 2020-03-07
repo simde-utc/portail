@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\Asso;
 use App\Models\Semester;
 use App\Models\Role;
+use App\Models\Service;
 
 class UsersTableSeeder extends Seeder
 {
@@ -73,7 +74,7 @@ class UsersTableSeeder extends Seeder
             ],
         ];
 
-        fprintf(STDOUT, "Seeding manually added users\n");
+        fprintf(STDOUT, "\tSeeding manually added users\n");
         foreach ($users as $user) {
             $model = User::create([
                 'id'		=> ($user['id'] ?? null),
@@ -92,8 +93,18 @@ class UsersTableSeeder extends Seeder
             }
         }
 
+        // Fetching common data
+        $admin = User::where("email", config('app.admin.email'))->first();
+        $currentSemester = Semester::getThisSemester();
+        $presidentRoleId = Role::where('type', 'president')->first()->id;
+        $roles = Role::where([
+            ["owned_by_type", "=", 'App\Models\Asso'],
+            ["owned_by_id" , "=", null]
+        ])->get()->toArray();
+        $assos = Asso::whereNull('in_cemetery_at')->get()->toArray();
+
         // Giving information
-        fprintf(STDOUT, "Seeding random users\n");
+        fprintf(STDOUT, "\tSeeding random users\n");
         $this->command->getOutput()->progressStart(config('seeder.user.amount'));
 
         // Seeding random users
@@ -104,30 +115,28 @@ class UsersTableSeeder extends Seeder
 
         $this->command->getOutput()->progressFinish();
 
-        // Fetching common data
-        $presidentRoleId = Role::where('type', 'president')->first()->id;
-        $roles = Role::where([
-            ["owned_by_type", "=", 'App\Models\Asso'],
-            ["owned_by_id" , "=", null]
-        ])->get()->toArray();
-        $assos = Asso::whereNull('in_cemetery_at')->get()->toArray();
-        $admin_id = User::where("email", config('app.admin.email'))->first()->id;
-        $semester_id = Semester::getThisSemester()->id;
-        if (config("seeder.membership.multiple_semesters")) {
+        /*
+         *  Memberships seeding
+         *  Includes pending and followed associations
+         *
+         */
+
+        $semester_id = $currentSemester->id;
+        if (config("seeder.user.membership.multiple_semesters")) {
             $semesters = Semester::all()->toArray();
         }
 
         // Start progress bar
-        fprintf(STDOUT, "Seeding memberships\n");
-        $this->command->getOutput()->progressStart(config('seeder.membership.amount'));
+        fprintf(STDOUT, "\tSeeding: Memberships\n");
+        $this->command->getOutput()->progressStart(config('seeder.user.membership.amount'));
 
         // Seeding
-        for ($i = 1; $i <= config('seeder.membership.amount'); $i++) {
+        for ($i = 1; $i <= config('seeder.user.membership.amount'); $i++) {
             $faker = Faker\Factory::create();
             $user_id = $faker->randomElement(User::all()->toArray())['id'];
             $asso = Asso::where('id', $faker->randomElement($assos)['id'])->first();
 
-            if (config("seeder.membership.multiple_semesters")) {
+            if (config("seeder.user.membership.multiple_semesters")) {
                 $semester_id = $faker->randomElement($semesters)['id'];
             }
 
@@ -135,7 +144,7 @@ class UsersTableSeeder extends Seeder
                 try {
                     $asso->assignRoles("president", [
                         'user_id' => $user_id,
-                        'validated_by_id' => $admin_id,
+                        'validated_by_id' => $admin->id,
                         'semester_id' => $semester_id,
                     ], true);
                     $this->command->getOutput()->progressAdvance();
@@ -161,5 +170,65 @@ class UsersTableSeeder extends Seeder
         }
 
         $this->command->getOutput()->progressFinish();
+
+        fprintf(STDOUT, "\tSeeding: Admin joining association\n");
+        for ($i = 1; $i <= config('seeder.user.joining_assos.admin.amount'); $i++) {
+            try {
+                $joinedAssos = array_merge($admin->currentJoinedAssos()->pluck('id')->toArray(), $admin->currentJoiningAssos()->pluck('id')->toArray());
+                $assos = Asso::whereNull('in_cemetery_at')->whereNotIn('id', $joinedAssos)->get()->toArray();
+                if (count($assos) == 0) {
+                    fprintf(STDOUT, "Admin joining associations amount not reached");
+                    break;
+                }
+
+                $asso = Asso::where('id', $faker->randomElement($assos)['id'])->first();
+                $asso->assignMembers($admin->id, [
+                    "role_id" => $faker->randomElement($roles)['id'],
+                    "semester_id" => $currentSemester->id,
+                ], true);
+            } catch (\Throwable $th) {
+                $i--;
+            }
+        }
+
+        fprintf(STDOUT, "\tSeeding: Admin followed association\n");
+
+        for ($i = 1; $i <= config('seeder.user.followed_assos.admin.amount'); $i++) {
+            try {
+                $joinedAssos = array_merge(
+                    $admin->currentJoinedAssos()->pluck('id')->toArray(),
+                    $admin->currentJoiningAssos()->pluck('id')->toArray(),
+                    $admin->currentFollowedAssos()->pluck('id')->toArray()
+                );
+                $assos = Asso::whereNull('in_cemetery_at')->whereNotIn('id', $joinedAssos)->get()->toArray();
+                if (count($assos) == 0) {
+                    fprintf(STDOUT, "Admin followed associations amount not reached");
+                    break;
+                }
+
+                $asso = Asso::where('id', $faker->randomElement($assos)['id'])->first();
+                $asso->assignMembers($admin->id, [
+                    "role_id" => null,
+                    "semester_id" => $currentSemester->id,
+                ]);
+            } catch (\Throwable $th) {
+                $i--;
+            }
+        }
+
+        fprintf(STDOUT, "\tSeeding: Admin followed services\n");
+        for ($i = 1; $i <= config('seeder.user.followed_services.admin.amount'); $i++) {
+            $services = Service::whereNotIn('id', $admin->followedServices()->pluck('id')->toArray())->get()->toArray();
+            if (count($services) == 0) {
+                fprintf(STDOUT, "Admin followed services amount not reached");
+                break;
+            }
+
+            try {
+                $admin->followedServices()->attach($faker->randomElement($services)["id"]);
+            } catch (\Throwable $th) {
+                $i--;
+            }
+        }
     }
 }
