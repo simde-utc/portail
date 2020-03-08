@@ -16,19 +16,19 @@ class GroupsTableSeeder extends Seeder
     {
         $groups = [
             [
-                'user_id'       => User::where('firstname', config('app.admin.firstname'))->first()->id,
+                'user_id'       => User::where('email', config('app.admin.email'))->first()->id,
                 'name'          => 'LA13 Forever',
                 'icon'          => null,
                 'visibility_id' => Visibility::findByType('public')->id,
             ],
             [
-                'user_id'       => User::where('firstname', 'Natan')->first()->id,
+                'user_id'       => User::where('email', 'natan.danous@etu.utc.fr')->first()->id,
                 'name'          => 'Coloc',
                 'icon'          => null,
                 'visibility_id' => Visibility::findByType('private')->id,
             ],
             [
-                'user_id'       => User::where('firstname', 'Alexandre')->first()->id,
+                'user_id'       => User::where('email', 'alexandre.brasseur@etu.utc.fr')->first()->id,
                 'name'          => 'Mon groupe sur invitation <3',
                 'icon'          => null,
                 'visibility_id' => Visibility::findByType('private')->id,

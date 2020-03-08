@@ -27,27 +27,27 @@ class ArticlesTableSeeder extends Seeder
                 'visibility_id' => 'public',
                 'actions' => [
                     [
-                        'user_id' => User::where('firstname', config('app.admin.firstname'))->first()->id,
+                        'user_id' => User::where('email', config('app.admin.email'))->first()->id,
                         'key' => 'liked',
                         'value' => false,
                     ],
                     [
-                        'user_id' => User::where('firstname', config('app.admin.firstname'))->first()->id,
+                        'user_id' => User::where('email', config('app.admin.email'))->first()->id,
                         'key' => 'seen',
                         'value' => 3,
                     ],
                     [
-                        'user_id' => User::where('firstname', config('app.admin.firstname'))->first()->id,
+                        'user_id' => User::where('email', config('app.admin.email'))->first()->id,
                         'key' => 'shared',
                         'value' => 1,
                     ],
                     [
-                        'user_id' => User::where('firstname', 'Alexandre')->first()->id,
+                        'user_id' => User::where('email', 'alexandre.brasseur@etu.utc.fr')->first()->id,
                         'key' => 'liked',
                         'value' => true,
                     ],
                     [
-                        'user_id' => User::where('firstname', 'Natan')->first()->id,
+                        'user_id' => User::where('email', 'natan.danous@etu.utc.fr')->first()->id,
                         'key' => 'seen',
                         'value' => 40,
                     // Big fan
@@ -63,7 +63,7 @@ class ArticlesTableSeeder extends Seeder
                 'visibility_id' => 'cas',
                 'actions' => [
                     [
-                        'user_id' => User::where('firstname', 'Romain')->first()->id,
+                        'user_id' => User::where('email', 'romain.maliach-auguste@etu.utc.fr')->first()->id,
                         'key' => 'liked',
                         'value' => true,
                     ],
@@ -77,12 +77,12 @@ class ArticlesTableSeeder extends Seeder
                 'visibility_id' => 'contributorBde',
                 'actions' => [
                     [
-                        'user_id' => User::where('firstname', 'Alexandre')->first()->id,
+                        'user_id' => User::where('email', 'alexandre.brasseur@etu.utc.fr')->first()->id,
                         'key' => 'liked',
                         'value' => true,
                     ],
                     [
-                        'user_id' => User::where('firstname', config('app.admin.firstname'))->first()->id,
+                        'user_id' => User::where('email', config('app.admin.email'))->first()->id,
                         'key' => 'seen',
                         'value' => 2,
                     ],
