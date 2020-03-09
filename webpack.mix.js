@@ -30,7 +30,20 @@ mix.react('resources/assets/react/index.js', 'public/js');
 mix.browserSync(process.env.APP_URL);
 
 mix.disableSuccessNotifications();
-
+mix.webpackConfig({
+    module: {
+        rules: [{
+            test: /\.jsx?$/,
+            exclude: /(bower_components)/,
+            use: [
+                {
+                    loader: 'babel-loader',
+                    options: mix.config.babel()
+                },
+            ],
+        }],
+    }
+});
 // Polyfill
 mix.polyfill({
 	enabled : true,
