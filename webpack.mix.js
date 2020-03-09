@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+require("laravel-mix-polyfill");
 require('dotenv').config();
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,11 @@ mix.react('resources/assets/react/index.js', 'public/js');
 mix.browserSync(process.env.APP_URL);
 
 mix.disableSuccessNotifications();
+
+// Polyfill
+mix.polyfill({
+	enabled : true,
+	useBuiltIns: 'entry',
+	targets: "defaults",
+	entry : "stable"
+});
