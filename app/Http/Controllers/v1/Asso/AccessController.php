@@ -6,6 +6,7 @@
  * TODO: Missing Scopes !
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -105,7 +106,7 @@ class AccessController extends Controller
      */
     public function index(Request $request, string $asso_id): JsonResponse
     {
-        $choices = $this->getChoices($request);
+        $choices = $this->getChoices($request, ["joined", "joining"], ["joined"]);
         $semester = $this->getSemester($request, $choices);
         $asso = $this->getAsso($request, $asso_id, \Auth::user(), $semester);
         $access = $asso->access()->where('semester_id', $semester->id);
@@ -114,6 +115,12 @@ class AccessController extends Controller
             $access = $access->where(function ($query) {
                 return $query->whereNotNull('validated_at')->orWhere('member_id', \Auth::id());
             });
+        }
+
+        if (in_array('joining', $choices) && count($choices) <= 1) {
+            $access = $access->whereNull('validated_by_id');
+        } else if (in_array('joined', $choices) && count($choices) <= 1) {
+            $access = $access->whereNotNull('validated_by_id');
         }
 
         $access = $access->getSelection()
@@ -179,13 +186,20 @@ class AccessController extends Controller
      */
     public function show(Request $request, string $asso_id, string $access_id): JsonResponse
     {
-        $choices = $this->getChoices($request);
+        $choices = $this->getChoices($request, ["joined", "joining"], ["joined"]);
         $semester = $this->getSemester($request, $choices);
         $user_id = (\Auth::id() ?? $request->input('user_id'));
         $asso = $this->getAsso($request, $asso_id, \Auth::user(), $semester);
         $access = $this->getAccess($request, $access_id, $user_id, $asso, $semester->id);
+        $validated = (isset($access["validated"]) && $access["validated"]);
 
-        return response()->json($access->hideSubData(), 200);
+        if (in_array('joined', $choices) && $validated) {
+            return response()->json($access->hideSubData(), 200);
+        } else if (in_array('joining', $choices) && !$validated) {
+            return response()->json($access->hideSubData(), 200);
+        }
+
+        return response()->json([], 200);
     }
 
     /**

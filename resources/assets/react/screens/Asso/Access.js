@@ -2,6 +2,7 @@
  * Display the access demands of an association.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -61,7 +62,7 @@ class AccessScreen extends React.Component {
 		}
 
 		if (!accessFetched) {
-			dispatch(actions.access.all());
+			dispatch(actions.access.all({ only: 'joined,joining' }));
 		}
 
 		dispatch(actions.config({ title: `${shortname} - Accès` }));
@@ -70,7 +71,7 @@ class AccessScreen extends React.Component {
 	loadAssosData(id) {
 		const { dispatch } = this.props;
 
-		dispatch(actions.assos(id).access.all());
+		dispatch(actions.assos(id).access.all({ only: 'joined,joining' }));
 	}
 
 	sendDemand(data) {
@@ -80,7 +81,7 @@ class AccessScreen extends React.Component {
 			.assos(asso.id)
 			.access.create(data)
 			.payload.then(({ data: { id: access_id } }) => {
-				dispatch(actions.assos(asso.id).access.all());
+				dispatch(actions.assos(asso.id).access.all({ only: 'joined,joining' }));
 				NotificationManager.success(
 					"La demande d'accès a été envoyée. En attente de la confirmation d'un responsable de l'association",
 					"Demande d'accès"
@@ -95,7 +96,7 @@ class AccessScreen extends React.Component {
 						.access(access_id)
 						.update()
 						.payload.then(() => {
-							dispatch(actions.assos(asso.id).access.all());
+							dispatch(actions.assos(asso.id).access.all({ only: 'joined,joining' }));
 							NotificationManager.success(
 								"La demande d'accès a été automatiquement confirmée. En attente de validation de l'accès",
 								"Demande d'accès"
@@ -127,7 +128,7 @@ class AccessScreen extends React.Component {
 			.access(acces.id)
 			.update()
 			.payload.then(() => {
-				dispatch(actions.assos(asso.id).access.all());
+				dispatch(actions.assos(asso.id).access.all({ only: 'joined,joining' }));
 				NotificationManager.success(
 					"La demande d'accès a été confirmée. En attente de validation de l'accès",
 					"Demande d'accès"
@@ -149,7 +150,7 @@ class AccessScreen extends React.Component {
 			.access(acces.id)
 			.delete()
 			.payload.then(() => {
-				dispatch(actions.assos(asso.id).access.all());
+				dispatch(actions.assos(asso.id).access.all({ only: 'joined,joining' }));
 				NotificationManager.success("La demande d'accès a été annulée", "Demande d'accès");
 			})
 			.catch(() => {
