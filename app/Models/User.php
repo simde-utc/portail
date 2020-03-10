@@ -15,7 +15,8 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Cog\Contracts\Ownership\CanBeOwner;
 use App\Interfaces\Model\{
-    CanBeNotifiable, CanHaveCalendars, CanHaveContacts, CanHaveEvents, CanHaveRoles, CanHavePermissions, CanComment
+    CanBeNotifiable, CanHaveCalendars, CanHaveContacts, CanHaveEvents, CanHaveRoles, CanHavePermissions, CanComment,
+    CanHaveArticles
 };
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -35,7 +36,7 @@ use App\Notifications\User\{
 };
 
 class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHaveContacts, CanHaveCalendars, CanHaveEvents,
-	CanHaveRoles, CanHavePermissions, CanComment
+	CanHaveRoles, CanHavePermissions, CanComment, CanHaveArticles
 {
     use HasHiddenData, HasSelection, HasApiTokens, Notifiable, HasRoles, HasUuid, IsLogged, UserRelations {
         UserRelations::notifications insteadof Notifiable;
@@ -458,5 +459,27 @@ class User extends Authenticatable implements CanBeNotifiable, CanBeOwner, CanHa
         } catch (PortailException $e) {
             return 'fr';
         }
+    }
+
+    /**
+     * Relation with articles.
+     *
+     * @return mixed
+     */
+    public function articles()
+    {
+        return $this->morphMany(Article::class, 'owned_by');
+    }
+
+    /**
+     * Indicate if an article is manageable.
+     * A user article is manageable by it's owner
+     *
+     * @param  string $user_id
+     * @return boolean
+     */
+    public function isArticleManageableBy(string $user_id): bool
+    {
+        return $this->id == $user_id;
     }
 }
