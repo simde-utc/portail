@@ -56,11 +56,12 @@ class AssoListScreen extends React.Component {
 
 	getGrid(assos, filter) {
 		const { assosCemetaryActive } = this.state;
+		// To understand accents removal, see https://en.wikipedia.org/wiki/Unicode_equivalence#Character_duplication
 		const regex = RegExp(
 			filter
 				.toLowerCase()
-				.split('')
-				.join('.*')
+				.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '')
 		);
 
 		const filteredList = assos.filter(({ shortname, name, in_cemetery_at }) => {
