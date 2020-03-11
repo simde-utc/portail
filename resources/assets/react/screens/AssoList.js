@@ -67,12 +67,34 @@ class AssoListScreen extends React.Component {
 		const filteredList = assos.filter(({ shortname, name, in_cemetery_at }) => {
 			if (!assosCemetaryActive) {
 				return (
-					(regex.test(shortname.toLowerCase()) || regex.test(name.toLowerCase())) &&
+					(regex.test(
+						shortname
+							.toLowerCase()
+							.normalize('NFD')
+							.replace(/[\u0300-\u036f]/g, '')
+					) ||
+						regex.test(
+							name
+								.toLowerCase()
+								.normalize('NFD')
+								.replace(/[\u0300-\u036f]/g, '')
+						)) &&
 					in_cemetery_at === null
 				);
 			}
 			return (
-				(regex.test(shortname.toLowerCase()) || regex.test(name.toLowerCase())) &&
+				(regex.test(
+					shortname
+						.toLowerCase()
+						.normalize('NFD')
+						.replace(/[\u0300-\u036f]/g, '')
+				) ||
+					regex.test(
+						name
+							.toLowerCase()
+							.normalize('NFD')
+							.replace(/[\u0300-\u036f]/g, '')
+					)) &&
 				in_cemetery_at != null
 			);
 		});
