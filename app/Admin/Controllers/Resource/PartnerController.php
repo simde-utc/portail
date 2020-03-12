@@ -25,7 +25,6 @@ class PartnerController extends ResourceController
     protected function getFields(): array
     {
         return [
-            'id' => 'display',
             'name' => 'text',
             'website' => 'url',
             'address' => 'text',
