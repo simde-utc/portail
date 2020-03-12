@@ -3,6 +3,7 @@
  * Allow to search for a user.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -74,7 +75,7 @@ class SearchUserController extends Controller
 
                     $grid->model()->orWhereIn('id', $cas);
                 } else {
-                    $grid->model()->orWhere($field, 'LIKE', $value);
+                    $grid->model()->orWhereRaw("lower($field) LIKE ?", strtolower($value));
                 }
             }
         } else {
@@ -90,7 +91,7 @@ class SearchUserController extends Controller
 
                         $grid->model()->whereIn('id', $cas);
                     } else {
-                        $grid->model()->where($field, 'LIKE', $value);
+                        $grid->model()->whereRaw("lower($field) LIKE ?", strtolower($value));
                     }
                 }
             }
