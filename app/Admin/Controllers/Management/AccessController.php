@@ -84,7 +84,7 @@ class AccessController extends Controller
         // Add all columns.
         $grid->column('asso.shortname', 'Asso');
 
-        $grid->get()->pôle()->display(function () {
+        $grid->column('Pôle')->display(function () {
             $asso = Asso::find($this->asso_id);
 
             if ($asso) {
@@ -99,7 +99,7 @@ class AccessController extends Controller
             return $this->member->lastname." ".$this->member->firstname;
         });
 
-        $grid->get()->rôle()->display(function () {
+        $grid->column('Rôles')->display(function () {
             $asso = Asso::find($this->asso_id);
 
             if ($asso) {
