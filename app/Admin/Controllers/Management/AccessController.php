@@ -44,14 +44,14 @@ class AccessController extends Controller
         $grid = new GridGenerator($this->model);
         $grid::$simplePrint = true;
 
-        $grid->addFields([
-            'id' => 'display',
-            'asso' => Asso::get(['id', 'name']),
-            'member' => User::get(['id', 'firstname', 'lastname']),
-        ]);
-
-        // Define the filter for parents.
+        // Add all filters.
         $grid->filter(function($filter) {
+            $filter->where(function ($query) {
+                $query->whereHas('asso', function ($query) {
+                    $query->where('id', '=', $this->input);
+                });
+            }, 'Asso')->select(Asso::get(['id', 'shortname'])->pluck('shortname', 'id'));
+
             // Get all poles (all assos with children).
             $poles = Asso::whereIn('id', function($query) {
                 return $query->select('parent_id')->from('assos');
@@ -62,9 +62,29 @@ class AccessController extends Controller
                     $query->where('parent_id', '=', $this->input);
                 });
             }, 'Pôle')->select($poles);
+
+            $filter->where(function ($query) {
+                $query->whereHas('member', function ($query) {
+                    $query->whereRaw('lower(lastname) like ?', [strtolower("%{$this->input}%")]);
+                });
+            }, 'Nom du membre');
+            $filter->where(function ($query) {
+                $query->whereHas('member', function ($query) {
+                    $query->whereRaw('lower(firstname) like ?', [strtolower("%{$this->input}%")]);
+                });
+            }, 'Prénom du membre');
+
+            $filter->where(function ($query) {
+                $query->whereHas('semester', function ($query) {
+                    $query->where('id', '=', $this->input);
+                });
+            }, 'Semestre')->select(Semester::get(['id', 'name'])->pluck('name', 'id'));
         });
 
-        $grid->get()->pôle()->sortable()->display(function () {
+        // Add all columns.
+        $grid->column('asso.shortname', 'Asso');
+
+        $grid->get()->pôle()->display(function () {
             $asso = Asso::find($this->asso_id);
 
             if ($asso) {
@@ -75,31 +95,38 @@ class AccessController extends Controller
             }
         });
 
-        $grid->get()->role()->sortable()->display(function () {
+        $grid->column('member.lastname', 'Membre')->display(function () {
+            return $this->member->lastname." ".$this->member->firstname;
+        });
+
+        $grid->get()->rôle()->display(function () {
             $asso = Asso::find($this->asso_id);
 
             if ($asso) {
                 $user = $asso->currentMembers()->wherePivot('user_id', $this->member['id'])->first();
-
                 if ($user) {
                     $this->role = Role::find($user->pivot->role_id, $this->asso);
-
                     return GridGenerator::modelToTable($this->role->toArray());
                 }
             }
         });
+        $grid->column('access.name', 'Accès')->display(function () {
+            return $this->access->name.' ('.$this->access->utc_access.')';
+        });
+        $grid->column('semester.name', 'Semestre');
 
-        $grid->get()->acces('Accès')->sortable()->display(function () {
-            $access = $this->access;
+        $grid->addFields([
+            'description' => 'textarea',
+            'comment' => 'text'
+        ]);
 
-            return $access->name.' ('.$access->utc_access.')';
+        $grid->column('validated_by.lastname', 'Validé par')->display(function () {
+            if ($this->validated_by) {
+                return $this->validated_by->lastname." ".$this->validated_by->firstname;
+            }
         });
 
         $grid->addFields([
-            'semester' => Semester::get(['id', 'name']),
-            'description' => 'textarea',
-            'comment' => 'text',
-            'validated_by' => User::get(['id', 'firstname', 'lastname']),
             'validated' => 'switch',
             'validated_at' => 'datetime',
             'created_at' => 'display',
