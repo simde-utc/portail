@@ -4,6 +4,7 @@
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -58,9 +59,8 @@ class GridGenerator extends Generator
     public static function generateFilter($filter, string $field, $data, $model)
     {
         if (is_string($data)) {
-            if ($data === 'datetime' || in_array($field, ['deleted_at', 'created_at', 'updated_at'])) {
-                $filter->lt($field)->datetime();
-                $filter->gt($field)->datetime();
+            if ($data === 'date' || $data === 'datetime' || in_array($field, ['deleted_at', 'created_at', 'updated_at'])) {
+                $filter->between($field)->date();
             } else {
                 switch ($data) {
                     case 'switch':
