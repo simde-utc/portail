@@ -4,6 +4,7 @@
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Noé Amiot <noe.amiot@etu.utc.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -118,7 +119,7 @@ class AccessController extends Controller
         $grid->addFields([
             'description' => 'textarea',
             'comment' => 'text'
-        ]);
+        ], false);
 
         $grid->column('validated_by.lastname', 'Validé par')->display(function () {
             if ($this->validated_by) {
@@ -130,7 +131,6 @@ class AccessController extends Controller
             'validated' => 'switch',
             'validated_at' => 'datetime',
             'created_at' => 'display',
-            'updated_at' => 'display'
         ]);
 
         $grid->tools(function ($tools) {

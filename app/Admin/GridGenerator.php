@@ -3,6 +3,7 @@
  * Generate a global admin presentation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -59,7 +60,6 @@ class GridGenerator extends Generator
         if (is_string($data)) {
             if ($data === 'datetime' || in_array($field, ['deleted_at', 'created_at', 'updated_at'])) {
                 $filter->lt($field)->datetime();
-                $filter->equal($field)->datetime();
                 $filter->gt($field)->datetime();
             } else {
                 switch ($data) {
@@ -96,22 +96,25 @@ class GridGenerator extends Generator
     /**
      * Allow to add several fields
      *
-     * @param array $fields
+     * @param array   $fields
+     * @param boolean $generateFilters
      * @return Generator
      */
-    public function addFields(array $fields)
+    public function addFields(array $fields, bool $generateFilters=true)
     {
         parent::addFields(array_keys($fields));
 
         $model = $this->generatedModel;
 
-        $this->generated->filter(function ($filter) use ($fields, $model) {
-            $filter->disableIdFilter();
+        if ($generateFilters) {
+            $this->generated->filter(function ($filter) use ($fields, $model) {
+                $filter->disableIdFilter();
 
-            foreach ($fields as $field => $data) {
-                GridGenerator::generateFilter($filter, $field, $data, $model);
-            }
-        });
+                foreach ($fields as $field => $data) {
+                    GridGenerator::generateFilter($filter, $field, $data, $model);
+                }
+            });
+        }
 
         return $this;
     }
