@@ -1,10 +1,40 @@
+/**
+ * Calendar component.
+ *
+ * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author Paco Pompeani <paco.pompeani@etu.utc.fr>
+ *
+ * @copyright Copyright (c) 2019, SiMDE-UTC
+ * @license GNU GPL-3.0
+ */
+
 import React from 'react';
 import { connect } from 'react-redux';
+import BigCalendar from 'react-big-calendar';
+import moment from 'moment';
 
 import CalendarSelector from './Selector';
-import CalendarCalendar from './Calendar';
+import { colorFromBackground } from '../../utils';
 
 import actions from '../../redux/actions';
+
+const localizer = BigCalendar.momentLocalizer(moment);
+
+const messages = {
+	allDay: 'Journée',
+	previous: 'Précédent',
+	next: 'Suivant',
+	today: "Aujourd'hui",
+	month: 'Mois',
+	week: 'Semaine',
+	day: 'Jour',
+	agenda: 'Agenda',
+	date: 'Date',
+	time: 'Heure',
+	event: 'Événement', // Or anything you want
+	showMore: total => `+ ${total} événement(s) supplémentaire(s)`,
+};
 
 @connect()
 class Calendar extends React.Component {
@@ -15,6 +45,8 @@ class Calendar extends React.Component {
 			selectedCalendars: {},
 			loadingCalendars: {},
 			events: {},
+			date: new Date(),
+			duration: Calendar.getDefaultView(),
 		};
 
 		if (props.selectedCalendars) {
@@ -34,9 +66,75 @@ class Calendar extends React.Component {
 		}
 	}
 
+	static getDefaultView() {
+		return window.innerWidth > 500 ? 'week' : 'day';
+	}
+
+	static getEventProps(event) {
+		return {
+			style: {
+				backgroundColor: event.calendar.color,
+				color: colorFromBackground(event.calendar.color),
+				border: 'none',
+				fontSize: '12px',
+			},
+		};
+	}
+
+	onNavigate(date) {
+		this.setState(
+			state => ({ ...state, date }),
+			() => this.loadAllEvents()
+		);
+	}
+
+	onView(duration) {
+		this.setState(
+			state => ({ ...state, duration }),
+			() => this.loadAllEvents()
+		);
+	}
+
+	getEvents() {
+		const { events, selectedCalendars } = this.state;
+		const generatedEvents = [];
+
+		Object.keys(events).forEach(calendar_id => {
+			const calendar = selectedCalendars[calendar_id];
+
+			events[calendar_id].forEach(({ id, name, begin_at, end_at, owned_by }) => {
+				generatedEvents.push({
+					id,
+					title: owned_by ? `${owned_by.shortname} - ${name}` : name,
+					start: new Date(begin_at),
+					end: new Date(end_at),
+					calendar,
+				});
+			});
+		});
+		return generatedEvents;
+	}
+
 	loadEvents(calendar) {
 		const { dispatch } = this.props;
-		const action = actions.calendars(calendar.id).events.all();
+		const { duration, date } = this.state;
+		let param;
+		if (duration === 'agenda') {
+			param = {
+				month: moment()
+					.startOf('day')
+					.format('YYYY-MM-DD'),
+			};
+		} else {
+			// duration in [ 'day', 'week', 'month' ]
+			param = {
+				[duration]: moment(date)
+					.startOf(duration)
+					.format('YYYY-MM-DD'),
+			};
+		}
+
+		const action = actions.calendars(calendar.id).events.all(param);
 
 		dispatch(action);
 		action.payload
@@ -62,6 +160,11 @@ class Calendar extends React.Component {
 					return prevState;
 				});
 			});
+	}
+
+	loadAllEvents() {
+		const { selectedCalendars } = this.state;
+		Object.values(selectedCalendars).map(cal => this.loadEvents(cal));
 	}
 
 	addCalendar(calendar) {
@@ -100,7 +203,18 @@ class Calendar extends React.Component {
 					onAddCalendar={this.addCalendar.bind(this)}
 					onRemoveCalendar={this.removeCalendar.bind(this)}
 				/>
-				<CalendarCalendar {...this.props} calendars={selectedCalendars} events={events} />
+				<div style={{ height: '700px' }}>
+					<BigCalendar
+						localizer={localizer}
+						defaultView={Calendar.getDefaultView()}
+						eventPropGetter={Calendar.getEventProps}
+						{...this.props}
+						events={this.getEvents()}
+						messages={messages}
+						onNavigate={date => this.onNavigate(date)}
+						onView={duration => this.onView(duration)}
+					/>
+				</div>
 				<span className={`loader large${fetching ? ' active' : ''}`} />
 			</div>
 		);

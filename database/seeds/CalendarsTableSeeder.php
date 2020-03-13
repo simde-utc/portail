@@ -24,8 +24,8 @@ class CalendarsTableSeeder extends Seeder
                 'description'	=> 'Calendrier personnel',
                 'color'			=> '#00FF00',
                 'visibility'	=> 'private',
-                'created_by'	=> User::where('firstname', config('app.admin.firstname'))->first(),
-                'owner'			=> User::where('firstname', config('app.admin.firstname'))->first(),
+                'created_by'	=> User::where('email', config('app.admin.email'))->first(),
+                'owner'			=> User::where('email', config('app.admin.email'))->first(),
                 'events'		=> [
                     'Petit pic des familles',
                     'Petite chose perso'
@@ -36,8 +36,8 @@ class CalendarsTableSeeder extends Seeder
                 'description'	=> 'Calendrier associatif',
                 'color'			=> '#0000FF',
                 'visibility'	=> 'private',
-                'created_by'	=> User::where('firstname', config('app.admin.firstname'))->first(),
-                'owner'			=> User::where('firstname', config('app.admin.firstname'))->first(),
+                'created_by'	=> User::where('email', config('app.admin.email'))->first(),
+                'owner'			=> User::where('email', config('app.admin.email'))->first(),
                 'events'		=> [
                     'Première réunion - Portail',
                     'Seconde réunion - Portail',
@@ -48,8 +48,8 @@ class CalendarsTableSeeder extends Seeder
                 'description'	=> 'Calendrier associatif',
                 'color'			=> '#0000FF',
                 'visibility'	=> 'private',
-                'created_by'	=> User::where('firstname', 'Natan')->first(),
-                'owner'			=> User::where('firstname', 'Natan')->first(),
+                'created_by'	=> User::where('email', 'natan.danous@etu.utc.fr')->first(),
+                'owner'			=> User::where('email', 'natan.danous@etu.utc.fr')->first(),
                 'events'		=> [
                     'Première réunion - Portail',
                     'Seconde réunion - Portail',
@@ -60,8 +60,8 @@ class CalendarsTableSeeder extends Seeder
                 'description'	=> 'Calendrier associatif',
                 'color'			=> '#0000FF',
                 'visibility'	=> 'private',
-                'created_by'	=> User::where('firstname', 'Alexandre')->first(),
-                'owner'			=> User::where('firstname', 'Alexandre')->first(),
+                'created_by'	=> User::where('email', 'alexandre.brasseur@etu.utc.fr')->first(),
+                'owner'			=> User::where('email', 'alexandre.brasseur@etu.utc.fr')->first(),
                 'events'		=> [
                     'Seconde réunion - Portail',
                 ],
@@ -71,8 +71,8 @@ class CalendarsTableSeeder extends Seeder
                 'description'	=> 'Calendrier associatif',
                 'color'			=> '#0000FF',
                 'visibility'	=> 'private',
-                'created_by'	=> User::where('firstname', 'Romain')->first(),
-                'owner'			=> User::where('firstname', 'Romain')->first(),
+                'created_by'	=> User::where('email', 'romain.maliach-auguste@etu.utc.fr')->first(),
+                'owner'			=> User::where('email', 'romain.maliach-auguste@etu.utc.fr')->first(),
                 'events'		=> [
                     'Seconde réunion - Portail',
                 ],
@@ -83,7 +83,7 @@ class CalendarsTableSeeder extends Seeder
                 'color'			=> '#FFC0CB',
                 'visibility'	=> 'cas',
                 'created_by'	=> Asso::where('login', 'simde')->first(),
-                'owner'			=> User::where('firstname', config('app.admin.firstname'))->first(),
+                'owner'			=> User::where('email', config('app.admin.email'))->first(),
                 'events'		=> [
                     'LA13'
                 ],
@@ -94,7 +94,7 @@ class CalendarsTableSeeder extends Seeder
                 'color'			=> '#FFC0CB',
                 'visibility'	=> 'cas',
                 'created_by'	=> Asso::where('login', 'simde')->first(),
-                'owner'			=> User::where('firstname', 'Alexandre')->first(),
+                'owner'			=> User::where('email', 'alexandre.brasseur@etu.utc.fr')->first(),
                 'events'		=> [
                     'MT90/91'
                 ],
@@ -105,7 +105,7 @@ class CalendarsTableSeeder extends Seeder
                 'color'			=> '#FFC0CB',
                 'visibility'	=> 'cas',
                 'created_by'	=> Asso::where('login', 'simde')->first(),
-                'owner'			=> User::where('firstname', 'Natan')->first(),
+                'owner'			=> User::where('email', 'natan.danous@etu.utc.fr')->first(),
                 'events'		=> [
                     'MT90/91'
                 ],
@@ -121,8 +121,8 @@ class CalendarsTableSeeder extends Seeder
                     'JDA'
                 ],
                 'followers'		=> [
-                    User::where('firstname', config('app.admin.firstname'))->first(),
-                    User::where('firstname', 'Natan')->first(),
+                    User::where('email', config('app.admin.email'))->first(),
+                    User::where('email', 'natan.danous@etu.utc.fr')->first(),
                 ],
             ],
             [
@@ -134,7 +134,7 @@ class CalendarsTableSeeder extends Seeder
                 'created_by'	=> Asso::where('login', 'bde')->first(),
                 'owner'			=> Asso::where('login', 'bde')->first(),
                 'followers'		=> [
-                    User::where('firstname', config('app.admin.firstname'))->first()
+                    User::where('email', config('app.admin.email'))->first()
                 ],
             ],
             [
@@ -145,8 +145,8 @@ class CalendarsTableSeeder extends Seeder
                 'created_by'	=> Asso::where('login', 'simde')->first(),
                 'owner'			=> Asso::where('login', 'simde')->first(),
                 'followers'		=> [
-                    User::where('firstname', config('app.admin.firstname'))->first(),
-                    User::where('firstname', 'Alexandre')->first(),
+                    User::where('email', config('app.admin.email'))->first(),
+                    User::where('email', 'alexandre.brasseur@etu.utc.fr')->first(),
                 ],
             ],
             [
@@ -162,10 +162,10 @@ class CalendarsTableSeeder extends Seeder
                     'Seconde réunion - Portail',
                 ],
                 'followers'		=> [
-                    User::where('firstname', config('app.admin.firstname'))->first(),
-                    User::where('firstname', 'Alexandre')->first(),
-                    User::where('firstname', 'Natan')->first(),
-                    User::where('firstname', 'Romain')->first(),
+                    User::where('email', config('app.admin.email'))->first(),
+                    User::where('email', 'alexandre.brasseur@etu.utc.fr')->first(),
+                    User::where('email', 'natan.danous@etu.utc.fr')->first(),
+                    User::where('email', 'romain.maliach-auguste@etu.utc.fr')->first(),
                 ],
             ],
         ];
