@@ -30,8 +30,8 @@ class AuthAppController extends ResourceController
             'app_id' => 'text',
             'password' => 'text',
             'key' => 'text',
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
     }
 

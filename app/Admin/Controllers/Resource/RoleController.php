@@ -30,8 +30,8 @@ class RoleController extends ResourceController
             'description' => 'textarea',
             'limited_at' => 'number',
             'owned_by' => 'display',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 

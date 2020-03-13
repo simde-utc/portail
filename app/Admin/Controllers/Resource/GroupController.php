@@ -30,8 +30,8 @@ class GroupController extends ResourceController
             'user' => User::get(['id', 'lastname', 'firstname']),
             'icon' => 'text',
             'visibility' => Visibility::get(['id', 'name']),
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
     }
 

@@ -29,8 +29,8 @@ class AccessController extends ResourceController
             'name' => 'text',
             'description' => 'textarea',
             'utc_access' => 'number',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 }

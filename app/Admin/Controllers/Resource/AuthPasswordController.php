@@ -29,8 +29,8 @@ class AuthPasswordController extends ResourceController
             'user' => User::get(['id', 'firstname', 'lastname']),
             'password' => 'text',
             'last_login_at' => 'display',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime'
         ];
     }
 

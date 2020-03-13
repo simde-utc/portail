@@ -34,8 +34,8 @@ class ServiceController extends ResourceController
             'description' => 'textarea',
             'url' => 'url',
             'visibility' => Visibility::get(['id', 'name']),
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 

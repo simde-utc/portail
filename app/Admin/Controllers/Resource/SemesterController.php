@@ -30,8 +30,8 @@ class SemesterController extends ResourceController
             'is_spring' => 'switch',
             'begin_at' => 'datetime',
             'end_at' => 'datetime',
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'date',
+            'updated_at' => 'date',
         ];
     }
 }
