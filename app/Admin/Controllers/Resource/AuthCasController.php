@@ -32,8 +32,8 @@ class AuthCasController extends ResourceController
             'is_active' => 'switch',
             'is_confirmed' => 'switch',
             'last_login_at' => 'display',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime'
         ];
     }
 

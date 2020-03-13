@@ -130,7 +130,7 @@ class AccessController extends Controller
         $grid->addFields([
             'validated' => 'switch',
             'validated_at' => 'datetime',
-            'created_at' => 'display',
+            'created_at' => 'datetime',
         ]);
 
         $grid->tools(function ($tools) {

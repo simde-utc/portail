@@ -42,8 +42,8 @@ class UserController extends Controller
         'firstname' => 'text',
         'lastname' => 'text',
         'last_login_at' => 'display',
-        'created_at' => 'display',
-        'updated_at' => 'display'
+        'created_at' => 'date',
+        'updated_at' => 'date'
     ];
 
     /**

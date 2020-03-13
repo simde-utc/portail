@@ -37,10 +37,10 @@ class AssoAccessController extends ResourceController
             'validated_by' => User::get(['id', 'firstname', 'lastname']),
             'description' => 'textarea',
             'comment' => 'text',
-            'validated_at' => 'datetime',
+            'validated_at' => 'date',
             'validated' => 'switch',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 

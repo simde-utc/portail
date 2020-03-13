@@ -29,8 +29,8 @@ class PermissionController extends ResourceController
             'name' => 'text',
             'description' => 'textarea',
             'owned_by' => 'display',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 

@@ -30,8 +30,8 @@ class CommentController extends ResourceController
             'body' => 'textarea',
             'created_by' => 'display',
             'owned_by' => 'display',
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
     }
 

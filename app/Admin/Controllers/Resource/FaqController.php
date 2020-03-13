@@ -31,8 +31,8 @@ class FaqController extends ResourceController
             'answer' => 'textarea',
             'category' => FaqCategory::get(['id', 'name']),
             'visibility' => Visibility::get(['id', 'name']),
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
     }
 

@@ -59,8 +59,20 @@ class GridGenerator extends Generator
     public static function generateFilter($filter, string $field, $data, $model)
     {
         if (is_string($data)) {
-            if ($data === 'date' || $data === 'datetime' || in_array($field, ['deleted_at', 'created_at', 'updated_at'])) {
-                $filter->between($field)->date();
+            if ($data === 'date' || $data === 'datetime' || $data === 'time') {
+                switch ($data) {
+                    case 'time':
+                        $filter->between($field)->time();
+                        break;
+
+                    case 'datetime':
+                        $filter->between($field)->datetime();
+                        break;
+
+                    default:
+                        $filter->between($field)->date();
+                        break;
+                }
             } else {
                 switch ($data) {
                     case 'switch':
