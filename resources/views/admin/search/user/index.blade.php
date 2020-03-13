@@ -95,7 +95,7 @@
                     @endforeach
                     <div class="form-group" style="margin-bottom: 0px; margin-left: auto;">
                         <div class="submit-wrapper">
-                            <button onclick="handleSubmit()" class="btn btn-primary">Rechercher</button>
+                            <input type="submit" onclick="handleSubmit()" value="Rechercher" class="btn btn-primary">
                         </div>
                     </div>
                 </form>
@@ -112,7 +112,7 @@
 
                     <div class="form-group" style="margin-bottom: 0px;">
                         <div class="submit-wrapper">
-                            <button type="submit" class="btn btn-primary">Rechercher</button>
+                            <input type="submit" value="Recherche Rapide" class="btn btn-primary">
                         </div>
                     </div>
                 </div>
