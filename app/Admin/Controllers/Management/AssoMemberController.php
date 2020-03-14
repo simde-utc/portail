@@ -86,6 +86,19 @@ class AssoMemberController extends Controller
                     });
                 }
             }, 'Semestre')->select(Semester::get(['id', 'name'])->pluck('name', 'id'));
+
+            $filter->where(function ($query) {
+                if (isset($this->input)) {
+                    if ($this->input === "true") {
+                        $query->whereNotNull("validated_by_id");
+                    } else {
+                        $query->whereNull("validated_by_id");
+                    }
+                }
+            }, 'Validé')->radio([
+                "true" => "oui",
+                "false" => "non",
+            ]);
         });
 
         $grid->column('user.lastname', 'Membre')->display(function () {
