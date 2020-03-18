@@ -49,6 +49,12 @@ return [
     ],
 
     // Short association description.
+    'short_description' => [
+        'min' => 0,
+        'max' => 255,
+    ],
+
+    // Association description.
     'description' => [
         'min' => 0,
         'max' => 8191,

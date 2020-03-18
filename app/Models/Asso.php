@@ -44,7 +44,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     ];
 
     protected $fillable = [
-        'name', 'shortname', 'login', 'image', 'description', 'type_id', 'parent_id', 'in_cemetery_at'
+        'name', 'shortname', 'login', 'image', 'description', 'short_description', 'type_id', 'parent_id', 'in_cemetery_at'
     ];
 
     protected $hidden = [
@@ -60,7 +60,7 @@ class Asso extends Model implements CanBeOwner, CanHaveContacts, CanHaveCalendar
     ];
 
     protected $must = [
-        'name', 'shortname', 'login', 'image', 'in_cemetery_at', 'deleted_at',
+        'shortname', 'login', 'image', 'in_cemetery_at', 'deleted_at',
     ];
 
     // Children in the case of a staged mode display.

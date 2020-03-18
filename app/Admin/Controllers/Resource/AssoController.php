@@ -30,6 +30,7 @@ class AssoController extends ResourceController
             'shortname' => 'text',
             'login' => 'text',
             'image' => 'image',
+            'short_description' => 'text',
             'description' => 'textarea',
             'type' => AssoType::get(['id', 'name']),
             'parent' => Asso::get(['id', 'name']),
