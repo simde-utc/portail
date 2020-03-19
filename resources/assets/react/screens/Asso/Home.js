@@ -195,10 +195,13 @@ class AssoHomeScreen extends React.Component {
 						<div className="col-md-10" style={{ whiteSpace: 'pre-line' }}>
 							<h1 className={`title ${color}`} style={{ fontWeight: 'bold' }}>
 								{asso.shortname}{' '}
-								<small className="text-muted h4" style={{ fontStyle: 'italic' }}>
-									{asso.name}
-								</small>
+								{asso.name && (
+									<small className="text-muted h4" style={{ fontStyle: 'italic' }}>
+										{asso.name}
+									</small>
+								)}
 							</h1>
+							{asso.short_description && <p>{asso.short_description}</p>}
 							<span className="mt-4">{asso.type && asso.type.description}</span>
 							<ReactMarkdown className="my-3 text-justify" source={asso.description} />
 							{asso.in_cemetery_at == null && (
