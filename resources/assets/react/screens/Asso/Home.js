@@ -201,7 +201,14 @@ class AssoHomeScreen extends React.Component {
 									</small>
 								)}
 							</h1>
-							{asso.short_description && <p>{asso.short_description}</p>}
+							{asso.short_description && (
+								<p
+									className={`${color}`}
+									style={{ padding: '.5rem', margin: '1rem 0', fontWeight: 'bold' }}
+								>
+									{asso.short_description}
+								</p>
+							)}
 							<span className="mt-4">{asso.type && asso.type.description}</span>
 							<ReactMarkdown className="my-3 text-justify" source={asso.description} />
 							{asso.in_cemetery_at == null && (
