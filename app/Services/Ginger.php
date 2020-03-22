@@ -6,6 +6,7 @@
  * @author Rémy Huet <remyhuet@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Natan Danous <natous.danous@hotmail.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -15,8 +16,7 @@ namespace App\Services;
 
 class Ginger
 {
-    protected const URL = 'https://assos.utc.fr/ginger/v1/';
-
+    protected $url;
     protected $user;
     protected $responseCode;
     protected $key;
@@ -27,6 +27,7 @@ class Ginger
     public function __construct()
     {
         $this->key = config('app.ginger_key');
+        $this->url = config('app.ginger_url');
     }
 
     /**
@@ -344,7 +345,7 @@ class Ginger
      */
     protected function call(string $method, string $route, array $params=[])
     {
-        $curl = \Curl::to(self::URL.$route.'?key='.$this->key)
+        $curl = \Curl::to($this->url.$route.'?key='.$this->key)
 	        ->withData($params)
 	        ->returnResponseObject();
 

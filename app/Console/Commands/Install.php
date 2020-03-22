@@ -5,6 +5,7 @@
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -158,6 +159,10 @@ class Install extends Command
 
         $value = $this->ask('App asso ?', 'simde');
         $this->changeEnv('APP_ASSO', $value);
+        $subBar->advance();
+
+        $value = $this->ask('Ginger Url ?', '');
+        $this->changeEnv('GINGER_KEY', $value);
         $subBar->advance();
 
         $value = $this->ask('Ginger key ?', '');
