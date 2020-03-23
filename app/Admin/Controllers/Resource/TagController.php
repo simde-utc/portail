@@ -27,8 +27,8 @@ class TagController extends ResourceController
             'id' => 'display',
             'name' => 'text',
             'description' => 'textarea',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 }

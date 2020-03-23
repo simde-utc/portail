@@ -37,8 +37,8 @@ class ArticleController extends ResourceController
             'tags' => 'display',
             'created_by' => 'display',
             'owned_by' => 'display',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 

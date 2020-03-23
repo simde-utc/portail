@@ -33,8 +33,8 @@ class CalendarController extends ResourceController
             'visibility' => Visibility::get(['id', 'name']),
             'created_by' => 'display',
             'owned_by' => 'display',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 

@@ -32,8 +32,8 @@ class FaqCategoryController extends ResourceController
             'lang' => 'text',
             'parent' => FaqCategory::get(['id', 'name']),
             'visibility' => Visibility::get(['id', 'name']),
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'date',
+            'updated_at' => 'date',
         ];
     }
 

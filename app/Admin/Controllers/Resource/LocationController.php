@@ -30,8 +30,8 @@ class LocationController extends ResourceController
             'name' => 'text',
             'place' => Place::get(['id', 'name']),
             'position' => 'text',
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'date',
+            'updated_at' => 'date',
         ];
     }
 

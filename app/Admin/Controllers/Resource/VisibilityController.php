@@ -28,8 +28,8 @@ class VisibilityController extends ResourceController
             'type' => 'display',
             'name' => 'text',
             'parent' => Visibility::get(['id', 'name']),
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'date',
+            'updated_at' => 'date',
         ];
     }
 

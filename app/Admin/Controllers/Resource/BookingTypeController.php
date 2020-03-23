@@ -28,8 +28,8 @@ class BookingTypeController extends ResourceController
             'type' => 'display',
             'name' => 'text',
             'need_validation' => 'switch',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 }

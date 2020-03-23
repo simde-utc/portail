@@ -29,8 +29,8 @@ class NotificationController extends ResourceController
             'notifiable' => 'display',
             'data' => 'text',
             'read_at' => 'display',
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
     }
 

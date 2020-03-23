@@ -48,7 +48,7 @@ const options = {
 		{
 			name: 'heading',
 			action: SimpleMDE.toggleHeadingSmaller,
-			className: 'fa fa-fw fa-heading',
+			className: 'fa fa-header',
 			title: 'Titre',
 		},
 		{
