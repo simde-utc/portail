@@ -162,8 +162,10 @@ class Ginger
         )->content;
         $contributions = [];
 
-        foreach ($contributionList as $contribution) {
-            $contributions[] = $this->parseContribution($contribution);
+        if (!empty($contributionList)) {
+            foreach ($contributionList as $contribution) {
+                $contributions[] = $this->parseContribution($contribution);
+            }
         }
 
         return $contributions;
