@@ -103,12 +103,13 @@ sudo supervisorctl reread && sudo supervisorctl update && sudo supervisorctl sta
 
 ## For BDE contributions management
 You only need to install this if you want to work on BDE contributions.
-	- Install [Ginger API](https://github.com/simde-utc/ginger) and follow the installation guide.
+	- Install [Fake ginger](https://github.com/simde-utc/faux-ginger) and follow the installation guide.
 	- Make sure you have it running and specify the `GINGER_KEY` and `GINGER_URL` values.
 	- Run
 ```bash
 php artisan portail:clear
 ```
+	- Keep in ming that your actions with fake Ginger are limited, for more advanced purposes, install  [Ginger API](https://github.com/simde-utc/ginger)
 
 ## Credentials
 If you need to use the api except from the frontend, you'll need to connect with the API through Oauth2 protocol.
