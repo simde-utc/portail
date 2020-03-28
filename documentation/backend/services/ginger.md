@@ -27,7 +27,7 @@ Ginger is used to see if a user has contributed to the BDE-UTC. This service all
 
 ## Properties
 
-- `URL` (protected, const) : contains the Ginger instance URL.
+- `url` contains the url to the Ginger API instance to use.
 - `key` contains the ginger key to be allowed to retrieve information on users.
 - `responseCode` status of the last HTTP request made on Ginger API
 - `user` content of the call request on Ginger with the following shape:
@@ -98,9 +98,9 @@ Retrieve user information from Ginger by using `user()` method and return last H
 
 ## getContributions() method
 
-Get an array containing all contributions of a given user. It takes as argument a user login wich is null by default. 
+Get an array containing all contributions of a given user. It takes as argument a user login wich is null by default.
 
-- If no argument is given, this method tests if the `user` property is set and get current user contributions or an empty array. 
+- If no argument is given, this method tests if the `user` property is set and get current user contributions or an empty array.
 - If the login argument is set, this method checks if the `user` property is set and it's login is the same as the requested login. If not, it tries to get it through the `user()` method.
 
 Example in JSON of this method's return value:

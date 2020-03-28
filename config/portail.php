@@ -4,6 +4,7 @@
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -71,6 +72,7 @@ return [
         'image' => env('CAS_IMAGE', ''),
     ],
 
+    'ginger_url' => env('GINGER_URL', ''),
     'ginger_key' => env('GINGER_KEY', ''),
 
     'cookie_lifetime' => 518400,
