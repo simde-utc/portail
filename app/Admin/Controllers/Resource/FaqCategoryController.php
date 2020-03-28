@@ -18,6 +18,8 @@ class FaqCategoryController extends ResourceController
 {
     protected $model = FaqCategory::class;
 
+    protected $name = "Catégorie de FAQ";
+
     /**
      * Field to display definition.
      *
@@ -34,6 +36,20 @@ class FaqCategoryController extends ResourceController
             'visibility' => Visibility::get(['id', 'name']),
             'created_at' => 'date',
             'updated_at' => 'date',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Nom',
+            'lang' => 'Langue',
+            'visibility' => "Visibilité",
         ];
     }
 

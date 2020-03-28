@@ -17,6 +17,8 @@ class AssoController extends ResourceController
 {
     protected $model = Asso::class;
 
+    protected $name = "Association";
+
     /**
      * Fields to display definition.
      *
@@ -37,6 +39,20 @@ class AssoController extends ResourceController
             'created_at' => 'date',
             'updated_at' => 'date',
             'deleted_at' => 'date',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Nom Officiel',
+            'shortname' => 'Nom D\'usage',
+            'in_cemetery_at' => 'Mis au cimetière le',
         ];
     }
 

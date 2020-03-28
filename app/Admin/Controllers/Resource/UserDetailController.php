@@ -18,6 +18,8 @@ class UserDetailController extends ResourceController
 {
     protected $model = UserDetail::class;
 
+    protected $name = "Détails utilisateur";
+
     /**
      * Fields to display definition.
      *
@@ -33,6 +35,20 @@ class UserDetailController extends ResourceController
             'type' => 'display',
             'created_at' => 'date',
             'updated_at' => 'date',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'user' => 'Utilisateur',
+            'key' => 'Clé',
+            'value' => 'Valeur',
         ];
     }
 

@@ -18,6 +18,8 @@ class FaqController extends ResourceController
 {
     protected $model = Faq::class;
 
+    protected $name = "FAQ";
+
     /**
      * Fields to display definition.
      *
@@ -37,6 +39,20 @@ class FaqController extends ResourceController
     }
 
     /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'answer' => 'Réponse',
+            'category' => "Catégorie",
+            'visibility' => "Visibilité",
+        ];
+    }
+
+    /**
      * Default values definition of the fields to display.
      *
      * @return array
@@ -44,8 +60,9 @@ class FaqController extends ResourceController
     protected function getDefaults(): array
     {
         return [
-            'category_id' => FaqCategory::orderBy('created_at', 'DESC')->first()->id,
-            'visibility_id' => Visibility::first()->id,
+            // We'll uncomment this once FaqCategories will be filled.
+            // 'category_id' => FaqCategory::orderBy('created_at', 'DESC')->first()->id.
+            'visibility_id' => Visibility::where('type', "public")->first()->id,
         ];
     }
 

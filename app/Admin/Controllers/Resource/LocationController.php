@@ -18,6 +18,8 @@ class LocationController extends ResourceController
 {
     protected $model = Location::class;
 
+    protected $name = "Lieu";
+
     /**
      * Fields to display definition.
      *
@@ -32,6 +34,19 @@ class LocationController extends ResourceController
             'position' => 'text',
             'created_at' => 'date',
             'updated_at' => 'date',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Nom',
+            'place' => 'Emplacement',
         ];
     }
 

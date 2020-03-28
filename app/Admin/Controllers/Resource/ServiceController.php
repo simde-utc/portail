@@ -40,6 +40,20 @@ class ServiceController extends ResourceController
     }
 
     /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Nom',
+            'shortname' => 'Nom court',
+            'visibility' => 'Visibilité',
+        ];
+    }
+
+    /**
      * Default values definition of the fields to display.
      *
      * @return array

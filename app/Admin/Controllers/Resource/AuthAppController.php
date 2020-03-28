@@ -17,6 +17,8 @@ class AuthAppController extends ResourceController
 {
     protected $model = AuthApp::class;
 
+    protected $name = "Autentification par application";
+
     /**
      * Fields to display definition.
      *
@@ -32,6 +34,21 @@ class AuthAppController extends ResourceController
             'key' => 'text',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'user' => 'Utilisateur',
+            'app_id' => 'Id de l\'application',
+            'password' => 'Mot de passe',
+            'key' => 'Clé',
         ];
     }
 

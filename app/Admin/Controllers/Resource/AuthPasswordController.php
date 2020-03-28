@@ -17,6 +17,8 @@ class AuthPasswordController extends ResourceController
 {
     protected $model = AuthPassword::class;
 
+    protected $name = "Autentification par Mot de passe";
+
     /**
      * Fields to display definition.
      *
@@ -31,6 +33,20 @@ class AuthPasswordController extends ResourceController
             'last_login_at' => 'display',
             'created_at' => 'datetime',
             'updated_at' => 'datetime'
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'user' => "Utilisateur",
+            'password' => 'Mot de passe',
+            'last_login_at' => 'Dernière connexion le',
         ];
     }
 

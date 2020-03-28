@@ -35,6 +35,19 @@ class NotificationController extends ResourceController
     }
 
     /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'data' => 'Contenu',
+            'read_at' => 'Lue le',
+        ];
+    }
+
+    /**
      * Return dependencies.
      *
      * @return array

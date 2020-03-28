@@ -20,6 +20,8 @@ class AssoAccessController extends ResourceController
 {
     protected $model = AssoAccess::class;
 
+    protected $name = "Accès par association";
+
     /**
      * Fields to display definition.
      *
@@ -41,6 +43,26 @@ class AssoAccessController extends ResourceController
             'validated' => 'switch',
             'created_at' => 'date',
             'updated_at' => 'date'
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'asso' => 'Association',
+            'access' => 'Accès',
+            'member' => 'Membre',
+            'semester' => 'Semestre',
+            'confirmed_by' => 'Confirmé par',
+            'validated_by' => 'Validé par',
+            'comment' => 'Commentaire',
+            'validated_at' => 'Validé le',
+            'validated' => 'Validé',
         ];
     }
 

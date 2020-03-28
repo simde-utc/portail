@@ -18,6 +18,8 @@ class ClientController extends ResourceController
 {
     protected $model = Client::class;
 
+    protected $name = "Client OAuth";
+
     /**
      * Fields to display definition.
      *
@@ -40,6 +42,17 @@ class ClientController extends ResourceController
             'created_at' => 'date',
             'updated_at' => 'date'
         ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        // Keep fields names as label.
+        return [];
     }
 
     /**

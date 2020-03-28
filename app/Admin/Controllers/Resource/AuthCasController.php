@@ -17,6 +17,8 @@ class AuthCasController extends ResourceController
 {
     protected $model = AuthCas::class;
 
+    protected $name = "Autentification par CAS";
+
     /**
      * Fields to display definition.
      *
@@ -34,6 +36,21 @@ class AuthCasController extends ResourceController
             'last_login_at' => 'display',
             'created_at' => 'datetime',
             'updated_at' => 'datetime'
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'user' => "Utilisateur",
+            'is_active' => 'Est actif',
+            'is_confirmed' => 'Est confirmé',
+            'last_login_at' => 'Dernière connexion le',
         ];
     }
 

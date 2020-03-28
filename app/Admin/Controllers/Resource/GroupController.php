@@ -18,6 +18,8 @@ class GroupController extends ResourceController
 {
     protected $model = Group::class;
 
+    protected $name = "Groupe";
+
     /**
      * Fields to display definition.
      *
@@ -27,11 +29,27 @@ class GroupController extends ResourceController
     {
         return [
             'id' => 'display',
+            'name' => 'text',
             'user' => User::get(['id', 'lastname', 'firstname']),
             'icon' => 'text',
             'visibility' => Visibility::get(['id', 'name']),
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Nom',
+            'user' => 'Utilisateur',
+            'icon' => 'Icône',
+            'visibility' => 'Visibilité',
         ];
     }
 

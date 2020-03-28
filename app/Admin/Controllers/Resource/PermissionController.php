@@ -16,6 +16,8 @@ class PermissionController extends ResourceController
 {
     protected $model = Permission::class;
 
+    protected $name = "Permission";
+
     /**
      * Fields to display definition.
      *
@@ -31,6 +33,19 @@ class PermissionController extends ResourceController
             'owned_by' => 'display',
             'created_at' => 'date',
             'updated_at' => 'date'
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'nom',
+            'owned_by' => 'Possédé par',
         ];
     }
 

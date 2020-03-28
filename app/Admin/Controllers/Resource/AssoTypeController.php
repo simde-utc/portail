@@ -16,6 +16,8 @@ class AssoTypeController extends ResourceController
 {
     protected $model = AssoType::class;
 
+    protected $name = "Types d'association";
+
     /**
      * Fields to display definition.
      *
@@ -29,6 +31,18 @@ class AssoTypeController extends ResourceController
             'name' => 'text',
             'created_at' => 'date',
             'updated_at' => 'date',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Name',
         ];
     }
 }

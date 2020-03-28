@@ -18,6 +18,8 @@ class BookingController extends ResourceController
 {
     protected $model = Booking::class;
 
+    protected $name = "Réservation";
+
     /**
      * Fields to display definition.
      *
@@ -36,6 +38,22 @@ class BookingController extends ResourceController
             'validated_by' => 'display',
             'created_at' => 'datetime',
             'updated_at' => 'datetime'
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'room' => 'Salle',
+            'event' => 'Évènement',
+            'created_by' => 'Créé par',
+            'owned_by' => 'Possédé par',
+            'validated_by' => 'Validé par',
         ];
     }
 

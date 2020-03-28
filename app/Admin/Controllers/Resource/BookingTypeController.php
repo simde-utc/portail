@@ -16,6 +16,8 @@ class BookingTypeController extends ResourceController
 {
     protected $model = BookingType::class;
 
+    protected $name = "Type de réservation";
+
     /**
      * Fields to display definition.
      *
@@ -30,6 +32,19 @@ class BookingTypeController extends ResourceController
             'need_validation' => 'switch',
             'created_at' => 'date',
             'updated_at' => 'date'
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Nom',
+            'need_validation' => 'Doit être validé',
         ];
     }
 }

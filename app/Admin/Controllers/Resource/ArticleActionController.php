@@ -18,6 +18,8 @@ class ArticleActionController extends ResourceController
 {
     protected $model = ArticleAction::class;
 
+    protected $name = "Actions d'articles";
+
     /**
      * Fields to display definition.
      *
@@ -38,6 +40,20 @@ class ArticleActionController extends ResourceController
             'type' => 'display',
             'created_at' => 'date',
             'updated_at' => 'date',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'user' => "Utilisateur",
+            'key' => 'Clé',
+            'value' => 'Valeur',
         ];
     }
 

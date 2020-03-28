@@ -47,6 +47,20 @@ class UserController extends Controller
     ];
 
     /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'firstname' => 'Prénom',
+            'lastname' => 'Nom',
+            'last_login_at' => 'Dernière connexion le',
+        ];
+    }
+
+    /**
      * Give access only if user has the right permission.
      */
     public function __construct()
@@ -65,7 +79,7 @@ class UserController extends Controller
     {
         $grid = new GridGenerator(User::class);
 
-        $grid->addFields($this->fields);
+        $grid->addFields($this->fields, $this->getLabels());
 
         $grid->types()->display(function () {
             $badges = '';

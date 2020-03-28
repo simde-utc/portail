@@ -18,6 +18,8 @@ class ContactController extends ResourceController
 {
     protected $model = Contact::class;
 
+    protected $name = "Moyen de contact";
+
     /**
      * Fields to display definition.
      *
@@ -34,6 +36,21 @@ class ContactController extends ResourceController
             'owned_by' => 'display',
             'created_at' => 'date',
             'updated_at' => 'date',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Nom',
+            'value' => 'Valeur',
+            'visibility' => 'Visibilité',
+            'owned_by' => 'Possédé par',
         ];
     }
 

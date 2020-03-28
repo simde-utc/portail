@@ -16,6 +16,8 @@ class SemesterController extends ResourceController
 {
     protected $model = Semester::class;
 
+    protected $name = "Semestre";
+
     /**
      * Fields to display definition.
      *
@@ -32,6 +34,23 @@ class SemesterController extends ResourceController
             'end_at' => 'datetime',
             'created_at' => 'date',
             'updated_at' => 'date',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'location' => 'Lieu',
+            'visibility' => 'Visibilité',
+            'calendar' => 'Calendrier',
+            'created_by' => 'Créé par',
+            'owned_by' => 'Possédé par',
+            'capacity' => 'Capacité',
         ];
     }
 }

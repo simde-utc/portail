@@ -16,6 +16,8 @@ class AccessController extends ResourceController
 {
     protected $model = Access::class;
 
+    protected $name = "Accès";
+
     /**
      * Fields to display definition.
      *
@@ -31,6 +33,19 @@ class AccessController extends ResourceController
             'utc_access' => 'number',
             'created_at' => 'date',
             'updated_at' => 'date'
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Nom',
+            'utc_access' => 'Numéro d\'accès UTC',
         ];
     }
 }

@@ -31,4 +31,16 @@ class TagController extends ResourceController
             'updated_at' => 'date'
         ];
     }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Nom',
+        ];
+    }
 }

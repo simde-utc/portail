@@ -18,6 +18,8 @@ class CalendarController extends ResourceController
 {
     protected $model = Calendar::class;
 
+    protected $name = "Calendrier";
+
     /**
      * Fields to display definition.
      *
@@ -35,6 +37,22 @@ class CalendarController extends ResourceController
             'owned_by' => 'display',
             'created_at' => 'date',
             'updated_at' => 'date'
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'name' => 'Nom',
+            'color' => 'Couleur',
+            'visibility' => 'Visibilité',
+            'created_by' => 'Créé par',
+            'owned_by' => 'Possédé par',
         ];
     }
 

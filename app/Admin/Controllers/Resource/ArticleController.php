@@ -19,6 +19,8 @@ class ArticleController extends ResourceController
 {
     protected $model = Article::class;
 
+    protected $name = "Article";
+
     /**
      * Fields to display definition.
      *
@@ -39,6 +41,23 @@ class ArticleController extends ResourceController
             'owned_by' => 'display',
             'created_at' => 'date',
             'updated_at' => 'date'
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'title' => 'Titre',
+            'content' => 'Contenu',
+            'event' => 'Évènement',
+            'visibility' => 'Visibilité',
+            'created_by' => 'Créé par',
+            'owned_by' => 'Possédé par',
         ];
     }
 

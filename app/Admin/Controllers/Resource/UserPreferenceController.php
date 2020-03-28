@@ -18,6 +18,8 @@ class UserPreferenceController extends ResourceController
 {
     protected $model = UserPreference::class;
 
+    protected $name = "Préférences utilisateur";
+
     /**
      * Field to display definition.
      *
@@ -34,6 +36,21 @@ class UserPreferenceController extends ResourceController
             'only_for' => 'text',
             'created_at' => 'date',
             'updated_at' => 'date',
+        ];
+    }
+
+    /**
+     * Fields to display labels definition.
+     *
+     * @return array
+     */
+    protected function getLabels(): array
+    {
+        return [
+            'user' => 'Utilisateur',
+            'key' => 'Clé',
+            'value' => 'Valeur',
+            'only_for' => 'Seulement pour',
         ];
     }
 
