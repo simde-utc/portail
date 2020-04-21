@@ -8,20 +8,22 @@ The install section describes the installation for this particulary project.
 	- [Table of content](#table-of-content)
 	- [Pre-install](#pre-install)
 		- [Install PHP 7, mysql, Redis, Git, Composer and npm](#install-php-7-mysql-redis-git-composer-and-npm)
+		- [Choose right version of node and npm](#choose-right-version-of-node-and-npm)
 		- [Create MySQL User and Database](#create-mysql-user-and-database)
 	- [Install](#install)
 		- [Portal](#portal)
 	- [For email and notification credentials](#for-email-and-notification-credentials)
+	- [For BDE contributions management](#for-bde-contributions-management)
 	- [Credentials](#credentials)
 	- [In case of a problem](#in-case-of-a-problem)
-  
+
 ## Pre-install
 
 ### Install PHP 7, mysql, Redis, Git, Composer and npm
 
 Install made for Ubuntu, Debian and Mint.
 
-Required version is `>=7.2` it is forced in `Project-root/composer.json`. This indicates how to install php version 7.3.
+Required version is `>=7.2` it is forced in `Project-root/composer.json`. This indicates how to install php version 7.2.
 
 ```bash
 sudo apt update
@@ -35,6 +37,12 @@ sudo apt install -y \
 	mysql-server
 ```
 
+### Choose right version of node and npm
+
+```bash
+nvm install lts/dubnium
+npm i -g npm
+```
 ### Create MySQL User and Database
 
 Enter into MySQL as root:
@@ -61,13 +69,11 @@ Here you have to fill the `.env` file.
 
 If you used the given commands, there's no need to change `DB_*` values. Otherwise, this is the basic mysql configuration. If you have any problem, ask someone of the team.
 
-Fill `ADMIN_EMAIL`, `ADMIN_FIRSTNAME`, `ADMIN_LASTNAME` with your own information. 
-
-If (And only if) you need to manage BDE Contributions, ask an administrator for the `GINGER_KEY` value.
+Fill `ADMIN_EMAIL`, `ADMIN_FIRSTNAME`, `ADMIN_LASTNAME` with your own information.
 
 Finally launch this last command. It will ask you some questions:
 - `/!\ A .env file already exists /!\`  `Do you want to replace it (old version will be placed in .env.last ? yes/no [no]:` : Type enter.
-- `Clear database ? (yes/no) [no]` : answer yes 
+- `Clear database ? (yes/no) [no]` : answer yes
 - `Seed database ? (yes/no) [no]` : answer yes
 ```bash
 composer install
@@ -96,6 +102,16 @@ cp laravel-worker.conf /etc/supervisor/conf.d # Adapt this file
 sudo supervisorctl reread && sudo supervisorctl update && sudo supervisorctl start laravel-worker:*
 ```
 
+## For BDE contributions management
+You only need to install this if you want to work on BDE contributions.
+- Install [Fake ginger](https://github.com/simde-utc/faux-ginger) and follow the installation guide.
+- Make sure you have it running and specify the `GINGER_KEY` and `GINGER_URL` values.
+- Run
+```bash
+php artisan portail:clear
+```
+- Keep in mind that your actions with fake Ginger are limited, for more advanced purposes, install  [Ginger API](https://github.com/simde-utc/ginger)
+
 ## Credentials
 If you need to use the api except from the frontend, you'll need to connect with the API through Oauth2 protocol.
 
@@ -113,7 +129,3 @@ If you need to use the api except from the frontend, you'll need to connect with
 composer dump-autoload
 php artisan portail:clear
 ```
-
-
-
-

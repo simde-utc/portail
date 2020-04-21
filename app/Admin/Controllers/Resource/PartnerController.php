@@ -25,7 +25,6 @@ class PartnerController extends ResourceController
     protected function getFields(): array
     {
         return [
-            'id' => 'display',
             'name' => 'text',
             'website' => 'url',
             'address' => 'text',
@@ -33,8 +32,8 @@ class PartnerController extends ResourceController
             'city' => 'text',
             'description' => 'textarea',
             'image' => 'image',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 }

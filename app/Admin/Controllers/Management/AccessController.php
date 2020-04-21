@@ -3,6 +3,8 @@
  * Manage accesses.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -43,41 +45,92 @@ class AccessController extends Controller
         $grid = new GridGenerator($this->model);
         $grid::$simplePrint = true;
 
-        $grid->addFields([
-            'id' => 'display',
-            'asso' => Asso::get(['id', 'name']),
-            'member' => User::get(['id', 'firstname', 'lastname']),
-        ]);
+        // Add all filters.
+        $grid->filter(function($filter) {
+            $filter->where(function ($query) {
+                $query->whereHas('asso', function ($query) {
+                    $query->where('id', '=', $this->input);
+                });
+            }, 'Asso')->select(Asso::get(['id', 'shortname'])->pluck('shortname', 'id'));
 
-        $grid->get()->role()->sortable()->display(function () {
+            // Get all poles (all assos with children).
+            $poles = Asso::whereIn('id', function($query) {
+                return $query->select('parent_id')->from('assos');
+            })->pluck('name', 'id');
+
+            $filter->where(function ($query) {
+                $query->whereHas('asso', function ($query) {
+                    $query->where('parent_id', '=', $this->input);
+                });
+            }, 'Pôle')->select($poles);
+
+            $filter->where(function ($query) {
+                $query->whereHas('member', function ($query) {
+                    $query->whereRaw('lower(lastname) like ?', [strtolower("%{$this->input}%")]);
+                });
+            }, 'Nom du membre');
+            $filter->where(function ($query) {
+                $query->whereHas('member', function ($query) {
+                    $query->whereRaw('lower(firstname) like ?', [strtolower("%{$this->input}%")]);
+                });
+            }, 'Prénom du membre');
+
+            $filter->where(function ($query) {
+                $query->whereHas('semester', function ($query) {
+                    $query->where('id', '=', $this->input);
+                });
+            }, 'Semestre')->select(Semester::get(['id', 'name'])->pluck('name', 'id'));
+        });
+
+        // Add all columns.
+        $grid->column('asso.shortname', 'Asso');
+
+        $grid->column('Pôle')->display(function () {
             $asso = Asso::find($this->asso_id);
 
             if ($asso) {
-                $user = $asso->currentMembers()->wherePivot('user_id', $this->member['id'])->first();
-
-                if ($user) {
-                    $this->role = Role::find($user->pivot->role_id, $this->asso);
-
-                    return GridGenerator::modelToTable($this->role->toArray());
+                $parent = Asso::find($asso->parent_id);
+                if ($parent) {
+                    return $parent->name;
                 }
             }
         });
 
-        $grid->get()->acces('Accès')->sortable()->display(function () {
-            $access = $this->access;
+        $grid->column('member.lastname', 'Membre')->display(function () {
+            return $this->member->lastname." ".$this->member->firstname;
+        });
 
-            return $access->name.' ('.$access->utc_access.')';
+        $grid->column('Rôles')->display(function () {
+            $asso = Asso::find($this->asso_id);
+
+            if ($asso) {
+                $user = $asso->currentMembers()->wherePivot('user_id', $this->member['id'])->first();
+                if ($user) {
+                    $this->role = Role::find($user->pivot->role_id, $this->asso);
+                    return GridGenerator::modelToTable($this->role->toArray());
+                }
+            }
+        });
+        $grid->column('access.name', 'Accès')->display(function () {
+            return $this->access->name.' ('.$this->access->utc_access.')';
+        });
+        $grid->column('semester.name', 'Semestre');
+
+        $grid->addFields([
+            'description' => 'textarea',
+            'comment' => 'text'
+        ], false);
+
+        $grid->column('validated_by.lastname', 'Validé par')->display(function () {
+            if ($this->validated_by) {
+                return $this->validated_by->lastname." ".$this->validated_by->firstname;
+            }
         });
 
         $grid->addFields([
-            'semester' => Semester::get(['id', 'name']),
-            'description' => 'textarea',
-            'comment' => 'text',
-            'validated_by' => User::get(['id', 'firstname', 'lastname']),
             'validated' => 'switch',
             'validated_at' => 'datetime',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'datetime',
         ]);
 
         $grid->tools(function ($tools) {

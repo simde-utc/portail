@@ -3,6 +3,8 @@
  * Generate a global admin presentation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -57,10 +59,20 @@ class GridGenerator extends Generator
     public static function generateFilter($filter, string $field, $data, $model)
     {
         if (is_string($data)) {
-            if ($data === 'datetime' || in_array($field, ['deleted_at', 'created_at', 'updated_at'])) {
-                $filter->lt($field)->datetime();
-                $filter->equal($field)->datetime();
-                $filter->gt($field)->datetime();
+            if ($data === 'date' || $data === 'datetime' || $data === 'time') {
+                switch ($data) {
+                    case 'time':
+                        $filter->between($field)->time();
+                        break;
+
+                    case 'datetime':
+                        $filter->between($field)->datetime();
+                        break;
+
+                    default:
+                        $filter->between($field)->date();
+                        break;
+                }
             } else {
                 switch ($data) {
                     case 'switch':
@@ -96,22 +108,25 @@ class GridGenerator extends Generator
     /**
      * Allow to add several fields
      *
-     * @param array $fields
+     * @param array   $fields
+     * @param boolean $generateFilters
      * @return Generator
      */
-    public function addFields(array $fields)
+    public function addFields(array $fields, bool $generateFilters=true)
     {
         parent::addFields(array_keys($fields));
 
         $model = $this->generatedModel;
 
-        $this->generated->filter(function ($filter) use ($fields, $model) {
-            $filter->disableIdFilter();
+        if ($generateFilters) {
+            $this->generated->filter(function ($filter) use ($fields, $model) {
+                $filter->disableIdFilter();
 
-            foreach ($fields as $field => $data) {
-                GridGenerator::generateFilter($filter, $field, $data, $model);
-            }
-        });
+                foreach ($fields as $field => $data) {
+                    GridGenerator::generateFilter($filter, $field, $data, $model);
+                }
+            });
+        }
 
         return $this;
     }

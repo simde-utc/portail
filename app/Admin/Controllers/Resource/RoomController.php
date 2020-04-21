@@ -33,8 +33,8 @@ class RoomController extends ResourceController
             'created_by' => 'display',
             'owned_by' => 'display',
             'capacity' => 'number',
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'date',
+            'updated_at' => 'date',
         ];
     }
 

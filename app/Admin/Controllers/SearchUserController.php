@@ -3,6 +3,7 @@
  * Allow to search for a user.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -24,7 +25,10 @@ class SearchUserController extends Controller
     use HasUsers;
 
     protected $fields = [
-        'id', 'email', 'lastname', 'firstname', 'loginCAS'
+        'email' => 'email',
+        'lastname' => "nom",
+        'firstname' => "prénom",
+        'loginCAS' => "login CAS"
     ];
 
     protected $limit;
@@ -65,32 +69,42 @@ class SearchUserController extends Controller
     {
         $grid = new Grid(new User());
 
-        if ($request->filled('any')) {
-            $value = '%'.$request->input('any').'%';
+        if ($request->filled('quick_search')) {
+            $values = explode(" ", $request->input('quick_search'));
 
-            foreach ($this->fields as $field) {
-                if ($field === 'loginCAS') {
-                    $cas = AuthCas::where('login', 'LIKE', $value)->get(['user_id'])->pluck('user_id')->toArray();
+            foreach ($values as $value) {
+                foreach (array_keys($this->fields) as $field) {
+                    if ($field === 'loginCAS') {
+                        $cas = AuthCas::whereRaw(
+                            'login LIKE convert(? using utf8mb4) COLLATE utf8mb4_general_ci',
+                            [$value]
+                        )->get(['user_id'])->pluck('user_id')->toArray();
 
-                    $grid->model()->orWhereIn('id', $cas);
-                } else {
-                    $grid->model()->orWhere($field, 'LIKE', $value);
+                        $grid->model()->orWhereIn('id', $cas);
+                    } else {
+                        $grid->model()->orwhereRaw(
+                            "$field LIKE convert( ? using utf8mb4) COLLATE utf8mb4_general_ci",
+                            [$value]
+                        );
+                    }
                 }
             }
         } else {
             $filled = false;
 
-            foreach ($this->fields as $field) {
+            foreach (array_keys($this->fields) as $field) {
                 if ($request->filled($field)) {
                     $value = '%'.$request->input($field).'%';
                     $filled = true;
 
                     if ($field === 'loginCAS') {
-                        $cas = AuthCas::where('login', 'LIKE', $value)->get(['user_id'])->pluck('user_id')->toArray();
-
+                        $cas = AuthCas::whereRaw(
+                            'login LIKE convert(? using utf8mb4) COLLATE utf8mb4_general_ci',
+                            [$value]
+                        )->get(['user_id'])->pluck('user_id')->toArray();
                         $grid->model()->whereIn('id', $cas);
                     } else {
-                        $grid->model()->where($field, 'LIKE', $value);
+                        $grid->model()->whereRaw("$field LIKE convert(? using utf8mb4) COLLATE utf8mb4_general_ci", [$value]);
                     }
                 }
             }

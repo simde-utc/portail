@@ -37,8 +37,8 @@ class ClientController extends ResourceController
             'personal_access_client' => 'switch',
             'password_client' => 'switch',
             'restricted' => 'switch',
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date'
         ];
     }
 

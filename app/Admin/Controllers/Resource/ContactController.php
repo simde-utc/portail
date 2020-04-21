@@ -32,8 +32,8 @@ class ContactController extends ResourceController
             'type' => ContactType::get(['id', 'name']),
             'visibility' => Visibility::get(['id', 'name']),
             'owned_by' => 'display',
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'date',
+            'updated_at' => 'date',
         ];
     }
 

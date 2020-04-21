@@ -36,8 +36,8 @@ class ArticleActionController extends ResourceController
             'key' => 'text',
             'value' => 'text',
             'type' => 'display',
-            'created_at' => 'display',
-            'updated_at' => 'display',
+            'created_at' => 'date',
+            'updated_at' => 'date',
         ];
     }
 

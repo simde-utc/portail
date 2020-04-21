@@ -114,7 +114,12 @@ class BookingController extends Controller
     {
         $room = $this->getRoom($request, \Auth::user(), $room_id);
 
-        $bookings = $room->bookings()->getSelection();
+        if ($request->hasAny(['month', 'week', 'day'])) {
+            $events = Event::getSelection()->pluck('id')->toArray();
+            $bookings = Booking::whereIn('event_id', $events)->get();
+        } else {
+            $bookings = $room->bookings()->getSelection();
+        }
 
         return response()->json($bookings->map(function ($booking) {
             return $booking->hideData();

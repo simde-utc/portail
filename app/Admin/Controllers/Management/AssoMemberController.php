@@ -3,6 +3,7 @@
  * Manage Associations Members.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -45,15 +46,79 @@ class AssoMemberController extends Controller
         $assosRoles = [];
         $grid::$simplePrint = true;
 
+        // Add all filters.
+        $grid->filter(function($filter) {
+            $filter->where(function ($query) {
+                if (isset($this->input)) {
+                    $query->whereHas('asso', function ($query) {
+                        $query->where('id', '=', $this->input);
+                    });
+                }
+            }, 'Asso')->select(Asso::get(['id', 'shortname'])->pluck('shortname', 'id'));
+
+            $filter->where(function ($query) {
+                if (isset($this->input)) {
+                    $query->whereHas('user', function ($query) {
+                        $query->whereRaw('lower(lastname) like ?', [strtolower("%{$this->input}%")]);
+                    });
+                }
+            }, 'Nom du membre');
+            $filter->where(function ($query) {
+                if (isset($this->input)) {
+                    $query->whereHas('user', function ($query) {
+                        $query->whereRaw('lower(firstname) like ?', [strtolower("%{$this->input}%")]);
+                    });
+                }
+            }, 'Prénom du membre');
+
+            $filter->where(function ($query) {
+                if (isset($this->input)) {
+                    $query->whereHas('role', function ($query) {
+                        $query->where('id', '=', $this->input);
+                    });
+                }
+            }, 'Rôle')->select(Role::get(['id', 'name'])->pluck('name', 'id'));
+
+            $filter->where(function ($query) {
+                if (isset($this->input)) {
+                    $query->whereHas('semester', function ($query) {
+                        $query->where('id', '=', $this->input);
+                    });
+                }
+            }, 'Semestre')->select(Semester::get(['id', 'name'])->pluck('name', 'id'));
+
+            $filter->where(function ($query) {
+                if (isset($this->input)) {
+                    if ($this->input === "true") {
+                        $query->whereNotNull("validated_by_id");
+                    } else {
+                        $query->whereNull("validated_by_id");
+                    }
+                }
+            }, 'Validé')->radio([
+                "true" => "oui",
+                "false" => "non",
+            ]);
+        });
+
+        $grid->column('user.lastname', 'Membre')->display(function () {
+            if (isset($this->user)) {
+                return $this->user->lastname." ".$this->user->firstname;
+            }
+        });
+
+        $grid->column('asso.shortname', 'Asso');
+        $grid->column('role.name', 'Rôle');
+        $grid->column('semester.name', 'Semestre');
+        $grid->column('validated_by.lastname', 'Validé par')->display(function () {
+            if (isset($this->validated_by)) {
+                return $this->validated_by->lastname." ".$this->validated_by->firstname;
+            }
+        });
+
         $grid->addFields([
-            'id' => 'display',
-            'user' => User::get(['id', 'firstname', 'lastname']),
-            'role' => Role::get(['id', 'name']),
-            'asso' => Asso::get(['id', 'name']),
-            'semester' => Semester::get(['id', 'name']),
-            'validated_by' => User::get(['id', 'firstname', 'lastname']),
-            'created_at' => 'display',
-            'updated_at' => 'display'
+            'created_at' => 'date',
+            'updated_at' => 'date',
         ]);
 
         $grid->tools(function ($tools) {
@@ -71,6 +136,7 @@ class AssoMemberController extends Controller
             $row = $actions->row;
             $roles = ($assosRoles[$row->asso_id] ?? ($assosRoles[$row->asso_id] = $row->asso->getUserRoles()));
 
+            // TODO: This is loading massive amount of data as each line displayed loads all the roles in a select form (and the data is always the same).
             $generateAction = function ($view) use ($actions, $row, $roles) {
                 $actions->append(view($view, [
                     'member' => $row,
