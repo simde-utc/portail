@@ -54,7 +54,7 @@ Pour résumer OAuth2 dans l'action, il y a trois étapes :
     - `state` : '' (A DÉFINIR)
 - L'utilisateur accepte, redirection vers le callback client avec les paramètres suivants :
     - `code` : le code demandé
-- Le client fait une requete POST vers https://assos.utc.fr/auth/token avec les paramètres suivants :
+- Le client fait une requete POST vers https://assos.utc.fr/oauth/token avec les paramètres suivants :
     - `client_id` : ID du client
     - `client_secret` : Secret du client
     - `grant_type` : authorization_code
