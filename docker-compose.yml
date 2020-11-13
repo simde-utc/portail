@@ -41,5 +41,10 @@ services:
       - MYSQL_ROOT_PASSWORD=portail
       - MYSQL_DATABASE=portail
 
+  mail:
+    image: djfarrelly/maildev
+    ports:
+      - 8001:80
+
 volumes:
   dbdata:
