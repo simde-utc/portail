@@ -7,7 +7,6 @@ RUN apt-get update && \
     gnupg \
     git \
     unzip \
-    mysql-client \
     libmagickwand-dev  \
     zlib1g-dev \
     libzip-dev \
@@ -20,6 +19,8 @@ RUN apt-get update && \
     libxml2 \
     libxml2-dev \
     g++ \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
     && docker-php-source extract \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure zip --with-libzip \
@@ -33,12 +34,29 @@ RUN apt-get update && \
     && pecl channel-update pecl.php.net \
     && pecl install \
      imagick \
-     mcrypt
+     mcrypt \
+    && php -r "readfile('https://getcomposer.org/installer');" | php \
+    && mv composer.phar /usr/local/bin/composer
 
-COPY composer.json /var/www/html
-RUN php -r "readfile('https://getcomposer.org/installer');" | php \
-  && mv composer.phar /usr/local/bin/composer \
-  && composer install --no-autoloader --no-scripts
+# Run as non root for safety and to avoid permissions problems
 
-COPY . /var/www/html
-COPY docker/.env.docker .env
+ARG USER_ID
+ARG GROUP_ID
+
+RUN groupadd -g ${GROUP_ID} developper &&\
+    useradd -l -u ${USER_ID} -g developper developper &&\
+    mkdir -p /home/developper && chown developper:developper /home/developper &&\
+    mkdir /var/www/html/vendor && chown developper:developper /var/www/html/vendor
+
+ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=developper --with-fpm-group=developper
+
+USER developper
+
+WORKDIR /var/www/html
+
+# Let the user install dependencies
+
+COPY entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["php-fpm"]

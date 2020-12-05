@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Allow execution from anywhere
+cd "$(dirname $(dirname $(readlink -f $0)))"
+
+# FIXME : Detect first run and print instructions required to get the website working ?
+
+docker/compose up "$@"

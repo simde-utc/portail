@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Allow execution from anywhere
+cd "$(dirname $(dirname $(readlink -f $0)))"
+
+# Prepare context (set user id, etc.)
+. docker/prepare
+
+SERVICE=$1
+
+# Allow shell features ("&&", variables, etc.) and ensure shell is bash
+COMMAND="bash"
+if [ $# -gt 1 ]; then
+  COMMAND="${@:2}"
+fi
+
+# echo docker-compose run --rm --entrypoint "$COMMAND" $SERVICE
+# docker-compose run --rm --entrypoint "$COMMAND" $SERVICE
+
+echo docker-compose exec $SERVICE $COMMAND
+docker-compose exec $SERVICE $COMMAND

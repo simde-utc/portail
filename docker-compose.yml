@@ -1,38 +1,54 @@
 version: '3.7'
+
+volumes:
+  dbdata:
+
 services:
-  # The Application
-  app:
+
+  # The Back-End Application (Laravel)
+  back:
     build:
-      context: ./
-      dockerfile: docker/app.dockerfile
+      context: docker/configurations/back
+      args:
+        USER_ID: ${USER_ID:-0}
+        GROUP_ID: ${GROUP_ID:-0}
     working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - /var/www/html/vendor # FIME : Share dependencies with the host ? Comment to enable.
     depends_on:
       - database
-      - nodejs
-    volumes:
-      - ./:/var/www/html
     env_file:
-      - docker/.env.docker
-  nodejs:
+      - .env
+
+  # The Front-End Bundler (Webpack)
+  front:
     build:
-      context: ./
-      dockerfile: docker/node.dockerfile
-    working_dir: /var/www/html
+      context: docker/configurations/front
+      args:
+        USER_ID: ${USER_ID:-0}
+        GROUP_ID: ${GROUP_ID:-0}
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules # FIME : Share dependencies with the host ? Comment to enable.
+    env_file:
+      - .env
+
+  # The Reverse Proxy (Nginx)
+  proxy:
+    image: nginx:stable
     volumes:
       - ./:/var/www/html
-      - ./node_modules:/var/www/node_modules
-  # The Web Server
-  web:
-    image: nginx:latest
+      - ./docker/configurations/proxy/vhost.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - 8000:80
-    volumes:
-      - .:/var/www/html
-      - ./docker/vhost.conf:/etc/nginx/conf.d/default.conf
+    env_file:
+      - .env
     depends_on:
-      - app
+      - back
 
-  # The Database
+  # The Database (MySQL)
   database:
     image: mysql:5.6
     volumes:
@@ -40,6 +56,3 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=portail
       - MYSQL_DATABASE=portail
-
-volumes:
-  dbdata:
