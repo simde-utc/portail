@@ -161,7 +161,8 @@ trait HasMembers
             if (!$force) {
                 $manageableRoles = $this->getUserRoles(($data['validated_by_id'] ?? \Auth::id()));
 
-                if (!$manageableRoles->contains('id', $data['role_id'])) {
+                if (!$manageableRoles->contains('id', $data['role_id'])
+                  || $manageableRoles->where('position', '!=', null)->isEmpty()) {
                     throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à \
                         donner ce rôle: '.$role->name);
                 }
@@ -216,7 +217,8 @@ trait HasMembers
                 if (isset($updatedData['validated_by_id']) || \Auth::id()) {
                     $manageableRoles = $this->getUserRoles(($updatedData['validated_by_id'] ?? \Auth::id()));
 
-                    if (!$manageableRoles->contains('id', $role->id)) {
+                    if (!$manageableRoles->contains('id', $role->id)
+                      || $manageableRoles->where('position', '!=', null)->isEmpty()) {
                         throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à \
                             modifier ce rôle: '.$role->name);
                     }
@@ -235,7 +237,8 @@ trait HasMembers
                         $manageableRoles ?? $this->getUserRoles(($updatedData['validated_by_id'] ?? \Auth::id()))
                     );
 
-                    if (!$manageableRoles->contains('id', $role->id)) {
+                    if (!$manageableRoles->contains('id', $role->id)
+                      || $manageableRoles->where('position', '!=', null)->isEmpty()) {
                         throw new PortailException('La personne demandant l\'affectation de rôle n\'est pas habilitée à \
                             modifier ce rôle: '.$role->name);
                     }
@@ -299,7 +302,8 @@ trait HasMembers
             }
 
             if (!$force && $removed_by !== null) {
-                if (!$manageableRoles->contains('id', $data['role_id'])) {
+                if (!$manageableRoles->contains('id', $data['role_id'])
+                  || $manageableRoles->where('position', '!=', null)->isEmpty()) {
                     throw new PortailException('La personne demandant la suppression du rôle n\'est pas habilitée \
                         à modifier ce rôle: '.$role->name);
                 }
