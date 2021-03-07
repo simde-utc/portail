@@ -3,6 +3,7 @@
  * V1 controller.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author Noé Amiot <noe.amiot@etu.utc.fr>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
  * @license GNU GPL-3.0
@@ -32,10 +33,11 @@ class Controller extends BaseController
      *
      * @param  Request $request
      * @param  array   $choices
+     * @param  array   $defaultChoices
      * @return array
      * @throws PortailException For bad $choices.
      */
-    protected function getChoices(Request $request, array $choices)
+    protected function getChoices(Request $request, array $choices, array $defaultChoices=[])
     {
         $only = $request->input('only') ? explode(',', $request->input('only')) : [];
         $except = $request->input('except') ? explode(',', $request->input('except')) : [];
@@ -43,6 +45,10 @@ class Controller extends BaseController
         if (count(array_intersect($only, $choices)) !== count($only)
          || count(array_intersect($except, $choices)) !== count($except)) {
             throw new PortailException('Il n\'est possible de spécifier uniquement: '.implode(', ', $choices));
+        }
+
+        if (empty($only) && empty($except)) {
+            return $defaultChoices;
         }
 
         if (count($only) > 0) {

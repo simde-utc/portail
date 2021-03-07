@@ -53,7 +53,7 @@ class AppLoader extends React.Component {
 		// User permissions retrievement.
 		dispatch(actions.user.permissions.all());
 		// User associations retrievement.
-		dispatch(actions.user.assos.all());
+		dispatch(actions.user.assos.all({ only: 'joined,joining,followed' }));
 		// User services retrievement.
 		dispatch(actions.user.services.all());
 

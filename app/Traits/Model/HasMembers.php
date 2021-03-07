@@ -82,8 +82,7 @@ trait HasMembers
     public function members()
     {
         return $this->belongsToMany(User::class, $this->getMemberRelationTable())
-            ->whereNotNull('validated_by_id')
-        ->withPivot('semester_id', 'role_id', 'validated_by_id', 'created_at', 'updated_at');
+            ->withPivot('semester_id', 'role_id', 'validated_by_id', 'created_at', 'updated_at');
     }
 
     /**
