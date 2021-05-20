@@ -73,12 +73,13 @@ class AssoListScreen extends React.Component {
 							.normalize('NFD')
 							.replace(/[\u0300-\u036f]/g, '')
 					) ||
-						regex.test(
-							name
-								.toLowerCase()
-								.normalize('NFD')
-								.replace(/[\u0300-\u036f]/g, '')
-						)) &&
+						(name &&
+							regex.test(
+								name
+									.toLowerCase()
+									.normalize('NFD')
+									.replace(/[\u0300-\u036f]/g, '')
+							))) &&
 					in_cemetery_at === null
 				);
 			}
