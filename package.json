@@ -42,7 +42,7 @@
 		"browser-sync-webpack-plugin": "^2.0.1",
 		"cross-env": "^5.2.1",
 		"dotenv": "^6.0.0",
-		"easymde": "^2.9.0",
+		"easymde": "^2.15.0",
 		"imagemin": "^5.3.1",
 		"immer": "^1.8.0",
 		"lodash": "^4.17.15",
