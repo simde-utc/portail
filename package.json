@@ -28,6 +28,7 @@
 	},
 	"dependencies": {
 		"@babel/cli": "^7.0.0",
+		"@babel/compat-data": "^7.16.4",
 		"@babel/core": "7.0.0",
 		"@babel/plugin-proposal-decorators": "^7.0.0",
 		"@babel/preset-env": "^7.0.0",

@@ -50,9 +50,11 @@ services:
 
   # The Database (MySQL)
   database:
-    image: mysql:5.6
+    image: mysql
     volumes:
       - dbdata:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=portail
+      - MYSQL_USER=portail
+      - MYSQL_PASSWORD=portail
       - MYSQL_DATABASE=portail

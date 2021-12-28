@@ -1,8 +1,8 @@
-FROM php:8.0-fpm
+FROM php:7.2-fpm
 LABEL maintainer="Cesar Richard <cesar.richard2@gmail.com>"
 
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y \
+RUN apt-get update
+RUN apt-get install --no-install-recommends -y \
     libmcrypt-dev \
     gnupg \
     git \
@@ -19,15 +19,16 @@ RUN apt-get update && \
     libxml2 \
     libxml2-dev \
     libpng-dev \
-    g++ \
-    && docker-php-source extract \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-configure zip \
-    && docker-php-ext-configure gd \
-            --with-freetype \
-            --with-jpeg \
-    && docker-php-ext-install -j$(nproc) mysqli pdo_mysql zip gd intl \
-    && docker-php-source delete \
+    g++
+RUN docker-php-source extract
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-configure zip
+RUN docker-php-ext-configure gd \
+            --with-freetype-dir=/usr/include/ \
+            --with-jpeg-dir=/usr/include/ \
+            --with-png-dir=/usr/include/
+RUN docker-php-ext-install mysqli pdo_mysql zip gd intl
+RUN docker-php-source delete \
     && pecl channel-update pecl.php.net \
     && pecl install \
      imagick \
@@ -37,17 +38,17 @@ RUN apt-get update && \
 
 # Run as non root for safety and to avoid permissions problems
 
-#ARG USER_ID
-#ARG GROUP_ID
-#
-#RUN groupadd -g ${GROUP_ID} developper &&\
-#    useradd -l -u ${USER_ID} -g developper developper &&\
-#    mkdir -p /home/developper && chown developper:developper /home/developper &&\
-#    mkdir /var/www/html/vendor && chown developper:developper /var/www/html/vendor
+ARG USER_ID
+ARG GROUP_ID
+
+RUN groupadd -g ${GROUP_ID} developper &&\
+    useradd -l -u ${USER_ID} -g developper developper &&\
+    mkdir -p /home/developper && chown developper:developper /home/developper &&\
+    mkdir /var/www/html/vendor && chown developper:developper /var/www/html/vendor
 
 ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm # --with-fpm-user=developper --with-fpm-group=developper
 
-#USER developper
+USER developper
 
 WORKDIR /var/www/html
 
