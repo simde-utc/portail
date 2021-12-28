@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:8.0-fpm
 LABEL maintainer="Cesar Richard <cesar.richard2@gmail.com>"
 
 RUN apt-get update && \
@@ -18,17 +18,14 @@ RUN apt-get update && \
     libxrender1 \
     libxml2 \
     libxml2-dev \
+    libpng-dev \
     g++ \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
     && docker-php-source extract \
     && docker-php-ext-configure intl \
-    && docker-php-ext-configure zip --with-libzip \
+    && docker-php-ext-configure zip \
     && docker-php-ext-configure gd \
-            --enable-gd-native-ttf \
-            --with-freetype-dir=/usr/include/freetype2 \
-            --with-png-dir=/usr/include \
-            --with-jpeg-dir=/usr/include \
+            --with-freetype \
+            --with-jpeg \
     && docker-php-ext-install -j$(nproc) mysqli pdo_mysql zip gd intl \
     && docker-php-source delete \
     && pecl channel-update pecl.php.net \
@@ -40,17 +37,17 @@ RUN apt-get update && \
 
 # Run as non root for safety and to avoid permissions problems
 
-ARG USER_ID
-ARG GROUP_ID
+#ARG USER_ID
+#ARG GROUP_ID
+#
+#RUN groupadd -g ${GROUP_ID} developper &&\
+#    useradd -l -u ${USER_ID} -g developper developper &&\
+#    mkdir -p /home/developper && chown developper:developper /home/developper &&\
+#    mkdir /var/www/html/vendor && chown developper:developper /var/www/html/vendor
 
-RUN groupadd -g ${GROUP_ID} developper &&\
-    useradd -l -u ${USER_ID} -g developper developper &&\
-    mkdir -p /home/developper && chown developper:developper /home/developper &&\
-    mkdir /var/www/html/vendor && chown developper:developper /var/www/html/vendor
+ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm # --with-fpm-user=developper --with-fpm-group=developper
 
-ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=developper --with-fpm-group=developper
-
-USER developper
+#USER developper
 
 WORKDIR /var/www/html
 
