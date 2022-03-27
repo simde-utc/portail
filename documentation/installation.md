@@ -129,3 +129,24 @@ If you need to use the api except from the frontend, you'll need to connect with
 composer dump-autoload
 php artisan portail:clear
 ```
+
+### MissingTokenError at /oauth/callback
+
+If you have a MissingTokenError, try to downgrade ```lcobucci/jwt``` to 3.3.3 with composer.
+```bash 
+composer require lcobucci/jwt=3.3.3
+```
+
+or directly in ```composer.json```:
+```json
+"require": {
+	...,
+    "lcobucci/jwt": "^3.3.3",
+	...,
+}
+```
+
+and then run : 
+```bash
+composer update
+```
