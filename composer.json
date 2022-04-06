@@ -41,7 +41,6 @@
         "nunomaduro/collision": "3.0.*",
         "phpunit/phpunit": "~8.0",
         "squizlabs/php_codesniffer": "3.*",
-        "symfony/thanks": "^1.0",
         "nunomaduro/larastan": "^0.3.17",
         "phpmd/phpmd": "^2.6"
     },
