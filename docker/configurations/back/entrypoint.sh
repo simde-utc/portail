@@ -1,4 +1,10 @@
 #!/bin/bash
+source .env
+if [[ $APP_KEY == "" ]] ; then
+	echo """Warning: no application encryption key has been defined.
+	But this nice docker entrypoint will run php artisan key:generate for you."""
+	php artisan key:generate
+fi
 
 if [[ ! -r 'storage/oauth-public.key' ]]
 then cat <<EOM
