@@ -1,4 +1,10 @@
 #!/bin/bash
+source .env
+if [[ $(php artisan migrate:status | grep "Migration table not found." | wc -l) == 1 ]] ; then
+	echo """Warning: you have never ran any migration.
+But this nice docker entrypoint will run 'php artisan migrate' for you."""
+	php artisan migrate
+fi
 
 if [[ ! -r 'storage/oauth-public.key' ]]
 then cat <<EOM
