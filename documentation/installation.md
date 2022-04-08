@@ -23,21 +23,32 @@ The install section describes the installation for this particulary project.
 
 Install made for Ubuntu, Debian and Mint.
 
-Required version is `>=7.2` it is forced in `Project-root/composer.json`. This indicates how to install php version 7.2.
+*** In order to install PHP7.2 is needed to manually install ondrej PPA : ***
+
+```bash
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+```
 
 ```bash
 sudo apt update
 sudo apt upgrade -y
 sudo apt install -y \
-	php7.2 php7.2-mbstring php7.2-dg php7.2-dom php7.2-mysql \
+	php7.2 php7.2-mbstring php7.2-gd php7.2-dom php7.2-mysql \
 	redis \
 	git \
 	composer \
 	npm \
 	mysql-server
 ```
+### INSTALLATION DE NVM :
 
-### Choose right version of node and npm
+```bash
+sudo apt-get install curl
+touch ~/.bash_profile
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash
+source ~/.nvm/nvm.sh
+```
 
 ```bash
 nvm install lts/dubnium
@@ -51,7 +62,9 @@ sudo mysql
 ```
 Then, inside create a MySQL user and a database using the following commands:
 ```bash
-GRANT ALL PRIVILEGES ON portail.* TO 'portail'@'localhost' IDENTIFIED BY 'password'; # User creation with all privileges on all tables of the `portail` database
+```
+CREATE USER 'portail'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON portail.* TO 'portail'@'localhost'; # User creation with all privileges on all tables of the `portail` database
 CREATE DATABASE portail; # Database creation
 \q #Quit
 ```
@@ -87,6 +100,34 @@ php artisan key:generate  # Key generation
 php artisan migrate:fresh --seed # Tables creation and seeding
 npm install --production # JS dependencies installation (pretty slow)
 npm run prod # Front-end application compilation (dammit JS so slooow)
+```
+
+OR run the following commands :
+
+In a 1st terminal :
+
+```
+php artisan key:generate
+php artisan config:clear #(If there's an error such as : The only supported ciphers are AES-128-CBC and AES-256-CBC with the correct key lengths) 
+php artisan config:cache
+php artisan serve
+```
+
+In a 2nd terminal in parallel :
+
+```
+npm run watch
+```
+
+**If you have any error type such as : ERROR  in ./resources/assets/react/index.js**
+```
+> sudo npm update --depth 5 @babel/preset-envÂ´
+> sudo npm update --depth 5 @babel/compat-data
+```
+
+And try another again : 
+```
+> npm run watch
 ```
 
 ## For email and notification credentials
