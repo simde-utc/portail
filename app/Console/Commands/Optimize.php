@@ -5,8 +5,10 @@
  *
  * @author Alexandre Brasseur <abrasseur.pro@gmail.com>
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author R01 <contact@r01.li>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @copyright Copyright (c) 2022, all contributors of this file as listed by the git log
  * @license GNU GPL-3.0
  */
 
@@ -42,6 +44,8 @@ class Optimize extends Command
         $this->call('view:cache');
         $this->call('route:cache');
         $this->call('config:clear');
-        $this->call('config:cache');
+	$this->call('config:cache');
+
+	return 0; # laravel 7
     }
 }

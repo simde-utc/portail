@@ -5,8 +5,10 @@
  * Based on the old portal version from 1st January 2019.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author R01 <contact@r01.li>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
+ * @copyright Copyright (c) 2022, all contributors of this file as listed by the git log
  * @license GNU GPL-3.0
  */
 
@@ -165,7 +167,9 @@ Cela prend en moyenne entre 30 min et 2h. Confirmer ?')) {
                     $this->warn('Le rôle '.$name.' est devenu: '.self::DEFAULT_ROLE);
                 }
             }
-        }
+	}
+
+	return 0; # laravel 7
     }
 
     /**

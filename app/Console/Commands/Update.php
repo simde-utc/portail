@@ -4,8 +4,11 @@
  * Update the application to the next version after a git pull.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author R01 <contact@r01.li>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @copyright Copyright (c) 2022 all contributors of this file as listed by the git log
+ *
  * @license GNU GPL-3.0
  */
 
@@ -84,6 +87,8 @@ class Update extends Command
 
         // End.
         $bar->finish();
-        $this->info(' [Portail Update] Installation finie !');
+	$this->info(' [Portail Update] Installation finie !');
+
+	return 0; # laravel 7
     }
 }

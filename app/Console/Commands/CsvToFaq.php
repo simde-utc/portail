@@ -4,8 +4,10 @@
  * Add CSV's categories and questions to FAQ.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * @author R01 <contact@r01.li>
  *
  * @copyright Copyright (c) 2019, SiMDE-UTC
+ * @copyright Copyright (c) 2022 all contributors of this file as listed by the git log
  * @license GNU GPL-3.0
  */
 
@@ -66,6 +68,8 @@ class CsvToFaq extends Command
                 'category_id' => $category->id,
                 'visibility_id' => $defaultVisibility->id,
             ]);
-        }
+	}
+
+	return 0; #laravel 7
     }
 }

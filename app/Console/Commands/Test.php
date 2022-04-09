@@ -5,8 +5,10 @@
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  * @author Corentin Mercier <corentin@cmercier.fr>
+ * @author R01 <contact@r01.li>
  *
  * @copyright Copyright (c) 2018, SiMDE-UTC
+ * @copyright Copyright (c) 2022, all contributors of this file as listed by the git log
  * @license GNU GPL-3.0
  */
 
@@ -163,7 +165,9 @@ class Test extends Command
         $this->info(PHP_EOL);
         $this->info(PHP_EOL);
 
-        $this->output->success('Code checked √');
+	$this->output->success('Code checked √');
+
+	return 0; # laravel 7
     }
 
     /**
