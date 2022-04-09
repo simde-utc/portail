@@ -1,13 +1,21 @@
 <?php
+
 /**
- * Remove unuseful Laravel Admin's tools.
+ * Laravel-admin - admin builder based on Laravel.
+ * @author z-song <https://github.com/z-song>
  *
- * @author Samy Nastuzzi <samy@nastuzzi.fr>
+ * Bootstraper for Admin.
  *
- * @copyright Copyright (c) 2018, SiMDE-UTC
- * @license GNU GPL-3.0
+ * Here you can remove builtin form field:
+ * Encore\Admin\Form::forget(['map', 'editor']);
+ *
+ * Or extend custom form field:
+ * Encore\Admin\Form::extend('php', PHPEditor::class);
+ *
+ * Or require js and css assets:
+ * Admin::css('/packages/prettydocs/css/styles.css');
+ * Admin::js('/packages/prettydocs/js/main.js');
+ *
  */
 
-use Encore\Admin\Form;
-
-Form::forget(['editor', 'map']);
+Encore\Admin\Form::forget(['map', 'editor']);

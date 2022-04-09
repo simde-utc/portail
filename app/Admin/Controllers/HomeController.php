@@ -1,34 +1,34 @@
 <?php
-/**
- * Admin homepage.
- *
- * @author Samy Nastuzzi <samy@nastuzzi.fr>
- *
- * @copyright Copyright (c) 2018, SiMDE-UTC
- * @license GNU GPL-3.0
- */
 
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use Encore\Admin\Controllers\Dashboard;
+use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
-use App\Admin\Models\Menu;
-use Encore\Admin\Widgets\Box;
+use Encore\Admin\Layout\Row;
 
 class HomeController extends Controller
 {
-    /**
-     * Display of the welcome page.
-     *
-     * @param  Content $content
-     * @return mixed
-     */
     public function index(Content $content)
     {
         return $content
-            ->header('SiMDE')
-            ->description('Il y a une vie après les cours')
-            ->row(new Box('Bienvenue', view('admin.home.welcome')))
-            ->row(new Box('Accès rapide', view('admin.home.index')));
+            ->title('Dashboard')
+            ->description('Description...')
+            ->row(Dashboard::title())
+            ->row(function (Row $row) {
+
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::environment());
+                });
+
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::extensions());
+                });
+
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::dependencies());
+                });
+            });
     }
 }
