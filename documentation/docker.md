@@ -17,6 +17,8 @@ The following 3 commands will download the project, move to the new folder and i
 ```bash
 git clone https://github.com/simde-utc/portail.git # ssh version : git clone git@github.com:simde-utc/portail.git
 cd portail
+cp .env.docker.example .env # and edit .env.docker.example
+chmod -R 777 storage # this command may be required to run again as root to fix permissions issues
 docker/run # or "docker/run -d" to run in background
 ```
 
