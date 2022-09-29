@@ -37,6 +37,8 @@ php artisan migrate:fresh --seed # Tables creation and seeding
 exit # It's done. Exit the container
 ```
 
+The site should be accessible at [localhost:8000](http://localhost:8000), check it out!
+
 # Develop with Docker
 
 Containers and the host *share the project folder*, so you can develop normally without the need of restarting the services.
