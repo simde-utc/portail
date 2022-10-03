@@ -49,7 +49,7 @@ services:
   database:
     image: mysql
     volumes:
-      - ./storage/database/mysql:/var/lib/mysql
+      - dbdata:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=portail
       - MYSQL_USER=portail
