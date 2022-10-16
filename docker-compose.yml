@@ -56,3 +56,6 @@ services:
       - MYSQL_PASSWORD=portail
       - MYSQL_DATABASE=portail
     command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  dbdata:
