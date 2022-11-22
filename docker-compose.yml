@@ -22,6 +22,7 @@ services:
       - .env
     environment:
       "DB_HOST": "database"
+      "APP_KEY": "base64:zJQUL4236152JL697IJ+1UO7IUS42w2Td4069LNABfE="
 
   # The Front-End Bundler (Webpack)
   front:
