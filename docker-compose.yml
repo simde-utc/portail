@@ -57,5 +57,7 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=portail
+      - MYSQL_ROOT_PASSWORD=toor
+      - MYSQL_USER=portail
+      - MYSQL_PASSWORD=password
       - MYSQL_DATABASE=portail
