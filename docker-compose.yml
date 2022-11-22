@@ -20,6 +20,8 @@ services:
       - database
     env_file:
       - .env
+    environment:
+      "DB_HOST": "database"
 
   # The Front-End Bundler (Webpack)
   front:
