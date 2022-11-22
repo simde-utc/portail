@@ -34,6 +34,9 @@ services:
       - /app/node_modules # FIME : Share dependencies with the host ? Comment to enable.
     env_file:
       - .env
+    environment:
+      NODE_OPTIONS: "--openssl-legacy-provider"
+    # TODO: upgrade webpack so that we can remove this option allowing the usage of deprecated crypto
 
   # The Reverse Proxy (Nginx)
   proxy:
