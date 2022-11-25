@@ -20,6 +20,9 @@ services:
       - database
     env_file:
       - .env
+    environment:
+      "DB_HOST": "database"
+      "APP_KEY": "base64:zJQUL4236152JL697IJ+1UO7IUS42w2Td4069LNABfE="
 
   # The Front-End Bundler (Webpack)
   front:
@@ -34,6 +37,9 @@ services:
       - /app/node_modules # FIME : Share dependencies with the host ? Comment to enable.
     env_file:
       - .env
+    environment:
+      NODE_OPTIONS: "--openssl-legacy-provider"
+    # TODO: upgrade webpack so that we can remove this option allowing the usage of deprecated crypto
 
   # The Reverse Proxy (Nginx)
   proxy:
@@ -54,5 +60,7 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=portail
+      - MYSQL_ROOT_PASSWORD=toor
+      - MYSQL_USER=portail
+      - MYSQL_PASSWORD=password
       - MYSQL_DATABASE=portail
