@@ -17,6 +17,8 @@ The following 3 commands will download the project, move to the new folder and i
 ```bash
 git clone https://github.com/simde-utc/portail.git # ssh version : git clone git@github.com:simde-utc/portail.git
 cd portail
+cp .env.docker.example .env # and edit .env.docker.example
+chmod -R 777 storage # this command may be required to run again as root to fix permissions issues
 docker/run # or "docker/run -d" to run in background
 ```
 
@@ -34,6 +36,8 @@ php artisan key:generate # Key generation
 php artisan migrate:fresh --seed # Tables creation and seeding
 exit # It's done. Exit the container
 ```
+
+The site should be accessible at [localhost:8000](http://localhost:8000), check it out!
 
 # Develop with Docker
 

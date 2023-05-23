@@ -1,8 +1,5 @@
 version: '3.7'
 
-volumes:
-  dbdata:
-
 services:
 
   # The Back-End Application (Laravel)
@@ -58,3 +55,7 @@ services:
       - MYSQL_USER=portail
       - MYSQL_PASSWORD=portail
       - MYSQL_DATABASE=portail
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  dbdata:
